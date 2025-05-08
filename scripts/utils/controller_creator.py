@@ -73,6 +73,17 @@ def get_curve_data():
     
     shape_override_enabled, shape_override_color = get_overrides_info(trn_obj)
 
+    
+
+    def get_shape_data(shape):
+
+        shape_data_list = []
+
+       
+
+        
+
+
 
     
     
