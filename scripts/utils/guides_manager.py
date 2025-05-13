@@ -44,17 +44,17 @@ def get_guides_info():
         for jnt in joint_guides:
 
             if jnt.startswith("L_"):
-                side = jnt.split("_")[0]
                 left_guides.append(jnt)
 
             if jnt.startswith("R_"):
-                side = jnt.split("_")[0]
                 right_guides.append(jnt)
 
             name = jnt.split("_")[1]
             joint_matrices.append(cmds.xform(jnt, q=True, ws=True, m=True))
             joint_parents = cmds.listRelatives(jnt, parent=True)
             joint_prefered_angles = cmds.getAttr(jnt + ".preferredAngle")
+            joint_parents.append(joint_parents)
+            joint_prefered_angles.append(joint_prefered_angles)
 
 
             if len(left_guides) != len(right_guides):
@@ -72,14 +72,6 @@ def get_guides_info():
     else:
         om.MGlobal.displayError("No joint guides found.")
         return None
-    
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    final_path = os.path.join(relative_path, "guides")
-    guides_data = {guides_name: {}}
-    
-    print(joint_matrices)
-
 
     if locator_guides:
 
@@ -91,9 +83,36 @@ def get_guides_info():
 
     else:
         om.MGlobal.displayInfo("No locator guides found.")
+        return None
 
-    print(locator_positions)
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    final_path = os.path.join(relative_path, "guides")
+    guides_data = {guides_name: {}}
+    
 
-    for info_jnt, info_loc in zip(joint_matrices, locator_positions):
-        
-        pass
+    for i, guide in enumerate(joint_parents):
+        guides_data[guides_name][guide] = {
+            "joint_matrix": joint_matrices[i],
+            "joint_prefered_angle": joint_prefered_angles[i],
+            "parent": joint_parents[i],
+        }
+
+    if locator_guides:
+        for i, loc in enumerate(locator_guides):
+            guides_data[guides_name][loc] = {
+                "locator_position": locator_positions[i],
+                "isLocator": True,
+            }
+
+    if not os.path.exists(final_path):
+        os.makedirs(final_path)
+    
+    with open(os.path.join(final_path, f"{guides_name}.json"), "w") as output_file:
+        json.dump(guides_data, output_file, indent=4)
+
+    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.json')}")
+
+def load_guides_info():
+
+    pass
