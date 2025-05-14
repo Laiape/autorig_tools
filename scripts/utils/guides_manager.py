@@ -113,6 +113,58 @@ def get_guides_info():
 
     om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.json')}")
 
-def load_guides_info():
 
-    pass
+
+def load_guides_info(all_descendents=True, filePath=None):
+
+    
+    if not filePath:
+        
+        complete_path = os.path.realpath(__file__)
+        relative_path = complete_path.split("\scripts")[0]
+        guides_path = os.path.join(relative_path, "guides")
+
+        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=guides_path, fileFilter="*.json")
+       
+        if not final_path:
+            om.MGlobal.displayError("No file selected.")
+            return None
+        
+    else:
+
+        final_path = os.path.normpath(filePath)
+
+    name = os.path.basename(final_path).split(".")[0]
+
+    with open(final_path, "r") as input_file:
+        guides_data = json.load(input_file)
+
+    
+    
+    if not cmds.ls("C_guides_GRP"):
+
+            guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
+            
+    else:
+
+        guides_node = "C_guides_GRP"
+
+        for guide, data in reversed(list(guides_data[name].items())):
+                
+                if "isLocator" in data and data["isLocator"]:
+                        locator = cmds.spaceLocator(name=guide)[0]
+                        cmds.xform(locator, ws=True, m=data["locator_position"])
+                        cmds.parent(locator, guides_node)
+
+                else:
+
+                    imported_joint = cmds.joint(name=guide, r=10)
+                    cmds.xform(imported_joint, ws=True, m=data["joint_matrix"])
+                    cmds.makeIdentity(imported_joint, apply=True, r=True)
+                    cmds.setAttr(f"{imported_joint}.preferredAngle", data["joint_prefered_angle"][0], data["joint_prefered_angle"][1], data["joint_prefered_angle"][2])
+
+                    if data["parent"] == "C_root_JNT":
+                        cmds.parent(imported_joint, guides_node)
+                    else:
+                        cmds.parent(imported_joint, data["parent"])
+
