@@ -115,7 +115,7 @@ def get_guides_info():
 
 
 
-def load_guides_info(all_descendents=True, filePath=None):
+def load_guides_info(filePath=None):
 
     
     if not filePath:
