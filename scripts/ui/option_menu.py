@@ -12,23 +12,21 @@ def reload_ui():
 
 def export_guides(*args):
 
-    from scripts.utils import guides_manager
-    reload(guides_manager)
-    guides_manager.get_guides_info()
+    from scripts.utils import guides_manager_self
+    reload(guides_manager_self)
+    guides_manager_self.get_guides_info()
 
 def import_guides(*args):
 
-    from scripts.utils import guides_manager
-    reload(guides_manager)
-    guides_manager.load_guides_info()
+    from scripts.utils import guides_manager_self
+    reload(guides_manager_self)
+    guides_manager_self.load_guides_info()
 
 def export_curves(*args):
 
-    from scripts.utils import controller_creator
-    reload(controller_creator)
-    controller_creator.export_curves_to_file()
-
-
+    from scripts.utils import curve_tool
+    reload(curve_tool)
+    curve_tool.get_all_ctl_curves_data()
 
 
 
