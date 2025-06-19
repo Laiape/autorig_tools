@@ -24,16 +24,28 @@ def import_guides(*args):
 
 def export_curves(*args):
 
+<<<<<<< HEAD
     from scripts.utils import curve_tool
     reload(curve_tool)
     curve_tool.get_all_ctl_curves_data()
+=======
+    from scripts.utils import controller_creator
+    reload(controller_creator)
+    controller_creator.export_curves_to_file()
 
+def mirror_curves(*args):
 
+    from scripts.utils import controller_creator
+    reload(controller_creator)
+    # controller_creator.mirror_curves() 
+    # Line commented out until function is implemented
 
-class LaiaUI(QtWidgets.QMainWindow):
+>>>>>>> 26b521417e4bbe8bce532416d58ab9636969d418
+
+class UI(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
-        super(LaiaUI, self).__init__(parent)
+        super(UI, self).__init__(parent)
         self.setWindowTitle("Auto Rig")
 
         self.main_layout = QtWidgets.QVBoxLayout()
@@ -65,6 +77,7 @@ class LaiaUI(QtWidgets.QMainWindow):
 
         self.curves = cmds.menuItem(label="Curves", subMenu=True, tearOff=True, boldFont=True)
         cmds.menuItem(label="Export Curves", command=export_curves)
+        cmds.menuItem(label="Mirror Curves", command=mirror_curves)
 
 
 
