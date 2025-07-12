@@ -1,1 +1,1 @@
-+ GITHUB 1.0 C:\GITHUB
++ module 1.0 C:\GITHUB

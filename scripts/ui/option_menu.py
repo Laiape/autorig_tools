@@ -8,8 +8,8 @@ def reload_ui():
 
     from scripts.ui import option_menu
     reload(option_menu)
-    option_menu.LaiaUI.make_ui()
-
+    option_menu.UI().make_ui()
+    
 def export_guides(*args):
 
     from scripts.utils import guides_manager
