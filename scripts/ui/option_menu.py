@@ -12,35 +12,21 @@ def reload_ui():
 
 def export_guides(*args):
 
-    from scripts.utils import guides_manager_self
-    reload(guides_manager_self)
-    guides_manager_self.get_guides_info()
+    from scripts.utils import guides_manager
+    reload(guides_manager)
+    guides_manager.get_guides_info()
 
 def import_guides(*args):
 
-    from scripts.utils import guides_manager_self
-    reload(guides_manager_self)
-    guides_manager_self.load_guides_info()
+    from scripts.utils import guides_manager
+    reload(guides_manager)
+    guides_manager.load_guides_info()
 
 def export_curves(*args):
 
-<<<<<<< HEAD
     from scripts.utils import curve_tool
     reload(curve_tool)
     curve_tool.get_all_ctl_curves_data()
-=======
-    from scripts.utils import controller_creator
-    reload(controller_creator)
-    controller_creator.export_curves_to_file()
-
-def mirror_curves(*args):
-
-    from scripts.utils import controller_creator
-    reload(controller_creator)
-    # controller_creator.mirror_curves() 
-    # Line commented out until function is implemented
-
->>>>>>> 26b521417e4bbe8bce532416d58ab9636969d418
 
 class UI(QtWidgets.QMainWindow):
 
@@ -77,7 +63,7 @@ class UI(QtWidgets.QMainWindow):
 
         self.curves = cmds.menuItem(label="Curves", subMenu=True, tearOff=True, boldFont=True)
         cmds.menuItem(label="Export Curves", command=export_curves)
-        cmds.menuItem(label="Mirror Curves", command=mirror_curves)
+        # cmds.menuItem(label="Mirror Curves", command=mirror_curves)
 
 
 
