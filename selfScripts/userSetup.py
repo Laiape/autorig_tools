@@ -6,4 +6,4 @@ if not cmds.commandPort(":4434", query=True):
 if not cmds.commandPort("localhost:7001", query=True):
     cmds.commandPort(name="localhost:7001")
 
-mu.executeDeferred("from scripts.ui import option_menu; option_menu.UI().make_ui()")
+mu.executeDeferred("from selfScripts.ui import option_menu; option_menu.UI().make_ui()")
