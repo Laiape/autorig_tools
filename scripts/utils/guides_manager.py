@@ -30,7 +30,7 @@ def get_guides_info():
         return None
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
-    locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
+    locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="spaceLocator")
 
     if joint_guides:
 
@@ -79,7 +79,7 @@ def get_guides_info():
 
         for loc in locator_guides:
             side = loc.split("_")[0]
-            locator_positions.append(cmds.xform(loc, q=True, ws=True, t=True))
+            locator_positions.append(cmds.xform(loc, q=True, ws=True, m=True))
 
     else:
         om.MGlobal.displayInfo("No locator guides found.")

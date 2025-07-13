@@ -5,8 +5,15 @@ from importlib import reload
 import maya.OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import info
+
+from utils import guides_manager
+from autorig import spine_module
+
+
 reload(icon_export)
 reload(info)
+reload(guides_manager)
+reload(spine_module)
 
 
 class UI(QtWidgets.QMainWindow):
@@ -310,8 +317,8 @@ class UI(QtWidgets.QMainWindow):
     def create_connections(self):
 
         # Connect character template buttons
-        self.template_buttons[0].clicked.connect(lambda: self.template_button_connections("Load"))
-        self.template_buttons[1].clicked.connect(lambda: self.template_button_connections("Save"))
+        self.template_buttons[0].clicked.connect(guides_manager.load_guides_info)
+        self.template_buttons[1].clicked.connect(guides_manager.get_guides_info)
         self.template_buttons[2].clicked.connect(lambda: self.template_button_connections("Delete"))
         self.template_buttons[3].clicked.connect(self.info_rig_guides_connections)
 
@@ -473,6 +480,7 @@ class UI(QtWidgets.QMainWindow):
         self.setCentralWidget(central_widget)
         
     def stylesheet(self):
+
         self.setStyleSheet("""
             QMainWindow {
             background-color: #2e2e2e; /* Dark gray */
@@ -549,23 +557,26 @@ class UI(QtWidgets.QMainWindow):
             }
         """)
 
-def make_ui():
-    
-    """Create and show the UI."""
 
-    if __name__ == "__main__":
-        # Get the main Maya window
-        maya_main_window_ptr = omui.MQtUtil.mainWindow()
-        maya_main_window = wrapInstance(int(maya_main_window_ptr), QtWidgets.QMainWindow)
-        try:
-            ui.close()  # Close the existing window if it exists
-        except:
-            pass
-        
-        # Create and show the UI
-        ui = UI(parent=maya_main_window)
-        ui.populate()
-        ui.show()
+
+
+
+maya_main_window_ptr = omui.MQtUtil.mainWindow()
+maya_main_window = wrapInstance(int(maya_main_window_ptr), QtWidgets.QWidget)
+
+global ui  # Optional: makes it easier to test multiple times
+try:
+    ui.close()  # Close the existing window if it's open
+except:
+    pass
+
+ui = UI(parent=maya_main_window)
+ui.populate()
+ui.show()
+
+
+
+
 
 
 
