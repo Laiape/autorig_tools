@@ -283,9 +283,6 @@ class UI(QtWidgets.QMainWindow):
         self.neck_follow_checkbox = QtWidgets.QCheckBox("Follow")
         self.neck_follow_checkbox.setChecked(True)
     
-
-
-    
     def populate_create_rig(self):
         
         self.create_rig_button = QtWidgets.QPushButton("Create Rig")
@@ -313,8 +310,14 @@ class UI(QtWidgets.QMainWindow):
     
     def rig_connections(self, type):
         print(f"Rig {type}!")
-      
-        
+
+    def create_rig_connections(self):
+
+        from autorig import create_rig
+        reload(create_rig)
+
+        build_rig = create_rig.AutoRig()
+        build_rig.build()
 
     def create_connections(self):
 
@@ -339,7 +342,7 @@ class UI(QtWidgets.QMainWindow):
         self.text_line.textEdited.connect(self.add_module_to_tree_connections)
 
 
-        self.create_rig_button.clicked.connect(create_rig.AutoRig())
+        self.create_rig_button.clicked.connect(self.create_rig_connections)
         self.delete_rig_button.clicked.connect(lambda: self.rig_connections("deleted"))
 
 

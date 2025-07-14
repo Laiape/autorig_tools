@@ -14,6 +14,10 @@ def get_guides_info():
 
     guides_transform = cmds.ls(selection=True, type="transform")[0]
 
+    if not guides_transform:
+        om.MGlobal.displayError("Please select a guide transform.")
+        return None
+
     answer = cmds.promptDialog(
                 title="INPUT DIALOG",
                 message="INSERT FILE NAME",
@@ -27,9 +31,7 @@ def get_guides_info():
     
     guides_name = cmds.promptDialog(query=True, text=True)
 
-    if not guides_transform:
-        om.MGlobal.displayError("Please select a guide transform.")
-        return None
+    
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")

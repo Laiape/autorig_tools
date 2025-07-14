@@ -1,7 +1,10 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
-from scripts.utils import controller_creator
-from scripts.utils import data_export
+from utils import data_export
+
+from importlib import reload
+
+reload(data_export)
 
 
 def create_basic_structure():
@@ -20,10 +23,10 @@ def create_basic_structure():
 
         cmds.createNode("transform", name=node, ss=True)
 
-        if i == 0:
+        if i != 0:
             cmds.parent(node, nodes[0])
 
     masterwalk_node = cmds.createNode("transform", name="C_masterwalk_GRP", ss=True)
     cmds.parent(masterwalk_node, nodes[2])
-    curve = cmds.circle(name="C_masterwalk_CTL", r=10)
+    curve = cmds.circle(name="C_masterwalk_CTL", r=10, ch=False)
     cmds.parent(curve, masterwalk_node)
