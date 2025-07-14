@@ -22,7 +22,9 @@ def get_guides_info():
                 cancelButton="Cancel",
                 dismissString="Cancel")
     if answer == "Cancel":
-            return
+        om.MGlobal.displayInfo("Operation cancelled by user.")
+        return
+    
     guides_name = cmds.promptDialog(query=True, text=True)
 
     if not guides_transform:
@@ -30,13 +32,14 @@ def get_guides_info():
         return None
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
-    locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="spaceLocator")
+    locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
 
     if joint_guides:
 
         joint_matrices = []
         joint_parents = []
         joint_prefered_angles = []
+        joint_joint_orient = []
 
         left_guides = []
         right_guides = []
@@ -51,15 +54,13 @@ def get_guides_info():
 
             name = jnt.split("_")[1]
             joint_matrices.append(cmds.xform(jnt, q=True, ws=True, m=True))
-            joint_parents = cmds.listRelatives(jnt, parent=True)
-            joint_prefered_angles = cmds.getAttr(jnt + ".preferredAngle")
-            joint_parents.append(joint_parents)
-            joint_prefered_angles.append(joint_prefered_angles)
+            joint_parent = cmds.listRelatives(jnt, parent=True)[0]
+            joint_parents.append(joint_parent)
+ 
 
+        if len(left_guides) != len(right_guides):
+            om.MGlobal.displayInfo("The number of left and right guides are not the same.")
 
-            if len(left_guides) != len(right_guides):
-                om.MGlobal.displayError("The number of left and right guides are not the same.")
-                return
 
             for left_guide in left_guides:
                 for right_guide in right_guides:
@@ -79,11 +80,13 @@ def get_guides_info():
 
         for loc in locator_guides:
             side = loc.split("_")[0]
-            locator_positions.append(cmds.xform(loc, q=True, ws=True, m=True))
+
+            parent_transform = cmds.listRelatives(loc, parent=True)[0]
+            locator_positions.append(cmds.xform(parent_transform, q=True, ws=True, m=True))
 
     else:
         om.MGlobal.displayInfo("No locator guides found.")
-        return None
+
 
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
@@ -91,13 +94,15 @@ def get_guides_info():
     guides_data = {guides_name: {}}
     
 
-    for i, guide in enumerate(joint_parents):
-        guides_data[guides_name][guide] = {
+    for i, guide in enumerate(joint_guides):
+        key = guide[0] if isinstance(guide, list) else guide
+        guides_data[guides_name][key] = {
             "joint_matrix": joint_matrices[i],
-            "joint_prefered_angle": joint_prefered_angles[i],
             "parent": joint_parents[i],
-        }
+            "isLocator": False,                     
+    }
 
+        
     if locator_guides:
         for i, loc in enumerate(locator_guides):
             guides_data[guides_name][loc] = {
@@ -108,10 +113,10 @@ def get_guides_info():
     if not os.path.exists(final_path):
         os.makedirs(final_path)
     
-    with open(os.path.join(final_path, f"{guides_name}.json"), "w") as output_file:
+    with open(os.path.join(final_path, f"{guides_name}.guides"), "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
 
-    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.json')}")
+    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.guides')}")
 
 
 
@@ -124,7 +129,7 @@ def load_guides_info(filePath=None):
         relative_path = complete_path.split("\scripts")[0]
         guides_path = os.path.join(relative_path, "guides")
 
-        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=guides_path, fileFilter="*.json")
+        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=guides_path, fileFilter="*.guides")[0]
        
         if not final_path:
             om.MGlobal.displayError("No file selected.")
@@ -132,7 +137,7 @@ def load_guides_info(filePath=None):
         
     else:
 
-        final_path = os.path.normpath(filePath)
+        final_path = os.path.normpath(filePath)[0]
 
     name = os.path.basename(final_path).split(".")[0]
 
@@ -143,13 +148,14 @@ def load_guides_info(filePath=None):
     
     if not cmds.ls("C_guides_GRP"):
 
-            guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
-            
-    else:
-
         guides_node = "C_guides_GRP"
 
+        guides_node = cmds.createNode("transform", name=guides_node, ss=True)
+
         for guide, data in reversed(list(guides_data[name].items())):
+                
+                print(f"Importing guide: {guide}")
+                print(f"Data: {data}")
                 
                 if "isLocator" in data and data["isLocator"]:
                         locator = cmds.spaceLocator(name=guide)[0]
@@ -158,13 +164,22 @@ def load_guides_info(filePath=None):
 
                 else:
 
-                    imported_joint = cmds.joint(name=guide, r=10)
+                    cmds.select(clear=True)
+                    imported_joint = cmds.joint(name=guide, r=5)
                     cmds.xform(imported_joint, ws=True, m=data["joint_matrix"])
                     cmds.makeIdentity(imported_joint, apply=True, r=True)
-                    cmds.setAttr(f"{imported_joint}.preferredAngle", data["joint_prefered_angle"][0], data["joint_prefered_angle"][1], data["joint_prefered_angle"][2])
+                    # cmds.setAttr(f"{imported_joint}.jointOrientX", data["joint_joint_orient"][0])
+                    # cmds.setAttr(f"{imported_joint}.jointOrientY", data["joint_joint_orient"][1])
+                    # cmds.setAttr(f"{imported_joint}.jointOrientZ", data["joint_joint_orient"][2])
 
                     if data["parent"] == "C_root_JNT":
                         cmds.parent(imported_joint, guides_node)
                     else:
                         cmds.parent(imported_joint, data["parent"])
+            
+    else:
+
+        guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
+
+        
 
