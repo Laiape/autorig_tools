@@ -8,12 +8,14 @@ import info
 
 from utils import guides_manager
 from autorig import spine_module
+from autorig import create_rig
 
 
 reload(icon_export)
 reload(info)
 reload(guides_manager)
 reload(spine_module)
+reload(create_rig)
 
 
 class UI(QtWidgets.QMainWindow):
@@ -337,7 +339,7 @@ class UI(QtWidgets.QMainWindow):
         self.text_line.textEdited.connect(self.add_module_to_tree_connections)
 
 
-        self.create_rig_button.clicked.connect(lambda: self.rig_connections("created"))
+        self.create_rig_button.clicked.connect(create_rig.AutoRig())
         self.delete_rig_button.clicked.connect(lambda: self.rig_connections("deleted"))
 
 
