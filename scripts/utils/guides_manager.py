@@ -122,6 +122,8 @@ def get_guides_info():
 
 def load_guides_info(filePath=None):
 
+    """ Load guides information from a JSON file and create the guides in the scene."""
+
     
     if not filePath:
         
@@ -154,11 +156,8 @@ def load_guides_info(filePath=None):
 
         for guide, data in reversed(list(guides_data[name].items())):
                 
-                print(f"Importing guide: {guide}")
-                print(f"Data: {data}")
-                
                 if "isLocator" in data and data["isLocator"]:
-                        locator = cmds.spaceLocator(name=guide)[0]
+                        locator = cmds.spaceLocator(name=guide.replace("Shape", "_LOC"))[0]
                         cmds.xform(locator, ws=True, m=data["locator_position"])
                         cmds.parent(locator, guides_node)
 
@@ -168,9 +167,6 @@ def load_guides_info(filePath=None):
                     imported_joint = cmds.joint(name=guide, r=5)
                     cmds.xform(imported_joint, ws=True, m=data["joint_matrix"])
                     cmds.makeIdentity(imported_joint, apply=True, r=True)
-                    # cmds.setAttr(f"{imported_joint}.jointOrientX", data["joint_joint_orient"][0])
-                    # cmds.setAttr(f"{imported_joint}.jointOrientY", data["joint_joint_orient"][1])
-                    # cmds.setAttr(f"{imported_joint}.jointOrientZ", data["joint_joint_orient"][2])
 
                     if data["parent"] == "C_root_JNT":
                         cmds.parent(imported_joint, guides_node)
@@ -179,7 +175,20 @@ def load_guides_info(filePath=None):
             
     else:
 
-        guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
+        om.MGlobal.displayError("Guides group 'C_guides_GRP' already exists. Please delete it before loading new guides.")
+
+
+def delete_guides():
+
+    """ Deletes the guides group and all its children."""
+
+    guides_group = "C_guides_GRP"
+
+    if cmds.objExists(guides_group):
+        cmds.delete(guides_group)
+        om.MGlobal.displayInfo(f"Deleted guides group: {guides_group}")
+    else:
+        om.MGlobal.displayError(f"Guides group '{guides_group}' does not exist.")
 
         
 

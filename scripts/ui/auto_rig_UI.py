@@ -319,7 +319,7 @@ class UI(QtWidgets.QMainWindow):
         # Connect character template buttons
         self.template_buttons[0].clicked.connect(guides_manager.load_guides_info)
         self.template_buttons[1].clicked.connect(guides_manager.get_guides_info)
-        self.template_buttons[2].clicked.connect(lambda: self.template_button_connections("Delete"))
+        self.template_buttons[2].clicked.connect(guides_manager.delete_guides)
         self.template_buttons[3].clicked.connect(self.info_rig_guides_connections)
 
 
