@@ -28,7 +28,7 @@ class UI(QtWidgets.QMainWindow):
 
         self.main_layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.main_layout)
-
+        self.main_window_setup()
         self.populate()
         self.layouts()
         self.stylesheet()
@@ -51,6 +51,18 @@ class UI(QtWidgets.QMainWindow):
             icon_data = json.load(file)
         return icon_data
 
+    def main_window_setup(self):
+
+        self.main_tab = QtWidgets.QTabWidget()
+        self.auto_rig_tab = QtWidgets.QWidget()
+        self.curves_tab = QtWidgets.QWidget()
+        self.skin_cluster_tab = QtWidgets.QWidget()
+
+        self.main_tab.addTab(self.auto_rig_tab, "Auto Rig")
+        self.main_tab.addTab(self.curves_tab, "Curves")
+        self.main_tab.addTab(self.skin_cluster_tab, "Skin Cluster")
+
+    
     def populate_template_menu(self):
         
         data = self.load_icon()
@@ -268,6 +280,13 @@ class UI(QtWidgets.QMainWindow):
         
         
         # Spine Attributes
+        self.spine_twist_joints_number = QtWidgets.QSpinBox()
+        self.spine_twist_joints_number.setRange(0, 10)
+        self.spine_twist_joints_number.setValue(5)
+        self.spine_twist_joints_number.setFixedWidth(70)
+        self.spine_twist_joints_label = QtWidgets.QLabel("Spine Joints: (0-10)")
+        self.spine_twist_joints_label.setStyleSheet("font-weight: bold; font-size: 10px;")
+        self.spine_twist_joints_number.setSingleStep(1)
         self.spine_reverse_twist_checkbox = QtWidgets.QCheckBox("Reverse Spine")
         self.spine_reverse_twist_checkbox.setChecked(True)
         self.spine_volume_checkbox = QtWidgets.QCheckBox("Volume Preservation")
@@ -295,6 +314,18 @@ class UI(QtWidgets.QMainWindow):
         self.delete_rig_button.setIconSize(QtCore.QSize(200,3))
  
         self.delete_rig_button.setToolTip("Delete all the rig")
+
+    def populate_curves_interactions(self):
+
+        data = self.load_icon()
+
+        pixmap = self.svg(data, "curves", "export")
+        self.export_curves_button = QtWidgets.QPushButton("")
+        self.export_curves_button.setIcon(QtGui.QPixmap(pixmap))
+        self.export_curves_button.setToolTip("Export all the curves in the scene")
+        self.export_curves_button.setIconSize(QtCore.QSize(24, 24))
+        self.export_curves_button.setStyleSheet("padding: 5px;")
+        self.export_curves_button.setObjectName("modulesButtons")
         
     def template_button_connections(self, type):
 
@@ -318,6 +349,16 @@ class UI(QtWidgets.QMainWindow):
 
         build_rig = create_rig.AutoRig()
         build_rig.build()
+
+    def export_curves_connections(self):
+
+        from utils import curve_tool
+        reload(curve_tool)
+
+        curves_tool = curve_tool.CurveTool()
+        curves_tool.get_curves_info()
+        curves_tool.write_json()
+        print("Curves exported successfully!")
 
     def create_connections(self):
 
@@ -345,11 +386,21 @@ class UI(QtWidgets.QMainWindow):
         self.create_rig_button.clicked.connect(self.create_rig_connections)
         self.delete_rig_button.clicked.connect(lambda: self.rig_connections("deleted"))
 
+        self.export_curves_button.clicked.connect(self.export_curves_connections)
+
 
     def layouts(self):
         
+        self.main_tab_layout = QtWidgets.QVBoxLayout()
+        self.auto_rig_tab.setLayout(self.main_tab_layout)
+        self.curves_tab_layout = QtWidgets.QVBoxLayout()
+        self.curves_tab.setLayout(self.curves_tab_layout)
+        self.skin_cluster_tab_layout = QtWidgets.QVBoxLayout()
+        self.skin_cluster_tab.setLayout(self.skin_cluster_tab_layout)
+        
         self.main_layout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.main_layout)
+        self.main_tab_layout.addLayout(self.main_layout)
+        # self.skin_cluster_tab_layout.addLayout(self.main_layout)
 
         # Template Layout
         self.template_layout_header = QtWidgets.QHBoxLayout()
@@ -430,6 +481,8 @@ class UI(QtWidgets.QMainWindow):
         
         # Spine Attrs Layout
         spine_layout = QtWidgets.QVBoxLayout()
+        spine_layout.addWidget(self.spine_twist_joints_label)
+        spine_layout.addWidget(self.spine_twist_joints_number)
         spine_layout.addWidget(self.spine_reverse_twist_checkbox)
         spine_layout.addWidget(self.spine_volume_checkbox)
         spine_layout.addWidget(self.spine_stretch_checkbox)
@@ -466,6 +519,14 @@ class UI(QtWidgets.QMainWindow):
         self.main_layout.addLayout(self.modules_layout)
         self.main_layout.addLayout(self.tree_attrs_layout)
         self.main_layout.addLayout(self.build_rig_layout)
+
+
+        # Curves Layout
+        self.curves_layout = QtWidgets.QVBoxLayout()
+
+        self.curves_layout.addWidget(self.export_curves_button)
+
+        self.curves_tab_layout.addLayout(self.curves_layout)
         
     def populate(self):
         
@@ -475,14 +536,13 @@ class UI(QtWidgets.QMainWindow):
         self.populate_rig_attributes()
         self.populate_add_module_to_tree()
         self.populate_create_rig()
+        self.populate_curves_interactions()
         self.create_connections()
         self.stylesheet()
 
         
-        # Set the main layout to the central widget
-        central_widget = QtWidgets.QWidget()
-        central_widget.setLayout(self.main_layout)
-        self.setCentralWidget(central_widget)
+        # Set the main tab widget as the central widget
+        self.setCentralWidget(self.main_tab)
         
     def stylesheet(self):
 

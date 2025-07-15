@@ -25,6 +25,8 @@ class CurveTool(object):
 
         all_curves = cmds.ls(type="nurbsCurve")
 
+        print(f"Found {all_curves} curves in the scene.")
+
         # Get the curves info: name, control points, degree, knots, overrideColor.
 
         self.curves_info = {}
@@ -34,43 +36,28 @@ class CurveTool(object):
             side = curve.split("_")[0]
             names = curve.split("_")[1]
             name = f"{side}_{names}"
-            curve_shape = cmds.listRelatives(curve, shapes=True)
             override_color = None  
 
-            for shape in curve_shape:
+            control_points = cmds.getAttr(f"{curve}.controlPoints")
+            degree = cmds.getAttr(f"{curve}.degree")
+            form = cmds.getAttr(f"{curve}.form")
+            draw_always_on_top = cmds.getAttr(f"{curve}.alwaysDrawOnTop")
+            # knots = cmds.getAttr(f"{curve}.knots")
+            override_enabled = cmds.getAttr(f"{curve}.overrideEnabled")
+            if override_enabled:
+                override_color = cmds.getAttr(f"{curve}.overrideColor")
 
-                if not curve_shape:
-                    om.MGlobal.displayError(f"Curve {curve} has no shape node.")
+            self.curves_info[curve] = {
+                "name": name,
+                "controlPoints": control_points,
+                "degree": degree,
+                # "knots": knots,
+                "overrideEnabled": override_enabled,
+                "overrideColor": override_color,
+                "form": form,
+                "alwaysDrawOnTop": draw_always_on_top
+        }
 
-                else:
-                    control_points = cmds.getAttr(f"{shape}.controlPoints")
-                    degree = cmds.getAttr(f"{shape}.degree")
-                    knots = cmds.getAttr(f"{shape}.knots")
-                    override_enabled = cmds.getAttr(f"{shape}.overrideEnabled")
-                    if override_enabled:
-                        override_color = cmds.getAttr(f"{shape}.overrideColor")
-
-                    self.curves_info[shape] = {
-                        "name": name,
-                        "controlPoints": control_points,
-                        "degree": degree,
-                        "knots": knots,
-                        "overrideEnabled": override_enabled,
-                        "overrideColor": override_color
-                }
-                    
-        # Get the curves info: form, drawAllwaysOnTop
-
-        for curve in all_curves:
-            curve_shape = cmds.listRelatives(curve, shapes=True)
-            for shape in curve_shape:
-                form = cmds.getAttr(f"{shape}.form")
-                draw_always_on_top = cmds.getAttr(f"{shape}.drawAlwaysOnTop")
-
-                self.curves_info[shape].append({
-                    "form": form,
-                    "drawAlwaysOnTop": draw_always_on_top
-                })
                 
         om.MGlobal.displayInfo(f"Curves info collected: {len(self.curves_info)} curves found.")
 

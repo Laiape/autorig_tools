@@ -1,0 +1,24 @@
+{
+    "C_character_CTLShape": {
+        "name": "C_character",
+        "controlPoints": [
+            []
+        ],
+        "degree": 3,
+        "overrideEnabled": true,
+        "overrideColor": 24,
+        "form": 2,
+        "alwaysDrawOnTop": true
+    },
+    "C_masterwalk_CTLShape": {
+        "name": "C_masterwalk",
+        "controlPoints": [
+            []
+        ],
+        "degree": 3,
+        "overrideEnabled": true,
+        "overrideColor": 14,
+        "form": 2,
+        "alwaysDrawOnTop": false
+    }
+}

@@ -26,7 +26,11 @@ def create_basic_structure():
         if i != 0:
             cmds.parent(node, nodes[0])
 
+    character_node = cmds.createNode("transform", name="C_characterNode_GRP", ss=True)
+    character_ctl = cmds.circle(name="C_character_CTL", r=10, ch=False)
+    cmds.parent(character_ctl, character_node)
+    cmds.parent(character_node, nodes[2])
     masterwalk_node = cmds.createNode("transform", name="C_masterwalk_GRP", ss=True)
-    cmds.parent(masterwalk_node, nodes[2])
+    cmds.parent(masterwalk_node, character_ctl)
     curve = cmds.circle(name="C_masterwalk_CTL", r=10, ch=False)
     cmds.parent(curve, masterwalk_node)
