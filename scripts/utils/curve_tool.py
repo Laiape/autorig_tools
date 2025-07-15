@@ -5,7 +5,7 @@ import os
 
 TEMPLATE_PATH = "C:/GITHUB/curves"
 
-class CurveTool(object):
+class CurveTool():
 
     def __init__(self):
 
@@ -14,7 +14,8 @@ class CurveTool(object):
         global TEMPLATE_PATH
 
         file_name = "curves_info.json"
-        self.final_path = os.path.join(TEMPLATE_PATH, file_name)
+        self.final_path = None
+
 
     def get_curves_info(self):
 
@@ -58,27 +59,29 @@ class CurveTool(object):
                 "alwaysDrawOnTop": draw_always_on_top
         }
 
-                
-        om.MGlobal.displayInfo(f"Curves info collected: {len(self.curves_info)} curves found.")
-
     def write_json(self):
 
         """ Writes curves information to a JSON file."""
 
-        with open(self.final_path, "w") as file:
-            json.dump(self.curves_info, file, indent=4)
-        
-        om.MGlobal.displayInfo(f"Curves info saved to {self.final_path}")
+        final_path = os.path.join(TEMPLATE_PATH, "curves_info.json")
 
-    def create_controller(self, name, offset=[None]):
+        with open(final_path, "w") as file:
+            json.dump(self.curves_info, file, indent=4)
+
+        om.MGlobal.displayInfo(f"Curves info saved to {final_path}")
+
+    def create_controller(self, name, offset = ["GRP"]):
 
         """Creates the controller based on the curves information."""
+        print(name)
+
+        final_path = os.path.join(TEMPLATE_PATH, "curves_info.json")
 
         # Build the controller offset groups.
         offset_grps = []
 
         for grp in offset:
-            if grp is None:
+            if grp == None:
                 grp = cmds.createNode("transform", name=f"{name}_GRP", ss=True)
             else:
                 grp = cmds.createNode("transform", name=f"{name}_{grp}", ss=True)
@@ -88,9 +91,12 @@ class CurveTool(object):
 
         
         # Create the controller from the curve information.
+        with open(final_path, 'r') as file:
+            curves_info = json.load(file)
 
-        if name in self.curves_info:
-            curve_info = self.curves_info[name]
+        if name in curves_info:
+
+            curve_info = curves_info[name]
             control_points = curve_info["controlPoints"]
             degree = curve_info["degree"]
             knots = curve_info["knots"]
@@ -99,16 +105,22 @@ class CurveTool(object):
 
 
             # Create the NURBS curve.
-            controller = cmds.curve(d=degree, p=control_points, k=knots, name=name)
+            controller = cmds.curve(d=degree, p=control_points, name=name)
 
             # Set the override color if it exists.
             
             cmds.setAttr(f"{controller}.overrideEnabled", override_enabled)
-            if override_color is not 0:
+            if override_color != 0:
                 cmds.setAttr(f"{controller}.overrideColor", override_color)
 
             # Parent the controller to the last offset group.
             cmds.parent(controller, offset_grps[-1])
+        
+        else:
+
+            controller = cmds.circle(name=name, ch=False)[0]
+
+        return offset_grps, controller
 
 
 

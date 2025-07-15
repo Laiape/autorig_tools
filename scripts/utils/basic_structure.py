@@ -1,10 +1,12 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from utils import data_export
+from utils import curve_tool
 
 from importlib import reload
 
 reload(data_export)
+reload(curve_tool)
 
 
 def create_basic_structure():
@@ -26,11 +28,7 @@ def create_basic_structure():
         if i != 0:
             cmds.parent(node, nodes[0])
 
-    character_node = cmds.createNode("transform", name="C_characterNode_GRP", ss=True)
-    character_ctl = cmds.circle(name="C_character_CTL", r=10, ch=False)
-    cmds.parent(character_ctl, character_node)
+    character_node, character_ctl = curve_tool.CurveTool.create_controller("C_character", ["GRP", "ANM"])
+    masterwalk_node, masterwalk_ctl = curve_tool.CurveTool.create_controller("C_masterwalk", ["GRP", "ANM"])
     cmds.parent(character_node, nodes[2])
-    masterwalk_node = cmds.createNode("transform", name="C_masterwalk_GRP", ss=True)
     cmds.parent(masterwalk_node, character_ctl)
-    curve = cmds.circle(name="C_masterwalk_CTL", r=10, ch=False)
-    cmds.parent(curve, masterwalk_node)
