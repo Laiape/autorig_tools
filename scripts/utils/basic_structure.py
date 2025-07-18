@@ -28,7 +28,7 @@ def create_basic_structure():
         if i != 0:
             cmds.parent(node, nodes[0])
 
-    character_node, character_ctl = curve_tool.CurveTool.create_controller("C_character", ["GRP", "ANM"])
-    masterwalk_node, masterwalk_ctl = curve_tool.CurveTool.create_controller("C_masterwalk", ["GRP", "ANM"])
-    cmds.parent(character_node, nodes[2])
-    cmds.parent(masterwalk_node, character_ctl)
+    character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
+    masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
+    cmds.parent(character_node[0], nodes[2])
+    cmds.parent(masterwalk_node[0], character_ctl)
