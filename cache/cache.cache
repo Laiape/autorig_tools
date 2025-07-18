@@ -1,0 +1,6 @@
+{
+    "basic_structure": {
+        "masterwalk_ctl": "C_masterwalk_CTL",
+        "character_ctl": "C_character_CTL"
+    }
+}

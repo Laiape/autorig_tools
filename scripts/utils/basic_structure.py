@@ -1,11 +1,11 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
-from utils import data_export
+from utils import data_manager
 from utils import curve_tool
 
 from importlib import reload
 
-reload(data_export)
+reload(data_manager)
 reload(curve_tool)
 
 
@@ -32,3 +32,10 @@ def create_basic_structure():
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
     cmds.parent(character_node[0], nodes[2])
     cmds.parent(masterwalk_node[0], character_ctl)
+    data_manager.DataExport().append_data("basic_structure",
+                            {
+                                "masterwalk_ctl" : masterwalk_ctl,
+                                "character_ctl" : character_ctl
+                            }
+    )
+

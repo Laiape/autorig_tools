@@ -3,9 +3,11 @@ from importlib import reload
 
 from utils import guides_manager
 from utils import basic_structure
+from utils import data_manager
 
 reload(guides_manager) 
 reload(basic_structure)
+reload(data_manager)
 
 
 class AutoRig(object):
@@ -20,10 +22,11 @@ class AutoRig(object):
         Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
         """
 
+        data_manager.DataExport().new_build()
+
         self.basic_structure()
         self.make_rig()
         self.label_joints()
-        # self.delete_unused_nodes()
         self.hide_connections()
         
 
