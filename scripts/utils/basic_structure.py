@@ -34,6 +34,7 @@ def create_basic_structure():
     cmds.parent(masterwalk_node[0], character_ctl)
     data_manager.DataExport().append_data("basic_structure",
                             {
+                                "rig_GRP" : nodes[1],
                                 "masterwalk_ctl" : masterwalk_ctl,
                                 "character_ctl" : character_ctl
                             }
