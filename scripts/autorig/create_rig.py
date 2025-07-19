@@ -5,9 +5,12 @@ from utils import guides_manager
 from utils import basic_structure
 from utils import data_manager
 
+from autorig import arm_module
+
 reload(guides_manager) 
 reload(basic_structure)
 reload(data_manager)
+reload(arm_module)
 
 
 class AutoRig(object):
@@ -44,7 +47,9 @@ class AutoRig(object):
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
-        pass
+        
+        arm_module.ArmModule().make("L")
+        arm_module.ArmModule().make("R")
 
     def label_joints(self):
 

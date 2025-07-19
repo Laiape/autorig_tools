@@ -4,6 +4,7 @@ import json
 import os
 
 GUIDES_PATH = "C:\GITHUB\guides"
+guides_node = "C_guides_GRP"
 
 def get_guides_info():
 
@@ -58,6 +59,7 @@ def get_guides_info():
             joint_matrices.append(cmds.xform(jnt, q=True, ws=True, m=True))
             joint_parent = cmds.listRelatives(jnt, parent=True)[0]
             joint_parents.append(joint_parent)
+            joint_children = cmds.listRelatives(jnt, children=True)
  
 
         if len(left_guides) != len(right_guides):
@@ -97,11 +99,13 @@ def get_guides_info():
     
 
     for i, guide in enumerate(joint_guides):
+        children = cmds.listRelatives(guide, allDescendents=True)
         key = guide[0] if isinstance(guide, list) else guide
         guides_data[guides_name][key] = {
             "joint_matrix": joint_matrices[i],
             "parent": joint_parents[i],
-            "isLocator": False,                     
+            "isLocator": False,
+            "children": list(reversed(children if children else [])),
     }
 
         
@@ -147,19 +151,15 @@ def load_guides_info(filePath=None):
 
     with open(final_path, "r") as input_file:
         guides_data = json.load(input_file)
-
-    
     
     if not cmds.ls("C_guides_GRP"):
 
-        guides_node = "C_guides_GRP"
-
-        guides_node = cmds.createNode("transform", name=guides_node, ss=True)
+        guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
 
         for guide, data in reversed(list(guides_data[name].items())):
                 
                 if "isLocator" in data and data["isLocator"]:
-                        locator = cmds.spaceLocator(name=guide.replace("Shape", "_LOC"))[0]
+                        locator = cmds.spaceLocator(name=guide.replace("LOCShape", "LOC"))[0]
                         cmds.xform(locator, ws=True, m=data["locator_position"])
                         cmds.parent(locator, guides_node)
 
@@ -192,5 +192,58 @@ def delete_guides():
     else:
         om.MGlobal.displayError(f"Guides group '{guides_group}' does not exist.")
 
+def get_guides(guide_export):
+
+    """
+    Get the guides from the scene based on the provided guide export data.
+    
+    Args:
+        guide_export (dict): The guide export data containing joint matrices and locator positions.
+        allDescendants (bool): Whether to include all descendants in the search.
+
+    Returns:
+        list: A list of guides found in the scene.
+    """
+
+
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    guides_path = os.path.join(relative_path, "guides")
+    final_path = os.path.join(guides_path, "test.guides") # Update this line
+
+    name = os.path.basename(final_path).split(".")[0]
+
+    if not os.path.exists(guides_path):
+
+        om.MGlobal.displayError("Guides path does not exist. Please create the guides first.")
+
+        return 
+    
+    else:
+
+        with open(final_path, "r") as input_file:
+            guides_data = json.load(input_file)
+            
+        if guide_export not in guides_data[name]:
+            om.MGlobal.displayError(f"Guide export '{guide_export}' not found in the guides data.")
+            return None
         
+        else:
+
+            chain = []
+
+            joint_exported = cmds.joint(name=guide_export, r=5)
+            cmds.xform(joint_exported, ws=True, m=guides_data[name][guide_export]["joint_matrix"])
+            cmds.makeIdentity(joint_exported, apply=True, r=True)
+            chain.append(joint_exported)
+
+            if "children" in guides_data[name][guide_export]:
+                for child in guides_data[name][guide_export]["children"]:
+                    child_joint = cmds.joint(name=child, r=5)
+                    cmds.xform(child_joint, ws=True, m=guides_data[name][child]["joint_matrix"])
+                    cmds.makeIdentity(child_joint, apply=True, r=True)
+                    chain.append(child_joint)
+
+            return chain
+
 

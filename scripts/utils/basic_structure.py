@@ -28,13 +28,16 @@ def create_basic_structure():
         if i != 0:
             cmds.parent(node, nodes[0])
 
+    skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
+    modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
     cmds.parent(character_node[0], nodes[2])
     cmds.parent(masterwalk_node[0], character_ctl)
     data_manager.DataExport().append_data("basic_structure",
                             {
-                                "rig_GRP" : nodes[1],
+                                "skel_GRP" : skel_grp,
+                                "modules_GRP" : modules_grp,
                                 "masterwalk_ctl" : masterwalk_ctl,
                                 "character_ctl" : character_ctl
                             }

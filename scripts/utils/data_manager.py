@@ -17,7 +17,6 @@ class DataExport:
         final_path = os.path.join(relative_path, "cache")   
         self.build_path = os.path.join(final_path, "cache.cache")
 
-        print(f"Build cache path set to: {self.build_path}")
 
     def new_build(self):
         """
@@ -26,7 +25,6 @@ class DataExport:
         with open(self.build_path, "w") as f:
             json.dump({}, f, indent=4)
         
-        print("New build cache initialized.")
 
     def clear_build(self):
         """
@@ -58,9 +56,6 @@ class DataExport:
         if module_name not in current_data:
             current_data[module_name] = {}
         current_data[module_name].update(data)
-
-        print(f"Data for module '{module_name}' updated in build cache.")
-
 
         with open(self.build_path, "w") as f:
             json.dump(current_data, f, indent=4)

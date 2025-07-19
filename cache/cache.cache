@@ -1,5 +1,7 @@
 {
     "basic_structure": {
+        "skel_GRP": "skel_GRP",
+        "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
         "character_ctl": "C_character_CTL"
     }

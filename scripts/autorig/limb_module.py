@@ -17,13 +17,9 @@ class LimbModule(object):
         self.complete_path = os.path.realpath(__file__)
         self.relative_path = self.complete_path.split("\scripts")[0]
         self.guides_path = os.path.join(self.relative_path, "guides", "character_guides.guides")
-        self.curves_path = os.path.join(self.relative_path, "curves", "arm_ctl.json")
+        self.curves_path = os.path.join(self.relative_path, "curves", "curves.json")
 
-        self.data_exporter = data_export.DataExport()
-
-        self.modules_grp = self.data_exporter.get_data("basic_structure", "modules_GRP")
-        self.skel_grp = self.data_exporter.get_data("basic_structure", "skel_GRP")
-        self.masterWalk_ctl = self.data_exporter.get_data("basic_structure", "masterWalk_CTL")
+        
 
         self.module = "Limb"
 
