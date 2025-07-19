@@ -27,6 +27,7 @@ def fk_constraint(joint, before_jnt, pair_blend):
         cmds.connectAttr(f"{mult_matrix_offset}.matrixSum", f"{joint}.offsetParentMatrix")
 
     if pair_blend != "None":
+        
         cmds.connectAttr(f"{joint_ctl}.rotate", f"{pair_blend}.inRotate2", force=True)
         cmds.connectAttr(f"{joint_grp}.translate", f"{pair_blend}.inTranslate2", force=True)
 

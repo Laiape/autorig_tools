@@ -142,5 +142,12 @@ class ArmModule(object):
 
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_armIkControllers_GRP", ss=True, p=self.controllers_grp)
 
-            
+        self.ik_wrist_nodes, self.ik_wrist_ctl = curve_tool.create_controller(name=f"{self.side}_armIkWrist", offset=["GRP", "SPC"])
+        cmds.parent(self.ik_wrist_nodes[0], ik_controllers_trn)
+        cmds.matchTransform(self.ik_wrist_nodes[0], self.arm_chain[-1], pos=True, rot=True)
+
+        reverse_node = cmds.createNode("reverse", name=f"{self.side}_armIkFK_REV", ss=True)
+        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{reverse_node}.inputX")
+        cmds.connectAttr(f"{reverse_node}.outputX", f"{ik_controllers_trn}.visibility")
+        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{fk_controllers_trn}.visibility")
 
