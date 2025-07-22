@@ -26,12 +26,12 @@ def get_curves_info():
         side = curve.split("_")[0]
         names = curve.split("_")[1]
         name = f"{side}_{names}"
-        override_color = None
 
         sel = om.MSelectionList()
         sel.add(curve)
         dag = sel.getDagPath(0)
         curve_fn = om.MFnNurbsCurve(dag)
+        print(curve_fn)
 
         cvs = []
         for i in range(curve_fn.numCVs):
@@ -51,8 +51,8 @@ def get_curves_info():
             "controlPoints": cvs,
             "degree": degree,
             "knots": list(knots),
-            "overrideEnabled": override_enabled,
-            "overrideColor": override_color,
+            "overrideEnabled": int(override_enabled),
+            "overrideColor": int(override_color) if override_color is not None else None,
             "form": form,
             "alwaysDrawOnTop": draw_always_on_top
     }

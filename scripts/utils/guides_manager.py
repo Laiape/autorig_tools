@@ -205,7 +205,6 @@ def get_guides(guide_export):
         list: A list of guides found in the scene.
     """
 
-
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     guides_path = os.path.join(relative_path, "guides")
@@ -230,20 +229,26 @@ def get_guides(guide_export):
         
         else:
 
-            chain = []
+            if guides_data[name][guide_export]["isLocator"] != True:
+                chain = []
 
-            joint_exported = cmds.joint(name=guide_export, r=5)
-            cmds.xform(joint_exported, ws=True, m=guides_data[name][guide_export]["joint_matrix"])
-            cmds.makeIdentity(joint_exported, apply=True, r=True)
-            chain.append(joint_exported)
+                joint_exported = cmds.joint(name=guide_export, r=5)
+                cmds.xform(joint_exported, ws=True, m=guides_data[name][guide_export]["joint_matrix"])
+                cmds.makeIdentity(joint_exported, apply=True, r=True)
+                chain.append(joint_exported)
 
-            if "children" in guides_data[name][guide_export]:
-                for child in guides_data[name][guide_export]["children"]:
-                    child_joint = cmds.joint(name=child, r=5)
-                    cmds.xform(child_joint, ws=True, m=guides_data[name][child]["joint_matrix"])
-                    cmds.makeIdentity(child_joint, apply=True, r=True)
-                    chain.append(child_joint)
+                if "children" in guides_data[name][guide_export]:
+                    for child in guides_data[name][guide_export]["children"]:
+                        child_joint = cmds.joint(name=child, r=5)
+                        cmds.xform(child_joint, ws=True, m=guides_data[name][child]["joint_matrix"])
+                        cmds.makeIdentity(child_joint, apply=True, r=True)
+                        chain.append(child_joint)
 
-            return chain
+                return chain
+            
+            elif guides_data[name][guide_export]["isLocator"] == True:
+                locator = cmds.spaceLocator(name=guide_export.replace("LOCShape", "LOC"))[0]
+                cmds.xform(locator, ws=True, m=guides_data[name][guide_export]["locator_position"])
+                return locator
 
 

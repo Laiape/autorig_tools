@@ -32,6 +32,9 @@ def create_basic_structure():
     modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
+    cmds.addAttr(masterwalk_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+    cmds.setAttr(f"{masterwalk_ctl}.EXTRA_ATTRIBUTES", lock=True, keyable=False)
+    cmds.addAttr(masterwalk_ctl, longName="globalScale", attributeType="float", defaultValue=1, minValue=0.01, keyable=True)
     cmds.parent(character_node[0], nodes[2])
     cmds.parent(masterwalk_node[0], character_ctl)
     data_manager.DataExport().append_data("basic_structure",
