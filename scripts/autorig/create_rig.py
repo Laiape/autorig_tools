@@ -106,6 +106,7 @@ class AutoRig(object):
             if node not in skin_clusters:
                 cmds.connectAttr(float_math + ".outFloat", node + ".isHistoricallyInteresting", force=True)
 
+        cmds.delete(float_math)
         print("Connections hidden successfully.")
 
     

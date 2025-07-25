@@ -47,6 +47,9 @@ class ArmModule(object):
         self.ik_setup()
         self.fk_stretch()
         self.soft_ik()
+        self.bendy()
+        self.bendy_callback(self.upper_segment_crv, "Upper")
+        self.bendy_callback(self.lower_segment_crv, "Lower")
 
     def lock_attributes(self, ctl, attrs):
 
@@ -156,6 +159,7 @@ class ArmModule(object):
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         cmds.matchTransform(self.pv_nodes[0], self.arm_chain[1], pos=True, rot=True)
+        cmds.select(self.pv_nodes[0])
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
@@ -193,6 +197,8 @@ class ArmModule(object):
         mid_point_to_elbow_point = mid_point + mid_point_to_elbow_vec_scaled
 
         cmds.xform(self.pv_nodes[0], translation=mid_point_to_elbow_point)
+        cmds.select(self.pv_nodes[0])
+        cmds.move(0,0,-15, r=True, ws=True, os=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
@@ -270,8 +276,6 @@ class ArmModule(object):
 
         self.soft_trn = cmds.createNode("transform", name=f"{self.side}_armSoft_TRN", p=self.soft_off)
         cmds.matchTransform(self.soft_trn, self.arm_chain[-1], pos=True)
-
-
 
         nodes_to_create = {
         f"{self.side}_armDistanceToControl_DBT": ("distanceBetween", None),  # 0
@@ -389,4 +393,271 @@ class ArmModule(object):
 
         cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{self.ik_wrist_ctl}.rotate", f"{self.ik_chain[-1]}.rotate")
-        cmds.parentConstraint(self.ik_root_ctl, self.ik_chain[0], maintainOffset=True)
+        cmds.parentConstraint(self.ik_root_ctl, self.ik_chain[0], maintainOffset=False)
+
+    def bendy(self):
+
+        """
+
+        Calculate the bendy nature of the arm module.
+        This method is a placeholder for future implementation.
+
+        """
+        
+        upper_pos = cmds.xform(self.arm_chain[0], q=True, ws=True, t=True)
+        mid_pos = cmds.xform(self.arm_chain[1], q=True, ws=True, t=True)
+        lower_pos = cmds.xform(self.arm_chain[2], q=True, ws=True, t=True)
+
+        self.bendy_trn = cmds.createNode("transform", name=f"{self.side}_armBendy_GRP", ss=True, p=self.module_trn)
+
+        self.upper_segment_crv = cmds.curve(name=f"{self.side}_armUpperSegment_CRV", d=1, p=[upper_pos, mid_pos, mid_pos])
+        self.lower_segment_crv = cmds.curve(name=f"{self.side}_armLowerSegment_CRV", d=1, p=[mid_pos, mid_pos, lower_pos])
+        self.degree_2_crv = cmds.attachCurve(self.upper_segment_crv, self.lower_segment_crv, name=f"{self.side}_armDegree2_CRV", ch=0, rpo=0, kmk=1, m=0, bb=0.5, bki=0, p=0.1)
+        cmds.delete(f"{self.degree_2_crv[0]}.cv[2]")
+        cmds.parent(self.degree_2_crv[0], self.bendy_trn)
+        cmds.parent(self.upper_segment_crv, self.bendy_trn)
+        cmds.parent(self.lower_segment_crv, self.bendy_trn)
+
+        #Create decompose nodes to connect the arm joints to the curves
+        decompose_shoulder = cmds.createNode("decomposeMatrix", name=f"{self.side}_armShoulderDecompose_DCM", ss=True)
+        cmds.connectAttr(f"{self.arm_chain[0]}.worldMatrix[0]", f"{decompose_shoulder}.inputMatrix")
+        decompose_elbow = cmds.createNode("decomposeMatrix", name=f"{self.side}_armElbowDecompose_DCM", ss=True)
+        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{decompose_elbow}.inputMatrix")
+        decompose_wrist = cmds.createNode("decomposeMatrix", name=f"{self.side}_armWristDecompose_DCM", ss=True)
+        cmds.connectAttr(f"{self.arm_chain[2]}.worldMatrix[0]", f"{decompose_wrist}.inputMatrix")
+
+        cmds.connectAttr(f"{decompose_shoulder}.outputTranslate", f"{self.upper_segment_crv}.controlPoints[0]")
+        cmds.connectAttr(f"{decompose_elbow}.outputTranslate", f"{self.upper_segment_crv}.controlPoints[1]")
+        cmds.connectAttr(f"{decompose_wrist}.outputTranslate", f"{self.upper_segment_crv}.controlPoints[2]")
+        cmds.connectAttr(f"{decompose_elbow}.outputTranslate", f"{self.lower_segment_crv}.controlPoints[0]")
+        cmds.connectAttr(f"{decompose_wrist}.outputTranslate", f"{self.lower_segment_crv}.controlPoints[1]")
+        cmds.connectAttr(f"{decompose_wrist}.outputTranslate", f"{self.lower_segment_crv}.controlPoints[2]") 
+
+        # Create roll joints and IK handles for the arm
+        self.no_roll_jnt = cmds.joint(name=f"{self.side}_armNoRollUpper_JNT")
+        self.no_roll_end_jnt = cmds.joint(name=f"{self.side}_armNoRollEndUpper_JNT")
+        cmds.select(clear=True)
+        self.roll_jnt = cmds.joint(name=f"{self.side}_armRollUpper_JNT")
+        cmds.parent(self.roll_jnt, self.no_roll_jnt)
+        cmds.matchTransform(self.no_roll_jnt, self.arm_chain[0], pos=True, rot=True)
+        cmds.makeIdentity(self.no_roll_jnt, apply=True, translate=True, rotate=True, scale=True, normal=False)
+        cmds.makeIdentity(self.no_roll_end_jnt, apply=True, translate=True, rotate=True, scale=True, normal=False)
+        cmds.matchTransform(self.no_roll_end_jnt, self.arm_chain[1], pos=True, rot=True)
+        self.roll_end_jnt = cmds.joint(name=f"{self.side}_armRollEndUpper_JNT")
+        cmds.matchTransform(self.roll_end_jnt, self.arm_chain[1], pos=True, rot=True)
+        cmds.makeIdentity(self.roll_end_jnt, apply=True, translate=True, rotate=True, scale=True, normal=False)
+        cmds.parent(self.no_roll_jnt, self.bendy_trn)
+
+
+        no_roll_hdl = cmds.ikHandle(name=f"{self.side}_armNoRollUpper_HDL", startJoint=self.no_roll_jnt, endEffector=self.no_roll_end_jnt, solver="ikSCsolver")[0]
+        roll_hdl = cmds.ikHandle(name=f"{self.side}_armRollUpper_HDL", startJoint=self.roll_jnt, endEffector=self.roll_end_jnt, solver="ikSCsolver")[0]
+        
+        cmds.pointConstraint(self.arm_chain[1], no_roll_hdl, maintainOffset=False)
+        cmds.parentConstraint(self.arm_chain[1], roll_hdl, maintainOffset=False)
+        
+        cmds.parent(no_roll_hdl, self.bendy_trn)
+        cmds.parent(roll_hdl, self.bendy_trn)
+
+        lower_roll_offset_trn = cmds.createNode("transform", name=f"{self.side}_armRollLowerOffset_TRN", ss=True, p=self.bendy_trn)
+        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{lower_roll_offset_trn}.offsetParentMatrix")
+        self.lower_roll_jnt = cmds.joint(name=f"{self.side}_armRollLower_JNT")
+        cmds.parent(self.lower_roll_jnt, lower_roll_offset_trn)
+        lower_roll_end_jnt = cmds.joint(name=f"{self.side}_armRollEndLower_JNT")
+        cmds.matchTransform(lower_roll_end_jnt, self.arm_chain[2], pos=True, rot=True)
+
+        lower_roll_hdl = cmds.ikHandle(name=f"{self.side}_armRollLower_HDL", startJoint=self.lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
+        cmds.parentConstraint(self.arm_chain[2], lower_roll_hdl, maintainOffset=False)
+        cmds.parent(lower_roll_hdl, self.bendy_trn)
+
+    def bendy_callback(self, crv, name):
+
+        """
+        Create bendy joints and motion paths for the arm.
+        
+        """
+        #Bendy setup
+        bendy_trn = cmds.createNode("transform", name=f"{self.side}_armBendy{name}_TRN", ss=True, p=self.bendy_trn)
+        
+        bendy_jnts = []
+
+        for i, part in enumerate(["Hook", "Mid", "Tip"]):   
+
+            cmds.select(clear=True)
+            bendy_jnt = cmds.joint(name=f"{self.side}_armBendy{part}{name}_JNT")
+            mtp = cmds.createNode("motionPath", name=f"{self.side}_armBendy{part}{name}_MTP", ss=True)
+            cmds.setAttr(f"{mtp}.worldUpType", 2)
+            cmds.setAttr(f"{mtp}.frontAxis", 0)
+            cmds.setAttr(f"{mtp}.upAxis", 1)
+            if self.side == "R":
+                cmds.setAttr(f"{mtp}.inverseFront", 1)
+            cmds.connectAttr(f"{crv}.worldSpace[0]", f"{mtp}.geometryPath")
+            float_constant = cmds.createNode("floatConstant", name=f"{self.side}_armBendy{part}{name}_FLT", ss=True)
+            float_math = cmds.createNode("floatMath", name=f"{self.side}_armBendy{part}{name}_FLM", ss=True)
+
+            cmds.setAttr(f"{float_math}.operation", 2)  # Set operation to 'Divide'
+            
+            if i == 0:
+                cmds.setAttr(f"{float_constant}.inFloat", 0.01)
+            elif i == 1:
+                cmds.setAttr(f"{float_constant}.inFloat", 0.5)
+            else:
+                cmds.setAttr(f"{float_constant}.inFloat", 0.99)
+
+            cmds.connectAttr(f"{float_constant}.outFloat", f"{mtp}.uValue")
+            
+            cmds.connectAttr(f"{float_constant}.outFloat", f"{float_math}.floatB")
+            if name == "Upper":
+                cmds.connectAttr(f"{self.roll_jnt}.rotateX", f"{float_math}.floatA")
+                cmds.connectAttr(f"{self.no_roll_jnt}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
+            else:
+                cmds.connectAttr(f"{self.lower_roll_jnt}.rotateX", f"{float_math}.floatA")
+                cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
+            cmds.connectAttr(f"{float_math}.outFloat", f"{mtp}.frontTwist")
+
+            cmds.connectAttr(f"{mtp}.rotate", f"{bendy_jnt}.rotate")
+            cmds.connectAttr(f"{mtp}.allCoordinates", f"{bendy_jnt}.translate")
+
+            cmds.parent(bendy_jnt, bendy_trn)
+            bendy_jnts.append(bendy_jnt)
+
+        bendy_nodes, bendy_ctl = curve_tool.create_controller(name=f"{self.side}_armBendy{name}", offset=["GRP"])
+        self.lock_attributes(bendy_ctl, ["visibility"])
+        cmds.parent(bendy_nodes[0], self.controllers_grp)
+        cmds.connectAttr(f"{bendy_jnts[1]}.worldMatrix[0]", f"{bendy_nodes[0]}.offsetParentMatrix")
+        cmds.select(clear=True)
+        bendy_jnt = cmds.joint(name=f"{self.side}_armBendy{name}_JNT")
+        cmds.connectAttr(f"{bendy_ctl}.worldMatrix[0]", f"{bendy_jnt}.offsetParentMatrix")
+        cmds.parent(bendy_jnt, bendy_trn)
+
+        self.bendy_bezier = cmds.curve(n=f"{self.side}_ArmBendyBezier{name}_CRV",d=1,p=[cmds.xform(bendy_jnts[0], q=True, ws=True, t=True),cmds.xform(bendy_jnt, q=True, ws=True, t=True),cmds.xform(bendy_jnts[2], q=True, ws=True, t=True)])
+        self.bendy_bezier = cmds.rebuildCurve(self.bendy_bezier, rpo=1, rt=0, end=1, kr=0, kep=1, kt=0, fr=0, s=2, d=3, tol=0.01, ch=False)
+        self.bendy_bezier_shape = cmds.rename(cmds.listRelatives(self.bendy_bezier, s=True), f"{self.side}_BendyBezier{name}_CRVShape")
+
+        self.bendy_bezier_shape = cmds.listRelatives(self.bendy_bezier, s=True)[0]
+        cmds.select(self.bendy_bezier_shape)
+        cmds.nurbsCurveToBezier()
+
+        cmds.select(f"{self.bendy_bezier[0]}.cv[6]", f"{self.bendy_bezier[0]}.cv[0]")
+        cmds.bezierAnchorPreset(p=2)
+        cmds.select(f"{self.bendy_bezier[0]}.cv[3]")
+        cmds.bezierAnchorPreset(p=1)
+       
+        cmds.parent(self.bendy_bezier, bendy_trn)
+        bendy_skin_cluster = cmds.skinCluster(bendy_jnts[0], bendy_jnt, bendy_jnts[-1], self.bendy_bezier,n=f"{self.side}_armBendyBezier{name}_SKIN")
+
+        cmds.skinPercent(bendy_skin_cluster[0], f"{self.bendy_bezier[0]}.cv[0]", transformValue=[bendy_jnts[0], 1])
+        cmds.skinPercent(bendy_skin_cluster[0], f"{self.bendy_bezier[0]}.cv[2]", transformValue=[bendy_jnt, 1])
+        cmds.skinPercent(bendy_skin_cluster[0], f"{self.bendy_bezier[0]}.cv[3]", transformValue=[bendy_jnt, 1])
+        cmds.skinPercent(bendy_skin_cluster[0], f"{self.bendy_bezier[0]}.cv[4]", transformValue=[bendy_jnt, 1])
+        cmds.skinPercent(bendy_skin_cluster[0], f"{self.bendy_bezier[0]}.cv[6]", transformValue=[bendy_jnts[2], 1])
+
+        # Twist setup
+        duplicate_bendy_crv = cmds.duplicate(self.bendy_bezier)
+        bendy_off_curve = cmds.offsetCurve(duplicate_bendy_crv, ch=True, rn=False, cb=2, st=True, cl=True, cr=0, d=1.5, tol=0.01, sd=0, ugn=False, name=f"{self.side}_armBendyBezierOffset{name}_CRV", normal=[0, 0, 1])
+        upper_bendy_shape_org = cmds.listRelatives(self.bendy_bezier, allDescendents=True)[-1]
+        
+        cmds.connectAttr(f"{upper_bendy_shape_org}.worldSpace[0]", f"{bendy_off_curve[1]}.inputCurve", f=True)
+        cmds.setAttr(f"{bendy_off_curve[1]}.useGivenNormal", 1)
+        cmds.setAttr(f"{bendy_off_curve[1]}.normal", 0, 0, 1, type="double3")
+        cmds.parent(bendy_off_curve[0], bendy_trn)
+        self.upper_bendy_off_curve_shape = cmds.rename(cmds.listRelatives(bendy_off_curve[0], s=True), f"{self.side}_armBendyBezierOffset{name}_CRVShape")
+        cmds.delete(duplicate_bendy_crv)
+
+        upper_bendy_off_skin_cluster = cmds.skinCluster(bendy_jnts[0], bendy_jnt, bendy_jnts[2], bendy_off_curve[0], tsb=True, n=f"{self.side}_armBezierOffset{name}_SKIN")
+
+        cmds.skinPercent(upper_bendy_off_skin_cluster[0], f"{bendy_off_curve[0]}.cv[0]", transformValue=[bendy_jnts[0], 1])
+        cmds.skinPercent(upper_bendy_off_skin_cluster[0], f"{bendy_off_curve[0]}.cv[2]", transformValue=[bendy_jnt, 1])
+        cmds.skinPercent(upper_bendy_off_skin_cluster[0], f"{bendy_off_curve[0]}.cv[3]", transformValue=[bendy_jnt, 1])
+        cmds.skinPercent(upper_bendy_off_skin_cluster[0], f"{bendy_off_curve[0]}.cv[4]", transformValue=[bendy_jnt, 1])
+        cmds.skinPercent(upper_bendy_off_skin_cluster[0], f"{bendy_off_curve[0]}.cv[6]", transformValue=[bendy_jnts[2], 1])
+
+        aim_helper = cmds.createNode("transform", name=f"{self.side}_arm{name}AimHelper_TRN", ss=True, p=bendy_trn)
+        cmds.setAttr(f"{aim_helper}.inheritsTransform", 0)
+
+        skinning_jnts = []
+        mpas = []
+        
+        for i, value in enumerate([0, 0.25, 0.5, 0.75, 1]):
+            
+            cmds.select(clear=True)
+            twist_jnt = cmds.joint(name=f"{self.side}_arm{name}Twist0{i}_JNT")
+            cmds.parent(twist_jnt, self.skeleton_grp)
+            mpa = cmds.createNode("motionPath", name=f"{self.side}_arm{name}Twist0{i}_MPA", ss=True)
+            cmds.setAttr(f"{mpa}.frontAxis", 1)
+            cmds.setAttr(f"{mpa}.upAxis", 2)
+            cmds.setAttr(f"{mpa}.worldUpType", 4)
+            cmds.setAttr(f"{mpa}.fractionMode", 1)
+            cmds.setAttr(f"{mpa}.follow", 1)
+            cmds.setAttr(f"{mpa}.uValue", value)
+            cmds.connectAttr(f"{self.bendy_bezier[0]}.worldSpace[0]", f"{mpa}.geometryPath")
+
+            if i == 3:
+                cmds.connectAttr(f"{mpa}.allCoordinates", f"{aim_helper}.translate")
+
+            skinning_jnts.append(twist_jnt)
+            mpas.append(mpa)
+
+        aim_transform = cmds.createNode("transform", name=f"{self.side}_arm{name}Aim_TRN", ss=True, p=bendy_trn)
+        aim_trns = []
+
+        for i, value in enumerate([0, 0.25, 0.5, 0.75, 1]):
+
+            aim_trn = cmds.createNode("transform", n=f"{self.side}_arm{name}Twist0{i}Aim_TRN")
+            mpa = cmds.createNode("motionPath", n=f"{self.side}_arm{name}Twist0{i}Aim_MPT", ss=True)
+            cmds.setAttr(f"{mpa}.fractionMode", True)
+            cmds.setAttr(f"{mpa}.uValue", value)
+            cmds.connectAttr(f"{mpa}.allCoordinates", f"{aim_trn}.translate")
+            cmds.connectAttr(f"{bendy_off_curve[0]}.worldSpace[0]", f"{mpa}.geometryPath")
+            cmds.parent(aim_trn, aim_transform)
+            aim_trns.append(aim_trn)
+            cmds.setAttr(f"{aim_trn}.inheritsTransform", 0)
+
+        
+        if self.side == "L":
+            primary_upvectorX = 1
+            secondary_upvectorZ =-1
+            reverse_upvectorX = -1
+
+        elif self.side == "R":
+            primary_upvectorX = -1
+            secondary_upvectorZ = 1
+            reverse_upvectorX = 1
+
+        for i, jnt in enumerate(skinning_jnts):
+            
+            compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_arm{name}Twist0{i}_CM", ss=True)
+            aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_arm{name}Twist0{i}_AMT", ss=True)
+            cmds.connectAttr(f"{mpas[i]}.allCoordinates", f"{compose_matrix}.inputTranslate")
+            cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{aim_matrix}.inputMatrix")
+            cmds.connectAttr(f"{aim_trns[i]}.worldMatrix[0]", f"{aim_matrix}.secondaryTargetMatrix")
+            cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{jnt}.offsetParentMatrix")
+
+            cmds.setAttr(f"{aim_matrix}.primaryInputAxisY", 0)
+            cmds.setAttr(f"{aim_matrix}.primaryInputAxisZ", 0)
+            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisX", 0)
+            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 0)
+            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", secondary_upvectorZ)
+            cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
+            cmds.setAttr(f"{aim_matrix}.secondaryMode", 1)
+
+            if i != 4:
+                cmds.connectAttr(f"{skinning_jnts[i+1]}.worldMatrix[0]", f"{aim_matrix}.primaryTargetMatrix")
+                cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", primary_upvectorX)
+
+            else:
+                cmds.connectAttr(f"{aim_helper}.worldMatrix[0]", f"{aim_matrix}.primaryTargetMatrix")
+                cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", reverse_upvectorX)
+
+
+    def curvature(self):
+
+        """
+        
+        Calculate the curvature of the arm module.
+        This method is a placeholder for future implementation.
+
+        """
+        
+        # Placeholder for curvature calculation
+        pass
+
