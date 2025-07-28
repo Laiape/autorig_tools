@@ -196,9 +196,9 @@ class ArmModule(object):
         mid_point_to_elbow_vec_scaled = mid_point_to_elbow_vec * 2
         mid_point_to_elbow_point = mid_point + mid_point_to_elbow_vec_scaled
 
-        cmds.xform(self.pv_nodes[0], translation=mid_point_to_elbow_point)
+        cmds.matchTransform(self.pv_nodes[0], self.arm_chain[1], pos=True, rot=True, scl=False)
         cmds.select(self.pv_nodes[0])
-        cmds.move(0,0,-15, r=True, ws=True, os=True)
+        # cmds.move(0,-15,0, r=True, ws=True, os=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 

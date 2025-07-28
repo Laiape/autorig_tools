@@ -6,11 +6,13 @@ from utils import basic_structure
 from utils import data_manager
 
 from autorig import arm_module
+from autorig import spine_module
 
 reload(guides_manager) 
 reload(basic_structure)
 reload(data_manager)
 reload(arm_module)
+reload(spine_module)
 
 
 class AutoRig(object):
@@ -50,6 +52,8 @@ class AutoRig(object):
         
         arm_module.ArmModule().make("L")
         arm_module.ArmModule().make("R")
+        spine_module.SpineModule().make("C")
+
 
     def label_joints(self):
 
