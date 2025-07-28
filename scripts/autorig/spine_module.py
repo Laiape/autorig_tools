@@ -107,10 +107,13 @@ class SpineModule(object):
         self.lock_attributes(self.body_ctl, ["sx", "sy", "sz", "v"])
         self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC"])
         self.lock_attributes(self.local_hip_ctl, ["sx", "sy", "sz", "v"])
+        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC"])
+        self.lock_attributes(self.local_chest_ctl, ["sx", "sy", "sz", "v"])
         cmds.matchTransform(self.body_nodes[0], self.spine_chain[0], pos=True, rot=True, scl=False)
         cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{self.local_hip_nodes[0]}.offsetParentMatrix")
         cmds.parent(self.body_nodes[0], self.controllers_grp)
         cmds.parent(self.local_hip_nodes[0], self.controllers_grp)
+        cmds.parent(self.local_chest_nodes[0], self.controllers_grp)
 
         # Create the local hip joint
         cmds.select(clear=True)
@@ -127,6 +130,7 @@ class SpineModule(object):
         local_hip_skinning_jnt = cmds.joint(name=f"{self.side}_localHipSkinning_JNT")
         cmds.connectAttr(f"{local_hip_jnt}.worldMatrix[0]", f"{local_hip_skinning_jnt}.offsetParentMatrix")
         cmds.parent(local_hip_skinning_jnt, self.skeleton_grp)
+
         
 
         self.spine_nodes = []
@@ -177,6 +181,22 @@ class SpineModule(object):
 
         cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrixEnd")
+        decompose_rotation_node_local_chest = cmds.createNode("decomposeMatrix", name=f"{self.side}_localChestRotation_DCM")
+        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation_node_local_chest}.inputMatrix")
+        decompose_translation_node_local_chest = cmds.createNode("decomposeMatrix", name=f"{self.side}_localChestTranslation_DCM")
+        cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{decompose_translation_node_local_chest}.inputMatrix")
+        compose_matrix_local_chest = cmds.createNode("composeMatrix", name=f"{self.side}_localChest_CMP")
+        cmds.connectAttr(f"{decompose_translation_node_local_chest}.outputTranslate", f"{compose_matrix_local_chest}.inputTranslate")
+        cmds.connectAttr(f"{decompose_rotation_node_local_chest}.outputRotate", f"{compose_matrix_local_chest}.inputRotate")
+        cmds.connectAttr(f"{compose_matrix_local_chest}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+        cmds.select(clear=True)
+        local_chest_jnt = cmds.joint(name=f"{self.side}_localChest_JNT")
+        cmds.parent(local_chest_jnt, self.module_trn)
+        cmds.connectAttr(f"{self.local_chest_nodes[0]}.worldMatrix[0]", f"{local_chest_jnt}.offsetParentMatrix")
+        cmds.select(clear=True)
+        local_chest_skinning_jnt = cmds.joint(name=f"{self.side}_localChestSkinning_JNT")
+        cmds.connectAttr(f"{local_chest_jnt}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix")
+        cmds.parent(local_chest_skinning_jnt, self.skeleton_grp)
 
         for i , ctl in enumerate(self.spine_ctls):
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
