@@ -13,7 +13,7 @@ def get_curves_info():
     This information is stored in a dictionary with the curve name as the key.
     """
 
-    all_curves = cmds.ls(type="nurbsCurve")
+    all_curves = cmds.ls("*_CTL")
 
     print(f"Found {all_curves} curves in the scene.")
 
@@ -31,7 +31,6 @@ def get_curves_info():
         sel.add(curve)
         dag = sel.getDagPath(0)
         curve_fn = om.MFnNurbsCurve(dag)
-        print(curve_fn)
 
         cvs = []
         for i in range(curve_fn.numCVs):
@@ -45,14 +44,16 @@ def get_curves_info():
         override_enabled = cmds.getAttr(f"{curve}.overrideEnabled")
         if override_enabled:
             override_color = cmds.getAttr(f"{curve}.overrideColor")
+        else:
+            override_color = None
 
         curves_info[curve] = {
             "name": name,
             "controlPoints": cvs,
             "degree": degree,
             "knots": list(knots),
-            "overrideEnabled": int(override_enabled),
-            "overrideColor": int(override_color) if override_color is not None else None,
+            "overrideEnabled": override_enabled,
+            "overrideColor": override_color if override_color is not None else None,
             "form": form,
             "alwaysDrawOnTop": draw_always_on_top
     }
@@ -108,7 +109,7 @@ def create_controller(name, offset=["GRP"]):
     
     else:
 
-        controller = cmds.circle(name=f"{name}_CTL", ch=False)[0]
+        controller = cmds.circle(name=f"{name}_CTL", ch=False, r=3, nr=[0, 1, 0])[0]
 
     cmds.parent(controller, offset_grps[-1])
 
@@ -128,5 +129,58 @@ def mirror_controllers():
             trans = cmds.xform(ctl_offset, translation=True)
             cmds.xform(ctl_offset, translation=(-trans[0], trans[1], trans[2]))
             cmds.makeIdentity(ctl_offset, apply=True, t=1, r=1, s=1, n=0, pn=1)
+
+def scale_selected_controller(value):
+
+    """
+    Scales the selected controller to a specific size.
+    The user is prompted to enter the desired scale value.
+    """
+
+    selected = cmds.ls(selection=True, type="nurbsCurve")
+
+    if not selected:
+        om.MGlobal.displayError("Please select a controller to scale.")
+        return
+    
+    if selected.endswith("_CTL"):
+
+        ctl = selected[0]
+        cvs = cmds.ls(f"{ctl}.cv[*]", flatten=True)
+        if not cvs:
+            om.MGlobal.displayError("No CVs found on the selected controller.")
+            return
+        
+        for cv in cvs:
+            cmds.scale(value, value, value, cv, relative=True, ocp=True)
+    
+    else:
+
+        om.MGlobal.displayError("Please select a controller with the suffix '_CTL'.")
+        return
+
+def scale_all_controllers(value):
+
+    """
+    Scales all controllers in the scene to a specific size.
+    The user is prompted to enter the desired scale value.
+    """
+
+    all_controllers = cmds.ls("*_CTL", type="nurbsCurve")
+
+    if not all_controllers:
+        om.MGlobal.displayError("No controllers found in the scene.")
+        return
+    
+    for controller in all_controllers:
+        cvs = cmds.ls(f"{controller}.cv[*]", flatten=True)
+        if not cvs:
+            om.MGlobal.displayError(f"No CVs found on the controller: {controller}.")
+            continue
+        
+        for cv in cvs:
+            cmds.scale(value, value, value, cv, relative=True, ocp=True)
+
+   
 
 

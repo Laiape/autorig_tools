@@ -38,6 +38,9 @@ class SpineModule(object):
         """
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_spineModule_GRP", ss=True, p=self.modules)
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleZ")
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_spineSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_spineControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
@@ -80,7 +83,7 @@ class SpineModule(object):
         num_joints = len(self.spine_chain)
         self.indices = [0, 1, num_joints // 2, num_joints - 2, num_joints - 1]
         positions = [cmds.xform(self.spine_chain[i], q=True, ws=True, t=True) for i in self.indices]
-        self.spine_crv = cmds.curve(n=f"{self.side}_spine_CRV", d=1, p=positions)
+        self.spine_crv = cmds.curve(n=f"{self.side}_spine_CRV", d=3, p=positions)
         spine_crv_shape = cmds.listRelatives(self.spine_crv, shapes=True)[0]
         cmds.rename(spine_crv_shape, f"{self.side}_spineShape_CRV")
         self.ik_handle = cmds.ikHandle(sj=self.spine_chain[0], ee=self.spine_chain[-1], name=f"{self.side}_spine_HDL", sol="ikSplineSolver", c=self.spine_crv, ccv=False)
@@ -345,6 +348,7 @@ class SpineModule(object):
             cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
             self.fk_joints.append(jnt)
             cmds.parent(jnt, fk_joints_grp)
+            cmds.setAttr(f"{jnt}.inheritsTransform", 0)
 
             skinning_jnt = cmds.duplicate(jnt, name=jnt.replace("FK_JNT", "Skinning_JNT"))[0]
             cmds.parent(skinning_jnt, self.skeleton_grp)

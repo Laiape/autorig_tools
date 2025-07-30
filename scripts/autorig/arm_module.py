@@ -38,6 +38,9 @@ class ArmModule(object):
         """
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_armModule_GRP", ss=True, p=self.modules)
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleZ")
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_armSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_armControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
@@ -159,7 +162,7 @@ class ArmModule(object):
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         cmds.matchTransform(self.pv_nodes[0], self.arm_chain[1], pos=True, rot=True)
-        cmds.select(self.pv_nodes[0])
+        
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
@@ -182,23 +185,17 @@ class ArmModule(object):
         cmds.setAttr(f"{self.ik_handle}.visibility", 0)
 
         cmds.connectAttr(f"{self.ik_wrist_ctl}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix")
-        cmds.xform(self.ik_handle, a=True, t=(0, 0, 0), ro=(0, 0, 0), s=(1, 1, 1))
+        self.float_constant_freeze = cmds.createNode("floatConstant", name=f"{self.side}_armFreeze_FC", ss=True)
+        cmds.setAttr(f"{self.float_constant_freeze}.inFloat", 0)
 
-        # Set up the pole vector constraint for the IK handle
-        arm_pos = om.MVector(cmds.xform(self.ik_chain[0], q=True, rp=True, ws=True))
-        elbow_pos = om.MVector(cmds.xform(self.ik_chain[1], q=True, rp=True, ws=True))
-        wrist_pos = om.MVector(cmds.xform(self.ik_chain[2], q=True, rp=True, ws=True))
+        for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
+            cmds.connectAttr(f"{self.float_constant_freeze}.outFloat", f"{self.ik_handle}.{attr}")
 
-        arm_to_wrist = wrist_pos - arm_pos
-        arm_to_wrist_scaled = arm_to_wrist / 2
-        mid_point = arm_pos + arm_to_wrist_scaled
-        mid_point_to_elbow_vec = elbow_pos - mid_point
-        mid_point_to_elbow_vec_scaled = mid_point_to_elbow_vec * 2
-        mid_point_to_elbow_point = mid_point + mid_point_to_elbow_vec_scaled
-
-        cmds.matchTransform(self.pv_nodes[0], self.arm_chain[1], pos=True, rot=True, scl=False)
         cmds.select(self.pv_nodes[0])
-        # cmds.move(0,-15,0, r=True, ws=True, os=True)
+        if self.side == "L":
+            cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
+        else:
+            cmds.move(0, 0, 20, relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
@@ -439,7 +436,7 @@ class ArmModule(object):
         cmds.select(clear=True)
         self.roll_jnt = cmds.joint(name=f"{self.side}_armRollUpper_JNT")
         cmds.parent(self.roll_jnt, self.no_roll_jnt)
-        cmds.matchTransform(self.no_roll_jnt, self.arm_chain[0], pos=True, rot=True)
+        cmds.connectAttr(f"{self.arm_chain[0]}.worldMatrix[0]", f"{self.no_roll_jnt}.offsetParentMatrix")
         cmds.makeIdentity(self.no_roll_jnt, apply=True, translate=True, rotate=True, scale=True, normal=False)
         cmds.makeIdentity(self.no_roll_end_jnt, apply=True, translate=True, rotate=True, scale=True, normal=False)
         cmds.matchTransform(self.no_roll_end_jnt, self.arm_chain[1], pos=True, rot=True)
@@ -452,22 +449,30 @@ class ArmModule(object):
         no_roll_hdl = cmds.ikHandle(name=f"{self.side}_armNoRollUpper_HDL", startJoint=self.no_roll_jnt, endEffector=self.no_roll_end_jnt, solver="ikSCsolver")[0]
         roll_hdl = cmds.ikHandle(name=f"{self.side}_armRollUpper_HDL", startJoint=self.roll_jnt, endEffector=self.roll_end_jnt, solver="ikSCsolver")[0]
         
-        cmds.pointConstraint(self.arm_chain[1], no_roll_hdl, maintainOffset=False)
-        cmds.parentConstraint(self.arm_chain[1], roll_hdl, maintainOffset=False)
+        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{no_roll_hdl}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{roll_hdl}.offsetParentMatrix")
+    
         
         cmds.parent(no_roll_hdl, self.bendy_trn)
         cmds.parent(roll_hdl, self.bendy_trn)
 
         lower_roll_offset_trn = cmds.createNode("transform", name=f"{self.side}_armRollLowerOffset_TRN", ss=True, p=self.bendy_trn)
-        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{lower_roll_offset_trn}.offsetParentMatrix")
         self.lower_roll_jnt = cmds.joint(name=f"{self.side}_armRollLower_JNT")
+        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{lower_roll_offset_trn}.offsetParentMatrix")
         cmds.parent(self.lower_roll_jnt, lower_roll_offset_trn)
         lower_roll_end_jnt = cmds.joint(name=f"{self.side}_armRollEndLower_JNT")
-        cmds.matchTransform(lower_roll_end_jnt, self.arm_chain[2], pos=True, rot=True)
+        
 
-        lower_roll_hdl = cmds.ikHandle(name=f"{self.side}_armRollLower_HDL", startJoint=self.lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
-        cmds.parentConstraint(self.arm_chain[2], lower_roll_hdl, maintainOffset=False)
-        cmds.parent(lower_roll_hdl, self.bendy_trn)
+        # lower_roll_hdl = cmds.ikHandle(name=f"{self.side}_armRollLower_HDL", startJoint=self.lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
+        # cmds.connectAttr(f"{self.arm_chain[-1]}.worldMatrix[0]", f"{lower_roll_hdl}.offsetParentMatrix")
+
+        for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
+
+            cmds.connectAttr(f"{self.float_constant_freeze}.outFloat", f"{no_roll_hdl}.{attr}")
+            cmds.connectAttr(f"{self.float_constant_freeze}.outFloat", f"{roll_hdl}.{attr}")
+            # cmds.connectAttr(f"{self.float_constant_freeze}.outFloat", f"{lower_roll_hdl}.{attr}")
+
+        # cmds.parent(lower_roll_hdl, self.bendy_trn)
 
     def bendy_callback(self, crv, name):
 
@@ -484,6 +489,7 @@ class ArmModule(object):
 
             cmds.select(clear=True)
             bendy_jnt = cmds.joint(name=f"{self.side}_armBendy{part}{name}_JNT")
+            cmds.setAttr(bendy_jnt + ".inheritsTransform", 0)
             mtp = cmds.createNode("motionPath", name=f"{self.side}_armBendy{part}{name}_MTP", ss=True)
             cmds.setAttr(f"{mtp}.worldUpType", 2)
             cmds.setAttr(f"{mtp}.frontAxis", 0)
@@ -553,12 +559,17 @@ class ArmModule(object):
 
         # Twist setup
         duplicate_bendy_crv = cmds.duplicate(self.bendy_bezier)
-        bendy_off_curve = cmds.offsetCurve(duplicate_bendy_crv, ch=True, rn=False, cb=2, st=True, cl=True, cr=0, d=1.5, tol=0.01, sd=0, ugn=False, name=f"{self.side}_armBendyBezierOffset{name}_CRV", normal=[0, 0, 1])
+
+        if self.side == "L":
+            normals = [0, 0, 1]
+        else:   
+            normals = [0, 0, -1]
+
+        bendy_off_curve = cmds.offsetCurve(duplicate_bendy_crv, ch=True, rn=False, cb=2, st=True, cl=True, cr=0, d=1.5, tol=0.01, sd=0, ugn=False, name=f"{self.side}_armBendyBezierOffset{name}_CRV", normal=normals)
         upper_bendy_shape_org = cmds.listRelatives(self.bendy_bezier, allDescendents=True)[-1]
         
         cmds.connectAttr(f"{upper_bendy_shape_org}.worldSpace[0]", f"{bendy_off_curve[1]}.inputCurve", f=True)
         cmds.setAttr(f"{bendy_off_curve[1]}.useGivenNormal", 1)
-        cmds.setAttr(f"{bendy_off_curve[1]}.normal", 0, 0, 1, type="double3")
         cmds.parent(bendy_off_curve[0], bendy_trn)
         self.upper_bendy_off_curve_shape = cmds.rename(cmds.listRelatives(bendy_off_curve[0], s=True), f"{self.side}_armBendyBezierOffset{name}_CRVShape")
         cmds.delete(duplicate_bendy_crv)
@@ -615,12 +626,12 @@ class ArmModule(object):
         
         if self.side == "L":
             primary_upvectorX = 1
-            secondary_upvectorZ =-1
+            secondary_upvectorY =1
             reverse_upvectorX = -1
 
         elif self.side == "R":
             primary_upvectorX = -1
-            secondary_upvectorZ = 1
+            secondary_upvectorY = -1
             reverse_upvectorX = 1
 
         for i, jnt in enumerate(skinning_jnts):
@@ -635,8 +646,8 @@ class ArmModule(object):
             cmds.setAttr(f"{aim_matrix}.primaryInputAxisY", 0)
             cmds.setAttr(f"{aim_matrix}.primaryInputAxisZ", 0)
             cmds.setAttr(f"{aim_matrix}.secondaryInputAxisX", 0)
-            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 0)
-            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", secondary_upvectorZ)
+            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", secondary_upvectorY)
+            cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", 0)
             cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
             cmds.setAttr(f"{aim_matrix}.secondaryMode", 1)
 

@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import maya.api.OpenMaya as om
 from importlib import reload
 
 from utils import guides_manager
@@ -7,12 +8,14 @@ from utils import data_manager
 
 from autorig import arm_module
 from autorig import spine_module
+from autorig import leg_module
 
 reload(guides_manager) 
 reload(basic_structure)
 reload(data_manager)
 reload(arm_module)
 reload(spine_module)
+reload(leg_module)
 
 
 class AutoRig(object):
@@ -33,6 +36,7 @@ class AutoRig(object):
         self.make_rig()
         self.label_joints()
         self.hide_connections()
+        self.inherit_transforms()
         
 
     def basic_structure(self):
@@ -49,10 +53,17 @@ class AutoRig(object):
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
-        
+        spine_module.SpineModule().make("C")
         arm_module.ArmModule().make("L")
         arm_module.ArmModule().make("R")
-        spine_module.SpineModule().make("C")
+        leg_module.LegModule().make("L")
+        leg_module.LegModule().make("R")
+
+        cmds.inViewMessage(
+    amg='Completed <hl>BIPED RIG</hl> build.',
+    pos='midCenter',
+    fade=True,
+    alpha=0.8)
 
 
     def label_joints(self):
@@ -112,6 +123,25 @@ class AutoRig(object):
 
         cmds.delete(float_math)
         print("Connections hidden successfully.")
+
+    def inherit_transforms(self):
+
+        """
+        Set the inherit transforms for the rig controls to ensure proper movement and rotation.
+        """
+
+        curves = cmds.ls("*CRV")
+
+        for crv in curves:
+           if "Shape" in crv:
+               continue
+           else:
+               try:
+                   cmds.setAttr(crv + ".inheritsTransform", 0)
+               except Exception as e:
+                   print(f"Error setting inherit transforms for {crv}: {e}")
+
+        print("Inherit transforms set successfully.")
 
     
     
