@@ -407,13 +407,20 @@ class ArmModule(object):
 
         self.bendy_trn = cmds.createNode("transform", name=f"{self.side}_armBendy_GRP", ss=True, p=self.module_trn)
 
-        self.degree_2_crv = cmds.curve(name=f"{self.side}_armDegree2_CRV", p=[upper_pos, mid_pos, mid_pos, lower_pos], d=1)
-        detached_curves = cmds.detachCurve(f"{self.degree_2_crv}.u[1]", ch=1, rpo=0)
+        self.upper_segment_crv = cmds.curve(name=f"{self.side}_armUpperSegment_CRV", d=1, p=[upper_pos, mid_pos, mid_pos])
+        self.lower_segment_crv = cmds.curve(name=f"{self.side}_armLowerSegment_CRV", d=1, p=[mid_pos, mid_pos, lower_pos])
+        self.degree_2_crv = cmds.attachCurve(self.upper_segment_crv, self.lower_segment_crv, name=f"{self.side}_armDegree2_CRV", ch=0, rpo=0, kmk=1, m=0, bb=0.5, bki=0, p=0.1)
+        cmds.delete(self.upper_segment_crv, self.lower_segment_crv)
+        detached_curves = cmds.detachCurve(f"{self.degree_2_crv[0]}.u[1]", ch=1, rpo=0)
         self.upper_segment_crv = detached_curves[0]
         self.lower_segment_crv = detached_curves[1]
+        self.upper_segment_crv = cmds.rename(self.upper_segment_crv, f"{self.side}_armUpperSegment_CRV")
+        self.lower_segment_crv = cmds.rename(self.lower_segment_crv, f"{self.side}_armLowerSegment_CRV")
+        self.lower_segment_crv = cmds.rebuildCurve(self.lower_segment_crv, ch=0, rpo=1, kcp=1,kr=0, d=1, end=1, name=f"{self.side}_armLowerSegment_CRV")[0]
+        cmds.delete(f"{self.degree_2_crv[0]}.cv[2]")
+        cmds.parent(self.degree_2_crv[0], self.bendy_trn)
         cmds.parent(self.upper_segment_crv, self.bendy_trn)
         cmds.parent(self.lower_segment_crv, self.bendy_trn)
-        cmds.parent(self.degree_2_crv, self.bendy_trn)
 
         #Create decompose nodes to connect the arm joints to the curves
         decompose_shoulder = cmds.createNode("decomposeMatrix", name=f"{self.side}_armShoulderDecompose_DCM", ss=True)
@@ -423,27 +430,19 @@ class ArmModule(object):
         decompose_wrist = cmds.createNode("decomposeMatrix", name=f"{self.side}_armWristDecompose_DCM", ss=True)
         cmds.connectAttr(f"{self.arm_chain[2]}.worldMatrix[0]", f"{decompose_wrist}.inputMatrix")
 
-        cmds.connectAttr(f"{decompose_shoulder}.outputTranslate", f"{self.degree_2_crv}.controlPoints[0]")
-        cmds.connectAttr(f"{decompose_elbow}.outputTranslate", f"{self.degree_2_crv}.controlPoints[1]")
-        cmds.connectAttr(f"{decompose_elbow}.outputTranslate", f"{self.degree_2_crv}.controlPoints[2]")
-        cmds.connectAttr(f"{decompose_wrist}.outputTranslate", f"{self.degree_2_crv}.controlPoints[3]")
-
-        # Create roll joints and IK handles for the arm
-        cmds.select(clear=True)
-        self.roll_jnt = cmds.joint(name=f"{self.side}_armRollUpper_JNT")
-        self.roll_end_jnt = cmds.joint(name=f"{self.side}_armRollEndUpper_JNT")
+        cmds.connectAttr(f"{decompose_shoulder}.outputTranslate", f"{self.degree_2_crv[0]}.controlPoints[0]")
+        cmds.connectAttr(f"{decompose_elbow}.outputTranslate", f"{self.degree_2_crv[0]}.controlPoints[1]")
+        cmds.connectAttr(f"{decompose_elbow}.outputTranslate", f"{self.degree_2_crv[0]}.controlPoints[2]")
+        cmds.connectAttr(f"{decompose_wrist}.outputTranslate", f"{self.degree_2_crv[0]}.controlPoints[3]")
 
         cmds.select(clear=True)
+        self.roll_jnt = cmds.joint(name=f"{self.side}_armRoll_JNT", ss=True)
+        roll_end_jnt = cmds.joint(name=f"{self.side}_armRollEnd_JNT", ss=True)
         cmds.connectAttr(f"{self.arm_chain[0]}.worldMatrix[0]", f"{self.roll_jnt}.offsetParentMatrix")
-        cmds.matchTransform(self.roll_end_jnt, self.arm_chain[1], pos=True, rot=True)
-        cmds.parent(self.roll_jnt, self.bendy_trn)
+        
 
-        roll_hdl = cmds.ikHandle(name=f"{self.side}_armRollUpper_HDL", startJoint=self.roll_jnt, endEffector=self.roll_end_jnt, solver="ikSCsolver")[0]
 
-        cmds.parent(roll_hdl, self.bendy_trn)
-        cmds.connectAttr(decompose_elbow + ".outputTranslate", f"{roll_hdl}.translate")
-        cmds.connectAttr(decompose_elbow + ".outputRotate", f"{roll_hdl}.rotate")
-
+        
 
     def bendy_callback(self, crv, name):
 
@@ -465,7 +464,7 @@ class ArmModule(object):
             cmds.setAttr(f"{mtp}.worldUpType", 2)
             cmds.setAttr(f"{mtp}.frontAxis", 0)
             cmds.setAttr(f"{mtp}.upAxis", 1)
-            cmds.setAttr(f"{mtp}.fractionMode", 1)
+            cmds.setAttr(f"{mtp}.fractionMode", True)
             if self.side == "R":
                 cmds.setAttr(f"{mtp}.inverseFront", 1)
             cmds.connectAttr(f"{crv}.worldSpace[0]", f"{mtp}.geometryPath")
@@ -485,12 +484,11 @@ class ArmModule(object):
             
             cmds.connectAttr(f"{float_constant}.outFloat", f"{float_math}.floatB")
             if name == "Upper":
-                if i != 0:
-                    cmds.connectAttr(f"{self.roll_jnt}.rotateX", f"{float_math}.floatA")
-                    cmds.connectAttr(f"{self.arm_chain[0]}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
+                cmds.connectAttr(f"{self.roll_jnt}.rotateX", f"{float_math}.floatA")
+                cmds.connectAttr(f"{self.roll_jnt}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
             else:
-                    cmds.connectAttr(f"{self.arm_chain[-1]}.rotateX", f"{float_math}.floatA")
-                    cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
+                cmds.connectAttr(f"{self.arm_chain[-1]}.rotateX", f"{float_math}.floatA")
+                cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
             cmds.connectAttr(f"{float_math}.outFloat", f"{mtp}.frontTwist")
 
             cmds.connectAttr(f"{mtp}.rotate", f"{bendy_jnt}.rotate")
