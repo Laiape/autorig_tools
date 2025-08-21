@@ -18,6 +18,9 @@ def de_boor_ribbon(cvs, controllers_grps, aim_axis='x', up_axis='y', num_joints=
         None
     """
 
+    jnts_grp = cmds.createNode('transform', n=f'{name}_Joints_GRP')
+    cmds.matchTransform(jnts_grp, controllers_grps[0], pos=True, rot=True, scl=False, pivot=True)
+
     # Match the controller groups to the cvs
     ctls = []
     for i, grp in enumerate(controllers_grps):
@@ -92,12 +95,41 @@ def de_boor_ribbon(cvs, controllers_grps, aim_axis='x', up_axis='y', num_joints=
             params = [(kv[d + 1] * (d * 0.5 + 0.5)) * (1 - t) + t * (1 - kv[d + 1] * (d * 0.5 - 0.5))
                     for i, t in enumerate(params)]
 
+        parent_offsets = []
+        translation_offsets = []
+        
         for i, ctl in enumerate(ctls):
 
             par_off = cmds.createNode('multMatrix', n=f'{name}_parentOffset_{i}_MM')
             cmds.connectAttr(f'{ctl}.worldMatrix', f'{par_off}.matrixIn[0]')
             cmds.connectAttr(f'{controllers_grps[0]}.worldInverseMatrix', f'{par_off}.matrixIn[1]')
 
+            parent_offsets.append(f"{par_off}.matrixSum")
             
+            trans_off = cmds.createNode('decomposeMatrix', n=f'{name}_transOffset_{i}_DM')
+            cmds.connectAttr(f'{par_off}.matrixSum', f'{trans_off}.inputMatrix')
+
+            translation_offsets.append(f"{trans_off}.outputTranslate")
 
 
+        jnts = []
+
+        for i, param in enumerate(params):
+            
+            cmds.select(clear=True)
+            jnt = cmds.joint(n = f"{name}0{i}_JNT")
+            cmds.parent(jnt, jnts_grp)
+            cmds.setAttr(f"{jnt}.jo", 0, 0, 0)
+            cmds.xform(jnt, m=om.MMatrix.kIdentity)
+
+            jnts.append(jnt)
+
+        return jnts
+    
+    """ 
+    import ribbon
+    from importlib import reload
+    reload(ribbon)
+    ribbon.de_boor_ribbon(cmds.ls(sl=True))
+
+    """
