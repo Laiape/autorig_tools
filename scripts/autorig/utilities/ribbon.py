@@ -11,7 +11,7 @@ AXIS_VECTOR = {"x": (1,0,0), "y": (0,1,0), "z": (0,0,1)}
 KNOT_TO_FORM_INDEX = {OPEN : om.MFnNurbsCurve.kOpen, PERIODIC : om.MFnNurbsCurve.kPeriodic}
 
 
-def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon", use_position = True, use_tangent=True, use_up=False, use_scale=False):
+def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon", use_position = True, use_tangent=True, use_up=True, use_scale=True):
 
     """
     In this function we will create a ribbon setup using the de Boor algorithm.
@@ -165,6 +165,7 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
         jnts.append(jnt)
 
         wts = core.de_boor(len(cvs), d, param, kv)
+
         if kv_type == PERIODIC:
 
             wts = get_consolidated_wts(wts, original_cvs, cvs)
@@ -238,12 +239,11 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
             cmds.delete(temp)
 
 
-
         aim = cmds.createNode("aimMatrix", n=f"{name}_pointOnCurve0{i}_AMX", ss=True)
 
         if position_plug:
 
-            cmds.connectAttr(f"{tangent}.matrixSum", f"{aim}.primaryTargetMatrix")
+            cmds.connectAttr(position_plug, f"{aim}.inputMatrix")
 
         else:
 
@@ -254,6 +254,7 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
         if tangent_plug:
 
             cmds.connectAttr(f"{tangent}.matrixSum", f"{aim}.primaryTargetMatrix")
+
         else:
 
             matrices = [om.MMatrix(cmds.getAttr(f"{top}")) for top in translation_offsets]
@@ -266,7 +267,7 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
 
                 tangent_offset_matrix = cmds.createNode("multMatrix", n=f"{name}_tangentOffset0{i}_MM", ss=True)
                 cmds.setAttr(f"{tangent_offset_matrix}.matrixIn[0]", tangent_offset_value, type="matrix")
-                cmds.connectAttr(f"{tangent_offset_matrix}.matrixSum", f"{aim}.primaryTargetMatrix")
+                cmds.connectAttr(f"{position_plug}.matrixSum", f"{tangent_offset_matrix}.matrixIn[1]")
             else:
 
                 cmds.setAttr(f"{aim}.primaryTargetMatrix", translation_matrix_weight, type="matrix")
@@ -280,20 +281,24 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
         else:
 
             cmds.connectAttr(up_plug, f"{aim}.secondaryTargetMatrix")
+ 
+        cmds.setAttr(f"{aim}.primaryInputAxis", *aim_vector)
+        cmds.setAttr(f"{aim}.secondaryInputAxis", *AXIS_VECTOR[up_axis])
+        cmds.setAttr(f"{aim}.secondaryMode", 2)
+        cmds.setAttr(f"{aim}.secondaryTargetVector", *AXIS_VECTOR[up_axis])
 
         output_plug = f"{aim}.outputMatrix"
 
         if use_scale:
 
             scale_weight = create_weight_add_matrix(scale_offsets, wts, f"{name}0{i}_scale_WAM", tol=tol)
-            cmds.setAttr(f"{aim}.primaryScaleMatrix", scale_weight, type="matrix")
+            scale_mm = cmds.createNode("multMatrix", n=f"{name}_scale0{i}_MM", ss=True)
+            cmds.connectAttr(f"{scale_weight}.matrixSum", f"{scale_mm}.matrixIn[0]")
+            cmds.connectAttr(output_plug, f"{scale_mm}.matrixIn[1]")
+            
+            output_plug = f"{scale_mm}.matrixSum"
 
-        cmds.setAttr(f"{aim}.primaryInputAxis", *aim_vector)
-        cmds.setAttr(f"{aim}.secondaryInputAxis", *AXIS_VECTOR[up_axis])
-        cmds.setAttr(f"{aim}.secondaryMode", 2)
-        cmds.setAttr(f"{aim}.secondaryTargetVector", *AXIS_VECTOR[up_axis])
-
-        cmds.connectAttr(f"{aim}.outputMatrix", f"{jnt}.offsetParentMatrix")
+        cmds.connectAttr(output_plug, f"{jnt}.offsetParentMatrix")
 
 
 
