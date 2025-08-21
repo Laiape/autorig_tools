@@ -411,6 +411,8 @@ class ArmModule(object):
         detached_curves = cmds.detachCurve(f"{self.degree_2_crv}.u[1]", ch=1, rpo=0)
         self.upper_segment_crv = detached_curves[0]
         self.lower_segment_crv = detached_curves[1]
+        self.upper_segment_crv = cmds.rename(self.upper_segment_crv, f"{self.side}_armUpperSegment_CRV")
+        self.lower_segment_crv = cmds.rename(self.lower_segment_crv, f"{self.side}_armLowerSegment_CRV")
         cmds.parent(self.upper_segment_crv, self.bendy_trn)
         cmds.parent(self.lower_segment_crv, self.bendy_trn)
         cmds.parent(self.degree_2_crv, self.bendy_trn)
@@ -507,6 +509,7 @@ class ArmModule(object):
         bendy_jnt = cmds.joint(name=f"{self.side}_armBendy{name}_JNT")
         cmds.connectAttr(f"{bendy_ctl}.worldMatrix[0]", f"{bendy_jnt}.offsetParentMatrix")
         cmds.parent(bendy_jnt, bendy_trn)
+        cmds.setAttr(f"{bendy_nodes[0]}.inheritsTransform", 0)
 
         self.bendy_bezier = cmds.curve(n=f"{self.side}_ArmBendyBezier{name}_CRV",d=1,p=[cmds.xform(bendy_jnts[0], q=True, ws=True, t=True),cmds.xform(bendy_jnt, q=True, ws=True, t=True),cmds.xform(bendy_jnts[2], q=True, ws=True, t=True)])
         self.bendy_bezier = cmds.rebuildCurve(self.bendy_bezier, rpo=1, rt=0, end=1, kr=0, kep=1, kt=0, fr=0, s=2, d=3, tol=0.01, ch=False)

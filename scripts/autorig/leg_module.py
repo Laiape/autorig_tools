@@ -221,10 +221,12 @@ class LegModule(object):
         cmds.parent(self.ball_handle, self.module_trn)
         cmds.parent(self.toe_handle, self.module_trn)
 
-        parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_legIkHDL_PMT", ss=True)
-        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
-        cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{self.ik_handle}.offsetParentMatrix")
+        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_legIkMultMatrix_MTX", ss=True)
+        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
+        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{self.ik_nodes[-1]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[2]")
+        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.ik_handle}.offsetParentMatrix")
+
 
         freeze_float_constant = cmds.createNode("floatConstant", name=f"{self.side}_freeze_FCF", ss=True)
         cmds.setAttr(f"{freeze_float_constant}.inFloat", 0)
@@ -364,10 +366,11 @@ class LegModule(object):
 
         # Create the soft IK handle TRN and do a parentMatrix to the last IK controller
         soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legSoftIkHDL_TRN", ss=True, p=self.module_trn)
-        parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_legSoftIkHDL_PMT", ss=True)
-        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
-        cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{soft_ik_handle}.offsetParentMatrix")
+        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_legSoftIkHDL_MTX", ss=True)
+        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
+        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{self.ik_nodes[-1]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[2]")
+        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{soft_ik_handle}.offsetParentMatrix")
 
 
         self.soft_off = cmds.createNode("transform", name=f"{self.side}_legSoft_OFF", p=self.module_trn)
@@ -507,7 +510,7 @@ class LegModule(object):
             cmds.connectAttr(f"{abs_up}.outFloat", f"{self.ik_chain[1]}.translateX")
             cmds.connectAttr(f"{abs_low}.outFloat", f"{self.ik_chain[2]}.translateX")
 
-        cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[2]}.rotate")
         cmds.parentConstraint(self.root_ik_ctl, self.ik_chain[0], maintainOffset=False)
 
@@ -608,7 +611,12 @@ class LegModule(object):
                     cmds.connectAttr(f"{self.roll_jnt}.rotateX", f"{float_math}.floatA")
                     cmds.connectAttr(f"{self.leg_chain[0]}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
             else:
-                    cmds.connectAttr(f"{self.leg_chain[2]}.rotateX", f"{float_math}.floatA")
+
+                    negate_float_math = cmds.createNode("floatMath", name=f"{self.side}_legBendy{part}{name}_Negate_FLM", ss=True)
+                    cmds.setAttr(f"{negate_float_math}.operation", 2)
+                    cmds.setAttr(f"{negate_float_math}.floatB", -1)
+                    cmds.connectAttr(f"{self.leg_chain[2]}.rotateY", f"{negate_float_math}.floatA")
+                    cmds.connectAttr(f"{negate_float_math}.outFloat", f"{float_math}.floatA")
                     cmds.connectAttr(f"{self.leg_chain[1]}.worldMatrix[0]", f"{mtp}.worldUpMatrix")
             cmds.connectAttr(f"{float_math}.outFloat", f"{mtp}.frontTwist")
 
@@ -626,6 +634,7 @@ class LegModule(object):
         bendy_jnt = cmds.joint(name=f"{self.side}_legBendy{name}_JNT")
         cmds.connectAttr(f"{bendy_ctl}.worldMatrix[0]", f"{bendy_jnt}.offsetParentMatrix")
         cmds.parent(bendy_jnt, bendy_trn)
+        cmds.setAttr(f"{bendy_nodes[0]}.inheritsTransform", 0)
 
         self.bendy_bezier = cmds.curve(n=f"{self.side}_legBendyBezier{name}_CRV",d=1,p=[cmds.xform(bendy_jnts[0], q=True, ws=True, t=True),cmds.xform(bendy_jnt, q=True, ws=True, t=True),cmds.xform(bendy_jnts[2], q=True, ws=True, t=True)])
         self.bendy_bezier = cmds.rebuildCurve(self.bendy_bezier, rpo=1, rt=0, end=1, kr=0, kep=1, kt=0, fr=0, s=2, d=3, tol=0.01, ch=False)

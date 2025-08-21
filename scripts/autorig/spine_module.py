@@ -132,6 +132,7 @@ class SpineModule(object):
         cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{local_hip_jnt}.offsetParentMatrix")
         local_hip_skinning_jnt = cmds.joint(name=f"{self.side}_localHipSkinning_JNT")
         cmds.connectAttr(f"{local_hip_jnt}.worldMatrix[0]", f"{local_hip_skinning_jnt}.offsetParentMatrix")
+        cmds.setAttr(f"{self.local_hip_nodes[0]}.inheritsTransform", 0)
         cmds.parent(local_hip_skinning_jnt, self.skeleton_grp)
 
         
@@ -199,6 +200,7 @@ class SpineModule(object):
         cmds.select(clear=True)
         local_chest_skinning_jnt = cmds.joint(name=f"{self.side}_localChestSkinning_JNT")
         cmds.connectAttr(f"{local_chest_jnt}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix")
+        cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
         cmds.parent(local_chest_skinning_jnt, self.skeleton_grp)
 
         for i , ctl in enumerate(self.spine_ctls):
