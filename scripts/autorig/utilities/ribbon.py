@@ -1,41 +1,67 @@
 import maya.cmds as cmds
 from maya.api import OpenMaya as om
-import de_boor_core as core
+from autorig.utilities import de_boor_core as core
 from importlib import reload
 
 reload(core)
 
-OPEN = 'open'
-PERIODIC = 'periodic'
+OPEN = "open"
+PERIODIC = "periodic"
 KNOT_TO_FORM_INDEX = {OPEN : om.MFnNurbsCurve.kOpen, PERIODIC : om.MFnNurbsCurve.kPeriodic}
 
 
-def de_boor_ribbon(cvs, controllers_grps, aim_axis='x', up_axis='y', num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name='ribbon'):
+def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon"):
 
     """
     In this function we will create a ribbon setup using the de Boor algorithm.
     args:
         None
     """
-
-    jnts_grp = cmds.createNode('transform', n=f'{name}_Joints_GRP')
-    cmds.matchTransform(jnts_grp, controllers_grps[0], pos=True, rot=True, scl=False, pivot=True)
-
+    
     # Match the controller groups to the cvs
+    
     ctls = []
-    for i, grp in enumerate(controllers_grps):
+    controllers_groups = []
+    
+    if controllers_grp is not None and len(controllers_grp) != 0:
 
-        if not cmds.objExists(grp):
-            raise om.MGlobal.displayError(
-                f'Controller group {grp} does not exist. Please check the input.')
+        controllers_grps = cmds.listRelatives(controllers_grp, c=True, type="transform")
 
-        cmds.matchTransform(grp, cvs[i], pos=True, rot=True, scl=False, pivot=True)
+        for i, grp in enumerate(controllers_grps):
+            
+            jnts_grp = cmds.createNode("transform", n=grp.replace("_GRP", "Joints_GRP")) # Create a group for joints
+            cmds.matchTransform(jnts_grp, controllers_grps[0], pos=True, rot=True, scl=False) # Match the joints group to the first controller group
+            cmds.matchTransform(grp, cvs[i], pos=True, rot=True, scl=False)
 
-        children = cmds.listRelatives(grp, c=True, type='transform') or [] # Get children of the group
-        ctl = next((child for child in children if child.endswith('CTL')), None) # Find the controller in the group
+            children = cmds.listRelatives(grp, c=True, type="transform") or [] # Get children of the group
+            ctl = next((child for child in children if child.endswith("CTL")), None) # Find the controller in the group
 
-        if ctl:
-            ctls.append(ctl) # If found, add to the list
+            if ctl:
+                ctls.append(ctl) # If found, add to the list
+
+            controllers_groups.append(grp) # Add the group to the list of controller groups
+
+
+    else:
+        
+        jnts_grp = cmds.createNode("transform", n=f"{name}_Joints_GRP") # Create a group for joints
+        controllers_grp = cmds.createNode("transform", n=f"{name}_Controllers_GRP") 
+        cmds.matchTransform(jnts_grp, cvs[0], pos=True, rot=True, scl=False)
+        cmds.matchTransform(controllers_grp, cvs[0], pos=True, rot=True, scl=False)
+        
+        
+        for i, cv in enumerate(cvs):
+            
+            grp = cmds.createNode("transform", n=f"{name}0{i}_GRP")
+            ctl = cmds.circle(n=f"{name}0{i}_CTL", nr=(1,0,0), ch=False)[0] # Create a controller circle
+            cmds.parent(grp, controllers_grp)
+            if cmds.listRelatives(ctl, parent=True) != grp:
+                cmds.parent(ctl, grp)
+                cmds.matchTransform(grp, cv, pos=True, rot=True, scl=False)
+            controllers_groups.append(grp)
+            ctls.append(ctl)          
+            
+            
 
     num_cvds = len(cvs)
     original_cvs = cvs[:]
@@ -70,7 +96,7 @@ def de_boor_ribbon(cvs, controllers_grps, aim_axis='x', up_axis='y', num_joints=
         data_creator = om.MFnNurbsCurveData()
         parent = data_creator.create()
 
-        crv_fn = om.MFnNurbsCurve()
+        crv_fn = om.MFnNurbsCurve() # Create a NURBS curve function set
         crv_fn.create(m_cv_pos, m_kv, d, form, is_2d, rational)#, parent)
 
 
@@ -100,14 +126,14 @@ def de_boor_ribbon(cvs, controllers_grps, aim_axis='x', up_axis='y', num_joints=
         
         for i, ctl in enumerate(ctls):
 
-            par_off = cmds.createNode('multMatrix', n=f'{name}_parentOffset_{i}_MM')
-            cmds.connectAttr(f'{ctl}.worldMatrix', f'{par_off}.matrixIn[0]')
-            cmds.connectAttr(f'{controllers_grps[0]}.worldInverseMatrix', f'{par_off}.matrixIn[1]')
+            par_off = cmds.createNode("multMatrix", n=f"{name}_parentOffset_{i}_MM")
+            cmds.connectAttr(f"{ctl}.worldMatrix", f"{par_off}.matrixIn[0]")
+            cmds.connectAttr(f"{controllers_groups[0]}.worldInverseMatrix", f"{par_off}.matrixIn[1]")
 
             parent_offsets.append(f"{par_off}.matrixSum")
             
-            trans_off = cmds.createNode('decomposeMatrix', n=f'{name}_transOffset_{i}_DM')
-            cmds.connectAttr(f'{par_off}.matrixSum', f'{trans_off}.inputMatrix')
+            trans_off = cmds.createNode("decomposeMatrix", n=f"{name}_transOffset_{i}_DM")
+            cmds.connectAttr(f"{par_off}.matrixSum", f"{trans_off}.inputMatrix")
 
             translation_offsets.append(f"{trans_off}.outputTranslate")
 
@@ -126,10 +152,9 @@ def de_boor_ribbon(cvs, controllers_grps, aim_axis='x', up_axis='y', num_joints=
 
         return jnts
     
-    """ 
+    """
     import ribbon
     from importlib import reload
     reload(ribbon)
     ribbon.de_boor_ribbon(cmds.ls(sl=True))
-
     """
