@@ -11,7 +11,7 @@ AXIS_VECTOR = {"x": (1,0,0), "y": (0,1,0), "z": (0,0,1)}
 KNOT_TO_FORM_INDEX = {OPEN : om.MFnNurbsCurve.kOpen, PERIODIC : om.MFnNurbsCurve.kPeriodic}
 
 
-def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon"):
+def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon", use_position = True, use_tangent=True, use_up=False, use_scale=False):
 
     """
     In this function we will create a ribbon setup using the de Boor algorithm.
@@ -86,7 +86,7 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
         m_kv_interval = 1 / (m_kv_len - 2 * (d - 1))
         m_kv = [-m_kv_interval * (d - 1) * (1 - t / (m_kv_len - 1)) +
         (1 + m_kv_interval * (d - 1)) * t / (m_kv_len - 1) for t in range(m_kv_len)]
-        
+
         kv, cvs = core.knot_vector(PERIODIC, cvs, d)
 
     m_cv_pos = om.MPointArray(
@@ -126,7 +126,8 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
 
     parent_offsets = []
     translation_offsets = []
-    
+    scale_offsets = []
+
     for i, ctl in enumerate(ctls):
 
         par_off = cmds.createNode("multMatrix", n=f"{name}_parentOffset_{i}_MM")
@@ -142,6 +143,14 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
 
         translation_offsets.append(f"{compose_matrix}.outputMatrix")
 
+        if use_scale and use_tangent or use_up:
+
+            scale_off = cmds.createNode("pickMatrix", n=f"{name}_scaleOffset0{i}_PM")
+            cmds.connectAttr(f"{par_off}.matrixSum", f"{scale_off}.inputMatrix")
+            for attr in "useRotate", "useShear", "useTranslate":
+                cmds.setAttr(f"{scale_off}.{attr}", 0)
+
+            scale_offsets.append(f"{scale_off}.outputMatrix")
 
     jnts = []
 
@@ -156,13 +165,11 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
         jnts.append(jnt)
 
         wts = core.de_boor(len(cvs), d, param, kv)
+        if kv_type == PERIODIC:
 
-        if kv_type == OPEN:
-
-            consolidated_weights = get_consolidated_wts(wts, original_cvs, cvs)
+            wts = get_consolidated_wts(wts, original_cvs, cvs)
         
-        position = create_weight_add_matrix(translation_offsets, wts, f"{name}0{i}Trans_WAM", tol)
-
+          
         tangent_param = tangent_offset + param
         aim_vector = om.MVector(AXIS_VECTOR[aim_axis])
 
@@ -176,30 +183,111 @@ def de_boor_ribbon(cvs, controllers_grp = [], aim_axis="x", up_axis="y", num_joi
 
             tangent_wts = get_consolidated_wts(tangent_wts, original_cvs, cvs)
 
-        tangent = create_weight_add_matrix(translation_offsets, tangent_wts, f"{name}0{i}Tan_WAM", tol)
+        position_plug = None
+        tangent_plug = None
 
-        temp = cmds.createNode("transform")
-        ori_con = cmds.orientConstraint(original_cvs, temp)[0]
-        cmds.setAttr(f"{ori_con}.interpType", 2)
-        for j, wt in enumerate(wts):
-            cmds.setAttr(f"{ori_con}.{original_cvs[j]}W{j}", wt)
+        # ---- Position setup ----
+        if use_position:
+            
+            position = create_weight_add_matrix(translation_offsets, wts, f"{name}0{i}Trans_WAM", tol)
+            position_plug = f"{position}.matrixSum"
 
-        up = create_weight_add_matrix(parent_offsets, wts, f"{name}_up0{i}_WAM", tol=tol)
+            if not use_tangent and not use_up: # No aim matrix necesary, connect wtAddMatrix ToJ oints
 
-        temp_mat = om.MMatrix(cmds.getAttr(f"{temp}.worldMatrix"))
-        up_inverse = om.MMatrix(cmds.getAttr(f"{up}.matrixSum")).inverse()
-        up_off_val = temp_mat * up_inverse
+                cmds.connectAttr(position_plug, f"{jnt}.offsetParentMatrix")
 
-        up_off = cmds.createNode("multMatrix", n=f"{name}_upOffset0{i}_MM", ss=True)
-        cmds.setAttr(f"{up_off}.matrixIn[0]", list(up_off_val), type="matrix")
-        cmds.connectAttr(f"{up}.matrixSum", f"{up_off}.matrixIn[1]")
+                if use_scale:
 
-        cmds.delete(temp)
+                    for transform_offset in translation_offsets:
+
+                        trans_off = transform_offset.split(".")[0]
+                        cmds.setAttr(f"{trans_off}.useScale", 1)
+
+                continue
+
+            # ---- Tangent setup ----
+            if use_tangent:
+
+                tangent = create_weight_add_matrix(translation_offsets, tangent_wts, f"{name}0{i}Tan_WAM", tol)
+                tangent_plug = f"{tangent}.matrixSum"
+
+        # ---- Up setup ----
+        up_plug = f"{controllers_groups[0]}.worldMatrix"
+
+        if use_up:
+
+            temp = cmds.createNode("transform")
+            cmds.parent(temp, controllers_groups[0])
+            ori_con = cmds.orientConstraint(original_cvs, temp)[0]
+            cmds.setAttr(f"{ori_con}.interpType", 2)
+            for j, wt in enumerate(wts):
+                cmds.setAttr(f"{ori_con}.{original_cvs[j]}W{j}", wt)
+
+            up = create_weight_add_matrix(parent_offsets, wts, f"{name}_up0{i}_WAM", tol=tol)
+
+            temp_mat = om.MMatrix(cmds.getAttr(f"{temp}.matrix"))
+            up_inverse = om.MMatrix(cmds.getAttr(f"{up}.matrixSum")).inverse()
+            up_off_val = temp_mat * up_inverse
+
+            up_off = cmds.createNode("multMatrix", n=f"{name}_upOffset0{i}_MM", ss=True)
+            cmds.setAttr(f"{up_off}.matrixIn[0]", list(up_off_val), type="matrix")
+            cmds.connectAttr(f"{up}.matrixSum", f"{up_off}.matrixIn[1]")
+
+            up_plug = f"{up_off}.matrixSum"
+
+            cmds.delete(temp)
+
+
 
         aim = cmds.createNode("aimMatrix", n=f"{name}_pointOnCurve0{i}_AMX", ss=True)
-        cmds.connectAttr(f"{position}.matrixSum", f"{aim}.inputMatrix")
-        cmds.connectAttr(f"{tangent}.matrixSum", f"{aim}.primaryTargetMatrix")
-        cmds.connectAttr(f"{up}.matrixSum", f"{aim}.secondaryTargetMatrix")
+
+        if position_plug:
+
+            cmds.connectAttr(f"{tangent}.matrixSum", f"{aim}.primaryTargetMatrix")
+
+        else:
+
+            matrices = [om.MMatrix(cmds.getAttr(f"{top}")) for top in translation_offsets]
+            translation_matrix_weight = get_weighted_translation_matrix(matrices, wts)
+            cmds.setAttr(f"{aim}.inputMatrix", translation_matrix_weight, type="matrix")
+
+        if tangent_plug:
+
+            cmds.connectAttr(f"{tangent}.matrixSum", f"{aim}.primaryTargetMatrix")
+        else:
+
+            matrices = [om.MMatrix(cmds.getAttr(f"{top}")) for top in translation_offsets]
+            translation_matrix_weight = get_weighted_translation_matrix(matrices, tangent_wts)
+
+            if position_plug:
+
+                position_matrix = om.MMatrix(cmds.getAttr(position_plug))
+                tangent_offset_value = translation_matrix_weight * position_matrix.inverse()
+
+                tangent_offset_matrix = cmds.createNode("multMatrix", n=f"{name}_tangentOffset0{i}_MM", ss=True)
+                cmds.setAttr(f"{tangent_offset_matrix}.matrixIn[0]", tangent_offset_value, type="matrix")
+                cmds.connectAttr(f"{tangent_offset_matrix}.matrixSum", f"{aim}.primaryTargetMatrix")
+            else:
+
+                cmds.setAttr(f"{aim}.primaryTargetMatrix", translation_matrix_weight, type="matrix")
+
+        
+        if up_plug == f"{controllers_groups[0]}.worldMatrix":
+
+            world_mat = cmds.getAttr(f"{up_plug}.worldMatrix")
+            cmds.setAttr(f"{aim}.secondaryTargetMatrix", world_mat, type="matrix")
+
+        else:
+
+            cmds.connectAttr(up_plug, f"{aim}.secondaryTargetMatrix")
+
+        output_plug = f"{aim}.outputMatrix"
+
+        if use_scale:
+
+            scale_weight = create_weight_add_matrix(scale_offsets, wts, f"{name}0{i}_scale_WAM", tol=tol)
+            cmds.setAttr(f"{aim}.primaryScaleMatrix", scale_weight, type="matrix")
+
         cmds.setAttr(f"{aim}.primaryInputAxis", *aim_vector)
         cmds.setAttr(f"{aim}.secondaryInputAxis", *AXIS_VECTOR[up_axis])
         cmds.setAttr(f"{aim}.secondaryMode", 2)
@@ -240,4 +328,14 @@ def create_weight_add_matrix(matrix_attrs, wts, name, tol=0.000001):
         cmds.connectAttr(matrix_attr, f"{wam}.wtMatrix[{i}].matrixIn")
         cmds.setAttr(f"{wam}.wtMatrix[{i}].weightIn", wt)
 
-    return wam 
+    return wam
+
+def get_weighted_translation_matrix(matrices, weights):
+
+    translation_matrix = om.MMatrix(((1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1)))
+
+    for m, wt in zip(matrices, weights):
+        for i in 12, 13, 14:
+            translation_matrix[i] += m[i] * wt
+
+    return translation_matrix

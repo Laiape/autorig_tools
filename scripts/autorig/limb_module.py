@@ -25,6 +25,7 @@ class LimbModule(object):
 
 
         self.module = "limb"
+        self.limb_chain = []
 
     def make(self, side):
 
@@ -33,6 +34,8 @@ class LimbModule(object):
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_{self.module}Module_GRP", ss=True, p=self.modules)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_{self.module}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_{self.module}Skinning_GRP", ss=True, p=self.skel_grp)
+
+        self.blend_chains()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -88,10 +91,7 @@ class LimbModule(object):
             cmds.connectAttr(f"{pair_blend}.outTranslate", f"{joint}.translate")
             cmds.connectAttr(f"{pair_blend}.outRotate", f"{joint}.rotate")
 
-        # cmds.parent(self.fk_chain[0], self.module_trn)
         cmds.parent(self.ik_chain[0], self.module_trn)
-
-
 
 
 class ArmModule(LimbModule):
@@ -103,11 +103,12 @@ class ArmModule(LimbModule):
     def make(self, side):
 
         self.side = side
-
         self.module = "arm"
-        super(ArmModule, self).make(side)
 
-        
+        self.load_guides()
+
+        super(ArmModule, self).make(side)
+  
 
     def load_guides(self):
 
