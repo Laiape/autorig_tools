@@ -6,7 +6,7 @@ from utils import guides_manager
 from utils import basic_structure
 from utils import data_manager
 
-from autorig import arm_module
+from autorig import arm_module_de_boor as arm_module
 from autorig import spine_module
 from autorig import leg_module
 
