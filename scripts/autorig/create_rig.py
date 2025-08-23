@@ -8,7 +8,7 @@ from utils import data_manager
 
 from autorig import arm_module_de_boor as arm_module
 from autorig import spine_module
-from autorig import leg_module
+from autorig import leg_module_de_boor as leg_module
 
 reload(guides_manager) 
 reload(basic_structure)
