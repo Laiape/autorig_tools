@@ -189,7 +189,13 @@ class LegModule(object):
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_legRootIk", offset=["GRP"])
         self.lock_attributes(self.root_ik_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.matchTransform(self.root_ik_nodes[0], self.leg_chain[0], pos=True, rot=True)
-        cmds.parentConstraint(self.root_ik_ctl, self.ik_chain[0], maintainOffset=True)
+        cmds.xform(self.ik_chain[0], m=om.MMatrix.kIdentity)
+        cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
+        for attr in ["translate", "rotate", "jointOrient"]:
+            for axis in ["X", "Y", "Z"]:
+                cmds.setAttr(f"{self.ik_chain[0]}.{attr}{axis}", 0)
+                cmds.setAttr(f"{self.leg_chain[0]}.{attr}{axis}", 0)
+
         cmds.parent(self.root_ik_nodes[0], ik_controllers_trn)
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP"])
@@ -202,6 +208,18 @@ class LegModule(object):
             cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
         else:
             cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+
+        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_legPv_CRV") # Create a line that points always to the PV
+        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPv_DCM", ss=True)
+        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPvCtl_DCM", ss=True)
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
+        cmds.connectAttr(f"{self.leg_chain[1]}.worldMatrix[0]", f"{decompose_knee}.inputMatrix")
+        cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
+        cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
+        cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
+        cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
+        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
+        cmds.parent(crv_point_pv, self.pv_ctl)
 
         
     def ik_setup(self):
@@ -507,8 +525,8 @@ class LegModule(object):
 
         cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[2]}.rotate")
-        cmds.parentConstraint(self.root_ik_ctl, self.ik_chain[0], maintainOffset=False)
-
+        cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[1]}.rotate")
+        
     def de_boor_ribbon(self):
 
         """
