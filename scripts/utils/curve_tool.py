@@ -40,6 +40,8 @@ def get_curves_info():
         degree = curve_fn.degree
         knots = curve_fn.knots()
         form = cmds.getAttr(f"{curve}.form")
+        if form == 2:
+            radius = cmds.getAttr(f"{curve}.radius")
         draw_always_on_top = cmds.getAttr(f"{curve}.alwaysDrawOnTop")
         override_enabled = cmds.getAttr(f"{curve}.overrideEnabled")
         if override_enabled:
@@ -55,6 +57,7 @@ def get_curves_info():
             "overrideEnabled": override_enabled,
             "overrideColor": override_color if override_color is not None else None,
             "form": form,
+            "radius": radius if form != 0 else None,
             "alwaysDrawOnTop": draw_always_on_top
     }
 
@@ -69,7 +72,12 @@ def create_controller(name, offset=["GRP"]):
 
     """Creates the controller based on the curves information."""
 
-    final_path = os.path.join(TEMPLATE_PATH, "curves_info.json")
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    guides_path = os.path.join(relative_path, "curves")
+    final_path = os.path.join(guides_path, "curves_info.json") # Update this line
+
+    name_temp = os.path.basename(final_path).split(".")[0]
 
     # Build the controller offset groups.
     offset_grps = []
@@ -88,27 +96,39 @@ def create_controller(name, offset=["GRP"]):
     
     # Create the controller from the curve information.
     with open(final_path, 'r') as file:
-        curves_info = json.load(file)
+        curves_data = json.load(file)
+
+    # print(curves_info)
 
     shape = name + "_CTLShape"
 
-    if shape in curves_info:
+    for path, data in curves_data.items():
 
-        control_points = curves_info[shape]["controlPoints"]
-        degree = curves_info[shape]["degree"]
-        override_enabled = curves_info[shape]["overrideEnabled"]
-        override_color = curves_info[shape]["overrideColor"] if "overrideColor" in curves_info[shape] else None
+        control_points = data["controlPoints"]
+        degree = data["degree"]
+        override_enabled = data["overrideEnabled"]
+        form = data["form"]
+        radius = data["radius"] 
+        always_draw_on_top = data["alwaysDrawOnTop"]
+        override_color = data["overrideColor"]
 
         # Create the NURBS curve.
-        controller = cmds.curve(d=degree, p=control_points, name=f"{name}_CTL")
+        if form == 0:
+            controller = cmds.curve(d=degree, p=control_points, name=f"{name}_CTL")
+        else:
+            controller = cmds.circle(name=f"{name}_CTL", ch=False, r=radius, nr=[0, 1, 0])[0]
 
         # Set the override color if it exists.
         cmds.setAttr(f"{controller}.overrideEnabled", override_enabled)
-        if override_color != 0:
+        if override_enabled != 0:
             cmds.setAttr(f"{controller}.overrideColor", override_color)
-    
+
+        cmds.setAttr(f"{controller}.form", form)
+        cmds.setAttr(f"{controller}.alwaysDrawOnTop", always_draw_on_top)
+
     else:
 
+        om.MGlobal.displayWarning(f"No curve info found for {shape}. Creating a default circle controller.")
         controller = cmds.circle(name=f"{name}_CTL", ch=False, r=3, nr=[0, 1, 0])[0]
 
     cmds.parent(controller, offset_grps[-1])
