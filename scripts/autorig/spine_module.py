@@ -51,6 +51,13 @@ class SpineModule(object):
         self.reversed_spine()
         self.attatched_fk()
         self.squash()
+        
+        data_manager.DataExport().append_data("basic_structure",
+                            {
+                                "local_hip_ctl": self.local_hip_ctl,
+                                "body_ctl": self.body_ctl,
+                                "local_chest_ctl": self.local_chest_ctl
+                            })
 
     def lock_attributes(self, ctl, attrs):
 
@@ -494,9 +501,6 @@ class SpineModule(object):
 
             cmds.connectAttr(f"{condition_node}.outColorR", f"{jnt}.scaleX")
             cmds.connectAttr(f"{condition_node}.outColorR", f"{jnt}.scaleZ")
-
-
-
 
 
 

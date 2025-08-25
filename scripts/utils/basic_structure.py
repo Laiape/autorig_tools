@@ -8,6 +8,17 @@ from importlib import reload
 reload(data_manager)
 reload(curve_tool)
 
+def lock_attributes(ctl, attrs):
+
+        """
+        Lock and hide attributes on a controller.
+        Args:
+            ctl (str): The name of the controller.
+            attrs (list): A list of attributes to lock and hide.
+        """
+        
+        for attr in attrs:
+            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
 def create_basic_structure():
 
@@ -32,10 +43,30 @@ def create_basic_structure():
     modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
+    preferences_node, preferences_ctl = curve_tool.create_controller(name="C_preferences", offset=["GRP"])
+
+    lock_attributes(character_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+    lock_attributes(preferences_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+    lock_attributes(masterwalk_ctl, ["visibility"])
+
+
+    cmds.addAttr(f"{preferences_ctl}", longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+    cmds.setAttr(f"{preferences_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+
+    for attr in ["Reference", "Show_Skeleton", "Show_Modules"]:
+
+        if not cmds.attributeQuery(attr, node=preferences_ctl, exists=True):
+            cmds.addAttr(f"{preferences_ctl}", longName=attr, attributeType="bool", keyable=True, defaultValue=1)
+            cmds.setAttr(f"{preferences_ctl}.{attr}", keyable=False, channelBox=True)
+
+    cmds.connectAttr(f"{preferences_ctl}.Show_Skeleton", f"{skel_grp}.visibility")
+    cmds.connectAttr(f"{preferences_ctl}.Show_Modules", f"{modules_grp}.visibility")
+
     cmds.addAttr(masterwalk_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-    cmds.setAttr(f"{masterwalk_ctl}.EXTRA_ATTRIBUTES", lock=True, keyable=False)
+    cmds.setAttr(f"{masterwalk_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
     cmds.addAttr(masterwalk_ctl, longName="globalScale", attributeType="float", defaultValue=1, minValue=0.01, keyable=True)
     cmds.parent(character_node[0], nodes[2])
+    cmds.parent(preferences_node[0], masterwalk_ctl)
     cmds.parent(masterwalk_node[0], character_ctl)
     data_manager.DataExport().append_data("basic_structure",
                             {

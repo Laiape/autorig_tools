@@ -9,6 +9,8 @@ from utils import data_manager
 from autorig import arm_module_de_boor as arm_module
 from autorig import spine_module
 from autorig import leg_module_de_boor as leg_module
+from autorig import neck_module
+from autorig import fingers_module
 
 reload(guides_manager) 
 reload(basic_structure)
@@ -16,6 +18,8 @@ reload(data_manager)
 reload(arm_module)
 reload(spine_module)
 reload(leg_module)
+reload(neck_module)
+reload(fingers_module)
 
 
 class AutoRig(object):
@@ -58,6 +62,9 @@ class AutoRig(object):
         arm_module.ArmModule().make("R")
         leg_module.LegModule().make("L")
         leg_module.LegModule().make("R")
+        neck_module.NeckModule().make("C")
+        fingers_module.FingersModule().make("L")
+        fingers_module.FingersModule().make("R")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',

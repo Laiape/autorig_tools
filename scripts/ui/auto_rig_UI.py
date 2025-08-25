@@ -355,7 +355,7 @@ class UI(QtWidgets.QMainWindow):
         from utils import curve_tool
         reload(curve_tool)
 
-        curve_tool.get_curves_info()
+        curve_tool.get_all_ctl_curves_data()
         print("Curves exported successfully!")
 
     def create_connections(self):

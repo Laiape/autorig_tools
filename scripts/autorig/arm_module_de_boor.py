@@ -79,7 +79,7 @@ class ArmModule(object):
         self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.matchTransform(self.settings_node[0], self.settings_loc, pos=True, rot=True)
         cmds.delete(self.settings_loc)
-        cmds.addAttr(self.settings_ctl, longName="Ik_Fk", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
+        cmds.addAttr(self.settings_ctl, longName="Ik_Fk", attributeType="float", defaultValue=1, minValue=0, maxValue=1, keyable=True)
         cmds.parent(self.settings_node[0], self.controllers_grp)
 
         self.fk_chain = []

@@ -29,6 +29,7 @@ class LegModule(object):
         self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        self.local_hip_ctl = data_manager.DataExport().get_data("basic_structure", "local_hip_ctl")
 
     def make(self, side):
 
@@ -55,6 +56,8 @@ class LegModule(object):
         self.fk_stretch()
         self.soft_ik()
         self.de_boor_ribbon()
+
+        cmds.parent(self.controllers_grp, self.local_hip_ctl)
 
     def lock_attributes(self, ctl, attrs):
 

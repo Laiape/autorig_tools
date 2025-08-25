@@ -6,134 +6,256 @@ import os
 TEMPLATE_PATH = "C:/GITHUB/curves"
 final_path = None
 
-def get_curves_info():
+complete_path = os.path.realpath(__file__)
+relative_path = complete_path.split("\scripts")[0]
+TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, "curves_info.json")
 
+
+def get_all_ctl_curves_data():
     """
-    Get all curves in the scene and extract their information such as name, control points, degree, knots, and overrideColor.
-    This information is stored in a dictionary with the curve name as the key.
+    Collects data from all controller curves in the scene and saves it to a JSON file.
+    This function retrieves information about each controller's transform and its associated nurbsCurve shapes,
+    including their CV positions, form, knots, degree, and override attributes.
     """
 
-    all_curves = cmds.ls("*_CTL")
+    ctl_data = {}
 
-    print(f"Found {all_curves} curves in the scene.")
+    transforms = cmds.ls("*_CTL*", type="transform", long=True)
 
-    # Get the curves info: name, control points, degree, knots, overrideColor.
+    for transform_name in transforms:
+        shapes = cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []
+        nurbs_shapes = []
 
-    curves_info = {}
+        for shape in shapes:
+            if cmds.nodeType(shape) == "nurbsCurve":
+                nurbs_shapes.append(shape)
 
-    for curve in all_curves:
-        
-        side = curve.split("_")[0]
-        names = curve.split("_")[1]
-        name = f"{side}_{names}"
+        if not nurbs_shapes:
+            continue  
 
-        sel = om.MSelectionList()
-        sel.add(curve)
-        dag = sel.getDagPath(0)
-        curve_fn = om.MFnNurbsCurve(dag)
+        sel_list = om.MSelectionList()
+        sel_list.add(transform_name)
+        transform_obj = sel_list.getDependNode(0)
 
-        cvs = []
-        for i in range(curve_fn.numCVs):
-            pt = curve_fn.cvPosition(i)
-            cvs.append((pt.x, pt.y, pt.z))
-        
-        degree = curve_fn.degree
-        knots = curve_fn.knots()
-        form = cmds.getAttr(f"{curve}.form")
-        if form == 2:
-            radius = cmds.getAttr(f"{curve}.radius")
-        draw_always_on_top = cmds.getAttr(f"{curve}.alwaysDrawOnTop")
-        override_enabled = cmds.getAttr(f"{curve}.overrideEnabled")
-        if override_enabled:
-            override_color = cmds.getAttr(f"{curve}.overrideColor")
-        else:
-            override_color = None
+        def get_override_info(node_obj):
+            fn_dep = om.MFnDependencyNode(node_obj)
+            try:
+                override_enabled = fn_dep.findPlug('overrideEnabled', False).asBool()
+                override_color = fn_dep.findPlug('overrideColor', False) if override_enabled else None
+                override_color_value = override_color.asInt() if override_color else None
+            except:
+                override_enabled = False
+                override_color_value = None
+            return override_enabled, override_color_value
 
-        curves_info[curve] = {
-            "name": name,
-            "controlPoints": cvs,
-            "degree": degree,
-            "knots": list(knots),
-            "overrideEnabled": override_enabled,
-            "overrideColor": override_color if override_color is not None else None,
-            "form": form,
-            "radius": radius if form != 0 else None,
-            "alwaysDrawOnTop": draw_always_on_top
-    }
+        transform_override_enabled, transform_override_color = get_override_info(transform_obj)
 
-    final_path = os.path.join(TEMPLATE_PATH, "curves_info.json")
+        shape_data_list = []
 
-    with open(final_path, "w") as file:
-        json.dump(curves_info, file, indent=4)
+        for shape in nurbs_shapes:
+            sel_list.clear()
+            sel_list.add(shape)
+            shape_obj = sel_list.getDependNode(0)
 
-    om.MGlobal.displayInfo(f"Curves info saved to {final_path}")
+            shape_override_enabled, shape_override_color = get_override_info(shape_obj)
+
+            fn_shape_dep = om.MFnDependencyNode(shape_obj)
+            try:
+                always_on_top = fn_shape_dep.findPlug('alwaysDrawOnTop', False).asBool()
+            except:
+                always_on_top = False
+
+            curve_fn = om.MFnNurbsCurve(shape_obj)
+
+            cvs = []
+            for i in range(curve_fn.numCVs):
+                pt = curve_fn.cvPosition(i)
+                cvs.append((pt.x, pt.y, pt.z))
+
+            form_types = {
+                om.MFnNurbsCurve.kOpen: "open",
+                om.MFnNurbsCurve.kClosed: "closed",
+                om.MFnNurbsCurve.kPeriodic: "periodic"
+            }
+
+            line_width = None
+            if cmds.attributeQuery("lineWidth", node=shape, exists=True):
+                try:
+                    line_width = cmds.getAttr(shape + ".lineWidth")
+                except:
+                    pass 
+
+            form = form_types.get(curve_fn.form, "unknown")
+            if form == "unknown":
+                om.MGlobal.displayWarning(f"Curve form unknown for {shape}")
+
+            knots = curve_fn.knots()
+            degree = curve_fn.degree
+
+            shape_data_list.append({
+                "name": shape.split("|")[-1],
+                "overrideEnabled": shape_override_enabled,
+                "overrideColor": shape_override_color,
+                "alwaysDrawOnTop": always_on_top,
+                "lineWidth": line_width,
+                "curve": {
+                    "cvs": cvs,
+                    "form": form,
+                    "knots": list(knots),
+                    "degree": degree
+                }
+            })
+
+        ctl_data[transform_name] = {
+            "transform": {
+                "name": transform_name.split("|")[-1],
+                "overrideEnabled": transform_override_enabled,
+                "overrideColor": transform_override_color
+            },
+            "shapes": shape_data_list
+        }
+
+    with open(TEMPLATE_FILE, "w") as f:
+        json.dump(ctl_data, f, indent=4)
+
+    print(f"Controllers template saved to: {TEMPLATE_FILE}")
+
+def build_curves_from_template(target_transform_name=None):
+    """
+    Builds controller curves from a predefined template JSON file.
+    If a specific target transform name is provided, it filters the curves to only create those associated with that transform.
+    If no target transform name is provided, it creates all curves defined in the template.
+    Args:
+        target_transform_name (str, optional): The name of the target transform to filter curves by. Defaults to None.
+    Returns:
+        list: A list of created transform names.
+    """
+
+    if not os.path.exists(TEMPLATE_FILE):
+        om.MGlobal.displayError("Template file does not exist.")
+        return
+
+    with open(TEMPLATE_FILE, "r") as f:
+        ctl_data = json.load(f)
+
+    if target_transform_name:
+        ctl_data = {k: v for k, v in ctl_data.items() if v["transform"]["name"] == target_transform_name}
+        if not ctl_data:
+            return
+
+    created_transforms = []
+
+    for transform_path, data in ctl_data.items():
+        transform_info = data["transform"]
+        shape_data_list = data["shapes"]
+
+        dag_modifier = om.MDagModifier()
+        transform_obj = dag_modifier.createNode("transform")
+        dag_modifier.doIt()
+
+        transform_fn = om.MFnDagNode(transform_obj)
+        final_name = transform_fn.setName(transform_info["name"])
+        created_transforms.append(final_name)
+
+        if transform_info["overrideEnabled"]:
+            fn_dep = om.MFnDependencyNode(transform_obj)
+            fn_dep.findPlug('overrideEnabled', False).setBool(True)
+            fn_dep.findPlug('overrideColor', False).setInt(transform_info["overrideColor"])
+
+        created_shapes = []
+
+        for shape_data in shape_data_list:
+            curve_info = shape_data["curve"]
+            cvs = curve_info["cvs"]
+            degree = curve_info["degree"]
+            knots = curve_info["knots"]
+            form = curve_info["form"]
+
+            form_flags = {
+                "open": om.MFnNurbsCurve.kOpen,
+                "closed": om.MFnNurbsCurve.kClosed,
+                "periodic": om.MFnNurbsCurve.kPeriodic
+            }
+            form_flag = form_flags.get(form, om.MFnNurbsCurve.kOpen)
+
+            points = om.MPointArray()
+            for pt in cvs:
+                points.append(om.MPoint(pt[0], pt[1], pt[2]))
+
+            curve_fn = om.MFnNurbsCurve()
+            shape_obj = curve_fn.create(
+                points,
+                knots,
+                degree,
+                form_flag,
+                False,    
+                True,     
+                transform_obj
+            )
+
+            shape_fn = om.MFnDagNode(shape_obj)
+            shape_fn.setName(shape_data["name"])
+
+            if shape_data["overrideEnabled"]:
+                fn_dep = om.MFnDependencyNode(shape_obj)
+                fn_dep.findPlug('overrideEnabled', False).setBool(True)
+                fn_dep.findPlug('overrideColor', False).setInt(shape_data["overrideColor"])
+
+            if shape_data.get("alwaysDrawOnTop", False):
+                fn_dep = om.MFnDependencyNode(shape_obj)
+                fn_dep.findPlug('alwaysDrawOnTop', False).setBool(True)
+
+            line_width = shape_data.get("lineWidth", None)
+            if line_width is not None:
+                if cmds.attributeQuery("lineWidth", node=shape_fn.name(), exists=True):
+                    try:
+                        cmds.setAttr(shape_fn.name() + ".lineWidth", line_width)
+                    except:
+                        om.MGlobal.displayWarning(f"Could not set lineWidth for {shape_fn.name()}")
+
+            created_shapes.append(shape_obj)
+
+
+    return created_transforms
+
 
 def create_controller(name, offset=["GRP"]):
+    """
+    Creates a controller with a specific name and offset transforms and returns the controller and the groups.
 
-    """Creates the controller based on the curves information."""
-
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    guides_path = os.path.join(relative_path, "curves")
-    final_path = os.path.join(guides_path, "curves_info.json") # Update this line
-
-    name_temp = os.path.basename(final_path).split(".")[0]
-
-    # Build the controller offset groups.
-    offset_grps = []
-
+    Args:
+        name (str): Name of the controller.
+        suffixes (list): List of suffixes for the groups to be created. Default is ["GRP"].
+    """
+    created_grps = []
     if offset:
-        for grp in offset:
+        for suffix in offset:
+            if cmds.ls(f"{name}_{suffix}"):
+                om.MGlobal.displayWarning(f"{name}_{suffix} already exists.")
+                if created_grps:
+                    cmds.delete(created_grps[0])
+                return
+            tra = cmds.createNode("transform", name=f"{name}_{suffix}", ss=True)
+            if created_grps:
+                cmds.parent(tra, created_grps[-1])
+            created_grps.append(tra)
 
-            grp = cmds.createNode("transform", name=f"{name}_{grp}", ss=True)
-            if offset_grps:
-                cmds.parent(grp, offset_grps[-1])
-            offset_grps.append(grp)
-        
+    if cmds.ls(f"{name}_CTL"):
+        om.MGlobal.displayWarning(f"{name}_CTL already exists.")
+        if created_grps:
+            cmds.delete(created_grps[0])
+        return
     else:
-            grp = cmds.createNode("transform", name=f"{name}_GRP", ss=True)
+        ctl = build_curves_from_template(f"{name}_CTL")
 
-    
-    # Create the controller from the curve information.
-    with open(final_path, 'r') as file:
-        curves_data = json.load(file)
-
-    # print(curves_info)
-
-    shape = name + "_CTLShape"
-
-    for path, data in curves_data.items():
-
-        control_points = data["controlPoints"]
-        degree = data["degree"]
-        override_enabled = data["overrideEnabled"]
-        form = data["form"]
-        radius = data["radius"] 
-        always_draw_on_top = data["alwaysDrawOnTop"]
-        override_color = data["overrideColor"]
-
-        # Create the NURBS curve.
-        if form == 0:
-            controller = cmds.curve(d=degree, p=control_points, name=f"{name}_CTL")
+        if not ctl:
+            ctl = cmds.circle(name=f"{name}_CTL", ch=False)
         else:
-            controller = cmds.circle(name=f"{name}_CTL", ch=False, r=radius, nr=[0, 1, 0])[0]
+            ctl = [ctl[0]]  # make sure ctl is a list with one element for consistency
 
-        # Set the override color if it exists.
-        cmds.setAttr(f"{controller}.overrideEnabled", override_enabled)
-        if override_enabled != 0:
-            cmds.setAttr(f"{controller}.overrideColor", override_color)
-
-        cmds.setAttr(f"{controller}.form", form)
-        cmds.setAttr(f"{controller}.alwaysDrawOnTop", always_draw_on_top)
-
-    else:
-
-        om.MGlobal.displayWarning(f"No curve info found for {shape}. Creating a default circle controller.")
-        controller = cmds.circle(name=f"{name}_CTL", ch=False, r=3, nr=[0, 1, 0])[0]
-
-    cmds.parent(controller, offset_grps[-1])
-
-    return offset_grps, controller
+        if created_grps:
+            cmds.parent(ctl[0], created_grps[-1])
+        return created_grps, ctl[0]
 
 def mirror_controllers():
 
