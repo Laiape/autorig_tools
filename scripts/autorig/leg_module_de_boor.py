@@ -526,7 +526,7 @@ class LegModule(object):
             cmds.connectAttr(f"{abs_up}.outFloat", f"{self.ik_chain[1]}.translateX")
             cmds.connectAttr(f"{abs_low}.outFloat", f"{self.ik_chain[2]}.translateX")
 
-        cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[2]}.rotate")
         cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[1]}.rotate")
         
@@ -584,13 +584,13 @@ class LegModule(object):
                 cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
                 cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
                 cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
+
             else:
 
                 cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
                 cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
 
                 if "arm" in part:
-                    
                     
                     cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
 
@@ -607,8 +607,6 @@ class LegModule(object):
                     cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{main_ctl_decompose}.inputMatrix")
                     cmds.connectAttr(f"{main_ctl_decompose}.outputRotate", f"{compose_matrix}.inputRotate")
                     cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{node}.offsetParentMatrix")
-
-            
             
             cmds.delete(blend_matrix)
             pM_s.append(parent_m)

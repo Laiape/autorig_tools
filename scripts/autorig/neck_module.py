@@ -82,8 +82,8 @@ class NeckModule(object):
         # Get positions for first, second, mid, penultimate, and last joints
         num_joints = len(self.neck_chain)
         self.indices = [0, 1, num_joints // 2, num_joints - 2, num_joints - 1]
-        positions = [cmds.xform(self.neck_chain[0], q=True, ws=True, t=True), cmds.xform(self.neck_chain[self.indices[2]], q=True, ws=True, t=True), cmds.xform(self.neck_chain[-1], q=True, ws=True, t=True)]
-        self.neck_crv = cmds.curve(n=f"{self.side}_neck_CRV", d=1, p=positions)
+        positions = [cmds.xform(self.neck_chain[i], q=True, ws=True, t=True) for i in self.indices]
+        self.neck_crv = cmds.curve(n=f"{self.side}_neck_CRV", d=3, p=positions)
         neck_crv_shape = cmds.listRelatives(self.neck_crv, shapes=True)[0]
         cmds.rename(neck_crv_shape, f"{self.side}_neckShape_CRV")
         self.ik_handle = cmds.ikHandle(sj=self.neck_chain[0], ee=self.neck_chain[-1], name=f"{self.side}_neck_HDL", sol="ikSplineSolver", c=self.neck_crv, ccv=False)
@@ -303,7 +303,10 @@ class NeckModule(object):
 
             decompose_node = cmds.createNode("decomposeMatrix", name=ctl.replace("_CTL", "Squash_DCM"))
             cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{decompose_node}.inputMatrix")
-            cmds.connectAttr(f"{decompose_node}.outputTranslate", f"{squash_crv}.controlPoints[{i}]")
+            if i == 0:
+                cmds.connectAttr(f"{decompose_node}.outputTranslate", f"{squash_crv}.controlPoints[{i}]")
+            else:
+                cmds.connectAttr(f"{decompose_node}.outputTranslate", f"{squash_crv}.controlPoints[{self.indices[-1]}]")
 
         neck_trn = cmds.createNode("transform", name=f"{self.side}_neckSquash_TRN", ss=True, p=self.module_trn)
         self.lock_attributes(neck_trn, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
