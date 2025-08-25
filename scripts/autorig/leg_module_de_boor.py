@@ -578,12 +578,38 @@ class LegModule(object):
             
             parent_m = cmds.createNode("parentMatrix", name=f"{self.side}_{part}UpBendy_PM", ss=True)
             cmds.setAttr(f"{parent_m}.inputMatrix", position, type="matrix")
+
             if i == 0:
+
                 cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
+                cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
+                cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
             else:
+
                 cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
-            cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
-            cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
+                cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
+
+                if "arm" in part:
+                    
+                    
+                    cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
+
+                if "leg" in part: # Set up to pick blend the translation but follow the main bendy rotation.
+
+                    pick_matrix_translate = cmds.createNode("pickMatrix", name=f"{self.side}_{part}LowBendyTranslate_PM", ss=True)
+                    cmds.connectAttr(f"{parent_m}.outputMatrix", f"{pick_matrix_translate}.inputMatrix")
+                    cmds.setAttr(f"{pick_matrix_translate}.useRotate", 0)
+                    decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{self.side}_{part}LowBendyTranslate_DCM", ss=True)
+                    cmds.connectAttr(f"{pick_matrix_translate}.outputMatrix", f"{decompose_matrix}.inputMatrix")
+                    compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_{part}LowBendyTranslate_CM", ss=True)
+                    cmds.connectAttr(f"{decompose_matrix}.outputTranslate", f"{compose_matrix}.inputTranslate")
+                    main_ctl_decompose = cmds.createNode("decomposeMatrix", name=f"{self.side}_{part}MainBendy_DCM", ss=True)
+                    cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{main_ctl_decompose}.inputMatrix")
+                    cmds.connectAttr(f"{main_ctl_decompose}.outputRotate", f"{compose_matrix}.inputRotate")
+                    cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{node}.offsetParentMatrix")
+
+            
+            
             cmds.delete(blend_matrix)
             pM_s.append(parent_m)
 
