@@ -381,13 +381,21 @@ class LegModule(object):
         soft_distance = full_length - initial_distance
 
         # Create the soft IK handle TRN and do a parentMatrix to the last IK controller
-        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legSoftIkHDL_TRN", ss=True, p=self.module_trn)
-        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_legSoftIkHDL_MTX", ss=True)
-        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{self.ik_nodes[-1]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[2]")
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{soft_ik_handle}.offsetParentMatrix")
+        child_dag = om.MSelectionList().add(self.ik_controllers[0]).getDagPath(0)
+        parent_dag = om.MSelectionList().add(self.ik_controllers[-1]).getDagPath(0)
 
+        child_world_matrix = child_dag.inclusiveMatrix()
+        parent_world_matrix = parent_dag.inclusiveMatrix()
+
+        offset_matrix = child_world_matrix * parent_world_matrix.inverse()
+
+        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legSoftIkHDL_TRN", ss=True, p=self.module_trn)
+        parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_legSoftIkHDL_PM", ss=True)
+        ankle_wM = cmds.getAttr(f"{self.ik_controllers[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{parent_matrix}.inputMatrix", ankle_wM, type="matrix")
+        cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
+        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+        cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{soft_ik_handle}.offsetParentMatrix")
 
         self.soft_off = cmds.createNode("transform", name=f"{self.side}_legSoft_OFF", p=self.module_trn)
         decompose_matrix_translate = cmds.createNode("decomposeMatrix", name=f"{self.side}_legSoftTranslation_DCM", ss=True)

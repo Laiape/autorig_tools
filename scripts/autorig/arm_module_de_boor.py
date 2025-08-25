@@ -54,6 +54,11 @@ class ArmModule(object):
         self.fk_stretch()
         self.soft_ik()
         self.de_boor_ribbon()
+        
+        data_manager.DataExport().append_data("arm_module",
+                            {
+                                f"{self.side}_wrist_JNT": self.arm_chain[-1],
+                            })
 
     def lock_attributes(self, ctl, attrs):
 

@@ -7,5 +7,9 @@
         "local_hip_ctl": "C_localHip_CTL",
         "body_ctl": "C_body_CTL",
         "local_chest_ctl": "C_localChest_CTL"
+    },
+    "arm_module": {
+        "L_wrist_JNT": "L_wrist_JNT",
+        "R_wrist_JNT": "R_wrist_JNT"
     }
 }

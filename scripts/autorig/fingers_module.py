@@ -27,6 +27,7 @@ class FingersModule(object):
         self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        
 
     def make(self, side):
 
@@ -37,6 +38,7 @@ class FingersModule(object):
 
         """
         self.side = side
+        self.wrist_jnt = data_manager.DataExport().get_data("arm_module", f"{self.side}_wrist_JNT")
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_fingersModule_GRP", ss=True, p=self.modules)
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
@@ -47,6 +49,7 @@ class FingersModule(object):
         self.load_guides()
         # self.create_finger_blends()
         self.fk_fingers()
+        self.parent_fingers_to_wrist()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -206,6 +209,43 @@ class FingersModule(object):
         cmds.parent(self.fk_ring_nodes[0], self.controllers_grp)
         cmds.parent(self.fk_pinky_nodes[0], self.controllers_grp)
 
-    def finger_attributes(self):
+    def parent_fingers_to_wrist(self):
 
-        pass
+        """
+        Parent the finger controllers to the wrist controller.
+        """
+        for finger in [self.fk_thumb_nodes[0], self.fk_index_nodes[0], self.fk_middle_nodes[0], self.fk_ring_nodes[0], self.fk_pinky_nodes[0]]:
+
+            cmds.select(clear=True)
+            temp_locator = cmds.spaceLocator(name=finger.replace("GRP", "LOC"))[0]
+            cmds.matchTransform(temp_locator, finger, pos=True, rot=True)
+            parent_matrix = cmds.createNode("parentMatrix", name=finger.replace("GRP", "PM"), ss=True)
+            cmds.connectAttr(f"{temp_locator}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(f"{self.wrist_jnt}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+            offset_matrix = self.get_offset_matrix(finger, self.wrist_jnt)
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{finger}.offsetParentMatrix")
+
+            cmds.xform(finger, m=om.MMatrix.kIdentity)
+            cmds.delete(temp_locator)
+
+    def get_offset_matrix(self, child, parent):
+
+        """
+        Calculate the offset matrix between a child and parent transform in Maya.
+        Args:
+            child (str): The name of the child transform.
+            parent (str): The name of the parent transform. 
+        Returns:
+            om.MMatrix: The offset matrix that transforms the child into the parent's space.
+        """
+        child_dag = om.MSelectionList().add(child).getDagPath(0)
+        parent_dag = om.MSelectionList().add(parent).getDagPath(0)
+        
+        child_world_matrix = child_dag.inclusiveMatrix()
+        parent_world_matrix = parent_dag.inclusiveMatrix()
+        
+        offset_matrix = child_world_matrix * parent_world_matrix.inverse()
+
+        
+        return offset_matrix
