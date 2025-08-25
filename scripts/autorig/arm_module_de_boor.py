@@ -41,9 +41,6 @@ class ArmModule(object):
         self.side = side
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleZ")
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}_Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}_Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 

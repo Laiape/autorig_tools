@@ -245,6 +245,98 @@
             }
         ]
     },
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL": {
+        "transform": {
+            "name": "C_head_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_head_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            7.046685244321688,
+                            2.4959405772656444e-16,
+                            7.046685244321696
+                        ],
+                        [
+                            6.102119763705659e-16,
+                            4.991881154531289e-16,
+                            9.965517842294103
+                        ],
+                        [
+                            -7.046685244321688,
+                            2.4959405772656444e-16,
+                            7.046685244321688
+                        ],
+                        [
+                            -9.965517842294103,
+                            0.0,
+                            5.166142047231035e-16
+                        ],
+                        [
+                            -7.046685244321688,
+                            2.4959405772656444e-16,
+                            -7.046685244321688
+                        ],
+                        [
+                            -9.982527379923345e-16,
+                            -9.983762309062578e-16,
+                            -9.965517842294103
+                        ],
+                        [
+                            7.046685244321688,
+                            -2.4959405772656444e-16,
+                            -7.046685244321688
+                        ],
+                        [
+                            9.965517842294103,
+                            5.542101393953046e-32,
+                            -1.3589941495502592e-15
+                        ],
+                        [
+                            7.046685244321688,
+                            2.4959405772656444e-16,
+                            7.046685244321696
+                        ],
+                        [
+                            6.102119763705659e-16,
+                            4.991881154531289e-16,
+                            9.965517842294103
+                        ],
+                        [
+                            -7.046685244321688,
+                            2.4959405772656444e-16,
+                            7.046685244321688
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localChest_GRP|C_localChest_SPC|C_localChest_CTL": {
         "transform": {
             "name": "C_localChest_CTL",
@@ -1112,98 +1204,6 @@
                             -4.370225875272713,
                             1.5479368973800923e-16,
                             4.370225875272712
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_neck00_GRP|C_neck00_CTL|C_neck04_GRP|C_neck04_CTL": {
-        "transform": {
-            "name": "C_neck04_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_neck04_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": null,
-                "alwaysDrawOnTop": false,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            5.691435842686463,
-                            2.0159103422580365e-16,
-                            5.691435842686463
-                        ],
-                        [
-                            4.928533336650091e-16,
-                            4.031820684516073e-16,
-                            8.048905758103508
-                        ],
-                        [
-                            -5.691435842686463,
-                            2.0159103422580365e-16,
-                            5.691435842686459
-                        ],
-                        [
-                            -8.048905758103512,
-                            0.0,
-                            4.172566958303327e-16
-                        ],
-                        [
-                            -5.691435842686463,
-                            2.0159103422580365e-16,
-                            -5.691435842686463
-                        ],
-                        [
-                            -8.062643946879385e-16,
-                            -8.063641369032146e-16,
-                            -8.048905758103514
-                        ],
-                        [
-                            5.691435842686463,
-                            -2.0159103422580365e-16,
-                            -5.691435842686459
-                        ],
-                        [
-                            8.048905758103512,
-                            4.4762201551097036e-32,
-                            -1.09762643634242e-15
-                        ],
-                        [
-                            5.691435842686463,
-                            2.0159103422580365e-16,
-                            5.691435842686463
-                        ],
-                        [
-                            4.928533336650091e-16,
-                            4.031820684516073e-16,
-                            8.048905758103508
-                        ],
-                        [
-                            -5.691435842686463,
-                            2.0159103422580365e-16,
-                            5.691435842686459
                         ]
                     ],
                     "form": "periodic",

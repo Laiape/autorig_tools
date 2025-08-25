@@ -38,9 +38,6 @@ class NeckModule(object):
         """
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_neckModule_GRP", ss=True, p=self.modules)
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleZ")
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_neckSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
@@ -51,6 +48,7 @@ class NeckModule(object):
         self.reversed_neck()
         self.attatched_fk()
         self.squash()
+        self.local_head()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -110,19 +108,23 @@ class NeckModule(object):
         self.neck_ctls = []
         
         for i, jnt in enumerate(self.neck_chain):
-            
-            if i == 0 or i == len(self.neck_chain) - 1:
+
+            if i == 0:
 
                 corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
                 
+            if i == len(self.neck_chain) - 1:
+
+                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP"])
+
+            if i == 0 or i == len(self.neck_chain) - 1:
+
                 cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
-                if self.neck_ctls:
-                    cmds.parent(corner_nodes[0], self.neck_ctls[0])
+                cmds.parent(corner_nodes[0], self.controllers_grp)
+            
                 self.neck_nodes.append(corner_nodes[0])
                 self.neck_ctls.append(corner_ctl)
 
-
-        cmds.parent(self.neck_nodes[0], self.controllers_grp)
         cmds.connectAttr(f"{self.neck_ctls[0]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrix")
         cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrixEnd")
 
@@ -424,7 +426,42 @@ class NeckModule(object):
             cmds.connectAttr(f"{condition_node}.outColorR", f"{jnt}.scaleX")
             cmds.connectAttr(f"{condition_node}.outColorR", f"{jnt}.scaleZ")
 
+    def local_head(self):
 
+        """
+        Create the local head setup to have the head follow the neck's movement.
+        """
+
+        head_jnt = cmds.joint(name=f"{self.side}_head_JNT")
+        cmds.parent(head_jnt, self.module_trn)
+
+        decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
+        cmds.connectAttr(f"{self.neck_chain[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
+        decompose_rotation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headRotation_DCM")
+        cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation}.inputMatrix")
+        compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")
+        cmds.connectAttr(f"{decompose_translation}.outputTranslate", f"{compose_head}.inputTranslate")
+        cmds.connectAttr(f"{decompose_rotation}.outputRotate", f"{compose_head}.inputRotate")
+        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{head_jnt}.offsetParentMatrix")
+
+        head_skinning_jnt = cmds.joint(name=f"{self.side}_headSkinning_JNT")
+        cmds.parent(head_skinning_jnt, self.skeleton_grp)
+        cmds.connectAttr(f"{head_jnt}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")
+
+        cmds.addAttr(f"{self.neck_ctls[-1]}", longName="SPACE_SWITCH", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.neck_ctls[-1]}.SPACE_SWITCH", keyable=False, channelBox=True)
+        cmds.addAttr(f"{self.neck_ctls[-1]}", longName="Follow_Neck", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+
+        blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_head_BMX")
+        neck_offset = cmds.createNode("multMatrix", name=f"{self.side}_neckOffset_MMX")
+        cmds.connectAttr(f"{self.neck_ctls[0]}.worldMatrix[0]", f"{neck_offset}.matrixIn[0]")
+        cmds.connectAttr(f"{self.neck_nodes[0]}.worldInverseMatrix[0]", f"{neck_offset}.matrixIn[1]")
+
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+        cmds.connectAttr(f"{neck_offset}.matrixSum", f"{blend_matrix}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.neck_ctls[-1]}.Follow_Neck", f"{blend_matrix}.target[0].weight")
+
+        cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{self.neck_nodes[-1]}.offsetParentMatrix")
 
 
 

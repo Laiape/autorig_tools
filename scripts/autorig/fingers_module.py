@@ -40,11 +40,9 @@ class FingersModule(object):
         self.side = side
         self.wrist_jnt = data_manager.DataExport().get_data("arm_module", f"{self.side}_wrist_JNT")
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_fingersModule_GRP", ss=True, p=self.modules)
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleZ")
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_fingersSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_fingersControllers_GRP", ss=True, p=self.masterwalk_ctl)
+        cmds.setAttr(f"{self.controllers_grp}.inheritsTransform", 0)
 
         self.load_guides()
         # self.create_finger_blends()
