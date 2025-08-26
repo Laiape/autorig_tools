@@ -9,7 +9,7 @@ from utils import data_manager
 from autorig import arm_module_de_boor as arm_module
 from autorig import spine_module
 from autorig import leg_module_de_boor as leg_module
-from autorig import neck_module
+from autorig import neck_module_de_boor as neck_module
 from autorig import fingers_module
 
 reload(guides_manager) 

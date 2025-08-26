@@ -65,6 +65,14 @@ def create_basic_structure():
     cmds.addAttr(masterwalk_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
     cmds.setAttr(f"{masterwalk_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
     cmds.addAttr(masterwalk_ctl, longName="globalScale", attributeType="float", defaultValue=1, minValue=0.01, keyable=True)
+    cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scaleX")
+    cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scaleY")
+    cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scaleZ")
+
+    for attr in ["scaleX", "scaleY", "scaleZ"]:
+
+        cmds.setAttr(f"{masterwalk_ctl}.{attr}", lock=True, keyable=False, channelBox=False)
+
     cmds.parent(character_node[0], nodes[2])
     cmds.parent(preferences_node[0], masterwalk_ctl)
     cmds.parent(masterwalk_node[0], character_ctl)

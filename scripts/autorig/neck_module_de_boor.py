@@ -9,12 +9,14 @@ from utils import guides_manager
 from utils import curve_tool
 
 from autorig.utilities import matrix_manager
+from autorig.utilities import ribbon
 
 reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 
 reload(matrix_manager)
+reload(ribbon)
 
 class NeckModule(object):
 
@@ -42,13 +44,14 @@ class NeckModule(object):
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.load_guides()
-        self.ik_setup()
         self.controller_creation()
-        self.stretch_callback(self.neck_chain, self.neck_crv)
-        self.reversed_neck()
-        self.attatched_fk()
-        self.squash()
         self.local_head()
+        self.ribbon_setup()
+        # self.stretch_callback(self.neck_chain, self.neck_crv)
+        # self.reversed_neck()
+        # self.attatched_fk()
+        # self.squash()
+        
 
     def lock_attributes(self, ctl, attrs):
 
@@ -71,31 +74,6 @@ class NeckModule(object):
         self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT")
         cmds.parent(self.neck_chain[0], self.module_trn)
 
-    def ik_setup(self):
-
-        """
-        Set up the IK system for the neck module.
-        """
-
-        # Get positions for first, second, mid, penultimate, and last joints
-        num_joints = len(self.neck_chain)
-        self.indices = [0, 1, num_joints // 2, num_joints - 2, num_joints - 1]
-        positions = [cmds.xform(self.neck_chain[i], q=True, ws=True, t=True) for i in self.indices]
-        self.neck_crv = cmds.curve(n=f"{self.side}_neck_CRV", d=3, p=positions)
-        neck_crv_shape = cmds.listRelatives(self.neck_crv, shapes=True)[0]
-        cmds.rename(neck_crv_shape, f"{self.side}_neckShape_CRV")
-        self.ik_handle = cmds.ikHandle(sj=self.neck_chain[0], ee=self.neck_chain[-1], name=f"{self.side}_neck_HDL", sol="ikSplineSolver", c=self.neck_crv, ccv=False)
-        cmds.parent(self.ik_handle[0], self.module_trn)
-        cmds.setAttr(f"{self.ik_handle[0]}.dTwistControlEnable", 1)
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpType", 4)
-        cmds.setAttr(f"{self.ik_handle[0]}.dForwardAxis", 2) # Y points next joint
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpAxis", 6) # X makes world position
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpVectorX", 1)
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpVectorY", 0)
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpVectorZ", 0)
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpVectorEndX", 1)
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpVectorEndY", 0)
-        cmds.setAttr(f"{self.ik_handle[0]}.dWorldUpVectorEndZ", 0)
        
 
     def controller_creation(self):
@@ -112,6 +90,7 @@ class NeckModule(object):
             if i == 0:
 
                 corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
+                cmds.connectAttr(f"{corner_ctl}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
                 
             if i == len(self.neck_chain) - 1:
 
@@ -121,21 +100,24 @@ class NeckModule(object):
 
                 cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
                 cmds.parent(corner_nodes[0], self.controllers_grp)
+                
             
                 self.neck_nodes.append(corner_nodes[0])
                 self.neck_ctls.append(corner_ctl)
 
-        # cmds.connectAttr(f"{self.neck_ctls[0]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrix")
-        # cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrixEnd")
 
+        cmds.xform(self.neck_chain[0], m=om.MMatrix.kIdentity)
         for i , ctl in enumerate(self.neck_ctls):
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
-            decompose_node = cmds.createNode("decomposeMatrix", name=ctl.replace("_CTL", "_DCM"))
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{decompose_node}.inputMatrix")
-            if i == 0:
-                cmds.connectAttr(f"{decompose_node}.outputTranslate", f"{self.neck_crv}.controlPoints[{i}]")
-            else:
-                cmds.connectAttr(f"{decompose_node}.outputTranslate", f"{self.neck_crv}.controlPoints[{self.indices[-1]}]")
+
+
+    def ribbon_setup(self):
+
+        """
+        Set up the ribbon for the neck module.
+        """
+        sel = (self.neck_chain[0], self.neck_chain[-1])
+        self.ribbon = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="y", up_axis="z")
 
     def stretch_callback(self, chain, crv):
 
@@ -432,8 +414,8 @@ class NeckModule(object):
         Create the local head setup to have the head follow the neck's movement.
         """
 
-        head_jnt = cmds.joint(name=f"{self.side}_head_JNT")
-        cmds.parent(head_jnt, self.module_trn)
+        self.head_jnt = cmds.joint(name=f"{self.side}_head_JNT")
+        cmds.parent(self.head_jnt, self.module_trn)
 
         decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
         cmds.connectAttr(f"{self.neck_chain[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
@@ -442,11 +424,11 @@ class NeckModule(object):
         compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")
         cmds.connectAttr(f"{decompose_translation}.outputTranslate", f"{compose_head}.inputTranslate")
         cmds.connectAttr(f"{decompose_rotation}.outputRotate", f"{compose_head}.inputRotate")
-        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{head_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{self.head_jnt}.offsetParentMatrix")
 
         head_skinning_jnt = cmds.joint(name=f"{self.side}_headSkinning_JNT")
         cmds.parent(head_skinning_jnt, self.skeleton_grp)
-        cmds.connectAttr(f"{head_jnt}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.head_jnt}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")
 
         cmds.addAttr(f"{self.neck_ctls[-1]}", longName="SPACE_SWITCH", attributeType="enum", enumName="____")
         cmds.setAttr(f"{self.neck_ctls[-1]}.SPACE_SWITCH", keyable=False, channelBox=True)

@@ -342,14 +342,14 @@ class LegModule(object):
         cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input1")
         cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input1")
 
-        upper_distance = cmds.getAttr(f"{self.fk_controllers[1]}.translateX")
-        lower_distance = cmds.getAttr(f"{self.fk_controllers[-1]}.translateX")
+        upper_distance = cmds.getAttr(f"{self.fk_nodes[1]}.translateX")
+        lower_distance = cmds.getAttr(f"{self.fk_nodes[-1]}.translateX")
 
         cmds.setAttr(f"{self.upper_double_mult_linear}.input2", upper_distance)
         cmds.setAttr(f"{self.lower_double_mult_linear}.input2", lower_distance)
-        cmds.connectAttr(f"{self.upper_double_mult_linear}.output", f"{self.fk_controllers[1]}.translateX")
-        cmds.connectAttr(f"{self.lower_double_mult_linear}.output", f"{self.fk_controllers[-1]}.translateX")
-    
+        cmds.connectAttr(f"{self.upper_double_mult_linear}.output", f"{self.fk_nodes[1]}.translateX")
+        cmds.connectAttr(f"{self.lower_double_mult_linear}.output", f"{self.fk_nodes[-1]}.translateX")
+
     def soft_ik(self):
 
         """
@@ -382,7 +382,7 @@ class LegModule(object):
         parent_dag = om.MSelectionList().add(self.ik_controllers[-1]).getDagPath(0)
 
         child_world_matrix = child_dag.inclusiveMatrix()
-        parent_world_matrix = parent_dag.inclusiveMatrix()
+        parent_world_matrix = parent_dag.inclusiveMatrix()  
 
         offset_matrix = child_world_matrix * parent_world_matrix.inverse()
 
@@ -395,8 +395,6 @@ class LegModule(object):
         cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{soft_ik_handle}.offsetParentMatrix")
 
         self.soft_off = cmds.createNode("transform", name=f"{self.side}_legSoft_OFF", p=self.module_trn)
-        decompose_matrix_translate = cmds.createNode("decomposeMatrix", name=f"{self.side}_legSoftTranslation_DCM", ss=True)
-        cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{decompose_matrix_translate}.inputMatrix")
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_legSoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
         cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
@@ -407,12 +405,7 @@ class LegModule(object):
         cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 1)
         cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", 0)
         cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
-        decompose_matrix_rotate = cmds.createNode("decomposeMatrix", name=f"{self.side}_legSoftRotation_DCM", ss=True)
-        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{decompose_matrix_rotate}.inputMatrix")
-        compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_legSoftCompose_CM", ss=True)
-        cmds.connectAttr(f"{decompose_matrix_translate}.outputTranslate", f"{compose_matrix}.inputTranslate")
-        cmds.connectAttr(f"{decompose_matrix_rotate}.outputRotate", f"{compose_matrix}.inputRotate")
-        cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
+        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
 
         self.soft_trn = cmds.createNode("transform", name=f"{self.side}_legSoft_TRN", p=self.soft_off)
         cmds.matchTransform(self.soft_trn, self.leg_chain[2], pos=True)
@@ -500,7 +493,7 @@ class LegModule(object):
 
         cmds.setAttr(f"{self.created_nodes[9]}.floatA", math.e)
         cmds.setAttr(f"{self.created_nodes[4]}.floatB", abs(cmds.getAttr(f"{self.ik_chain[1]}.translateX")))
-        cmds.setAttr(f"{self.created_nodes[10]}.floatB", abs(cmds.getAttr(f"{self.ik_chain[-3]}.translateX")))
+        cmds.setAttr(f"{self.created_nodes[10]}.floatB", abs(cmds.getAttr(f"{self.ik_chain[2]}.translateX")))
         cmds.setAttr(f"{self.created_nodes[2]}.outputMin", 0.001)
         cmds.setAttr(f"{self.created_nodes[2]}.outputMax", soft_distance)
         cmds.setAttr(f"{self.created_nodes[7]}.floatB", -1.0)
