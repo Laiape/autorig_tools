@@ -48,6 +48,7 @@ class FingersModule(object):
         # self.create_finger_blends()
         self.fk_fingers()
         self.parent_fingers_to_wrist()
+        self.attributes_setup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -207,6 +208,8 @@ class FingersModule(object):
         cmds.parent(self.fk_ring_nodes[0], self.controllers_grp)
         cmds.parent(self.fk_pinky_nodes[0], self.controllers_grp)
 
+    
+
     def parent_fingers_to_wrist(self):
 
         """
@@ -226,6 +229,85 @@ class FingersModule(object):
 
             cmds.xform(finger, m=om.MMatrix.kIdentity)
             cmds.delete(temp_locator)
+
+    def attributes_setup(self):
+
+        self.finger_attributes_nodes, self.finger_attributes_ctl = curve_tool.create_controller(name=f"{self.side}_fingersAttributes", offset=["GRP"])
+        cmds.parent(self.finger_attributes_nodes[0], self.controllers_grp)
+        point_temp = cmds.pointConstraint(self.fk_middle_ctl[0], self.fk_middle_ctl[1], self.finger_attributes_nodes[0], mo=False)
+        cmds.delete(point_temp)
+        self.lock_attributes(self.finger_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        cmds.addAttr(self.finger_attributes_ctl, longName="CURL", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="SPREAD", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="TWIST", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="FAN", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+
+        self.attributes_values_trn = cmds.createNode("transform", name=f"{self.side}_fingersAttributesValues_TRN", ss=True, p=self.module_trn)
+        self.lock_attributes(self.attributes_values_trn, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+
+        cmds.addAttr(self.attributes_values_trn, longName="CURL", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.CURL", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_Down", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.Curl_Down", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_down_00", attributeType="float", defaultValue=0, keyable=True) # Curl values
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_down_01", attributeType="float", defaultValue=90, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_down_02", attributeType="float", defaultValue=80, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_down_03", attributeType="float", defaultValue=80, keyable=True)
+
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_up", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.Curl_up", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_up_00", attributeType="float", defaultValue=0, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_up_01", attributeType="float", defaultValue=-20, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_up_02", attributeType="float", defaultValue=-18, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Curl_up_03", attributeType="float", defaultValue=-15, keyable=True)
+
+        cmds.addAttr(self.attributes_values_trn, longName="SPREAD", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.SPREAD", channelBox=True, keyable=False)
+
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_Open", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.Spread_Open", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_open_thumb", attributeType="float", defaultValue=20, keyable=True) # Spread values
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_open_index", attributeType="float", defaultValue=25, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_open_middle", attributeType="float", defaultValue=2, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_open_ring", attributeType="float", defaultValue=15, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_open_pinky", attributeType="float", defaultValue=30, keyable=True)
+
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_close", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.Spread_close", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_close_thumb", attributeType="float", defaultValue=0, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_close_index", attributeType="float", defaultValue=15, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_close_middle", attributeType="float", defaultValue=2, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_close_ring", attributeType="float", defaultValue=-10, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Spread_close_pinky", attributeType="float", defaultValue=-15, keyable=True)
+
+
+        cmds.addAttr(self.attributes_values_trn, longName="TWIST", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.TWIST", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Twist_00", attributeType="float", defaultValue=0, keyable=True) # Twist values
+        cmds.addAttr(self.attributes_values_trn, longName="Twist_01", attributeType="float", defaultValue=20, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Twist_02", attributeType="float", defaultValue=10, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Twist_03", attributeType="float", defaultValue=50, keyable=True)
+
+        
+        cmds.addAttr(self.attributes_values_trn, longName="FAN", attributeType="enum", enumName="____")
+        cmds.setAttr(f"{self.attributes_values_trn}.FAN", channelBox=True, keyable=False)
+        cmds.addAttr(self.attributes_values_trn, longName="Fan_thumb", attributeType="float", defaultValue=25, keyable=True) # Fan value
+        cmds.addAttr(self.attributes_values_trn, longName="Fan_index", attributeType="float", defaultValue=10, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Fan_middle", attributeType="float", defaultValue=15, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Fan_ring", attributeType="float", defaultValue=20, keyable=True)
+        cmds.addAttr(self.attributes_values_trn, longName="Fan_pinky", attributeType="float", defaultValue=25, keyable=True)
+
+    def fingers_attributes_callback(self, ctl):
+
+        condition_curl = cmds.createNode("condition", name=ctl.replace("CTL", "CURL_COND"), ss=True)
+        condition_spread = cmds.createNode("condition", name=ctl.replace("CTL", "SPREAD_COND"), ss=True)
+        condition_twist = cmds.createNode("condition", name=ctl.replace("CTL", "TWIST_COND"), ss=True)
+        condition_fan = cmds.createNode("condition", name=ctl.replace("CTL", "FAN_COND"), ss=True)
+
+        cmds.connectAttr(f"{self.attributes_values_trn}.Curl", f"{condition_curl}.firstTerm")
+        cmds.connectAttr(f"{self.attributes_values_trn}.Spread", f"{condition_spread}.firstTerm")
+        cmds.connectAttr(f"{self.attributes_values_trn}.Twist", f"{condition_twist}.firstTerm")
+        cmds.connectAttr(f"{self.attributes_values_trn}.Fan", f"{condition_fan}.firstTerm")
 
     def get_offset_matrix(self, child, parent):
 
