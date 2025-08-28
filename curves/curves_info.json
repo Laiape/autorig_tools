@@ -3819,6 +3819,217 @@
             }
         ]
     },
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_clavicle_GRP|L_clavicle_OFF|L_clavicl1e_CTL": {
+        "transform": {
+            "name": "L_clavicl1e_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_clavicl1e_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_clavicle_GRP|L_clavicle_OFF|L_clavicl1e_CTL|L_clavicle_CTL": {
+        "transform": {
+            "name": "L_clavicle_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_clavicle_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": false,
+                "lineWidth": 1.2999999523162842,
+                "curve": {
+                    "cvs": [
+                        [
+                            9.856504261486421,
+                            16.813437992919198,
+                            -9.769962616701378e-15
+                        ],
+                        [
+                            7.101401180669286,
+                            17.95463905472955,
+                            -8.881784197001252e-16
+                        ],
+                        [
+                            4.346298099852163,
+                            16.813437992919187,
+                            -5.551115123125783e-15
+                        ],
+                        [
+                            3.2050970380418073,
+                            14.058334912102069,
+                            -1.8338058217754988e-15
+                        ],
+                        [
+                            4.346298099852163,
+                            11.303231831284943,
+                            -9.992007221626409e-16
+                        ],
+                        [
+                            7.101401180669286,
+                            10.16203076947459,
+                            -1.5543122344752192e-15
+                        ],
+                        [
+                            9.856504261486421,
+                            11.303231831284943,
+                            -1.1102230246251565e-15
+                        ],
+                        [
+                            10.99770532329677,
+                            14.058334912102069,
+                            -2.069321999172317e-15
+                        ],
+                        [
+                            9.856504261486421,
+                            16.813437992919198,
+                            -9.769962616701378e-15
+                        ],
+                        [
+                            7.101401180669286,
+                            17.95463905472955,
+                            -8.881784197001252e-16
+                        ],
+                        [
+                            4.346298099852163,
+                            16.813437992919187,
+                            -5.551115123125783e-15
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            },
+            {
+                "name": "L_clavicle_CTLShape1",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": false,
+                "lineWidth": 1.2999999523162842,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            7.031807577381403,
+                            10.547711366072111,
+                            4.884981308350689e-15
+                        ]
+                    ],
+                    "form": "open",
+                    "knots": [
+                        0.0,
+                        1.0
+                    ],
+                    "degree": 1
+                }
+            }
+        ]
+    },
     "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_arm_Controllers_GRP|L_armFkControllers_GRP|L_shoulderFk_GRP|L_shoulderFk_CTL|L_elbowFk_GRP|L_elbowFk_CTL": {
         "transform": {
             "name": "L_elbowFk_CTL",
@@ -3911,98 +4122,6 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_fingersAttributes_GRP|L_fingersAttributes1_CTL": {
-        "transform": {
-            "name": "L_fingersAttributes1_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_fingersAttributes1_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": null,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            -1.1081941875543881,
-                            5.74489823752483e-17,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            -0.7836116248912245,
-                            0.0
-                        ],
-                        [
-                            -1.1100856969603225e-16,
-                            -1.1081941875543884,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            -0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            1.1081941875543881,
-                            -1.511240500779959e-16,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_fingersAttributes_GRP|L_fingersAttributes_CTL": {
         "transform": {
             "name": "L_fingersAttributes_CTL",
@@ -4012,10 +4131,10 @@
         "shapes": [
             {
                 "name": "L_fingersAttributes_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": null,
+                "overrideEnabled": true,
+                "overrideColor": 6,
                 "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
+                "lineWidth": 1.2999999523162842,
                 "curve": {
                     "cvs": [
                         [
@@ -4039,10 +4158,10 @@
             },
             {
                 "name": "nurbsCircleShape2",
-                "overrideEnabled": false,
-                "overrideColor": null,
+                "overrideEnabled": true,
+                "overrideColor": 6,
                 "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
+                "lineWidth": 1.2999999523162842,
                 "curve": {
                     "cvs": [
                         [
@@ -4122,10 +4241,10 @@
             },
             {
                 "name": "nurbsCircleShape1",
-                "overrideEnabled": false,
-                "overrideColor": null,
+                "overrideEnabled": true,
+                "overrideColor": 6,
                 "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
+                "lineWidth": 1.2999999523162842,
                 "curve": {
                     "cvs": [
                         [
@@ -4389,7 +4508,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_SDK|L_index00_CTL": {
         "transform": {
             "name": "L_index00_CTL",
             "overrideEnabled": false,
@@ -4481,7 +4600,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_CTL|L_index01_GRP|L_index01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_SDK|L_index00_CTL|L_index01_GRP|L_index01_SDK|L_index01_CTL": {
         "transform": {
             "name": "L_index01_CTL",
             "overrideEnabled": false,
@@ -4573,7 +4692,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_CTL|L_index01_GRP|L_index01_CTL|L_index02_GRP|L_index02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_SDK|L_index00_CTL|L_index01_GRP|L_index01_SDK|L_index01_CTL|L_index02_GRP|L_index02_SDK|L_index02_CTL": {
         "transform": {
             "name": "L_index02_CTL",
             "overrideEnabled": false,
@@ -4665,7 +4784,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_CTL|L_index01_GRP|L_index01_CTL|L_index02_GRP|L_index02_CTL|L_index03_GRP|L_index03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_SDK|L_index00_CTL|L_index01_GRP|L_index01_SDK|L_index01_CTL|L_index02_GRP|L_index02_SDK|L_index02_CTL|L_index03_GRP|L_index03_SDK|L_index03_CTL": {
         "transform": {
             "name": "L_index03_CTL",
             "overrideEnabled": false,
@@ -5825,7 +5944,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_SDK|L_middle00_CTL": {
         "transform": {
             "name": "L_middle00_CTL",
             "overrideEnabled": false,
@@ -5917,7 +6036,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_CTL|L_middle01_GRP|L_middle01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_SDK|L_middle00_CTL|L_middle01_GRP|L_middle01_SDK|L_middle01_CTL": {
         "transform": {
             "name": "L_middle01_CTL",
             "overrideEnabled": false,
@@ -6009,7 +6128,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_CTL|L_middle01_GRP|L_middle01_CTL|L_middle02_GRP|L_middle02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_SDK|L_middle00_CTL|L_middle01_GRP|L_middle01_SDK|L_middle01_CTL|L_middle02_GRP|L_middle02_SDK|L_middle02_CTL": {
         "transform": {
             "name": "L_middle02_CTL",
             "overrideEnabled": false,
@@ -6101,7 +6220,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_CTL|L_middle01_GRP|L_middle01_CTL|L_middle02_GRP|L_middle02_CTL|L_middle03_GRP|L_middle03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_SDK|L_middle00_CTL|L_middle01_GRP|L_middle01_SDK|L_middle01_CTL|L_middle02_GRP|L_middle02_SDK|L_middle02_CTL|L_middle03_GRP|L_middle03_SDK|L_middle03_CTL": {
         "transform": {
             "name": "L_middle03_CTL",
             "overrideEnabled": false,
@@ -6193,7 +6312,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_SDK|L_pinky00_CTL": {
         "transform": {
             "name": "L_pinky00_CTL",
             "overrideEnabled": false,
@@ -6285,7 +6404,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_CTL|L_pinky01_GRP|L_pinky01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_SDK|L_pinky00_CTL|L_pinky01_GRP|L_pinky01_SDK|L_pinky01_CTL": {
         "transform": {
             "name": "L_pinky01_CTL",
             "overrideEnabled": false,
@@ -6377,7 +6496,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_CTL|L_pinky01_GRP|L_pinky01_CTL|L_pinky02_GRP|L_pinky02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_SDK|L_pinky00_CTL|L_pinky01_GRP|L_pinky01_SDK|L_pinky01_CTL|L_pinky02_GRP|L_pinky02_SDK|L_pinky02_CTL": {
         "transform": {
             "name": "L_pinky02_CTL",
             "overrideEnabled": false,
@@ -6469,7 +6588,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_CTL|L_pinky01_GRP|L_pinky01_CTL|L_pinky02_GRP|L_pinky02_CTL|L_pinky03_GRP|L_pinky03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_SDK|L_pinky00_CTL|L_pinky01_GRP|L_pinky01_SDK|L_pinky01_CTL|L_pinky02_GRP|L_pinky02_SDK|L_pinky02_CTL|L_pinky03_GRP|L_pinky03_SDK|L_pinky03_CTL": {
         "transform": {
             "name": "L_pinky03_CTL",
             "overrideEnabled": false,
@@ -6561,7 +6680,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_SDK|L_ring00_CTL": {
         "transform": {
             "name": "L_ring00_CTL",
             "overrideEnabled": false,
@@ -6653,7 +6772,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_CTL|L_ring01_GRP|L_ring01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_SDK|L_ring00_CTL|L_ring01_GRP|L_ring01_SDK|L_ring01_CTL": {
         "transform": {
             "name": "L_ring01_CTL",
             "overrideEnabled": false,
@@ -6745,7 +6864,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_CTL|L_ring01_GRP|L_ring01_CTL|L_ring02_GRP|L_ring02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_SDK|L_ring00_CTL|L_ring01_GRP|L_ring01_SDK|L_ring01_CTL|L_ring02_GRP|L_ring02_SDK|L_ring02_CTL": {
         "transform": {
             "name": "L_ring02_CTL",
             "overrideEnabled": false,
@@ -6837,7 +6956,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_CTL|L_ring01_GRP|L_ring01_CTL|L_ring02_GRP|L_ring02_CTL|L_ring03_GRP|L_ring03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_ring00_GRP|L_ring00_SDK|L_ring00_CTL|L_ring01_GRP|L_ring01_SDK|L_ring01_CTL|L_ring02_GRP|L_ring02_SDK|L_ring02_CTL|L_ring03_GRP|L_ring03_SDK|L_ring03_CTL": {
         "transform": {
             "name": "L_ring03_CTL",
             "overrideEnabled": false,
@@ -7021,7 +7140,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_thumb00_GRP|L_thumb00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_thumb00_GRP|L_thumb00_SDK|L_thumb00_CTL": {
         "transform": {
             "name": "L_thumb00_CTL",
             "overrideEnabled": false,
@@ -7113,7 +7232,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_thumb00_GRP|L_thumb00_CTL|L_thumb01_GRP|L_thumb01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_thumb00_GRP|L_thumb00_SDK|L_thumb00_CTL|L_thumb01_GRP|L_thumb01_SDK|L_thumb01_CTL": {
         "transform": {
             "name": "L_thumb01_CTL",
             "overrideEnabled": false,
@@ -7205,7 +7324,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_thumb00_GRP|L_thumb00_CTL|L_thumb01_GRP|L_thumb01_CTL|L_thumb02_GRP|L_thumb02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_thumb00_GRP|L_thumb00_SDK|L_thumb00_CTL|L_thumb01_GRP|L_thumb01_SDK|L_thumb01_CTL|L_thumb02_GRP|L_thumb02_SDK|L_thumb02_CTL": {
         "transform": {
             "name": "L_thumb02_CTL",
             "overrideEnabled": false,
@@ -9249,6 +9368,217 @@
             }
         ]
     },
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_clavicle_GRP|R_clavicle_OFF|R_clavic1le_CTL": {
+        "transform": {
+            "name": "R_clavic1le_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_clavic1le_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_clavicle_GRP|R_clavicle_OFF|R_clavic1le_CTL|R_clavicle_CTL": {
+        "transform": {
+            "name": "R_clavicle_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_clavicle_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": false,
+                "lineWidth": 1.2999999523162842,
+                "curve": {
+                    "cvs": [
+                        [
+                            -9.856504261486412,
+                            -16.813437992919198,
+                            1.3322676295501878e-15
+                        ],
+                        [
+                            -7.101401180669285,
+                            -17.954639054729544,
+                            1.3766765505351941e-14
+                        ],
+                        [
+                            -4.346298099852162,
+                            -16.81343799291918,
+                            6.8833827526759706e-15
+                        ],
+                        [
+                            -3.2050970380418065,
+                            -14.058334912102064,
+                            9.769962616701378e-15
+                        ],
+                        [
+                            -4.346298099852161,
+                            -11.303231831284938,
+                            9.103828801926284e-15
+                        ],
+                        [
+                            -7.101401180669287,
+                            -10.162030769474589,
+                            6.8833827526759706e-15
+                        ],
+                        [
+                            -9.856504261486418,
+                            -11.303231831284938,
+                            1.0658141036401503e-14
+                        ],
+                        [
+                            -10.997705323296767,
+                            -14.058334912102064,
+                            1.1546319456101628e-14
+                        ],
+                        [
+                            -9.856504261486412,
+                            -16.813437992919198,
+                            1.3322676295501878e-15
+                        ],
+                        [
+                            -7.101401180669285,
+                            -17.954639054729544,
+                            1.3766765505351941e-14
+                        ],
+                        [
+                            -4.346298099852162,
+                            -16.81343799291918,
+                            6.8833827526759706e-15
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            },
+            {
+                "name": "R_clavicle_CTLShape1",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": false,
+                "lineWidth": 1.2999999523162842,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            -7.031807577381403,
+                            -10.547711366072104,
+                            1.6209256159527285e-14
+                        ]
+                    ],
+                    "form": "open",
+                    "knots": [
+                        0.0,
+                        1.0
+                    ],
+                    "degree": 1
+                }
+            }
+        ]
+    },
     "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_arm_Controllers_GRP|R_armFkControllers_GRP|R_shoulderFk_GRP|R_shoulderFk_CTL|R_elbowFk_GRP|R_elbowFk_CTL": {
         "transform": {
             "name": "R_elbowFk_CTL",
@@ -9350,66 +9680,176 @@
         "shapes": [
             {
                 "name": "R_fingersAttributes_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": null,
+                "overrideEnabled": true,
+                "overrideColor": 13,
                 "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
+                "lineWidth": 1.2999999523162842,
                 "curve": {
                     "cvs": [
                         [
-                            0.7836116248912245,
-                            0.7836116248912246,
+                            0.0,
+                            0.0,
                             0.0
                         ],
                         [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
+                            -1.4844787889209297,
+                            1.4844787889209292,
+                            -3.3306690738754696e-16
+                        ]
+                    ],
+                    "form": "open",
+                    "knots": [
+                        0.0,
+                        1.0
+                    ],
+                    "degree": 1
+                }
+            },
+            {
+                "name": "R_fingersAttributes_CTLShape1",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": false,
+                "lineWidth": 1.2999999523162842,
+                "curve": {
+                    "cvs": [
+                        [
+                            -1.1053301996124438,
+                            2.2135243871668315,
+                            -2.7755575615628914e-17
+                        ],
+                        [
+                            -1.4299127622756074,
+                            2.9971360120580557,
+                            -1.1102230246251565e-16
+                        ],
+                        [
+                            -2.2135243871668315,
+                            3.3217185747212197,
+                            -2.7755575615628914e-17
+                        ],
+                        [
+                            -2.9971360120580557,
+                            2.9971360120580557,
                             0.0
                         ],
                         [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
+                            -3.3217185747212206,
+                            2.2135243871668315,
+                            -2.7755575615628914e-17
                         ],
                         [
-                            -1.1081941875543881,
-                            5.74489823752483e-17,
-                            0.0
+                            -2.9971360120580557,
+                            1.429912762275606,
+                            1.6653345369377348e-16
                         ],
                         [
-                            -0.7836116248912245,
-                            -0.7836116248912245,
-                            0.0
+                            -2.213524387166831,
+                            1.1053301996124436,
+                            2.7755575615628914e-17
                         ],
                         [
-                            -1.1100856969603225e-16,
-                            -1.1081941875543884,
-                            0.0
+                            -1.4299127622756076,
+                            1.4299127622756072,
+                            -6.162975822039155e-33
                         ],
                         [
-                            0.7836116248912245,
-                            -0.7836116248912244,
-                            0.0
+                            -1.1053301996124438,
+                            2.2135243871668315,
+                            -2.7755575615628914e-17
                         ],
                         [
-                            1.1081941875543881,
-                            -1.511240500779959e-16,
-                            0.0
+                            -1.4299127622756074,
+                            2.9971360120580557,
+                            -1.1102230246251565e-16
                         ],
                         [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
+                            -2.2135243871668315,
+                            3.3217185747212197,
+                            -2.7755575615628914e-17
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            },
+            {
+                "name": "R_fingersAttributes_CTLShape2",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": false,
+                "lineWidth": 1.2999999523162842,
+                "curve": {
+                    "cvs": [
+                        [
+                            -1.6594272933896375,
+                            1.6594272933896375,
+                            -0.7836116248912246
                         ],
                         [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
+                            -2.2135243871668315,
+                            2.213524387166831,
+                            -1.1081941875543877
                         ],
                         [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
+                            -2.767621480944026,
+                            2.767621480944026,
+                            -0.7836116248912244
+                        ],
+                        [
+                            -2.997136012058056,
+                            2.9971360120580566,
+                            -5.74489823752483e-17
+                        ],
+                        [
+                            -2.767621480944026,
+                            2.767621480944026,
+                            0.7836116248912245
+                        ],
+                        [
+                            -2.2135243871668315,
+                            2.213524387166831,
+                            1.1081941875543884
+                        ],
+                        [
+                            -1.6594272933896375,
+                            1.6594272933896375,
+                            0.7836116248912244
+                        ],
+                        [
+                            -1.4299127622756074,
+                            1.4299127622756074,
+                            1.511240500779959e-16
+                        ],
+                        [
+                            -1.6594272933896375,
+                            1.6594272933896375,
+                            -0.7836116248912246
+                        ],
+                        [
+                            -2.2135243871668315,
+                            2.213524387166831,
+                            -1.1081941875543877
+                        ],
+                        [
+                            -2.767621480944026,
+                            2.767621480944026,
+                            -0.7836116248912244
                         ]
                     ],
                     "form": "periodic",
@@ -9617,7 +10057,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_SDK|R_index00_CTL": {
         "transform": {
             "name": "R_index00_CTL",
             "overrideEnabled": true,
@@ -9709,7 +10149,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_CTL|R_index01_GRP|R_index01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_SDK|R_index00_CTL|R_index01_GRP|R_index01_SDK|R_index01_CTL": {
         "transform": {
             "name": "R_index01_CTL",
             "overrideEnabled": true,
@@ -9801,7 +10241,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_CTL|R_index01_GRP|R_index01_CTL|R_index02_GRP|R_index02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_SDK|R_index00_CTL|R_index01_GRP|R_index01_SDK|R_index01_CTL|R_index02_GRP|R_index02_SDK|R_index02_CTL": {
         "transform": {
             "name": "R_index02_CTL",
             "overrideEnabled": true,
@@ -9893,7 +10333,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_CTL|R_index01_GRP|R_index01_CTL|R_index02_GRP|R_index02_CTL|R_index03_GRP|R_index03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_SDK|R_index00_CTL|R_index01_GRP|R_index01_SDK|R_index01_CTL|R_index02_GRP|R_index02_SDK|R_index02_CTL|R_index03_GRP|R_index03_SDK|R_index03_CTL": {
         "transform": {
             "name": "R_index03_CTL",
             "overrideEnabled": true,
@@ -11053,7 +11493,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_SDK|R_middle00_CTL": {
         "transform": {
             "name": "R_middle00_CTL",
             "overrideEnabled": true,
@@ -11145,7 +11585,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_CTL|R_middle01_GRP|R_middle01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_SDK|R_middle00_CTL|R_middle01_GRP|R_middle01_SDK|R_middle01_CTL": {
         "transform": {
             "name": "R_middle01_CTL",
             "overrideEnabled": true,
@@ -11237,7 +11677,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_CTL|R_middle01_GRP|R_middle01_CTL|R_middle02_GRP|R_middle02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_SDK|R_middle00_CTL|R_middle01_GRP|R_middle01_SDK|R_middle01_CTL|R_middle02_GRP|R_middle02_SDK|R_middle02_CTL": {
         "transform": {
             "name": "R_middle02_CTL",
             "overrideEnabled": true,
@@ -11329,7 +11769,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_CTL|R_middle01_GRP|R_middle01_CTL|R_middle02_GRP|R_middle02_CTL|R_middle03_GRP|R_middle03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_SDK|R_middle00_CTL|R_middle01_GRP|R_middle01_SDK|R_middle01_CTL|R_middle02_GRP|R_middle02_SDK|R_middle02_CTL|R_middle03_GRP|R_middle03_SDK|R_middle03_CTL": {
         "transform": {
             "name": "R_middle03_CTL",
             "overrideEnabled": true,
@@ -11421,7 +11861,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_SDK|R_pinky00_CTL": {
         "transform": {
             "name": "R_pinky00_CTL",
             "overrideEnabled": true,
@@ -11513,7 +11953,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_CTL|R_pinky01_GRP|R_pinky01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_SDK|R_pinky00_CTL|R_pinky01_GRP|R_pinky01_SDK|R_pinky01_CTL": {
         "transform": {
             "name": "R_pinky01_CTL",
             "overrideEnabled": true,
@@ -11605,7 +12045,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_CTL|R_pinky01_GRP|R_pinky01_CTL|R_pinky02_GRP|R_pinky02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_SDK|R_pinky00_CTL|R_pinky01_GRP|R_pinky01_SDK|R_pinky01_CTL|R_pinky02_GRP|R_pinky02_SDK|R_pinky02_CTL": {
         "transform": {
             "name": "R_pinky02_CTL",
             "overrideEnabled": true,
@@ -11697,7 +12137,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_CTL|R_pinky01_GRP|R_pinky01_CTL|R_pinky02_GRP|R_pinky02_CTL|R_pinky03_GRP|R_pinky03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_pinky00_GRP|R_pinky00_SDK|R_pinky00_CTL|R_pinky01_GRP|R_pinky01_SDK|R_pinky01_CTL|R_pinky02_GRP|R_pinky02_SDK|R_pinky02_CTL|R_pinky03_GRP|R_pinky03_SDK|R_pinky03_CTL": {
         "transform": {
             "name": "R_pinky03_CTL",
             "overrideEnabled": true,
@@ -11789,7 +12229,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_SDK|R_ring00_CTL": {
         "transform": {
             "name": "R_ring00_CTL",
             "overrideEnabled": true,
@@ -11881,7 +12321,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_CTL|R_ring01_GRP|R_ring01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_SDK|R_ring00_CTL|R_ring01_GRP|R_ring01_SDK|R_ring01_CTL": {
         "transform": {
             "name": "R_ring01_CTL",
             "overrideEnabled": true,
@@ -11973,7 +12413,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_CTL|R_ring01_GRP|R_ring01_CTL|R_ring02_GRP|R_ring02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_SDK|R_ring00_CTL|R_ring01_GRP|R_ring01_SDK|R_ring01_CTL|R_ring02_GRP|R_ring02_SDK|R_ring02_CTL": {
         "transform": {
             "name": "R_ring02_CTL",
             "overrideEnabled": true,
@@ -12065,7 +12505,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_CTL|R_ring01_GRP|R_ring01_CTL|R_ring02_GRP|R_ring02_CTL|R_ring03_GRP|R_ring03_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_ring00_GRP|R_ring00_SDK|R_ring00_CTL|R_ring01_GRP|R_ring01_SDK|R_ring01_CTL|R_ring02_GRP|R_ring02_SDK|R_ring02_CTL|R_ring03_GRP|R_ring03_SDK|R_ring03_CTL": {
         "transform": {
             "name": "R_ring03_CTL",
             "overrideEnabled": true,
@@ -12249,7 +12689,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_thumb00_GRP|R_thumb00_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_thumb00_GRP|R_thumb00_SDK|R_thumb00_CTL": {
         "transform": {
             "name": "R_thumb00_CTL",
             "overrideEnabled": false,
@@ -12341,7 +12781,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_thumb00_GRP|R_thumb00_CTL|R_thumb01_GRP|R_thumb01_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_thumb00_GRP|R_thumb00_SDK|R_thumb00_CTL|R_thumb01_GRP|R_thumb01_SDK|R_thumb01_CTL": {
         "transform": {
             "name": "R_thumb01_CTL",
             "overrideEnabled": false,
@@ -12433,7 +12873,7 @@
             }
         ]
     },
-    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_thumb00_GRP|R_thumb00_CTL|R_thumb01_GRP|R_thumb01_CTL|R_thumb02_GRP|R_thumb02_CTL": {
+    "|Character|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_thumb00_GRP|R_thumb00_SDK|R_thumb00_CTL|R_thumb01_GRP|R_thumb01_SDK|R_thumb01_CTL|R_thumb02_GRP|R_thumb02_SDK|R_thumb02_CTL": {
         "transform": {
             "name": "R_thumb02_CTL",
             "overrideEnabled": true,

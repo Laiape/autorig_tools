@@ -3,13 +3,22 @@
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
-        "character_ctl": "C_character_CTL",
+        "character_ctl": "C_character_CTL"
+    },
+    "spine_module": {
         "local_hip_ctl": "C_localHip_CTL",
         "body_ctl": "C_body_CTL",
-        "local_chest_ctl": "C_localChest_CTL"
+        "local_chest_ctl": "C_localChest_CTL",
+        "last_spine_jnt": "C_spine07_JNT"
     },
     "arm_module": {
+        "L_shoulder_JNT": "L_shoulder_JNT",
         "L_wrist_JNT": "L_wrist_JNT",
-        "R_wrist_JNT": "R_wrist_JNT"
+        "L_armSettings": "L_armSettings_CTL",
+        "L_armIk": "L_armIkWrist_CTL",
+        "R_shoulder_JNT": "R_shoulder_JNT",
+        "R_wrist_JNT": "R_wrist_JNT",
+        "R_armSettings": "R_armSettings_CTL",
+        "R_armIk": "R_armIkWrist_CTL"
     }
 }

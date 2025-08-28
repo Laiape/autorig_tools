@@ -8,6 +8,7 @@ from utils import data_manager
 
 from autorig import arm_module_de_boor as arm_module
 from autorig import spine_module
+from autorig import clavicle_module
 from autorig import leg_module_de_boor as leg_module
 from autorig import neck_module_de_boor as neck_module
 from autorig import fingers_module
@@ -20,6 +21,7 @@ reload(spine_module)
 reload(leg_module)
 reload(neck_module)
 reload(fingers_module)
+reload(clavicle_module)
 
 
 class AutoRig(object):
@@ -58,8 +60,10 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
         spine_module.SpineModule().make("C")
-        arm_module.ArmModule().make("L")
+        arm_module.ArmModule().make("L") 
         arm_module.ArmModule().make("R")
+        clavicle_module.ClavicleModule().make("L")
+        clavicle_module.ClavicleModule().make("R")
         leg_module.LegModule().make("L")
         leg_module.LegModule().make("R")
         neck_module.NeckModule().make("C")

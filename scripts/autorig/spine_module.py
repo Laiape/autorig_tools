@@ -52,11 +52,12 @@ class SpineModule(object):
         self.attatched_fk()
         self.squash()
         
-        data_manager.DataExport().append_data("basic_structure",
+        data_manager.DataExport().append_data("spine_module",
                             {
                                 "local_hip_ctl": self.local_hip_ctl,
                                 "body_ctl": self.body_ctl,
-                                "local_chest_ctl": self.local_chest_ctl
+                                "local_chest_ctl": self.local_chest_ctl,
+                                "last_spine_jnt": self.spine_chain[-1]
                             })
 
     def lock_attributes(self, ctl, attrs):

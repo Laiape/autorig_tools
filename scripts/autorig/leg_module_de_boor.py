@@ -29,7 +29,7 @@ class LegModule(object):
         self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
-        self.local_hip_ctl = data_manager.DataExport().get_data("basic_structure", "local_hip_ctl")
+        self.local_hip_ctl = data_manager.DataExport().get_data("spine_module", "local_hip_ctl")
 
     def make(self, side):
 

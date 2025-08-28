@@ -54,7 +54,10 @@ class ArmModule(object):
         
         data_manager.DataExport().append_data("arm_module",
                             {
+                                f"{self.side}_shoulder_JNT": self.arm_chain[0],
                                 f"{self.side}_wrist_JNT": self.arm_chain[-1],
+                                f"{self.side}_armSettings": self.settings_ctl,
+                                f"{self.side}_armIk": self.ik_wrist_ctl,
                             })
 
     def lock_attributes(self, ctl, attrs):

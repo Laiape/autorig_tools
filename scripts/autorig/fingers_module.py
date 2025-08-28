@@ -130,6 +130,11 @@ class FingersModule(object):
         self.fk_middle_nodes = []
         self.fk_ring_nodes = []
         self.fk_pinky_nodes = []
+        self.fk_thumb_sdk = []
+        self.fk_index_sdk = []
+        self.fk_middle_sdk = []
+        self.fk_ring_sdk = []
+        self.fk_pinky_sdk = []
         self.fk_thumb_ctl = []
         self.fk_index_ctl = []
         self.fk_middle_ctl = []
@@ -153,16 +158,17 @@ class FingersModule(object):
                     skinning_jnt = cmds.joint(name=joint.replace("_JNT", "Skinning_JNT"))
                     cmds.connectAttr(f"{joint}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
 
-                    fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP"])
+                    fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP", "SDK"])
                     cmds.matchTransform(fk_node[0], joint, pos=True, rot=True)
                     if "thumb" in joint:
                         if self.fk_thumb_ctl:
-                            cmds.parent(fk_node[0], self.fk_thumb_ctl[-1])
+                            cmds.parent(fk_node[0], self.fk_thumb_ctl[-1])  
                             # cmds.parent(skinning_jnt, self.skinning_jnts[-1])
                         cmds.parent(skinning_jnt, thumb_skinning_trn)
 
                         self.fk_thumb_ctl.append(fk_ctl)
                         self.fk_thumb_nodes.append(fk_node[0])
+                        self.fk_thumb_sdk.append(fk_node[1])
                     elif "index" in joint:
                         if self.fk_index_ctl:
                             cmds.parent(fk_node[0], self.fk_index_ctl[-1])
@@ -170,6 +176,7 @@ class FingersModule(object):
                         cmds.parent(skinning_jnt, index_skinning_trn)
                         self.fk_index_ctl.append(fk_ctl)
                         self.fk_index_nodes.append(fk_node[0])
+                        self.fk_index_sdk.append(fk_node[1])
                     elif "middle" in joint:
                         if self.fk_middle_ctl:
                             cmds.parent(fk_node[0], self.fk_middle_ctl[-1])
@@ -177,7 +184,8 @@ class FingersModule(object):
                         cmds.parent(skinning_jnt, middle_skinning_trn)
                         self.fk_middle_ctl.append(fk_ctl)
                         self.fk_middle_nodes.append(fk_node[0])
-                        
+                        self.fk_middle_sdk.append(fk_node[1])
+
                     elif "ring" in joint:
                         if self.fk_ring_ctl:
                             cmds.parent(fk_node[0], self.fk_ring_ctl[-1])
@@ -185,7 +193,8 @@ class FingersModule(object):
                         cmds.parent(skinning_jnt, ring_skinning_trn)
                         self.fk_ring_ctl.append(fk_ctl)
                         self.fk_ring_nodes.append(fk_node[0])
-                        
+                        self.fk_ring_sdk.append(fk_node[1])
+
                     elif "pinky" in joint:
                         if self.fk_pinky_ctl:
                             cmds.parent(fk_node[0], self.fk_pinky_ctl[-1])
@@ -193,6 +202,7 @@ class FingersModule(object):
                         cmds.parent(skinning_jnt, pinky_skinning_trn)
                         self.fk_pinky_ctl.append(fk_ctl)
                         self.fk_pinky_nodes.append(fk_node[0])
+                        self.fk_pinky_sdk.append(fk_node[1])
 
                     if i == 0:
                         matrix_manager.fk_constraint(joint, None, False, None)
@@ -297,17 +307,46 @@ class FingersModule(object):
         cmds.addAttr(self.attributes_values_trn, longName="Fan_ring", attributeType="float", defaultValue=20, keyable=True)
         cmds.addAttr(self.attributes_values_trn, longName="Fan_pinky", attributeType="float", defaultValue=25, keyable=True)
 
-    def fingers_attributes_callback(self, ctl):
+        # self.fingers_attributes_callback(self.fk_thumb_sdk[1], attributes=["Curl_down_01", "Curl_up_01", "Spread_open_thumb", "Spread_close_thumb"])
+        # self.fingers_attributes_callback(self.fk_thumb_sdk[2], attributes=["Curl_down_02", "Curl_up_02", None, None])
 
-        condition_curl = cmds.createNode("condition", name=ctl.replace("CTL", "CURL_COND"), ss=True)
-        condition_spread = cmds.createNode("condition", name=ctl.replace("CTL", "SPREAD_COND"), ss=True)
-        condition_twist = cmds.createNode("condition", name=ctl.replace("CTL", "TWIST_COND"), ss=True)
-        condition_fan = cmds.createNode("condition", name=ctl.replace("CTL", "FAN_COND"), ss=True)
+    def fingers_attributes_callback(self, ctl, attributes=[]):
 
-        cmds.connectAttr(f"{self.attributes_values_trn}.Curl", f"{condition_curl}.firstTerm")
-        cmds.connectAttr(f"{self.attributes_values_trn}.Spread", f"{condition_spread}.firstTerm")
-        cmds.connectAttr(f"{self.attributes_values_trn}.Twist", f"{condition_twist}.firstTerm")
-        cmds.connectAttr(f"{self.attributes_values_trn}.Fan", f"{condition_fan}.firstTerm")
+        if attributes[0] is not None or attributes[1] is not None:
+
+            remap_value_curl = cmds.createNode("remapValue", name=ctl.replace("_SDK", "Curl_RMV"), ss=True) # Curl setup
+            cmds.setAttr(f"{remap_value_curl}.inputMin", -10)
+            cmds.setAttr(f"{remap_value_curl}.inputMax", 10)
+            cmds.connectAttr(f"{self.finger_attributes_ctl}.CURL", f"{remap_value_curl}.inputValue")
+            cmds.connectAttr(f"{self.attributes_values_trn}.{attributes[0]}", f"{remap_value_curl}.outputMax")
+            cmds.connectAttr(f"{self.attributes_values_trn}.{attributes[1]}", f"{remap_value_curl}.outputMin")
+            condition_curl = cmds.createNode("condition", name=ctl.replace("_SDK", "Curl_COND"), ss=True)
+            cmds.setAttr(f"{condition_curl}.operation", 1) # Not equal
+            cmds.setAttr(f"{condition_curl}.colorIfFalseR", 0)
+            cmds.setAttr(f"{condition_curl}.colorIfFalseG", 0)
+            cmds.setAttr(f"{condition_curl}.colorIfFalseB", 0)
+            cmds.connectAttr(f"{self.finger_attributes_ctl}.CURL", f"{condition_curl}.firstTerm")
+            cmds.setAttr(f"{condition_curl}.secondTerm", 0)
+            cmds.connectAttr(f"{remap_value_curl}.outValue", f"{condition_curl}.colorIfTrueR")
+            cmds.connectAttr(f"{condition_curl}.outColorR", f"{ctl}.rz")
+
+        if attributes[2] is not None or attributes[3] is not None:
+            remap_value_spread = cmds.createNode("remapValue", name=ctl.replace("_SDK", "Spread_RMV"), ss=True) # Spread setup
+            cmds.setAttr(f"{remap_value_spread}.inputMin", -10)
+            cmds.setAttr(f"{remap_value_spread}.inputMax", 10)
+            cmds.connectAttr(f"{self.finger_attributes_ctl}.SPREAD", f"{remap_value_spread}.inputValue")
+            cmds.connectAttr(f"{self.attributes_values_trn}.{attributes[2]}", f"{remap_value_spread}.outputMax")
+            cmds.connectAttr(f"{self.attributes_values_trn}.{attributes[3]}", f"{remap_value_spread}.outputMin")
+
+            condition_spread = cmds.createNode("condition", name=ctl.replace("_SDK", "Spread_COND"), ss=True)
+            cmds.setAttr(f"{condition_spread}.operation", 1) # Not equal
+            cmds.setAttr(f"{condition_spread}.colorIfFalseR", 0)
+            cmds.setAttr(f"{condition_spread}.colorIfFalseG", 0)
+            cmds.setAttr(f"{condition_spread}.colorIfFalseB", 0)
+            cmds.connectAttr(f"{self.finger_attributes_ctl}.SPREAD", f"{condition_spread}.firstTerm")
+            cmds.setAttr(f"{condition_spread}.secondTerm", 0)
+            cmds.connectAttr(f"{remap_value_spread}.outValue", f"{condition_spread}.colorIfTrueR")
+            cmds.connectAttr(f"{condition_spread}.outColorR", f"{ctl}.ry")
 
     def get_offset_matrix(self, child, parent):
 
