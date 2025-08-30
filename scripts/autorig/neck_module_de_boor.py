@@ -118,6 +118,7 @@ class NeckModule(object):
         """
         sel = (self.neck_chain[0], self.neck_chain[-1])
         self.ribbon = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="y", up_axis="z")
+        cmds.parent(self.ribbon, self.module_trn)
 
     def stretch_callback(self, chain, crv):
 
@@ -413,7 +414,7 @@ class NeckModule(object):
         """
         Create the local head setup to have the head follow the neck's movement.
         """
-
+        masterwalk_grp = self.masterwalk_ctl.replace("_CTL", "_GRP")
         self.head_jnt = cmds.joint(name=f"{self.side}_head_JNT")
         cmds.parent(self.head_jnt, self.module_trn)
 
@@ -438,12 +439,17 @@ class NeckModule(object):
         neck_offset = cmds.createNode("multMatrix", name=f"{self.side}_neckOffset_MMX")
         cmds.connectAttr(f"{self.neck_ctls[0]}.worldMatrix[0]", f"{neck_offset}.matrixIn[0]")
         cmds.connectAttr(f"{self.neck_nodes[0]}.worldInverseMatrix[0]", f"{neck_offset}.matrixIn[1]")
+        masterwalk_offset = cmds.createNode("multMatrix", name=f"{self.side}_masterwalkOffset_MMX")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{masterwalk_offset}.matrixIn[0]")
+        cmds.connectAttr(f"{masterwalk_grp}.worldInverseMatrix[0]", f"{masterwalk_offset}.matrixIn[1]")
 
-        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+        cmds.connectAttr(f"{masterwalk_offset}.matrixSum", f"{blend_matrix}.inputMatrix")
         cmds.connectAttr(f"{neck_offset}.matrixSum", f"{blend_matrix}.target[0].targetMatrix")
         cmds.connectAttr(f"{self.neck_ctls[-1]}.Follow_Neck", f"{blend_matrix}.target[0].weight")
 
         cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{self.neck_nodes[-1]}.offsetParentMatrix")
+        cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
+        cmds.xform(self.head_jnt, m=om.MMatrix.kIdentity)
 
 
 

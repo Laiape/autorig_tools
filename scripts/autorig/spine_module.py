@@ -126,7 +126,7 @@ class SpineModule(object):
         cmds.parent(self.local_hip_nodes[0], self.controllers_grp)
         cmds.parent(self.local_chest_nodes[0], self.controllers_grp)
 
-        # Create the local hip joint
+        # ------ Local hip setup ------
         cmds.select(clear=True)
         local_hip_jnt = cmds.joint(name=f"{self.side}_localHip_JNT")
         cmds.parent(local_hip_jnt, self.module_trn)
@@ -138,6 +138,7 @@ class SpineModule(object):
         cmds.connectAttr(f"{decompose_translation_node}.outputTranslate", f"{compose_matrix}.inputTranslate")
         cmds.connectAttr(f"{decompose_rotation_node}.outputRotate", f"{compose_matrix}.inputRotate")
         cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{local_hip_jnt}.offsetParentMatrix")
+        cmds.setAttr(f"{local_hip_jnt}.inheritsTransform", 0)
         local_hip_skinning_jnt = cmds.joint(name=f"{self.side}_localHipSkinning_JNT")
         cmds.connectAttr(f"{local_hip_jnt}.worldMatrix[0]", f"{local_hip_skinning_jnt}.offsetParentMatrix")
         cmds.setAttr(f"{self.local_hip_nodes[0]}.inheritsTransform", 0)
@@ -193,22 +194,44 @@ class SpineModule(object):
 
         cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{self.ik_handle[0]}.dWorldUpMatrixEnd")
-        decompose_rotation_node_local_chest = cmds.createNode("decomposeMatrix", name=f"{self.side}_localChestRotation_DCM")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation_node_local_chest}.inputMatrix")
-        decompose_translation_node_local_chest = cmds.createNode("decomposeMatrix", name=f"{self.side}_localChestTranslation_DCM")
-        cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{decompose_translation_node_local_chest}.inputMatrix")
-        compose_matrix_local_chest = cmds.createNode("composeMatrix", name=f"{self.side}_localChest_CMP")
-        cmds.connectAttr(f"{decompose_translation_node_local_chest}.outputTranslate", f"{compose_matrix_local_chest}.inputTranslate")
-        cmds.connectAttr(f"{decompose_rotation_node_local_chest}.outputRotate", f"{compose_matrix_local_chest}.inputRotate")
-        cmds.connectAttr(f"{compose_matrix_local_chest}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+
+
+        # ----- Local chest setup ------
+        pick_matrix_translation = cmds.createNode("pickMatrix", name=f"{self.side}_localChestTranslation_PMX")
+        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{pick_matrix_translation}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_translation}.useTranslate", 1) # Activate only translation
+        cmds.setAttr(f"{pick_matrix_translation}.useRotate", 0)
+        cmds.setAttr(f"{pick_matrix_translation}.useScale", 0)
+        cmds.setAttr(f"{pick_matrix_translation}.useShear", 0)
+
+        pick_matrix_rotation = cmds.createNode("pickMatrix", name=f"{self.side}_localChestRotation_PMX")
+        cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{pick_matrix_rotation}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_rotation}.useTranslate", 0)
+        cmds.setAttr(f"{pick_matrix_rotation}.useRotate", 1) # Activate only rotation
+        cmds.setAttr(f"{pick_matrix_rotation}.useScale", 0)
+        cmds.setAttr(f"{pick_matrix_rotation}.useShear", 0)
+
+        blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_localChest_BMX")
+        cmds.connectAttr(f"{pick_matrix_rotation}.outputMatrix", f"{blend_matrix}.inputMatrix")
+        cmds.connectAttr(f"{pick_matrix_translation}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
+        cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0) # Deactivate scale
+
+        cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.local_chest_nodes[0]}.scaleX") # Connect the global scale
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.local_chest_nodes[0]}.scaleY")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.local_chest_nodes[0]}.scaleZ")
+
+        cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
+
         cmds.select(clear=True)
         local_chest_jnt = cmds.joint(name=f"{self.side}_localChest_JNT")
+        cmds.setAttr(f"{local_chest_jnt}.inheritsTransform", 0)
         cmds.parent(local_chest_jnt, self.module_trn)
-        cmds.connectAttr(f"{self.local_chest_nodes[0]}.worldMatrix[0]", f"{local_chest_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.local_chest_ctl}.worldMatrix[0]", f"{local_chest_jnt}.offsetParentMatrix")
         cmds.select(clear=True)
         local_chest_skinning_jnt = cmds.joint(name=f"{self.side}_localChestSkinning_JNT")
         cmds.connectAttr(f"{local_chest_jnt}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix")
-        cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
+        
         cmds.parent(local_chest_skinning_jnt, self.skeleton_grp)
 
         for i , ctl in enumerate(self.spine_ctls):

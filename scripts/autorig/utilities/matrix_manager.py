@@ -61,4 +61,86 @@ def ik_constraint(source, target):
         om.MGlobal.displayError("Source or target does not exist.")
         return
 
+def space_switches(target, sources = [None], default_value = 1):
+
+    """
+    Create space switches for a given target and a list of source objects.
+    Args:
+        target (str): The name of the target object.
+        sources (list): A list of source objects to switch between.
+        default_value (int): The default value for the space switch.
+    """
+    
+    target_grp = target.replace("CTL", "GRP")
+
+    if not cmds.objExists(target_grp): 
+
+        om.MGlobal.displayError(f"Target group {target_grp} does not exist.")
+        return
+
+    parent_matrix = cmds.createNode("parentMatrix", name=target.replace("CTL", "PMT"), ss=True)
+    cmds.connectAttr(f"{target_grp}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
+    mult_matrix = cmds.createNode("multMatrix", name=target.replace("CTL", "MMT"), ss=True)
+    cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
+    cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+    
+
+    condition_nodes = []
+    source_matrices = []
+
+    for i, matrix in enumerate(sources):
+
+        offset = get_offset_matrix(matrix, target)
+
+        cmds.connectAttr(f"{matrix}.worldMatrix[0]", f"{parent_matrix}.target[{i}].targetMatrix")
+        cmds.setAttr(f"{parent_matrix}.target[{i}].offsetMatrix", offset, type="matrix")
+
+        condition = cmds.createNode("condition", name=sources[i].replace("CTL", "COND"), ss=True)
+        cmds.setAttr(f"{condition}.firstTerm", i)
+        cmds.setAttr(f"{condition}.operation", 0)
+        cmds.setAttr(f"{condition}.colorIfFalseR", 0)
+
+        condition_nodes.append(condition)
+        source_matrices.append(matrix)
+
+    cmds.addAttr(target, longName="SpaceSwitchSep", niceName = "SpaceSwitches_____", attributeType="enum", enumName="____", keyable=True)
+    cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
+    if len(sources) == 1:     
+        cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=False)
+        cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
+    else:
+        cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=True)
+
+    cmds.addAttr(target, longName="FollowValue", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
+
+    for i, condition in enumerate(condition_nodes):
+        cmds.connectAttr(f"{target}.SpaceSwitch", f"{condition}.secondTerm")
+        cmds.connectAttr(f"{target}.FollowValue", f"{condition}.colorIfTrueR")
+        cmds.connectAttr(f"{condition}.outColorR", f"{parent_matrix}.target[{i}].weight")
+
+    
+    cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{target}.offsetParentMatrix")
+
+
+def get_offset_matrix(child, parent):
+
+    """
+    Calculate the offset matrix between a child and parent transform in Maya.
+    Args:
+        child (str): The name of the child transform.
+        parent (str): The name of the parent transform. 
+    Returns:
+        om.MMatrix: The offset matrix that transforms the child into the parent's space.
+    """
+    child_dag = om.MSelectionList().add(child).getDagPath(0)
+    parent_dag = om.MSelectionList().add(parent).getDagPath(0)
+    
+    child_world_matrix = child_dag.inclusiveMatrix()
+    parent_world_matrix = parent_dag.inclusiveMatrix()
+    
+    offset_matrix = child_world_matrix * parent_world_matrix.inverse()
+
+    
+    return offset_matrix
+
     

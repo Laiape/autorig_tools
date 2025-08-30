@@ -303,7 +303,7 @@ class LegModule(object):
         cmds.setAttr(f"{multiply_divide_node}.operation", 1)
         cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{multiply_divide_node}.input1X")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{multiply_divide_node}.input2X")
-        cmds.connectAttr(f"{multiply_divide_node}.outputX", f"{self.ik_sdk_nodes[-1]}.rotateX")
+        cmds.connectAttr(f"{multiply_divide_node}.outputX", f"{self.ik_sdk_nodes[-2]}.rotateX")
 
         roll_break_angle = cmds.createNode("remapValue", name=f"{self.side}_legRollBreakAngle_RMV", ss=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_break_angle}.inputValue")
@@ -323,7 +323,7 @@ class LegModule(object):
         cmds.setAttr(f"{roll_lift_angle_mdv}.operation", 1)
         cmds.connectAttr(f"{roll_break_angle}.outValue", f"{roll_lift_angle_mdv}.input1X")
         cmds.connectAttr(f"{roll_angle_enable_mdv}.outputX", f"{roll_lift_angle_mdv}.input2X")
-        cmds.connectAttr(f"{roll_lift_angle_mdv}.outputX", f"{self.ik_sdk_nodes[-2]}.rotateX")
+        cmds.connectAttr(f"{roll_lift_angle_mdv}.outputX", f"{self.ik_sdk_nodes[-1]}.rotateX")
 
     def fk_stretch(self):
 
@@ -386,7 +386,7 @@ class LegModule(object):
 
         offset_matrix = child_world_matrix * parent_world_matrix.inverse()
 
-        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legSoftIkHDL_TRN", ss=True, p=self.module_trn)
+        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legIkHandleManager_TRN", ss=True, p=self.module_trn)
         parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_legSoftIkHDL_PM", ss=True)
         ankle_wM = cmds.getAttr(f"{self.ik_controllers[0]}.worldMatrix[0]")
         cmds.setAttr(f"{parent_matrix}.inputMatrix", ankle_wM, type="matrix")
@@ -397,7 +397,7 @@ class LegModule(object):
         self.soft_off = cmds.createNode("transform", name=f"{self.side}_legSoft_OFF", p=self.module_trn)
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_legSoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
         cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", 1)
         cmds.setAttr(f"{aim_matrix}.primaryInputAxisY", 0)
         cmds.setAttr(f"{aim_matrix}.primaryInputAxisZ", 0)

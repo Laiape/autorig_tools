@@ -120,6 +120,6 @@ class ClavicleModule(object):
 
         cmds.connectAttr(f"{ctl_switch}.autoClavicleIk", f"{aim[0]}.{dupe[0]}W0")
 
-        cmds.parent(shoulder, self.clavicle_joint)
+        # cmds.parent(shoulder, self.clavicle_joint)
         cmds.hide(sphere)
         # cmds.delete(shoulder)
