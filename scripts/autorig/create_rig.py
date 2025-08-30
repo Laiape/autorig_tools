@@ -76,6 +76,13 @@ class AutoRig(object):
     fade=True,
     alpha=0.8)
 
+    def space_switches(self):
+
+        """
+        Create space switches for the rig controls.
+        """
+
+        pass
 
     def label_joints(self):
 
