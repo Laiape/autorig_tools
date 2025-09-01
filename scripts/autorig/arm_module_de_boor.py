@@ -58,6 +58,8 @@ class ArmModule(object):
                                 f"{self.side}_wrist_JNT": self.arm_chain[-1],
                                 f"{self.side}_armSettings": self.settings_ctl,
                                 f"{self.side}_armIk": self.ik_wrist_ctl,
+                                f"{self.side}_armPv": self.pv_ctl,
+                                f"{self.side}_shoulderFk": self.fk_controllers[0],
                             })
 
     def lock_attributes(self, ctl, attrs):

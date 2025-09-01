@@ -22,6 +22,19 @@ def get_all_ctl_curves_data():
 
     transforms = cmds.ls("*_CTL*", type="transform", long=True)
 
+    answer = cmds.promptDialog(
+                title="INPUT DIALOG",
+                message="INSERT FILE NAME",
+                button=["OK", "Cancel"],
+                defaultButton="OK",
+                cancelButton="Cancel",
+                dismissString="Cancel")
+    if answer == "Cancel":
+        om.MGlobal.displayInfo("Operation cancelled by user.")
+        return
+    
+    curves_name = cmds.promptDialog(query=True, text=True)
+
     for transform_name in transforms:
         shapes = cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []
         nurbs_shapes = []

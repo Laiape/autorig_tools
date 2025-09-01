@@ -7,11 +7,11 @@ reload(core)
 
 OPEN = "open"
 PERIODIC = "periodic"
-AXIS_VECTOR = {"x": (1,0,0), "y": (0,1,0), "z": (0,0,1)}
+AXIS_VECTOR = {"x": (1,0,0), "y": (0,1,0), "z": (0,0,1), "-x": (-1,0,0), "-y": (0,-1,0), "-z": (0,0,-1)}
 KNOT_TO_FORM_INDEX = {OPEN : om.MFnNurbsCurve.kOpen, PERIODIC : om.MFnNurbsCurve.kPeriodic}
 
 
-def de_boor_ribbon(cvs, controllers_grp = [], bendys = [1,-2], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon", use_position = True, use_tangent=True, use_up=True, use_scale=True):
+def de_boor_ribbon(cvs, controllers_grp = [], controllers = False, bendys = [1,-2], aim_axis="x", up_axis="y", num_joints=5, parameter_length=True, tangent_offset=0.001, d=None, kv_type=OPEN, tol=0.000001, name = "ribbon", use_position = True, use_tangent=True, use_up=True, use_scale=True):
 
     """
     In this function we will create a ribbon setup using the de Boor algorithm.
@@ -23,7 +23,7 @@ def de_boor_ribbon(cvs, controllers_grp = [], bendys = [1,-2], aim_axis="x", up_
     # -------- Joint chain as argument --------
     # Match the controller groups to the cvs
 
-    if cmds.nodeType(cvs[0]) == "joint": # If the first CV is a joint, dont create controllers
+    if cmds.nodeType(cvs[0]) == "joint" and controllers == False: # If the first CV is a joint, dont create controllers
 
         jnt_trn = f"{name}Joints_GRP"
 
@@ -41,18 +41,16 @@ def de_boor_ribbon(cvs, controllers_grp = [], bendys = [1,-2], aim_axis="x", up_
         ctls = []
         controllers_groups = []
         
-        if controllers_grp is not None and len(controllers_grp) != 0:
+        if controllers == True:
 
-            controllers_grps = cmds.listRelatives(controllers_grp, c=True, type="transform")
-
-            for i, grp in enumerate(controllers_grps):
+            for i, cv in enumerate(cvs):
                 
-                controllers_grp = cmds.createNode("transform", n=grp.replace("_GRP", "Joints_GRP")) # Create a group for joints
-                cmds.matchTransform(controllers_grp, controllers_grps[0], pos=True, rot=True, scl=False) # Match the joints group to the first controller group
-                cmds.matchTransform(grp, cvs[i], pos=True, rot=True, scl=False)
+                ctl = cv
+                grp = cv.replace("_CTL", "_GRP")
 
-                children = cmds.listRelatives(grp, c=True, type="transform") or [] # Get children of the group
-                ctl = next((child for child in children if child.endswith("CTL")), None) # Find the controller in the group
+                if i == 0:
+                    controllers_grp = cmds.createNode("transform", n=name + "_GRP") # Create a group for joints
+                    cmds.matchTransform(controllers_grp, cvs[0], pos=True, rot=True, scl=False) # Match the joints group to the first controller group
 
                 if ctl:
                     ctls.append(ctl) # If found, add to the list
@@ -60,7 +58,7 @@ def de_boor_ribbon(cvs, controllers_grp = [], bendys = [1,-2], aim_axis="x", up_
                 controllers_groups.append(grp) # Add the group to the list of controller groups
 
 
-        else:
+        elif controllers == False:
             
             controllers_grp = cmds.createNode("transform", n=f"{name}_Joints_GRP") # Create a group for joints
             controllers_grp = cmds.createNode("transform", n=f"{name}_Controllers_GRP") 

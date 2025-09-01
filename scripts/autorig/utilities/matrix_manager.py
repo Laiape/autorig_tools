@@ -84,13 +84,12 @@ def space_switches(target, sources = [None], default_value = 1):
     cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
     cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
     
-
     condition_nodes = []
     source_matrices = []
 
     for i, matrix in enumerate(sources):
 
-        offset = get_offset_matrix(matrix, target)
+        offset = get_offset_matrix(target_grp, matrix)
 
         cmds.connectAttr(f"{matrix}.worldMatrix[0]", f"{parent_matrix}.target[{i}].targetMatrix")
         cmds.setAttr(f"{parent_matrix}.target[{i}].offsetMatrix", offset, type="matrix")
@@ -100,10 +99,12 @@ def space_switches(target, sources = [None], default_value = 1):
         cmds.setAttr(f"{condition}.operation", 0)
         cmds.setAttr(f"{condition}.colorIfFalseR", 0)
 
-        condition_nodes.append(condition)
-        source_matrices.append(matrix)
+        name = matrix.split("_")[1].capitalize()
 
-    cmds.addAttr(target, longName="SpaceSwitchSep", niceName = "SpaceSwitches_____", attributeType="enum", enumName="____", keyable=True)
+        condition_nodes.append(condition)
+        source_matrices.append(name)
+
+    cmds.addAttr(target, longName="SpaceSwitchSep", niceName = "SPACE_SWITCHES", attributeType="enum", enumName="____", keyable=True)
     cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
     if len(sources) == 1:     
         cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=False)
@@ -134,7 +135,7 @@ def get_offset_matrix(child, parent):
     """
     child_dag = om.MSelectionList().add(child).getDagPath(0)
     parent_dag = om.MSelectionList().add(parent).getDagPath(0)
-    
+
     child_world_matrix = child_dag.inclusiveMatrix()
     parent_world_matrix = parent_dag.inclusiveMatrix()
     

@@ -208,7 +208,7 @@ def get_guides(guide_export):
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     guides_path = os.path.join(relative_path, "guides")
-    final_path = os.path.join(guides_path, "test.guides") # Update this line
+    final_path = os.path.join(guides_path, "vitorio.guides") # Update this line
 
     name = os.path.basename(final_path).split(".")[0]
 

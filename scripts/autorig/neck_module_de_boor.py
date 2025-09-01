@@ -40,24 +40,29 @@ class NeckModule(object):
         """
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_neckModule_GRP", ss=True, p=self.modules)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_neckSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.load_guides()
         self.controller_creation()
-        self.local_head()
+        
         self.ribbon_setup()
+        self.local_head()
         # self.stretch_callback(self.neck_chain, self.neck_crv)
         # self.reversed_neck()
         # self.attatched_fk()
         # self.squash()
+
+        data_manager.DataExport().append_data("neck_module",
+                            {
+                                "head_ctl": self.neck_ctls[-1]
+                            })
         
 
     def lock_attributes(self, ctl, attrs):
 
         """
         Lock and hide attributes on a controller.
-        Args:
+        Args:source_matrices
             ctl (str): The name of the controller.
             attrs (list): A list of attributes to lock and hide.
         """
@@ -89,7 +94,7 @@ class NeckModule(object):
 
             if i == 0:
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
+                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_neck", offset=["GRP"])
                 cmds.connectAttr(f"{corner_ctl}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
                 
             if i == len(self.neck_chain) - 1:
@@ -101,7 +106,6 @@ class NeckModule(object):
                 cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
                 cmds.parent(corner_nodes[0], self.controllers_grp)
                 
-            
                 self.neck_nodes.append(corner_nodes[0])
                 self.neck_ctls.append(corner_ctl)
 
@@ -116,9 +120,15 @@ class NeckModule(object):
         """
         Set up the ribbon for the neck module.
         """
-        sel = (self.neck_chain[0], self.neck_chain[-1])
-        self.ribbon = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="y", up_axis="z")
-        cmds.parent(self.ribbon, self.module_trn)
+        sel = (self.neck_ctls[0], self.neck_ctls[-1])
+        self.skeleton_grp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", controllers=True, aim_axis="y", up_axis="z") # Do the ribbon setup, with the created controllers
+
+        cmds.parent(self.skeleton_grp, self.skel_grp) # Parent the output skinning joints trn to skeleton_grp
+
+        self.joints = cmds.listRelatives(self.skeleton_grp, c=True, type="joint")
+
+        for jnt in self.joints:
+            cmds.setAttr(f"{jnt}.inheritsTransform", 1)
 
     def stretch_callback(self, chain, crv):
 
@@ -414,12 +424,12 @@ class NeckModule(object):
         """
         Create the local head setup to have the head follow the neck's movement.
         """
-        masterwalk_grp = self.masterwalk_ctl.replace("_CTL", "_GRP")
+
         self.head_jnt = cmds.joint(name=f"{self.side}_head_JNT")
         cmds.parent(self.head_jnt, self.module_trn)
 
         decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
-        cmds.connectAttr(f"{self.neck_chain[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
+        cmds.connectAttr(f"{self.joints[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
         decompose_rotation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headRotation_DCM")
         cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation}.inputMatrix")
         compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")
@@ -428,37 +438,13 @@ class NeckModule(object):
         cmds.connectAttr(f"{compose_head}.outputMatrix", f"{self.head_jnt}.offsetParentMatrix")
 
         head_skinning_jnt = cmds.joint(name=f"{self.side}_headSkinning_JNT")
+        cmds.setAttr(f"{head_skinning_jnt}.inheritsTransform", 0)
         cmds.parent(head_skinning_jnt, self.skeleton_grp)
         cmds.connectAttr(f"{self.head_jnt}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")
 
-        cmds.addAttr(f"{self.neck_ctls[-1]}", longName="SPACE_SWITCH", attributeType="enum", enumName="____")
-        cmds.setAttr(f"{self.neck_ctls[-1]}.SPACE_SWITCH", keyable=False, channelBox=True)
-        cmds.addAttr(f"{self.neck_ctls[-1]}", longName="Follow_Neck", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
-
-        blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_head_BMX")
-        neck_offset = cmds.createNode("multMatrix", name=f"{self.side}_neckOffset_MMX")
-        cmds.connectAttr(f"{self.neck_ctls[0]}.worldMatrix[0]", f"{neck_offset}.matrixIn[0]")
-        cmds.connectAttr(f"{self.neck_nodes[0]}.worldInverseMatrix[0]", f"{neck_offset}.matrixIn[1]")
-        masterwalk_offset = cmds.createNode("multMatrix", name=f"{self.side}_masterwalkOffset_MMX")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{masterwalk_offset}.matrixIn[0]")
-        cmds.connectAttr(f"{masterwalk_grp}.worldInverseMatrix[0]", f"{masterwalk_offset}.matrixIn[1]")
-
-        cmds.connectAttr(f"{masterwalk_offset}.matrixSum", f"{blend_matrix}.inputMatrix")
-        cmds.connectAttr(f"{neck_offset}.matrixSum", f"{blend_matrix}.target[0].targetMatrix")
-        cmds.connectAttr(f"{self.neck_ctls[-1]}.Follow_Neck", f"{blend_matrix}.target[0].weight")
-
-        cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{self.neck_nodes[-1]}.offsetParentMatrix")
         cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
         cmds.xform(self.head_jnt, m=om.MMatrix.kIdentity)
-
-
-
-
-
-
-
-
+        cmds.delete(self.neck_chain[0])
         
-
-        
-
+        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=0) # Neck base and masterwalk
+         

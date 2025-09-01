@@ -47,6 +47,11 @@ class ClavicleModule(object):
         self.load_guides()
         self.auto_clavicle_setup()
 
+        data_manager.DataExport().append_data("clavicle_module",
+                            {
+                                f"{self.side}_clavicle": self.ctl_ik
+                            })
+
 
     def lock_attributes(self, ctl, attrs):
 

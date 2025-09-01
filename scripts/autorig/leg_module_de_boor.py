@@ -56,6 +56,16 @@ class LegModule(object):
 
         cmds.parent(self.controllers_grp, self.local_hip_ctl)
 
+        data_manager.DataExport().append_data("leg_module",
+                            {
+                                f"{self.side}_hip_JNT": self.leg_chain[0],
+                                f"{self.side}_knee_JNT": self.leg_chain[1],
+                                f"{self.side}_ankle_JNT": self.leg_chain[2],
+                                f"{self.side}_legIk": self.ik_controllers[0],
+                                f"{self.side}_hipFk": self.fk_controllers[0],
+                                f"{self.side}_legPv": self.pv_ctl,
+                            })
+
     def lock_attributes(self, ctl, attrs):
 
         """
@@ -205,9 +215,9 @@ class LegModule(object):
         
         cmds.select(self.pv_nodes[0])
         if self.side == "L":
-            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
-        else:
             cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+        else:
+            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_legPv_CRV") # Create a line that points always to the PV
         decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPv_DCM", ss=True)
@@ -611,7 +621,7 @@ class LegModule(object):
 
         sel = (first_sel, up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel)
 
-        self.skinning_jnt_trn = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}") # Call the ribbon script to create de Boors system
+        self.skinning_jnt_trn = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", aim_axis="x", up_axis="y") # Call the ribbon script to create de Boors system
 
         cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
 

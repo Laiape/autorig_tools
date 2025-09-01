@@ -5,6 +5,7 @@ from importlib import reload
 from utils import guides_manager
 from utils import basic_structure
 from utils import data_manager
+from autorig.utilities import matrix_manager
 
 from autorig import arm_module_de_boor as arm_module
 from autorig import spine_module
@@ -16,6 +17,7 @@ from autorig import fingers_module
 reload(guides_manager) 
 reload(basic_structure)
 reload(data_manager)
+reload(matrix_manager)
 reload(arm_module)
 reload(spine_module)
 reload(leg_module)
@@ -40,9 +42,11 @@ class AutoRig(object):
 
         self.basic_structure()
         self.make_rig()
+        self.space_switches()
         self.label_joints()
         self.hide_connections()
         self.inherit_transforms()
+        
         
 
     def basic_structure(self):
@@ -79,10 +83,53 @@ class AutoRig(object):
     def space_switches(self):
 
         """
-        Create space switches for the rig controls.
+        Els controls han de tenir els següents spaceSwitches de translació i rotació:
+
+        armIk: masterWalk, chest, body, localHip, head (per defecte ha d'estar a masterWalk)
+
+        armPv: masterWalk, armIk, clavicle, chest, body (per defecte ha d'estar a armIk)
+
+        legIk: masterWalk, body, localHip (per defecte ha d'estar a masterWalk)
+
+        legPv: masterWalk, legIk, body (per defecte ha d'estar a legIk)
+
+        Els controls han de tenir els següents spaceSwitches de només rotació, però han de seguir el seu hook:
+
+        armFk00: clavicle, chest, body (per defecte ha d'estar en clavicle)
+
+        legFk00: masterWalk, localHip, body (per defecte ha d'estar en localHip)
+
+        El control del head ha de tenir un spaceSwitch de només rotació que a més a més hi hagi un atribut de tipus float amb màxim a 1 i mínim a 0 i valor per defecte a 1 que permeti escollir la quantitat d’space que s’està aplicant. 
+
+        head: masterWalk, neck, chest, body (per defecte ha d’estar a chest)
         """
 
-        pass
+        # Drivens
+        masterwalk = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        chest = data_manager.DataExport().get_data("spine_module", "local_chest_ctl")
+        body = data_manager.DataExport().get_data("spine_module", "body_ctl")
+        local_hip = data_manager.DataExport().get_data("spine_module", "local_hip_ctl")
+        head = data_manager.DataExport().get_data("neck_module", "head_ctl")
+
+        for side in ["L", "R"]:
+
+            # Drivers
+            arm_ik = data_manager.DataExport().get_data("arm_module", f"{side}_armIk")
+            arm_pv = data_manager.DataExport().get_data("arm_module", f"{side}_armPv")
+            leg_ik = data_manager.DataExport().get_data("leg_module", f"{side}_legIk")
+            leg_pv = data_manager.DataExport().get_data("leg_module", f"{side}_legPv")
+            shoulder_fk = data_manager.DataExport().get_data("arm_module", f"{side}_shoulderFk")
+            hip_fk = data_manager.DataExport().get_data("leg_module", f"{side}_hipFk")
+
+            # Drivens
+            clavicle = data_manager.DataExport().get_data("clavicle_module", f"{side}_clavicle")
+
+            matrix_manager.space_switches(target=arm_ik, sources=[masterwalk, chest, body, local_hip, head], default_value=1) # Arm ik
+            matrix_manager.space_switches(target=arm_pv, sources=[arm_ik, masterwalk, clavicle, chest, body], default_value=1) # Arm pv
+            matrix_manager.space_switches(target=leg_ik, sources=[masterwalk, body, local_hip], default_value=1) # Leg ik
+            matrix_manager.space_switches(target=leg_pv, sources=[leg_ik, masterwalk, body], default_value=1) # Leg pv
+            matrix_manager.space_switches(target=shoulder_fk, sources=[clavicle, chest, body], default_value=1) # Shoulder fk
+            matrix_manager.space_switches(target=hip_fk, sources=[masterwalk, local_hip, body], default_value=1) # Hip fk
 
     def label_joints(self):
 
