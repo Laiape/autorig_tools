@@ -197,26 +197,9 @@ class SpineModule(object):
 
 
         # ----- Local chest setup ------
-        pick_matrix_translation = cmds.createNode("pickMatrix", name=f"{self.side}_localChestTranslation_PMX")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{pick_matrix_translation}.inputMatrix")
-        cmds.setAttr(f"{pick_matrix_translation}.useTranslate", 1) # Activate only translation
-        cmds.setAttr(f"{pick_matrix_translation}.useRotate", 0)
-        cmds.setAttr(f"{pick_matrix_translation}.useScale", 0)
-        cmds.setAttr(f"{pick_matrix_translation}.useShear", 0)
+        
 
-        pick_matrix_rotation = cmds.createNode("pickMatrix", name=f"{self.side}_localChestRotation_PMX")
-        cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{pick_matrix_rotation}.inputMatrix")
-        cmds.setAttr(f"{pick_matrix_rotation}.useTranslate", 0)
-        cmds.setAttr(f"{pick_matrix_rotation}.useRotate", 1) # Activate only rotation
-        cmds.setAttr(f"{pick_matrix_rotation}.useScale", 0)
-        cmds.setAttr(f"{pick_matrix_rotation}.useShear", 0)
-
-        blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_localChest_BMX")
-        cmds.connectAttr(f"{pick_matrix_rotation}.outputMatrix", f"{blend_matrix}.inputMatrix")
-        cmds.connectAttr(f"{pick_matrix_translation}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0) # Deactivate scale
-
-        cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.local_chest_nodes[0]}.scaleX") # Connect the global scale
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.local_chest_nodes[0]}.scaleY")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.local_chest_nodes[0]}.scaleZ")

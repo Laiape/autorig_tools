@@ -415,6 +415,11 @@ class ArmModule(object):
         self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[0], self.blend_matrices[1], "Upper")
         self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
 
+        cmds.select(clear=True)
+        wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")
+        cmds.connectAttr(f"{self.arm_chain[-1]}.worldMatrix[0]", f"{wrist_skinning}.offsetParentMatrix")
+        cmds.parent(wrist_skinning, self.skeleton_grp)
+
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
         

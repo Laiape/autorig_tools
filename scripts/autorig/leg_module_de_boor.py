@@ -552,6 +552,15 @@ class LegModule(object):
         self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[0], self.blend_matrices[1], "Upper")
         self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
 
+        cmds.select(clear=True)
+        ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")
+        cmds.connectAttr(f"{self.leg_chain[-2]}.worldMatrix[0]", f"{ball_skinning_jnt}.offsetParentMatrix")
+        cmds.select(clear=True)
+        ankle_skinning_jnt = cmds.joint(name=f"{self.module_name}AnkleSkinning_JNT")
+        cmds.connectAttr(f"{self.leg_chain[-3]}.worldMatrix[0]", f"{ankle_skinning_jnt}.offsetParentMatrix")
+        cmds.parent(ankle_skinning_jnt, self.skeleton_grp)
+        cmds.parent(ball_skinning_jnt, self.skeleton_grp)
+
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
         if f"{first_sel[0]}.outputMatrix":
