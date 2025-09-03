@@ -13,6 +13,7 @@ from autorig import clavicle_module
 from autorig import leg_module_de_boor as leg_module
 from autorig import neck_module_de_boor as neck_module
 from autorig import fingers_module
+from autorig import eyebrow_module
 
 reload(guides_manager) 
 reload(basic_structure)
@@ -24,6 +25,8 @@ reload(leg_module)
 reload(neck_module)
 reload(fingers_module)
 reload(clavicle_module)
+
+reload(eyebrow_module)
 
 
 class AutoRig(object):
@@ -63,6 +66,7 @@ class AutoRig(object):
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
+        # ---- Body mechanics  ----
         spine_module.SpineModule().make("C")
         arm_module.ArmModule().make("L") 
         arm_module.ArmModule().make("R")
@@ -73,6 +77,10 @@ class AutoRig(object):
         neck_module.NeckModule().make("C")
         fingers_module.FingersModule().make("L")
         fingers_module.FingersModule().make("R")
+
+        # ---- Facial  ----
+        # eyebrow_module.EyebrowModule().make("L")
+        # eyebrow_module.EyebrowModule().make("R")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',
