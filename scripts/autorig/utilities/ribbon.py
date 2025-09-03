@@ -12,8 +12,8 @@ KNOT_TO_FORM_INDEX = {OPEN: om.MFnNurbsCurve.kOpen, PERIODIC: om.MFnNurbsCurve.k
 
 
 def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, tangent_offset=0.001, d=None, kv_type=OPEN,
-                   param_from_length=True, tol=0.000001, name='ribbon', use_position=True, use_tangent=True,
-                   use_up=True, use_scale=False, custom_parameter=[]):
+                   param_from_length=False, tol=0.000001, name='ribbon', use_position=True, use_tangent=True,
+                   use_up=True, use_scale=True, custom_parameter=[]):
     """
     Use controls and de_boor function to get position, tangent and up values for joints.  The param_from_length can
     be used to get the parameter values using a fraction of the curve length, otherwise the parameter values will be

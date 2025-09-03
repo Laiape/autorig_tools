@@ -29,8 +29,22 @@ def create_basic_structure():
         om.MGlobal.displayError("Basic structure already exists. Please delete it before creating a new one.")
         return
     
+    else:
 
-    nodes = ["Character", "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
+        answer = cmds.promptDialog(
+                title="INPUT DIALOG",
+                message="INSERT FILE NAME",
+                button=["OK", "Cancel"],
+                defaultButton="OK",
+                cancelButton="Cancel",
+                dismissString="Cancel")
+    if answer == "Cancel":
+        om.MGlobal.displayInfo("Operation cancelled by user.")
+        return
+    
+    character_name = cmds.promptDialog(query=True, text=True)
+
+    nodes = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
 
     for i, node in enumerate(nodes):
 
@@ -81,6 +95,7 @@ def create_basic_structure():
     cmds.parent(masterwalk_node[0], character_ctl)
     data_manager.DataExport().append_data("basic_structure",
                             {
+                                "character_name": character_name,
                                 "skel_GRP" : skel_grp,
                                 "modules_GRP" : modules_grp,
                                 "masterwalk_ctl" : masterwalk_ctl,

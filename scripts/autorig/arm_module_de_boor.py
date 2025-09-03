@@ -417,6 +417,8 @@ class ArmModule(object):
 
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
+        
+
         if f"{first_sel[0]}.outputMatrix":
             first_sel_output = f"{first_sel[0]}.outputMatrix"
         elif f"{first_sel[0]}.worldMatrix":
@@ -474,8 +476,14 @@ class ArmModule(object):
 
         sel = (first_sel[0], up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel[0])
 
-        self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}") # Call the ribbon script to create de Boors system
+        params = [i / (len(sel) - 1) for i in range(len(sel))]
+        params[-1] = 0.95
 
+        if self.side == "L":
+            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y') # Call the ribbon script to create de Boors system
+        elif self.side == "R":
+            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y')
+            
         cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
         for t in temp:
             cmds.delete(t)

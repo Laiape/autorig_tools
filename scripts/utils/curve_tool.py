@@ -3,12 +3,16 @@ import maya.api.OpenMaya as om
 import json
 import os
 
+from utils import data_manager
+
 TEMPLATE_PATH = "C:/GITHUB/curves"
 final_path = None
+curves_name = None
 
 complete_path = os.path.realpath(__file__)
 relative_path = complete_path.split("\scripts")[0]
-TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, "curves_info.json")
+CHARACTER_NAME = None
+TEMPLATE_FILE = None
 
 
 def get_all_ctl_curves_data():
@@ -34,6 +38,8 @@ def get_all_ctl_curves_data():
         return
     
     curves_name = cmds.promptDialog(query=True, text=True)
+    CHARACTER_NAME = curves_name
+    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}.curves")
 
     for transform_name in transforms:
         shapes = cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []
@@ -143,10 +149,12 @@ def build_curves_from_template(target_transform_name=None):
     Returns:
         list: A list of created transform names.
     """
+    CHARACTER_NAME = data_manager.DataExport().get_data("basic_structure", "character_name")
+    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}.curves")
 
     if not os.path.exists(TEMPLATE_FILE):
-        om.MGlobal.displayError("Template file does not exist.")
-        return
+        # om.MGlobal.displayError("Template file does not exist.")
+        TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, "default.curves")
 
     with open(TEMPLATE_FILE, "r") as f:
         ctl_data = json.load(f)

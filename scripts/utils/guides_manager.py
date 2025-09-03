@@ -3,8 +3,11 @@ import maya.api.OpenMaya as om
 import json
 import os
 
+from utils import data_manager
+
 GUIDES_PATH = "C:\GITHUB\guides"
 guides_node = "C_guides_GRP"
+CHARACTER_NAME = None
 
 def get_guides_info():
 
@@ -12,6 +15,8 @@ def get_guides_info():
     Get the guides transform and take the information from the joints and locators.
 
     """
+
+    CHARACTER_NAME = data_manager.DataExport().get_data("basic_structure", "character_name")
 
     guides_transform = cmds.ls(selection=True, type="transform")[0]
 
@@ -119,10 +124,10 @@ def get_guides_info():
     if not os.path.exists(final_path):
         os.makedirs(final_path)
     
-    with open(os.path.join(final_path, f"{guides_name}.guides"), "w") as output_file:
+    with open(os.path.join(final_path, f"{CHARACTER_NAME}.guides"), "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
 
-    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.guides')}")
+    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{CHARACTER_NAME}.guides')}")
 
 
 
@@ -205,10 +210,12 @@ def get_guides(guide_export):
         list: A list of guides found in the scene.
     """
 
+    CHARACTER_NAME = data_manager.DataExport().get_data("basic_structure", "character_name")
+
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     guides_path = os.path.join(relative_path, "guides")
-    final_path = os.path.join(guides_path, "vitorio.guides") # Update this line
+    final_path = os.path.join(guides_path, f"{CHARACTER_NAME}.guides") # Update this line and put an attribute to file_name
 
     name = os.path.basename(final_path).split(".")[0]
 
