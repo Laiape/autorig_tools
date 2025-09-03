@@ -41,8 +41,8 @@ class ArmModule(object):
         self.side = side
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}_Skinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}_Controllers_GRP", ss=True, p=self.masterwalk_ctl)
+        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
+        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.load_guides()
         self.create_chains()
@@ -123,6 +123,7 @@ class ArmModule(object):
         """
         self.fk_nodes = []
         self.fk_controllers = []
+        self.blend_matrices = []
 
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_armFkControllers_GRP", ss=True, p=self.controllers_grp)
 
@@ -140,9 +141,11 @@ class ArmModule(object):
             self.fk_controllers.append(fk_ctl)
 
             if i == 0:
-                matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
+                blend_matrix = matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
             else:
-                matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
+                blend_matrix = matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
+
+            self.blend_matrices.append(blend_matrix)
 
         cmds.parent(self.fk_nodes[0], fk_controllers_trn)
 
@@ -409,10 +412,20 @@ class ArmModule(object):
         """
 
         # Placeholder for de Boor ribbon setup
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.arm_chain[0], self.arm_chain[1], "Upper")
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.arm_chain[1], self.arm_chain[2], "Lower")
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[0], self.blend_matrices[1], "Upper")
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
 
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
+
+        if f"{first_sel[0]}.outputMatrix":
+            first_sel_output = f"{first_sel[0]}.outputMatrix"
+        elif f"{first_sel[0]}.worldMatrix":
+            first_sel_output = f"{first_sel[0]}.worldMatrix"
+
+        if f"{second_sel[0]}.outputMatrix":
+            second_sel_output = f"{second_sel[0]}.outputMatrix"
+        elif f"{second_sel[0]}.worldMatrix":
+            second_sel_output = f"{second_sel[0]}.worldMatrix"
 
         main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}MainBendy", offset=["GRP"])
         up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}UpBendy", offset=["GRP"])
@@ -423,9 +436,9 @@ class ArmModule(object):
             cmds.parent(node, self.controllers_grp)
             cmds.setAttr(f"{node}.inheritsTransform", 0)
 
-        blend_matrix_main = cmds.createNode("blendMatrix", name=f"{self.side}_{part}BlendMatrix_BM", ss=True)
-        cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{blend_matrix_main}.inputMatrix")
-        cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{blend_matrix_main}.target[0].targetMatrix")
+        blend_matrix_main = cmds.createNode("blendMatrix", name=f"{self.side}_{part}MainBendy_BM", ss=True)
+        cmds.connectAttr(first_sel_output, f"{blend_matrix_main}.inputMatrix")
+        cmds.connectAttr(second_sel_output, f"{blend_matrix_main}.target[0].targetMatrix")
         cmds.setAttr(f"{blend_matrix_main}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{blend_matrix_main}.target[0].rotateWeight", 0)
         cmds.setAttr(f"{blend_matrix_main}.target[0].shearWeight", 0)
@@ -436,11 +449,11 @@ class ArmModule(object):
         
         for i , node in enumerate([up_bendy_nodes[0], low_bendy_nodes[0]]):
 
-            blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_{part}BlendMatrix0{i}_BM", ss=True)
+            blend_matrix = cmds.createNode("blendMatrix", name=node.replace("_CTL", "_BM"), ss=True)
             if i == 0:
-                cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+                cmds.connectAttr(first_sel_output, f"{blend_matrix}.inputMatrix")
             else:
-                cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+                cmds.connectAttr(second_sel_output, f"{blend_matrix}.inputMatrix")
             cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
             cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
             cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
@@ -451,19 +464,21 @@ class ArmModule(object):
             parent_m = cmds.createNode("parentMatrix", name=f"{self.side}_{part}UpBendy_PM", ss=True)
             cmds.setAttr(f"{parent_m}.inputMatrix", position, type="matrix")
             if i == 0:
-                cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
+                cmds.connectAttr(first_sel_output, f"{parent_m}.target[0].targetMatrix")
             else:
-                cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
+                cmds.connectAttr(second_sel_output, f"{parent_m}.target[0].targetMatrix")
             cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
             cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
             cmds.delete(blend_matrix)
             pM_s.append(parent_m)
 
-        sel = (first_sel, up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel)
+        sel = (first_sel[0], up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel[0])
 
-        self.skinning_jnt_trn = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}") # Call the ribbon script to create de Boors system
+        self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}") # Call the ribbon script to create de Boors system
 
         cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
+        for t in temp:
+            cmds.delete(t)
 
         for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
 

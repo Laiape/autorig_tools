@@ -30,7 +30,7 @@ def create_basic_structure():
         return
     
 
-    nodes = ["Character", "rig_GRP", "controls_GRP", "meshes_GRP", "deformers_GRP"]
+    nodes = ["Character", "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
 
     for i, node in enumerate(nodes):
 
@@ -59,6 +59,9 @@ def create_basic_structure():
             cmds.addAttr(f"{preferences_ctl}", longName=attr, attributeType="bool", keyable=True, defaultValue=1)
             cmds.setAttr(f"{preferences_ctl}.{attr}", keyable=False, channelBox=True)
 
+    
+    cmds.connectAttr(f"{preferences_ctl}.Reference", f"{nodes[3]}.overrideEnabled")
+    cmds.setAttr(f"{nodes[3]}.overrideDisplayType", 2)
     cmds.connectAttr(f"{preferences_ctl}.Show_Skeleton", f"{skel_grp}.visibility")
     cmds.connectAttr(f"{preferences_ctl}.Show_Modules", f"{modules_grp}.visibility")
 

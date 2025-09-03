@@ -133,6 +133,7 @@ class LegModule(object):
         """
         self.fk_nodes = []
         self.fk_controllers = []
+        self.blend_matrices = []
 
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_legFkControllers_GRP", ss=True, p=self.controllers_grp)
         
@@ -151,11 +152,14 @@ class LegModule(object):
             self.fk_controllers.append(fk_ctl)
 
             if i == 0:
-                matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
+                blend_matrix = matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
             else:
-                matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
+                blend_matrix = matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
+
+            self.blend_matrices.append(blend_matrix)
 
         cmds.parent(self.fk_nodes[0], fk_controllers_trn)
+        
 
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_legIkControllers_GRP", ss=True, p=self.controllers_grp)
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_legIkFkReverse", ss=True)
@@ -215,9 +219,9 @@ class LegModule(object):
         
         cmds.select(self.pv_nodes[0])
         if self.side == "L":
-            cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 30, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
         else:
-            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, -30, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_legPv_CRV") # Create a line that points always to the PV
         decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPv_DCM", ss=True)
@@ -545,23 +549,33 @@ class LegModule(object):
         """
 
         # Placeholder for de Boor ribbon setup
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.leg_chain[0], self.leg_chain[1], "legUpper")
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.leg_chain[1], self.leg_chain[2], "legLower")
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[0], self.blend_matrices[1], "Upper")
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
 
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
-        main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}MainBendy", offset=["GRP"])
-        up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}UpBendy", offset=["GRP"])
-        low_bendy_nodes, low_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}LowBendy", offset=["GRP"])
+        if f"{first_sel[0]}.outputMatrix":
+            first_sel_output = f"{first_sel[0]}.outputMatrix"
+        elif f"{first_sel[0]}.worldMatrix[0]":
+            first_sel_output = f"{first_sel[0]}.worldMatrix[0]"
+
+        if f"{second_sel[0]}.outputMatrix":
+            second_sel_output = f"{second_sel[0]}.outputMatrix"
+        elif f"{second_sel[0]}.worldMatrix[0]":
+            second_sel_output = f"{second_sel[0]}.worldMatrix[0]"
+
+        main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}MainBendy", offset=["GRP"])
+        up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}UpBendy", offset=["GRP"])
+        low_bendy_nodes, low_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}LowBendy", offset=["GRP"])
 
         for node in [main_bendy_nodes[0], up_bendy_nodes[0], low_bendy_nodes[0]]:
 
             cmds.parent(node, self.controllers_grp)
             cmds.setAttr(f"{node}.inheritsTransform", 0)
 
-        blend_matrix_main = cmds.createNode("blendMatrix", name=f"{self.side}_{part}BlendMatrix_BM", ss=True)
-        cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{blend_matrix_main}.inputMatrix")
-        cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{blend_matrix_main}.target[0].targetMatrix")
+        blend_matrix_main = cmds.createNode("blendMatrix", name=f"{self.module_name}{part}BlendMatrix_BM", ss=True)
+        cmds.connectAttr(first_sel_output, f"{blend_matrix_main}.inputMatrix")
+        cmds.connectAttr(second_sel_output, f"{blend_matrix_main}.target[0].targetMatrix")
         cmds.setAttr(f"{blend_matrix_main}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{blend_matrix_main}.target[0].rotateWeight", 0)
         cmds.setAttr(f"{blend_matrix_main}.target[0].shearWeight", 0)
@@ -572,11 +586,11 @@ class LegModule(object):
         
         for i , node in enumerate([up_bendy_nodes[0], low_bendy_nodes[0]]):
 
-            blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_{part}BlendMatrix0{i}_BM", ss=True)
+            blend_matrix = cmds.createNode("blendMatrix", name=f"{self.module_name}{part}BlendMatrix0{i}_BM", ss=True)
             if i == 0:
-                cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+                cmds.connectAttr(first_sel_output, f"{blend_matrix}.inputMatrix")
             else:
-                cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+                cmds.connectAttr(second_sel_output, f"{blend_matrix}.inputMatrix")
             cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
             cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
             cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
@@ -584,18 +598,18 @@ class LegModule(object):
             cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0.5)
             position = cmds.getAttr(f"{blend_matrix}.outputMatrix")
             
-            parent_m = cmds.createNode("parentMatrix", name=f"{self.side}_{part}UpBendy_PM", ss=True)
+            parent_m = cmds.createNode("parentMatrix", name=f"{self.module_name}{part}UpBendy_PM", ss=True)
             cmds.setAttr(f"{parent_m}.inputMatrix", position, type="matrix")
 
             if i == 0:
 
-                cmds.connectAttr(f"{first_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
+                cmds.connectAttr(first_sel_output, f"{parent_m}.target[0].targetMatrix")
                 cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
                 cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
 
             else:
 
-                cmds.connectAttr(f"{second_sel}.worldMatrix[0]", f"{parent_m}.target[0].targetMatrix")
+                cmds.connectAttr(second_sel_output, f"{parent_m}.target[0].targetMatrix")
                 cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
 
                 if "arm" in part:
@@ -604,14 +618,14 @@ class LegModule(object):
 
                 if "leg" in part: # Set up to pick blend the translation but follow the main bendy rotation.
 
-                    pick_matrix_translate = cmds.createNode("pickMatrix", name=f"{self.side}_{part}LowBendyTranslate_PM", ss=True)
+                    pick_matrix_translate = cmds.createNode("pickMatrix", name=f"{self.module_name}{part}LowBendyTranslate_PM", ss=True)
                     cmds.connectAttr(f"{parent_m}.outputMatrix", f"{pick_matrix_translate}.inputMatrix")
                     cmds.setAttr(f"{pick_matrix_translate}.useRotate", 0)
-                    decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{self.side}_{part}LowBendyTranslate_DCM", ss=True)
+                    decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{self.module_name}{part}LowBendyTranslate_DCM", ss=True)
                     cmds.connectAttr(f"{pick_matrix_translate}.outputMatrix", f"{decompose_matrix}.inputMatrix")
-                    compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_{part}LowBendyTranslate_CM", ss=True)
+                    compose_matrix = cmds.createNode("composeMatrix", name=f"{self.module_name}{part}LowBendyTranslate_CM", ss=True)
                     cmds.connectAttr(f"{decompose_matrix}.outputTranslate", f"{compose_matrix}.inputTranslate")
-                    main_ctl_decompose = cmds.createNode("decomposeMatrix", name=f"{self.side}_{part}MainBendy_DCM", ss=True)
+                    main_ctl_decompose = cmds.createNode("decomposeMatrix", name=f"{self.module_name}{part}MainBendy_DCM", ss=True)
                     cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{main_ctl_decompose}.inputMatrix")
                     cmds.connectAttr(f"{main_ctl_decompose}.outputRotate", f"{compose_matrix}.inputRotate")
                     cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{node}.offsetParentMatrix")
@@ -619,11 +633,14 @@ class LegModule(object):
             cmds.delete(blend_matrix)
             pM_s.append(parent_m)
 
-        sel = (first_sel, up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel)
+        sel = (first_sel[0], up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel[0])
 
-        self.skinning_jnt_trn = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", aim_axis="x", up_axis="y") # Call the ribbon script to create de Boors system
+        self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}") # Call the ribbon script to create de Boors system
 
         cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
+        for t in temp:
+            cmds.delete(t)
+
 
         for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
 
