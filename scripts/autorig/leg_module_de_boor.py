@@ -347,8 +347,8 @@ class LegModule(object):
 
         for ctl in self.fk_controllers:
             cmds.setAttr(f"{ctl}.translateX", lock=False)
-            cmds.addAttr(ctl, shortName="STRETCHY____", attributeType="enum", enumName="____", keyable=True)
-            cmds.setAttr(f"{ctl}.STRETCHY____", lock=True, keyable=False)
+            cmds.addAttr(ctl, shortName="STRETCHY", attributeType="enum", enumName="____", keyable=True)
+            cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)
             cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
         self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_legUpperDoubleMultLinear_MDL")
@@ -591,31 +591,51 @@ class LegModule(object):
         cmds.setAttr(f"{blend_matrix_main}.target[0].translateWeight", 0.5)
         cmds.connectAttr(f"{blend_matrix_main}.outputMatrix", f"{main_bendy_nodes[0]}.offsetParentMatrix")
 
-        pM_s = []
-        for i, node in enumerate([up_bendy_nodes[0], low_bendy_nodes[0]]):
 
-            blend_matrix = cmds.createNode("blendMatrix", name=node.replace("_CTL", "_BM"), ss=True)
+        for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
+
+            self.lock_attributes(ctl, ["visibility"])
+
+            cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+            cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+            cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
+
             if i == 0:
-                cmds.connectAttr(first_sel_output, f"{blend_matrix}.inputMatrix")
-            else:
-                cmds.connectAttr(second_sel_output, f"{blend_matrix}.inputMatrix")
-            cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+
+                cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
+                cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)
+
+        cmds.connectAttr(f"{main_bendy_ctl}.Bendy_Height", f"{blend_matrix_main}.target[0].translateWeight") # Connect Bendy_Height to blend_matrix_main
+        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{up_bendy_nodes[0]}.visibility")
+        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{low_bendy_nodes[0]}.visibility")
+
+        for i, node in enumerate([up_bendy_nodes[0], low_bendy_nodes[0]]): # Create blend matrices for up and low bendy nodes
+
+            blend_matrix = cmds.createNode("blendMatrix", name=node.replace("GRP", "BMX"), ss=True)
+
+            if i == 0:
+                if "Upper" in node:
+                    cmds.connectAttr(f"{self.leg_chain[0]}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+                elif "Lower" in node:
+                    cmds.connectAttr(f"{self.leg_chain[1]}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+                cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+                cmds.connectAttr(f"{up_bendy_ctl}.Bendy_Height", f"{blend_matrix}.target[0].translateWeight")
+
+            elif i == 1:
+                cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+
+                if "Upper" in node:
+                    cmds.connectAttr(f"{self.leg_chain[1]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+                elif "Lower" in node:
+                    cmds.connectAttr(f"{self.leg_chain[2]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+                
+                cmds.connectAttr(f"{low_bendy_ctl}.Bendy_Height", f"{blend_matrix}.target[0].translateWeight")
+
+
             cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
             cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
             cmds.setAttr(f"{blend_matrix}.target[0].shearWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0.5)
-            position = cmds.getAttr(f"{blend_matrix}.outputMatrix")
-            
-            parent_m = cmds.createNode("parentMatrix", name=f"{self.side}_{part}UpBendy_PM", ss=True)
-            cmds.setAttr(f"{parent_m}.inputMatrix", position, type="matrix")
-            if i == 0:
-                cmds.connectAttr(first_sel_output, f"{parent_m}.target[0].targetMatrix")
-            else:
-                cmds.connectAttr(second_sel_output, f"{parent_m}.target[0].targetMatrix")
-            cmds.connectAttr(f"{main_bendy_ctl}.worldMatrix[0]", f"{parent_m}.target[1].targetMatrix")
-            cmds.connectAttr(f"{parent_m}.outputMatrix", f"{node}.offsetParentMatrix")
-            cmds.delete(blend_matrix)
-            pM_s.append(parent_m)
+            cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{node}.offsetParentMatrix")
 
         sel = (first_sel[0], up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel[0])
 
@@ -632,32 +652,4 @@ class LegModule(object):
         for t in temp:
             cmds.delete(t)
 
-        for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
-
-            self.lock_attributes(ctl, ["visibility"])
-
-            cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-            cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
-            cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
-
-            if i == 0:
-
-                cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
-                cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)
-
-        cmds.connectAttr(f"{main_bendy_ctl}.Bendy_Height", f"{blend_matrix_main}.target[0].translateWeight") # Connect Bendy_Height to blend_matrix_main
-
-        float_math_up = cmds.createNode("floatMath", name=f"{self.side}_{part}UpBendy_FLM", ss=True) # Create a FLM node to control the up bendy
-        cmds.setAttr(f"{float_math_up}.operation", 1)
-        cmds.connectAttr(f"{up_bendy_ctl}.Bendy_Height", f"{float_math_up}.floatB")
-        cmds.connectAttr(f"{float_math_up}.outFloat", f"{pM_s[0]}.target[0].weight")
-        cmds.connectAttr(f"{up_bendy_ctl}.Bendy_Height", f"{pM_s[0]}.target[1].weight")
-
-        float_math_low = cmds.createNode("floatMath", name=f"{self.side}_{part}LowBendy_FLM", ss=True) # Create a FLM node to control the low bendy
-        cmds.setAttr(f"{float_math_low}.operation", 1)
-        cmds.connectAttr(f"{low_bendy_ctl}.Bendy_Height", f"{float_math_low}.floatB")
-        cmds.connectAttr(f"{float_math_low}.outFloat", f"{pM_s[1]}.target[1].weight")
-        cmds.connectAttr(f"{low_bendy_ctl}.Bendy_Height", f"{pM_s[1]}.target[0].weight")
-
-        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{up_bendy_nodes[0]}.visibility")
-        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{low_bendy_nodes[0]}.visibility")
+        
