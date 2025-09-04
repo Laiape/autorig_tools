@@ -3,11 +3,11 @@ import maya.api.OpenMaya as om
 import os
 from importlib import reload
 from scripts.utils import data_manager
-from scripts.utils import guides_manager
+from scripts.utils import guides_manager_new
 from scripts.utils import curve_tool
 
 reload(data_manager)
-reload(guides_manager)
+reload(guides_manager_new)
 reload(curve_tool)
 
 class LimbModule(object):
@@ -116,8 +116,8 @@ class ArmModule(LimbModule):
         Load guides from arm
         """
 
-        self.limb_chain = guides_manager.get_guides(joint_name=f"{self.side}_shoulder_JNT")
-        self.settings_loc = guides_manager.get_guides(joint_name=f"{self.side}_armSettings_LOC")[0]
+        self.limb_chain = guides_manager_new.get_guides(joint_name=f"{self.side}_shoulder_JNT")
+        self.settings_loc = guides_manager_new.get_guides(joint_name=f"{self.side}_armSettings_LOC")[0]
         
 
 class LegModule(LimbModule):
@@ -134,5 +134,5 @@ class LegModule(LimbModule):
         Load guides from leg
         """
 
-        self.limb_chain = guides_manager.get_guides(joint_name=f"{self.side}_hip_JNT")
-        self.settings_loc = guides_manager.get_guides(joint_name=f"{self.side}_legSettings_LOC")[0]
+        self.limb_chain = guides_manager_new.get_guides(joint_name=f"{self.side}_hip_JNT")
+        self.settings_loc = guides_manager_new.get_guides(joint_name=f"{self.side}_legSettings_LOC")[0]

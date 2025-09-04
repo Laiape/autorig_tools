@@ -2,7 +2,7 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
 
-from utils import guides_manager
+from scripts.utils import guides_manager_new
 from utils import basic_structure
 from utils import data_manager
 from autorig.utilities import matrix_manager
@@ -15,7 +15,7 @@ from autorig import neck_module_de_boor as neck_module
 from autorig import fingers_module
 from autorig import eyebrow_module
 
-reload(guides_manager) 
+reload(guides_manager_new) 
 reload(basic_structure)
 reload(data_manager)
 reload(matrix_manager)
@@ -118,6 +118,7 @@ class AutoRig(object):
         body = data_manager.DataExport().get_data("spine_module", "body_ctl")
         local_hip = data_manager.DataExport().get_data("spine_module", "local_hip_ctl")
         head = data_manager.DataExport().get_data("neck_module", "head_ctl")
+        neck = data_manager.DataExport().get_data("neck_module", "neck_ctl")
 
         for side in ["L", "R"]:
 
@@ -128,16 +129,18 @@ class AutoRig(object):
             leg_pv = data_manager.DataExport().get_data("leg_module", f"{side}_legPv")
             shoulder_fk = data_manager.DataExport().get_data("arm_module", f"{side}_shoulderFk")
             hip_fk = data_manager.DataExport().get_data("leg_module", f"{side}_hipFk")
-
-            # Drivens
             clavicle = data_manager.DataExport().get_data("clavicle_module", f"{side}_clavicle")
 
-            matrix_manager.space_switches(target=arm_ik, sources=[masterwalk, chest, body, local_hip, head], default_value=1) # Arm ik
-            matrix_manager.space_switches(target=arm_pv, sources=[arm_ik, masterwalk, clavicle, chest, body], default_value=1) # Arm pv
-            matrix_manager.space_switches(target=leg_ik, sources=[masterwalk, body, local_hip], default_value=1) # Leg ik
-            matrix_manager.space_switches(target=leg_pv, sources=[leg_ik, masterwalk, body], default_value=1) # Leg pv
+            # Space switches
+            matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik
+            matrix_manager.space_switches(target=arm_pv, sources=[body, arm_ik, masterwalk, clavicle, chest], default_value=1) # Arm pv
+            matrix_manager.space_switches(target=leg_ik, sources=[local_hip, body, masterwalk], default_value=1) # Leg ik
+            matrix_manager.space_switches(target=leg_pv, sources=[body, leg_ik, masterwalk], default_value=1) # Leg pv
             matrix_manager.space_switches(target=shoulder_fk, sources=[clavicle, chest, body], default_value=1) # Shoulder fk
-            matrix_manager.space_switches(target=hip_fk, sources=[masterwalk, local_hip, body], default_value=1) # Hip fk
+            matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip, masterwalk], default_value=1) # Hip fk
+            matrix_manager.space_switches(target=clavicle, sources=[chest, body], default_value=1) # Clavicle ik
+        matrix_manager.space_switches(target=neck, sources=[chest, body], default_value=1) # Neck
+        matrix_manager.space_switches(target=local_hip, sources=[body, masterwalk], default_value=1) # Local hip
 
     def label_joints(self):
 

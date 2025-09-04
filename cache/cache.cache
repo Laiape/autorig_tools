@@ -1,50 +1,9 @@
 {
     "basic_structure": {
-        "character_name": "spiderVerse",
+        "character_name": "vitorio",
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
         "character_ctl": "C_character_CTL"
-    },
-    "spine_module": {
-        "local_hip_ctl": "C_localHip_CTL",
-        "body_ctl": "C_body_CTL",
-        "local_chest_ctl": "C_localChest_CTL",
-        "last_spine_jnt": "C_spine07_JNT"
-    },
-    "arm_module": {
-        "L_shoulder_JNT": "L_shoulder_JNT",
-        "L_wrist_JNT": "L_wrist_JNT",
-        "L_armSettings": "L_armSettings_CTL",
-        "L_armIk": "L_armIkWrist_CTL",
-        "L_armPv": "L_armPv_CTL",
-        "L_shoulderFk": "L_shoulderFk_CTL",
-        "R_shoulder_JNT": "R_shoulder_JNT",
-        "R_wrist_JNT": "R_wrist_JNT",
-        "R_armSettings": "R_armSettings_CTL",
-        "R_armIk": "R_armIkWrist_CTL",
-        "R_armPv": "R_armPv_CTL",
-        "R_shoulderFk": "R_shoulderFk_CTL"
-    },
-    "clavicle_module": {
-        "L_clavicle": "L_clavicle_CTL",
-        "R_clavicle": "R_clavicle_CTL"
-    },
-    "leg_module": {
-        "L_hip_JNT": "L_hip_JNT",
-        "L_knee_JNT": "L_knee_JNT",
-        "L_ankle_JNT": "L_ankle_JNT",
-        "L_legIk": "L_ankleIk_CTL",
-        "L_hipFk": "L_hipFk_CTL",
-        "L_legPv": "L_legPv_CTL",
-        "R_hip_JNT": "R_hip_JNT",
-        "R_knee_JNT": "R_knee_JNT",
-        "R_ankle_JNT": "R_ankle_JNT",
-        "R_legIk": "R_ankleIk_CTL",
-        "R_hipFk": "R_hipFk_CTL",
-        "R_legPv": "R_legPv_CTL"
-    },
-    "neck_module": {
-        "head_ctl": "C_head_CTL"
     }
 }

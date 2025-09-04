@@ -5,14 +5,14 @@ import os
 import math
 
 from utils import data_manager
-from utils import guides_manager
+from scripts.utils import guides_manager_new
 from utils import curve_tool
 
 from autorig.utilities import matrix_manager
 from autorig.utilities import ribbon
 
 reload(data_manager)
-reload(guides_manager)
+reload(guides_manager_new)
 reload(curve_tool)
 
 reload(matrix_manager)
@@ -76,9 +76,9 @@ class ArmModule(object):
     
     def load_guides(self):
 
-        self.arm_chain = guides_manager.get_guides(f"{self.side}_shoulder_JNT")
+        self.arm_chain = guides_manager_new.get_guides(f"{self.side}_shoulder_JNT")
         cmds.parent(self.arm_chain[0], self.module_trn)
-        self.settings_loc = guides_manager.get_guides(f"{self.side}_armSettings_LOCShape")
+        self.settings_loc = guides_manager_new.get_guides(f"{self.side}_armSettings_LOCShape")
 
     def create_chains(self):
 

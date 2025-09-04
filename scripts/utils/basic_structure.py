@@ -33,7 +33,7 @@ def create_basic_structure():
 
         answer = cmds.promptDialog(
                 title="INPUT DIALOG",
-                message="INSERT FILE NAME",
+                message="INSERT CHARACTER NAME",
                 button=["OK", "Cancel"],
                 defaultButton="OK",
                 cancelButton="Cancel",

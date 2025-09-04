@@ -41,6 +41,14 @@ def get_guides_info():
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
+    transforms = cmds.listRelatives(guides_transform, allDescendents=True, type="transform")
+
+    transform_guides = []
+    for t in transforms:
+        if t.endswith("GUIDE"):
+            transform_guides.append(t)
+        else:
+            continue
 
     if joint_guides:
 
@@ -96,7 +104,6 @@ def get_guides_info():
     else:
         om.MGlobal.displayInfo("No locator guides found.")
 
-
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     final_path = os.path.join(relative_path, "guides")
@@ -110,6 +117,8 @@ def get_guides_info():
             "joint_matrix": joint_matrices[i],
             "parent": joint_parents[i],
             "isLocator": False,
+            "isJoint": True,
+            "isGuide": False,
             "children": list(reversed(children if children else [])),
     }
 
@@ -119,7 +128,22 @@ def get_guides_info():
             guides_data[guides_name][loc] = {
                 "locator_position": locator_positions[i],
                 "isLocator": True,
+                "isJoint": False,
+                "isGuide": False,
             }
+
+    if transform_guides:
+        transform_matrices = []
+        for t in transform_guides:
+            transform_matrices.append(cmds.xform(t, q=True, ws=True, m=True))
+            transform_children = cmds.listRelatives(t, allDescendents=True)
+            guides_data[guides_name][t] = {
+                "transform_matrix": transform_matrices[i],
+                "isLocator": False,
+                "isJoint": False,
+                "isGuide": True,
+                "children": list(reversed(transform_children if transform_children else [])),
+        }
 
     if not os.path.exists(final_path):
         os.makedirs(final_path)
@@ -168,7 +192,7 @@ def load_guides_info(filePath=None):
                         cmds.xform(locator, ws=True, m=data["locator_position"])
                         cmds.parent(locator, guides_node)
 
-                else:
+                elif "isJoint" in data and data["isJoint"]:
 
                     cmds.select(clear=True)
                     imported_joint = cmds.joint(name=guide, r=5)
@@ -179,7 +203,16 @@ def load_guides_info(filePath=None):
                         cmds.parent(imported_joint, guides_node)
                     else:
                         cmds.parent(imported_joint, data["parent"])
-            
+                
+                elif "isGuide" in data and data["isGuide"]:
+                    transform_node = cmds.createNode("transform", name=guide, ss=True)
+                    cmds.xform(transform_node, ws=True, m=data["transform_matrix"])
+                    cmds.makeIdentity(transform_node, apply=True, r=True)
+                    if data["parent"] == "C_root_JNT":
+                        cmds.parent(imported_joint, guides_node)
+                    else:
+                        cmds.parent(imported_joint, data["parent"])
+
     else:
 
         om.MGlobal.displayError("Guides group 'C_guides_GRP' already exists. Please delete it before loading new guides.")
@@ -236,7 +269,7 @@ def get_guides(guide_export):
         
         else:
 
-            if guides_data[name][guide_export]["isLocator"] != True:
+            if guides_data[name][guide_export]["isJoint"] == True: # Creates joints or joint chains
                 chain = []
 
                 joint_exported = cmds.joint(name=guide_export, r=5)
@@ -253,7 +286,24 @@ def get_guides(guide_export):
 
                 return chain
             
-            elif guides_data[name][guide_export]["isLocator"] == True:
+            elif guides_data[name][guide_export]["isLocator"] == True: # Used only to attatch a position
                 locator = cmds.spaceLocator(name=guide_export.replace("LOCShape", "LOC"))[0]
                 cmds.xform(locator, ws=True, m=guides_data[name][guide_export]["locator_position"])
                 return locator
+            
+            
+            elif guides_data[name][guide_export]["isGuide"] == True: # Used to create a transform node and the children
+
+                chain = []
+
+                transform_node = cmds.createNode("transform", name=guide_export, ss=True)
+                cmds.xform(transform_node, ws=True, m=guides_data[name][guide_export]["transform_matrix"])
+                cmds.makeIdentity(transform_node, apply=True, r=True)
+
+                if "children" in guides_data[name][guide_export]:
+                    for child in guides_data[name][guide_export]["children"]:
+                        child_joint = cmds.joint(name=child, r=5)
+                        cmds.xform(child_joint, ws=True, m=guides_data[name][child]["joint_matrix"])
+                        cmds.makeIdentity(child_joint, apply=True, r=True)
+                        chain.append(child_joint)
+                return transform_node

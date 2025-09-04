@@ -12,15 +12,15 @@ def reload_ui():
     
 def export_guides(*args):
 
-    from scripts.utils import guides_manager
-    reload(guides_manager)
-    guides_manager.get_guides_info()
+    from scripts.utils import guides_manager_new
+    reload(guides_manager_new)
+    guides_manager_new.get_guides_info()
 
 def import_guides(*args):
 
-    from scripts.utils import guides_manager
-    reload(guides_manager)
-    guides_manager.load_guides_info()
+    from scripts.utils import guides_manager_new
+    reload(guides_manager_new)
+    guides_manager_new.load_guides_info()
 
 def export_curves(*args):
 
