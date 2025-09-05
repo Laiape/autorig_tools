@@ -5,13 +5,13 @@ import os
 import math
 
 from utils import data_manager
-from scripts.utils import guides_manager_new
+from utils import guides_manager
 from utils import curve_tool
 
 from autorig.utilities import matrix_manager
 
 reload(data_manager)
-reload(guides_manager_new)
+reload(guides_manager)
 reload(curve_tool)
 
 reload(matrix_manager)
@@ -65,19 +65,19 @@ class FingersModule(object):
     def load_guides(self):
 
         cmds.select(clear=True)
-        self.thumb = guides_manager_new.get_guides(f"{self.side}_thumb00_JNT")
+        self.thumb = guides_manager.get_guides(f"{self.side}_thumb00_JNT")
         cmds.parent(self.thumb[0], self.module_trn)
         cmds.select(clear=True)
-        self.index = guides_manager_new.get_guides(f"{self.side}_index00_JNT")
+        self.index = guides_manager.get_guides(f"{self.side}_index00_JNT")
         cmds.parent(self.index[0], self.module_trn)
         cmds.select(clear=True)
-        self.middle = guides_manager_new.get_guides(f"{self.side}_middle00_JNT")
+        self.middle = guides_manager.get_guides(f"{self.side}_middle00_JNT")
         cmds.parent(self.middle[0], self.module_trn)
         cmds.select(clear=True)
-        self.ring = guides_manager_new.get_guides(f"{self.side}_ring00_JNT")
+        self.ring = guides_manager.get_guides(f"{self.side}_ring00_JNT")
         cmds.parent(self.ring[0], self.module_trn)
         cmds.select(clear=True)
-        self.pinky = guides_manager_new.get_guides(f"{self.side}_pinky00_JNT")
+        self.pinky = guides_manager.get_guides(f"{self.side}_pinky00_JNT")
         cmds.parent(self.pinky[0], self.module_trn)
         cmds.select(clear=True)
 

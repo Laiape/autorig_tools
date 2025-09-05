@@ -6,14 +6,14 @@ import maya.OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import info
 
-from scripts.utils import guides_manager_new
+from utils import guides_manager
 from autorig import spine_module
 from autorig import create_rig
 
 
 reload(icon_export)
 reload(info)
-reload(guides_manager_new)
+reload(guides_manager)
 reload(spine_module)
 reload(create_rig)
 
@@ -361,9 +361,9 @@ class UI(QtWidgets.QMainWindow):
     def create_connections(self):
 
         # Connect character template buttons
-        self.template_buttons[0].clicked.connect(guides_manager_new.load_guides_info)
-        self.template_buttons[1].clicked.connect(guides_manager_new.get_guides_info)
-        self.template_buttons[2].clicked.connect(guides_manager_new.delete_guides)
+        self.template_buttons[0].clicked.connect(guides_manager.load_guides_info)
+        self.template_buttons[1].clicked.connect(guides_manager.get_guides_info)
+        self.template_buttons[2].clicked.connect(guides_manager.delete_guides)
         self.template_buttons[3].clicked.connect(self.info_rig_guides_connections)
 
 

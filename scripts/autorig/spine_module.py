@@ -5,13 +5,13 @@ import os
 import math
 
 from utils import data_manager
-from scripts.utils import guides_manager_new
+from utils import guides_manager
 from utils import curve_tool
 
 from autorig.utilities import matrix_manager
 
 reload(data_manager)
-reload(guides_manager_new)
+reload(guides_manager)
 reload(curve_tool)
 
 reload(matrix_manager)
@@ -78,7 +78,7 @@ class SpineModule(object):
         Load the spine guides for the specified side and parent them to the module transform.
         """
 
-        self.spine_chain = guides_manager_new.get_guides(f"{self.side}_spine00_JNT")
+        self.spine_chain = guides_manager.get_guides(f"{self.side}_spine00_JNT")
         cmds.parent(self.spine_chain[0], self.module_trn)
 
     def ik_setup(self):

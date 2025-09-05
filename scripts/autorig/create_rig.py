@@ -2,7 +2,7 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
 
-from scripts.utils import guides_manager_new
+from utils import guides_manager
 from utils import basic_structure
 from utils import data_manager
 from autorig.utilities import matrix_manager
@@ -15,7 +15,7 @@ from autorig import neck_module_de_boor as neck_module
 from autorig import fingers_module
 from autorig import eyebrow_module
 
-reload(guides_manager_new) 
+reload(guides_manager) 
 reload(basic_structure)
 reload(data_manager)
 reload(matrix_manager)
@@ -79,8 +79,8 @@ class AutoRig(object):
         fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
-        # eyebrow_module.EyebrowModule().make("L")
-        # eyebrow_module.EyebrowModule().make("R")
+        eyebrow_module.EyebrowModule().make("L")
+        eyebrow_module.EyebrowModule().make("R")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',

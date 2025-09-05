@@ -257,3 +257,5 @@ def get_guides(guide_export):
                 locator = cmds.spaceLocator(name=guide_export.replace("LOCShape", "LOC"))[0]
                 cmds.xform(locator, ws=True, m=guides_data[name][guide_export]["locator_position"])
                 return locator
+            
+            

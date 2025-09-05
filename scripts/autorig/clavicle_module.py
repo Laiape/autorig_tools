@@ -5,13 +5,13 @@ import os
 import math
 
 from utils import data_manager
-from scripts.utils import guides_manager_new
+from utils import guides_manager
 from utils import curve_tool
 
 from autorig.utilities import matrix_manager
 
 reload(data_manager)
-reload(guides_manager_new)
+reload(guides_manager)
 reload(curve_tool)
 
 reload(matrix_manager)
@@ -92,7 +92,7 @@ class ClavicleModule(object):
         Load clavicle joint guides and parent it to the module transform.
         """
 
-        self.clavicle_joint = guides_manager_new.get_guides(f"{self.side}_clavicle_JNT")
+        self.clavicle_joint = guides_manager.get_guides(f"{self.side}_clavicle_JNT")
         cmds.parent(self.clavicle_joint, self.module_trn)
 
     def auto_clavicle_setup(self):

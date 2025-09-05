@@ -5,14 +5,14 @@ import os
 import math
 
 from utils import data_manager
-from scripts.utils import guides_manager_new
+from utils import guides_manager
 from utils import curve_tool
 
 from autorig.utilities import matrix_manager
 from autorig.utilities import ribbon
 
 reload(data_manager)
-reload(guides_manager_new)
+reload(guides_manager)
 reload(curve_tool)
 
 reload(matrix_manager)
@@ -80,12 +80,12 @@ class LegModule(object):
     
     def load_guides(self):
 
-        self.leg_chain = guides_manager_new.get_guides(f"{self.side}_hip_JNT")
+        self.leg_chain = guides_manager.get_guides(f"{self.side}_hip_JNT")
         cmds.parent(self.leg_chain[0], self.module_trn)
-        self.settings_loc = guides_manager_new.get_guides(f"{self.side}_legSettings_LOCShape")
-        self.bank_out_loc = guides_manager_new.get_guides(f"{self.side}_bankOut_LOCShape")
-        self.bank_in_loc = guides_manager_new.get_guides(f"{self.side}_bankIn_LOCShape")
-        self.heel_loc = guides_manager_new.get_guides(f"{self.side}_heel_LOCShape")
+        self.settings_loc = guides_manager.get_guides(f"{self.side}_legSettings_LOCShape")
+        self.bank_out_loc = guides_manager.get_guides(f"{self.side}_bankOut_LOCShape")
+        self.bank_in_loc = guides_manager.get_guides(f"{self.side}_bankIn_LOCShape")
+        self.heel_loc = guides_manager.get_guides(f"{self.side}_heel_LOCShape")
 
 
     def create_chains(self):
