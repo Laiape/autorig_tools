@@ -4030,7 +4030,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_CTL|L_eyebrowInTan_GRP|L_eyebrowInTan_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_CTL|L_eyebrowInTan_GRP|L_eyebrowInTan_CTL": {
         "transform": {
             "name": "L_eyebrowInTan_CTL",
             "overrideEnabled": true,
@@ -4288,7 +4288,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_CTL": {
         "transform": {
             "name": "L_eyebrowIn_CTL",
             "overrideEnabled": true,
@@ -4546,7 +4546,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL": {
         "transform": {
             "name": "L_eyebrowMain_CTL",
             "overrideEnabled": false,
@@ -4618,7 +4618,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_CTL": {
         "transform": {
             "name": "L_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -4876,7 +4876,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_CTL|L_eyebrowOutTan_GRP|L_eyebrowOutTan_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_CTL|L_eyebrowOutTan_GRP|L_eyebrowOutTan_CTL": {
         "transform": {
             "name": "L_eyebrowOutTan_CTL",
             "overrideEnabled": true,
@@ -5134,7 +5134,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_CTL": {
         "transform": {
             "name": "L_eyebrowOut_CTL",
             "overrideEnabled": true,
@@ -5369,6 +5369,1110 @@
                             0.383529041827542,
                             -0.383529041827542,
                             -5.433849617895452e-17
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_CTL|L_eyelidDown01_GRP|L_eyelidDown01_CTL": {
+        "transform": {
+            "name": "L_eyelidDown01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidDown01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 18,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDownIn_GRP|L_eyelidDownIn_CTL": {
+        "transform": {
+            "name": "L_eyelidDownIn_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidDownIn_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDownOut_GRP|L_eyelidDownOut_CTL": {
+        "transform": {
+            "name": "L_eyelidDownOut_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidDownOut_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_CTL": {
+        "transform": {
+            "name": "L_eyelidDown_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidDown_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            2.583511078128762e-17,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            -4.992114006539675e-17,
+                            -0.49836077888443037,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -6.796128345632865e-17,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidIn_GRP|L_eyelidIn_CTL|L_eyelidIn01_GRP|L_eyelidIn01_CTL": {
+        "transform": {
+            "name": "L_eyelidIn01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidIn01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 18,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidIn_GRP|L_eyelidIn_CTL": {
+        "transform": {
+            "name": "L_eyelidIn_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidIn_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            2.583511078128762e-17,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            -4.992114006539675e-17,
+                            -0.49836077888443037,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -6.796128345632865e-17,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_CTL|L_eyelidOut01_GRP|L_eyelidOut01_CTL": {
+        "transform": {
+            "name": "L_eyelidOut01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidOut01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 18,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_CTL": {
+        "transform": {
+            "name": "L_eyelidOut_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidOut_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            2.583511078128762e-17,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            -4.992114006539675e-17,
+                            -0.49836077888443037,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -6.796128345632865e-17,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_CTL|L_eyelidUp01_GRP|L_eyelidUp01_CTL": {
+        "transform": {
+            "name": "L_eyelidUp01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidUp01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 18,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUpIn_GRP|L_eyelidUpIn_CTL": {
+        "transform": {
+            "name": "L_eyelidUpIn_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidUpIn_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUpOut_GRP|L_eyelidUpOut_CTL": {
+        "transform": {
+            "name": "L_eyelidUpOut_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidUpOut_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_CTL": {
+        "transform": {
+            "name": "L_eyelidUp_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_eyelidUp_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 6,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            2.583511078128762e-17,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            -4.992114006539675e-17,
+                            -0.49836077888443037,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -6.796128345632865e-17,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -10849,7 +11953,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_CTL|R_eyebrowInTan_GRP|R_eyebrowInTan_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_CTL|R_eyebrowInTan_GRP|R_eyebrowInTan_CTL": {
         "transform": {
             "name": "R_eyebrowInTan_CTL",
             "overrideEnabled": true,
@@ -11107,7 +12211,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_CTL": {
         "transform": {
             "name": "R_eyebrowIn_CTL",
             "overrideEnabled": true,
@@ -11365,7 +12469,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL": {
         "transform": {
             "name": "R_eyebrowMain_CTL",
             "overrideEnabled": false,
@@ -11437,7 +12541,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_CTL": {
         "transform": {
             "name": "R_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -11695,7 +12799,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_CTL|R_eyebrowOutTan_GRP|R_eyebrowOutTan_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_CTL|R_eyebrowOutTan_GRP|R_eyebrowOutTan_CTL": {
         "transform": {
             "name": "R_eyebrowOutTan_CTL",
             "overrideEnabled": true,
@@ -11953,7 +13057,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_CTL": {
         "transform": {
             "name": "R_eyebrowOut_CTL",
             "overrideEnabled": true,
@@ -12188,6 +13292,1110 @@
                             0.383529041827542,
                             -0.383529041827542,
                             -5.433849617895452e-17
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_CTL|R_eyelidDown01_GRP|R_eyelidDown01_CTL": {
+        "transform": {
+            "name": "R_eyelidDown01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidDown01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 12,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.1888041053407078,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -3.2074034149439404e-16,
+                            0.26700932640455866,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.1888041053407077,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.2670093264045793,
+                            -2.1559914819166434e-14,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534075298,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -3.6383645418257386e-16,
+                            -0.2670093264046003,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.1888041053407529,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.2670093264045793,
+                            -2.161016859736427e-14,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.1888041053407078,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -3.2074034149439404e-16,
+                            0.26700932640455866,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.1888041053407077,
+                            -6.741798946811739e-16
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDownIn_GRP|R_eyelidDownIn_CTL": {
+        "transform": {
+            "name": "R_eyelidDownIn_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidDownIn_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.1888041053407078,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -3.2074034149439404e-16,
+                            0.26700932640455866,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.1888041053407077,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.2670093264045793,
+                            -2.1559914819166434e-14,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534075298,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -3.6383645418257386e-16,
+                            -0.2670093264046003,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.1888041053407529,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.2670093264045793,
+                            -2.161016859736427e-14,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.1888041053407078,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -3.2074034149439404e-16,
+                            0.26700932640455866,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.1888041053407077,
+                            -6.741798946811739e-16
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDownOut_GRP|R_eyelidDownOut_CTL": {
+        "transform": {
+            "name": "R_eyelidDownOut_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidDownOut_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            -6.741798946811739e-16
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_CTL": {
+        "transform": {
+            "name": "R_eyelidDown_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidDown_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.35239428622657337,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -2.1386415016394613e-16,
+                            0.49836077888441677,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265732,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -0.49836077888443037,
+                            -1.561448148429173e-14,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862266065,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -2.9430108686341274e-16,
+                            -0.49836077888444363,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862266064,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            0.49836077888443037,
+                            -1.570827787852935e-14,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.35239428622657337,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -2.1386415016394613e-16,
+                            0.49836077888441677,
+                            -4.887598935960327e-16
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265732,
+                            -4.887598935960327e-16
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidIn_GRP|R_eyelidIn_CTL|R_eyelidIn01_GRP|R_eyelidIn01_CTL": {
+        "transform": {
+            "name": "R_eyelidIn01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidIn01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 12,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.1888041053407078,
+                            0.0
+                        ],
+                        [
+                            -1.5219536782410053e-16,
+                            0.26700932640455866,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.1888041053407077,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            -2.1559914819166434e-14,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534075298,
+                            0.0
+                        ],
+                        [
+                            -1.952914805122801e-16,
+                            -0.2670093264046003,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.1888041053407529,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -2.161016859736427e-14,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.1888041053407078,
+                            0.0
+                        ],
+                        [
+                            -1.5219536782410053e-16,
+                            0.26700932640455866,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.1888041053407077,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidIn_GRP|R_eyelidIn_CTL": {
+        "transform": {
+            "name": "R_eyelidIn_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidIn_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.35239428622657337,
+                            0.0
+                        ],
+                        [
+                            -9.167417676493806e-17,
+                            0.49836077888441677,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265732,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            -1.561448148429173e-14,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862266065,
+                            0.0
+                        ],
+                        [
+                            -1.7211111346440457e-16,
+                            -0.49836077888444363,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862266064,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -1.570827787852935e-14,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.35239428622657337,
+                            0.0
+                        ],
+                        [
+                            -9.167417676493806e-17,
+                            0.49836077888441677,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265732,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_CTL|R_eyelidOut01_GRP|R_eyelidOut01_CTL": {
+        "transform": {
+            "name": "R_eyelidOut01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidOut01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 12,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_CTL": {
+        "transform": {
+            "name": "R_eyelidOut_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidOut_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            2.583511078128762e-17,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            -4.992114006539675e-17,
+                            -0.49836077888443037,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -6.796128345632865e-17,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_CTL|R_eyelidUp01_GRP|R_eyelidUp01_CTL": {
+        "transform": {
+            "name": "R_eyelidUp01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidUp01_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 12,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUpIn_GRP|R_eyelidUpIn_CTL": {
+        "transform": {
+            "name": "R_eyelidUpIn_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidUpIn_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -3.2074034149439404e-16,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -3.6383645418257386e-16,
+                            -0.2670093264045793,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            0.0
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            0.0
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            0.0
+                        ],
+                        [
+                            -3.2074034149439404e-16,
+                            0.2670093264045792,
+                            0.0
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUpOut_GRP|R_eyelidUpOut_CTL": {
+        "transform": {
+            "name": "R_eyelidUpOut_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidUpOut_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.2670093264045793,
+                            1.384181063112713e-17,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            -0.18880410534073047,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -2.6746506841986717e-17,
+                            -0.2670093264045793,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            -0.18880410534073036,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.2670093264045793,
+                            -3.641196756671965e-17,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            0.18880410534073047,
+                            0.18880410534073047,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            1.6349605846192962e-17,
+                            0.2670093264045792,
+                            -6.741798946811739e-16
+                        ],
+                        [
+                            -0.18880410534073047,
+                            0.18880410534073036,
+                            -6.741798946811739e-16
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_CTL": {
+        "transform": {
+            "name": "R_eyelidUp_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_eyelidUp_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 13,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            -0.49836077888443037,
+                            2.583511078128762e-17,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            -0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            -4.992114006539675e-17,
+                            -0.49836077888443037,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            -0.3523942862265903,
+                            0.0
+                        ],
+                        [
+                            0.49836077888443037,
+                            -6.796128345632865e-17,
+                            0.0
+                        ],
+                        [
+                            0.3523942862265904,
+                            0.3523942862265904,
+                            0.0
+                        ],
+                        [
+                            3.051579663406995e-17,
+                            0.49836077888443014,
+                            0.0
+                        ],
+                        [
+                            -0.3523942862265904,
+                            0.3523942862265903,
+                            0.0
                         ]
                     ],
                     "form": "periodic",

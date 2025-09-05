@@ -548,9 +548,20 @@ class LegModule(object):
         Create a de Boor ribbon setup.
         """
 
+        
+        temp_trn = [cmds.createNode("transform", name=f"{self.side}_legLowBendyTemp_TRN", ss=True, p=self.module_trn)]
+        cmds.matchTransform(temp_trn[0], self.leg_chain[2], pos=True)
+        aim = cmds.aimConstraint(self.leg_chain[-2], temp_trn[0], aimVector=(1, 0, 0), upVector=(0, 1, 0), worldUpType="scene")
+        cmds.delete(aim)
+
+
         # Placeholder for de Boor ribbon setup
         self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[0], self.blend_matrices[1], "Upper")
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], temp_trn, "Lower")
+
+        trn_outputs = cmds.listConnections(f"{temp_trn[0]}.worldMatrix[0]", destination=True, plugs=True)
+        for output in trn_outputs:
+            cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", output, force=True)
 
         cmds.select(clear=True)
         ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")
@@ -563,14 +574,14 @@ class LegModule(object):
 
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
-        if f"{first_sel[0]}.outputMatrix":
+        if cmds.objExists(f"{first_sel[0]}.outputMatrix"):
             first_sel_output = f"{first_sel[0]}.outputMatrix"
-        elif f"{first_sel[0]}.worldMatrix[0]":
+        elif cmds.objExists(f"{first_sel[0]}.worldMatrix[0]"):
             first_sel_output = f"{first_sel[0]}.worldMatrix[0]"
 
-        if f"{second_sel[0]}.outputMatrix":
+        if cmds.objExists(f"{second_sel[0]}.outputMatrix"):
             second_sel_output = f"{second_sel[0]}.outputMatrix"
-        elif f"{second_sel[0]}.worldMatrix[0]":
+        elif cmds.objExists(f"{second_sel[0]}.worldMatrix[0]"):
             second_sel_output = f"{second_sel[0]}.worldMatrix[0]"
 
         main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}MainBendy", offset=["GRP"])
@@ -636,6 +647,8 @@ class LegModule(object):
             cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
             cmds.setAttr(f"{blend_matrix}.target[0].shearWeight", 0)
             cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{node}.offsetParentMatrix")
+
+        
 
         sel = (first_sel[0], up_bendy_ctl, main_bendy_ctl, low_bendy_ctl, second_sel[0])
 

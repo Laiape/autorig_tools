@@ -13,7 +13,9 @@ from autorig import clavicle_module
 from autorig import leg_module_de_boor as leg_module
 from autorig import neck_module_de_boor as neck_module
 from autorig import fingers_module
+
 from autorig import eyebrow_module
+from autorig import eyelid_module
 
 reload(guides_manager) 
 reload(basic_structure)
@@ -27,6 +29,7 @@ reload(fingers_module)
 reload(clavicle_module)
 
 reload(eyebrow_module)
+reload(eyelid_module)
 
 
 class AutoRig(object):
@@ -81,6 +84,8 @@ class AutoRig(object):
         # ---- Facial  ----
         eyebrow_module.EyebrowModule().make("L")
         eyebrow_module.EyebrowModule().make("R")
+        eyelid_module.EyelidModule().make("L")
+        eyelid_module.EyelidModule().make("R")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',

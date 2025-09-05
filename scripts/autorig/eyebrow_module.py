@@ -49,7 +49,7 @@ class EyebrowModule(object):
         self.load_guides()
         self.create_controllers()
         self.ribbon_setup()
-        self.slide_setup()
+        # self.slide_setup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -91,8 +91,8 @@ class EyebrowModule(object):
         eyebrows = guides_manager.get_guides(f"{self.side}_eyebrowMain_JNT")
         cmds.parent(eyebrows[0], self.module_trn)
         self.main_eyebrow = eyebrows[0]
-        self.eyebrows = eyebrows[1:]
-        
+        self.eyebrows = sorted(eyebrows[1:], key=lambda x: om.MVector(cmds.xform(x, q=True, ws=True, t=True)).x)
+
         for jnt in self.eyebrows:
             cmds.parent(jnt, self.module_trn)
 
@@ -120,6 +120,8 @@ class EyebrowModule(object):
             cmds.setAttr(f"{self.radius_loc}.translateX", 0)
             cmds.matchTransform(self.sphere, self.radius_loc)
             cmds.delete(self.radius_loc)
+        
+        self.sphere = cmds.ls("C_eyebrowSlide_NRB", long=True)[0]
             
 
         self.main_eyebrow_nodes, self.main_eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrowMain", offset=["GRP", "OFF"])
@@ -177,12 +179,12 @@ class EyebrowModule(object):
 
         skinning_joints = cmds.listRelatives(self.skinning_trn, c=True, type="joint")
 
-        for i, ctl in enumerate(self.eyebrow_controllers):
+        for i, jnt in enumerate(self.eyebrows):
 
-            closest_point = cmds.createNode("closestPointOnSurface", name=ctl.replace("_CTL", "Slide_CPOS"))
-            point_on_surface_info = cmds.createNode("pointOnSurfaceInfo", name=ctl.replace("_CTL", "Slide_POS"))
-            compose_matrix = cmds.createNode("composeMatrix", name=ctl.replace("_CTL", "Slide_CMTX"))
-            aim_matrix = cmds.createNode("aimMatrix", name=ctl.replace("_CTL", "Slide_AMTX"))
+            closest_point = cmds.createNode("closestPointOnSurface", name=jnt.replace("_JNT", "Slide_CPOS"))
+            point_on_surface_info = cmds.createNode("pointOnSurfaceInfo", name=jnt.replace("_JNT", "Slide_POS"))
+            compose_matrix = cmds.createNode("composeMatrix", name=jnt.replace("_JNT", "Slide_CMTX"))
+            aim_matrix = cmds.createNode("aimMatrix", name=jnt.replace("_JNT", "Slide_AMTX"))
 
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{point_on_surface_info}.inputSurface")
             cmds.connectAttr(f"{self.local_trns[i]}.translate", f"{closest_point}.inPosition") # I think this should change
@@ -193,11 +195,36 @@ class EyebrowModule(object):
             cmds.connectAttr(f"{point_on_surface_info}.normalizedTangentV", f"{aim_matrix}.primaryTargetVector")
             cmds.connectAttr(f"{point_on_surface_info}.normalizedTangentU", f"{aim_matrix}.secondaryTargetVector")
 
-            blend_matrix = cmds.createNode("blendMatrix", name=ctl.replace("_CTL", "Slide_BMTX"))
-            cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")
-
+            parent_matrix = cmds.createNode("parentMatrix", name=jnt.replace("_JNT", "SlideParent_MMT"))
             input_conns = cmds.listConnections(f"{skinning_joints[i]}.offsetParentMatrix", source=True, destination=True, plugs=True)
-            cmds.connectAttr(f"{input_conns[0]}", f"{blend_matrix}.target[0].targetMatrix")
-            cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{blend_matrix}.target[0].weight")
-            cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{skinning_joints[i]}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{input_conns[0]}", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{parent_matrix}.target[0].targetMatrix")
+            cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{parent_matrix}.target[0].weight")
+            self.get_offset_matrix(aim_matrix, input_conns[0])
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{skinning_joints[i]}.offsetParentMatrix", force=True)
+
+
+    def get_offset_matrix(self, child, parent):
+
+        """
+        Calculate the offset matrix between a child and parent transform in Maya.
+        Args:
+            child (str): The name of the child transform.
+            parent (str): The name of the parent transform. 
+        Returns:
+            om.MMatrix: The offset matrix that transforms the child into the parent's space.
+        """
+        child_dag = om.MSelectionList().add(child).getDagPath(0)
+        parent_dag = om.MSelectionList().add(parent).getDagPath(0)
+
+        child_world_matrix = child_dag.inclusiveMatrix()
+        parent_world_matrix = parent_dag.inclusiveMatrix()
+        
+        offset_matrix = child_world_matrix * parent_world_matrix.inverse()
+
+        
+        return offset_matrix
+
+
             
+
