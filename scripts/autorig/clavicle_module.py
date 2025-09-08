@@ -93,6 +93,7 @@ class ClavicleModule(object):
         """
 
         self.clavicle_joint = guides_manager.get_guides(f"{self.side}_clavicle_JNT")
+       
         cmds.parent(self.clavicle_joint, self.module_trn)
 
     def auto_clavicle_setup(self):
@@ -122,6 +123,7 @@ class ClavicleModule(object):
         cmds.makeIdentity(clavicle_skinning, apply=True, t=1, r=1, s=1, n=0)
         cmds.parent(clavicle_skinning, self.skeleton_grp)
         cmds.connectAttr(f"{self.ctl_ik}.worldMatrix[0]", f"{clavicle_skinning}.offsetParentMatrix")
+        cmds.setAttr(f"{self.clavicle_joint[0]}.inheritsTransform", 0)
 
         # ik_pos = cmds.xform(self.clavicle_joint, q=True, ws=True, t=True)
         # armIk_pos = cmds.xform(shoulder, q=True, ws=True, t=True)

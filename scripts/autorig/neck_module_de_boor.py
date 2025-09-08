@@ -146,6 +146,7 @@ class NeckModule(object):
         cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation}.inputMatrix")
         compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")
         cmds.connectAttr(f"{decompose_translation}.outputTranslate", f"{compose_head}.inputTranslate")
+        cmds.connectAttr(f"{decompose_translation}.outputScale", f"{compose_head}.inputScale")
         cmds.connectAttr(f"{decompose_rotation}.outputRotate", f"{compose_head}.inputRotate")
         cmds.connectAttr(f"{compose_head}.outputMatrix", f"{self.head_jnt}.offsetParentMatrix")
 

@@ -48,7 +48,8 @@ class EyelidModule(object):
 
         self.load_guides()
         self.create_controllers()
-        self.create_eyelid_joint()
+        self.create_main_eye_setup()
+        self.attributes()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -90,11 +91,51 @@ class EyelidModule(object):
         """
 
         self.locators = []
-        for guide in ["In", "UpIn", "Up", "UpOut",  "DownOut", "Down", "DownIn", "Out"]:
+        for guide in ["In", "UpIn", "Up", "UpOut",  "DownIn", "Down", "DownOut", "Out"]:
             loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
             self.locators.append(loc)
             cmds.parent(loc, self.module_trn)
 
+        self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT")
+        cmds.parent(self.eye_joint[0], self.module_trn)
+
+
+    def create_main_eye_setup(self):
+
+        """
+        Create the main eye setup for the eyelid module.
+        """
+        if self.side == "L":
+            self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
+            cmds.parent(self.main_aim_nodes[0], self.head_ctl)
+            self.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+            before_translate = cmds.xform(self.eye_joint[0], q=True, t=True, ws=True)
+            cmds.setAttr(f"{self.eye_joint[0]}.tx", 0)
+            cmds.matchTransform(self.main_aim_nodes[0], self.eye_joint[0])
+            cmds.select(self.main_aim_nodes[0])
+            cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.xform(self.eye_joint[0], t=before_translate, ws=True)
+
+        side_aim_nodes, side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
+        cmds.parent(side_aim_nodes[0], self.controllers_grp)
+        cmds.matchTransform(side_aim_nodes[0], self.eye_joint[0])
+        cmds.select(side_aim_nodes[0])
+        cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
+        self.lock_attributes(side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+        cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
+
+        # Aim setup
+        eye_jnt_matrix = cmds.xform(self.eye_joint[0], q=True, m=True, ws=True)
+        aim = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
+        cmds.setAttr(f"{aim}.primaryInputAxis", 0, 0, 1)
+        cmds.setAttr(f"{aim}.secondaryInputAxis", 0, 1, 0)
+        cmds.setAttr(f"{aim}.secondaryTargetVector", 0, 1, 0)
+        cmds.setAttr(f"{aim}.secondaryMode", 2) # Align
+        cmds.setAttr(f"{aim}.inputMatrix", eye_jnt_matrix, type="matrix")
+        cmds.connectAttr(f"{side_aim_ctl}.worldMatrix[0]", f"{aim}.primaryTargetMatrix")
+        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
+        cmds.connectAttr(f"{aim}.outputMatrix", f"{self.eye_joint[0]}.offsetParentMatrix")
+        cmds.xform(self.eye_joint[0], m=om.MMatrix.kIdentity)
 
     def create_controllers(self):
 
@@ -122,23 +163,41 @@ class EyelidModule(object):
             else:
                 self.upper_local_trn.append(local_trn)
                 self.lower_local_trn.append(local_trn)
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"]) 
             
             cmds.matchTransform(node[0], loc)
             cmds.matchTransform(local_grp, loc)
 
-            
-    def create_eyelid_joint(self):
+        
 
         sel_upper = [ctl for ctl in self.upper_local_trn]
-        self.upper_skinning_jnt_trn, temp = ribbon.de_boor_ribbon(cvs=sel_upper, name=f"{self.side}_eyelidUpper", aim_axis='x', up_axis='y', num_joints=20)
+        self.upper_skinning_jnt_trn, temp = ribbon.de_boor_ribbon(cvs=sel_upper, name=f"{self.side}_eyelidUpper", aim_axis='x', up_axis='y', num_joints=18)
 
-        sel_lower = [ctl for ctl in self.lower_local_trn]
-        self.lower_skinning_jnt_trn, temp_down = ribbon.de_boor_ribbon(cvs=sel_lower, name=f"{self.side}_eyelidLower", aim_axis="x", up_axis="y", num_joints=20)
+        sel_lower = [ctl_low for ctl_low in self.lower_local_trn]
+        self.lower_skinning_jnt_trn, temp_down = ribbon.de_boor_ribbon(cvs=sel_lower, name=f"{self.side}_eyelidLower", aim_axis="x", up_axis="y", num_joints=18)
 
         cmds.parent(self.upper_skinning_jnt_trn, self.skeleton_grp)
         cmds.parent(self.lower_skinning_jnt_trn, self.skeleton_grp)
         cmds.delete(temp, temp_down)
+
+    def attributes(self):
+
+        """
+        Add custom attributes to the eyelid controllers.
+        """
+
+        self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP"])
+        cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
+        cmds.matchTransform(self.eye_direct_nodes[0], self.eye_joint[0])
+        cmds.select(self.eye_direct_nodes[0])
+        cmds.move(0, 0, 3, relative=True, objectSpace=True, worldSpaceDistance=True)
+        self.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+
+        cmds.addAttr(self.eye_direct_ctl, ln="EYE_ATTRIBUTES", at="enum", en="____", k=True)
+        cmds.setAttr(f"{self.eye_direct_ctl}.EYE_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Blink", at="float", min=-10, max=10, dv=0, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.2, k=True)
+      
 
 
     def get_offset_matrix(self, child, parent):
