@@ -561,7 +561,7 @@ class LegModule(object):
 
         trn_outputs = cmds.listConnections(f"{temp_trn[0]}.worldMatrix[0]", destination=True, plugs=True)
         for output in trn_outputs:
-            cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", output, force=True)
+            cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", output    , force=True)
 
         cmds.select(clear=True)
         ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")

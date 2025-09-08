@@ -117,7 +117,9 @@ class ClavicleModule(object):
         cmds.setAttr(f"{self.clavicle_joint[0]}.translateY", 0)
         cmds.setAttr(f"{self.clavicle_joint[0]}.translateZ", 0)
 
+        cmds.select(clear=True)
         clavicle_skinning = cmds.joint(name=f"{self.side}_clavicleSkinning_JNT")
+        cmds.makeIdentity(clavicle_skinning, apply=True, t=1, r=1, s=1, n=0)
         cmds.parent(clavicle_skinning, self.skeleton_grp)
         cmds.connectAttr(f"{self.ctl_ik}.worldMatrix[0]", f"{clavicle_skinning}.offsetParentMatrix")
 

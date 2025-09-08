@@ -48,7 +48,7 @@ class EyelidModule(object):
 
         self.load_guides()
         self.create_controllers()
-
+        self.create_eyelid_joint()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -84,6 +84,7 @@ class EyelidModule(object):
         return local_grp, local_trn
 
     def load_guides(self):
+
         """
         Load the guide locators for the eyelid module.
         """
@@ -101,6 +102,9 @@ class EyelidModule(object):
         Create controllers for the eyelid module.
         """
 
+        self.upper_local_trn = []
+        self.lower_local_trn = []
+
         for i, loc in enumerate(self.locators):
 
             node, ctl = curve_tool.create_controller(name=loc.replace("_LOC", ""), offset=["GRP"])
@@ -111,9 +115,31 @@ class EyelidModule(object):
                 cmds.parent(local_grp_01, local_trn)
                 cmds.parent(node_01, ctl)
             cmds.parent(node, self.controllers_grp)
+            if "Up" in loc:
+                self.upper_local_trn.append(local_trn)
+            elif "Down" in loc:
+                self.lower_local_trn.append(local_trn)
+            else:
+                self.upper_local_trn.append(local_trn)
+                self.lower_local_trn.append(local_trn)
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             
             cmds.matchTransform(node[0], loc)
+            cmds.matchTransform(local_grp, loc)
+
+            
+    def create_eyelid_joint(self):
+
+        sel_upper = [ctl for ctl in self.upper_local_trn]
+        self.upper_skinning_jnt_trn, temp = ribbon.de_boor_ribbon(cvs=sel_upper, name=f"{self.side}_eyelidUpper", aim_axis='x', up_axis='y', num_joints=20)
+
+        sel_lower = [ctl for ctl in self.lower_local_trn]
+        self.lower_skinning_jnt_trn, temp_down = ribbon.de_boor_ribbon(cvs=sel_lower, name=f"{self.side}_eyelidLower", aim_axis="x", up_axis="y", num_joints=20)
+
+        cmds.parent(self.upper_skinning_jnt_trn, self.skeleton_grp)
+        cmds.parent(self.lower_skinning_jnt_trn, self.skeleton_grp)
+        cmds.delete(temp, temp_down)
+
 
     def get_offset_matrix(self, child, parent):
 
