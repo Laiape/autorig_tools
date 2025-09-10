@@ -9,8 +9,11 @@ def vs_code_ports():
 
 def init_auto_rig_UI():
     try:
-        from ui import auto_rig_UI
+        from biped.ui import auto_rig_UI
+        from importlib import reload
+        reload(auto_rig_UI)
         auto_rig_UI()
+
     except Exception as e:
         cmds.warning("Could not load auto_rig_UI: {}".format(e))
 mu.executeDeferred(init_auto_rig_UI)

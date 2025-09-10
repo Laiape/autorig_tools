@@ -182,12 +182,15 @@ class LegModule(object):
         self.ik_sdk_nodes = []
         self.ik_controllers = []
 
-        for name, guide in ik_controller_dict.items():
+        for i, (name, guide) in enumerate(ik_controller_dict.items()):
 
             ik_node, ik_ctl = curve_tool.create_controller(name=f"{self.side}_{name}", offset=["GRP", "SDK"])
             self.lock_attributes(ik_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
-            cmds.matchTransform(ik_node[0], guide, pos=True, rot=True)
+            if i == 0:    
+                cmds.matchTransform(ik_node[0], guide, pos=True)
+            else:
+                cmds.matchTransform(ik_node[0], guide, pos=True, rot=True)
             child = cmds.listRelatives(guide, children=True, type="locator")
             if child:
                     cmds.delete(guide) # Delete the locator guide
