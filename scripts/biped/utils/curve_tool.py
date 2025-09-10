@@ -3,9 +3,12 @@ import maya.api.OpenMaya as om
 import json
 import os
 
-from utils import data_manager
+from biped.utils import data_manager
 
-TEMPLATE_PATH = "C:/GITHUB/curves"
+if os.path.exists("C:/GITHUB/curves"):
+    TEMPLATE_PATH = "C:/GITHUB/curves"
+elif os.path.exists("H:/GIT/biped_autorig/curves"):
+    TEMPLATE_PATH = "H:/GIT/biped_autorig/curves"
 final_path = None
 curves_name = None
 

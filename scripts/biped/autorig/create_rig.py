@@ -2,20 +2,20 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
 
-from utils import guides_manager
-from utils import basic_structure
-from utils import data_manager
-from autorig.utilities import matrix_manager
+from biped.utils import guides_manager
+from biped.utils import basic_structure
+from biped.utils import data_manager
+from biped.autorig.utilities import matrix_manager
 
-from autorig import arm_module_de_boor as arm_module
-from autorig import spine_module
-from autorig import clavicle_module
-from autorig import leg_module_de_boor as leg_module
-from autorig import neck_module_de_boor as neck_module
-from autorig import fingers_module
+from biped.autorig import arm_module_de_boor as arm_module
+from biped.autorig import spine_module
+from biped.autorig import clavicle_module
+from biped.autorig import leg_module_de_boor as leg_module
+from biped.autorig import neck_module_de_boor as neck_module
+from biped.autorig import fingers_module
 
-from autorig import eyebrow_module
-from autorig import eyelid_module
+from biped.autorig import eyebrow_module
+from biped.autorig import eyelid_module
 
 reload(guides_manager) 
 reload(basic_structure)

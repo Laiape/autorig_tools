@@ -3,7 +3,7 @@ import maya.api.OpenMaya as om
 import json
 import os
 
-from utils import data_manager
+from biped.utils import data_manager
 
 GUIDES_PATH = "C:\GITHUB\guides"
 guides_node = "C_guides_GRP"

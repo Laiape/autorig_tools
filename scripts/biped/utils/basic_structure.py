@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
-from utils import data_manager
-from utils import curve_tool
+from biped.utils import data_manager
+from biped.utils import curve_tool
 
 from importlib import reload
 

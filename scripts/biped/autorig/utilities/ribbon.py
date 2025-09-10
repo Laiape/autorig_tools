@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 from maya.api import OpenMaya as om
-from autorig.utilities import de_boor_core as core
+from biped.autorig.utilities import de_boor_core as core
 import importlib
 importlib.reload(core)
 

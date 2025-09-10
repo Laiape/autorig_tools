@@ -1,18 +1,19 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 import json
-import icon_export
+# import icon_export
 from importlib import reload
 import maya.OpenMayaUI as omui
 from shiboken2 import wrapInstance
-import info
+# import info
+import os
 
-from utils import guides_manager
-from autorig import spine_module
-from autorig import create_rig
+from biped.utils import guides_manager
+from biped.autorig import spine_module
+from biped.autorig import create_rig
 
 
-reload(icon_export)
-reload(info)
+# reload(icon_export)
+# reload(info)
 reload(guides_manager)
 reload(spine_module)
 reload(create_rig)
@@ -40,13 +41,21 @@ class UI(QtWidgets.QMainWindow):
         return pixmap
     
     def load_info(self):
-        load_path = "C:/Users/laia.peris/Documents/maya/2024/scripts/info.JSON"
+        if os.path.exists("C:/Users/laia.peris/Documents/maya/2024/scripts/info.JSON"):
+            load_path = "C:/Users/laia.peris/Documents/maya/2024/scripts/info.JSON"
+        elif os.path.exists("C:/Users/laia.peris/Documents/maya/icon.JSON"):
+            load_path = "C:/Users/laia.peris/Documents/maya/icon.JSON"
         with open(load_path, "r") as file:
             self.data = json.load(file)
             return self.data
         
     def load_icon(self):
-        icon_path = "C:/Users/laiap/Documents/maya/2024/scripts/icon.JSON"
+
+        if os.path.exists("C:/Users/laia.peris/Documents/maya/2024/scripts/icon.JSON"):
+            icon_path = "C:/Users/laia.peris/Documents/maya/2024/scripts/icon.JSON"
+        elif os.path.exists("C:/Users/laia.peris/Documents/maya/icon.JSON"):
+            icon_path = "C:/Users/laia.peris/Documents/maya/icon.JSON"
+
         with open(icon_path, "r") as file:
             icon_data = json.load(file)
         return icon_data
@@ -319,9 +328,9 @@ class UI(QtWidgets.QMainWindow):
 
         data = self.load_icon()
 
-        pixmap = self.svg(data, "curves", "export")
+        # pixmap = self.svg(data, "curves", "export")
         self.export_curves_button = QtWidgets.QPushButton("")
-        self.export_curves_button.setIcon(QtGui.QPixmap(pixmap))
+        # self.export_curves_button.setIcon(QtGui.QPixmap(pixmap))
         self.export_curves_button.setToolTip("Export all the curves in the scene")
         self.export_curves_button.setIconSize(QtCore.QSize(24, 24))
         self.export_curves_button.setStyleSheet("padding: 5px;")
@@ -331,9 +340,9 @@ class UI(QtWidgets.QMainWindow):
 
         print(f"{type} template")
     
-    def info_rig_guides_connections(self):
+    # def info_rig_guides_connections(self):
 
-        QtWidgets.QMessageBox.information(self, "Rig Guides Info", info.text, QtWidgets.QMessageBox.Ok)
+    #     QtWidgets.QMessageBox.information(self, "Rig Guides Info", info.text, QtWidgets.QMessageBox.Ok)
 
     def module_create_connections(self, part):
 
@@ -344,7 +353,7 @@ class UI(QtWidgets.QMainWindow):
 
     def create_rig_connections(self):
 
-        from autorig import create_rig
+        from biped.autorig import create_rig
         reload(create_rig)
 
         build_rig = create_rig.AutoRig()
@@ -352,7 +361,7 @@ class UI(QtWidgets.QMainWindow):
 
     def export_curves_connections(self):
 
-        from utils import curve_tool
+        from biped.utils import curve_tool
         reload(curve_tool)
 
         curve_tool.get_all_ctl_curves_data()
@@ -364,7 +373,7 @@ class UI(QtWidgets.QMainWindow):
         self.template_buttons[0].clicked.connect(guides_manager.load_guides_info)
         self.template_buttons[1].clicked.connect(guides_manager.get_guides_info)
         self.template_buttons[2].clicked.connect(guides_manager.delete_guides)
-        self.template_buttons[3].clicked.connect(self.info_rig_guides_connections)
+        # self.template_buttons[3].clicked.connect(self.info_rig_guides_connections)
 
 
         self.arm_module.clicked.connect(lambda: self.module_create_connections("Biped Arm"))
