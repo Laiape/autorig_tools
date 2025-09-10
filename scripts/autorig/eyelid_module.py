@@ -116,25 +116,25 @@ class EyelidModule(object):
             cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
             cmds.xform(self.eye_joint[0], t=before_translate, ws=True)
 
-        side_aim_nodes, side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
+        side_aim_nodes, self.side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
         cmds.parent(side_aim_nodes[0], self.controllers_grp)
         cmds.matchTransform(side_aim_nodes[0], self.eye_joint[0])
         cmds.select(side_aim_nodes[0])
         cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
-        self.lock_attributes(side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+        self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
         cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
 
         # Aim setup
-        eye_jnt_matrix = cmds.xform(self.eye_joint[0], q=True, m=True, ws=True)
-        aim = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
-        cmds.setAttr(f"{aim}.primaryInputAxis", 0, 0, 1)
-        cmds.setAttr(f"{aim}.secondaryInputAxis", 0, 1, 0)
-        cmds.setAttr(f"{aim}.secondaryTargetVector", 0, 1, 0)
-        cmds.setAttr(f"{aim}.secondaryMode", 2) # Align
-        cmds.setAttr(f"{aim}.inputMatrix", eye_jnt_matrix, type="matrix")
-        cmds.connectAttr(f"{side_aim_ctl}.worldMatrix[0]", f"{aim}.primaryTargetMatrix")
-        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
-        cmds.connectAttr(f"{aim}.outputMatrix", f"{self.eye_joint[0]}.offsetParentMatrix")
+        self.eye_jnt_matrix = cmds.xform(self.eye_joint[0], q=True, m=True, ws=True)
+        self.aim = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
+        cmds.setAttr(f"{self.aim}.primaryInputAxis", 0, 0, 1)
+        cmds.setAttr(f"{self.aim}.secondaryInputAxis", 0, 1, 0)
+        cmds.setAttr(f"{self.aim}.secondaryTargetVector", 0, 1, 0)
+        cmds.setAttr(f"{self.aim}.secondaryMode", 2) # Align
+        cmds.setAttr(f"{self.aim}.inputMatrix", self.eye_jnt_matrix, type="matrix")
+        cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{self.aim}.primaryTargetMatrix")
+        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{self.aim}.secondaryTargetMatrix")
+        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_joint[0]}.offsetParentMatrix")
         cmds.xform(self.eye_joint[0], m=om.MMatrix.kIdentity)
 
     def create_controllers(self):
@@ -197,6 +197,21 @@ class EyelidModule(object):
         cmds.setAttr(f"{self.eye_direct_ctl}.EYE_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Blink", at="float", min=-10, max=10, dv=0, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.2, k=True)
+
+        # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
+        eye_direct_matrix = cmds.xform(self.eye_direct_nodes, q=True, m=True, ws=True)
+        cmds.setAttr(f"{self.aim}.inputMatrix", eye_direct_matrix, type="matrix")
+        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_direct_nodes[0]}.offsetParentMatrix", force=True)
+        cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
+        cmds.setAttr(f"{self.eye_direct_nodes[0]}.inheritsTransform", 0)
+        pick_matrix_rotation = cmds.createNode("pickMatrix", name=f"{self.side}_eye_PMK", ss=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{pick_matrix_rotation}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_rotation}.useTranslate", 0)
+        cmds.setAttr(f"{pick_matrix_rotation}.useScale", 0)
+        cmds.connectAttr(f"{pick_matrix_rotation}.outputMatrix", f"{self.eye_joint[0]}.offsetParentMatrix", force=True)
+        cmds.xform(self.eye_joint[0], m=self.eye_jnt_matrix)
+        
+
       
 
 
