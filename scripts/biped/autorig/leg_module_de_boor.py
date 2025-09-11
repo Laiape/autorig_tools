@@ -54,7 +54,7 @@ class LegModule(object):
         self.soft_ik()
         self.de_boor_ribbon()
 
-        # cmds.parent(self.controllers_grp, self.local_hip_ctl)
+        cmds.parent(self.controllers_grp, self.local_hip_ctl)
 
         data_manager.DataExport().append_data("leg_module",
                             {
@@ -251,23 +251,20 @@ class LegModule(object):
         cmds.parent(self.ball_handle, self.module_trn)
         cmds.parent(self.toe_handle, self.module_trn)
 
-        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_legIkMultMatrix_MTX", ss=True)
-        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{self.ik_nodes[-1]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[2]")
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.ik_handle}.offsetParentMatrix")
 
+        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{self.ball_handle}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.ik_controllers[-2]}.worldMatrix[0]", f"{self.toe_handle}.offsetParentMatrix") 
 
         freeze_float_constant = cmds.createNode("floatConstant", name=f"{self.side}_freeze_FCF", ss=True)
         cmds.setAttr(f"{freeze_float_constant}.inFloat", 0)
         for attr in ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"]:
             cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.ik_handle}.{attr}")
+            cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.toe_handle}.{attr}")
 
-        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{self.ball_handle}.offsetParentMatrix") # If it doesnt work change for parentConstraint
-        cmds.xform(self.ball_handle, t=(0, 0, 0), ro=(0, 0, 0))
+        for attr in ["translateX", "translateY", "translateZ"]:
+            cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.ball_handle}.{attr}")
 
-        cmds.connectAttr(f"{self.ik_controllers[-2]}.worldMatrix[0]", f"{self.toe_handle}.offsetParentMatrix") # If it doesnt work change for parentConstraint
-        cmds.xform(self.toe_handle, t=(0, 0, 0), ro=(0, 0, 0))
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
 
     def foot_attributes(self):
@@ -405,7 +402,7 @@ class LegModule(object):
 
         soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legIkHandleManager_TRN", ss=True, p=self.module_trn)
         parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_legSoftIkHDL_PM", ss=True)
-        ankle_wM = cmds.getAttr(f"{self.ik_controllers[0]}.worldMatrix[0]")
+        ankle_wM = cmds.getAttr(f"{self.ik_chain[2]}.worldMatrix[0]")
         cmds.setAttr(f"{parent_matrix}.inputMatrix", ankle_wM, type="matrix")
         cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
         cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
@@ -542,8 +539,15 @@ class LegModule(object):
             cmds.connectAttr(f"{abs_low}.outFloat", f"{self.ik_chain[2]}.translateX")
 
         cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
-        cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[2]}.rotate")
-        cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[1]}.rotate")
+        pick_matrix_rotate = cmds.createNode("pickMatrix", name=f"{self.side}_legIkHandlePickMatrix_PMT", ss=True)
+        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{pick_matrix_rotate}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_rotate}.useTranslate", 0)
+        cmds.setAttr(f"{pick_matrix_rotate}.useScale", 0)
+        cmds.setAttr(f"{pick_matrix_rotate}.useShear", 0)
+        cmds.connectAttr(f"{pick_matrix_rotate}.outputMatrix", f"{self.ik_chain[2]}.offsetParentMatrix", force=True)
+
+        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[2]}.rotate")
+        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[1]}.rotate")
         
     def de_boor_ribbon(self):
 

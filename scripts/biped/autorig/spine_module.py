@@ -346,7 +346,15 @@ class SpineModule(object):
                 cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{mult_matrix_node}.matrixIn[0]")
                 cmds.connectAttr(f"{self.spine_chain[i-1]}.worldInverseMatrix[0]", f"{mult_matrix_node}.matrixIn[1]")
                 cmds.connectAttr(f"{fk_controllers[-1]}.worldMatrix[0]", f"{mult_matrix_node}.matrixIn[2]")
+                cmds.connectAttr(f"{fk_nodes[-1]}.worldInverseMatrix[0]", f"{mult_matrix_node}.matrixIn[3]")
                 cmds.connectAttr(f"{mult_matrix_node}.matrixSum", f"{fk_node[0]}.offsetParentMatrix")
+            
+            if fk_controllers:
+                cmds.parent(fk_node[0], fk_controllers[-1])
+                for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
+                    cmds.setAttr(f"{fk_node[0]}.{attr}", 0)
+
+
 
             fk_nodes.append(fk_node[0])
             fk_controllers.append(fk_ctl)

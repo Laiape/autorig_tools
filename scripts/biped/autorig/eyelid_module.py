@@ -50,6 +50,7 @@ class EyelidModule(object):
         self.create_controllers()
         self.create_main_eye_setup()
         self.attributes()
+        self.create_blink_setup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -146,6 +147,8 @@ class EyelidModule(object):
         self.upper_local_trn = []
         self.lower_local_trn = []
 
+        self.controllers = []
+
         for i, loc in enumerate(self.locators):
 
             node, ctl = curve_tool.create_controller(name=loc.replace("_LOC", ""), offset=["GRP"])
@@ -167,6 +170,7 @@ class EyelidModule(object):
             
             cmds.matchTransform(node[0], loc)
             cmds.matchTransform(local_grp, loc)
+            self.controllers.append(ctl)
 
         
 
@@ -195,8 +199,9 @@ class EyelidModule(object):
 
         cmds.addAttr(self.eye_direct_ctl, ln="EYE_ATTRIBUTES", at="enum", en="____", k=True)
         cmds.setAttr(f"{self.eye_direct_ctl}.EYE_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.eye_direct_ctl, ln="Blink", at="float", min=-10, max=10, dv=0, k=True)
-        cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.2, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Upper_Blink", at="float", min=0, max=1, dv=0, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Lower_Blink", at="float", min=0, max=1, dv=0, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.6, k=True)
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
         eye_direct_matrix = cmds.xform(self.eye_direct_nodes, q=True, m=True, ws=True)
@@ -212,7 +217,41 @@ class EyelidModule(object):
         cmds.xform(self.eye_joint[0], m=self.eye_jnt_matrix)
         
 
-      
+    def create_blink_setup(self):
+
+        """
+        Create the blink setup for the eyelid module.
+        """
+        up_locators = [loc for loc in self.locators if "Up" in loc]
+        down_locators = [loc for loc in self.locators if "Down" in loc]
+
+        up_controllers = [ctl for ctl in self.controllers if "Up" in ctl]
+        down_controllers = [ctl for ctl in self.controllers if "Down" in ctl]
+
+        up_local_trns = [trn for trn in self.upper_local_trn if "Up" in trn]
+        down_local_trns = [trn for trn in self.lower_local_trn if "Down" in trn]
+
+        blink_locators = []
+
+        for i in range(3):
+
+            loc = cmds.spaceLocator(name=f"{self.side}_blink{i+1}_LOC")[0]
+            cmds.parent(loc, self.module_trn)
+
+            blend_matrix = cmds.createNode("blendMatrix", name=loc.replace("_LOC", "Blink_BMT"), ss=True) # Create blendMatrix node to blend between original position and blink position
+            cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0.6)
+            cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.target[0].shearWeight", 0)
+
+            cmds.connectAttr(f"{up_locators[i]}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+            cmds.connectAttr(f"{down_locators[i]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+            cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{blend_matrix}.target[0].translateWeight")
+            cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{loc}.offsetParentMatrix")
+
+            blink_locators.append(loc)
+
+                
 
 
     def get_offset_matrix(self, child, parent):

@@ -39,20 +39,11 @@ class UI(QtWidgets.QMainWindow):
         pixmap = QtGui.QPixmap()
         pixmap.loadFromData(QtCore.QByteArray(data[part][module].encode()), "SVG")
         return pixmap
-    
-    def load_info(self):
-        if os.path.exists("C:/Users/laia.peris/Documents/maya/2024/scripts/info.JSON"):
-            load_path = "C:/Users/laia.peris/Documents/maya/2024/scripts/info.JSON"
-        elif os.path.exists("C:/Users/laia.peris/Documents/maya/icon.JSON"):
-            load_path = "C:/Users/laia.peris/Documents/maya/icon.JSON"
-        with open(load_path, "r") as file:
-            self.data = json.load(file)
-            return self.data
         
     def load_icon(self):
 
-        if os.path.exists("C:/Users/laia.peris/Documents/maya/2024/scripts/icon.JSON"):
-            icon_path = "C:/Users/laia.peris/Documents/maya/2024/scripts/icon.JSON"
+        if os.path.exists("C:/Users/laiap/Documents/maya/2024/scripts/icon.JSON"):
+            icon_path = "C:/Users/laiap/Documents/maya/2024/scripts/icon.JSON"
         elif os.path.exists("C:/Users/laia.peris/Documents/maya/icon.JSON"):
             icon_path = "C:/Users/laia.peris/Documents/maya/icon.JSON"
 
