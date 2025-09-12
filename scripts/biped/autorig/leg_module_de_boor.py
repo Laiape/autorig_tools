@@ -607,6 +607,23 @@ class LegModule(object):
         cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
         cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{main_bendy_nodes[0]}.offsetParentMatrix")
 
+        for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
+
+            self.lock_attributes(ctl, ["visibility"])
+
+            cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+            cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+            cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
+
+            if i == 0:
+
+                cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
+                cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)
+
+        cmds.connectAttr(f"{main_bendy_ctl}.Bendy_Height", f"{blend_matrix}.target[0].translateWeight") # Connect Bendy_Height to blend_matrix_main
+        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{up_bendy_nodes[0]}.visibility")
+        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{low_bendy_nodes[0]}.visibility")
+
         for i, ctl in enumerate([up_bendy_nodes[0], low_bendy_nodes[0]]):
 
             blend_matrix_ = cmds.createNode("blendMatrix", name=f"{ctl}_BMT", ss=True)

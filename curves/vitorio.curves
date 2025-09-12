@@ -1223,7 +1223,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine01FK_GRP|C_spine01FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL": {
         "transform": {
             "name": "C_spine01FK_CTL",
             "overrideEnabled": false,
@@ -1407,7 +1407,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine02FK_GRP|C_spine02FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL": {
         "transform": {
             "name": "C_spine02FK_CTL",
             "overrideEnabled": false,
@@ -1499,7 +1499,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine03FK_GRP|C_spine03FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL": {
         "transform": {
             "name": "C_spine03FK_CTL",
             "overrideEnabled": false,
@@ -1683,7 +1683,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine04FK_GRP|C_spine04FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL": {
         "transform": {
             "name": "C_spine04FK_CTL",
             "overrideEnabled": false,
@@ -1775,7 +1775,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine05FK_GRP|C_spine05FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL": {
         "transform": {
             "name": "C_spine05FK_CTL",
             "overrideEnabled": false,
@@ -1867,7 +1867,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine06FK_GRP|C_spine06FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL": {
         "transform": {
             "name": "C_spine06FK_CTL",
             "overrideEnabled": false,
@@ -2051,7 +2051,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine07FK_GRP|C_spine07FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL|C_spine07FK_GRP|C_spine07FK_CTL": {
         "transform": {
             "name": "C_spine07FK_CTL",
             "overrideEnabled": false,
@@ -2787,7 +2787,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL": {
         "transform": {
             "name": "L_ankleFk_CTL",
             "overrideEnabled": false,
@@ -2879,7 +2879,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL": {
         "transform": {
             "name": "L_ankleIk_CTL",
             "overrideEnabled": false,
@@ -2895,84 +2895,84 @@
                 "curve": {
                     "cvs": [
                         [
-                            8.419400258755585,
-                            12.112067215239644,
-                            11.430646869094462
+                            7.674717477714645,
+                            5.53152344617631,
+                            8.19576184995643
                         ],
                         [
-                            8.419400258755585,
-                            12.112067215239644,
-                            -6.491022532025614
+                            7.674717477714654,
+                            5.531523446176306,
+                            -8.076949289936683
                         ],
                         [
-                            -10.391562998047748,
-                            12.112067215239644,
-                            -6.491022532025614
+                            -7.674717459614032,
+                            5.531523446176268,
+                            -8.076949289936682
                         ],
                         [
-                            -10.391562998047748,
-                            12.112067215239644,
-                            11.430646869094462
+                            -7.674717459614041,
+                            5.531523446176264,
+                            8.19576184995643
                         ],
                         [
-                            8.419400258755585,
-                            12.112067215239644,
-                            11.430646869094462
+                            7.674717477714645,
+                            5.53152344617631,
+                            8.19576184995643
                         ],
                         [
-                            8.419400258755585,
-                            -1.6719440200145705,
-                            11.430646869094462
+                            7.674717477714622,
+                            -2.9063640355018023,
+                            8.19576184995643
                         ],
                         [
-                            8.419400258755585,
-                            -1.6719440200145705,
-                            -6.491022532025614
+                            7.674717477714631,
+                            -2.9063640355018068,
+                            -8.076949289936683
                         ],
                         [
-                            8.419400258755585,
-                            12.112067215239644,
-                            -6.491022532025614
+                            7.674717477714654,
+                            5.531523446176306,
+                            -8.076949289936683
                         ],
                         [
-                            8.419400258755585,
-                            -1.6719440200145705,
-                            -6.491022532025614
+                            7.674717477714631,
+                            -2.9063640355018068,
+                            -8.076949289936683
                         ],
                         [
-                            -10.391562998047748,
-                            -1.6719440200145705,
-                            -6.491022532025614
+                            -7.6747174596140555,
+                            -2.906364035501844,
+                            -8.076949289936682
                         ],
                         [
-                            -10.391562998047748,
-                            12.112067215239644,
-                            -6.491022532025614
+                            -7.674717459614032,
+                            5.531523446176268,
+                            -8.076949289936682
                         ],
                         [
-                            -10.391562998047748,
-                            -1.6719440200145705,
-                            -6.491022532025614
+                            -7.6747174596140555,
+                            -2.906364035501844,
+                            -8.076949289936682
                         ],
                         [
-                            -10.391562998047748,
-                            -1.6719440200145705,
-                            11.430646869094462
+                            -7.674717459614064,
+                            -2.9063640355018485,
+                            8.19576184995643
                         ],
                         [
-                            -10.391562998047748,
-                            12.112067215239644,
-                            11.430646869094462
+                            -7.674717459614041,
+                            5.531523446176264,
+                            8.19576184995643
                         ],
                         [
-                            -10.391562998047748,
-                            -1.6719440200145705,
-                            11.430646869094462
+                            -7.674717459614064,
+                            -2.9063640355018485,
+                            8.19576184995643
                         ],
                         [
-                            8.419400258755585,
-                            -1.6719440200145705,
-                            11.430646869094462
+                            7.674717477714622,
+                            -2.9063640355018023,
+                            8.19576184995643
                         ]
                     ],
                     "form": "open",
@@ -3543,7 +3543,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL": {
         "transform": {
             "name": "L_ballFk_CTL",
             "overrideEnabled": false,
@@ -3635,7 +3635,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL|L_ballIk_GRP|L_ballIk_SDK|L_ballIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL|L_ballIk_GRP|L_ballIk_SDK|L_ballIk_CTL": {
         "transform": {
             "name": "L_ballIk_CTL",
             "overrideEnabled": false,
@@ -3727,7 +3727,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL": {
         "transform": {
             "name": "L_bankIn_CTL",
             "overrideEnabled": false,
@@ -3819,7 +3819,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL": {
         "transform": {
             "name": "L_bankOut_CTL",
             "overrideEnabled": false,
@@ -6974,7 +6974,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL": {
         "transform": {
             "name": "L_heel_CTL",
             "overrideEnabled": false,
@@ -7066,7 +7066,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL": {
         "transform": {
             "name": "L_hipFk_CTL",
             "overrideEnabled": false,
@@ -7526,7 +7526,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL": {
         "transform": {
             "name": "L_kneeFk_CTL",
             "overrideEnabled": false,
@@ -7618,7 +7618,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerLowBendy_GRP|L_legLowerLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerLowBendy_GRP|L_legLowerLowBendy_CTL": {
         "transform": {
             "name": "L_legLowerLowBendy_CTL",
             "overrideEnabled": false,
@@ -7634,59 +7634,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            0.6056673840831668,
-                            -6.2439596436516585,
-                            -14.6735980179059
+                            2.0141093317991522e-07,
+                            -7.9482687509055125,
+                            -7.948268791003459
                         ],
                         [
-                            0.6056673840831668,
-                            3.5228041454292165,
-                            -18.719124039837588
+                            2.0141093317991522e-07,
+                            3.1071533500027625e-08,
+                            -11.240549517885007
                         ],
                         [
-                            0.6056673840831668,
-                            13.289567934510059,
-                            -14.673598017905896
+                            2.0141093317991522e-07,
+                            7.948268813048555,
+                            -7.948268791003457
                         ],
                         [
-                            0.6056673840831668,
-                            17.335093956441856,
-                            -4.906834228824974
+                            2.0141093317991522e-07,
+                            11.240549539930191,
+                            -9.026366623587975e-09
                         ],
                         [
-                            0.6056673840831668,
-                            13.289567934510059,
-                            4.859929560255898
+                            2.0141093317991522e-07,
+                            7.948268813048555,
+                            7.948268772950685
                         ],
                         [
-                            0.6056673840831668,
-                            3.5228041454292196,
-                            8.905455582187656
+                            2.0141093317991522e-07,
+                            3.107153639125378e-08,
+                            11.240549499832287
                         ],
                         [
-                            0.6056673840831668,
-                            -6.243959643651667,
-                            4.859929560255898
+                            2.0141093317991522e-07,
+                            -7.948268750905521,
+                            7.948268772950685
                         ],
                         [
-                            0.6056673840831668,
-                            -10.289485665583411,
-                            -4.906834228824971
+                            2.0141093317991522e-07,
+                            -11.240549477787107,
+                            -9.026364455168334e-09
                         ],
                         [
-                            0.6056673840831668,
-                            -6.2439596436516585,
-                            -14.6735980179059
+                            2.0141093317991522e-07,
+                            -7.9482687509055125,
+                            -7.948268791003459
                         ],
                         [
-                            0.6056673840831668,
-                            3.5228041454292165,
-                            -18.719124039837588
+                            2.0141093317991522e-07,
+                            3.1071533500027625e-08,
+                            -11.240549517885007
                         ],
                         [
-                            0.6056673840831668,
-                            13.289567934510059,
-                            -14.673598017905896
+                            2.0141093317991522e-07,
+                            7.948268813048555,
+                            -7.948268791003457
                         ]
                     ],
                     "form": "periodic",
@@ -7710,7 +7710,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerMainBendy_GRP|L_legLowerMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerMainBendy_GRP|L_legLowerMainBendy_CTL": {
         "transform": {
             "name": "L_legLowerMainBendy_CTL",
             "overrideEnabled": false,
@@ -7802,7 +7802,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerUpBendy_GRP|L_legLowerUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerUpBendy_GRP|L_legLowerUpBendy_CTL": {
         "transform": {
             "name": "L_legLowerUpBendy_CTL",
             "overrideEnabled": false,
@@ -7818,59 +7818,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            0.7374613318763522,
-                            -3.740972972901558,
-                            -9.766763789080953
+                            2.4044503974096326e-07,
+                            -7.948268697720842,
+                            -7.948268791003358
                         ],
                         [
-                            0.7374613318763522,
-                            6.025790816179298,
-                            -13.812289811012716
+                            2.4044503974096326e-07,
+                            8.425618744976641e-08,
+                            -11.240549517884961
                         ],
                         [
-                            0.7374613318763522,
-                            15.792554605260158,
-                            -9.76676378908095
+                            2.4044503974096326e-07,
+                            7.948268866233217,
+                            -7.948268791003356
                         ],
                         [
-                            0.7374613318763522,
-                            19.838080627191953,
-                            -9.631083354504657e-14
+                            2.4044503974096326e-07,
+                            11.24054959311485,
+                            -9.026321417519279e-09
                         ],
                         [
-                            0.7374613318763522,
-                            15.792554605260158,
-                            9.76676378908074
+                            2.4044503974096326e-07,
+                            7.948268866233217,
+                            7.948268772950698
                         ],
                         [
-                            0.7374613318763522,
-                            6.0257908161793,
-                            13.812289811012526
+                            2.4044503974096326e-07,
+                            8.425618889537946e-08,
+                            11.240549499832323
                         ],
                         [
-                            0.7374613318763522,
-                            -3.740972972901558,
-                            9.76676378908074
+                            2.4044503974096326e-07,
+                            -7.948268697720842,
+                            7.948268772950698
                         ],
                         [
-                            0.7374613318763522,
-                            -7.78649899483331,
-                            -9.371122491746146e-14
+                            2.4044503974096326e-07,
+                            -11.240549424602442,
+                            -9.026318526293092e-09
                         ],
                         [
-                            0.7374613318763522,
-                            -3.740972972901558,
-                            -9.766763789080953
+                            2.4044503974096326e-07,
+                            -7.948268697720842,
+                            -7.948268791003358
                         ],
                         [
-                            0.7374613318763522,
-                            6.025790816179298,
-                            -13.812289811012716
+                            2.4044503974096326e-07,
+                            8.425618744976641e-08,
+                            -11.240549517884961
                         ],
                         [
-                            0.7374613318763522,
-                            15.792554605260158,
-                            -9.76676378908095
+                            2.4044503974096326e-07,
+                            7.948268866233217,
+                            -7.948268791003356
                         ]
                     ],
                     "form": "periodic",
@@ -7894,7 +7894,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legPv_GRP|L_legPv_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legPv_GRP|L_legPv_CTL": {
         "transform": {
             "name": "L_legPv_CTL",
             "overrideEnabled": false,
@@ -8014,7 +8014,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legRootIk_GRP|L_legRootIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legRootIk_GRP|L_legRootIk_CTL": {
         "transform": {
             "name": "L_legRootIk_CTL",
             "overrideEnabled": true,
@@ -8216,7 +8216,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legSettings_GRP|L_legSettings_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legSettings_GRP|L_legSettings_CTL": {
         "transform": {
             "name": "L_legSettings_CTL",
             "overrideEnabled": false,
@@ -8318,7 +8318,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperLowBendy_GRP|L_legUpperLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperLowBendy_GRP|L_legUpperLowBendy_CTL": {
         "transform": {
             "name": "L_legUpperLowBendy_CTL",
             "overrideEnabled": false,
@@ -8334,59 +8334,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            1.998966628164132e-14,
-                            11.853485131477667,
-                            -11.853485131477663
+                            1.6267746809453774e-14,
+                            9.646458935915286,
+                            -9.646458935915282
                         ],
                         [
-                            1.9989670308299856e-14,
-                            -2.332350099164958e-15,
-                            -16.763359434323544
+                            1.626775008637999e-14,
+                            -1.9807706944119195e-15,
+                            -13.642153056046538
                         ],
                         [
-                            1.998966628164132e-14,
-                            -11.853485131477663,
-                            -11.853485131477662
+                            1.6267746809453774e-14,
+                            -9.646458935915282,
+                            -9.64645893591528
                         ],
                         [
-                            1.998971106577113e-14,
-                            -16.763359434323554,
-                            -3.052056327947313e-15
+                            1.6267783255128984e-14,
+                            -13.642153056046547,
+                            -2.483787317491996e-15
                         ],
                         [
-                            1.9989683075690035e-14,
-                            -11.853485131477663,
-                            11.853485131477662
+                            1.6267760476582e-14,
+                            -9.646458935915282,
+                            9.64645893591528
                         ],
                         [
-                            1.998969083749384e-14,
-                            -5.038007002397683e-15,
-                            16.76335943432356
+                            1.626776679319867e-14,
+                            -4.182655450010093e-15,
+                            13.642153056046554
                         ],
                         [
-                            1.9989699869738698e-14,
-                            11.853485131477662,
-                            11.853485131477662
+                            1.6267774143710196e-14,
+                            9.64645893591528,
+                            9.64645893591528
                         ],
                         [
-                            1.9989683075690035e-14,
-                            16.763359434323554,
-                            1.0297259260363557e-16
+                            1.6267760476582e-14,
+                            13.642153056046547,
+                            8.379990146846182e-17
                         ],
                         [
-                            1.998966628164132e-14,
-                            11.853485131477667,
-                            -11.853485131477663
+                            1.6267746809453774e-14,
+                            9.646458935915286,
+                            -9.646458935915282
                         ],
                         [
-                            1.9989670308299856e-14,
-                            -2.332350099164958e-15,
-                            -16.763359434323544
+                            1.626775008637999e-14,
+                            -1.9807706944119195e-15,
+                            -13.642153056046538
                         ],
                         [
-                            1.998966628164132e-14,
-                            -11.853485131477663,
-                            -11.853485131477662
+                            1.6267746809453774e-14,
+                            -9.646458935915282,
+                            -9.64645893591528
                         ]
                     ],
                     "form": "periodic",
@@ -8410,7 +8410,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperMainBendy_GRP|L_legUpperMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperMainBendy_GRP|L_legUpperMainBendy_CTL": {
         "transform": {
             "name": "L_legUpperMainBendy_CTL",
             "overrideEnabled": false,
@@ -8502,7 +8502,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperUpBendy_GRP|L_legUpperUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperUpBendy_GRP|L_legUpperUpBendy_CTL": {
         "transform": {
             "name": "L_legUpperUpBendy_CTL",
             "overrideEnabled": false,
@@ -8518,59 +8518,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            1.4330913279846875e-13,
-                            11.853485131477482,
-                            -11.853485131477663
+                            1.1662609345254453e-13,
+                            9.646458935915142,
+                            -9.646458935915282
                         ],
                         [
-                            1.4330911927647652e-13,
-                            -1.5123958557995692e-13,
-                            -16.763359434323544
+                            1.166260824482413e-13,
+                            -1.2316264390667122e-13,
+                            -13.642153056046538
                         ],
                         [
-                            1.4330910480838705e-13,
-                            -11.853485131477827,
-                            -11.853485131477662
+                            1.1662607067399694e-13,
+                            -9.646458935915422,
+                            -9.64645893591528
                         ],
                         [
-                            1.4330912160243598e-13,
-                            -16.76335943432373,
-                            -3.052056327947313e-15
+                            1.1662608434112542e-13,
+                            -13.642153056046691,
+                            -2.483787317491996e-15
                         ],
                         [
-                            1.4330911600441942e-13,
-                            -11.853485131477822,
-                            11.853485131477662
+                            1.166260797854157e-13,
+                            -9.646458935915417,
+                            9.64645893591528
                         ],
                         [
-                            1.4330913980567064e-13,
-                            -1.5394524248318922e-13,
-                            16.76335943432356
+                            1.1662609915506015e-13,
+                            -1.2536452866226905e-13,
+                            13.642153056046554
                         ],
                         [
-                            1.433091439945013e-13,
-                            11.85348513147748,
-                            11.853485131477662
+                            1.1662610256396341e-13,
+                            9.646458935915142,
+                            9.64645893591528
                         ],
                         [
-                            1.4330915519053357e-13,
-                            16.763359434323384,
-                            1.0297259260363557e-16
+                            1.1662611167538202e-13,
+                            13.642153056046407,
+                            8.379990146846182e-17
                         ],
                         [
-                            1.4330913279846875e-13,
-                            11.853485131477482,
-                            -11.853485131477663
+                            1.1662609345254453e-13,
+                            9.646458935915142,
+                            -9.646458935915282
                         ],
                         [
-                            1.4330911927647652e-13,
-                            -1.5123958557995692e-13,
-                            -16.763359434323544
+                            1.166260824482413e-13,
+                            -1.2316264390667122e-13,
+                            -13.642153056046538
                         ],
                         [
-                            1.4330910480838705e-13,
-                            -11.853485131477827,
-                            -11.853485131477662
+                            1.1662607067399694e-13,
+                            -9.646458935915422,
+                            -9.64645893591528
                         ]
                     ],
                     "form": "periodic",
@@ -10066,7 +10066,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL|L_tipFk_GRP|L_tipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL|L_tipFk_GRP|L_tipFk_CTL": {
         "transform": {
             "name": "L_tipFk_CTL",
             "overrideEnabled": false,
@@ -10158,7 +10158,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL": {
         "transform": {
             "name": "L_toeIk_CTL",
             "overrideEnabled": false,
@@ -10894,7 +10894,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL": {
         "transform": {
             "name": "R_ankleFk_CTL",
             "overrideEnabled": false,
@@ -10986,7 +10986,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL": {
         "transform": {
             "name": "R_ankleIk_CTL",
             "overrideEnabled": false,
@@ -11002,84 +11002,84 @@
                 "curve": {
                     "cvs": [
                         [
-                            10.695096804663796,
-                            1.6719440200139204,
-                            6.491022532025667
+                            6.9213951009613774,
+                            5.5315234361613435,
+                            8.19577911895978
                         ],
                         [
-                            10.695096804663796,
-                            1.6719440200139204,
-                            -11.430646869094401
+                            6.9213951009613774,
+                            5.5315234361613435,
+                            -8.076964999767934
                         ],
                         [
-                            -8.11586645213954,
-                            1.6719440200139204,
-                            -11.430646869094401
+                            -6.921394867402696,
+                            5.5315234361613435,
+                            -8.076964999767934
                         ],
                         [
-                            -8.11586645213954,
-                            1.6719440200139204,
-                            6.491022532025667
+                            -6.921394867402696,
+                            5.5315234361613435,
+                            8.19577911895978
                         ],
                         [
-                            10.695096804663796,
-                            1.6719440200139204,
-                            6.491022532025667
+                            6.9213951009613774,
+                            5.5315234361613435,
+                            8.19577911895978
                         ],
                         [
-                            10.695096804663796,
-                            -12.112067215240309,
-                            6.491022532025667
+                            6.921395100961376,
+                            -2.9063417879837212,
+                            8.19577911895978
                         ],
                         [
-                            10.695096804663796,
-                            -12.112067215240309,
-                            -11.430646869094401
+                            6.921395100961376,
+                            -2.9063417879837212,
+                            -8.076964999767934
                         ],
                         [
-                            10.695096804663796,
-                            1.6719440200139204,
-                            -11.430646869094401
+                            6.9213951009613774,
+                            5.5315234361613435,
+                            -8.076964999767934
                         ],
                         [
-                            10.695096804663796,
-                            -12.112067215240309,
-                            -11.430646869094401
+                            6.921395100961376,
+                            -2.9063417879837212,
+                            -8.076964999767934
                         ],
                         [
-                            -8.11586645213954,
-                            -12.112067215240309,
-                            -11.430646869094401
+                            -6.9213948674026975,
+                            -2.9063417879837212,
+                            -8.076964999767934
                         ],
                         [
-                            -8.11586645213954,
-                            1.6719440200139204,
-                            -11.430646869094401
+                            -6.921394867402696,
+                            5.5315234361613435,
+                            -8.076964999767934
                         ],
                         [
-                            -8.11586645213954,
-                            -12.112067215240309,
-                            -11.430646869094401
+                            -6.9213948674026975,
+                            -2.9063417879837212,
+                            -8.076964999767934
                         ],
                         [
-                            -8.11586645213954,
-                            -12.112067215240309,
-                            6.491022532025667
+                            -6.9213948674026975,
+                            -2.9063417879837212,
+                            8.19577911895978
                         ],
                         [
-                            -8.11586645213954,
-                            1.6719440200139204,
-                            6.491022532025667
+                            -6.921394867402696,
+                            5.5315234361613435,
+                            8.19577911895978
                         ],
                         [
-                            -8.11586645213954,
-                            -12.112067215240309,
-                            6.491022532025667
+                            -6.9213948674026975,
+                            -2.9063417879837212,
+                            8.19577911895978
                         ],
                         [
-                            10.695096804663796,
-                            -12.112067215240309,
-                            6.491022532025667
+                            6.921395100961376,
+                            -2.9063417879837212,
+                            8.19577911895978
                         ]
                     ],
                     "form": "open",
@@ -11650,7 +11650,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL": {
         "transform": {
             "name": "R_ballFk_CTL",
             "overrideEnabled": false,
@@ -11742,7 +11742,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL|R_ballIk_GRP|R_ballIk_SDK|R_ballIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL|R_ballIk_GRP|R_ballIk_SDK|R_ballIk_CTL": {
         "transform": {
             "name": "R_ballIk_CTL",
             "overrideEnabled": false,
@@ -11834,7 +11834,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL": {
         "transform": {
             "name": "R_bankIn_CTL",
             "overrideEnabled": false,
@@ -11926,7 +11926,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL": {
         "transform": {
             "name": "R_bankOut_CTL",
             "overrideEnabled": false,
@@ -15081,7 +15081,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL": {
         "transform": {
             "name": "R_heel_CTL",
             "overrideEnabled": false,
@@ -15173,7 +15173,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL": {
         "transform": {
             "name": "R_hipFk_CTL",
             "overrideEnabled": false,
@@ -15633,7 +15633,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL": {
         "transform": {
             "name": "R_kneeFk_CTL",
             "overrideEnabled": false,
@@ -15725,7 +15725,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerLowBendy_GRP|R_legLowerLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerLowBendy_GRP|R_legLowerLowBendy_CTL": {
         "transform": {
             "name": "R_legLowerLowBendy_CTL",
             "overrideEnabled": false,
@@ -15741,59 +15741,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            9.161094499733705,
-                            4.935461223874988,
-                            0.023451966434598757
+                            -0.6136782043838809,
+                            7.325849385078127,
+                            -6.648856551758356
                         ],
                         [
-                            -0.6056692893471504,
-                            8.438989530538889,
-                            -1.9993110445312732
+                            -0.8475741564075698,
+                            10.118330343753911,
+                            1.45463401601087
                         ],
                         [
-                            -10.372433078428013,
-                            4.935461223874985,
-                            0.02345196643460404
+                            -0.5849722402867013,
+                            6.983630762559308,
+                            8.7060196298392
                         ],
                         [
-                            -14.417959100359798,
-                            -3.5228043302310135,
-                            4.906833860975034
+                            0.020298903020280288,
+                            -0.24198485780711199,
+                            10.85753694314316
                         ],
                         [
-                            -10.372433078428013,
-                            -11.981069884337025,
-                            9.790215755515506
+                            0.6136796466772162,
+                            -7.325848883429615,
+                            6.648856293469753
                         ],
                         [
-                            -0.6056692893471521,
-                            -15.484598191000917,
-                            11.812978766481333
+                            0.8475755987009077,
+                            -10.118329842105435,
+                            -1.4546342742994787
                         ],
                         [
-                            9.161094499733705,
-                            -11.981069884337021,
-                            9.790215755515506
+                            0.5849736825800435,
+                            -6.983630260910895,
+                            -8.706019888127837
                         ],
                         [
-                            13.206620521665476,
-                            -3.5228043302310166,
-                            4.906833860975035
+                            -0.020297460726942402,
+                            0.2419853594555909,
+                            -10.857537201431786
                         ],
                         [
-                            9.161094499733705,
-                            4.935461223874988,
-                            0.023451966434598757
+                            -0.6136782043838809,
+                            7.325849385078127,
+                            -6.648856551758356
                         ],
                         [
-                            -0.6056692893471504,
-                            8.438989530538889,
-                            -1.9993110445312732
+                            -0.8475741564075698,
+                            10.118330343753911,
+                            1.45463401601087
                         ],
                         [
-                            -10.372433078428013,
-                            4.935461223874985,
-                            0.02345196643460404
+                            -0.5849722402867013,
+                            6.983630762559308,
+                            8.7060196298392
                         ]
                     ],
                     "form": "periodic",
@@ -15817,7 +15817,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerMainBendy_GRP|R_legLowerMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerMainBendy_GRP|R_legLowerMainBendy_CTL": {
         "transform": {
             "name": "R_legLowerMainBendy_CTL",
             "overrideEnabled": false,
@@ -15909,7 +15909,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerUpBendy_GRP|R_legLowerUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerUpBendy_GRP|R_legLowerUpBendy_CTL": {
         "transform": {
             "name": "R_legLowerUpBendy_CTL",
             "overrideEnabled": false,
@@ -15925,59 +15925,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.7374612258786125,
-                            3.7409729599291155,
-                            9.766763789081068
+                            6.983626350808897e-07,
+                            7.948268733694858,
+                            7.948268652832732
                         ],
                         [
-                            -0.7374612258786125,
-                            7.786498981860865,
-                            2.3146266631084837e-13
+                            6.983626350808897e-07,
+                            11.24054946057645,
+                            -1.291442843854409e-07
                         ],
                         [
-                            -0.7374612258786125,
-                            3.740972959929114,
-                            -9.766763789080638
+                            6.983626350808897e-07,
+                            7.9482687336948565,
+                            -7.9482689111213265
                         ],
                         [
-                            -0.7374612258786125,
-                            -6.025790829151741,
-                            -13.812289811012423
+                            6.983626350808897e-07,
+                            -4.828217409462393e-08,
+                            -11.240549638002948
                         ],
                         [
-                            -0.7374612258786125,
-                            -15.7925546182326,
-                            -9.766763789080638
+                            6.983626350808897e-07,
+                            -7.9482688302592095,
+                            -7.9482689111213265
                         ],
                         [
-                            -0.7374612258786125,
-                            -19.838080640164396,
-                            2.292333209685246e-13
+                            6.983626350808897e-07,
+                            -11.24054955714084,
+                            -1.2914428619969957e-07
                         ],
                         [
-                            -0.7374612258786125,
-                            -15.7925546182326,
-                            9.766763789081082
+                            6.983626350808897e-07,
+                            -7.9482688302592095,
+                            7.948268652832743
                         ],
                         [
-                            -0.7374612258786125,
-                            -6.025790829151746,
-                            13.812289811012832
+                            6.983626350808897e-07,
+                            -4.828217843146319e-08,
+                            11.240549379714336
                         ],
                         [
-                            -0.7374612258786125,
-                            3.7409729599291155,
-                            9.766763789081068
+                            6.983626350808897e-07,
+                            7.948268733694858,
+                            7.948268652832732
                         ],
                         [
-                            -0.7374612258786125,
-                            7.786498981860865,
-                            2.3146266631084837e-13
+                            6.983626350808897e-07,
+                            11.24054946057645,
+                            -1.291442843854409e-07
                         ],
                         [
-                            -0.7374612258786125,
-                            3.740972959929114,
-                            -9.766763789080638
+                            6.983626350808897e-07,
+                            7.9482687336948565,
+                            -7.9482689111213265
                         ]
                     ],
                     "form": "periodic",
@@ -16001,7 +16001,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legPv_GRP|R_legPv_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legPv_GRP|R_legPv_CTL": {
         "transform": {
             "name": "R_legPv_CTL",
             "overrideEnabled": false,
@@ -16121,7 +16121,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legRootIk_GRP|R_legRootIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legRootIk_GRP|R_legRootIk_CTL": {
         "transform": {
             "name": "R_legRootIk_CTL",
             "overrideEnabled": true,
@@ -16323,7 +16323,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legSettings_GRP|R_legSettings_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legSettings_GRP|R_legSettings_CTL": {
         "transform": {
             "name": "R_legSettings_CTL",
             "overrideEnabled": false,
@@ -16425,7 +16425,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperLowBendy_GRP|R_legUpperLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperLowBendy_GRP|R_legUpperLowBendy_CTL": {
         "transform": {
             "name": "R_legUpperLowBendy_CTL",
             "overrideEnabled": false,
@@ -16441,59 +16441,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.3971877963918087e-20,
-                            11.853485131477678,
-                            11.853485131477672
+                            1.3229944930696022e-15,
+                            9.646458935915295,
+                            9.64645893591529
                         ],
                         [
-                            3.3082184731595386e-20,
-                            16.763359434323576,
-                            6.7622142171950874e-15
+                            1.323001907108524e-15,
+                            13.642153056046569,
+                            5.503142834237744e-15
                         ],
                         [
-                            1.2775845503836935e-20,
-                            11.853485131477672,
-                            -11.853485131477655
+                            1.3229853816507937e-15,
+                            9.64645893591529,
+                            -9.646458935915275
                         ],
                         [
-                            1.5798130437558595e-21,
-                            1.878266790192949e-14,
-                            -16.763359434323537
+                            1.3229762702319846e-15,
+                            1.5285482085074347e-14,
+                            -13.642153056046531
                         ],
                         [
-                            -2.6410268106446932e-20,
-                            -11.853485131477655,
-                            -11.853485131477655
+                            1.3229534916849642e-15,
+                            -9.646458935915275,
+                            -9.646458935915275
                         ],
                         [
-                            5.092103581392576e-21,
-                            -16.763359434323544,
-                            4.056557313962382e-15
+                            1.3229791285615035e-15,
+                            -13.642153056046538,
+                            3.301258078639594e-15
                         ],
                         [
-                            -2.6410268106446932e-20,
-                            -11.853485131477646,
-                            11.853485131477672
+                            1.3229534916849642e-15,
+                            -9.646458935915268,
+                            9.64645893591529
                         ],
                         [
-                            1.2775845503836935e-20,
-                            1.5627638981378532e-14,
-                            16.763359434323576
+                            1.3229853816507937e-15,
+                            1.2717894866113885e-14,
+                            13.642153056046569
                         ],
                         [
-                            2.3971877963918087e-20,
-                            11.853485131477678,
-                            11.853485131477672
+                            1.3229944930696022e-15,
+                            9.646458935915295,
+                            9.64645893591529
                         ],
                         [
-                            3.3082184731595386e-20,
-                            16.763359434323576,
-                            6.7622142171950874e-15
+                            1.323001907108524e-15,
+                            13.642153056046569,
+                            5.503142834237744e-15
                         ],
                         [
-                            1.2775845503836935e-20,
-                            11.853485131477672,
-                            -11.853485131477655
+                            1.3229853816507937e-15,
+                            9.64645893591529,
+                            -9.646458935915275
                         ]
                     ],
                     "form": "periodic",
@@ -16517,7 +16517,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperMainBendy_GRP|R_legUpperMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperMainBendy_GRP|R_legUpperMainBendy_CTL": {
         "transform": {
             "name": "R_legUpperMainBendy_CTL",
             "overrideEnabled": false,
@@ -16609,7 +16609,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperUpBendy_GRP|R_legUpperUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperUpBendy_GRP|R_legUpperUpBendy_CTL": {
         "transform": {
             "name": "R_legUpperUpBendy_CTL",
             "overrideEnabled": false,
@@ -16625,59 +16625,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            3.1675127276165534e-14,
-                            11.853485131477662,
-                            11.853485131477598
+                            2.5777466388176966e-14,
+                            9.64645893591528,
+                            9.64645893591523
                         ],
                         [
-                            3.1675113266577715e-14,
-                            16.763359434323544,
-                            -7.281119064564117e-14
+                            2.5777454987064798e-14,
+                            13.642153056046538,
+                            -5.925431658686521e-14
                         ],
                         [
-                            3.167508249203659e-14,
-                            11.853485131477662,
-                            -11.85348513147773
+                            2.5777429942502476e-14,
+                            9.64645893591528,
+                            -9.646458935915337
                         ],
                         [
-                            3.1675065697988315e-14,
-                            -3.0903821408220064e-15,
-                            -16.763359434323647
+                            2.5777416275374612e-14,
+                            -2.5149771638519926e-15,
+                            -13.642153056046624
                         ],
                         [
-                            3.167504890394e-14,
-                            -11.85348513147767,
-                            -11.853485131477742
+                            2.5777402608246707e-14,
+                            -9.646458935915287,
+                            -9.646458935915348
                         ],
                         [
-                            3.167505728641377e-14,
-                            -16.763359434323576,
-                            -7.551684754887385e-14
+                            2.5777409429969445e-14,
+                            -13.642153056046569,
+                            -6.145620134246333e-14
                         ],
                         [
-                            3.167511608013333e-14,
-                            -11.85348513147767,
-                            11.853485131477603
+                            2.577745727675837e-14,
+                            -9.646458935915287,
+                            9.646458935915234
                         ],
                         [
-                            3.167508809005269e-14,
-                            -6.245411061372961e-15,
-                            16.76335943432348
+                            2.5777434498211772e-14,
+                            -5.082564382812455e-15,
+                            13.642153056046485
                         ],
                         [
-                            3.1675127276165534e-14,
-                            11.853485131477662,
-                            11.853485131477598
+                            2.5777466388176966e-14,
+                            9.64645893591528,
+                            9.64645893591523
                         ],
                         [
-                            3.1675113266577715e-14,
-                            16.763359434323544,
-                            -7.281119064564117e-14
+                            2.5777454987064798e-14,
+                            13.642153056046538,
+                            -5.925431658686521e-14
                         ],
                         [
-                            3.167508249203659e-14,
-                            11.853485131477662,
-                            -11.85348513147773
+                            2.5777429942502476e-14,
+                            9.64645893591528,
+                            -9.646458935915337
                         ]
                     ],
                     "form": "periodic",
@@ -18173,7 +18173,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL|R_tipFk_GRP|R_tipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL|R_tipFk_GRP|R_tipFk_CTL": {
         "transform": {
             "name": "R_tipFk_CTL",
             "overrideEnabled": false,
@@ -18265,7 +18265,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL": {
         "transform": {
             "name": "R_toeIk_CTL",
             "overrideEnabled": false,

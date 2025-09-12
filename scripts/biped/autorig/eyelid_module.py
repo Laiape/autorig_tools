@@ -47,10 +47,11 @@ class EyelidModule(object):
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
 
         self.load_guides()
-        self.create_controllers()
         self.create_main_eye_setup()
-        self.attributes()
-        self.create_blink_setup()
+        # self.create_controllers()
+        
+        # self.attributes()
+        # self.create_blink_setup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -91,11 +92,11 @@ class EyelidModule(object):
         Load the guide locators for the eyelid module.
         """
 
-        self.locators = []
-        for guide in ["In", "UpIn", "Up", "UpOut",  "DownIn", "Down", "DownOut", "Out"]:
-            loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
-            self.locators.append(loc)
-            cmds.parent(loc, self.module_trn)
+        # self.locators = []
+        # for guide in ["In", "UpIn", "Up", "UpOut",  "DownIn", "Down", "DownOut", "Out"]:
+        #     loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
+        #     self.locators.append(loc)
+        #     cmds.parent(loc, self.module_trn)
 
         self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT")
         cmds.parent(self.eye_joint[0], self.module_trn)
