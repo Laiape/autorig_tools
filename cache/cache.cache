@@ -1,6 +1,6 @@
 {
     "basic_structure": {
-        "character_name": "spiderVerse",
+        "character_name": "yuna",
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",

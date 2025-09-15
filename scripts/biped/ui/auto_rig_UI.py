@@ -327,6 +327,11 @@ class UI(QtWidgets.QMainWindow):
         self.export_curves_button.setStyleSheet("padding: 5px;")
         self.export_curves_button.setObjectName("modulesButtons")
 
+        # Curve creator: shapes, colors, sizes, offset_grps, etc.
+        # Shapes: circle, square, cube, sphere, arrow, diamond, cross, star, heart, custom (load from file)
+        
+
+
     def populate_skin_cluster_interactions(self):
 
         self.export_skin_weights_button = QtWidgets.QPushButton("Export Skin Cluster Weights")
