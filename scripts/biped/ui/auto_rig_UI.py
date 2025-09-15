@@ -307,8 +307,8 @@ class UI(QtWidgets.QMainWindow):
         self.create_rig_button = QtWidgets.QPushButton("Create Rig")
         self.create_rig_button.setIcon(QtGui.QIcon("*"))
         self.create_rig_button.setIconSize(QtCore.QSize(200,3))
-    
         self.create_rig_button.setToolTip("Create all the rig")
+
         self.delete_rig_button = QtWidgets.QPushButton("Delete Rig")
         self.delete_rig_button.setIcon(QtGui.QIcon("*"))
         self.delete_rig_button.setIconSize(QtCore.QSize(200,3))
@@ -320,13 +320,22 @@ class UI(QtWidgets.QMainWindow):
         data = self.load_icon()
 
         # pixmap = self.svg(data, "curves", "export")
-        self.export_curves_button = QtWidgets.QPushButton("")
+        self.export_curves_button = QtWidgets.QPushButton("Export Curves")
         # self.export_curves_button.setIcon(QtGui.QPixmap(pixmap))
         self.export_curves_button.setToolTip("Export all the curves in the scene")
         self.export_curves_button.setIconSize(QtCore.QSize(24, 24))
         self.export_curves_button.setStyleSheet("padding: 5px;")
         self.export_curves_button.setObjectName("modulesButtons")
-        
+
+    def populate_skin_cluster_interactions(self):
+
+        self.export_skin_weights_button = QtWidgets.QPushButton("Export Skin Cluster Weights")
+        # self.export_skin_weights_button.setIcon(QtGui.QPixmap(pixmap))
+        self.export_skin_weights_button.setToolTip("Export all the skin cluster weights of the selected mesh")
+        self.export_skin_weights_button.setIconSize(QtCore.QSize(24, 24))
+        self.export_skin_weights_button.setStyleSheet("padding: 5px;")
+        self.export_skin_weights_button.setObjectName("modulesButtons")
+
     def template_button_connections(self, type):
 
         print(f"{type} template")
@@ -358,6 +367,14 @@ class UI(QtWidgets.QMainWindow):
         curve_tool.get_all_ctl_curves_data()
         print("Curves exported successfully!")
 
+    def export_skin_weights_connections(self):
+
+        from biped.tools import skin_cluster
+        reload(skin_cluster)
+
+        skin_cluster.export_joint_weights_json()
+        print("Skin weights exported successfully!")
+
     def create_connections(self):
 
         # Connect character template buttons
@@ -385,6 +402,7 @@ class UI(QtWidgets.QMainWindow):
         self.delete_rig_button.clicked.connect(lambda: self.rig_connections("deleted"))
 
         self.export_curves_button.clicked.connect(self.export_curves_connections)
+        self.export_skin_weights_button.clicked.connect(self.export_skin_weights_connections)
 
 
     def layouts(self):
@@ -521,11 +539,14 @@ class UI(QtWidgets.QMainWindow):
 
         # Curves Layout
         self.curves_layout = QtWidgets.QVBoxLayout()
-
         self.curves_layout.addWidget(self.export_curves_button)
-
         self.curves_tab_layout.addLayout(self.curves_layout)
-        
+
+        # Skin Cluster Layout
+        self.skin_cluster_layout = QtWidgets.QVBoxLayout()
+        self.skin_cluster_layout.addWidget(self.export_skin_weights_button)
+        self.skin_cluster_tab_layout.addLayout(self.skin_cluster_layout)
+
     def populate(self):
         
         self.populate_template_menu()
@@ -535,6 +556,7 @@ class UI(QtWidgets.QMainWindow):
         self.populate_add_module_to_tree()
         self.populate_create_rig()
         self.populate_curves_interactions()
+        self.populate_skin_cluster_interactions()
         self.create_connections()
         self.stylesheet()
 
