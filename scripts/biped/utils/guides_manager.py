@@ -125,7 +125,7 @@ def get_guides_info():
         os.makedirs(final_path)
     
     with open(os.path.join(final_path, f"{guides_name}.guides"), "w") as output_file:
-        json.dump(guides_name, output_file, indent=4)
+        json.dump(guides_data, output_file, indent=4)
 
     om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.guides')}")
 
