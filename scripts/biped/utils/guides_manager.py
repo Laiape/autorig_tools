@@ -124,10 +124,10 @@ def get_guides_info():
     if not os.path.exists(final_path):
         os.makedirs(final_path)
     
-    with open(os.path.join(final_path, f"{CHARACTER_NAME}.guides"), "w") as output_file:
-        json.dump(guides_data, output_file, indent=4)
+    with open(os.path.join(final_path, f"{guides_name}.guides"), "w") as output_file:
+        json.dump(guides_name, output_file, indent=4)
 
-    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{CHARACTER_NAME}.guides')}")
+    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.guides')}")
 
 
 
