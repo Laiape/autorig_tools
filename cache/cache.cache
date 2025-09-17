@@ -1,6 +1,6 @@
 {
     "basic_structure": {
-        "character_name": "spot",
+        "character_name": "spiderVerse",
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
@@ -37,12 +37,14 @@
         "L_legIk": "L_ankleIk_CTL",
         "L_hipFk": "L_hipFk_CTL",
         "L_legPv": "L_legPv_CTL",
+        "L_rootIk": "L_legRootIk_CTL",
         "R_hip_JNT": "R_hip_JNT",
         "R_knee_JNT": "R_knee_JNT",
         "R_ankle_JNT": "R_ankle_JNT",
         "R_legIk": "R_ankleIk_CTL",
         "R_hipFk": "R_hipFk_CTL",
-        "R_legPv": "R_legPv_CTL"
+        "R_legPv": "R_legPv_CTL",
+        "R_rootIk": "R_legRootIk_CTL"
     },
     "neck_module": {
         "head_ctl": "C_head_CTL",
