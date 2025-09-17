@@ -54,8 +54,6 @@ class LegModule(object):
         self.soft_ik()
         self.de_boor_ribbon()
 
-        cmds.parent(self.controllers_grp, self.local_hip_ctl)
-
         data_manager.DataExport().append_data("leg_module",
                             {
                                 f"{self.side}_hip_JNT": self.leg_chain[0],
@@ -64,6 +62,7 @@ class LegModule(object):
                                 f"{self.side}_legIk": self.ik_controllers[0],
                                 f"{self.side}_hipFk": self.fk_controllers[0],
                                 f"{self.side}_legPv": self.pv_ctl,
+                                f"{self.side}_rootIk": self.root_ik_ctl,
                             })
 
     def lock_attributes(self, ctl, attrs):

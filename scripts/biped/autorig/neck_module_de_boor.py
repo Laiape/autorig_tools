@@ -159,5 +159,5 @@ class NeckModule(object):
         cmds.xform(self.head_jnt, m=om.MMatrix.kIdentity)
         cmds.delete(self.neck_chain[0])
         
-        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=0) # Neck base and masterwalk
+        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=1) # Neck base and masterwalk
          

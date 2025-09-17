@@ -135,6 +135,7 @@ class AutoRig(object):
             shoulder_fk = data_manager.DataExport().get_data("arm_module", f"{side}_shoulderFk")
             hip_fk = data_manager.DataExport().get_data("leg_module", f"{side}_hipFk")
             clavicle = data_manager.DataExport().get_data("clavicle_module", f"{side}_clavicle")
+            root_ik = data_manager.DataExport().get_data("leg_module", f"{side}_rootIk")
 
             # Space switches
             matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik
@@ -143,6 +144,7 @@ class AutoRig(object):
             matrix_manager.space_switches(target=leg_pv, sources=[body, leg_ik, masterwalk], default_value=1) # Leg pv
             matrix_manager.space_switches(target=shoulder_fk, sources=[clavicle, chest, body], default_value=1) # Shoulder fk
             matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip, masterwalk], default_value=1) # Hip fk
+            matrix_manager.space_switches(target=root_ik, sources=[local_hip, masterwalk], default_value=1) # Root ik
             matrix_manager.space_switches(target=clavicle, sources=[chest, body], default_value=1) # Clavicle ik
         matrix_manager.space_switches(target=neck, sources=[chest, body], default_value=1) # Neck
         matrix_manager.space_switches(target=local_hip, sources=[body, masterwalk], default_value=1) # Local hip
