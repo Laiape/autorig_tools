@@ -259,10 +259,8 @@ class LegModule(object):
         cmds.setAttr(f"{freeze_float_constant}.inFloat", 0)
         for attr in ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"]:
             cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.ik_handle}.{attr}")
-            cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.toe_handle}.{attr}")
-
-        for attr in ["translateX", "translateY", "translateZ"]:
             cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.ball_handle}.{attr}")
+            cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.toe_handle}.{attr}")
 
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
 
@@ -538,16 +536,11 @@ class LegModule(object):
             cmds.connectAttr(f"{abs_low}.outFloat", f"{self.ik_chain[2]}.translateX")
 
         cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
-        pick_matrix_rotate = cmds.createNode("pickMatrix", name=f"{self.side}_legIkHandlePickMatrix_PMT", ss=True)
-        cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{pick_matrix_rotate}.inputMatrix")
-        cmds.setAttr(f"{pick_matrix_rotate}.useTranslate", 0)
-        cmds.setAttr(f"{pick_matrix_rotate}.useScale", 0)
-        cmds.setAttr(f"{pick_matrix_rotate}.useShear", 0)
-        cmds.connectAttr(f"{pick_matrix_rotate}.outputMatrix", f"{self.ik_chain[2]}.offsetParentMatrix", force=True)
+        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateX", f"{self.ik_chain[2]}.rotateX")
+        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateY", f"{self.ik_chain[2]}.rotateY")
+        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateZ", f"{self.ik_chain[2]}.rotateZ")
 
-        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[2]}.rotate")
-        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotate", f"{self.ik_chain[1]}.rotate")
-        
+
     def de_boor_ribbon(self):
 
         """
