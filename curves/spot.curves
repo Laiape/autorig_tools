@@ -783,134 +783,134 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.9630712572837945,
-                            228.57458454614013,
-                            1.6455330059212103
+                            2.737559803321263,
+                            211.17838228702408,
+                            1.5202958757656566
                         ],
                         [
-                            -1.3119790182344775,
-                            228.57458454614013,
-                            1.6455330059212103
+                            -1.212127792840185,
+                            211.17838228702408,
+                            1.5202958757656566
                         ],
                         [
-                            -1.3119790182344775,
-                            212.86975095922315,
-                            1.6455330059212103
+                            -1.212127792840185,
+                            196.66880171594983,
+                            1.5202958757656566
                         ],
                         [
-                            0.8894773004979506,
-                            212.86975095922315,
-                            1.6455330059212103
+                            0.8217815544679218,
+                            196.66880171594983,
+                            1.5202958757656566
                         ],
                         [
-                            0.8894773004979506,
-                            219.11276976209308,
-                            1.6455330059212103
+                            0.8217815544679218,
+                            202.43668100137154,
+                            1.5202958757656566
                         ],
                         [
-                            1.8790207973019202,
-                            219.11276976209308,
-                            1.6455330059212103
+                            1.7360135338134843,
+                            202.43668100137154,
+                            1.5202958757656566
                         ],
                         [
-                            3.3021844780986407,
-                            219.20171749214288,
-                            1.6455330059212103
+                            3.0508640209621585,
+                            202.51885915681834,
+                            1.5202958757656566
                         ],
                         [
-                            4.564130398180116,
-                            219.46300144916412,
-                            1.6455330059212103
+                            4.2167666013635285,
+                            202.76025748844322,
+                            1.5202958757656566
                         ],
                         [
-                            5.6592993244182175,
-                            219.90774009941316,
-                            1.6455330059212103
+                            5.228585140302155,
+                            203.17114826567723,
+                            1.5202958757656566
                         ],
                         [
-                            6.587691256812942,
-                            220.5303742097617,
-                            1.6455330059212103
+                            6.086319637778043,
+                            203.74639535380476,
+                            1.5202958757656566
                         ],
                         [
-                            7.332628495979983,
-                            221.30866684769725,
-                            1.6455330059212103
+                            6.774561689644932,
+                            204.4654542139641,
+                            1.5202958757656566
                         ],
                         [
-                            7.86075564315064,
-                            222.22594031383582,
-                            1.6455330059212103
+                            7.262494487610259,
+                            205.31291644200928,
+                            1.5202958757656566
                         ],
                         [
-                            8.183191164581135,
-                            223.27107614192084,
-                            1.6455330059212103
+                            7.560390301104872,
+                            206.27850976850897,
+                            1.5202958757656566
                         ],
                         [
-                            8.288816594015278,
-                            224.45519279820897,
-                            1.6455330059212103
+                            7.657976860697947,
+                            207.37250646289448,
+                            1.5202958757656566
                         ],
                         [
-                            8.233224262734153,
-                            225.28351853429763,
-                            1.6455330059212103
+                            7.606615513543696,
+                            208.13779053549274,
+                            1.5202958757656566
                         ],
                         [
-                            8.07756573514702,
-                            226.01733730720846,
-                            1.6455330059212103
+                            7.462803741511822,
+                            208.81576031792883,
+                            1.5202958757656566
                         ],
                         [
-                            7.8162817781257425,
-                            226.65664911694142,
-                            1.6455330059212103
+                            7.221405409886864,
+                            209.40641581020265,
+                            1.5202958757656566
                         ],
                         [
-                            7.449372391670332,
-                            227.20701319662456,
-                            1.6455330059212103
+                            6.882420518668839,
+                            209.91489314702966,
+                            1.5202958757656566
                         ],
                         [
-                            7.110259170855495,
-                            227.55724488369543,
-                            1.6455330059212103
+                            6.5691163010279485,
+                            210.23846963410125,
+                            1.5202958757656566
                         ],
                         [
-                            6.72111285188764,
-                            227.85188423948554,
-                            1.6455330059212103
+                            6.209586870948235,
+                            210.5106847740189,
+                            1.5202958757656566
                         ],
                         [
-                            6.287492667894891,
-                            228.09093126399424,
-                            1.6455330059212103
+                            5.808968363145128,
+                            210.7315385667821,
+                            1.5202958757656566
                         ],
                         [
-                            5.80939861887724,
-                            228.274385957222,
-                            1.6455330059212103
+                            5.367260777618615,
+                            210.90103101239112,
+                            1.5202958757656566
                         ],
                         [
-                            5.253475306066021,
-                            228.40224831916856,
-                            1.6455330059212103
+                            4.853647306076165,
+                            211.0191621108459,
+                            1.5202958757656566
                         ],
                         [
-                            4.597485796948787,
-                            228.49675528234638,
-                            1.6455330059212103
+                            4.247583409656071,
+                            211.10647640100802,
+                            1.5202958757656566
                         ],
                         [
-                            3.8303116252693,
-                            228.55790684675574,
-                            1.6455330059212103
+                            3.5387968189274868,
+                            211.1629738828778,
+                            1.5202958757656566
                         ],
                         [
-                            2.9630712572837945,
-                            228.57458454614013,
-                            1.6455330059212103
+                            2.737559803321263,
+                            211.17838228702408,
+                            1.5202958757656566
                         ]
                     ],
                     "form": "open",
@@ -2695,7 +2695,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL": {
         "transform": {
             "name": "L_ankleFk_CTL",
             "overrideEnabled": false,
@@ -2787,7 +2787,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL": {
         "transform": {
             "name": "L_ankleIk_CTL",
             "overrideEnabled": false,
@@ -2803,84 +2803,84 @@
                 "curve": {
                     "cvs": [
                         [
-                            5.11841025480542,
-                            7.363295144081692,
-                            6.949038928632657
+                            5.717879078015553,
+                            4.189857055481542,
+                            5.447564367314517
                         ],
                         [
-                            5.11841025480542,
-                            7.363295144081692,
-                            -3.9460906087155885
+                            5.717879078015553,
+                            4.189857055481542,
+                            -5.447565170033728
                         ],
                         [
-                            -6.31734814571289,
-                            7.363295144081692,
-                            -3.9460906087155885
+                            -5.717879322502757,
+                            4.189857055481542,
+                            -5.447565170033728
                         ],
                         [
-                            -6.31734814571289,
-                            7.363295144081692,
-                            6.949038928632657
+                            -5.717879322502757,
+                            4.189857055481542,
+                            5.447564367314517
                         ],
                         [
-                            5.11841025480542,
-                            7.363295144081692,
-                            6.949038928632657
+                            5.717879078015553,
+                            4.189857055481542,
+                            5.447564367314517
                         ],
                         [
-                            5.11841025480542,
-                            -1.0164257731545387,
-                            6.949038928632657
+                            5.717879078015553,
+                            -4.189863861754689,
+                            5.447564367314517
                         ],
                         [
-                            5.11841025480542,
-                            -1.0164257731545387,
-                            -3.9460906087155885
+                            5.717879078015553,
+                            -4.189863861754689,
+                            -5.447565170033728
                         ],
                         [
-                            5.11841025480542,
-                            7.363295144081692,
-                            -3.9460906087155885
+                            5.717879078015553,
+                            4.189857055481542,
+                            -5.447565170033728
                         ],
                         [
-                            5.11841025480542,
-                            -1.0164257731545387,
-                            -3.9460906087155885
+                            5.717879078015553,
+                            -4.189863861754689,
+                            -5.447565170033728
                         ],
                         [
-                            -6.31734814571289,
-                            -1.0164257731545387,
-                            -3.9460906087155885
+                            -5.717879322502757,
+                            -4.189863861754689,
+                            -5.447565170033728
                         ],
                         [
-                            -6.31734814571289,
-                            7.363295144081692,
-                            -3.9460906087155885
+                            -5.717879322502757,
+                            4.189857055481542,
+                            -5.447565170033728
                         ],
                         [
-                            -6.31734814571289,
-                            -1.0164257731545387,
-                            -3.9460906087155885
+                            -5.717879322502757,
+                            -4.189863861754689,
+                            -5.447565170033728
                         ],
                         [
-                            -6.31734814571289,
-                            -1.0164257731545387,
-                            6.949038928632657
+                            -5.717879322502757,
+                            -4.189863861754689,
+                            5.447564367314517
                         ],
                         [
-                            -6.31734814571289,
-                            7.363295144081692,
-                            6.949038928632657
+                            -5.717879322502757,
+                            4.189857055481542,
+                            5.447564367314517
                         ],
                         [
-                            -6.31734814571289,
-                            -1.0164257731545387,
-                            6.949038928632657
+                            -5.717879322502757,
+                            -4.189863861754689,
+                            5.447564367314517
                         ],
                         [
-                            5.11841025480542,
-                            -1.0164257731545387,
-                            6.949038928632657
+                            5.717879078015553,
+                            -4.189863861754689,
+                            5.447564367314517
                         ]
                     ],
                     "form": "open",
@@ -3451,7 +3451,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL": {
         "transform": {
             "name": "L_ballFk_CTL",
             "overrideEnabled": false,
@@ -3543,7 +3543,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL|L_ballIk_GRP|L_ballIk_SDK|L_ballIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL|L_ballIk_GRP|L_ballIk_SDK|L_ballIk_CTL": {
         "transform": {
             "name": "L_ballIk_CTL",
             "overrideEnabled": false,
@@ -3559,59 +3559,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.6429839280929652,
+                            -1.0410819404086103e-05,
                             6.416082555038436,
-                            -1.0410819405154804e-05
+                            -2.642983928092962
                         ],
                         [
-                            -2.277784649833855e-05,
+                            -1.0410819404141819e-05,
                             7.510851778081621,
-                            -1.0410819405029997e-05
+                            2.2777846499226735e-05
                         ],
                         [
-                            -2.6430294837859667,
+                            -1.041081940397508e-05,
                             6.416082555038433,
-                            -1.0410819404905173e-05
+                            2.643029483785969
                         ],
                         [
-                            -3.737775928982647,
-                            1.1212567398880558e-16,
-                            2.8107118546312907e-17
+                            0.11870253621374387,
+                            -1.9243131495202193,
+                            3.737775928982648
                         ],
                         [
-                            -2.64300670593947,
-                            -2.6430066391602945e-05,
-                            2.806194536580412e-17
+                            0.11870253621374331,
+                            -1.9243131495202215,
+                            2.6430067059394706
                         ],
                         [
-                            5.230618999511616e-16,
-                            -3.737775834547267e-05,
-                            -9.675868456380821e-17
+                            0.11870253621374328,
+                            -1.9243131495202228,
+                            -2.157629385337537e-15
                         ],
                         [
-                            2.64300670593947,
-                            -2.6430066391602935e-05,
-                            2.806194536580412e-17
+                            0.11870253621374342,
+                            -1.9243131495202215,
+                            -2.6430067059394697
                         ],
                         [
-                            3.737775928982647,
-                            1.1211863912750446e-16,
-                            2.810711854631292e-17
+                            0.11870253621374331,
+                            -1.9243131495202193,
+                            -3.737775928982646
                         ],
                         [
-                            2.6429839280929652,
+                            -1.0410819404086103e-05,
                             6.416082555038436,
-                            -1.0410819405154804e-05
+                            -2.642983928092962
                         ],
                         [
-                            -2.277784649833855e-05,
+                            -1.0410819404141819e-05,
                             7.510851778081621,
-                            -1.0410819405029997e-05
+                            2.2777846499226735e-05
                         ],
                         [
-                            -2.6430294837859667,
+                            -1.041081940397508e-05,
                             6.416082555038433,
-                            -1.0410819404905173e-05
+                            2.643029483785969
                         ]
                     ],
                     "form": "periodic",
@@ -3635,7 +3635,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL": {
         "transform": {
             "name": "L_bankIn_CTL",
             "overrideEnabled": false,
@@ -3727,7 +3727,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL": {
         "transform": {
             "name": "L_bankOut_CTL",
             "overrideEnabled": false,
@@ -4232,7 +4232,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL": {
         "transform": {
             "name": "L_heel_CTL",
             "overrideEnabled": false,
@@ -4324,7 +4324,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL": {
         "transform": {
             "name": "L_hipFk_CTL",
             "overrideEnabled": false,
@@ -4784,7 +4784,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL": {
         "transform": {
             "name": "L_kneeFk_CTL",
             "overrideEnabled": false,
@@ -4876,7 +4876,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerLowBendy_GRP|L_legLowerLowBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerLowBendy_GRP|L_legLowerLowBendy_CTL": {
         "transform": {
             "name": "L_legLowerLowBendy_CTL",
             "overrideEnabled": false,
@@ -4968,7 +4968,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerMainBendy_GRP|L_legLowerMainBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerMainBendy_GRP|L_legLowerMainBendy_CTL": {
         "transform": {
             "name": "L_legLowerMainBendy_CTL",
             "overrideEnabled": false,
@@ -5060,7 +5060,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerUpBendy_GRP|L_legLowerUpBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerUpBendy_GRP|L_legLowerUpBendy_CTL": {
         "transform": {
             "name": "L_legLowerUpBendy_CTL",
             "overrideEnabled": false,
@@ -5152,7 +5152,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legPv_GRP|L_legPv_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legPv_GRP|L_legPv_CTL": {
         "transform": {
             "name": "L_legPv_CTL",
             "overrideEnabled": false,
@@ -5272,7 +5272,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legRootIk_GRP|L_legRootIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legRootIk_GRP|L_legRootIk_CTL": {
         "transform": {
             "name": "L_legRootIk_CTL",
             "overrideEnabled": true,
@@ -5474,7 +5474,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legSettings_GRP|L_legSettings_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legSettings_GRP|L_legSettings_CTL": {
         "transform": {
             "name": "L_legSettings_CTL",
             "overrideEnabled": false,
@@ -5576,7 +5576,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperLowBendy_GRP|L_legUpperLowBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperLowBendy_GRP|L_legUpperLowBendy_CTL": {
         "transform": {
             "name": "L_legUpperLowBendy_CTL",
             "overrideEnabled": false,
@@ -5668,7 +5668,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperMainBendy_GRP|L_legUpperMainBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperMainBendy_GRP|L_legUpperMainBendy_CTL": {
         "transform": {
             "name": "L_legUpperMainBendy_CTL",
             "overrideEnabled": false,
@@ -5760,7 +5760,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperUpBendy_GRP|L_legUpperUpBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperUpBendy_GRP|L_legUpperUpBendy_CTL": {
         "transform": {
             "name": "L_legUpperUpBendy_CTL",
             "overrideEnabled": false,
@@ -7324,7 +7324,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL|L_tipFk_GRP|L_tipFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL|L_tipFk_GRP|L_tipFk_CTL": {
         "transform": {
             "name": "L_tipFk_CTL",
             "overrideEnabled": false,
@@ -7416,7 +7416,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL": {
         "transform": {
             "name": "L_toeIk_CTL",
             "overrideEnabled": false,
@@ -7432,24 +7432,24 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.64300670593947,
-                            3.0161882395430164e-16,
-                            -2.64300670593947
+                            2.608646754214967,
+                            -1.9239743551441162,
+                            -2.5834862767175366
                         ],
                         [
-                            1.8030544691731093e-15,
-                            3.6865410519454423e-16,
-                            -3.737775928982647
+                            -0.034359951724501826,
+                            -1.9239743551441162,
+                            -3.6782554997607133
                         ],
                         [
-                            -2.64300670593947,
-                            3.0161882395430164e-16,
-                            -2.64300670593947
+                            -2.677366657663973,
+                            -1.9239743551441162,
+                            -2.5834862767175366
                         ],
                         [
-                            -3.737775928982647,
-                            -4.048245783121199e-15,
-                            2.6408516944159487e-15
+                            -3.77213588070715,
+                            -1.9239743551441162,
+                            0.05952042922193597
                         ],
                         [
                             -2.643029483785966,
@@ -7467,24 +7467,24 @@
                             -1.0410819404483807e-05
                         ],
                         [
-                            3.737775928982647,
-                            -3.34475963521142e-15,
-                            2.6408516944159487e-15
+                            3.703415977258144,
+                            -1.9239743551441162,
+                            0.05952042922193597
                         ],
                         [
-                            2.64300670593947,
-                            3.0161882395430164e-16,
-                            -2.64300670593947
+                            2.608646754214967,
+                            -1.9239743551441162,
+                            -2.5834862767175366
                         ],
                         [
-                            1.8030544691731093e-15,
-                            3.6865410519454423e-16,
-                            -3.737775928982647
+                            -0.034359951724501826,
+                            -1.9239743551441162,
+                            -3.6782554997607133
                         ],
                         [
-                            -2.64300670593947,
-                            3.0161882395430164e-16,
-                            -2.64300670593947
+                            -2.677366657663973,
+                            -1.9239743551441162,
+                            -2.5834862767175366
                         ]
                     ],
                     "form": "periodic",
@@ -8152,7 +8152,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL": {
         "transform": {
             "name": "R_ankleFk_CTL",
             "overrideEnabled": false,
@@ -8244,7 +8244,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL": {
         "transform": {
             "name": "R_ankleIk_CTL",
             "overrideEnabled": false,
@@ -8260,84 +8260,84 @@
                 "curve": {
                     "cvs": [
                         [
-                            6.501875606187043,
-                            1.0164257731541473,
-                            3.9460906087156196
+                            5.717878823367061,
+                            4.189859665161084,
+                            5.447564657590131
                         ],
                         [
-                            6.501875606187043,
-                            1.0164257731541473,
-                            -6.949038928632626
+                            5.717878823367061,
+                            4.189859665161084,
+                            -5.447564879758115
                         ],
                         [
-                            -4.933882794331258,
-                            1.0164257731541473,
-                            -6.949038928632626
+                            -5.7178795771512405,
+                            4.189859665161084,
+                            -5.447564879758115
                         ],
                         [
-                            -4.933882794331258,
-                            1.0164257731541473,
-                            3.9460906087156196
+                            -5.7178795771512405,
+                            4.189859665161084,
+                            5.447564657590131
                         ],
                         [
-                            6.501875606187043,
-                            1.0164257731541473,
-                            3.9460906087156196
+                            5.717878823367061,
+                            4.189859665161084,
+                            5.447564657590131
                         ],
                         [
-                            6.501875606187043,
-                            -7.3632951440820875,
-                            3.9460906087156196
+                            5.717878823367061,
+                            -4.189861252075151,
+                            5.447564657590131
                         ],
                         [
-                            6.501875606187043,
-                            -7.3632951440820875,
-                            -6.949038928632626
+                            5.717878823367061,
+                            -4.189861252075151,
+                            -5.447564879758115
                         ],
                         [
-                            6.501875606187043,
-                            1.0164257731541473,
-                            -6.949038928632626
+                            5.717878823367061,
+                            4.189859665161084,
+                            -5.447564879758115
                         ],
                         [
-                            6.501875606187043,
-                            -7.3632951440820875,
-                            -6.949038928632626
+                            5.717878823367061,
+                            -4.189861252075151,
+                            -5.447564879758115
                         ],
                         [
-                            -4.933882794331258,
-                            -7.3632951440820875,
-                            -6.949038928632626
+                            -5.7178795771512405,
+                            -4.189861252075151,
+                            -5.447564879758115
                         ],
                         [
-                            -4.933882794331258,
-                            1.0164257731541473,
-                            -6.949038928632626
+                            -5.7178795771512405,
+                            4.189859665161084,
+                            -5.447564879758115
                         ],
                         [
-                            -4.933882794331258,
-                            -7.3632951440820875,
-                            -6.949038928632626
+                            -5.7178795771512405,
+                            -4.189861252075151,
+                            -5.447564879758115
                         ],
                         [
-                            -4.933882794331258,
-                            -7.3632951440820875,
-                            3.9460906087156196
+                            -5.7178795771512405,
+                            -4.189861252075151,
+                            5.447564657590131
                         ],
                         [
-                            -4.933882794331258,
-                            1.0164257731541473,
-                            3.9460906087156196
+                            -5.7178795771512405,
+                            4.189859665161084,
+                            5.447564657590131
                         ],
                         [
-                            -4.933882794331258,
-                            -7.3632951440820875,
-                            3.9460906087156196
+                            -5.7178795771512405,
+                            -4.189861252075151,
+                            5.447564657590131
                         ],
                         [
-                            6.501875606187043,
-                            -7.3632951440820875,
-                            3.9460906087156196
+                            5.717878823367061,
+                            -4.189861252075151,
+                            5.447564657590131
                         ]
                     ],
                     "form": "open",
@@ -8908,7 +8908,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL": {
         "transform": {
             "name": "R_ballFk_CTL",
             "overrideEnabled": false,
@@ -9000,7 +9000,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL|R_ballIk_GRP|R_ballIk_SDK|R_ballIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL|R_ballIk_GRP|R_ballIk_SDK|R_ballIk_CTL": {
         "transform": {
             "name": "R_ballIk_CTL",
             "overrideEnabled": false,
@@ -9016,59 +9016,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.6430525188408684,
+                            2.0930212604741705e-05,
                             -6.416082554409944,
-                            2.0930212604314167e-05
+                            -2.643052518840869
                         ],
                         [
-                            4.581290140232606e-05,
+                            2.0930212605562324e-05,
                             -7.510851777453093,
-                            2.093021260556232e-05
+                            -4.581290140232607e-05
                         ],
                         [
-                            -2.6429608930380626,
+                            2.0930212605296816e-05,
                             -6.416082554409942,
-                            2.0930212605312663e-05
+                            2.6429608930380626
                         ],
                         [
-                            -3.737775928982647,
-                            -6.288524280087116e-20,
-                            -6.09475732078032e-20
+                            -0.11870253621374192,
+                            1.92431314952022,
+                            3.737775928982628
                         ],
                         [
-                            -2.64300670593947,
-                            2.643006639171495e-05,
-                            -2.3392839349940836e-20
+                            -0.11870253621374137,
+                            1.9243131495202226,
+                            2.643006705939451
                         ],
                         [
-                            -3.7441557118820087e-16,
-                            3.737775834558455e-05,
-                            1.248067601485761e-16
+                            -0.11870253621374145,
+                            1.9243131495202235,
+                            -1.7264458962811032e-14
                         ],
                         [
-                            2.64300670593947,
-                            2.643006639171493e-05,
-                            -2.148822768719654e-20
+                            -0.11870253621374181,
+                            1.9243131495202226,
+                            -2.6430067059394893
                         ],
                         [
-                            3.737775928982647,
-                            -5.585038149948888e-20,
-                            -6.094757320782417e-20
+                            -0.11870253621374126,
+                            1.92431314952022,
+                            -3.737775928982666
                         ],
                         [
-                            2.6430525188408684,
+                            2.0930212604741705e-05,
                             -6.416082554409944,
-                            2.0930212604314167e-05
+                            -2.643052518840869
                         ],
                         [
-                            4.581290140232606e-05,
+                            2.0930212605562324e-05,
                             -7.510851777453093,
-                            2.093021260556232e-05
+                            -4.581290140232607e-05
                         ],
                         [
-                            -2.6429608930380626,
+                            2.0930212605296816e-05,
                             -6.416082554409942,
-                            2.0930212605312663e-05
+                            2.6429608930380626
                         ]
                     ],
                     "form": "periodic",
@@ -9092,7 +9092,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL": {
         "transform": {
             "name": "R_bankIn_CTL",
             "overrideEnabled": false,
@@ -9184,7 +9184,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL": {
         "transform": {
             "name": "R_bankOut_CTL",
             "overrideEnabled": false,
@@ -9689,7 +9689,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL": {
         "transform": {
             "name": "R_heel_CTL",
             "overrideEnabled": false,
@@ -9781,7 +9781,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL": {
         "transform": {
             "name": "R_hipFk_CTL",
             "overrideEnabled": false,
@@ -10241,7 +10241,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL": {
         "transform": {
             "name": "R_kneeFk_CTL",
             "overrideEnabled": false,
@@ -10333,7 +10333,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerLowBendy_GRP|R_legLowerLowBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerLowBendy_GRP|R_legLowerLowBendy_CTL": {
         "transform": {
             "name": "R_legLowerLowBendy_CTL",
             "overrideEnabled": false,
@@ -10425,7 +10425,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerMainBendy_GRP|R_legLowerMainBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerMainBendy_GRP|R_legLowerMainBendy_CTL": {
         "transform": {
             "name": "R_legLowerMainBendy_CTL",
             "overrideEnabled": false,
@@ -10517,7 +10517,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerUpBendy_GRP|R_legLowerUpBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerUpBendy_GRP|R_legLowerUpBendy_CTL": {
         "transform": {
             "name": "R_legLowerUpBendy_CTL",
             "overrideEnabled": false,
@@ -10609,7 +10609,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legPv_GRP|R_legPv_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legPv_GRP|R_legPv_CTL": {
         "transform": {
             "name": "R_legPv_CTL",
             "overrideEnabled": false,
@@ -10729,7 +10729,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legRootIk_GRP|R_legRootIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legRootIk_GRP|R_legRootIk_CTL": {
         "transform": {
             "name": "R_legRootIk_CTL",
             "overrideEnabled": true,
@@ -10931,7 +10931,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legSettings_GRP|R_legSettings_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legSettings_GRP|R_legSettings_CTL": {
         "transform": {
             "name": "R_legSettings_CTL",
             "overrideEnabled": false,
@@ -11033,7 +11033,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperLowBendy_GRP|R_legUpperLowBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperLowBendy_GRP|R_legUpperLowBendy_CTL": {
         "transform": {
             "name": "R_legUpperLowBendy_CTL",
             "overrideEnabled": false,
@@ -11125,7 +11125,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperMainBendy_GRP|R_legUpperMainBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperMainBendy_GRP|R_legUpperMainBendy_CTL": {
         "transform": {
             "name": "R_legUpperMainBendy_CTL",
             "overrideEnabled": false,
@@ -11217,7 +11217,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperUpBendy_GRP|R_legUpperUpBendy_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperUpBendy_GRP|R_legUpperUpBendy_CTL": {
         "transform": {
             "name": "R_legUpperUpBendy_CTL",
             "overrideEnabled": false,
@@ -12781,7 +12781,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL|R_tipFk_GRP|R_tipFk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL|R_tipFk_GRP|R_tipFk_CTL": {
         "transform": {
             "name": "R_tipFk_CTL",
             "overrideEnabled": false,
@@ -12873,7 +12873,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL": {
         "transform": {
             "name": "R_toeIk_CTL",
             "overrideEnabled": false,
@@ -12889,24 +12889,24 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.64300670593947,
-                            1.3236644607498855e-15,
-                            2.643006705939475
+                            2.6773666576639767,
+                            1.9239743551441142,
+                            2.58348627671751
                         ],
                         [
-                            1.1263502375072928e-15,
-                            7.545816145376256e-17,
-                            3.7377759289826495
+                            0.034359951724507794,
+                            1.9239743551441142,
+                            3.6782554997606844
                         ],
                         [
-                            -2.64300670593947,
-                            1.0740232008906617e-15,
-                            2.643006705939473
+                            -2.6086467542149636,
+                            1.9239743551441142,
+                            2.5834862767175077
                         ],
                         [
-                            -3.737775928982647,
-                            4.103439092989588e-15,
-                            4.8917376288869525e-15
+                            -3.7034159772581403,
+                            1.9239743551441142,
+                            -0.0595204292219599
                         ],
                         [
                             -2.6429608930380626,
@@ -12924,24 +12924,24 @@
                             2.093021261196325e-05
                         ],
                         [
-                            3.737775928982647,
-                            3.3999529450798018e-15,
-                            4.8917376288869525e-15
+                            3.7721358807071534,
+                            1.9239743551441142,
+                            -0.0595204292219599
                         ],
                         [
-                            2.64300670593947,
-                            1.3236644607498855e-15,
-                            2.643006705939475
+                            2.6773666576639767,
+                            1.9239743551441142,
+                            2.58348627671751
                         ],
                         [
-                            1.1263502375072928e-15,
-                            7.545816145376256e-17,
-                            3.7377759289826495
+                            0.034359951724507794,
+                            1.9239743551441142,
+                            3.6782554997606844
                         ],
                         [
-                            -2.64300670593947,
-                            1.0740232008906617e-15,
-                            2.643006705939473
+                            -2.6086467542149636,
+                            1.9239743551441142,
+                            2.5834862767175077
                         ]
                     ],
                     "form": "periodic",

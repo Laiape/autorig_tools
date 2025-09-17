@@ -93,7 +93,7 @@ class LegModule(object):
         self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.matchTransform(self.settings_node[0], self.settings_loc, pos=True, rot=True)
         cmds.delete(self.settings_loc)
-        cmds.addAttr(self.settings_ctl, longName="Ik_Fk", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
+        cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
         cmds.parent(self.settings_node[0], self.controllers_grp)
 
         self.fk_chain = []
@@ -547,7 +547,29 @@ class LegModule(object):
         Create a de Boor ribbon setup.
         """
         # Placeholder for de Boor ribbon setup
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[0], self.blend_matrices[1], "Upper")
+        self.primary_aim_vector = (1, 0, 0) if self.side == "L" else (-1, 0, 0)
+        self.secondary_aim_vector = (0, 1, 0)
+
+        nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollAlign_BLM", ss=True)
+        nonRollPick = cmds.createNode("pickMatrix", name=f"{self.side}_legNonRollPick_PIM", ss=True)
+        nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_legNonRollAim_AMX", ss=True)
+
+        cmds.connectAttr(f"{self.root_ik_nodes[0]}.worldMatrix[0]", f"{nonRollAlign}.inputMatrix")
+        cmds.connectAttr(f"{self.fk_nodes[0]}.worldMatrix[0]", f"{nonRollAlign}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{nonRollAlign}.target[0].weight")
+
+        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollPick}.inputMatrix")
+        cmds.connectAttr(f"{nonRollPick}.outputMatrix", f"{nonRollAim}.inputMatrix")
+        cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.secondaryTargetMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
+        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primary_aim_vector, type="double3")
+        cmds.setAttr(f"{nonRollAim}.secondaryInputAxis", *self.secondary_aim_vector, type="double3")
+        cmds.setAttr(f"{nonRollAim}.secondaryTargetVector", *self.secondary_aim_vector, type="double3")
+        cmds.setAttr(f"{nonRollAim}.secondaryMode", 2)
+
+        cmds.setAttr(f"{nonRollPick}.useRotate", 0)
+
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper")
         self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
 
         cmds.select(clear=True)
@@ -563,6 +585,8 @@ class LegModule(object):
 
         if cmds.objExists(f"{first_sel[0]}.outputMatrix"):
             first_sel_output = f"{first_sel[0]}.outputMatrix"
+        if cmds.objExists(f"{first_sel}.outputMatrix"):
+            first_sel_output = f"{first_sel}.outputMatrix"
         elif cmds.objExists(f"{first_sel[0]}.worldMatrix[0]"):
             first_sel_output = f"{first_sel[0]}.worldMatrix[0]"
 
