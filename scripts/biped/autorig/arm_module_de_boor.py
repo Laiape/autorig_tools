@@ -411,27 +411,43 @@ class ArmModule(object):
         Create a de Boor ribbon setup.
         """
 
-        self.primary_aim_vector = (1, 0, 0) if self.side == "L" else (-1, 0, 0)
-        self.secondary_aim_vector = (0, 1, 0)
+        primary_aim_vector = (1, 0, 0)
+        secondary_aim_vector = (0, 0, 1)
 
-        nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollAlign_BLM", ss=True)
-        nonRollPick = cmds.createNode("pickMatrix", name=f"{self.side}_legNonRollPick_PIM", ss=True)
-        nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_legNonRollAim_AMX", ss=True)
+        guides = []
+        for node in self.arm_chain:
+            
+            guide = cmds.createNode("transform", name=node.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
+            cmds.matchTransform(guide, node, pos=True, rot=True)
+            guides.append(guide)
 
-        cmds.connectAttr(f"{self.ik_root_nodes[0]}.worldMatrix[0]", f"{nonRollAlign}.inputMatrix")
-        cmds.connectAttr(f"{self.fk_nodes[0]}.worldMatrix[0]", f"{nonRollAlign}.target[0].targetMatrix")
-        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{nonRollAlign}.target[0].weight")
+        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
+        cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{guides[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *primary_aim_vector, type="double3")
+        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *secondary_aim_vector, type="double3")
+        cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
 
-        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollPick}.inputMatrix")
-        cmds.connectAttr(f"{nonRollPick}.outputMatrix", f"{nonRollAim}.inputMatrix")
-        cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.secondaryTargetMatrix")
+
+        nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_armNonRollAlign_BLM", ss=True)
+        nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_armNonRollAim_AMX", ss=True)
+        nonRollMasterWalk_mmx = cmds.createNode("multMatrix", name=f"{self.side}_armNonRollMasterWalk_MMX", ss=True)
+
+        cmds.connectAttr(f"{guides_aim}.outputMatrix", f"{nonRollMasterWalk_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{nonRollMasterWalk_mmx}.matrixIn[1]")
+
+        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
+        cmds.connectAttr(f"{nonRollMasterWalk_mmx}.matrixSum", f"{nonRollAlign}.target[0].targetMatrix")
+        cmds.setAttr(f"{nonRollAlign}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{nonRollAlign}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{nonRollAlign}.target[0].shearWeight", 0)
+        
+
+        cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
-        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primary_aim_vector, type="double3")
-        cmds.setAttr(f"{nonRollAim}.secondaryInputAxis", *self.secondary_aim_vector, type="double3")
-        cmds.setAttr(f"{nonRollAim}.secondaryTargetVector", *self.secondary_aim_vector, type="double3")
-        cmds.setAttr(f"{nonRollAim}.secondaryMode", 2)
+        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
 
-        cmds.setAttr(f"{nonRollPick}.useRotate", 0)
 
         # Placeholder for de Boor ribbon setup
         self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper")
@@ -457,6 +473,9 @@ class ArmModule(object):
         main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}MainBendy", offset=["GRP"])
         up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}UpBendy", offset=["GRP"])
         low_bendy_nodes, low_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}LowBendy", offset=["GRP"])
+
+        for ctl in [main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]:
+            self.lock_attributes(ctl, ["rotateX", "rotateY", "rotateZ", "visibility"])
 
         for node in [main_bendy_nodes[0], up_bendy_nodes[0], low_bendy_nodes[0]]:
 

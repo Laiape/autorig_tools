@@ -547,27 +547,42 @@ class LegModule(object):
         Create a de Boor ribbon setup.
         """
         # Placeholder for de Boor ribbon setup
-        self.primary_aim_vector = (1, 0, 0) if self.side == "L" else (-1, 0, 0)
-        self.secondary_aim_vector = (0, 1, 0)
+        primary_aim_vector = (1, 0, 0)
+        secondary_aim_vector = (0, -1, 0)
+
+        guides = []
+        for node in self.leg_chain:
+            
+            guide = cmds.createNode("transform", name=node.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
+            cmds.matchTransform(guide, node, pos=True, rot=True)
+            guides.append(guide)
+
+        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_legGuides_AIM", ss=True)
+        cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{guides[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *primary_aim_vector, type="double3")
+        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *secondary_aim_vector, type="double3")
+        cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
+
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollAlign_BLM", ss=True)
-        nonRollPick = cmds.createNode("pickMatrix", name=f"{self.side}_legNonRollPick_PIM", ss=True)
         nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_legNonRollAim_AMX", ss=True)
+        nonRollMasterWalk_mmx = cmds.createNode("multMatrix", name=f"{self.side}_legNonRollMasterWalk_MMX", ss=True)
 
-        cmds.connectAttr(f"{self.root_ik_nodes[0]}.worldMatrix[0]", f"{nonRollAlign}.inputMatrix")
-        cmds.connectAttr(f"{self.fk_nodes[0]}.worldMatrix[0]", f"{nonRollAlign}.target[0].targetMatrix")
-        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{nonRollAlign}.target[0].weight")
+        cmds.connectAttr(f"{guides_aim}.outputMatrix", f"{nonRollMasterWalk_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{nonRollMasterWalk_mmx}.matrixIn[1]")
 
-        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollPick}.inputMatrix")
-        cmds.connectAttr(f"{nonRollPick}.outputMatrix", f"{nonRollAim}.inputMatrix")
-        cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.secondaryTargetMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
+        cmds.connectAttr(f"{nonRollMasterWalk_mmx}.matrixSum", f"{nonRollAlign}.target[0].targetMatrix")
+        cmds.setAttr(f"{nonRollAlign}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{nonRollAlign}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{nonRollAlign}.target[0].shearWeight", 0)
+        
+
+        cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
-        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primary_aim_vector, type="double3")
-        cmds.setAttr(f"{nonRollAim}.secondaryInputAxis", *self.secondary_aim_vector, type="double3")
-        cmds.setAttr(f"{nonRollAim}.secondaryTargetVector", *self.secondary_aim_vector, type="double3")
-        cmds.setAttr(f"{nonRollAim}.secondaryMode", 2)
-
-        cmds.setAttr(f"{nonRollPick}.useRotate", 0)
+        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
 
         self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper")
         self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
@@ -659,9 +674,9 @@ class LegModule(object):
         params[-1] = 0.95
 
         if self.side == "L":
-            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y') # Call the ribbon script to create de Boors system
+            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='z') # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y')
+            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='z')
 
         cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
 

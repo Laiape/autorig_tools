@@ -72,6 +72,8 @@ def create_basic_structure():
         if not cmds.attributeQuery(attr, node=preferences_ctl, exists=True):
             cmds.addAttr(f"{preferences_ctl}", longName=attr, attributeType="bool", keyable=True, defaultValue=1)
             cmds.setAttr(f"{preferences_ctl}.{attr}", keyable=False, channelBox=True)
+            if attr == "Show_Modules":
+                cmds.setAttr(f"{preferences_ctl}.{attr}", 0)
 
     
     cmds.connectAttr(f"{preferences_ctl}.Reference", f"{nodes[3]}.overrideEnabled")
