@@ -47,8 +47,8 @@ class SpineModule(object):
         self.controller_creation()
         self.local_hip_chest_setup()
         self.ribbon_setup()
-        # self.attatched_fk()
-        
+        self.stretch_activate()
+
 
 
         data_manager.DataExport().append_data("spine_module",
@@ -248,6 +248,10 @@ class SpineModule(object):
         """
         Stretch activate
         """
+
+        cmds.addAttr(self.body_ctl, longName="STRETCH", attributeType="enum", enumName="____", keyable=True)
+        cmds.setAttr(f"{self.body_ctl}.STRETCH", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.body_ctl, longName="Stretch", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
 
 
