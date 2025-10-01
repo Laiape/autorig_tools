@@ -113,11 +113,14 @@ class SpineModule(object):
 
                 corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
                 
-                cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
+                if i == len(self.spine_chain) - 1:
+                    cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
 
                 if i == 0:
 
-                    cmds.parent(corner_nodes[0], self.body_ctl)
+                    cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix") # Parent the first spine ctl to body ctl
+                    cmds.setAttr(f"{corner_nodes[0]}.inheritsTransform", 0) # Don't inherit the transform from body ctl
+                    cmds.parent(corner_nodes[0], self.controllers_grp)
 
                 else:
 
@@ -189,8 +192,6 @@ class SpineModule(object):
         cmds.setAttr(f"{self.body_ctl}.FK", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
-        fk_controllers_grp = cmds.createNode("transform", name=f"{self.side}_spineFKControllers_GRP", ss=True, p=self.body_ctl)
-        cmds.connectAttr(f"{self.body_ctl}.FK_Vis", f"{fk_controllers_grp}.visibility")
 
         # Create the FK controllers
         self.fk_nodes = []
@@ -199,8 +200,11 @@ class SpineModule(object):
         for i, jnt in enumerate(self.spine_chain):
             
             fk_node, fk_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "FK"), offset=["GRP"])
-            # cmds.matchTransform(fk_node[0], jnt, pos=True, rot=True, scl=False)
-            cmds.parent(fk_node[0], fk_controllers_grp)
+            if i == 0:
+                cmds.setAttr(f"{fk_node[0]}.inheritsTransform", 0)
+                cmds.parent(fk_node[0], self.controllers_grp)
+                cmds.connectAttr(f"{self.body_ctl}.FK_Vis", f"{fk_node[0]}.visibility")
+
             self.lock_attributes(fk_ctl, ["sx", "sy", "sz", "v"])
             if self.fk_controllers:
                 cmds.parent(fk_node[0], self.fk_controllers[-1])
@@ -208,18 +212,21 @@ class SpineModule(object):
             self.fk_controllers.append(fk_ctl)
 
         sel = (self.spine_ctls[0], self.spine_ctls[1], self.spine_ctls[2], self.spine_ctls[3], self.spine_ctls[4])
-        self.skeleton_grp, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain)) # Do the ribbon setup, with the created controllers
-        cmds.setAttr(f"{self.skeleton_grp}.inheritsTransform", 1)
+        skeleton_grp, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
         for t in temp:
             cmds.delete(t)
-        
-        cmds.parent(self.skeleton_grp, self.skel_grp) # Parent the output skinning joints trn to skeleton_grp
+    
 
-        self.joints = cmds.listRelatives(self.skeleton_grp, c=True, type="joint")
+        # Get only the joints from skeleton_grp that have "spine" in their name
+        all_joints = cmds.listRelatives(skeleton_grp, c=True, type="joint") or []
+        self.joints = [jnt for jnt in all_joints if "spine" in jnt]
         jnt_connections = []
         for i, jnt in enumerate(self.joints):
 
+            cmds.setAttr(f"{jnt}.inheritsTransform", 0)
+            # cmds.parent(jnt, self.skeleton_grp)
             jnt_connection = cmds.listConnections(jnt, source=True, destination=True, plugs=True)[0]
+
             if jnt_connection:
                 
                 mult_matrix_node = cmds.createNode("multMatrix", name=jnt.replace("_JNT", "_MMX"))
@@ -235,6 +242,7 @@ class SpineModule(object):
                 cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
                 jnt_connections.append(jnt_connection)
 
+        # cmds.delete(self.skeleton_grp)
 
     def stretch_activate(self):
 
