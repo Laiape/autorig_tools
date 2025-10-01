@@ -13,7 +13,7 @@ KNOT_TO_FORM_INDEX = {OPEN: om.MFnNurbsCurve.kOpen, PERIODIC: om.MFnNurbsCurve.k
 
 def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, tangent_offset=0.001, d=None, kv_type=OPEN,
                    param_from_length=False, tol=0.000001, name='ribbon', use_position=True, use_tangent=True,
-                   use_up=True, use_scale=True, custom_parameter=[]):
+                   use_up=True, use_scale=True, custom_parameter=[], skeleton_grp=None):
     """
     Use controls and de_boor function to get position, tangent and up values for joints.  The param_from_length can
     be used to get the parameter values using a fraction of the curve length, otherwise the parameter values will be
@@ -108,10 +108,6 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
         list: joints
     """
 
-
-    # jnts_grp = cmds.createNode('transform', n=f'{name}_Joints_GRP')
-    # cmds.matchTransform(jnts_grp, cvs[0])
-
     ctls = []
     grps = []
 
@@ -168,8 +164,11 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
             cmds.connectAttr(f'{cv}.outputMatrix', f'{temp_node}.offsetParentMatrix')
         temp_nodes.append(temp_node)
 
-    jnts_grp = cmds.createNode('transform', n=f'{name}Skinning_GRP')
-    cmds.matchTransform(jnts_grp, temp_nodes[0])
+    if skeleton_grp is None:
+        skeleton_grp = cmds.createNode('transform', n=f'{name}Skinning_GRP')
+        cmds.matchTransform(skeleton_grp, temp_nodes[0])
+    else:
+        skeleton_grp = skeleton_grp
 
     m_cv_poss = om.MPointArray([cmds.xform(obj, q=True, ws=True, t=True) for obj in temp_nodes])
     form = KNOT_TO_FORM_INDEX[kv_type]
@@ -213,19 +212,36 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
 
     for i, ctl in enumerate(cvs):
 
-        par_off = cmds.createNode('multMatrix', n=f'{name}_parentOffset_{i}_MM')
+        if skeleton_grp is None:
 
-        if cmds.objExists(f"{ctl}.worldMatrix[0]"):
-            cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{par_off}.matrixIn[0]')
-        elif cmds.objExists(f"{ctl}.outputMatrix"):
-            cmds.connectAttr(f'{ctl}.outputMatrix', f'{par_off}.matrixIn[0]')
+            par_off = cmds.createNode('multMatrix', n=f'{name}_parentOffset_{i}_MM')
+
+            if cmds.objExists(f"{ctl}.worldMatrix[0]"):
+                cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{par_off}.matrixIn[0]')
+            elif cmds.objExists(f"{ctl}.outputMatrix"):
+                cmds.connectAttr(f'{ctl}.outputMatrix', f'{par_off}.matrixIn[0]')
+                
+            cmds.connectAttr(f'{skeleton_grp}.worldInverseMatrix', f'{par_off}.matrixIn[1]') # First guide
+
+            par_off_plugs.append(f'{par_off}.matrixSum')
+
+        else:
+            if cmds.objExists(f"{ctl}.worldMatrix[0]"):
+                par_off_plugs.append(f'{ctl}.worldMatrix[0]')
+            elif cmds.objExists(f"{ctl}.outputMatrix"):
+                par_off_plugs.append(f'{ctl}.outputMatrix')
             
-        cmds.connectAttr(f'{jnts_grp}.worldInverseMatrix', f'{par_off}.matrixIn[1]') # First guide
-
-        par_off_plugs.append(f'{par_off}.matrixSum')
 
         trans_off = cmds.createNode('pickMatrix', n=f'{name}_translation_{i}_PM')
-        cmds.connectAttr(f'{par_off}.matrixSum', f'{trans_off}.inputMatrix')
+
+        if skeleton_grp is None:
+            cmds.connectAttr(f'{par_off}.matrixSum', f'{trans_off}.inputMatrix')
+        else:
+            if cmds.objExists(f"{ctl}.worldMatrix[0]"):
+                cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{trans_off}.inputMatrix')
+            elif cmds.objExists(f"{ctl}.outputMatrix"):
+                cmds.connectAttr(f'{ctl}.outputMatrix', f'{trans_off}.inputMatrix')
+            
 
         for attr in 'useRotate', 'useScale', 'useShear':
             cmds.setAttr(f'{trans_off}.{attr}', False)
@@ -235,7 +251,13 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
         if use_scale and use_tangent or use_up:
 
             sca_off = cmds.createNode('pickMatrix', n=f'{name}_scaleOffset_{i}_PM')
-            cmds.connectAttr(f'{par_off}.matrixSum', f'{sca_off}.inputMatrix')
+            if skeleton_grp is None:
+                cmds.connectAttr(f'{par_off}.matrixSum', f'{sca_off}.inputMatrix')
+            else:
+                if cmds.objExists(f"{ctl}.worldMatrix[0]"):
+                    cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{sca_off}.inputMatrix')
+                elif cmds.objExists(f"{ctl}.outputMatrix"):
+                    cmds.connectAttr(f'{ctl}.outputMatrix', f'{sca_off}.inputMatrix')
 
             for attr in 'useRotate', 'useShear', 'useTranslate':
                 cmds.setAttr(f'{sca_off}.{attr}', False)
@@ -251,7 +273,7 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
         jnt = cmds.joint(n=f'{name}0{i}_JNT')
         # cube = cmds.polyCube(n=f'{name}0{i}_JNT_Cube', ch=False)[0]
         # cmds.parent(cube, jnt)
-        cmds.parent(jnt, jnts_grp)
+        cmds.parent(jnt, skeleton_grp)
         cmds.setAttr(f'{jnt}.jo', 0, 0, 0)
         cmds.xform(jnt, m=om.MMatrix.kIdentity)
 
@@ -299,13 +321,13 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 tangent = create_wt_add_matrix(trans_off_plugs, tangent_wts, f'{name}_tangent_{i}_WAM', tol=tol)
                 tangent_plug = f'{tangent}.matrixSum'
 
-        up_plug = f'{jnts_grp}.worldMatrix'
+        up_plug = f'{skeleton_grp}.worldMatrix'
 
         # ----- up setup
         if use_up:
 
             temp = cmds.createNode('transform')
-            cmds.parent(temp, jnts_grp)
+            cmds.parent(temp, skeleton_grp)
             ori_con = cmds.orientConstraint(temp_nodes, temp)[0]
             cmds.setAttr(f'{ori_con}.interpType', 2)
             for j, wt in enumerate(wts):
@@ -321,7 +343,13 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
             cmds.setAttr(f'{up_off}.matrixIn[0]', list(up_off_val), type='matrix')
             cmds.connectAttr(f'{up}.matrixSum', f'{up_off}.matrixIn[1]')
 
-            up_plug = f'{up_off}.matrixSum'
+            if skeleton_grp is not None:
+                up_plug = f'{up_off}.matrixSum'
+            else:
+                if cmds.objExists(f"{ctl}.worldMatrix[0]"):
+                    up_plug = f'{ctl}.worldMatrix[0]'
+                elif cmds.objExists(f"{ctl}.outputMatrix"):
+                    up_plug = f'{ctl}.outputMatrix'
 
             cmds.delete(temp)
 
@@ -355,7 +383,7 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
 
                 cmds.setAttr(f'{aim}.primaryTargetMatrix', trans_wt_mat, type='matrix')
 
-        if up_plug == f'{jnts_grp}.worldMatrix':
+        if up_plug == f'{skeleton_grp}.worldMatrix':
             mod_mat = cmds.getAttr(up_plug)
             cmds.setAttr(f'{aim}.secondaryTargetMatrix', mod_mat, type='matrix')
         else:
@@ -381,7 +409,7 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
 
     
 
-    return jnts_grp, temp_nodes
+    return jnts, temp_nodes
 
 
 def get_consolidated_wts(wts, original_cvs, cvs):

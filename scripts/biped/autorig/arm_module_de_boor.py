@@ -60,6 +60,7 @@ class ArmModule(object):
                                 f"{self.side}_armIk": self.ik_wrist_ctl,
                                 f"{self.side}_armPv": self.pv_ctl,
                                 f"{self.side}_shoulderFk": self.fk_controllers[0],
+                                f"{self.side}_armIkRoot": self.ik_root_ctl,
                             })
 
     def lock_attributes(self, ctl, attrs):
@@ -179,7 +180,7 @@ class ArmModule(object):
         cmds.parent(crv_point_pv, self.pv_ctl)
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
-        self.lock_attributes(self.ik_root_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_root_nodes[0], ik_controllers_trn)
         cmds.matchTransform(self.ik_root_nodes[0], self.arm_chain[0], pos=True, rot=True)
 
@@ -524,11 +525,10 @@ class ArmModule(object):
         params[-1] = 0.95
 
         if self.side == "L":
-            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y') # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y')
-            
-        cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y', skeleton_grp=self.skeleton_grp)
+
         for t in temp:
             cmds.delete(t)
 

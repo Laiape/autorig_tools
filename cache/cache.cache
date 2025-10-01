@@ -1,6 +1,6 @@
 {
     "basic_structure": {
-        "character_name": "vitorio",
+        "character_name": "spot",
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
@@ -19,12 +19,14 @@
         "L_armIk": "L_armIkWrist_CTL",
         "L_armPv": "L_armPv_CTL",
         "L_shoulderFk": "L_shoulderFk_CTL",
+        "L_armIkRoot": "L_armIkRoot_CTL",
         "R_shoulder_JNT": "R_shoulder_JNT",
         "R_wrist_JNT": "R_wrist_JNT",
         "R_armSettings": "R_armSettings_CTL",
         "R_armIk": "R_armIkWrist_CTL",
         "R_armPv": "R_armPv_CTL",
-        "R_shoulderFk": "R_shoulderFk_CTL"
+        "R_shoulderFk": "R_shoulderFk_CTL",
+        "R_armIkRoot": "R_armIkRoot_CTL"
     },
     "clavicle_module": {
         "L_clavicle": "L_clavicle_CTL",

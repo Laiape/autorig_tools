@@ -41,6 +41,7 @@ class NeckModule(object):
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_neckModule_GRP", ss=True, p=self.modules)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
+        self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_neckSkinning_GRP", ss=True, p=self.skel_grp)
 
         self.load_guides()
         self.controller_creation()
@@ -118,19 +119,15 @@ class NeckModule(object):
         Set up the ribbon for the neck module.
         """
         sel = (self.neck_ctls[0], self.neck_ctls[-1])
-        self.skeleton_grp, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="y", up_axis="z") # Do the ribbon setup, with the created controllers
+        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="y", up_axis="z", skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
 
         for t in temp:
             cmds.delete(t)
-        
-        cmds.parent(self.skeleton_grp, self.skel_grp) # Parent the output skinning joints trn to skeleton_grp
 
-        self.joints = cmds.listRelatives(self.skeleton_grp, c=True, type="joint")
-
-        for jnt in self.joints:
+        for jnt in self.output_joints:
             cmds.setAttr(f"{jnt}.inheritsTransform", 1)
 
-
+    
     def local_head(self):
 
         """
@@ -141,7 +138,7 @@ class NeckModule(object):
         cmds.parent(self.head_jnt, self.module_trn)
 
         decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
-        cmds.connectAttr(f"{self.joints[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
+        cmds.connectAttr(f"{self.output_joints[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
         decompose_rotation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headRotation_DCM")
         cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation}.inputMatrix")
         compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")

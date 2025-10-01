@@ -212,16 +212,12 @@ class SpineModule(object):
             self.fk_controllers.append(fk_ctl)
 
         sel = (self.spine_ctls[0], self.spine_ctls[1], self.spine_ctls[2], self.spine_ctls[3], self.spine_ctls[4])
-        skeleton_grp, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
         for t in temp:
             cmds.delete(t)
     
-
-        # Get only the joints from skeleton_grp that have "spine" in their name
-        all_joints = cmds.listRelatives(skeleton_grp, c=True, type="joint") or []
-        self.joints = [jnt for jnt in all_joints if "spine" in jnt]
         jnt_connections = []
-        for i, jnt in enumerate(self.joints):
+        for i, jnt in enumerate(output_joints):
 
             cmds.setAttr(f"{jnt}.inheritsTransform", 0)
             # cmds.parent(jnt, self.skeleton_grp)

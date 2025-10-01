@@ -130,6 +130,7 @@ class LegModule(object):
         """
         Create controllers for the leg module.
         """
+        # FK Controllers
         self.fk_nodes = []
         self.fk_controllers = []
         self.blend_matrices = []
@@ -160,6 +161,7 @@ class LegModule(object):
         cmds.parent(self.fk_nodes[0], fk_controllers_trn)
         
 
+        # IK Controllers
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_legIkControllers_GRP", ss=True, p=self.controllers_grp)
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_legIkFkReverse", ss=True)
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{reverse_node}.inputX")
@@ -203,7 +205,7 @@ class LegModule(object):
         cmds.parent(self.ik_nodes[0], ik_controllers_trn)
 
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_legRootIk", offset=["GRP"])
-        self.lock_attributes(self.root_ik_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.root_ik_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.matchTransform(self.root_ik_nodes[0], self.leg_chain[0], pos=True, rot=True)
         cmds.xform(self.ik_chain[0], m=om.MMatrix.kIdentity)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
@@ -674,11 +676,9 @@ class LegModule(object):
         params[-1] = 0.95
 
         if self.side == "L":
-            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='z') # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='z', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            self.skinning_jnt_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='z')
-
-        cmds.parent(self.skinning_jnt_trn, self.skeleton_grp)
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='z', skeleton_grp=self.skeleton_grp)
 
         for t in temp:
             cmds.delete(t)
