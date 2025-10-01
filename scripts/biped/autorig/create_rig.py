@@ -44,7 +44,7 @@ class AutoRig(object):
         Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
         """
 
-        data_manager.DataExport().new_build()
+        data_manager.DataExportBiped().new_build()
 
         self.basic_structure()
         self.make_rig()
@@ -118,25 +118,25 @@ class AutoRig(object):
         """
 
         # Drivens
-        masterwalk = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
-        chest = data_manager.DataExport().get_data("spine_module", "local_chest_ctl")
-        body = data_manager.DataExport().get_data("spine_module", "body_ctl")
-        local_hip = data_manager.DataExport().get_data("spine_module", "local_hip_ctl")
-        head = data_manager.DataExport().get_data("neck_module", "head_ctl")
-        neck = data_manager.DataExport().get_data("neck_module", "neck_ctl")
+        masterwalk = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+        chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
+        body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
+        local_hip = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
+        head = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        neck = data_manager.DataExportBiped().get_data("neck_module", "neck_ctl")
 
         for side in ["L", "R"]:
 
             # Drivers
-            arm_ik = data_manager.DataExport().get_data("arm_module", f"{side}_armIk")
-            arm_pv = data_manager.DataExport().get_data("arm_module", f"{side}_armPv")
-            leg_ik = data_manager.DataExport().get_data("leg_module", f"{side}_legIk")
-            leg_pv = data_manager.DataExport().get_data("leg_module", f"{side}_legPv")
-            shoulder_fk = data_manager.DataExport().get_data("arm_module", f"{side}_shoulderFk")
-            hip_fk = data_manager.DataExport().get_data("leg_module", f"{side}_hipFk")
-            clavicle = data_manager.DataExport().get_data("clavicle_module", f"{side}_clavicle")
-            root_ik = data_manager.DataExport().get_data("leg_module", f"{side}_rootIk")
-            arm_ik_root = data_manager.DataExport().get_data("arm_module", f"{side}_armIkRoot")
+            arm_ik = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIk")
+            arm_pv = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armPv")
+            leg_ik = data_manager.DataExportBiped().get_data("leg_module", f"{side}_legIk")
+            leg_pv = data_manager.DataExportBiped().get_data("leg_module", f"{side}_legPv")
+            shoulder_fk = data_manager.DataExportBiped().get_data("arm_module", f"{side}_shoulderFk")
+            hip_fk = data_manager.DataExportBiped().get_data("leg_module", f"{side}_hipFk")
+            clavicle = data_manager.DataExportBiped().get_data("clavicle_module", f"{side}_clavicle")
+            root_ik = data_manager.DataExportBiped().get_data("leg_module", f"{side}_rootIk")
+            arm_ik_root = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIkRoot")
 
             # Space switches
             matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik

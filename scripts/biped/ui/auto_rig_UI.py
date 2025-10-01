@@ -8,7 +8,7 @@ from shiboken2 import wrapInstance
 import os
 
 from biped.utils import guides_manager
-from biped.autorig import spine_module
+from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import create_rig
 
 

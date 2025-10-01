@@ -95,7 +95,7 @@ def create_basic_structure():
     cmds.parent(character_node[0], nodes[2])
     cmds.parent(preferences_node[0], masterwalk_ctl)
     cmds.parent(masterwalk_node[0], character_ctl)
-    data_manager.DataExport().append_data("basic_structure",
+    data_manager.DataExportBiped().append_data("basic_structure",
                             {
                                 "character_name": character_name,
                                 "skel_GRP" : skel_grp,

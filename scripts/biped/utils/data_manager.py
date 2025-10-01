@@ -1,7 +1,7 @@
 import os
 import json
 
-class DataExport:
+class DataExportBiped:
     """
     Handles export, import, and management of rigging build cache data.
     Each module can append its own data for rig construction purposes.
@@ -15,7 +15,7 @@ class DataExport:
         complete_path = os.path.realpath(__file__)
         relative_path = complete_path.split("\scripts")[0]
         final_path = os.path.join(relative_path, "cache")   
-        self.build_path = os.path.join(final_path, "cache.cache")
+        self.build_path = os.path.join(final_path, "biped.cache")
 
 
     def new_build(self):
@@ -81,3 +81,16 @@ class DataExport:
                 return None
 
         return current_data.get(module_name, {}).get(attribute_name)
+
+class DataExportQuadruped(DataExportBiped):
+    
+    """
+    Inherits from DataExportBiped to handle quadruped-specific data management.
+    """
+    def __init__(self):
+
+        super().__init__()
+        complete_path = os.path.realpath(__file__)
+        relative_path = complete_path.split("\scripts")[0]
+        final_path = os.path.join(relative_path, "cache")   
+        self.build_path = os.path.join(final_path, "quadruped.cache")

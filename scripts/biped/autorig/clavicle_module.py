@@ -24,9 +24,9 @@ class ClavicleModule(object):
         Initialize the clavicleModule class, setting up the necessary groups and controllers.
         """
         
-        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
     def make(self, side):
 
@@ -47,7 +47,7 @@ class ClavicleModule(object):
         self.load_guides()
         self.auto_clavicle_setup()
 
-        data_manager.DataExport().append_data("clavicle_module",
+        data_manager.DataExportBiped().append_data("clavicle_module",
                             {
                                 f"{self.side}_clavicle": self.ctl_ik
                             })

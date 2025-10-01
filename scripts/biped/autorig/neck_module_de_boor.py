@@ -26,9 +26,9 @@ class NeckModule(object):
         Initialize the neckModule class, setting up the necessary groups and controllers.
         """
         
-        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
     def make(self, side):
 
@@ -49,7 +49,7 @@ class NeckModule(object):
         self.local_head()
 
 
-        data_manager.DataExport().append_data("neck_module",
+        data_manager.DataExportBiped().append_data("neck_module",
                             {
                                 "head_ctl": self.neck_ctls[-1],
                                 "neck_ctl": self.neck_ctls[0]

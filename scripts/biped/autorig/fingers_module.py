@@ -24,9 +24,9 @@ class FingersModule(object):
         Initialize the fingersModule class, setting up the necessary groups and controllers.
         """
         
-        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         
 
     def make(self, side):
@@ -38,7 +38,7 @@ class FingersModule(object):
 
         """
         self.side = side
-        self.wrist_jnt = data_manager.DataExport().get_data("arm_module", f"{self.side}_wrist_JNT")
+        self.wrist_jnt = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_wrist_JNT")
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_fingersModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_fingersSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_fingersControllers_GRP", ss=True, p=self.masterwalk_ctl)

@@ -254,72 +254,95 @@
         "shapes": [
             {
                 "name": "C_head_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": null,
+                "overrideEnabled": true,
+                "overrideColor": 17,
                 "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
+                "lineWidth": 1.2999999523162842,
                 "curve": {
                     "cvs": [
                         [
-                            -8.746648637123364,
-                            16.27935442291224,
-                            -6.039055349637514
+                            12.708156432429528,
+                            20.844403382331222,
+                            12.368195029682648
                         ],
                         [
-                            -12.369629127931955,
-                            16.27935442291224,
-                            2.707593287485807
+                            12.708156432429528,
+                            20.844403382331222,
+                            -12.368195122836283
                         ],
                         [
-                            -8.746648637123338,
-                            16.279354422912238,
-                            11.45424192460917
+                            -12.708156432429526,
+                            20.844403382331222,
+                            -12.368195122836283
                         ],
                         [
-                            -1.1511749494944556e-15,
-                            23.376464551890756,
-                            15.07722241541778
+                            -12.708156432429526,
+                            20.844403382331222,
+                            12.368195029682648
                         ],
                         [
-                            8.746648637123345,
-                            16.279354422912228,
-                            11.45424192460917
+                            12.708156432429528,
+                            20.844403382331222,
+                            12.368195029682648
                         ],
                         [
-                            12.369629127931955,
-                            16.279354422912238,
-                            2.7075932874858166
+                            12.708156432429528,
+                            18.701467012405917,
+                            12.368195029682648
                         ],
                         [
-                            8.746648637123345,
-                            16.279354422912245,
-                            -6.039055349637508
+                            12.708156432429528,
+                            18.701467012405917,
+                            -12.368195122836283
                         ],
                         [
-                            3.223289858584472e-15,
-                            23.376464551890777,
-                            -9.662035840446126
+                            12.708156432429528,
+                            20.844403382331222,
+                            -12.368195122836283
                         ],
                         [
-                            -8.746648637123364,
-                            16.27935442291224,
-                            -6.039055349637514
+                            12.708156432429528,
+                            18.701467012405917,
+                            -12.368195122836283
                         ],
                         [
-                            -12.369629127931955,
-                            16.27935442291224,
-                            2.707593287485807
+                            -12.708156432429526,
+                            18.701467012405917,
+                            -12.368195122836283
                         ],
                         [
-                            -8.746648637123338,
-                            16.279354422912238,
-                            11.45424192460917
+                            -12.708156432429526,
+                            20.844403382331222,
+                            -12.368195122836283
+                        ],
+                        [
+                            -12.708156432429526,
+                            18.701467012405917,
+                            -12.368195122836283
+                        ],
+                        [
+                            -12.708156432429526,
+                            18.701467012405917,
+                            12.368195029682648
+                        ],
+                        [
+                            -12.708156432429526,
+                            20.844403382331222,
+                            12.368195029682648
+                        ],
+                        [
+                            -12.708156432429526,
+                            18.701467012405917,
+                            12.368195029682648
+                        ],
+                        [
+                            12.708156432429528,
+                            18.701467012405917,
+                            12.368195029682648
                         ]
                     ],
-                    "form": "periodic",
+                    "form": "open",
                     "knots": [
-                        -2.0,
-                        -1.0,
                         0.0,
                         1.0,
                         2.0,
@@ -330,9 +353,14 @@
                         7.0,
                         8.0,
                         9.0,
-                        10.0
+                        10.0,
+                        11.0,
+                        12.0,
+                        13.0,
+                        14.0,
+                        15.0
                     ],
-                    "degree": 3
+                    "degree": 1
                 }
             }
         ]
@@ -783,134 +811,134 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.737559803321263,
-                            211.17838228702408,
-                            1.5202958757656566
+                            2.888610385050857,
+                            222.83059074452328,
+                            1.604181377063893
                         ],
                         [
-                            -1.212127792840185,
-                            211.17838228702408,
-                            1.5202958757656566
+                            -1.2790094763076976,
+                            222.83059074452328,
+                            1.604181377063893
                         ],
                         [
-                            -1.212127792840185,
-                            196.66880171594983,
-                            1.5202958757656566
+                            -1.2790094763076976,
+                            207.52041375058582,
+                            1.604181377063893
                         ],
                         [
-                            0.8217815544679218,
-                            196.66880171594983,
-                            1.5202958757656566
+                            0.867125068683185,
+                            207.52041375058582,
+                            1.604181377063893
                         ],
                         [
-                            0.8217815544679218,
-                            202.43668100137154,
-                            1.5202958757656566
+                            0.867125068683185,
+                            213.60654782640586,
+                            1.604181377063893
                         ],
                         [
-                            1.7360135338134843,
-                            202.43668100137154,
-                            1.5202958757656566
+                            1.8318017075932271,
+                            213.60654782640586,
+                            1.604181377063893
                         ],
                         [
-                            3.0508640209621585,
-                            202.51885915681834,
-                            1.5202958757656566
+                            3.219201817486322,
+                            213.6932603332741,
+                            1.604181377063893
                         ],
                         [
-                            4.2167666013635285,
-                            202.76025748844322,
-                            1.5202958757656566
+                            4.4494355086805975,
+                            213.94797832219982,
+                            1.604181377063893
                         ],
                         [
-                            5.228585140302155,
-                            203.17114826567723,
-                            1.5202958757656566
+                            5.517083249496766,
+                            214.38154085654145,
+                            1.604181377063893
                         ],
                         [
-                            6.086319637778043,
-                            203.74639535380476,
-                            1.5202958757656566
+                            6.422145039934835,
+                            214.9885284046195,
+                            1.604181377063893
                         ],
                         [
-                            6.774561689644932,
-                            204.4654542139641,
-                            1.5202958757656566
+                            7.148362284957007,
+                            215.74726283971734,
+                            1.604181377063893
                         ],
                         [
-                            7.262494487610259,
-                            205.31291644200928,
-                            1.5202958757656566
+                            7.663217794487648,
+                            216.64148556679697,
+                            1.604181377063893
                         ],
                         [
-                            7.560390301104872,
-                            206.27850976850897,
-                            1.5202958757656566
+                            7.977550631885292,
+                            217.6603575224996,
+                            1.604181377063893
                         ],
                         [
-                            7.657976860697947,
-                            207.37250646289448,
-                            1.5202958757656566
+                            8.080521733791429,
+                            218.81471777018413,
+                            1.604181377063893
                         ],
                         [
-                            7.606615513543696,
-                            208.13779053549274,
-                            1.5202958757656566
+                            8.026326416998721,
+                            219.62222799039537,
+                            1.604181377063893
                         ],
                         [
-                            7.462803741511822,
-                            208.81576031792883,
-                            1.5202958757656566
+                            7.8745795299791785,
+                            220.33760617205908,
+                            1.604181377063893
                         ],
                         [
-                            7.221405409886864,
-                            209.40641581020265,
-                            1.5202958757656566
+                            7.619861541053486,
+                            220.96085231517506,
+                            1.604181377063893
                         ],
                         [
-                            6.882420518668839,
-                            209.91489314702966,
-                            1.5202958757656566
+                            7.262172450221666,
+                            221.4973859514229,
+                            1.604181377063893
                         ],
                         [
-                            6.5691163010279485,
-                            210.23846963410125,
-                            1.5202958757656566
+                            6.931581017786207,
+                            221.83881644721657,
+                            1.604181377063893
                         ],
                         [
-                            6.209586870948235,
-                            210.5106847740189,
-                            1.5202958757656566
+                            6.5522138002373165,
+                            222.12605162621813,
+                            1.604181377063893
                         ],
                         [
-                            5.808968363145128,
-                            210.7315385667821,
-                            1.5202958757656566
+                            6.129490329254267,
+                            222.35909148842669,
+                            1.604181377063893
                         ],
                         [
-                            5.367260777618615,
-                            210.90103101239112,
-                            1.5202958757656566
+                            5.6634106048370505,
+                            222.5379360338426,
+                            1.604181377063893
                         ],
                         [
-                            4.853647306076165,
-                            211.0191621108459,
-                            1.5202958757656566
+                            5.1214574369100605,
+                            222.66258526246585,
+                            1.604181377063893
                         ],
                         [
-                            4.247583409656071,
-                            211.10647640100802,
-                            1.5202958757656566
+                            4.481952698756212,
+                            222.75471730101327,
+                            1.604181377063893
                         ],
                         [
-                            3.5387968189274868,
-                            211.1629738828778,
-                            1.5202958757656566
+                            3.7340573270169624,
+                            222.8143321494854,
+                            1.604181377063893
                         ],
                         [
-                            2.737559803321263,
-                            211.17838228702408,
-                            1.5202958757656566
+                            2.888610385050857,
+                            222.83059074452328,
+                            1.604181377063893
                         ]
                     ],
                     "form": "open",
@@ -947,7 +975,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL": {
         "transform": {
             "name": "C_spine00FK_CTL",
             "overrideEnabled": false,
@@ -1039,7 +1067,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL": {
         "transform": {
             "name": "C_spine00_CTL",
             "overrideEnabled": false,
@@ -1131,7 +1159,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL": {
         "transform": {
             "name": "C_spine01FK_CTL",
             "overrideEnabled": false,
@@ -1223,7 +1251,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine01Tan_GRP|C_spine01Tan_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine01Tan_GRP|C_spine01Tan_CTL": {
         "transform": {
             "name": "C_spine01Tan_CTL",
             "overrideEnabled": false,
@@ -1315,7 +1343,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL": {
         "transform": {
             "name": "C_spine02FK_CTL",
             "overrideEnabled": false,
@@ -1407,7 +1435,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL": {
         "transform": {
             "name": "C_spine03FK_CTL",
             "overrideEnabled": false,
@@ -1499,7 +1527,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL": {
         "transform": {
             "name": "C_spine03_CTL",
             "overrideEnabled": false,
@@ -1591,7 +1619,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL": {
         "transform": {
             "name": "C_spine04FK_CTL",
             "overrideEnabled": false,
@@ -1683,7 +1711,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL": {
         "transform": {
             "name": "C_spine05FK_CTL",
             "overrideEnabled": false,
@@ -1775,7 +1803,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL": {
         "transform": {
             "name": "C_spine06FK_CTL",
             "overrideEnabled": false,
@@ -1867,7 +1895,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL|C_spine06Tan_GRP|C_spine06Tan_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL|C_spine06Tan_GRP|C_spine06Tan_CTL": {
         "transform": {
             "name": "C_spine06Tan_CTL",
             "overrideEnabled": false,
@@ -1959,7 +1987,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL|C_spine07FK_GRP|C_spine07FK_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL|C_spine07FK_GRP|C_spine07FK_CTL": {
         "transform": {
             "name": "C_spine07FK_CTL",
             "overrideEnabled": false,
@@ -2051,7 +2079,7 @@
             }
         ]
     },
-    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL": {
+    "|spot|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL": {
         "transform": {
             "name": "C_spine07_CTL",
             "overrideEnabled": false,

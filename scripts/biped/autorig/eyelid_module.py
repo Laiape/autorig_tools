@@ -26,10 +26,10 @@ class EyelidModule(object):
         Initialize the eyelidModule class, setting up the necessary groups and controllers.
         """
         
-        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
-        self.head_ctl = data_manager.DataExport().get_data("neck_module", "head_ctl")
+        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+        self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     def make(self, side):
 

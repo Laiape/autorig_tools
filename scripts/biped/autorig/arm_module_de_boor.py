@@ -26,9 +26,9 @@ class ArmModule(object):
         Initialize the ArmModule class, setting up the necessary groups and controllers.
         """
         
-        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
     def make(self, side):
 
@@ -52,7 +52,7 @@ class ArmModule(object):
         self.soft_ik()
         self.de_boor_ribbon()
         
-        data_manager.DataExport().append_data("arm_module",
+        data_manager.DataExportBiped().append_data("arm_module",
                             {
                                 f"{self.side}_shoulder_JNT": self.arm_chain[0],
                                 f"{self.side}_wrist_JNT": self.arm_chain[-1],

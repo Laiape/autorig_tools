@@ -26,9 +26,9 @@ class SpineModule(object):
         Initialize the spineModule class, setting up the necessary groups and controllers.
         """
         
-        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
 
     def make(self, side):
 
@@ -52,7 +52,7 @@ class SpineModule(object):
 
 
 
-        data_manager.DataExportBiped().append_data("spine_module",
+        data_manager.DataExport().append_data("spine_module",
                             {
                                 "local_hip_ctl": self.local_hip_ctl,
                                 "body_ctl": self.body_ctl,
@@ -212,7 +212,7 @@ class SpineModule(object):
             self.fk_controllers.append(fk_ctl)
 
         sel = (self.spine_ctls[0], self.spine_ctls[1], self.spine_ctls[2], self.spine_ctls[3], self.spine_ctls[4])
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="x", up_axis="y", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
         for t in temp:
             cmds.delete(t)
     
@@ -236,88 +236,4 @@ class SpineModule(object):
                 cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
                 jnt_connections.append(jnt_connection)
 
-        # cmds.delete(self.skeleton_grp)
 
-    def stretch_activate(self):
-
-        """
-        Stretch activate
-        """
-        # Create the guides for the aim and blend matrix nodes
-        guide_00 = cmds.createNode("transform", name=f"{self.side}_spine00_Guide", ss=True, p=self.module_trn)
-        guide_01 = cmds.createNode("transform", name=f"{self.side}_spine01_Guide", ss=True, p=self.module_trn)
-        cmds.matchTransform(guide_00, self.spine_chain[0], pos=True, rot=True, scl=False)
-        cmds.matchTransform(guide_01, self.spine_chain[-1], pos=True, rot=True, scl=False)
-
-        aim_matrix_spine_00 = cmds.createNode("aimMatrix", name=f"{self.side}_spine00_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix_spine_00}.primaryInputAxis", 0, 1, 0, type="double3")
-        cmds.connectAttr(f"{guide_00}.worldMatrix[0]", f"{aim_matrix_spine_00}.inputMatrix")
-        cmds.connectAttr(f"{guide_01}.worldMatrix[0]", f"{aim_matrix_spine_00}.primaryTargetMatrix") # Aim at the next guide
-
-        blend_matrix_guide_04 = cmds.createNode("blendMatrix", name=f"{self.side}_spine04_BLM", ss=True)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].weight", 1)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].rotateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].shearWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].translateWeight", 0)
-        cmds.connectAttr(f"{guide_01}.worldMatrix[0]", f"{blend_matrix_guide_04}.inputMatrix") # First target is the guide itself
-        cmds.connectAttr(f"{aim_matrix_spine_00}.outputMatrix", f"{blend_matrix_guide_04}.target[0].targetMatrix")
-
-        blend_matrix_spine = cmds.createNode("blendMatrix", name=f"{self.side}_spine_BLM", ss=True)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].weight", 1)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].rotateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].shearWeight", 0)
-        cmds.connectAttr(f"{aim_matrix_spine_00}.outputMatrix", f"{blend_matrix_spine}.inputMatrix") # First target is the guide itself
-        cmds.connectAttr(f"{guide_01}.worldMatrix[0]", f"{blend_matrix_spine}.target[0].targetMatrix")
-
-        # Create the stretch attribute in the body controller
-        cmds.addAttr(self.body_ctl, longName="STRETCH", attributeType="enum", enumName="____", keyable=True)
-        cmds.setAttr(f"{self.body_ctl}.STRETCH", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.body_ctl, longName="Stretch", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
-
-        # Create the nodes to drive the stretch
-        distance_node = cmds.createNode("distanceBetween", name=f"{self.side}_spineStretch_DTB")
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{distance_node}.inMatrix1")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{distance_node}.inMatrix2") # Distance between the first and last spine joint
-
-        divide_node = cmds.createNode("divide", name=f"{self.side}_spineStretch_DIV")
-        cmds.connectAttr(f"{distance_node}.distance", f"{divide_node}.input1")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{divide_node}.input2")
-
-        distance_matrix_node = cmds.createNode("distanceBetween", name=f"{self.side}_spineStretchMatrix_DTB")
-        cmds.connectAttr(f"{aim_matrix_spine_00}.outputMatrix", f"{distance_matrix_node}.inMatrix1")
-        cmds.connectAttr(f"{blend_matrix_guide_04}.outputMatrix", f"{distance_matrix_node}.inMatrix2") # Distance between the first aim matrix and the last blend matrix
-
-        blend_two_attr_node = cmds.createNode("blendTwoAttr", name=f"{self.side}_spineStretch_B2A")
-        cmds.connectAttr(f"{self.body_ctl}.Stretch", f"{blend_two_attr_node}.attributesBlender")
-        cmds.connectAttr(f"{divide_node}.output", f"{blend_two_attr_node}.input[0]")   
-        cmds.connectAttr(f"{distance_matrix_node}.distance", f"{blend_two_attr_node}.input[1]") # Blend between no stretch and full stretch
-
-        four_by_four_matrix_node = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spineStretch_44M", ss=True)
-        cmds.connectAttr(f"{blend_two_attr_node}.output", f"{four_by_four_matrix_node}.in31")
-
-        blend_matrix_ctls = cmds.createNode("aimMatrix", name=f"{self.side}_spineStretch_AIM", ss=True)
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{blend_matrix_ctls}.inputMatrix")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_ctls}.primaryTargetMatrix") # Second target is the stretch matrix
-        cmds.setAttr(f"{blend_matrix_ctls}.primaryInputAxis", 0, 1, 0, type="double3")
-        
-        mult_matrix_stretch_node = cmds.createNode("multMatrix", name=f"{self.side}_spineStretch_MMX", ss=True)
-        cmds.connectAttr(f"{blend_matrix_ctls}.outputMatrix", f"{mult_matrix_stretch_node}.matrixIn[0]")
-        cmds.connectAttr(f"{four_by_four_matrix_node}.output", f"{mult_matrix_stretch_node}.matrixIn[1]") # Apply the stretch to the final blend matrix
-
-        
-
-        index = [1, 1- 1/len(self.spine_chain), 0.5, 1/len(self.spine_chain),  0]
-
-        self.blend_matrices = []
-        for i, ctl in enumerate(self.spine_ctls):
-            
-            blend_matrix_node = cmds.createNode("blendMatrix", name=ctl.replace("CTL", "BLM"), ss=True)
-            cmds.setAttr(f"{blend_matrix_node}.target[0].weight", index[i])
-            cmds.setAttr(f"{blend_matrix_node}.target[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix_node}.target[0].rotateWeight", 0)
-            cmds.setAttr(f"{blend_matrix_node}.target[0].shearWeight", 0)
-            cmds.connectAttr(f"{mult_matrix_stretch_node}.matrixSum", f"{blend_matrix_node}.inputMatrix", force=True)
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix", force=True) # Second target is the aim matrix
-            self.blend_matrices.append(blend_matrix_node)
