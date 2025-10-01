@@ -176,13 +176,11 @@ class EyelidModule(object):
         
 
         sel_upper = [ctl for ctl in self.upper_local_trn]
-        self.upper_skinning_jnt_trn, temp = ribbon.de_boor_ribbon(cvs=sel_upper, name=f"{self.side}_eyelidUpper", aim_axis='x', up_axis='y', num_joints=18)
+        self.upper_output_joints, temp = ribbon.de_boor_ribbon(cvs=sel_upper, name=f"{self.side}_eyelidUpper", aim_axis='x', up_axis='y', num_joints=18, skeleton_grp=self.skeleton_grp)
 
         sel_lower = [ctl_low for ctl_low in self.lower_local_trn]
-        self.lower_skinning_jnt_trn, temp_down = ribbon.de_boor_ribbon(cvs=sel_lower, name=f"{self.side}_eyelidLower", aim_axis="x", up_axis="y", num_joints=18)
+        self.lower_output_joints, temp_down = ribbon.de_boor_ribbon(cvs=sel_lower, name=f"{self.side}_eyelidLower", aim_axis="x", up_axis="y", num_joints=18, skeleton_grp=self.skeleton_grp)
 
-        cmds.parent(self.upper_skinning_jnt_trn, self.skeleton_grp)
-        cmds.parent(self.lower_skinning_jnt_trn, self.skeleton_grp)
         cmds.delete(temp, temp_down)
 
     def attributes(self):

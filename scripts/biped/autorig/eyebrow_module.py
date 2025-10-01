@@ -160,11 +160,11 @@ class EyebrowModule(object):
 
         sel = [trn for trn in self.local_trns]
 
-        self.skinning_trn, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_eyebrowSkinning", aim_axis='x', up_axis='y', num_joints=len(self.eyebrows))
+        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_eyebrowSkinning", aim_axis='x', up_axis='y', num_joints=len(self.eyebrows), skeleton_grp=self.skeleton_grp)
 
         for t in temp:
             cmds.delete(t)
-        cmds.parent(self.skinning_trn, self.skeleton_grp)
+
 
     def slide_setup(self):
 
@@ -177,7 +177,6 @@ class EyebrowModule(object):
         cmds.setAttr(f"{self.main_eyebrow_ctl}.SLIDE", keyable=False, channelBox=True)
         cmds.addAttr(self.main_eyebrow_ctl, longName="slide", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
-        skinning_joints = cmds.listRelatives(self.skinning_trn, c=True, type="joint")
 
         for i, jnt in enumerate(self.eyebrows):
 
@@ -196,12 +195,12 @@ class EyebrowModule(object):
             cmds.connectAttr(f"{point_on_surface_info}.normalizedTangentU", f"{aim_matrix}.secondaryTargetVector")
 
             parent_matrix = cmds.createNode("parentMatrix", name=jnt.replace("_JNT", "SlideParent_MMT"))
-            input_conns = cmds.listConnections(f"{skinning_joints[i]}.offsetParentMatrix", source=True, destination=True, plugs=True)
+            input_conns = cmds.listConnections(f"{self.output_joints[i]}.offsetParentMatrix", source=True, destination=True, plugs=True)
             cmds.connectAttr(f"{input_conns[0]}", f"{parent_matrix}.inputMatrix")
             cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{parent_matrix}.target[0].targetMatrix")
             cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{parent_matrix}.target[0].weight")
             self.get_offset_matrix(aim_matrix, input_conns[0])
-            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{skinning_joints[i]}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{self.output_joints[i]}.offsetParentMatrix", force=True)
 
 
     def get_offset_matrix(self, child, parent):

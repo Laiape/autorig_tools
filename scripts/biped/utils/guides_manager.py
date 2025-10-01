@@ -16,7 +16,7 @@ def get_guides_info():
 
     """
 
-    CHARACTER_NAME = data_manager.DataExport().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
 
     guides_transform = cmds.ls(selection=True, type="transform")[0]
 
@@ -210,7 +210,7 @@ def get_guides(guide_export):
         list: A list of guides found in the scene.
     """
 
-    CHARACTER_NAME = data_manager.DataExport().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
 
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]

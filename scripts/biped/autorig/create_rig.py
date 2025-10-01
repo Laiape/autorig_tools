@@ -2,11 +2,13 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
 
+# Utils
 from biped.utils import guides_manager
 from biped.utils import basic_structure
 from biped.utils import data_manager
 from biped.autorig.utilities import matrix_manager
 
+# Body mechanics
 from biped.autorig import arm_module_de_boor as arm_module
 from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import clavicle_module
@@ -14,13 +16,18 @@ from biped.autorig import leg_module_de_boor as leg_module
 from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
+# Facial
 from biped.autorig import eyebrow_module
 from biped.autorig import eyelid_module
+from biped.autorig import ear_module
 
+# Reload utils
 reload(guides_manager) 
 reload(basic_structure)
 reload(data_manager)
 reload(matrix_manager)
+
+# Reload body mechanics
 reload(arm_module)
 reload(spine_module)
 reload(leg_module)
@@ -28,8 +35,10 @@ reload(neck_module)
 reload(fingers_module)
 reload(clavicle_module)
 
+# Reload facial
 reload(eyebrow_module)
 reload(eyelid_module)
+reload(ear_module)
 
 
 class AutoRig(object):
@@ -82,10 +91,13 @@ class AutoRig(object):
         fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
-        # eyebrow_module.EyebrowModule().make("L")
-        # eyebrow_module.EyebrowModule().make("R")
-        # eyelid_module.EyelidModule().make("L")
-        # eyelid_module.EyelidModule().make("R")
+        eyebrow_module.EyebrowModule().make("L")
+        eyebrow_module.EyebrowModule().make("R")
+        eyelid_module.EyelidModule().make("L")
+        eyelid_module.EyelidModule().make("R")
+        ear_module.EarModule().make("L")
+        ear_module.EarModule().make("R")
+
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',
