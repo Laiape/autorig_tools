@@ -75,8 +75,10 @@ class NeckModule(object):
         """
 
         self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT")
+        cmds.select(clear=True)
+        self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT")
         cmds.parent(self.neck_chain[0], self.module_trn)
-
+        cmds.parent(self.throat_guide[0], self.module_trn)
        
 
     def controller_creation(self):
@@ -111,6 +113,14 @@ class NeckModule(object):
         cmds.xform(self.neck_chain[0], m=om.MMatrix.kIdentity)
         for i , ctl in enumerate(self.neck_ctls):
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+
+        throat_nodes, throat_ctl = curve_tool.create_controller(name=f"{self.side}_throat", offset=["GRP"], parent=self.neck_ctls[0])
+        self.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
+        cmds.matchTransform(throat_nodes[0], self.throat_guide[0], pos=True, rot=True, scl=False)
+        skin_throat_jnt = cmds.joint(name=f"{self.side}_throatSkinning_JNT")
+        cmds.parent(skin_throat_jnt, self.skeleton_grp)
+        cmds.connectAttr(f"{throat_ctl}.worldMatrix[0]", f"{skin_throat_jnt}.offsetParentMatrix")
+        cmds.xform(skin_throat_jnt, m=om.MMatrix.kIdentity)
 
 
     def ribbon_setup(self):

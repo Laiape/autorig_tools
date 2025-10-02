@@ -103,6 +103,7 @@ class EarModule(object):
         for i, guide in enumerate(self.ear_guides):
             
             nodes, ctl = curve_tool.create_controller(name=guide.replace("_JNT", ""), offset=["GRP", "ANM"])
+            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.matchTransform(nodes[0], guide)
             local_grp = cmds.createNode("transform", name=guide.replace("_JNT", "Local_GRP"), ss=True, p=self.module_trn)
             local_trn = cmds.createNode("transform", name=guide.replace("_JNT", "Local_TRN"), ss=True, p=local_grp)
