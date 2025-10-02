@@ -1,4 +1,96 @@
 {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL": {
+        "transform": {
+            "name": "C_baseNose_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_baseNose_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            3.896251399019842,
+                            1.860011043525064,
+                            -3.768866345489707
+                        ],
+                        [
+                            3.3739824955972415e-16,
+                            2.6304528439168755,
+                            0.0
+                        ],
+                        [
+                            -3.896251399019842,
+                            1.8600110435250634,
+                            -3.768866345489707
+                        ],
+                        [
+                            -5.510131570909001,
+                            1.3636313993181455e-16,
+                            -3.768866345489707
+                        ],
+                        [
+                            -3.896251399019842,
+                            -1.860011043525064,
+                            -3.768866345489707
+                        ],
+                        [
+                            -5.519536480094919e-16,
+                            -2.6304528439168777,
+                            0.0
+                        ],
+                        [
+                            3.896251399019842,
+                            -1.8600110435250634,
+                            -3.768866345489707
+                        ],
+                        [
+                            5.510131570909001,
+                            -3.587139255703695e-16,
+                            -3.768866345489707
+                        ],
+                        [
+                            3.896251399019842,
+                            1.860011043525064,
+                            -3.768866345489707
+                        ],
+                        [
+                            3.3739824955972415e-16,
+                            2.6304528439168755,
+                            0.0
+                        ],
+                        [
+                            -3.896251399019842,
+                            1.8600110435250634,
+                            -3.768866345489707
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL": {
         "transform": {
             "name": "C_body_CTL",
@@ -836,6 +928,190 @@
                             -18.796814062008036,
                             -8.237276712331607,
                             18.796814062008053
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_noseMain_GRP|C_noseMain_CTL": {
+        "transform": {
+            "name": "C_noseMain_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_noseMain_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.1052946493417338,
+                            0.021942675828491964
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            0.14890912114439922,
+                            1.738177086140107
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.10529464934173374,
+                            0.021942675828491964
+                        ],
+                        [
+                            -1.1081941875543881,
+                            7.719475135505939e-18,
+                            0.021942675828491964
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.10529464934173374,
+                            0.021942675828491964
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -0.14890912114439936,
+                            1.738177086140107
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.10529464934173374,
+                            0.021942675828491964
+                        ],
+                        [
+                            1.1081941875543881,
+                            -2.0306684273952776e-17,
+                            0.021942675828491964
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.1052946493417338,
+                            0.021942675828491964
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            0.14890912114439922,
+                            1.738177086140107
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.10529464934173374,
+                            0.021942675828491964
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|C_noseTip_GRP|C_noseTip_CTL": {
+        "transform": {
+            "name": "C_noseTip_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_noseTip_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.5789892612379246,
+                            0.5789892612379247,
+                            0.0
+                        ],
+                        [
+                            5.0137925726429495e-17,
+                            0.8188144657110517,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            0.5789892612379245,
+                            0.0
+                        ],
+                        [
+                            -0.818814465711052,
+                            4.244748649426025e-17,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            -0.5789892612379246,
+                            0.0
+                        ],
+                        [
+                            -8.202120504313131e-17,
+                            -0.8188144657110522,
+                            0.0
+                        ],
+                        [
+                            0.5789892612379246,
+                            -0.5789892612379245,
+                            0.0
+                        ],
+                        [
+                            0.818814465711052,
+                            -1.1166143958378354e-16,
+                            0.0
+                        ],
+                        [
+                            0.5789892612379246,
+                            0.5789892612379247,
+                            0.0
+                        ],
+                        [
+                            5.0137925726429495e-17,
+                            0.8188144657110517,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            0.5789892612379245,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -8042,6 +8318,190 @@
             }
         ]
     },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nose_GRP|L_nose_CTL": {
+        "transform": {
+            "name": "L_nose_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 6
+        },
+        "shapes": [
+            {
+                "name": "L_nose_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.5789892612379246,
+                            0.5789892612379247,
+                            0.0
+                        ],
+                        [
+                            5.0137925726429495e-17,
+                            0.8188144657110517,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            0.5789892612379245,
+                            0.0
+                        ],
+                        [
+                            -0.818814465711052,
+                            4.244748649426025e-17,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            -0.5789892612379246,
+                            0.0
+                        ],
+                        [
+                            -8.202120504313131e-17,
+                            -0.8188144657110522,
+                            0.0
+                        ],
+                        [
+                            0.5789892612379246,
+                            -0.5789892612379245,
+                            0.0
+                        ],
+                        [
+                            0.818814465711052,
+                            -1.1166143958378354e-16,
+                            0.0
+                        ],
+                        [
+                            0.5789892612379246,
+                            0.5789892612379247,
+                            0.0
+                        ],
+                        [
+                            5.0137925726429495e-17,
+                            0.8188144657110517,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            0.5789892612379245,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL": {
+        "transform": {
+            "name": "L_nosetril_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 6
+        },
+        "shapes": [
+            {
+                "name": "L_nosetril_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.39669016263538853,
+                            0.39669016263538864,
+                            0.0
+                        ],
+                        [
+                            3.435162487831575e-17,
+                            0.5610046080589548,
+                            0.0
+                        ],
+                        [
+                            -0.39669016263538853,
+                            0.3966901626353884,
+                            0.0
+                        ],
+                        [
+                            -0.5610046080589551,
+                            2.908257794776628e-17,
+                            0.0
+                        ],
+                        [
+                            -0.39669016263538853,
+                            -0.39669016263538853,
+                            0.0
+                        ],
+                        [
+                            -5.619621527788552e-17,
+                            -0.5610046080589554,
+                            0.0
+                        ],
+                        [
+                            0.39669016263538853,
+                            -0.3966901626353884,
+                            0.0
+                        ],
+                        [
+                            0.5610046080589551,
+                            -7.650400032271153e-17,
+                            0.0
+                        ],
+                        [
+                            0.39669016263538853,
+                            0.39669016263538864,
+                            0.0
+                        ],
+                        [
+                            3.435162487831575e-17,
+                            0.5610046080589548,
+                            0.0
+                        ],
+                        [
+                            -0.39669016263538853,
+                            0.3966901626353884,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_pinky00_GRP|L_pinky00_SDK|L_pinky00_CTL": {
         "transform": {
             "name": "L_pinky00_CTL",
@@ -15206,6 +15666,190 @@
                             -8.26527527606431e-15,
                             1.5524651531839737,
                             -1.5524651531840277
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nose_GRP|R_nose_CTL": {
+        "transform": {
+            "name": "R_nose_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 13
+        },
+        "shapes": [
+            {
+                "name": "R_nose_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.5789892612379246,
+                            0.5789892612379247,
+                            0.0
+                        ],
+                        [
+                            5.0137925726429495e-17,
+                            0.8188144657110517,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            0.5789892612379245,
+                            0.0
+                        ],
+                        [
+                            -0.818814465711052,
+                            4.244748649426025e-17,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            -0.5789892612379246,
+                            0.0
+                        ],
+                        [
+                            -8.202120504313131e-17,
+                            -0.8188144657110522,
+                            0.0
+                        ],
+                        [
+                            0.5789892612379246,
+                            -0.5789892612379245,
+                            0.0
+                        ],
+                        [
+                            0.818814465711052,
+                            -1.1166143958378354e-16,
+                            0.0
+                        ],
+                        [
+                            0.5789892612379246,
+                            0.5789892612379247,
+                            0.0
+                        ],
+                        [
+                            5.0137925726429495e-17,
+                            0.8188144657110517,
+                            0.0
+                        ],
+                        [
+                            -0.5789892612379246,
+                            0.5789892612379245,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL": {
+        "transform": {
+            "name": "R_nosetril_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 13
+        },
+        "shapes": [
+            {
+                "name": "R_nosetril_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.39669016263538853,
+                            0.39669016263538864,
+                            0.0
+                        ],
+                        [
+                            3.435162487831575e-17,
+                            0.5610046080589548,
+                            0.0
+                        ],
+                        [
+                            -0.39669016263538853,
+                            0.3966901626353884,
+                            0.0
+                        ],
+                        [
+                            -0.5610046080589551,
+                            2.908257794776628e-17,
+                            0.0
+                        ],
+                        [
+                            -0.39669016263538853,
+                            -0.39669016263538853,
+                            0.0
+                        ],
+                        [
+                            -5.619621527788552e-17,
+                            -0.5610046080589554,
+                            0.0
+                        ],
+                        [
+                            0.39669016263538853,
+                            -0.3966901626353884,
+                            0.0
+                        ],
+                        [
+                            0.5610046080589551,
+                            -7.650400032271153e-17,
+                            0.0
+                        ],
+                        [
+                            0.39669016263538853,
+                            0.39669016263538864,
+                            0.0
+                        ],
+                        [
+                            3.435162487831575e-17,
+                            0.5610046080589548,
+                            0.0
+                        ],
+                        [
+                            -0.39669016263538853,
+                            0.3966901626353884,
+                            0.0
                         ]
                     ],
                     "form": "periodic",

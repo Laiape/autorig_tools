@@ -20,6 +20,7 @@ from biped.autorig import fingers_module
 from biped.autorig import eyebrow_module
 from biped.autorig import eyelid_module
 from biped.autorig import ear_module
+from biped.autorig import nose_module
 
 # Reload utils
 reload(guides_manager) 
@@ -39,6 +40,7 @@ reload(clavicle_module)
 reload(eyebrow_module)
 reload(eyelid_module)
 reload(ear_module)
+reload(nose_module)
 
 
 class AutoRig(object):
@@ -97,7 +99,8 @@ class AutoRig(object):
         eyelid_module.EyelidModule().make("R")
         ear_module.EarModule().make("L")
         ear_module.EarModule().make("R")
-
+        nose_module.NoseModule().make("L")
+        nose_module.NoseModule().make("R")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',
