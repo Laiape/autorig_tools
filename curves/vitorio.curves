@@ -1039,7 +1039,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL": {
         "transform": {
             "name": "C_spine00FK_CTL",
             "overrideEnabled": false,
@@ -1131,7 +1131,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL": {
         "transform": {
             "name": "C_spine00_CTL",
             "overrideEnabled": false,
@@ -1223,7 +1223,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL": {
         "transform": {
             "name": "C_spine01FK_CTL",
             "overrideEnabled": false,
@@ -1315,7 +1315,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine01Tan_GRP|C_spine01Tan_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine01Tan_GRP|C_spine01Tan_CTL": {
         "transform": {
             "name": "C_spine01Tan_CTL",
             "overrideEnabled": false,
@@ -1407,7 +1407,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL": {
         "transform": {
             "name": "C_spine02FK_CTL",
             "overrideEnabled": false,
@@ -1499,7 +1499,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL": {
         "transform": {
             "name": "C_spine03FK_CTL",
             "overrideEnabled": false,
@@ -1591,7 +1591,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL": {
         "transform": {
             "name": "C_spine03_CTL",
             "overrideEnabled": false,
@@ -1683,7 +1683,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL": {
         "transform": {
             "name": "C_spine04FK_CTL",
             "overrideEnabled": false,
@@ -1775,7 +1775,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL": {
         "transform": {
             "name": "C_spine05FK_CTL",
             "overrideEnabled": false,
@@ -1867,7 +1867,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL": {
         "transform": {
             "name": "C_spine06FK_CTL",
             "overrideEnabled": false,
@@ -1959,7 +1959,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL|C_spine06Tan_GRP|C_spine06Tan_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL|C_spine06Tan_GRP|C_spine06Tan_CTL": {
         "transform": {
             "name": "C_spine06Tan_CTL",
             "overrideEnabled": false,
@@ -2051,7 +2051,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spineFKControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL|C_spine07FK_GRP|C_spine07FK_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL|C_spine07FK_GRP|C_spine07FK_CTL": {
         "transform": {
             "name": "C_spine07FK_CTL",
             "overrideEnabled": false,
@@ -2143,7 +2143,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_body_GRP|C_body_SPC|C_body_CTL|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_CTL": {
         "transform": {
             "name": "C_spine07_CTL",
             "overrideEnabled": false,
@@ -2787,7 +2787,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL": {
         "transform": {
             "name": "L_ankleFk_CTL",
             "overrideEnabled": false,
@@ -2879,7 +2879,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL": {
         "transform": {
             "name": "L_ankleIk_CTL",
             "overrideEnabled": false,
@@ -3543,7 +3543,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL": {
         "transform": {
             "name": "L_ballFk_CTL",
             "overrideEnabled": false,
@@ -3635,7 +3635,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL|L_ballIk_GRP|L_ballIk_SDK|L_ballIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL|L_ballIk_GRP|L_ballIk_SDK|L_ballIk_CTL": {
         "transform": {
             "name": "L_ballIk_CTL",
             "overrideEnabled": false,
@@ -3727,7 +3727,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL": {
         "transform": {
             "name": "L_bankIn_CTL",
             "overrideEnabled": false,
@@ -3819,7 +3819,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL": {
         "transform": {
             "name": "L_bankOut_CTL",
             "overrideEnabled": false,
@@ -4030,6 +4030,282 @@
             }
         ]
     },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL": {
+        "transform": {
+            "name": "L_ear00_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 6
+        },
+        "shapes": [
+            {
+                "name": "L_ear00_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            2.903711790140733e-15,
+                            1.3535882790911569,
+                            1.35358827909116
+                        ],
+                        [
+                            3.068427931539895e-15,
+                            1.91426290215997,
+                            1.8935716361930892e-15
+                        ],
+                        [
+                            2.616046671558871e-15,
+                            1.3535882790911562,
+                            -1.3535882790911526
+                        ],
+                        [
+                            2.711935044419492e-15,
+                            9.923572688147027e-17,
+                            -1.914262902159967
+                        ],
+                        [
+                            2.616046671558871e-15,
+                            -1.3535882790911569,
+                            -1.3535882790911526
+                        ],
+                        [
+                            3.068427931539894e-15,
+                            -1.9142629021599709,
+                            1.5846038152665396e-15
+                        ],
+                        [
+                            2.903711790140733e-15,
+                            -1.3535882790911562,
+                            1.35358827909116
+                        ],
+                        [
+                            2.711935044419492e-15,
+                            -2.6104735608376926e-16,
+                            1.914262902159974
+                        ],
+                        [
+                            2.903711790140733e-15,
+                            1.3535882790911569,
+                            1.35358827909116
+                        ],
+                        [
+                            3.068427931539895e-15,
+                            1.91426290215997,
+                            1.8935716361930892e-15
+                        ],
+                        [
+                            2.616046671558871e-15,
+                            1.3535882790911562,
+                            -1.3535882790911526
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL|L_ear01_GRP|L_ear01_ANM|L_ear01_CTL": {
+        "transform": {
+            "name": "L_ear01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_ear01_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            2.1705078701922185e-14,
+                            1.1011874335436695,
+                            1.1011874335436584
+                        ],
+                        [
+                            2.169964801625253e-14,
+                            1.5573142032322749,
+                            -1.454568695855459e-14
+                        ],
+                        [
+                            2.1627070438369578e-14,
+                            1.101187433543669,
+                            -1.1011874335436826
+                        ],
+                        [
+                            2.143204977948805e-14,
+                            5.8399921975626975e-15,
+                            -1.5573142032322869
+                        ],
+                        [
+                            2.1627070438369578e-14,
+                            -1.1011874335436695,
+                            -1.1011874335436826
+                        ],
+                        [
+                            2.169964801625253e-14,
+                            -1.5573142032322755,
+                            -1.4797042180101034e-14
+                        ],
+                        [
+                            2.1705078701922185e-14,
+                            -1.101187433543669,
+                            1.1011874335436584
+                        ],
+                        [
+                            2.158806630659324e-14,
+                            5.546890366224396e-15,
+                            1.5573142032322644
+                        ],
+                        [
+                            2.1705078701922185e-14,
+                            1.1011874335436695,
+                            1.1011874335436584
+                        ],
+                        [
+                            2.169964801625253e-14,
+                            1.5573142032322749,
+                            -1.454568695855459e-14
+                        ],
+                        [
+                            2.1627070438369578e-14,
+                            1.101187433543669,
+                            -1.1011874335436826
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL|L_ear01_GRP|L_ear01_ANM|L_ear01_CTL|L_ear02_GRP|L_ear02_ANM|L_ear02_CTL": {
+        "transform": {
+            "name": "L_ear02_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "L_ear02_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            2.2814100279125913e-14,
+                            1.0114887200576879,
+                            1.0114887200576455
+                        ],
+                        [
+                            2.2689389845111675e-14,
+                            1.4304610660929813,
+                            -4.104014696607662e-14
+                        ],
+                        [
+                            2.2634965292085554e-14,
+                            1.0114887200576874,
+                            -1.0114887200577296
+                        ],
+                        [
+                            2.252748429986128e-14,
+                            -4.058412603466634e-15,
+                            -1.430461066093029
+                        ],
+                        [
+                            2.2634965292085554e-14,
+                            -1.0114887200576879,
+                            -1.0114887200577296
+                        ],
+                        [
+                            2.2689389845111675e-14,
+                            -1.430461066092982,
+                            -4.1271027707699054e-14
+                        ],
+                        [
+                            2.2814100279125913e-14,
+                            -1.0114887200576874,
+                            1.0114887200576455
+                        ],
+                        [
+                            2.252748429986128e-14,
+                            -4.327639428252391e-15,
+                            1.4304610660929393
+                        ],
+                        [
+                            2.2814100279125913e-14,
+                            1.0114887200576879,
+                            1.0114887200576455
+                        ],
+                        [
+                            2.2689389845111675e-14,
+                            1.4304610660929813,
+                            -4.104014696607662e-14
+                        ],
+                        [
+                            2.2634965292085554e-14,
+                            1.0114887200576874,
+                            -1.0114887200577296
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_armControllers_GRP|L_armFkControllers_GRP|L_shoulderFk_GRP|L_shoulderFk_CTL|L_elbowFk_GRP|L_elbowFk_CTL": {
         "transform": {
             "name": "L_elbowFk_CTL",
@@ -4099,98 +4375,6 @@
                             -3.268361030051948e-14,
                             8.653987013725061,
                             -8.653987013725091
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyeDirect_GRP|L_eyeDirect_CTL": {
-        "transform": {
-            "name": "L_eyeDirect_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyeDirect_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.5,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.5369775403247115,
-                            0.5369775403247116,
-                            0.0
-                        ],
-                        [
-                            4.649989531066229e-17,
-                            0.7594009202169526,
-                            0.0
-                        ],
-                        [
-                            -0.5369775403247115,
-                            0.5369775403247113,
-                            0.0
-                        ],
-                        [
-                            -0.7594009202169528,
-                            3.936747780420023e-17,
-                            0.0
-                        ],
-                        [
-                            -0.5369775403247115,
-                            -0.5369775403247115,
-                            0.0
-                        ],
-                        [
-                            -7.606970955620298e-17,
-                            -0.759400920216953,
-                            0.0
-                        ],
-                        [
-                            0.5369775403247115,
-                            -0.5369775403247113,
-                            0.0
-                        ],
-                        [
-                            0.7594009202169528,
-                            -1.0355923536235891e-16,
-                            0.0
-                        ],
-                        [
-                            0.5369775403247115,
-                            0.5369775403247116,
-                            0.0
-                        ],
-                        [
-                            4.649989531066229e-17,
-                            0.7594009202169526,
-                            0.0
-                        ],
-                        [
-                            -0.5369775403247115,
-                            0.5369775403247113,
-                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -5668,1110 +5852,6 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_CTL|L_eyelidDown01_GRP|L_eyelidDown01_CTL": {
-        "transform": {
-            "name": "L_eyelidDown01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidDown01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 18,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDownIn_GRP|L_eyelidDownIn_CTL": {
-        "transform": {
-            "name": "L_eyelidDownIn_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidDownIn_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDownOut_GRP|L_eyelidDownOut_CTL": {
-        "transform": {
-            "name": "L_eyelidDownOut_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidDownOut_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_CTL": {
-        "transform": {
-            "name": "L_eyelidDown_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidDown_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            2.583511078128762e-17,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            -4.992114006539675e-17,
-                            -0.49836077888443037,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -6.796128345632865e-17,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidIn_GRP|L_eyelidIn_CTL|L_eyelidIn01_GRP|L_eyelidIn01_CTL": {
-        "transform": {
-            "name": "L_eyelidIn01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidIn01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 18,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidIn_GRP|L_eyelidIn_CTL": {
-        "transform": {
-            "name": "L_eyelidIn_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidIn_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            2.583511078128762e-17,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            -4.992114006539675e-17,
-                            -0.49836077888443037,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -6.796128345632865e-17,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_CTL|L_eyelidOut01_GRP|L_eyelidOut01_CTL": {
-        "transform": {
-            "name": "L_eyelidOut01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidOut01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 18,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_CTL": {
-        "transform": {
-            "name": "L_eyelidOut_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidOut_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            2.583511078128762e-17,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            -4.992114006539675e-17,
-                            -0.49836077888443037,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -6.796128345632865e-17,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_CTL|L_eyelidUp01_GRP|L_eyelidUp01_CTL": {
-        "transform": {
-            "name": "L_eyelidUp01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidUp01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 18,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUpIn_GRP|L_eyelidUpIn_CTL": {
-        "transform": {
-            "name": "L_eyelidUpIn_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidUpIn_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUpOut_GRP|L_eyelidUpOut_CTL": {
-        "transform": {
-            "name": "L_eyelidUpOut_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidUpOut_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_CTL": {
-        "transform": {
-            "name": "L_eyelidUp_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "L_eyelidUp_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 6,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            2.583511078128762e-17,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            -4.992114006539675e-17,
-                            -0.49836077888443037,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -6.796128345632865e-17,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_fingersAttributes_GRP|L_fingersAttributes_CTL": {
         "transform": {
             "name": "L_fingersAttributes_CTL",
@@ -6974,7 +6054,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL": {
         "transform": {
             "name": "L_heel_CTL",
             "overrideEnabled": false,
@@ -7066,7 +6146,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL": {
         "transform": {
             "name": "L_hipFk_CTL",
             "overrideEnabled": false,
@@ -7526,7 +6606,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL": {
         "transform": {
             "name": "L_kneeFk_CTL",
             "overrideEnabled": false,
@@ -7618,7 +6698,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerLowBendy_GRP|L_legLowerLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerLowBendy_GRP|L_legLowerLowBendy_CTL": {
         "transform": {
             "name": "L_legLowerLowBendy_CTL",
             "overrideEnabled": false,
@@ -7710,7 +6790,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerMainBendy_GRP|L_legLowerMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerMainBendy_GRP|L_legLowerMainBendy_CTL": {
         "transform": {
             "name": "L_legLowerMainBendy_CTL",
             "overrideEnabled": false,
@@ -7802,7 +6882,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legLowerUpBendy_GRP|L_legLowerUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legLowerUpBendy_GRP|L_legLowerUpBendy_CTL": {
         "transform": {
             "name": "L_legLowerUpBendy_CTL",
             "overrideEnabled": false,
@@ -7894,7 +6974,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legPv_GRP|L_legPv_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legPv_GRP|L_legPv_CTL": {
         "transform": {
             "name": "L_legPv_CTL",
             "overrideEnabled": false,
@@ -8014,7 +7094,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legRootIk_GRP|L_legRootIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_legRootIk_GRP|L_legRootIk_CTL": {
         "transform": {
             "name": "L_legRootIk_CTL",
             "overrideEnabled": true,
@@ -8216,7 +7296,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legSettings_GRP|L_legSettings_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legSettings_GRP|L_legSettings_CTL": {
         "transform": {
             "name": "L_legSettings_CTL",
             "overrideEnabled": false,
@@ -8318,7 +7398,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperLowBendy_GRP|L_legUpperLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperLowBendy_GRP|L_legUpperLowBendy_CTL": {
         "transform": {
             "name": "L_legUpperLowBendy_CTL",
             "overrideEnabled": false,
@@ -8410,7 +7490,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperMainBendy_GRP|L_legUpperMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperMainBendy_GRP|L_legUpperMainBendy_CTL": {
         "transform": {
             "name": "L_legUpperMainBendy_CTL",
             "overrideEnabled": false,
@@ -8502,7 +7582,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legUpperUpBendy_GRP|L_legUpperUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legUpperUpBendy_GRP|L_legUpperUpBendy_CTL": {
         "transform": {
             "name": "L_legUpperUpBendy_CTL",
             "overrideEnabled": false,
@@ -10066,7 +9146,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL|L_tipFk_GRP|L_tipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_CTL|L_ankleFk_GRP|L_ankleFk_CTL|L_ballFk_GRP|L_ballFk_CTL|L_tipFk_GRP|L_tipFk_CTL": {
         "transform": {
             "name": "L_tipFk_CTL",
             "overrideEnabled": false,
@@ -10158,7 +9238,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legIkControllers_GRP|L_ankleIk_GRP|L_ankleIk_SDK|L_ankleIk_CTL|L_bankOut_GRP|L_bankOut_SDK|L_bankOut_CTL|L_bankIn_GRP|L_bankIn_SDK|L_bankIn_CTL|L_heel_GRP|L_heel_SDK|L_heel_CTL|L_toeIk_GRP|L_toeIk_SDK|L_toeIk_CTL": {
         "transform": {
             "name": "L_toeIk_CTL",
             "overrideEnabled": false,
@@ -10894,7 +9974,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL": {
         "transform": {
             "name": "R_ankleFk_CTL",
             "overrideEnabled": false,
@@ -10986,7 +10066,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL": {
         "transform": {
             "name": "R_ankleIk_CTL",
             "overrideEnabled": false,
@@ -11650,7 +10730,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL": {
         "transform": {
             "name": "R_ballFk_CTL",
             "overrideEnabled": false,
@@ -11742,7 +10822,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL|R_ballIk_GRP|R_ballIk_SDK|R_ballIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL|R_ballIk_GRP|R_ballIk_SDK|R_ballIk_CTL": {
         "transform": {
             "name": "R_ballIk_CTL",
             "overrideEnabled": false,
@@ -11834,7 +10914,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL": {
         "transform": {
             "name": "R_bankIn_CTL",
             "overrideEnabled": false,
@@ -11926,7 +11006,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL": {
         "transform": {
             "name": "R_bankOut_CTL",
             "overrideEnabled": false,
@@ -12137,6 +11217,282 @@
             }
         ]
     },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL": {
+        "transform": {
+            "name": "R_ear00_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 13
+        },
+        "shapes": [
+            {
+                "name": "R_ear00_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            6.047144512433023e-15,
+                            1.3535882790911569,
+                            1.3535882790911626
+                        ],
+                        [
+                            6.13685586307979e-15,
+                            1.91426290215997,
+                            3.669928475593319e-15
+                        ],
+                        [
+                            6.047144512433023e-15,
+                            1.3535882790911562,
+                            -1.35358827909115
+                        ],
+                        [
+                            5.711535207420844e-15,
+                            1.0435804463998593e-14,
+                            -1.9142629021599626
+                        ],
+                        [
+                            6.047144512433023e-15,
+                            -1.3535882790911569,
+                            -1.35358827909115
+                        ],
+                        [
+                            6.13685586307979e-15,
+                            -1.9142629021599709,
+                            3.3609606546667855e-15
+                        ],
+                        [
+                            6.047144512433023e-15,
+                            -1.3535882790911562,
+                            1.3535882790911626
+                        ],
+                        [
+                            5.9992003260027015e-15,
+                            1.0075521381033365e-14,
+                            1.9142629021599766
+                        ],
+                        [
+                            6.047144512433023e-15,
+                            1.3535882790911569,
+                            1.3535882790911626
+                        ],
+                        [
+                            6.13685586307979e-15,
+                            1.91426290215997,
+                            3.669928475593319e-15
+                        ],
+                        [
+                            6.047144512433023e-15,
+                            1.3535882790911562,
+                            -1.35358827909115
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL|R_ear01_GRP|R_ear01_ANM|R_ear01_CTL": {
+        "transform": {
+            "name": "R_ear01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_ear01_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            3.47521970728577e-14,
+                            1.1011874335436695,
+                            1.1011874335436365
+                        ],
+                        [
+                            3.4662370514612695e-14,
+                            1.5573142032322749,
+                            -3.5403980847722755e-14
+                        ],
+                        [
+                            3.4557176413976113e-14,
+                            1.101187433543669,
+                            -1.1011874335436995
+                        ],
+                        [
+                            3.45961805457524e-14,
+                            5.8399921975626975e-15,
+                            -1.5573142032323102
+                        ],
+                        [
+                            3.4557176413976113e-14,
+                            -1.1011874335436695,
+                            -1.1011874335436995
+                        ],
+                        [
+                            3.4662370514612695e-14,
+                            -1.5573142032322755,
+                            -3.5655336069269273e-14
+                        ],
+                        [
+                            3.47521970728577e-14,
+                            -1.101187433543669,
+                            1.1011874335436365
+                        ],
+                        [
+                            3.45961805457524e-14,
+                            5.546890366224396e-15,
+                            1.557314203232244
+                        ],
+                        [
+                            3.47521970728577e-14,
+                            1.1011874335436695,
+                            1.1011874335436365
+                        ],
+                        [
+                            3.4662370514612695e-14,
+                            1.5573142032322749,
+                            -3.5403980847722755e-14
+                        ],
+                        [
+                            3.4557176413976113e-14,
+                            1.101187433543669,
+                            -1.1011874335436995
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL|R_ear01_GRP|R_ear01_ANM|R_ear01_CTL|R_ear02_GRP|R_ear02_ANM|R_ear02_CTL": {
+        "transform": {
+            "name": "R_ear02_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "R_ear02_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            1.706705410627692e-14,
+                            1.0114887200576879,
+                            1.0114887200576397
+                        ],
+                        [
+                            1.6957070259819393e-14,
+                            1.4304610660929813,
+                            -4.54810390645773e-14
+                        ],
+                        [
+                            1.706705410627692e-14,
+                            1.0114887200576874,
+                            -1.0114887200577352
+                        ],
+                        [
+                            1.674461112960425e-14,
+                            -4.058412603466634e-15,
+                            -1.4304610660930352
+                        ],
+                        [
+                            1.706705410627692e-14,
+                            -1.0114887200576879,
+                            -1.0114887200577352
+                        ],
+                        [
+                            1.6957070259819406e-14,
+                            -1.430461066092982,
+                            -4.571191980619974e-14
+                        ],
+                        [
+                            1.706705410627692e-14,
+                            -1.0114887200576874,
+                            1.0114887200576397
+                        ],
+                        [
+                            1.6887919119236572e-14,
+                            -4.327639428252391e-15,
+                            1.4304610660929338
+                        ],
+                        [
+                            1.706705410627692e-14,
+                            1.0114887200576879,
+                            1.0114887200576397
+                        ],
+                        [
+                            1.6957070259819393e-14,
+                            1.4304610660929813,
+                            -4.54810390645773e-14
+                        ],
+                        [
+                            1.706705410627692e-14,
+                            1.0114887200576874,
+                            -1.0114887200577352
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_armControllers_GRP|R_armFkControllers_GRP|R_shoulderFk_GRP|R_shoulderFk_CTL|R_elbowFk_GRP|R_elbowFk_CTL": {
         "transform": {
             "name": "R_elbowFk_CTL",
@@ -12206,98 +11562,6 @@
                             -7.219029957336716e-14,
                             8.65398701372501,
                             -8.653987013725091
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyeDirect_GRP|R_eyeDirect_CTL": {
-        "transform": {
-            "name": "R_eyeDirect_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyeDirect_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.5,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.5369775403247115,
-                            0.5369775403247116,
-                            0.0
-                        ],
-                        [
-                            4.649989531066229e-17,
-                            0.7594009202169526,
-                            0.0
-                        ],
-                        [
-                            -0.5369775403247115,
-                            0.5369775403247113,
-                            0.0
-                        ],
-                        [
-                            -0.7594009202169528,
-                            3.936747780420023e-17,
-                            0.0
-                        ],
-                        [
-                            -0.5369775403247115,
-                            -0.5369775403247115,
-                            0.0
-                        ],
-                        [
-                            -7.606970955620298e-17,
-                            -0.759400920216953,
-                            0.0
-                        ],
-                        [
-                            0.5369775403247115,
-                            -0.5369775403247113,
-                            0.0
-                        ],
-                        [
-                            0.7594009202169528,
-                            -1.0355923536235891e-16,
-                            0.0
-                        ],
-                        [
-                            0.5369775403247115,
-                            0.5369775403247116,
-                            0.0
-                        ],
-                        [
-                            4.649989531066229e-17,
-                            0.7594009202169526,
-                            0.0
-                        ],
-                        [
-                            -0.5369775403247115,
-                            0.5369775403247113,
-                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -13775,1110 +13039,6 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_CTL|R_eyelidDown01_GRP|R_eyelidDown01_CTL": {
-        "transform": {
-            "name": "R_eyelidDown01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidDown01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 12,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.1888041053407078,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -3.2074034149439404e-16,
-                            0.26700932640455866,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.1888041053407077,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.2670093264045793,
-                            -2.1559914819166434e-14,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534075298,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -3.6383645418257386e-16,
-                            -0.2670093264046003,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.1888041053407529,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.2670093264045793,
-                            -2.161016859736427e-14,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.1888041053407078,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -3.2074034149439404e-16,
-                            0.26700932640455866,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.1888041053407077,
-                            -6.741798946811739e-16
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDownIn_GRP|R_eyelidDownIn_CTL": {
-        "transform": {
-            "name": "R_eyelidDownIn_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidDownIn_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.1888041053407078,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -3.2074034149439404e-16,
-                            0.26700932640455866,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.1888041053407077,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.2670093264045793,
-                            -2.1559914819166434e-14,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534075298,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -3.6383645418257386e-16,
-                            -0.2670093264046003,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.1888041053407529,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.2670093264045793,
-                            -2.161016859736427e-14,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.1888041053407078,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -3.2074034149439404e-16,
-                            0.26700932640455866,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.1888041053407077,
-                            -6.741798946811739e-16
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDownOut_GRP|R_eyelidDownOut_CTL": {
-        "transform": {
-            "name": "R_eyelidDownOut_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidDownOut_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            -6.741798946811739e-16
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_CTL": {
-        "transform": {
-            "name": "R_eyelidDown_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidDown_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.35239428622657337,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -2.1386415016394613e-16,
-                            0.49836077888441677,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265732,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -0.49836077888443037,
-                            -1.561448148429173e-14,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862266065,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -2.9430108686341274e-16,
-                            -0.49836077888444363,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862266064,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            0.49836077888443037,
-                            -1.570827787852935e-14,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.35239428622657337,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -2.1386415016394613e-16,
-                            0.49836077888441677,
-                            -4.887598935960327e-16
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265732,
-                            -4.887598935960327e-16
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidIn_GRP|R_eyelidIn_CTL|R_eyelidIn01_GRP|R_eyelidIn01_CTL": {
-        "transform": {
-            "name": "R_eyelidIn01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidIn01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 12,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.1888041053407078,
-                            0.0
-                        ],
-                        [
-                            -1.5219536782410053e-16,
-                            0.26700932640455866,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.1888041053407077,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            -2.1559914819166434e-14,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534075298,
-                            0.0
-                        ],
-                        [
-                            -1.952914805122801e-16,
-                            -0.2670093264046003,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.1888041053407529,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -2.161016859736427e-14,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.1888041053407078,
-                            0.0
-                        ],
-                        [
-                            -1.5219536782410053e-16,
-                            0.26700932640455866,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.1888041053407077,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidIn_GRP|R_eyelidIn_CTL": {
-        "transform": {
-            "name": "R_eyelidIn_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidIn_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.35239428622657337,
-                            0.0
-                        ],
-                        [
-                            -9.167417676493806e-17,
-                            0.49836077888441677,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265732,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            -1.561448148429173e-14,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862266065,
-                            0.0
-                        ],
-                        [
-                            -1.7211111346440457e-16,
-                            -0.49836077888444363,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862266064,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -1.570827787852935e-14,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.35239428622657337,
-                            0.0
-                        ],
-                        [
-                            -9.167417676493806e-17,
-                            0.49836077888441677,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265732,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_CTL|R_eyelidOut01_GRP|R_eyelidOut01_CTL": {
-        "transform": {
-            "name": "R_eyelidOut01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidOut01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 12,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_CTL": {
-        "transform": {
-            "name": "R_eyelidOut_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidOut_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            2.583511078128762e-17,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            -4.992114006539675e-17,
-                            -0.49836077888443037,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -6.796128345632865e-17,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_CTL|R_eyelidUp01_GRP|R_eyelidUp01_CTL": {
-        "transform": {
-            "name": "R_eyelidUp01_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidUp01_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 12,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUpIn_GRP|R_eyelidUpIn_CTL": {
-        "transform": {
-            "name": "R_eyelidUpIn_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidUpIn_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -3.2074034149439404e-16,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -3.6383645418257386e-16,
-                            -0.2670093264045793,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            0.0
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            0.0
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            0.0
-                        ],
-                        [
-                            -3.2074034149439404e-16,
-                            0.2670093264045792,
-                            0.0
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUpOut_GRP|R_eyelidUpOut_CTL": {
-        "transform": {
-            "name": "R_eyelidUpOut_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidUpOut_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.2670093264045793,
-                            1.384181063112713e-17,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            -0.18880410534073047,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -2.6746506841986717e-17,
-                            -0.2670093264045793,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            -0.18880410534073036,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.2670093264045793,
-                            -3.641196756671965e-17,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            0.18880410534073047,
-                            0.18880410534073047,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            1.6349605846192962e-17,
-                            0.2670093264045792,
-                            -6.741798946811739e-16
-                        ],
-                        [
-                            -0.18880410534073047,
-                            0.18880410534073036,
-                            -6.741798946811739e-16
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_CTL": {
-        "transform": {
-            "name": "R_eyelidUp_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "R_eyelidUp_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 13,
-                "alwaysDrawOnTop": true,
-                "lineWidth": 1.2999999523162842,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            -0.49836077888443037,
-                            2.583511078128762e-17,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            -0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            -4.992114006539675e-17,
-                            -0.49836077888443037,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            -0.3523942862265903,
-                            0.0
-                        ],
-                        [
-                            0.49836077888443037,
-                            -6.796128345632865e-17,
-                            0.0
-                        ],
-                        [
-                            0.3523942862265904,
-                            0.3523942862265904,
-                            0.0
-                        ],
-                        [
-                            3.051579663406995e-17,
-                            0.49836077888443014,
-                            0.0
-                        ],
-                        [
-                            -0.3523942862265904,
-                            0.3523942862265903,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_fingersAttributes_GRP|R_fingersAttributes_CTL": {
         "transform": {
             "name": "R_fingersAttributes_CTL",
@@ -15081,7 +13241,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL": {
         "transform": {
             "name": "R_heel_CTL",
             "overrideEnabled": false,
@@ -15173,7 +13333,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL": {
         "transform": {
             "name": "R_hipFk_CTL",
             "overrideEnabled": false,
@@ -15633,7 +13793,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL": {
         "transform": {
             "name": "R_kneeFk_CTL",
             "overrideEnabled": false,
@@ -15725,7 +13885,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerLowBendy_GRP|R_legLowerLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerLowBendy_GRP|R_legLowerLowBendy_CTL": {
         "transform": {
             "name": "R_legLowerLowBendy_CTL",
             "overrideEnabled": false,
@@ -15817,7 +13977,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerMainBendy_GRP|R_legLowerMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerMainBendy_GRP|R_legLowerMainBendy_CTL": {
         "transform": {
             "name": "R_legLowerMainBendy_CTL",
             "overrideEnabled": false,
@@ -15909,7 +14069,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legLowerUpBendy_GRP|R_legLowerUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legLowerUpBendy_GRP|R_legLowerUpBendy_CTL": {
         "transform": {
             "name": "R_legLowerUpBendy_CTL",
             "overrideEnabled": false,
@@ -16001,7 +14161,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legPv_GRP|R_legPv_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legPv_GRP|R_legPv_CTL": {
         "transform": {
             "name": "R_legPv_CTL",
             "overrideEnabled": false,
@@ -16121,7 +14281,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legRootIk_GRP|R_legRootIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_legRootIk_GRP|R_legRootIk_CTL": {
         "transform": {
             "name": "R_legRootIk_CTL",
             "overrideEnabled": true,
@@ -16323,7 +14483,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legSettings_GRP|R_legSettings_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legSettings_GRP|R_legSettings_CTL": {
         "transform": {
             "name": "R_legSettings_CTL",
             "overrideEnabled": false,
@@ -16425,7 +14585,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperLowBendy_GRP|R_legUpperLowBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperLowBendy_GRP|R_legUpperLowBendy_CTL": {
         "transform": {
             "name": "R_legUpperLowBendy_CTL",
             "overrideEnabled": false,
@@ -16517,7 +14677,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperMainBendy_GRP|R_legUpperMainBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperMainBendy_GRP|R_legUpperMainBendy_CTL": {
         "transform": {
             "name": "R_legUpperMainBendy_CTL",
             "overrideEnabled": false,
@@ -16609,7 +14769,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legUpperUpBendy_GRP|R_legUpperUpBendy_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legUpperUpBendy_GRP|R_legUpperUpBendy_CTL": {
         "transform": {
             "name": "R_legUpperUpBendy_CTL",
             "overrideEnabled": false,
@@ -18173,7 +16333,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL|R_tipFk_GRP|R_tipFk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_CTL|R_ankleFk_GRP|R_ankleFk_CTL|R_ballFk_GRP|R_ballFk_CTL|R_tipFk_GRP|R_tipFk_CTL": {
         "transform": {
             "name": "R_tipFk_CTL",
             "overrideEnabled": false,
@@ -18265,7 +16425,7 @@
             }
         ]
     },
-    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localHip_GRP|C_localHip_SPC|C_localHip_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL": {
+    "|vitorio|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legIkControllers_GRP|R_ankleIk_GRP|R_ankleIk_SDK|R_ankleIk_CTL|R_bankOut_GRP|R_bankOut_SDK|R_bankOut_CTL|R_bankIn_GRP|R_bankIn_SDK|R_bankIn_CTL|R_heel_GRP|R_heel_SDK|R_heel_CTL|R_toeIk_GRP|R_toeIk_SDK|R_toeIk_CTL": {
         "transform": {
             "name": "R_toeIk_CTL",
             "overrideEnabled": false,

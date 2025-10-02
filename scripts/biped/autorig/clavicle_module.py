@@ -99,12 +99,12 @@ class ClavicleModule(object):
     def auto_clavicle_setup(self):
 
         cmds.select(clear=True)
-        shoulder = data_manager.DataExport().get_data("arm_module", f"{self.side}_shoulder_JNT")
-        armIk = data_manager.DataExport().get_data("arm_module", f"{self.side}_armIk") 
-        ctl_switch = data_manager.DataExport().get_data("arm_module", f"{self.side}_armSettings") 
-        spine_joints = data_manager.DataExport().get_data("spine_module", "last_spine_jnt") 
-        local_chest = data_manager.DataExport().get_data("spine_module", "local_chest_ctl")
-        body = data_manager.DataExport().get_data("spine_module", "body_ctl")
+        shoulder = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_shoulder_JNT")
+        armIk = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_armIk") 
+        ctl_switch = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_armSettings") 
+        spine_joints = data_manager.DataExportBiped().get_data("spine_module", "last_spine_jnt") 
+        local_chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
+        body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
 
         # cmds.scaleConstraint(self.masterwalk_ctl, self.module_trn, mo=True)
         
