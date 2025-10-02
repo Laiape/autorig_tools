@@ -127,13 +127,25 @@ class NoseModule(object):
 
         for i, guide in enumerate(self.nose_guides):
             nodes, ctl = curve_tool.create_controller(name=guide.replace("_JNT", ""), offset=["GRP"], parent=self.controllers_grp)
-            if self.side == "L" and i != 0:
-                cmds.parent(nodes[0], base_ctl)
-            elif self.side == "R":
-                cmds.parent(nodes[0], "C_baseNose_CTL")
-            
             cmds.matchTransform(nodes[0], guide)
             local_grp, local_trn = self.local(ctl)
+
+            if self.side == "L" and i != 0:
+
+                mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Offset_MLT"))
+                cmds.connectAttr(f"{base_ctl}.matrix", f"{mult_matrix}.matrixIn[0]")
+                cmds.connectAttr(f"{ctl}.matrix", f"{mult_matrix}.matrixIn[1]")
+                cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{local_trn}.offsetParentMatrix", force=True)
+                cmds.parent(nodes[0], base_ctl)
+
+            elif self.side == "R":
+                mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Offset_MLT"))
+                cmds.connectAttr("C_baseNose_CTL.matrix", f"{mult_matrix}.matrixIn[0]")
+                cmds.connectAttr(f"{ctl}.matrix", f"{mult_matrix}.matrixIn[1]")
+                cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{local_trn}.offsetParentMatrix", force=True)
+                cmds.parent(nodes[0], "C_baseNose_CTL")
+            
+            
             jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint
             cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
             skinning_joints.append(jnt)
