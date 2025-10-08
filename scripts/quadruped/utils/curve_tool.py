@@ -43,8 +43,7 @@ def get_all_ctl_curves_data():
     curves_name = cmds.promptDialog(query=True, text=True)
     CHARACTER_NAME = curves_name
     TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}.curves")
-    if "_" in curves_name:
-        curves_name = curves_name.split("_")[0]
+    
 
     for transform_name in transforms:
         shapes = cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []

@@ -129,8 +129,6 @@ def get_guides_info():
 
     om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.guides')}")
 
-
-
 def load_guides_info(filePath=None):
 
     """ Load guides information from a JSON file and create the guides in the scene."""
@@ -183,7 +181,6 @@ def load_guides_info(filePath=None):
     else:
 
         om.MGlobal.displayError("Guides group 'C_guides_GRP' already exists. Please delete it before loading new guides.")
-
 
 def delete_guides():
 
