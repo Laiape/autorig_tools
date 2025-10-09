@@ -9,7 +9,7 @@ from biped.utils import data_manager
 from biped.autorig.utilities import matrix_manager
 
 # Body mechanics
-from biped.autorig import arm_module_de_boor as arm_module
+from biped.autorig import arm_module_de_boor_02 as arm_module
 from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import clavicle_module
 from biped.autorig import leg_module_de_boor as leg_module
@@ -83,16 +83,16 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
         # ---- Body mechanics  ----
-        spine_module.SpineModule().make("C")
+        # spine_module.SpineModule().make("C")
         arm_module.ArmModule().make("L") 
-        arm_module.ArmModule().make("R")
-        clavicle_module.ClavicleModule().make("L")
-        clavicle_module.ClavicleModule().make("R")
-        leg_module.LegModule().make("L")
-        leg_module.LegModule().make("R")
-        neck_module.NeckModule().make("C")
-        fingers_module.FingersModule().make("L")
-        fingers_module.FingersModule().make("R")
+        # arm_module.ArmModule().make("R")
+        # clavicle_module.ClavicleModule().make("L")
+        # clavicle_module.ClavicleModule().make("R")
+        # leg_module.LegModule().make("L")
+        # leg_module.LegModule().make("R")
+        # neck_module.NeckModule().make("C")
+        # fingers_module.FingersModule().make("L")
+        # fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
         # eyebrow_module.EyebrowModule().make("L")
