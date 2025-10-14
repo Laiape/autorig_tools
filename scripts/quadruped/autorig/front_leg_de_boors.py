@@ -18,12 +18,12 @@ reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
 
-class FrontLegModule(object):
+class LegModule(object):
 
     def __init__(self):
 
         """
-        Initialize the frontLegModule class, setting up the necessary groups and controllers.
+        Initialize the LegModule class, setting up the necessary groups and controllers.
         """
         
         self.modules = data_manager.DataExportQuadruped().get_data("basic_structure", "modules_GRP")
@@ -31,19 +31,20 @@ class FrontLegModule(object):
         self.masterwalk_ctl = data_manager.DataExportQuadruped().get_data("basic_structure", "masterwalk_ctl")
         self.local_hip_ctl = data_manager.DataExportQuadruped().get_data("spine_module", "local_hip_ctl")
 
-    def make(self, side):
+    def make(self, side, name):
 
         """ 
-        Create the frontLeg module structure and controllers. Call this method with the side ('L' or 'R') to create the respective frontLeg module.
+        Create the {self.name} module structure and controllers. Call this method with the side ('L' or 'R') to create the respective {self.name} module.
         Args:
-            side (str): The side of the frontLeg ('L' or 'R').
-
+            side (str): The side of the {self.name} ('L' or 'R').
+            name (str): The name identifier for the {self.name} or backLeg module.
         """
+        self.name = name
         self.side = side
-        self.module_name = f"{self.side}_frontLeg"
-        self.module_trn = cmds.createNode("transform", name=f"{self.side}_frontLegModule_GRP", ss=True, p=self.modules)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_frontLegSkinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_frontLegControllers_GRP", ss=True, p=self.masterwalk_ctl)
+        self.module_name = f"{self.side}_{self.name}"
+        self.module_trn = cmds.createNode("transform", name=f"{self.side}_{self.name}Module_GRP", ss=True, p=self.modules)
+        self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_{self.name}Skinning_GRP", ss=True, p=self.skel_grp)
+        self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_{self.name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.load_guides()
         self.create_chains()
@@ -54,15 +55,15 @@ class FrontLegModule(object):
         self.soft_ik()
         self.de_boor_ribbon()
 
-        data_manager.DataExportQuadruped().append_data("frontLeg_module",
+        data_manager.DataExportQuadruped().append_data(f"{self.module_name}_module",
                             {
-                                f"{self.side}_hip_JNT": self.frontLeg_chain[0],
-                                f"{self.side}_knee_JNT": self.frontLeg_chain[1],
-                                f"{self.side}_ankle_JNT": self.frontLeg_chain[2],
-                                f"{self.side}_frontLegIk": self.ik_controllers[0],
-                                f"{self.side}_hipFk": self.fk_controllers[0],
-                                f"{self.side}_frontLegPv": self.pv_ctl,
-                                f"{self.side}_rootIk": self.root_ik_ctl,
+                                f"{self.side}_{self.name}Hip_JNT": self.leg_chain[0],
+                                f"{self.side}_{self.name}Knee_JNT": self.leg_chain[1],
+                                f"{self.side}_{self.name}Ankle_JNT": self.leg_chain[2],
+                                f"{self.side}_{self.name}Ik": self.ik_controllers[0],
+                                f"{self.side}_{self.name}HipFk": self.fk_controllers[0],
+                                f"{self.side}_{self.name}Pv": self.pv_ctl,
+                                f"{self.side}_{self.name}RootIk": self.root_ik_ctl,
                             })
 
     def lock_attributes(self, ctl, attrs):
@@ -77,19 +78,19 @@ class FrontLegModule(object):
         for attr in attrs:
             cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
     
-    def load_guides(self):
+    def load_guides(self, name):
 
-        self.frontLeg_chain = guides_manager.get_guides(f"{self.side}_hip_JNT")
-        cmds.parent(self.frontLeg_chain[0], self.module_trn)
-        self.settings_loc = guides_manager.get_guides(f"{self.side}_frontLegSettings_LOCShape")
-        self.bank_out_loc = guides_manager.get_guides(f"{self.side}_bankOut_LOCShape")
-        self.bank_in_loc = guides_manager.get_guides(f"{self.side}_bankIn_LOCShape")
-        self.heel_loc = guides_manager.get_guides(f"{self.side}_heel_LOCShape")
+        self.leg_chain = guides_manager.get_guides(f"{self.side}_{name}Hip_JNT")
+        cmds.parent(self.leg_chain[0], self.module_trn)
+        self.settings_loc = guides_manager.get_guides(f"{self.side}_{name}{self.name}Settings_LOCShape")
+        self.bank_out_loc = guides_manager.get_guides(f"{self.side}_{name}{self.name}BankOut_LOCShape")
+        self.bank_in_loc = guides_manager.get_guides(f"{self.side}_{name}{self.name}BankIn_LOCShape")
+        self.heel_loc = guides_manager.get_guides(f"{self.side}_{name}{self.name}Heel_LOCShape")
 
 
     def create_chains(self):
 
-        self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_frontLegSettings", offset=["GRP"])
+        self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_{self.name}Settings", offset=["GRP"])
         self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.matchTransform(self.settings_node[0], self.settings_loc, pos=True, rot=True)
         cmds.delete(self.settings_loc)
@@ -99,7 +100,7 @@ class FrontLegModule(object):
         self.fk_chain = []
         self.ik_chain = []
 
-        for joint in self.frontLeg_chain:
+        for joint in self.fk_chain:
 
             pair_blend = cmds.createNode("pairBlend", name=joint.replace("JNT", "PBL"), ss=True)
             cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{pair_blend}.weight")
@@ -128,22 +129,22 @@ class FrontLegModule(object):
     def controllers_creation(self):
 
         """
-        Create controllers for the frontLeg module.
+        Create controllers for the {self.name} module.
         """
         # FK Controllers
         self.fk_nodes = []
         self.fk_controllers = []
         self.blend_matrices = []
 
-        fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_frontLegFkControllers_GRP", ss=True, p=self.controllers_grp)
+        fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.name}FkControllers_GRP", ss=True, p=self.controllers_grp)
         
 
         for i, joint in enumerate(self.fk_chain):
 
             fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP"]) # create FK controllers
             self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-            
-            cmds.matchTransform(fk_node[0], self.frontLeg_chain[i], pos=True, rot=True)
+
+            cmds.matchTransform(fk_node[0], self.fk_chain[i], pos=True, rot=True)
 
             if self.fk_controllers:
                 cmds.parent(fk_node[0], self.fk_controllers[-1])
@@ -162,20 +163,20 @@ class FrontLegModule(object):
         
 
         # IK Controllers
-        ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_frontLegIkControllers_GRP", ss=True, p=self.controllers_grp)
-        reverse_node = cmds.createNode("reverse", name=f"{self.side}_frontLegIkFkReverse", ss=True)
+        ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.name}IkControllers_GRP", ss=True, p=self.controllers_grp)
+        reverse_node = cmds.createNode("reverse", name=f"{self.side}_{self.name}IkFkReverse", ss=True)
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{reverse_node}.inputX")
         cmds.connectAttr(f"{reverse_node}.outputX", f"{ik_controllers_trn}.visibility")
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{fk_controllers_trn}.visibility")
         
         ik_controller_dict = {
 
-            "ankleIk": self.frontLeg_chain[2],
+            "ankleIk": self.leg_chain[2],
             "bankOut": self.bank_out_loc,
             "bankIn": self.bank_in_loc,
             "heel": self.heel_loc,
-            "toeIk": self.frontLeg_chain[4],
-            "ballIk": self.frontLeg_chain[3]
+            "toeIk": self.leg_chain[4],
+            "ballIk": self.leg_chain[3]
             
         }
 
@@ -204,22 +205,22 @@ class FrontLegModule(object):
 
         cmds.parent(self.ik_nodes[0], ik_controllers_trn)
 
-        self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_frontLegRootIk", offset=["GRP"])
+        self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_{self.name}RootIk", offset=["GRP"])
         self.lock_attributes(self.root_ik_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-        cmds.matchTransform(self.root_ik_nodes[0], self.frontLeg_chain[0], pos=True, rot=True)
+        cmds.matchTransform(self.root_ik_nodes[0], self.ik_chain[0], pos=True, rot=True)
         cmds.xform(self.ik_chain[0], m=om.MMatrix.kIdentity)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
         for attr in ["translate", "rotate", "jointOrient"]:
             for axis in ["X", "Y", "Z"]:
                 cmds.setAttr(f"{self.ik_chain[0]}.{attr}{axis}", 0)
-                cmds.setAttr(f"{self.frontLeg_chain[0]}.{attr}{axis}", 0)
+                cmds.setAttr(f"{self.ik_chain[0]}.{attr}{axis}", 0)
 
         cmds.parent(self.root_ik_nodes[0], ik_controllers_trn)
 
-        self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_frontLegPv", offset=["GRP"])
+        self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_{self.name}Pv", offset=["GRP"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        cmds.matchTransform(self.pv_nodes[0], self.frontLeg_chain[1], pos=True, rot=True)
+        cmds.matchTransform(self.pv_nodes[0], self.ik_chain[1], pos=True, rot=True)
         
         cmds.select(self.pv_nodes[0])
         if self.side == "L":
@@ -227,11 +228,11 @@ class FrontLegModule(object):
         else:
             cmds.move(0, -30, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
-        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_frontLegPv_CRV") # Create a line that points always to the PV
-        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_frontLegPv_DCM", ss=True)
-        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_frontLegPvCtl_DCM", ss=True)
+        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_{self.name}Pv_CRV") # Create a line that points always to the PV
+        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_{self.name}Pv_DCM", ss=True)
+        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_{self.name}PvCtl_DCM", ss=True)
         cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
-        cmds.connectAttr(f"{self.frontLeg_chain[1]}.worldMatrix[0]", f"{decompose_knee}.inputMatrix")
+        cmds.connectAttr(f"{self.ik_chain[1]}.worldMatrix[0]", f"{decompose_knee}.inputMatrix")
         cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
         cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
@@ -243,9 +244,9 @@ class FrontLegModule(object):
     def ik_setup(self):
 
         """
-        Set up the IK handle for the frontLeg module.
+        Set up the IK handle for the {self.name} module.
         """
-        self.ik_handle = cmds.ikHandle(name=f"{self.side}_frontLegIk_HDL", startJoint=self.ik_chain[0], endEffector=self.ik_chain[-3], solver="ikRPsolver")[0]
+        self.ik_handle = cmds.ikHandle(name=f"{self.side}_{self.name}Ik_HDL", startJoint=self.ik_chain[0], endEffector=self.ik_chain[-3], solver="ikRPsolver")[0]
         self.ball_handle = cmds.ikHandle(name=f"{self.side}_ballIk_HDL", startJoint=self.ik_chain[-3], endEffector=self.ik_chain[-2], solver="ikSCsolver")[0]
         self.toe_handle = cmds.ikHandle(name=f"{self.side}_toeIk_HDL", startJoint=self.ik_chain[-2], endEffector=self.ik_chain[-1], solver="ikSCsolver")[0]
         cmds.parent(self.ik_handle, self.module_trn)
@@ -269,7 +270,7 @@ class FrontLegModule(object):
     def foot_attributes(self):
 
         """
-        Add foot attributes to the frontLeg module.
+        Add foot attributes to the {self.name} module.
         """
         cmds.addAttr(self.ik_controllers[0], longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
         cmds.setAttr(f"{self.ik_controllers[0]}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
@@ -293,7 +294,7 @@ class FrontLegModule(object):
         cmds.connectAttr(f"{self.ik_controllers[0]}.Ball_Twist", f"{self.ik_sdk_nodes[-2]}.rotateY")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Toe_Twist", f"{self.ik_sdk_nodes[-1]}.rotateY")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Heel_Twist", f"{self.ik_sdk_nodes[-3]}.rotateY")
-        bank_clamp = cmds.createNode("clamp", name=f"{self.side}_frontLegBank_CLM", ss=True)
+        bank_clamp = cmds.createNode("clamp", name=f"{self.side}_{self.name}Bank_CLM", ss=True)
         cmds.setAttr(f"{bank_clamp}.minG", -360)
         cmds.setAttr(f"{bank_clamp}.maxR", 360)
         cmds.connectAttr(f"{self.ik_controllers[0]}.Bank", f"{bank_clamp}.inputR")
@@ -305,34 +306,34 @@ class FrontLegModule(object):
             cmds.connectAttr(f"{bank_clamp}.outputG", f"{self.ik_sdk_nodes[2]}.rotateZ")
             cmds.connectAttr(f"{bank_clamp}.outputR", f"{self.ik_sdk_nodes[1]}.rotateZ")
 
-        roll_straight_angle = cmds.createNode("remapValue", name=f"{self.side}_frontLegRollStraightAngle_RMV", ss=True)
+        roll_straight_angle = cmds.createNode("remapValue", name=f"{self.side}_{self.name}RollStraightAngle_RMV", ss=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_straight_angle}.inputValue")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll_Straight_Angle", f"{roll_straight_angle}.inputMax")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll_Break_Angle", f"{roll_straight_angle}.inputMin")
         cmds.setAttr(f"{roll_straight_angle}.outputMin", 0)
         cmds.setAttr(f"{roll_straight_angle}.outputMax", 1)
 
-        multiply_divide_node = cmds.createNode("multiplyDivide", name=f"{self.side}_frontLegRollStraightAngle_MDV", ss=True)
+        multiply_divide_node = cmds.createNode("multiplyDivide", name=f"{self.side}_{self.name}RollStraightAngle_MDV", ss=True)
         cmds.setAttr(f"{multiply_divide_node}.operation", 1)
         cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{multiply_divide_node}.input1X")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{multiply_divide_node}.input2X")
         cmds.connectAttr(f"{multiply_divide_node}.outputX", f"{self.ik_sdk_nodes[-2]}.rotateX")
 
-        roll_break_angle = cmds.createNode("remapValue", name=f"{self.side}_frontLegRollBreakAngle_RMV", ss=True)
+        roll_break_angle = cmds.createNode("remapValue", name=f"{self.side}_{self.name}RollBreakAngle_RMV", ss=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_break_angle}.inputValue")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll_Break_Angle", f"{roll_break_angle}.inputMax")
         cmds.setAttr(f"{roll_break_angle}.outputMin", 0)
         cmds.setAttr(f"{roll_break_angle}.outputMax", 1)
 
-        reverse = cmds.createNode("reverse", name=f"{self.side}_frontLegRollBreakAngle_REV", ss=True)
+        reverse = cmds.createNode("reverse", name=f"{self.side}_{self.name}RollBreakAngle_REV", ss=True)
         cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{reverse}.inputX")
 
-        roll_angle_enable_mdv = cmds.createNode("multiplyDivide", name=f"{self.side}_frontLegRollAngleEnable_MDV", ss=True)
+        roll_angle_enable_mdv = cmds.createNode("multiplyDivide", name=f"{self.side}_{self.name}RollAngleEnable_MDV", ss=True)
         cmds.setAttr(f"{roll_angle_enable_mdv}.operation", 1)
         cmds.connectAttr(f"{reverse}.outputX", f"{roll_angle_enable_mdv}.input1X")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_angle_enable_mdv}.input2X")
 
-        roll_lift_angle_mdv = cmds.createNode("multiplyDivide", name=f"{self.side}_frontLegRollLiftAngle_MDV", ss=True)
+        roll_lift_angle_mdv = cmds.createNode("multiplyDivide", name=f"{self.side}_{self.name}RollLiftAngle_MDV", ss=True)
         cmds.setAttr(f"{roll_lift_angle_mdv}.operation", 1)
         cmds.connectAttr(f"{roll_break_angle}.outValue", f"{roll_lift_angle_mdv}.input1X")
         cmds.connectAttr(f"{roll_angle_enable_mdv}.outputX", f"{roll_lift_angle_mdv}.input2X")
@@ -341,7 +342,7 @@ class FrontLegModule(object):
     def fk_stretch(self):
 
         """
-        Setup FK stretch for the frontLeg module.
+        Setup FK stretch for the {self.name} module.
         """
 
         for ctl in self.fk_controllers:
@@ -350,8 +351,8 @@ class FrontLegModule(object):
             cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)
             cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
-        self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_frontLegUpperDoubleMultLinear_MDL")
-        self.lower_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_frontLegLowerDoubleMultLinear_MDL")
+        self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_{self.name}UpperDoubleMultLinear_MDL")
+        self.lower_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_{self.name}LowerDoubleMultLinear_MDL")
         cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input1")
         cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input1")
 
@@ -366,7 +367,7 @@ class FrontLegModule(object):
     def soft_ik(self):
 
         """
-        Setup soft IK for the frontLeg module.
+        Setup soft IK for the {self.name} module.
         """
 
         # --- Stretchy IK Controllers ---
@@ -399,16 +400,16 @@ class FrontLegModule(object):
 
         offset_matrix = child_world_matrix * parent_world_matrix.inverse()
 
-        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_frontLegIkHandleManager_TRN", ss=True, p=self.module_trn)
-        parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_frontLegSoftIkHDL_PM", ss=True)
+        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_{self.name}IkHandleManager_TRN", ss=True, p=self.module_trn)
+        parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_{self.name}SoftIkHDL_PM", ss=True)
         ankle_wM = cmds.getAttr(f"{self.ik_chain[2]}.worldMatrix[0]")
         cmds.setAttr(f"{parent_matrix}.inputMatrix", ankle_wM, type="matrix")
         cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
         cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
         cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{soft_ik_handle}.offsetParentMatrix")
 
-        self.soft_off = cmds.createNode("transform", name=f"{self.side}_frontLegSoft_OFF", p=self.module_trn)
-        aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_frontLegSoftOff_AMT", ss=True)
+        self.soft_off = cmds.createNode("transform", name=f"{self.side}_{self.name}Soft_OFF", p=self.module_trn)
+        aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_{self.name}SoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
         cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
         cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", 1)
@@ -420,36 +421,36 @@ class FrontLegModule(object):
         cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
 
-        self.soft_trn = cmds.createNode("transform", name=f"{self.side}_frontLegSoft_TRN", p=self.soft_off)
-        cmds.matchTransform(self.soft_trn, self.frontLeg_chain[2], pos=True)
+        self.soft_trn = cmds.createNode("transform", name=f"{self.side}_{self.name}Soft_TRN", p=self.soft_off)
+        cmds.matchTransform(self.soft_trn, self.ik_chain[2], pos=True)
 
         nodes_to_create = {
-        f"{self.side}_frontLegDistanceToControl_DBT": ("distanceBetween", None),  # 0
-        f"{self.side}_frontLegDistanceToControlNormalized_FLM": ("floatMath", 3),  # 1
-        f"{self.side}_frontLegSoftValue_RMV": ("remapValue", None),  # 2
-        f"{self.side}_frontLegDistanceToControlMinusSoftDistance_FLM": ("floatMath", 1),  # 3
-        f"{self.side}_frontLegUpperLength_FLM": ("floatMath", 2),  # 4
-        f"{self.side}_frontLegDistanceToControlMinusSoftDistanceDividedBySoftValue_FLM": ("floatMath", 3),  # 5
-        f"{self.side}_frontLegFullLength_FLM": ("floatMath", 0),  # 6
-        f"{self.side}_frontLegDistanceToControlMinusSoftDistanceDividedBySoftValueNegate_FLM": ("floatMath", 2),  # 7
-        f"{self.side}_frontLegSoftDistance_FLM": ("floatMath", 1),  # 8
-        f"{self.side}_frontLegSoftEPower_FLM": ("floatMath", 6),  # 9
-        f"{self.side}_frontLegLowerLength_FLM": ("floatMath", 2),  # 10
-        f"{self.side}_frontLegSoftOneMinusEPower_FLM": ("floatMath", 1),  # 11
-        f"{self.side}_frontLegSoftOneMinusEPowerSoftValueEnable_FLM": ("floatMath", 2),  # 12
-        f"{self.side}_frontLegSoftConstant_FLM": ("floatMath", 0),  # 13
-        f"{self.side}_frontLegLengthRatio_FLM": ("floatMath", 3),  # 14
-        f"{self.side}_frontLegSoftRatio_FLM": ("floatMath", 3),  # 15
-        f"{self.side}_frontLegDistanceToControlDividedByTheLengthRatio_FLM": ("floatMath", 3),  # 16
-        f"{self.side}_frontLegSoftEffectorDistance_FLM": ("floatMath", 2),  # 17
-        f"{self.side}_frontLegSoftCondition_CON": ("condition", None),  # 18
-        f"{self.side}_frontLegUpperLengthStretch_FLM": ("floatMath", 2),  # 19
-        f"{self.side}_frontLegDistanceToControlDividedByTheSoftEffector_FLM": ("floatMath", 3),  # 20
-        f"{self.side}_frontLegDistanceToControlDividedByTheSoftEffectorMinusOne_FLM": ("floatMath", 1),  # 21
-        f"{self.side}_frontLegDistanceToControlDividedByTheSoftEffectorMinusOneMultipliedByTheStretch_FLM": ("floatMath", 2),  # 22
-        f"{self.side}_frontLegStretchFactor_FLM": ("floatMath", 0),  # 23
-        f"{self.side}_frontLegSoftEffectStretchDistance_FLM": ("floatMath", 2),  # 24
-        f"{self.side}_frontLegLowerLengthStretch_FLM": ("floatMath", 2),  # 25
+        f"{self.side}_{self.name}DistanceToControl_DBT": ("distanceBetween", None),  # 0
+        f"{self.side}_{self.name}DistanceToControlNormalized_FLM": ("floatMath", 3),  # 1
+        f"{self.side}_{self.name}SoftValue_RMV": ("remapValue", None),  # 2
+        f"{self.side}_{self.name}DistanceToControlMinusSoftDistance_FLM": ("floatMath", 1),  # 3
+        f"{self.side}_{self.name}UpperLength_FLM": ("floatMath", 2),  # 4
+        f"{self.side}_{self.name}DistanceToControlMinusSoftDistanceDividedBySoftValue_FLM": ("floatMath", 3),  # 5
+        f"{self.side}_{self.name}FullLength_FLM": ("floatMath", 0),  # 6
+        f"{self.side}_{self.name}DistanceToControlMinusSoftDistanceDividedBySoftValueNegate_FLM": ("floatMath", 2),  # 7
+        f"{self.side}_{self.name}SoftDistance_FLM": ("floatMath", 1),  # 8
+        f"{self.side}_{self.name}SoftEPower_FLM": ("floatMath", 6),  # 9
+        f"{self.side}_{self.name}LowerLength_FLM": ("floatMath", 2),  # 10
+        f"{self.side}_{self.name}SoftOneMinusEPower_FLM": ("floatMath", 1),  # 11
+        f"{self.side}_{self.name}SoftOneMinusEPowerSoftValueEnable_FLM": ("floatMath", 2),  # 12
+        f"{self.side}_{self.name}SoftConstant_FLM": ("floatMath", 0),  # 13
+        f"{self.side}_{self.name}LengthRatio_FLM": ("floatMath", 3),  # 14
+        f"{self.side}_{self.name}SoftRatio_FLM": ("floatMath", 3),  # 15
+        f"{self.side}_{self.name}DistanceToControlDividedByTheLengthRatio_FLM": ("floatMath", 3),  # 16
+        f"{self.side}_{self.name}SoftEffectorDistance_FLM": ("floatMath", 2),  # 17
+        f"{self.side}_{self.name}SoftCondition_CON": ("condition", None),  # 18
+        f"{self.side}_{self.name}UpperLengthStretch_FLM": ("floatMath", 2),  # 19
+        f"{self.side}_{self.name}DistanceToControlDividedByTheSoftEffector_FLM": ("floatMath", 3),  # 20
+        f"{self.side}_{self.name}DistanceToControlDividedByTheSoftEffectorMinusOne_FLM": ("floatMath", 1),  # 21
+        f"{self.side}_{self.name}DistanceToControlDividedByTheSoftEffectorMinusOneMultipliedByTheStretch_FLM": ("floatMath", 2),  # 22
+        f"{self.side}_{self.name}StretchFactor_FLM": ("floatMath", 0),  # 23
+        f"{self.side}_{self.name}SoftEffectStretchDistance_FLM": ("floatMath", 2),  # 24
+        f"{self.side}_{self.name}LowerLengthStretch_FLM": ("floatMath", 2),  # 25
         }
 
         self.created_nodes = []
@@ -526,8 +527,8 @@ class FrontLegModule(object):
             cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
             cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
         else:
-            abs_up = cmds.createNode("floatMath", n=f"{self.side}_frontLegAbsUpper_FLM")
-            abs_low = cmds.createNode("floatMath", n=f"{self.side}_frontLegAbsLower_FLM")
+            abs_up = cmds.createNode("floatMath", n=f"{self.side}_{self.name}AbsUpper_FLM")
+            abs_low = cmds.createNode("floatMath", n=f"{self.side}_{self.name}AbsLower_FLM")
             cmds.setAttr(f"{abs_up}.operation", 2)
             cmds.setAttr(f"{abs_low}.operation", 2)
             cmds.setAttr(f"{abs_up}.floatB", -1)
@@ -553,13 +554,13 @@ class FrontLegModule(object):
         secondary_aim_vector = (0, -1, 0)
 
         guides = []
-        for node in self.frontLeg_chain:
+        for node in self.leg_chain:
             
             guide = cmds.createNode("transform", name=node.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
             cmds.matchTransform(guide, node, pos=True, rot=True)
             guides.append(guide)
 
-        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_frontLegGuides_AIM", ss=True)
+        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_{self.name}Guides_AIM", ss=True)
         cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
         cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
         cmds.connectAttr(f"{guides[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
@@ -568,9 +569,9 @@ class FrontLegModule(object):
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
 
 
-        nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_frontLegNonRollAlign_BLM", ss=True)
-        nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_frontLegNonRollAim_AMX", ss=True)
-        nonRollMasterWalk_mmx = cmds.createNode("multMatrix", name=f"{self.side}_frontLegNonRollMasterWalk_MMX", ss=True)
+        nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_{self.name}NonRollAlign_BLM", ss=True)
+        nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_{self.name}NonRollAim_AMX", ss=True)
+        nonRollMasterWalk_mmx = cmds.createNode("multMatrix", name=f"{self.side}_{self.name}NonRollMasterWalk_MMX", ss=True)
 
         cmds.connectAttr(f"{guides_aim}.outputMatrix", f"{nonRollMasterWalk_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{nonRollMasterWalk_mmx}.matrixIn[1]")
@@ -591,10 +592,10 @@ class FrontLegModule(object):
 
         cmds.select(clear=True)
         ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")
-        cmds.connectAttr(f"{self.frontLeg_chain[-2]}.worldMatrix[0]", f"{ball_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.leg_chain[-2]}.worldMatrix[0]", f"{ball_skinning_jnt}.offsetParentMatrix")
         cmds.select(clear=True)
         ankle_skinning_jnt = cmds.joint(name=f"{self.module_name}AnkleSkinning_JNT")
-        cmds.connectAttr(f"{self.frontLeg_chain[-3]}.worldMatrix[0]", f"{ankle_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.leg_chain[-3]}.worldMatrix[0]", f"{ankle_skinning_jnt}.offsetParentMatrix")
         cmds.parent(ankle_skinning_jnt, self.skeleton_grp)
         cmds.parent(ball_skinning_jnt, self.skeleton_grp)
 

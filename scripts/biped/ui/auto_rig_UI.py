@@ -312,8 +312,10 @@ class UI(QtWidgets.QMainWindow):
         self.delete_rig_button = QtWidgets.QPushButton("Create Quadruped Rig")
         self.delete_rig_button.setIcon(QtGui.QIcon("*"))
         self.delete_rig_button.setIconSize(QtCore.QSize(200,3))
+        import quadruped.autorig.create_rig
+        reload(quadruped.autorig.create_rig)
+
  
-        self.delete_rig_button.setToolTip("Create all quadruped rig")
 
     def populate_curves_interactions(self):
 
@@ -365,8 +367,11 @@ class UI(QtWidgets.QMainWindow):
         build_rig.build()
 
     def create_quadruped_rig_connections(self):
+        from quadruped.autorig import create_rig
+        reload(create_rig)
 
-        print("Quadruped rig created!") # To be implemented
+        build_rig = create_rig.AutoRig()
+        build_rig.build()
 
 
     def export_curves_connections(self):
@@ -409,7 +414,7 @@ class UI(QtWidgets.QMainWindow):
 
 
         self.create_rig_button.clicked.connect(self.create_biped_rig_connections)
-        self.delete_rig_button.clicked.connect(lambda: self.rig_connections("deleted"))
+        self.delete_rig_button.clicked.connect(self.create_quadruped_rig_connections)
 
         self.export_curves_button.clicked.connect(self.export_curves_connections)
         self.export_skin_weights_button.clicked.connect(self.export_skin_weights_connections)

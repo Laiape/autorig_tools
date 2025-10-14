@@ -3,25 +3,18 @@ import maya.api.OpenMaya as om
 from importlib import reload
 
 # Utils
-from biped.utils import guides_manager
-from biped.utils import basic_structure
-from biped.utils import data_manager
+from quadruped.utils import guides_manager
+from quadruped.utils import basic_structure
+from quadruped.utils import data_manager
 from biped.autorig.utilities import matrix_manager
 
 # Body mechanics
-from biped.autorig import arm_module_de_boor as arm_module
-from biped.autorig import spine_module_de_boor as spine_module
-from biped.autorig import clavicle_module
-from biped.autorig import leg_module_de_boor as leg_module
-from biped.autorig import neck_module_de_boor as neck_module
-from biped.autorig import fingers_module
+# from quadruped.autorig import arm_module_de_boor as arm_module
+from quadruped.autorig import spine_module as spine_module
+# from quadruped.autorig import clavicle_module
+from quadruped.autorig import front_leg_de_boors as leg_module
+# from quadruped.autorig import neck_module_de_boor as neck_module
 
-# Facial
-from biped.autorig import eyebrow_module
-from biped.autorig import eyelid_module
-from biped.autorig import ear_module
-from biped.autorig import nose_module
-from biped.autorig import jaw_module
 
 # Reload utils
 reload(guides_manager) 
@@ -30,19 +23,9 @@ reload(data_manager)
 reload(matrix_manager)
 
 # Reload body mechanics
-reload(arm_module)
 reload(spine_module)
 reload(leg_module)
-reload(neck_module)
-reload(fingers_module)
-reload(clavicle_module)
 
-# Reload facial
-reload(eyebrow_module)
-reload(eyelid_module)
-reload(ear_module)
-reload(nose_module)
-reload(jaw_module)
 
 
 class AutoRig(object):
@@ -57,11 +40,11 @@ class AutoRig(object):
         Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
         """
 
-        data_manager.DataExportBiped().new_build()
+        data_manager.DataExportQuadruped().new_build()
 
         self.basic_structure()
         self.make_rig()
-        self.space_switches()
+        # self.space_switches()
         self.label_joints()
         self.hide_connections()
         self.inherit_transforms()
@@ -83,7 +66,10 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
         # ---- Body mechanics  ----
-        pass
+        spine_module.SpineModule().make("C")
+        leg_module.LegModule().make("L", "frontLeg")
+        leg_module.LegModule().make("R", "frontLeg")
+
 
         cmds.inViewMessage(
     amg='Completed <hl>QUADRUPED RIG</hl> build.',
@@ -116,25 +102,25 @@ class AutoRig(object):
         """
 
         # Drivens
-        masterwalk = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
-        chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
-        body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
-        local_hip = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
-        head = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
-        neck = data_manager.DataExportBiped().get_data("neck_module", "neck_ctl")
+        masterwalk = data_manager.DataExportQuadruped().get_data("basic_structure", "masterwalk_ctl")
+        chest = data_manager.DataExportQuadruped().get_data("spine_module", "local_chest_ctl")
+        body = data_manager.DataExportQuadruped().get_data("spine_module", "body_ctl")
+        local_hip = data_manager.DataExportQuadruped().get_data("spine_module", "local_hip_ctl")
+        head = data_manager.DataExportQuadruped().get_data("neck_module", "head_ctl")
+        neck = data_manager.DataExportQuadruped().get_data("neck_module", "neck_ctl")
 
         for side in ["L", "R"]:
 
             # Drivers
-            arm_ik = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIk")
-            arm_pv = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armPv")
-            leg_ik = data_manager.DataExportBiped().get_data("leg_module", f"{side}_legIk")
-            leg_pv = data_manager.DataExportBiped().get_data("leg_module", f"{side}_legPv")
-            shoulder_fk = data_manager.DataExportBiped().get_data("arm_module", f"{side}_shoulderFk")
-            hip_fk = data_manager.DataExportBiped().get_data("leg_module", f"{side}_hipFk")
-            clavicle = data_manager.DataExportBiped().get_data("clavicle_module", f"{side}_clavicle")
-            root_ik = data_manager.DataExportBiped().get_data("leg_module", f"{side}_rootIk")
-            arm_ik_root = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIkRoot")
+            arm_ik = data_manager.DataExportQuadruped().get_data("arm_module", f"{side}_armIk")
+            arm_pv = data_manager.DataExportQuadruped().get_data("arm_module", f"{side}_armPv")
+            leg_ik = data_manager.DataExportQuadruped().get_data("leg_module", f"{side}_legIk")
+            leg_pv = data_manager.DataExportQuadruped().get_data("leg_module", f"{side}_legPv")
+            shoulder_fk = data_manager.DataExportQuadruped().get_data("arm_module", f"{side}_shoulderFk")
+            hip_fk = data_manager.DataExportQuadruped().get_data("leg_module", f"{side}_hipFk")
+            clavicle = data_manager.DataExportQuadruped().get_data("clavicle_module", f"{side}_clavicle")
+            root_ik = data_manager.DataExportQuadruped().get_data("leg_module", f"{side}_rootIk")
+            arm_ik_root = data_manager.DataExportQuadruped().get_data("arm_module", f"{side}_armIkRoot")
 
             # Space switches
             matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik

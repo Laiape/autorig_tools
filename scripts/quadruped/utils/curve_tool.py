@@ -3,7 +3,7 @@ import maya.api.OpenMaya as om
 import json
 import os
 
-from biped.utils import data_manager
+from quadruped.utils import data_manager
 
 if os.path.exists("C:/GITHUB/curves"):
     TEMPLATE_PATH = "C:/GITHUB/curves"
@@ -153,7 +153,7 @@ def build_curves_from_template(target_transform_name=None):
     Returns:
         list: A list of created transform names.
     """
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = data_manager.DataExportQuadruped().get_data("basic_structure", "character_name")
     TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}.curves")
 
     if not os.path.exists(TEMPLATE_FILE):

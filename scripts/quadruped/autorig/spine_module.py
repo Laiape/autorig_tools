@@ -4,9 +4,9 @@ from importlib import reload
 import os
 import math
 
-from biped.utils import data_manager
-from biped.utils import guides_manager
-from biped.utils import curve_tool
+from quadruped.utils import data_manager
+from quadruped.utils import guides_manager
+from quadruped.utils import curve_tool
 
 from biped.autorig.utilities import matrix_manager
 from biped.autorig.utilities import ribbon
@@ -25,10 +25,10 @@ class SpineModule(object):
         """
         Initialize the spineModule class, setting up the necessary groups and controllers.
         """
-        
-        self.modules = data_manager.DataExport().get_data("basic_structure", "modules_GRP")
-        self.skel_grp = data_manager.DataExport().get_data("basic_structure", "skel_GRP")
-        self.masterwalk_ctl = data_manager.DataExport().get_data("basic_structure", "masterwalk_ctl")
+
+        self.modules = data_manager.DataExportQuadruped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportQuadruped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportQuadruped().get_data("basic_structure", "masterwalk_ctl")
 
     def make(self, side):
 
@@ -52,7 +52,7 @@ class SpineModule(object):
 
 
 
-        data_manager.DataExport().append_data("spine_module",
+        data_manager.DataExportQuadruped().append_data("spine_module",
                             {
                                 "local_hip_ctl": self.local_hip_ctl,
                                 "body_ctl": self.body_ctl,
@@ -132,6 +132,7 @@ class SpineModule(object):
 
             if i == (len(self.spine_chain) - 1) // 2:
 
+                print(jnt.replace("_JNT", ""))
                 mid_nodes, mid_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
 
                 cmds.parent(mid_nodes[0], self.spine_ctls[0])
