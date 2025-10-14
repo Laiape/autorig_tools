@@ -266,25 +266,25 @@ class FingersModule(object):
         cmds.addAttr(self.finger_attributes_ctl, ln="THUMB_TWIST", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
         cmds.addAttr(self.finger_attributes_ctl, ln="THUMB_FAN", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
 
-        self.fingers_attributes_callback(self.fk_thumb_nodes[0], values=[None], thumb_attributes=[0,0,0,0,0,0, 10, -10])
+        self.fingers_attributes_callback(self.fk_thumb_sdk[0], values=[None], thumb_attributes=[0,0,0,0,0,0, 10, -10])
         self.fingers_attributes_callback(self.fk_thumb_sdk[1], values=[None], thumb_attributes=[-90, 20, -20, 20, 20, -20, 0, 0])
         self.fingers_attributes_callback(self.fk_thumb_sdk[2], values=[None], thumb_attributes=[-80, 18, 0, 0, 10, -10, 0, 0])
 
-        self.fingers_attributes_callback(self.fk_index_nodes[1], values=[-90, 20, -25, 15, 20, -20, 30, -30], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_index_nodes[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_index_nodes[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_index_sdk[1], values=[-90, 20, -25, 15, 20, -20, 30, -30], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_index_sdk[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_index_sdk[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
 
-        self.fingers_attributes_callback(self.fk_middle_nodes[1], values=[-90, 20, 2, -2, 20, -20, -2, 2], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_middle_nodes[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_middle_nodes[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_middle_sdk[1], values=[-90, 20, 2, -2, 20, -20, -2, 2], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_middle_sdk[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_middle_sdk[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
 
-        self.fingers_attributes_callback(self.fk_ring_nodes[1], values=[-90, 20, 15, -10, 20, -20, -20, 20], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_ring_nodes[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_ring_nodes[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_ring_sdk[1], values=[-90, 20, 15, -10, 20, -20, -20, 20], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_ring_sdk[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_ring_sdk[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
 
-        self.fingers_attributes_callback(self.fk_pinky_nodes[1], values=[-90, 20, 30, -15, 20, -20, -50, 50], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_pinky_nodes[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
-        self.fingers_attributes_callback(self.fk_pinky_nodes[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_pinky_sdk[1], values=[-90, 20, 30, -15, 20, -20, -50, 50], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_pinky_sdk[2], values=[-80, 18, 0, 0, 10, -10, 0, 0], thumb_attributes=[None])
+        self.fingers_attributes_callback(self.fk_pinky_sdk[3], values=[-80, 15, 0, 0, 5, -5, 0, 0], thumb_attributes=[None])
 
     def fingers_attributes_callback(self, ctl, values=[None], thumb_attributes=[None]):
 

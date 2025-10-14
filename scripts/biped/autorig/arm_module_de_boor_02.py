@@ -87,10 +87,11 @@ class ArmModule(object):
         self.secondary_axis = (0, 1, 0)
 
         self.guides = [] # List to store guide names
-        for node in self.arm_chain:
+        for i, node in enumerate(self.arm_chain):
             
             guide = cmds.createNode("transform", name=node.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
             cmds.matchTransform(guide, node, pos=True, rot=True)
+            cmds.setAttr(f"{guide}.rotate", 0, 0, 0, type="double3")
             if self.guides:
                 cmds.parent(guide, self.guides[-1])
             self.guides.append(guide)

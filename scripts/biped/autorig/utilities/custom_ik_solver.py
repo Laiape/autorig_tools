@@ -93,14 +93,14 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
         acos_lower = cmds.createNode('acos', name=guides_01_name.replace('GUIDE', 'ACOS'), ss=True)
         cmds.connectAttr(divide_lower+'.output', acos_lower+'.input') # (a2+b2-c2)/2ab
 
-        subtract_angle = cmds.createNode('subtract', name=guides_02_name.replace('GUIDE', 'SUB'), ss=True)
+        subtract_angle = cmds.createNode('subtract', name=guides_02_name.replace('_GUIDE', 'Angle_SUB'), ss=True)
         float_constant_180 = cmds.createNode('floatConstant', name=guides_02_name.replace('GUIDE', 'FCN'), ss=True)
         cmds.setAttr(float_constant_180+'.inFloat', 180) # 180 degrees in radians
         cmds.connectAttr(float_constant_180+'.outFloat', subtract_angle+'.input1') # 180 degrees
-        cmds.connectAttr(acos_node+'.output', subtract_angle+'.input2') # upper angle
+        cmds.connectAttr(acos_lower+'.output', subtract_angle+'.input2') # upper angle
 
-        negate_node = cmds.createNode('negate', name=guides_02_name.replace('GUIDE', 'NEG'), ss=True)
-        cmds.connectAttr(acos_lower+'.output', negate_node+'.input') # lower angle
+        negate_node = cmds.createNode('negate', name=guides_02_name.replace('_GUIDE', 'AngleNegate_NEG'), ss=True)
+        cmds.connectAttr(subtract_angle+'.output', negate_node+'.input') # lower angle
 
         # Upper WM
         aim_matrix = cmds.createNode('aimMatrix', name=guides_02_name.replace('_GUIDE', 'Eff_AMX'), ss=True) # aim matrix for end controller,
@@ -114,7 +114,7 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
 
 
         sin_upper = cmds.createNode('sin', name=guides_00_name.replace('GUIDE', 'SIN'), ss=True)
-        four_by_four_up_local_rotation = cmds.createNode('fourByFourMatrix', name=guides_00_name.replace('_GUIDE', 'LocalRotation_FBF'), ss=True) # local rotation matrix for upper arm
+        four_by_four_up_local_rotation = cmds.createNode('fourByFourMatrix', name=guides_00_name.replace('_GUIDE', 'LocalRotation_F4FX'), ss=True) # local rotation matrix for upper arm
         negate_sin = cmds.createNode('negate', name=guides_00_name.replace('_GUIDE', 'Sin_NEG'), ss=True)
         cmds.connectAttr(acos_node+'.output', sin_upper+'.input') # upper angle
         cmds.connectAttr(sin_upper+'.output', negate_sin+'.input') # negate sin
@@ -130,16 +130,16 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
         #  ----- This will be used to connect it to the blend matrix later -----
 
         # Lower WM
-        four_by_four_low_local_rotation = cmds.createNode('fourByFourMatrix', name=guides_01_name.replace('_GUIDE', 'Local_FBF'), ss=True) # local matrix for lower arm
+        four_by_four_low_local_rotation = cmds.createNode('fourByFourMatrix', name=guides_01_name.replace('_GUIDE', 'Local_F4FX'), ss=True) # local matrix for lower arm
         sin_lower = cmds.createNode('sin', name=guides_01_name.replace('GUIDE', 'SIN'), ss=True)
         negate_sin_lower = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'Sin_NEG'), ss=True)
         negate_cos_lower = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'Cos_NEG'), ss=True)
         cmds.connectAttr(divide_lower+'.output', negate_cos_lower+'.input') # negate cos
-        cmds.connectAttr(acos_lower+'.output', sin_lower+'.input') # lower angle
+        cmds.connectAttr(negate_node+'.output', sin_lower+'.input') # lower angle
         cmds.connectAttr(sin_lower+'.output', negate_sin_lower+'.input') # negate sin
         cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in00') # -cos
-        cmds.connectAttr(sin_lower+'.output', four_by_four_low_local_rotation+'.in01') # sin
-        cmds.connectAttr(negate_sin_lower+'.output', four_by_four_low_local_rotation+'.in10') # -sin
+        cmds.connectAttr(negate_sin_lower+'.output', four_by_four_low_local_rotation+'.in01') # sin
+        cmds.connectAttr(sin_lower+'.output', four_by_four_low_local_rotation+'.in10') # -sin
         cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in11') # -cos
         if side == 'L':
                 cmds.connectAttr(distance_between_up+'.distance', four_by_four_low_local_rotation+'.in30') # position x, add the position
@@ -150,8 +150,8 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
 
 
         mult_matrix_lower_rwm = cmds.createNode('multMatrix', name=guides_01_name.replace('_GUIDE', 'LowWM_MMT'), ss=True) # world matrix rotation mult for lower arm
-        cmds.connectAttr(upper_wm, mult_matrix_lower_rwm+'.matrixIn[0]') # connect upper world matrix to lower world matrix
-        cmds.connectAttr(four_by_four_low_local_rotation+'.output', mult_matrix_lower_rwm+'.matrixIn[1]') # connect local rotation to world matrix
+        cmds.connectAttr(upper_wm, mult_matrix_lower_rwm+'.matrixIn[1]') # connect upper world matrix to lower world matrix
+        cmds.connectAttr(four_by_four_low_local_rotation+'.output', mult_matrix_lower_rwm+'.matrixIn[0]') # connect local rotation to world matrix
         lower_wm = mult_matrix_lower_rwm+'.matrixSum' # lower world matrix
         lower_lm = four_by_four_low_local_rotation+'.output' # lower local matrix
         # ----- This will be used to connect it to the blend matrix later -----
