@@ -38,11 +38,16 @@ class NoseModule(object):
 
         """
         self.side = side
-        self.module_name = f"{self.side}_nose"
-        self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
+        self.module_name = f"C_nose"
+        if cmds.objExists(f"{self.module_name}Module_GRP"):
+            self.module_trn = f"{self.module_name}Module_GRP"
+            self.skeleton_grp = f"{self.module_name}Skinning_GRP"
+            self.controllers_grp = f"{self.module_name}Controllers_GRP"
+        else:
+            self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
+            cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
+            self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
 
         self.load_guides()
         self.create_controllers()
@@ -157,5 +162,6 @@ class NoseModule(object):
             cmds.delete(guide)
         
         
-
+# nose = NoseModule().make("L")
+# nose = NoseModule().make("R")
 

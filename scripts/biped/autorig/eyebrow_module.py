@@ -40,16 +40,21 @@ class EyebrowModule(object):
 
         """
         self.side = side
-        self.module_name = f"{self.side}_eyebrow"
-        self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
+        self.module_name = f"C_eyebrow"
+        if cmds.objExists(f"{self.module_name}Module_GRP"):
+            self.module_trn = f"{self.module_name}Module_GRP"
+            self.skeleton_grp = f"{self.module_name}Skinning_GRP"
+            self.controllers_grp = f"{self.module_name}Controllers_GRP"
+        else:
+            self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
+            cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
+            self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
 
         self.load_guides()
         self.create_controllers()
         self.ribbon_setup()
-        # self.slide_setup()
+        self.slide_setup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -92,6 +97,7 @@ class EyebrowModule(object):
         cmds.parent(eyebrows[0], self.module_trn)
         self.main_eyebrow = eyebrows[0]
         self.eyebrows = sorted(eyebrows[1:], key=lambda x: om.MVector(cmds.xform(x, q=True, ws=True, t=True)).x)
+        cmds.select(clear=True)
 
         for jnt in self.eyebrows:
             cmds.parent(jnt, self.module_trn)
@@ -99,7 +105,7 @@ class EyebrowModule(object):
         if self.side == "L":
             self.radius_loc = guides_manager.get_guides("C_headRadius_LOCShape")
             cmds.select(clear=True)
-            self.mid_eyebrow = guides_manager.get_guides("C_eyebrowMid_JNT")
+            self.mid_eyebrow = guides_manager.get_guides("C_eyebrowMid_JNT")[0]
             cmds.parent(self.mid_eyebrow, self.module_trn)
             
 
@@ -123,13 +129,43 @@ class EyebrowModule(object):
         
         self.sphere = cmds.ls("C_eyebrowSlide_NRB", long=True)[0]
             
-
         self.main_eyebrow_nodes, self.main_eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrowMain", offset=["GRP", "OFF"])
-        
         cmds.matchTransform(self.main_eyebrow_nodes[0], self.main_eyebrow)
+        
         cmds.parent(self.main_eyebrow_nodes[0], self.controllers_grp)
         self.lock_attributes(self.main_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         main_local_grp, main_local_trn = self.local(self.main_eyebrow_ctl)
+
+        if self.side == "L":
+            mid_eyebrow_nodes, mid_eyebrow_ctl = curve_tool.create_controller("C_eyebrowMid", offset=["GRP", "OFF"])
+            cmds.parent(mid_eyebrow_nodes[0], self.controllers_grp)
+            cmds.matchTransform(mid_eyebrow_nodes[0], self.mid_eyebrow)
+            self.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+
+            mid_local_grp, mid_local_trn = self.local(mid_eyebrow_ctl)
+            self.mid_eyebrow_guide = cmds.createNode("transform", name="C_eyebrowMid_GUIDE", ss=True, p=self.module_trn)
+            cmds.matchTransform(self.mid_eyebrow_guide, self.mid_eyebrow)
+            jnt = cmds.createNode("joint", name="C_eyebrowMidSkinning_JNT", ss=True, p=self.skeleton_grp)
+            cmds.connectAttr(f"{mid_local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
+            
+            parent_matrix = cmds.createNode("parentMatrix", name="C_eyebrowMid_PM", ss=True)
+            cmds.connectAttr(f"{self.mid_eyebrow_guide}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mid_local_grp}.offsetParentMatrix")
+            cmds.setAttr(f"{parent_matrix}.envelope", 0.5)
+        
+            cmds.xform(mid_local_grp, m=om.MMatrix.kIdentity)
+            
+        else:
+            parent_matrix = "C_eyebrowMid_PM"
+            mid_eyebrow_nodes = "C_eyebrowMid_GRP" # Dummy for get_offset_matrix
+            self.mid_eyebrow_guide = "C_eyebrowMid_GUIDE" # Dummy for get_offset_matrix
+            cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[1].targetMatrix")
+
+        if self.side == "L":
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", *self.get_offset_matrix(self.mid_eyebrow_guide, main_local_trn), type="matrix")
+        else:
+            cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *self.get_offset_matrix(self.mid_eyebrow_guide, main_local_trn), type="matrix")
 
         names = {"In": 0, "InTan": 1, "Mid": len(self.eyebrows) // 2, "OutTan": -2, "Out": -1}
 
@@ -178,31 +214,34 @@ class EyebrowModule(object):
         cmds.addAttr(self.main_eyebrow_ctl, longName="slide", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
 
-        for i, jnt in enumerate(self.eyebrows):
+        for i, jnt in enumerate(self.output_joints):
 
-            closest_point = cmds.createNode("closestPointOnSurface", name=jnt.replace("_JNT", "Slide_CPOS"))
-            point_on_surface_info = cmds.createNode("pointOnSurfaceInfo", name=jnt.replace("_JNT", "Slide_POS"))
-            compose_matrix = cmds.createNode("composeMatrix", name=jnt.replace("_JNT", "Slide_CMTX"))
-            aim_matrix = cmds.createNode("aimMatrix", name=jnt.replace("_JNT", "Slide_AMTX"))
+            closest_point = cmds.createNode("closestPointOnSurface", name=jnt.replace("_JNT", "Slide_CPOS"), ss=True)
+            row_from_matrix_projection = cmds.createNode("rowFromMatrix", name=jnt.replace("_JNT", "Slide_RFM"), ss=True)
+            cmds.setAttr(f"{row_from_matrix_projection}.input", 3) # Getting the translation row
+            compose_matrix = cmds.createNode("composeMatrix", name=jnt.replace("_JNT", "Slide_CM"), ss=True)
+            decompose_matrix = cmds.createNode("decomposeMatrix", name=jnt.replace("_JNT", "Slide_DCM"), ss=True)
+            blend_matrix = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Slide_BM"), ss=True)
+            jnt_input = cmds.listConnections(jnt, source=True, destination=True, plugs=True)[0] # Getting the input matrix of the joint
 
-            cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{point_on_surface_info}.inputSurface")
-            cmds.connectAttr(f"{self.local_trns[i]}.translate", f"{closest_point}.inPosition") # I think this should change
-            cmds.connectAttr(f"{closest_point}.parameterU", f"{point_on_surface_info}.parameterU")
-            cmds.connectAttr(f"{closest_point}.parameterV", f"{point_on_surface_info}.parameterV")
-            cmds.connectAttr(f"{point_on_surface_info}.position", f"{compose_matrix}.inputTranslate")
-            cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{aim_matrix}.inputMatrix")
-            cmds.connectAttr(f"{point_on_surface_info}.normalizedTangentV", f"{aim_matrix}.primaryTargetVector")
-            cmds.connectAttr(f"{point_on_surface_info}.normalizedTangentU", f"{aim_matrix}.secondaryTargetVector")
+            cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{closest_point}.inputSurface") # Sphere world matrix to CPOS
+            cmds.connectAttr(jnt_input, f"{row_from_matrix_projection}.matrix") # Joint input matrix to RFM
+            cmds.connectAttr(f"{row_from_matrix_projection}.outputX", f"{closest_point}.inPositionX")
+            cmds.connectAttr(f"{row_from_matrix_projection}.outputY", f"{closest_point}.inPositionY") 
+            cmds.connectAttr(f"{row_from_matrix_projection}.outputZ", f"{closest_point}.inPositionZ")
+            cmds.connectAttr(jnt_input, f"{decompose_matrix}.inputMatrix") # Joint input matrix to CM
+            cmds.connectAttr(f"{closest_point}.position", f"{compose_matrix}.inputTranslate") # CPOS position to CM
+            cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{compose_matrix}.inputRotate") # DM to CM
+            cmds.connectAttr(f"{decompose_matrix}.outputScale", f"{compose_matrix}.inputScale") # DM to CM
+            cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix") # CM to BM
+            cmds.connectAttr(jnt_input, f"{blend_matrix}.inputMatrix") # Joint input matrix to BM
+            cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{blend_matrix}.target[0].weight") # Slide attribute to BM weight
+            cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{jnt}.offsetParentMatrix", force=True) # BM to joint offsetParentMatrix
 
-            parent_matrix = cmds.createNode("parentMatrix", name=jnt.replace("_JNT", "SlideParent_MMT"))
-            input_conns = cmds.listConnections(f"{self.output_joints[i]}.offsetParentMatrix", source=True, destination=True, plugs=True)
-            cmds.connectAttr(f"{input_conns[0]}", f"{parent_matrix}.inputMatrix")
-            cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{parent_matrix}.target[0].targetMatrix")
-            cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{parent_matrix}.target[0].weight")
-            self.get_offset_matrix(aim_matrix, input_conns[0])
-            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{self.output_joints[i]}.offsetParentMatrix", force=True)
+        for jnt in self.eyebrows:
+            cmds.delete(jnt)
 
-
+            
     def get_offset_matrix(self, child, parent):
 
         """

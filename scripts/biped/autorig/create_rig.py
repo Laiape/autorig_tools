@@ -95,16 +95,15 @@ class AutoRig(object):
         fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
-        # eyebrow_module.EyebrowModule().make("L")
-        # eyebrow_module.EyebrowModule().make("R")
-        # eyelid_module.EyelidModule().make("L")
-        # eyelid_module.EyelidModule().make("R")
-        # ear_module.EarModule().make("L")
-        # ear_module.EarModule().make("R")
-        # nose_module.NoseModule().make("L")
-        # nose_module.NoseModule().make("R")
-        # jaw_module.JawModule().make("L")
-        # jaw_module.JawModule().make("R")
+        eyebrow_module.EyebrowModule().make("L")
+        eyebrow_module.EyebrowModule().make("R")
+        eyelid_module.EyelidModule().make("L")
+        eyelid_module.EyelidModule().make("R")
+        ear_module.EarModule().make("L")
+        ear_module.EarModule().make("R")
+        nose_module.NoseModule().make("L")
+        nose_module.NoseModule().make("R")
+        jaw_module.JawModule().make("C")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',

@@ -271,8 +271,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
         # print(param)
         cmds.select(cl=True)
         jnt = cmds.joint(n=f'{name}0{i}_JNT')
-        cube = cmds.polyCube(n=f'{name}0{i}_JNT_Cube', ch=False)[0]
-        cmds.parent(cube, jnt)
+        # cube = cmds.polyCube(n=f'{name}0{i}_JNT_Cube', ch=False)[0]
+        # cmds.parent(cube, jnt)
         cmds.parent(jnt, skeleton_grp)
         cmds.setAttr(f'{jnt}.jo', 0, 0, 0)
         cmds.xform(jnt, m=om.MMatrix.kIdentity)
