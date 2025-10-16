@@ -162,6 +162,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
             cmds.connectAttr(f'{cv}.worldMatrix[0]', f'{temp_node}.offsetParentMatrix')
         elif cmds.objExists(f"{cv}.outputMatrix"):
             cmds.connectAttr(f'{cv}.outputMatrix', f'{temp_node}.offsetParentMatrix')
+        elif cmds.objExists(f"{cv}.output"):
+            cmds.connectAttr(f'{cv}.output', f'{temp_node}.offsetParentMatrix')
         temp_nodes.append(temp_node)
 
     if skeleton_grp is None:
@@ -220,6 +222,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{par_off}.matrixIn[0]')
             elif cmds.objExists(f"{ctl}.outputMatrix"):
                 cmds.connectAttr(f'{ctl}.outputMatrix', f'{par_off}.matrixIn[0]')
+            elif cmds.objExists(f"{ctl}.output"):
+                cmds.connectAttr(f'{ctl}.output', f'{par_off}.matrixIn[0]')
                 
             cmds.connectAttr(f'{skeleton_grp}.worldInverseMatrix', f'{par_off}.matrixIn[1]') # First guide
 
@@ -230,6 +234,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 par_off_plugs.append(f'{ctl}.worldMatrix[0]')
             elif cmds.objExists(f"{ctl}.outputMatrix"):
                 par_off_plugs.append(f'{ctl}.outputMatrix')
+            elif cmds.objExists(f"{ctl}.output"):
+                par_off_plugs.append(f'{ctl}.output')
             
 
         trans_off = cmds.createNode('pickMatrix', n=f'{name}_translation_{i}_PM')
@@ -241,6 +247,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{trans_off}.inputMatrix')
             elif cmds.objExists(f"{ctl}.outputMatrix"):
                 cmds.connectAttr(f'{ctl}.outputMatrix', f'{trans_off}.inputMatrix')
+            elif cmds.objExists(f"{ctl}.output"):
+                cmds.connectAttr(f'{ctl}.output', f'{trans_off}.inputMatrix')
             
 
         for attr in 'useRotate', 'useScale', 'useShear':
@@ -258,6 +266,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                     cmds.connectAttr(f'{ctl}.worldMatrix[0]', f'{sca_off}.inputMatrix')
                 elif cmds.objExists(f"{ctl}.outputMatrix"):
                     cmds.connectAttr(f'{ctl}.outputMatrix', f'{sca_off}.inputMatrix')
+                elif cmds.objExists(f"{ctl}.output"):
+                    cmds.connectAttr(f'{ctl}.output', f'{sca_off}.inputMatrix')
 
             for attr in 'useRotate', 'useShear', 'useTranslate':
                 cmds.setAttr(f'{sca_off}.{attr}', False)
@@ -350,6 +360,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                     up_plug = f'{ctl}.worldMatrix[0]'
                 elif cmds.objExists(f"{ctl}.outputMatrix"):
                     up_plug = f'{ctl}.outputMatrix'
+                elif cmds.objExists(f"{ctl}.output"):
+                    up_plug = f'{ctl}.output'
+                elif cmds.objExists(f"{skeleton_grp}.matrix"):
+                    up_plug = f'{skeleton_grp}.matrix'
 
             cmds.delete(temp)
 

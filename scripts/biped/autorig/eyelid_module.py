@@ -52,11 +52,11 @@ class EyelidModule(object):
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
 
         self.load_guides()
+        self.locators_into_guides()
         self.create_main_eye_setup()
-        # self.create_controllers()
-        
-        # self.attributes()
-        # self.create_blink_setup()
+        self.create_controllers()
+        self.attributes()
+        self.create_blink_setup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -79,17 +79,11 @@ class EyelidModule(object):
         Returns:
             str: The name of the local transform node.
         """
-
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
         grp = ctl.replace("_CTL", "_GRP")
-        mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMT"))
-        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{local_trn}.offsetParentMatrix")
-        cmds.matchTransform(local_grp, ctl)
+        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=self.module_trn)
+        cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix")
 
-        return local_grp, local_trn
+        return local_trn
 
     def load_guides(self):
 
@@ -97,21 +91,41 @@ class EyelidModule(object):
         Load the guide locators for the eyelid module.
         """
 
-        # self.locators = []
-        # for guide in ["In", "UpIn", "Up", "UpOut",  "DownIn", "Down", "DownOut", "Out"]:
-        #     loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
-        #     self.locators.append(loc)
-        #     cmds.parent(loc, self.module_trn)
+        self.locators = []
+        for guide in ["In", "UpIn", "Up", "UpOut",  "DownIn", "Down", "DownOut", "Out"]:
+            loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
+            self.locators.append(loc)
+            cmds.parent(loc, self.module_trn)
 
         self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT")
         cmds.parent(self.eye_joint[0], self.module_trn)
 
+    
+    def locators_into_guides(self):
+
+        """
+        Convert locators into guides for the eyelid module.
+        """
+        self.guides_matrices = []
+
+        for loc in self.locators:
+            four_by_four_matrix = cmds.createNode("fourByFourMatrix", name=loc.replace("LOC", "FFX")) # Create a fourByFourMatrix node for each locator
+            cmds.connectAttr(f"{loc}.translateX", f"{four_by_four_matrix}.in30")
+            cmds.connectAttr(f"{loc}.translateY", f"{four_by_four_matrix}.in31")
+            cmds.connectAttr(f"{loc}.translateZ", f"{four_by_four_matrix}.in32")
+            if self.side == "R":
+                cmds.setAttr(f"{four_by_four_matrix}.in00", -1)
+            self.guides_matrices.append(four_by_four_matrix)
+            
 
     def create_main_eye_setup(self):
 
         """
         Create the main eye setup for the eyelid module.
         """
+        eye_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_eyeSkinning_JNT", p=self.skeleton_grp)
+        cmds.connectAttr(f"{self.eye_joint[0]}.worldMatrix[0]", f"{eye_skinning_jnt}.offsetParentMatrix")
+
         if self.side == "L":
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
             cmds.parent(self.main_aim_nodes[0], self.head_ctl)
@@ -155,27 +169,27 @@ class EyelidModule(object):
 
         self.controllers = []
 
-        for i, loc in enumerate(self.locators):
+        for i, matrix in enumerate(self.guides_matrices):
 
-            node, ctl = curve_tool.create_controller(name=loc.replace("_LOC", ""), offset=["GRP"])
-            local_grp, local_trn = self.local(ctl)
-            if "eyelidIn_" in loc or "eyelidOut_" in loc or "eyelidDown_" in loc or "eyelidUp_" in loc:
-                node_01, ctl_01 = curve_tool.create_controller(name=loc.replace("_LOC", "01"), offset=["GRP"])
-                local_grp_01, local_trn_01 = self.local(ctl_01)
-                cmds.parent(local_grp_01, local_trn)
+            node, ctl = curve_tool.create_controller(name=matrix.replace("_FFX", ""), offset=["GRP"])
+            local_trn = self.local(ctl)
+            cmds.matchTransform(local_trn, node[0])
+            if "eyelidIn_" in matrix or "eyelidOut_" in matrix or "eyelidDown_" in matrix or "eyelidUp_" in matrix:
+                node_01, ctl_01 = curve_tool.create_controller(name=matrix.replace("_FFX", "01"), offset=["GRP"])
+                local_trn_01 = self.local(ctl_01)
+                cmds.matchTransform(local_trn_01, node_01[0])
                 cmds.parent(node_01, ctl)
             cmds.parent(node, self.controllers_grp)
-            if "Up" in loc:
+            if "Up" in matrix:
                 self.upper_local_trn.append(local_trn)
-            elif "Down" in loc:
+            elif "Down" in matrix:
                 self.lower_local_trn.append(local_trn)
             else:
                 self.upper_local_trn.append(local_trn)
                 self.lower_local_trn.append(local_trn)
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"]) 
-            
-            cmds.matchTransform(node[0], loc)
-            cmds.matchTransform(local_grp, loc)
+            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+
+            cmds.connectAttr(f"{matrix}.output", f"{node[0]}.offsetParentMatrix")
             self.controllers.append(ctl)
 
         
@@ -186,6 +200,11 @@ class EyelidModule(object):
         sel_lower = [ctl_low for ctl_low in self.lower_local_trn]
         self.lower_output_joints, temp_down = ribbon.de_boor_ribbon(cvs=sel_lower, name=f"{self.side}_eyelidLower", aim_axis="x", up_axis="y", num_joints=18, skeleton_grp=self.skeleton_grp)
 
+        for trn in self.upper_local_trn + self.lower_local_trn:
+            grp = trn.replace("Local_TRN", "_GRP") # Gitana historica
+            cmds.matchTransform(trn, grp)
+
+        # Clean up temporary nodes
         cmds.delete(temp, temp_down)
 
     def attributes(self):
@@ -208,17 +227,17 @@ class EyelidModule(object):
         cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.6, k=True)
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
-        eye_direct_matrix = cmds.xform(self.eye_direct_nodes, q=True, m=True, ws=True)
-        cmds.setAttr(f"{self.aim}.inputMatrix", eye_direct_matrix, type="matrix")
-        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_direct_nodes[0]}.offsetParentMatrix", force=True)
-        cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
-        cmds.setAttr(f"{self.eye_direct_nodes[0]}.inheritsTransform", 0)
-        pick_matrix_rotation = cmds.createNode("pickMatrix", name=f"{self.side}_eye_PMK", ss=True)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{pick_matrix_rotation}.inputMatrix")
-        cmds.setAttr(f"{pick_matrix_rotation}.useTranslate", 0)
-        cmds.setAttr(f"{pick_matrix_rotation}.useScale", 0)
-        cmds.connectAttr(f"{pick_matrix_rotation}.outputMatrix", f"{self.eye_joint[0]}.offsetParentMatrix", force=True)
-        cmds.xform(self.eye_joint[0], m=self.eye_jnt_matrix)
+        # eye_direct_matrix = cmds.xform(self.eye_direct_nodes, q=True, m=True, ws=True)
+        # cmds.setAttr(f"{self.aim}.inputMatrix", eye_direct_matrix, type="matrix")
+        # cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_direct_nodes[0]}.offsetParentMatrix", force=True)
+        # cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
+        # cmds.setAttr(f"{self.eye_direct_nodes[0]}.inheritsTransform", 0)
+        # pick_matrix_rotation = cmds.createNode("pickMatrix", name=f"{self.side}_eye_PMK", ss=True)
+        # cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{pick_matrix_rotation}.inputMatrix")
+        # cmds.setAttr(f"{pick_matrix_rotation}.useTranslate", 0)
+        # cmds.setAttr(f"{pick_matrix_rotation}.useScale", 0)
+        # cmds.connectAttr(f"{pick_matrix_rotation}.outputMatrix", f"{self.eye_joint[0]}.offsetParentMatrix", force=True)
+        # cmds.xform(self.eye_joint[0], m=self.eye_jnt_matrix)
         
 
     def create_blink_setup(self):
@@ -226,37 +245,9 @@ class EyelidModule(object):
         """
         Create the blink setup for the eyelid module.
         """
-        up_locators = [loc for loc in self.locators if "Up" in loc]
-        down_locators = [loc for loc in self.locators if "Down" in loc]
-
-        up_controllers = [ctl for ctl in self.controllers if "Up" in ctl]
-        down_controllers = [ctl for ctl in self.controllers if "Down" in ctl]
-
-        up_local_trns = [trn for trn in self.upper_local_trn if "Up" in trn]
-        down_local_trns = [trn for trn in self.lower_local_trn if "Down" in trn]
-
-        blink_locators = []
-
-        for i in range(3):
-
-            loc = cmds.spaceLocator(name=f"{self.side}_blink{i+1}_LOC")[0]
-            cmds.parent(loc, self.module_trn)
-
-            blend_matrix = cmds.createNode("blendMatrix", name=loc.replace("_LOC", "Blink_BMT"), ss=True) # Create blendMatrix node to blend between original position and blink position
-            cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0.6)
-            cmds.setAttr(f"{blend_matrix}.target[0].rotateWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.target[0].shearWeight", 0)
-
-            cmds.connectAttr(f"{up_locators[i]}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
-            cmds.connectAttr(f"{down_locators[i]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
-            cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{blend_matrix}.target[0].translateWeight")
-            cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{loc}.offsetParentMatrix")
-
-            blink_locators.append(loc)
-
-                
-
+        
+        for loc in self.locators:
+            cmds.delete(loc)
 
     def get_offset_matrix(self, child, parent):
 
