@@ -44,6 +44,11 @@ def create_basic_structure():
     
     character_name = cmds.promptDialog(query=True, text=True)
 
+    data_manager.DataExportBiped().append_data("basic_structure",
+                            {
+                                "character_name": character_name
+                            })
+
     nodes = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
 
     for i, node in enumerate(nodes):
@@ -97,11 +102,11 @@ def create_basic_structure():
     cmds.parent(masterwalk_node[0], character_ctl)
     data_manager.DataExportBiped().append_data("basic_structure",
                             {
-                                "character_name": character_name,
                                 "skel_GRP" : skel_grp,
                                 "modules_GRP" : modules_grp,
                                 "masterwalk_ctl" : masterwalk_ctl,
-                                "character_ctl" : character_ctl
+                                "character_ctl" : character_ctl,
+                                "preferences_ctl" : preferences_ctl
                             }
     )
 

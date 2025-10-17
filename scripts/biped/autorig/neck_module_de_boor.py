@@ -29,6 +29,9 @@ class NeckModule(object):
         self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+        self.preferences_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
+        cmds.addAttr(self.preferences_ctl, longName="Face", attributeType="enum", enumName="____:", keyable=True)
+        cmds.setAttr(f"{self.preferences_ctl}.Face", keyable=False, channelBox=True)
 
     def make(self, side):
 
