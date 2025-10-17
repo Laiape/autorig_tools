@@ -517,8 +517,7 @@ class EyelidModule(object):
             cmds.delete(temp_trn)
 
             self.upper_skin_joints.append(jnt)
-            cmds.parent(node[0], self.controllers_grp)
-            cmds.parent(ctl, self.extra_controllers_grp)
+            cmds.parent(node[0], self.extra_controllers_grp)
 
 
     def cleanup(self):
