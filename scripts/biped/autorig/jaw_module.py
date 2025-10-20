@@ -114,7 +114,7 @@ class JawModule(object):
 
         for side in ["L", "R"]:
             self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_sideJaw", offset=["GRP", "OFF"], parent=self.jaw_ctl)
-            cmds.matchTransform(self.side_jaw_nodes[0], self.jaw_guides[1 if side == "L" else 2])
+            cmds.matchTransform(self.side_jaw_nodes[0], self.jaw_guides[1 if side == "L" else -1])
             self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
 
     def collision_setup(self):

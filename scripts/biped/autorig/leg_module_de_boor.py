@@ -316,7 +316,9 @@ class LegModule(object):
         cmds.setAttr(f"{multiply_divide_node}.operation", 1)
         cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{multiply_divide_node}.input1X")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{multiply_divide_node}.input2X")
-        cmds.connectAttr(f"{multiply_divide_node}.outputX", f"{self.ik_sdk_nodes[-2]}.rotateZ")
+        negate_roll_straight = cmds.createNode("negate", name=f"{self.side}_legRollStraight_NEG", ss=True)
+        cmds.connectAttr(f"{multiply_divide_node}.outputX", f"{negate_roll_straight}.input")
+        cmds.connectAttr(f"{negate_roll_straight}.output", f"{self.ik_sdk_nodes[-2]}.rotateZ")
 
         roll_break_angle = cmds.createNode("remapValue", name=f"{self.side}_legRollBreakAngle_RMV", ss=True)
         cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_break_angle}.inputValue")
@@ -336,7 +338,9 @@ class LegModule(object):
         cmds.setAttr(f"{roll_lift_angle_mdv}.operation", 1)
         cmds.connectAttr(f"{roll_break_angle}.outValue", f"{roll_lift_angle_mdv}.input1X")
         cmds.connectAttr(f"{roll_angle_enable_mdv}.outputX", f"{roll_lift_angle_mdv}.input2X")
-        cmds.connectAttr(f"{roll_lift_angle_mdv}.outputX", f"{self.ik_sdk_nodes[-1]}.rotateZ")
+        negate_roll_lift = cmds.createNode("negate", name=f"{self.side}_legRollLift_NEG", ss=True)
+        cmds.connectAttr(f"{roll_lift_angle_mdv}.outputX", f"{negate_roll_lift}.input")
+        cmds.connectAttr(f"{negate_roll_lift}.output", f"{self.ik_sdk_nodes[-1]}.rotateZ")
 
     def fk_stretch(self):
 
@@ -356,7 +360,7 @@ class LegModule(object):
         cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input1")
 
         upper_distance = cmds.getAttr(f"{self.fk_nodes[1]}.translateX")
-        lower_distance = cmds.getAttr(f"{self.fk_nodes[-1]}.translateX")
+        lower_distance = cmds.getAttr(f"{self.fk_nodes[2]}.translateX")
 
         cmds.setAttr(f"{self.upper_double_mult_linear}.input2", upper_distance)
         cmds.setAttr(f"{self.lower_double_mult_linear}.input2", lower_distance)
@@ -644,12 +648,13 @@ class LegModule(object):
 
             self.lock_attributes(ctl, ["visibility"])
 
-            cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-            cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
-            cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
+            
+            
 
             if i == 0:
-
+                cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+                cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+                cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", defaultValue=0.5, minValue=0, maxValue=1, keyable=True)
                 cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
                 cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)
 

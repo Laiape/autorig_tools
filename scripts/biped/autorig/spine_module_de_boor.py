@@ -112,6 +112,7 @@ class SpineModule(object):
             if i == 0 or i == len(self.spine_chain) - 1:
 
                 corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
+                self.lock_attributes(corner_ctl, [ "v"])
                 
                 if i == len(self.spine_chain) - 1:
                     cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
@@ -133,6 +134,7 @@ class SpineModule(object):
             if i == (len(self.spine_chain) - 1) // 2:
 
                 mid_nodes, mid_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
+                self.lock_attributes(mid_ctl, [ "v"])
 
                 cmds.parent(mid_nodes[0], self.spine_ctls[0])
                 cmds.matchTransform(mid_nodes[0], self.spine_chain[(len(self.spine_chain) // 2) - 1], pos=True, rot=True, scl=False)
@@ -143,6 +145,7 @@ class SpineModule(object):
             if i == 1 or i == len(self.spine_chain) - 2:
 
                 tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP"])
+                self.lock_attributes(tan_ctl, ["v"])
 
                 cmds.matchTransform(tan_nodes[0], jnt, pos=True, rot=True, scl=False)
 
