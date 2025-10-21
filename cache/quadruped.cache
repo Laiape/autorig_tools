@@ -5,5 +5,10 @@
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
         "character_ctl": "C_character_CTL"
+    },
+    "spine_module": {
+        "local_hip_ctl": "C_localHip_CTL",
+        "body_ctl": "C_body_CTL",
+        "local_chest_ctl": "C_localChest_CTL"
     }
 }

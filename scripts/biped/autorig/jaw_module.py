@@ -109,7 +109,7 @@ class JawModule(object):
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
         self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP", "OFF"], parent=self.jaw_ctl)
-        cmds.matchTransform(self.chin_nodes[0], self.jaw_guides[-1])
+        cmds.matchTransform(self.chin_nodes[0], self.jaw_guides[-2])
         self.lock_attributes(self.chin_ctl, ["v"])
 
         for side in ["L", "R"]:
