@@ -56,16 +56,15 @@ class EyelidModule(object):
             self.curves_grp = cmds.createNode("transform", name=f"{self.module_name}Curves_GRP", ss=True, p=self.module_trn)
         self.extra_controllers_grp = cmds.createNode("transform", name=f"{self.side}_eyelidExtraControllers_GRP", ss=True, p=self.controllers_grp)
 
+        self.create_curves()
         self.load_guides()
-        self.locators_into_guides()
+        self.curve_cvs_into_guides()
         self.create_main_eye_setup()
         self.create_controllers()
-        self.create_curves()
         self.eye_direct()
         self.create_blink_setup()
         self.fleshy_setup()
         self.skinning_joints()
-        self.cleanup()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -100,73 +99,75 @@ class EyelidModule(object):
         
 
         return  local_jnt
+    
+    def create_curves(self):
+
+        """
+        Create curves for the blink setup.
+        """
+        # Get the guide curves
+        self.linear_upper_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidUpperLinear_CRVShape", parent=self.curves_grp)
+        self.linear_lower_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidLowerLinear_CRVShape", parent=self.curves_grp)
+        self.blink_ref_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidBlinkRef_CRVShape")
+        self.up_blink_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidUpBlink_CRVShape")
+        self.down_blink_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidDownBlink_CRVShape")
+
+        # Rebuild the curves to have proper CV count and degree
+        self.eyelid_up_curve = cmds.rebuildCurve(self.linear_upper_curve, n=f"{self.side}_eyelidUp_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=4)[0]
+        self.eyelid_down_curve = cmds.rebuildCurve(self.linear_lower_curve, n=f"{self.side}_eyelidDown_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=4)[0]
+        self.eyelid_up_curve_rebuild = cmds.rebuildCurve(self.eyelid_up_curve, n=f"{self.side}_eyelidUpRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)
+        self.eyelid_down_curve_rebuild = cmds.rebuildCurve(self.eyelid_down_curve, n=f"{self.side}_eyelidDownRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)
+
+        cmds.parent(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, self.up_blink_curve, self.down_blink_curve, self.eyelid_up_curve_rebuild,  self.eyelid_down_curve_rebuild, self.curves_grp)
 
     def load_guides(self):
 
         """
         Load the guide locators for the eyelid module.
         """
-
-        self.locators = []
-        for guide in ["In", "UpIn", "Up", "UpOut",  "DownIn", "Down", "DownOut", "Out"]:
-            if "Blink" not in guide:
-                loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
-                self.locators.append(loc)
-                cmds.parent(loc, self.module_trn)
-
-        self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT")
-        cmds.parent(self.eye_joint[0], self.module_trn)
-
-        self.upper_blink_locators = [] # Create list for upper blink locators
-        self.upper_blink_locators.append(self.locators[0])
-        for guide in ["UpInBlink", "UpBlink", "UpOutBlink"]:
-            loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
-            self.upper_blink_locators.append(loc)
-            # cmds.parent(loc, self.module_trn)
-        self.upper_blink_locators.append(self.locators[-1])
-
-        self.lower_blink_locators = [] # Create list for lower blink locators
-        self.lower_blink_locators.append(self.locators[0])
-        for guide in ["DownInBlink", "DownBlink", "DownOutBlink"]:
-            loc = guides_manager.get_guides(f"{self.side}_eyelid{guide}_LOCShape")
-            self.lower_blink_locators.append(loc)
-            # cmds.parent(loc, self.module_trn)
-        self.lower_blink_locators.append(self.locators[-1])
-
-        self.blink_ref_locators = [] # Create list for blink reference locators
-        self.blink_ref_locators.append(self.locators[0])
-        for guide in ["eyelidBlink01", "eyelidBlink02", "eyelidBlink03"]:
-            loc = guides_manager.get_guides(f"{self.side}_{guide}_LOCShape")
-            self.blink_ref_locators.append(loc)
-            # cmds.parent(loc, self.module_trn)
-        self.blink_ref_locators.append(self.locators[-1])
-
         cmds.select(clear=True)
-        self.upper_jnts = guides_manager.get_guides(f"{self.side}_upperEyelid00_JNT")
-        cmds.select(clear=True)
-        self.lower_jnts = guides_manager.get_guides(f"{self.side}_downEyelid00_JNT")
-
-    def locators_into_guides(self):
-
-        """
-        Convert locators into guides for the eyelid module.
-        """
-
+        self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT", parent=self.module_trn)
         self.eye_guide = cmds.createNode("transform", name=f"{self.side}_eye_GUIDE", ss=True, p=self.module_trn)
         cmds.matchTransform(self.eye_guide, self.eye_joint[0])
+        cmds.delete(self.eye_joint[0])
+
+    def curve_cvs_into_guides(self):
+
+        """
+        Convert curve CVs into guides for the eyelid module.
+        """
+
+        names = [
+            "eyelidIn",
+            "eyelidInUp",
+            "eyelidUp",
+            "eyelidOutUp",
+            "eyelidOut",
+            "eyelidInDown",
+            "eyelidDown",
+            "eyelidOutDown"
+        ]
 
         self.guides_matrices = []
 
-        for loc in self.locators:
-            four_by_four_matrix = cmds.createNode("fourByFourMatrix", name=loc.replace("LOC", "FFX")) # Create a fourByFourMatrix node for each locator
-            cmds.connectAttr(f"{loc}.translateX", f"{four_by_four_matrix}.in30")
-            cmds.connectAttr(f"{loc}.translateY", f"{four_by_four_matrix}.in31")
-            cmds.connectAttr(f"{loc}.translateZ", f"{four_by_four_matrix}.in32")
-            # if self.side == "R":
-            #     cmds.setAttr(f"{four_by_four_matrix}.in00", -1)
-            self.guides_matrices.append(four_by_four_matrix)
+        for i, name in enumerate(names):
+            if i == 0 or i == len(names) - 1:
+                # Must connect in and out with blend matrices to upper and lower curve cvs
+                four_by_four_matrix_00 = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{name}00_FFX", ss=True)
+                four_by_four_matrix_01 = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{name}01_FFX", ss=True)
+                cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.editPoints[{i}].xValueEp", f"{four_by_four_matrix_00}.in30")
+                cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.editPoints[{i}].yValueEp", f"{four_by_four_matrix_00}.in31")
+                cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.editPoints[{i}].zValueEp", f"{four_by_four_matrix_00}.in32")
+                cmds.connectAttr(f"{self.eyelid_down_curve_rebuild}.editPoints[{i}].xValueEp", f"{four_by_four_matrix_01}.in30")
+                cmds.connectAttr(f"{self.eyelid_down_curve_rebuild}.editPoints[{i}].yValueEp", f"{four_by_four_matrix_01}.in31")
+                cmds.connectAttr(f"{self.eyelid_down_curve_rebuild}.editPoints[{i}].zValueEp", f"{four_by_four_matrix_01}.in32")
+                blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_{name}_BMX", ss=True)
+                cmds.connectAttr(f"{four_by_four_matrix_00}.output", f"{blend_matrix}.inputMatrix")
+                cmds.connectAttr(f"{four_by_four_matrix_01}.output", f"{blend_matrix}.target[0].targetMatrix")
+                cmds.setAttr(f"{blend_matrix}.envelope", 0.5) # Blend equally between upper and lower
             
-
+            
+        print(self.guides_matrices)
     def create_main_eye_setup(self):
 
         """
@@ -178,23 +179,23 @@ class EyelidModule(object):
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
             cmds.parent(self.main_aim_nodes[0], self.head_ctl)
             self.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
-            before_translate = cmds.xform(self.eye_joint[0], q=True, t=True, ws=True)
-            cmds.setAttr(f"{self.eye_joint[0]}.tx", 0)
-            cmds.matchTransform(self.main_aim_nodes[0], self.eye_joint[0])
+            before_translate = cmds.xform(self.eye_guide, q=True, t=True, ws=True)
+            cmds.setAttr(f"{self.eye_guide}.tx", 0)
+            cmds.matchTransform(self.main_aim_nodes[0], self.eye_guide)
             cmds.select(self.main_aim_nodes[0])
             cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
-            cmds.xform(self.eye_joint[0], t=before_translate, ws=True)
+            cmds.xform(self.eye_guide, t=before_translate, ws=True)
 
         side_aim_nodes, self.side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
         cmds.parent(side_aim_nodes[0], self.controllers_grp)
-        cmds.matchTransform(side_aim_nodes[0], self.eye_joint[0])
+        cmds.matchTransform(side_aim_nodes[0], self.eye_guide)
         cmds.select(side_aim_nodes[0])
         cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
         self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
         cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
 
         # Aim setup
-        self.eye_jnt_matrix = cmds.xform(self.eye_joint[0], q=True, m=True, ws=True)
+        self.eye_jnt_matrix = cmds.xform(self.eye_guide, q=True, m=True, ws=True)
         self.aim = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
         cmds.setAttr(f"{self.aim}.primaryInputAxis", 0, 1, 0)
         cmds.setAttr(f"{self.aim}.secondaryInputAxis", 0, 0, -1)
@@ -204,9 +205,6 @@ class EyelidModule(object):
         cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{self.aim}.primaryTargetMatrix")
         cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{self.aim}.secondaryTargetMatrix")
         cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_skinning_jnt}.offsetParentMatrix")
-        cmds.xform(self.eye_joint[0], m=om.MMatrix.kIdentity)
-
-    
 
     def create_controllers(self):
 
@@ -270,43 +268,7 @@ class EyelidModule(object):
         self.local_constraints_callback(driven_jnt=self.lower_local_jnt[1], drivers=[self.lower_controllers[2], self.lower_controllers[0]])
         self.local_constraints_callback(driven_jnt=self.lower_local_jnt[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]])
 
-    def create_curves(self):
 
-        """
-        Create curves for the blink setup.
-        """
-        upper_pos = [self.upper_jnts[0]] + [jnt for jnt in self.upper_jnts]
-        lower_pos = [jnt for jnt in self.lower_jnts] + [self.upper_jnts[-1]]
-        self.linear_upper_curve = cmds.curve(name=f"{self.side}_eyelidUpperLinear_CRV", d=1, p=[tuple(cmds.xform(jnt, q=True, t=True, ws=True)) for jnt in upper_pos])
-        self.linear_upper_curve = cmds.rebuildCurve(self.linear_upper_curve, n=f"{self.side}_eyelidUpperLinear_CRV", ch=False, rpo=True, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
-        shapes = cmds.listRelatives(self.linear_upper_curve, shapes=True)
-        if shapes:
-            cmds.rename(shapes[0], f"{self.side}_eyelidUpperLinear_CRVShape")
-        self.linear_lower_curve = cmds.curve(name=f"{self.side}_eyelidLowerLinear_CRV", d=1, p=[tuple(cmds.xform(jnt, q=True, t=True, ws=True)) for jnt in lower_pos])
-        self.linear_lower_curve = cmds.rebuildCurve(self.linear_lower_curve, n=f"{self.side}_eyelidLowerLinear_CRV", ch=False, rpo=True, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
-        shapes = cmds.listRelatives(self.linear_lower_curve, shapes=True)
-        if shapes:
-            cmds.rename(shapes[0], f"{self.side}_eyelidLowerLinear_CRVShape")
-
-
-        self.eyelid_up_curve = cmds.rebuildCurve(self.linear_upper_curve, n=f"{self.side}_eyelidUp_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=2)[0]
-        self.eyelid_down_curve = cmds.rebuildCurve(self.linear_lower_curve, n=f"{self.side}_eyelidDown_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=2)[0]
-        self.eyelid_up_curve_rebuild = cmds.rebuildCurve(self.eyelid_up_curve, n=f"{self.side}_eyelidUpRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)
-        self.eyelid_down_curve_rebuild = cmds.rebuildCurve(self.eyelid_down_curve, n=f"{self.side}_eyelidDownRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)
-
-        self.blink_ref_curve = cmds.curve(name=f"{self.side}_eyelidBlinkRef_CRV", d=3, p=[tuple(cmds.xform(loc, q=True, t=True, ws=True)) for loc in self.blink_ref_locators])
-        self.up_blink_curve = cmds.curve(name=f"{self.side}_eyelidUpBlink_CRV", d=3, p=[tuple(cmds.xform(loc, q=True, t=True, ws=True)) for loc in self.upper_blink_locators])
-        self.down_blink_curve = cmds.curve(name=f"{self.side}_eyelidDownBlink_CRV", d=3, p=[tuple(cmds.xform(loc, q=True, t=True, ws=True)) for loc in self.lower_blink_locators])
-
-        cmds.parent(self.linear_upper_curve, self.curves_grp)
-        cmds.parent(self.linear_lower_curve, self.curves_grp)
-        cmds.parent(self.eyelid_up_curve, self.curves_grp)
-        cmds.parent(self.eyelid_up_curve_rebuild, self.curves_grp)
-        cmds.parent(self.eyelid_down_curve, self.curves_grp)
-        cmds.parent(self.eyelid_down_curve_rebuild, self.curves_grp)
-        cmds.parent(self.blink_ref_curve, self.curves_grp)
-        cmds.parent(self.up_blink_curve, self.curves_grp)
-        cmds.parent(self.down_blink_curve, self.curves_grp)
 
     def eye_direct(self):
 
@@ -456,6 +418,7 @@ class EyelidModule(object):
                 
         for jnt in self.upper_local_jnt + self.lower_local_jnt:
             cmds.matchTransform(jnt, jnt.replace("Local_JNT", "_GRP"))
+
     def skinning_joints(self):
         
         """
@@ -558,20 +521,6 @@ class EyelidModule(object):
             if "UpIn_" in node or "UpOut_" in node or "DownIn_" in node or "DownOut_" in node:
                 cmds.xform(node, m=om.MMatrix.kIdentity)
 
-        
-
-    def cleanup(self):
-
-        cmds.delete(self.eye_joint)
-        
-        for loc in self.locators:
-            cmds.delete(loc)
-
-        for loc in self.upper_blink_locators[1:-1] + self.lower_blink_locators[1:-1] + self.blink_ref_locators[1:-1]:
-            cmds.delete(loc)
-
-        cmds.delete(self.upper_jnts)
-        cmds.delete(self.lower_jnts)
 
     def get_offset_matrix(self, child, parent):
 

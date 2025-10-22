@@ -309,7 +309,7 @@ def delete_guides():
     else:
         om.MGlobal.displayError(f"Guides group '{guides_group}' does not exist.")
 
-def get_guides(guide_export):
+def get_guides(guide_export, parent=None):
 
     """
     Get the guides from the scene based on the provided guide export data.
@@ -341,13 +341,8 @@ def get_guides(guide_export):
 
         with open(final_path, "r") as input_file:
             guides_data = json.load(input_file)
-            
-        if guide_export not in guides_data[name]:
-            om.MGlobal.displayError(f"Guide export '{guide_export}' not found in the guides data.")
-            return None
-        
-        else:
-
+              
+        try:
             if guides_data[name][guide_export]["isJoint"] == True:
                 chain = []
 
@@ -363,24 +358,33 @@ def get_guides(guide_export):
                         cmds.makeIdentity(child_joint, apply=True, r=True)
                         chain.append(child_joint)
 
+                if parent:
+                    if len(chain[0]) > 1:
+                        cmds.parent(chain[0], parent)
+                    else:
+                        cmds.parent(chain, parent)
+
                 return chain
             
             elif guides_data[name][guide_export]["isLocator"] == True:
                 locator = cmds.spaceLocator(name=guide_export.replace("LOCShape", "LOC"))[0]
                 cmds.xform(locator, ws=True, m=guides_data[name][guide_export]["locator_position"])
+                if parent:
+                    cmds.parent(locator.split("Shape")[0], parent)
                 return locator
             
             elif guides_data[name][guide_export]["isCurve"] == True:
 
-                curve_name = guides_data[name][guide_export]["curve_data"]["name"]
+                curve_name = guide_export
                 dag_modifier = om.MDagModifier()
                 transform_obj = dag_modifier.createNode("transform")
                 dag_modifier.doIt()
                 transform_fn = om.MFnDagNode(transform_obj)
                 transform_fn.setName(curve_name.split("Shape")[0])
                 dag_modifier.doIt()
-    
-                curve_info = guides_data[name][guide_export]["curve_data"]
+
+                # Retrieve curve data from the loaded guides_data
+                curve_info = guides_data[name][curve_name]["curve_data"]
                 cvs = curve_info["cvs"]
                 degree = curve_info["degree"]
                 knots = curve_info["knots"]
@@ -410,5 +414,12 @@ def get_guides(guide_export):
 
                 shape_fn = om.MFnDagNode(shape_obj)
                 shape_fn.setName(curve_name)
+
+                if parent:
+                    cmds.parent(transform_fn.name(), parent)
             
-            return shape_fn.name()
+                return shape_fn.name()
+        
+        except KeyError:
+            om.MGlobal.displayError(f"Guide '{guide_export}' not found in the guide export data.")
+            return None

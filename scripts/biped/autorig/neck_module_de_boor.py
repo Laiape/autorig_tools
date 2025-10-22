@@ -77,11 +77,9 @@ class NeckModule(object):
         Load the neck guides for the specified side and parent them to the module transform.
         """
 
-        self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT")
+        self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT", parent=self.module_trn)
         cmds.select(clear=True)
-        self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT")
-        cmds.parent(self.neck_chain[0], self.module_trn)
-        cmds.parent(self.throat_guide[0], self.module_trn)
+        self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
        
 
     def controller_creation(self):
