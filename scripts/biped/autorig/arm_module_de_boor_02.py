@@ -208,12 +208,12 @@ class ArmModule(object):
         self.ik_wrist_nodes, self.ik_wrist_ctl = curve_tool.create_controller(name=f"{self.side}_armIkWrist", offset=["GRP", "SPC"])
         self.lock_attributes(self.ik_wrist_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_wrist_nodes[0], ik_controllers_trn)
-        # cmds.matchTransform(self.ik_wrist_nodes[0], self.arm_chain[-1], pos=True, rot=True)
+        cmds.connectAttr(self.guides_matrices[2], f"{self.ik_wrist_nodes[0]}.offsetParentMatrix")
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        # cmds.matchTransform(self.pv_nodes[0], self.arm_chain[1], pos=True, rot=True)
+        cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_armPv_CRV") # Create a line that points always to the PV
         decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPv_DCM", ss=True)
@@ -231,7 +231,7 @@ class ArmModule(object):
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_root_nodes[0], ik_controllers_trn)
-        # cmds.matchTransform(self.ik_root_nodes[0], self.arm_chain[0], pos=True, rot=True)
+        cmds.connectAttr(self.guides_matrices[0], f"{self.ik_root_nodes[0]}.offsetParentMatrix")
 
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_armIkFK_REV", ss=True)
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{reverse_node}.inputX")
@@ -253,7 +253,7 @@ class ArmModule(object):
         cmds.setAttr(f"{self.ik_wrist_ctl}.SOFT____", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
 
-        custom_ik_solver.triangle_solver(guides=self.guides_matrices, controllers=[self.ik_root_ctl, self.pv_ctl, self.ik_wrist_ctl], stretch=False)
+        custom_ik_solver.triangle_solver(name=f"{self.side}_armIk", guides=self.guides_matrices, controllers=[self.ik_root_ctl, self.pv_ctl, self.ik_wrist_ctl], trn_guides=self.guides, use_stretch=True)
         
         
 

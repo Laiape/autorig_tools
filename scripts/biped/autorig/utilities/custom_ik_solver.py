@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 
-def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
+def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
         
         """Custom IK solver for biped characters. Cosinus theorem based.
         Args:
@@ -9,6 +9,7 @@ def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,
         Returns:
                 None
                 """
+        master_walk_ctl = "C_masterwalk_CTL"
         side = guides[0].split('_')[0]
         if side == 'R':
                 primary_mode = (-1,0,0)
@@ -21,69 +22,83 @@ def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,
         guides_01_name = side + "_" + guides[1].split('_')[1] + '_GUIDE'
         guides_02_name = side + "_" + guides[2].split('_')[1] + '_GUIDE'
 
-        #Connect guides to controllers
-        cmds.connectAttr(guides[0], grp_upper+'.offsetParentMatrix')
-        cmds.connectAttr(guides[1], grp_lower+'.offsetParentMatrix')
-        cmds.connectAttr(guides[2], grp_eff+'.offsetParentMatrix')
 
-        # Create distanceBetween nodes to measure initial lengths
-        distance_between_up = cmds.createNode('distanceBetween', name=guides_00_name.replace('_GUIDE', 'InitialLength_DBT'), ss=True)
-        distance_between_low = cmds.createNode('distanceBetween', name=guides_01_name.replace('_GUIDE', 'InitialLength_DBT'), ss=True)
-        distance_between_eff = cmds.createNode('distanceBetween', name=guides_02_name.replace('_GUIDE', 'InitialLength_DBT'), ss=True)
+        if use_stretch == True:
+                distance_between_eff, distance_between_up, distance_between_low = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers, trn_guides=trn_guides)
 
-        cmds.connectAttr(guides[0], distance_between_up+'.inMatrix1') # a
-        cmds.connectAttr(guides[1], distance_between_up+'.inMatrix2')
-        cmds.connectAttr(guides[1], distance_between_low+'.inMatrix1') # b
-        cmds.connectAttr(guides[2], distance_between_low+'.inMatrix2')
-        cmds.connectAttr(guides[0], distance_between_eff+'.inMatrix1') # c
-        cmds.connectAttr(guides[2], distance_between_eff+'.inMatrix2')
-        
+
         # Create nodes for the IK solver
-        multiply_upper = cmds.createNode('multiply', name=guides_00_name.replace('_GUIDE', 'Squared_MULT'), ss=True)
-        multiply_lower = cmds.createNode('multiply', name=guides_01_name.replace('_GUIDE', 'Squared_MULT'), ss=True)
-        multiply_eff = cmds.createNode('multiply', name=guides_02_name.replace('_GUIDE', 'Squared_MULT'), ss=True)
+        multiply_upper = cmds.createNode('multiply', name=guides_00_name.replace('_GUIDE', 'ASquared_MULT'), ss=True) # a squared
+        multiply_lower = cmds.createNode('multiply', name=guides_01_name.replace('_GUIDE', 'BSquared_MULT'), ss=True) # b squared
+        multiply_eff = cmds.createNode('multiply', name=guides_02_name.replace('_GUIDE', 'CSquared_MULT'), ss=True) # c squared
 
-        cmds.connectAttr(distance_between_up+'.distance', multiply_upper+'.input[0]') # a2
-        cmds.connectAttr(distance_between_up+'.distance', multiply_upper+'.input[1]')
-        cmds.connectAttr(distance_between_low+'.distance', multiply_lower+'.input[0]') # b2
-        cmds.connectAttr(distance_between_low+'.distance', multiply_lower+'.input[1]')
-        cmds.connectAttr(distance_between_eff+'.distance', multiply_eff+'.input[0]') # c2
-        cmds.connectAttr(distance_between_eff+'.distance', multiply_eff+'.input[1]')
+        
+        if use_stretch == False:
+                distance_between_eff = cmds.createNode('distanceBetween', name=guides_02_name.replace('_GUIDE', 'InitialLength_DBT'), ss=True)
+                distance_between_up = cmds.createNode('distanceBetween', name=guides_00_name.replace('_GUIDE', 'InitialLength_DBT'), ss=True)
+                distance_between_low = cmds.createNode('distanceBetween', name=guides_01_name.replace('_GUIDE', 'InitialLength_DBT'), ss=True)
+                cmds.connectAttr(guides[0], distance_between_up+'.inMatrix1') # a
+                cmds.connectAttr(guides[1], distance_between_up+'.inMatrix2')
+                cmds.connectAttr(guides[1], distance_between_low+'.inMatrix1') # b
+                cmds.connectAttr(guides[2], distance_between_low+'.inMatrix2')
+                cmds.connectAttr(guides[0], distance_between_eff+'.inMatrix1') # c
+                cmds.connectAttr(guides[2], distance_between_eff+'.inMatrix2')
+                cmds.connectAttr(distance_between_up+'.distance', multiply_upper+'.input[0]') # a2
+                cmds.connectAttr(distance_between_up+'.distance', multiply_upper+'.input[1]')
+                cmds.connectAttr(distance_between_low+'.distance', multiply_lower+'.input[0]') # b2
+                cmds.connectAttr(distance_between_low+'.distance', multiply_lower+'.input[1]')
+                cmds.connectAttr(distance_between_eff+'.distance', multiply_eff+'.input[0]') # c2
+                cmds.connectAttr(distance_between_eff+'.distance', multiply_eff+'.input[1]')
+        else:
+                cmds.connectAttr(distance_between_up+'.output', multiply_upper+'.input[0]') # a2
+                cmds.connectAttr(distance_between_up+'.output', multiply_upper+'.input[1]')
+                cmds.connectAttr(distance_between_low+'.output', multiply_lower+'.input[0]') # b2
+                cmds.connectAttr(distance_between_low+'.output', multiply_lower+'.input[1]')
+                cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[0]') # c2
+                cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[1]')
 
-        sum_node = cmds.createNode('sum', name=guides_00_name.replace('_GUIDE', 'UpperFull_SUM'), ss=True)
+        sum_node = cmds.createNode('sum', name=guides_00_name.replace('_GUIDE', 'ASquaredPlusCSquared_UpperFull_SUM'), ss=True)
         cmds.connectAttr(multiply_upper+'.output', sum_node+'.input[0]') # a2+c2
         cmds.connectAttr(multiply_eff+'.output', sum_node+'.input[1]')
 
-        subtract_node = cmds.createNode('subtract', name=guides_02_name.replace('GUIDE', 'Lower_SUB'), ss=True)
+        subtract_node = cmds.createNode('subtract', name=guides_02_name.replace('_GUIDE', 'UpperFullMinusBSquared_Lower_SUB'), ss=True)
         cmds.connectAttr(sum_node+'.output', subtract_node+'.input1') # a2+c2
         cmds.connectAttr(multiply_lower+'.output', subtract_node+'.input2') # - b2
 
-        multiply_node = cmds.createNode('multiply', name=guides_00_name.replace('GUIDE', 'MULT'), ss=True)
-        float_constant = cmds.createNode('floatConstant', name=guides_00_name.replace('GUIDE', 'FCN'), ss=True)
+        multiply_node = cmds.createNode('multiply', name=guides_00_name.replace('_GUIDE', '2ac_MULT'), ss=True)
+        float_constant = cmds.createNode('floatConstant', name=guides_00_name.replace('_GUIDE', '2_FCN'), ss=True)
         cmds.setAttr(float_constant+'.inFloat', 2)
-        cmds.connectAttr(distance_between_up+'.distance', multiply_node+'.input[0]') # a
-        cmds.connectAttr(distance_between_low+'.distance', multiply_node+'.input[1]') # b
+        if use_stretch == False:
+                cmds.connectAttr(distance_between_up+'.distance', multiply_node+'.input[0]') # a
+                cmds.connectAttr(distance_between_low+'.distance', multiply_node+'.input[1]') # b
+        else:
+                cmds.connectAttr(distance_between_up+'.output', multiply_node+'.input[0]') # a
+                cmds.connectAttr(distance_between_low+'.output', multiply_node+'.input[1]') # b
         cmds.connectAttr(float_constant+'.outFloat', multiply_node+'.input[2]') # *2
 
-        divide_node = cmds.createNode('divide', name=guides_00_name.replace('GUIDE', 'DIV'), ss=True)
+        divide_node = cmds.createNode('divide', name=guides_00_name.replace('_GUIDE', 'CosineValue_DIV'), ss=True)
         cmds.connectAttr(subtract_node+'.output', divide_node+'.input1') # a2+b2-c2
         cmds.connectAttr(multiply_node+'.output', divide_node+'.input2') # 2ac
 
-        acos_node = cmds.createNode('acos', name=guides_00_name.replace('GUIDE', 'ACOS'), ss=True)
+        acos_node = cmds.createNode('acos', name=guides_00_name.replace('_GUIDE', 'Angle_ACOS'), ss=True)
         cmds.connectAttr(divide_node+'.output', acos_node+'.input') # (a2+c2-b2)/2ac
         
         # Lower controller rotation
-        add_lower = cmds.createNode('sum', name=guides_01_name.replace('GUIDE', 'SUM'), ss=True)
+        add_lower = cmds.createNode('sum', name=guides_01_name.replace('_GUIDE', 'ASquaredPlusBSquared_SUM'), ss=True)
         cmds.connectAttr(multiply_upper+'.output', add_lower+'.input[0]') # a2+b2
         cmds.connectAttr(multiply_lower+'.output', add_lower+'.input[1]')
 
-        subtract_lower = cmds.createNode('subtract', name=guides_01_name.replace('GUIDE', 'SUB'), ss=True)
+        subtract_lower = cmds.createNode('subtract', name=guides_01_name.replace('_GUIDE', 'SUB'), ss=True)
         cmds.connectAttr(add_lower+'.output', subtract_lower+'.input1') # a2+b2
         cmds.connectAttr(multiply_eff+'.output', subtract_lower+'.input2') # - c2
 
         multiply_lower_2 = cmds.createNode('multiply', name=guides_01_name.replace('GUIDE', '2ab_MULT'), ss=True)
-        cmds.connectAttr(distance_between_up+'.distance', multiply_lower_2+'.input[0]') # a
-        cmds.connectAttr(distance_between_low+'.distance', multiply_lower_2+'.input[1]') # b
+        if use_stretch == False:
+                cmds.connectAttr(distance_between_up+'.distance', multiply_lower_2+'.input[0]') # a
+                cmds.connectAttr(distance_between_low+'.distance', multiply_lower_2+'.input[1]') # b
+        else:
+                cmds.connectAttr(distance_between_up+'.output', multiply_lower_2+'.input[0]') # a
+                cmds.connectAttr(distance_between_low+'.output', multiply_lower_2+'.input[1]') # b
         cmds.connectAttr(float_constant+'.outFloat', multiply_lower_2+'.input[2]') # *2
 
         divide_lower = cmds.createNode('divide', name=guides_01_name.replace('GUIDE', 'CosValue_DIV'), ss=True)
@@ -115,6 +130,8 @@ def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,
         cmds.connectAttr(aim_matrix+'.outputMatrix', mult_matrix_upper_wm+'.matrixIn[1]') # connect aim matrix to world matrix
         cmds.connectAttr(four_by_four_up_local_rotation+'.output', mult_matrix_upper_wm+'.matrixIn[0]') # connect local rotation to world matrix
         upper_wm = mult_matrix_upper_wm+'.matrixSum' # upper world matrix
+        locator_upper = cmds.spaceLocator(name=f"{side}_armUpper_LOC")[0]
+        cmds.connectAttr(upper_wm, locator_upper+'.offsetParentMatrix') # connect upper
         #  ----- This will be used to connect it to the blend matrix later -----
 
         # Lower WM
@@ -147,10 +164,16 @@ def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,
         cmds.connectAttr(power_to_sin+'.output', four_by_four_low_local_rotation+'.in10') # sin
         cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in11') # cos
         if side == 'L':
-                cmds.connectAttr(distance_between_up+'.distance', four_by_four_low_local_rotation+'.in30') # position x, add the position
+                if use_stretch == False:
+                        cmds.connectAttr(distance_between_up+'.distance', four_by_four_low_local_rotation+'.in30') # position x, add the position
+                else:
+                        cmds.connectAttr(distance_between_up+'.output', four_by_four_low_local_rotation+'.in30') # position x, add the position
         else:
                 negate_position_x = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'PosX_NEG'), ss=True)
-                cmds.connectAttr(distance_between_up+'.distance', negate_position_x+'.input') # negate position
+                if use_stretch == False:
+                        cmds.connectAttr(distance_between_up+'.distance', negate_position_x+'.input') # negate position
+                else:
+                        cmds.connectAttr(distance_between_up+'.output', negate_position_x+'.input') # negate position
                 cmds.connectAttr(negate_position_x+'.output', four_by_four_low_local_rotation+'.in30') # position x, add the position
 
 
@@ -159,42 +182,76 @@ def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,
         cmds.connectAttr(four_by_four_low_local_rotation+'.output', mult_matrix_lower_rwm+'.matrixIn[0]') # connect local rotation to world matrix
         lower_wm = mult_matrix_lower_rwm+'.matrixSum' # lower world matrix
         lower_lm = four_by_four_low_local_rotation+'.output' # lower local matrix
+        locator_lower = cmds.spaceLocator(name=f"{side}_armLower_LOC")[0]
+        cmds.connectAttr(lower_wm, locator_lower+'.offsetParentMatrix') # connect lower
         # ----- This will be used to connect it to the blend matrix later -----
 
         # Effector WM
         
 
-        # Add stretch functionality
-        if stretch != False:
-                add_upper_lower_length = cmds.createNode('sum', name=guides_00_name.replace('_GUIDE', 'SummedLength_SUM'), ss=True) # sum of upper and lower lengths
-                cmds.connectAttr(distance_between_up+'.distance', add_upper_lower_length+'.input[0]') # upper length
-                cmds.connectAttr(distance_between_low+'.distance', add_upper_lower_length+'.input[1]') # lower length
+def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
 
-                full_length = cmds.createNode('distanceBetween', name=guides_00_name.replace('_GUIDE', 'CurrentLength_DBT'), ss=True) # full length distance between start and effector
-                cmds.connectAttr(controllers[0]+'.worldMatrix[0]', full_length+'.inMatrix1') # start
-                cmds.connectAttr(controllers[2]+'.worldMatrix[0]', full_length+'.inMatrix2') # effector
 
-                divide_length = cmds.createNode('divide', name=guides_00_name.replace('_GUIDE', 'Length_DIV'), ss=True) # divide full length by upper+lower length
-                cmds.connectAttr(full_length+'.distance', divide_length+'.input1') # current length
-                cmds.connectAttr(add_upper_lower_length+'.output', divide_length+'.input2') # upper + lower length
 
-                max_node = cmds.createNode('max', name=guides_00_name.replace('_GUIDE', 'scaler_MAX'), ss=True) # max node to avoid scaling down
-                float_constant_one = cmds.createNode('floatConstant', name=guides_00_name.replace('_GUIDE', 'One_FCN'), ss=True)
-                cmds.setAttr(float_constant_one+'.inFloat', 1) # constant 1
-                cmds.connectAttr(float_constant_one+'.outFloat', max_node+'.input[0]') # connect 1
-                cmds.connectAttr(divide_length+'.output', max_node+'.input[1]') # connect division result
+        side = name.split('_')[0]
+        limb = name.split('_')[1]
+        limb_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}Length_DBT", ss=True) # arm length distance between start and effector
+        cmds.connectAttr(f"{trn_guides[0]}.worldMatrix[0]", f"{limb_length}.inMatrix1") # start
+        cmds.connectAttr(f"{trn_guides[2]}.worldMatrix[0]", f"{limb_length}.inMatrix2") # effector
 
-                remap_node = cmds.createNode('remapValue', name=guides_00_name.replace('_GUIDE', 'EnableIKStretch_RMV'), ss=True) # remap node to control stretch influence
-                cmds.connectAttr(controllers[-1]+'.Stretch', remap_node+'.inputValue') # connect stretch attribute
-                cmds.setAttr(remap_node+'.inputMin', 0)
-                cmds.setAttr(remap_node+'.inputMax', 1)
-                cmds.setAttr(remap_node+'.outputMin', 1)
-                cmds.connectAttr(max_node+'.output', remap_node+'.outputMax') # connect max node to remap output max
+        limb_upper_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}UpperInitialLength_DBT", ss=True)
+        cmds.connectAttr(f"{trn_guides[0]}.worldMatrix[0]", f"{limb_upper_length}.inMatrix1") # start
+        cmds.connectAttr(f"{trn_guides[1]}.worldMatrix[0]", f"{limb_upper_length}.inMatrix2") # mid
 
-                multiply_upper_length = cmds.createNode('multiply', name=guides_00_name.replace('_GUIDE', 'UpperLength_MULT'), ss=True) # multiply upper length by scaler
-                cmds.connectAttr(distance_between_up+'.distance', multiply_upper_length+'.input[0]') # upper length
-                cmds.connectAttr(remap_node+'.outValue', multiply_upper_length+'.input[1]') # remap output
+        limb_lower_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}LowerInitialLength_DBT", ss=True)
+        cmds.connectAttr(f"{trn_guides[1]}.worldMatrix[0]", f"{limb_lower_length}.inMatrix1") # mid
+        cmds.connectAttr(f"{trn_guides[2]}.worldMatrix[0]", f"{limb_lower_length}.inMatrix2") # effector
 
-                multiply_lower_length = cmds.createNode('multiply', name=guides_01_name.replace('_GUIDE', 'LowerLength_MULT'), ss=True) # multiply lower length by scaler
-                cmds.connectAttr(distance_between_low+'.distance', multiply_lower_length+'.input[0]') # lower length
-                cmds.connectAttr(remap_node+'.outValue', multiply_lower_length+'.input[1]') # remap output
+        sum_upper_lower = cmds.createNode('sum', name=f"{side}_{limb}InitialLength_SUM", ss=True)
+        cmds.connectAttr(f"{limb_upper_length}.distance", f"{sum_upper_lower}.input[0]") # upper length
+        cmds.connectAttr(f"{limb_lower_length}.distance", f"{sum_upper_lower}.input[1]") # lower length
+
+        divide_length = cmds.createNode('divide', name=f"{side}_{limb}LengthRatio_DIV", ss=True)
+        cmds.connectAttr(f"{limb_length}.distance", f"{divide_length}.input1") # current length
+        cmds.connectAttr(f"{sum_upper_lower}.output", f"{divide_length}.input2") # upper + lower length
+
+        max_length = cmds.createNode('max', name=f"{side}_{limb}Scaler_MAX", ss=True) # max node to avoid scaling down
+        float_constant_one = cmds.createNode('floatConstant', name=f"{side}_{limb}One_FCN", ss=True)
+        cmds.setAttr(f"{float_constant_one}.inFloat", 1) # constant 1
+        cmds.connectAttr(f"{float_constant_one}.outFloat", f"{max_length}.input[0]") # connect 1
+        cmds.connectAttr(f"{divide_length}.output", f"{max_length}.input[1]") # connect division result
+
+        remap_stretch = cmds.createNode('remapValue', name=f"{side}_{limb}Stretch_RMV", ss=True) # remap node to control stretch influence
+        cmds.connectAttr(f"{controllers[-1]}.Stretch", f"{remap_stretch}.inputValue") # connect stretch attribute
+        cmds.setAttr(f"{remap_stretch}.inputMin", 0)
+        cmds.setAttr(f"{remap_stretch}.inputMax", 1)
+        cmds.setAttr(f"{remap_stretch}.outputMin", 1)
+        cmds.connectAttr(f"{max_length}.output", f"{remap_stretch}.outputMax") # connect max node to remap output max
+
+        multiply_upper_length = cmds.createNode('multiply', name=f"{side}_{limb}UpperLength_MULT", ss=True) # multiply upper length by scaler
+        cmds.connectAttr(f"{limb_upper_length}.distance", f"{multiply_upper_length}.input[0]") # upper length
+        cmds.connectAttr(f"{remap_stretch}.outValue", f"{multiply_upper_length}.input[1]") # max length
+        cmds.connectAttr(f"{controllers[-1]}.upperLengthMult", f"{multiply_upper_length}.input[2]") # connect stretch attribute
+
+        multiply_lower_length = cmds.createNode('multiply', name=f"{side}_{limb}LowerLength_MULT", ss=True) # multiply lower length by scaler
+        cmds.connectAttr(f"{limb_lower_length}.distance", f"{multiply_lower_length}.input[0]") # lower length
+        cmds.connectAttr(f"{remap_stretch}.outValue", f"{multiply_lower_length}.input[1]") # max length
+        cmds.connectAttr(f"{controllers[-1]}.lowerLengthMult", f"{multiply_lower_length}.input[2]") # connect stretch attribute
+
+        length_final = cmds.createNode("sum", name=f"{side}_{limb}FinalLength_SUM", ss=True)
+        cmds.connectAttr(f"{multiply_upper_length}.output", f"{length_final}.input[0]")
+        cmds.connectAttr(f"{multiply_lower_length}.output", f"{length_final}.input[1]")
+
+        current_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}CurrentLength_DBT", ss=True) # arm length distance between start and effector
+        cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", f"{current_length}.inMatrix1") # start
+        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", f"{current_length}.inMatrix2") # effector
+
+        global_scale_factor = cmds.createNode('divide', name=f"{side}_{limb}GlobalScale_DIV", ss=True)
+        cmds.connectAttr(f"{current_length}.distance", f"{global_scale_factor}.input1")
+        cmds.connectAttr(f"{master_walk_ctl}.globalScale", f"{global_scale_factor}.input2")
+
+        clamped_final_length = cmds.createNode('min', name=f"{side}_{limb}ClampedFinalLength_MIN", ss=True)
+        cmds.connectAttr(f"{length_final}.output", f"{clamped_final_length}.input[0]")
+        cmds.connectAttr(f"{global_scale_factor}.output", f"{clamped_final_length}.input[1]")
+
+        return clamped_final_length, multiply_upper_length, multiply_lower_length
