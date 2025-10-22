@@ -253,7 +253,7 @@ class ArmModule(object):
         cmds.setAttr(f"{self.ik_wrist_ctl}.SOFT____", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
 
-        custom_ik_solver.solver(guides=self.guides_matrices, controllers=[self.ik_root_ctl, self.pv_ctl, self.ik_wrist_ctl], stretch=False)
+        custom_ik_solver.triangle_solver(guides=self.guides_matrices, controllers=[self.ik_root_ctl, self.pv_ctl, self.ik_wrist_ctl], stretch=False)
         
         
 

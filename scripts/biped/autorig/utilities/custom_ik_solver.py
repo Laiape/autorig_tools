@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 
-def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
+def triangle_solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
         
         """Custom IK solver for biped characters. Cosinus theorem based.
         Args:
@@ -54,15 +54,15 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
         cmds.connectAttr(multiply_upper+'.output', sum_node+'.input[0]') # a2+c2
         cmds.connectAttr(multiply_eff+'.output', sum_node+'.input[1]')
 
-        subtract_node = cmds.createNode('subtract', name=guides_02_name.replace('_GUIDE', 'Lower_SUB'), ss=True)
+        subtract_node = cmds.createNode('subtract', name=guides_02_name.replace('GUIDE', 'Lower_SUB'), ss=True)
         cmds.connectAttr(sum_node+'.output', subtract_node+'.input1') # a2+c2
         cmds.connectAttr(multiply_lower+'.output', subtract_node+'.input2') # - b2
 
-        multiply_node = cmds.createNode('multiply', name=guides_00_name.replace('_GUIDE', 'MULT'), ss=True)
-        float_constant = cmds.createNode('floatConstant', name=guides_00_name.replace('_GUIDE', 'FCN'), ss=True)
+        multiply_node = cmds.createNode('multiply', name=guides_00_name.replace('GUIDE', 'MULT'), ss=True)
+        float_constant = cmds.createNode('floatConstant', name=guides_00_name.replace('GUIDE', 'FCN'), ss=True)
         cmds.setAttr(float_constant+'.inFloat', 2)
         cmds.connectAttr(distance_between_up+'.distance', multiply_node+'.input[0]') # a
-        cmds.connectAttr(distance_between_eff+'.distance', multiply_node+'.input[1]') # c
+        cmds.connectAttr(distance_between_low+'.distance', multiply_node+'.input[1]') # b
         cmds.connectAttr(float_constant+'.outFloat', multiply_node+'.input[2]') # *2
 
         divide_node = cmds.createNode('divide', name=guides_00_name.replace('GUIDE', 'DIV'), ss=True)
@@ -81,26 +81,14 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
         cmds.connectAttr(add_lower+'.output', subtract_lower+'.input1') # a2+b2
         cmds.connectAttr(multiply_eff+'.output', subtract_lower+'.input2') # - c2
 
-        multiply_lower_2 = cmds.createNode('multiply', name=guides_01_name.replace('GUIDE', 'MULT'), ss=True)
+        multiply_lower_2 = cmds.createNode('multiply', name=guides_01_name.replace('GUIDE', '2ab_MULT'), ss=True)
         cmds.connectAttr(distance_between_up+'.distance', multiply_lower_2+'.input[0]') # a
         cmds.connectAttr(distance_between_low+'.distance', multiply_lower_2+'.input[1]') # b
         cmds.connectAttr(float_constant+'.outFloat', multiply_lower_2+'.input[2]') # *2
 
-        divide_lower = cmds.createNode('divide', name=guides_01_name.replace('GUIDE', 'DIV'), ss=True)
+        divide_lower = cmds.createNode('divide', name=guides_01_name.replace('GUIDE', 'CosValue_DIV'), ss=True)
         cmds.connectAttr(subtract_lower+'.output', divide_lower+'.input1') # a2+b2-c2
         cmds.connectAttr(multiply_lower_2+'.output', divide_lower+'.input2') # 2ab
-
-        acos_lower = cmds.createNode('acos', name=guides_01_name.replace('GUIDE', 'ACOS'), ss=True)
-        cmds.connectAttr(divide_lower+'.output', acos_lower+'.input') # (a2+b2-c2)/2ab
-
-        subtract_angle = cmds.createNode('subtract', name=guides_02_name.replace('_GUIDE', 'Angle_SUB'), ss=True)
-        float_constant_180 = cmds.createNode('floatConstant', name=guides_02_name.replace('GUIDE', 'FCN'), ss=True)
-        cmds.setAttr(float_constant_180+'.inFloat', 180) # 180 degrees in radians
-        cmds.connectAttr(float_constant_180+'.outFloat', subtract_angle+'.input1') # 180 degrees
-        cmds.connectAttr(acos_lower+'.output', subtract_angle+'.input2') # upper angle
-
-        negate_node = cmds.createNode('negate', name=guides_02_name.replace('_GUIDE', 'AngleNegate_NEG'), ss=True)
-        cmds.connectAttr(subtract_angle+'.output', negate_node+'.input') # lower angle
 
         # Upper WM
         aim_matrix = cmds.createNode('aimMatrix', name=guides_02_name.replace('_GUIDE', 'Eff_AMX'), ss=True) # aim matrix for end controller,
@@ -131,16 +119,33 @@ def solver(guides=[], controllers=[], stretch=False, primary_mode=(1,0,0), secon
 
         # Lower WM
         four_by_four_low_local_rotation = cmds.createNode('fourByFourMatrix', name=guides_01_name.replace('_GUIDE', 'Local_F4FX'), ss=True) # local matrix for lower arm
-        sin_lower = cmds.createNode('sin', name=guides_01_name.replace('GUIDE', 'SIN'), ss=True)
-        negate_sin_lower = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'Sin_NEG'), ss=True)
-        negate_cos_lower = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'Cos_NEG'), ss=True)
+
+        negate_sin_lower = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'SinNegate_NEG'), ss=True)
+        negate_cos_lower = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'CosNegate_NEG'), ss=True)
         cmds.connectAttr(divide_lower+'.output', negate_cos_lower+'.input') # negate cos
-        cmds.connectAttr(negate_node+'.output', sin_lower+'.input') # lower angle
-        cmds.connectAttr(sin_lower+'.output', negate_sin_lower+'.input') # negate sin
-        cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in00') # -cos
-        cmds.connectAttr(negate_sin_lower+'.output', four_by_four_low_local_rotation+'.in01') # sin
-        cmds.connectAttr(sin_lower+'.output', four_by_four_low_local_rotation+'.in10') # -sin
-        cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in11') # -cos
+        square_cos_lower = cmds.createNode('multiply', name=guides_01_name.replace('_GUIDE', 'CosSquared_MULT'), ss=True)
+        cmds.connectAttr(divide_lower+'.output', square_cos_lower+'.input[0]') # cos
+        cmds.connectAttr(divide_lower+'.output', square_cos_lower+'.input[1]') # cos
+        subtract_to_sin = cmds.createNode('subtract', name=guides_01_name.replace('_GUIDE', 'ToSin_SUB'), ss=True)
+        max_value = cmds.createNode('max', name=guides_01_name.replace('_GUIDE', 'MaxValue_MAX'), ss=True)
+        float_constant_zero = cmds.createNode('floatConstant', name=guides_01_name.replace('_GUIDE', 'Zero_FCN'), ss=True)
+        cmds.setAttr(float_constant_zero+'.inFloat', 0) # constant 0
+        cmds.connectAttr(float_constant_zero+'.outFloat', max_value+'.input[0]')
+        cmds.connectAttr(subtract_to_sin+'.output', max_value+'.input[1]') # max sin
+
+        float_constant_one = cmds.createNode('floatConstant', name=guides_01_name.replace('_GUIDE', 'One_FCN'), ss=True)
+        cmds.setAttr(float_constant_one+'.inFloat', 1) # constant 1
+        cmds.connectAttr(float_constant_one+'.outFloat', subtract_to_sin+'.input1') # 1
+        cmds.connectAttr(square_cos_lower+'.output', subtract_to_sin+'.input2') # cos2
+        power_to_sin = cmds.createNode('power', name=guides_01_name.replace('_GUIDE', 'Sin_POWER'), ss=True)
+        cmds.setAttr(power_to_sin+'.exponent', 0.5) # square
+        cmds.connectAttr(max_value+'.output', power_to_sin+'.input') # sin
+        cmds.connectAttr(power_to_sin+'.output', negate_sin_lower+'.input') # negate sin
+
+        cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in00') # cos
+        cmds.connectAttr(negate_sin_lower+'.output', four_by_four_low_local_rotation+'.in01') # -sin
+        cmds.connectAttr(power_to_sin+'.output', four_by_four_low_local_rotation+'.in10') # sin
+        cmds.connectAttr(negate_cos_lower+'.output', four_by_four_low_local_rotation+'.in11') # cos
         if side == 'L':
                 cmds.connectAttr(distance_between_up+'.distance', four_by_four_low_local_rotation+'.in30') # position x, add the position
         else:
