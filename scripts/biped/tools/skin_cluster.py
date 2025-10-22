@@ -83,7 +83,7 @@ def import_joint_weights_json(filePath=None):
         path = os.path.join(relative_path, "skin_cluster")
         guides_path = os.path.join(path, "guides")
 
-        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=guides_path, fileFilter="*.guides")[0]
+        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=guides_path, fileFilter="*.weights")[0]
        
         if not final_path:
             om.MGlobal.displayError("No file selected.")
@@ -99,31 +99,35 @@ def import_joint_weights_json(filePath=None):
     
     with open(final_path, 'r') as f:
         data = json.load(f)
+        mesh = list(data.keys())[-1] # Get the last key which is the mesh name
+        print(mesh)
 
     # Apply weights to the selected mesh
-    sel = cmds.ls(sl=True, long=True)
-    if not sel:
-        cmds.error("Please select a mesh to import weights into first.")
+    
+    try:
+        sel = cmds.ls(mesh, sl=True, long=True)
+    except:
+        om.MGlobal.displayError(f"Mesh {mesh} not found in the scene.")
         return
 
-    mesh = sel[0]
+    # mesh = sel[0]
 
     if mesh not in data:
         cmds.error(f"No weight data found for mesh: {mesh}")
         return
 
     # Create a new skinCluster if one doesn't exist
-    skin_clusters = cmds.ls(cmds.listHistory(mesh), type='skinCluster') 
+    skin_clusters = cmds.ls(cmds.listHistory(mesh), type='skinCluster')
     if not skin_clusters:
         joints = list(data[mesh].keys())
-        new_joints = []
+        skin_joints = []
         for jnt in joints:
             if not cmds.objExists(jnt):
-                new_jnt = cmds.createNode('joint', name=jnt)
-                new_joints.append(new_jnt) # Create missing joints in the 0,0,0 position
-            new_joints.append(jnt) # Add existing joints as well
+                new_jnt = cmds.createNode('joint', name=jnt) # Add missing joints
+                skin_joints.append(new_jnt) # Create missing joints in the 0,0,0 position
+            skin_joints.append(jnt) # Add existing joints as well
 
-        sc = cmds.skinCluster(new_joints, mesh, toSelectedBones=True)[0]
+        sc = cmds.skinCluster(skin_joints, mesh, toSelectedBones=True)[0]
     else:
         sc = skin_clusters[0]
 
@@ -133,3 +137,21 @@ def import_joint_weights_json(filePath=None):
             cmds.skinPercent(sc, f"{mesh}.{vtx}", tv=[(joint, weight)])
 
     print(f"Import complete! Weights loaded from: {final_path}")
+
+def create_skin_cluster(joints=None, mesh=None):
+    """
+    Create a skin cluster for the given mesh and joints.
+    If no joints or mesh are provided, use the current selection.
+    """
+    if not joints or not mesh:
+        sel = cmds.ls(sl=True, long=True)
+        if len(sel) < 2:
+            cmds.error("Please select at least one joint and one mesh.")
+            return
+
+        joints = sel[:-1]
+        mesh = sel[-1]
+
+    sc = cmds.skinCluster(joints, mesh, toSelectedBones=True)[0]
+    print(f"Skin cluster '{sc}' created for mesh '{mesh}' with joints: {joints}")
+    return sc

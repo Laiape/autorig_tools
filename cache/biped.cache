@@ -1,1 +1,14 @@
-{}
+{
+    "basic_structure": {
+        "character_name": "jamal",
+        "skel_GRP": "skel_GRP",
+        "modules_GRP": "modules_GRP",
+        "masterwalk_ctl": "C_masterwalk_CTL",
+        "character_ctl": "C_character_CTL",
+        "preferences_ctl": "C_preferences_CTL"
+    },
+    "neck_module": {
+        "head_ctl": "C_head_CTL",
+        "neck_ctl": "C_neck_CTL"
+    }
+}

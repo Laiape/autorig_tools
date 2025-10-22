@@ -18,10 +18,12 @@ def get_guides_info():
 
     CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
 
-    guides_transform = cmds.ls(selection=True, type="transform")[0]
+    try:
+        guides_transform = cmds.ls(guides_node, type="transform")[0]
 
-    if not guides_transform:
-        om.MGlobal.displayError("Please select a guide transform.")
+    except IndexError:
+
+        om.MGlobal.displayError("Not a guide transform.")
         return None
 
     answer = cmds.promptDialog(
@@ -38,9 +40,66 @@ def get_guides_info():
     guides_name = cmds.promptDialog(query=True, text=True)
 
     
-    
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
+    curves_in_scene = cmds.ls("*_CRV", type="transform", long=True)
+
+    if curves_in_scene:
+        shapes_data = []
+        curve_guide = []
+
+        for curve in curves_in_scene:
+
+            curve_guide.append(curve.split("|")[-1])
+
+        curve_shapes = cmds.listRelatives(curve_guide, allDescendents=True, type="nurbsCurve")
+        
+        for shape in curve_shapes:
+
+            nurbs_shapes = []
+            if cmds.nodeType(shape) == "nurbsCurve":
+                nurbs_shapes.append(shape)
+
+            if not nurbs_shapes:
+                continue  
+
+            sel_list = om.MSelectionList()
+            shape_data_list = []
+            sel_list.clear()
+            sel_list.add(shape)
+            shape_obj = sel_list.getDependNode(0)
+            curve_fn = om.MFnNurbsCurve(shape_obj)
+
+            cvs = []
+            for i in range(curve_fn.numCVs):
+                pt = curve_fn.cvPosition(i)
+                cvs.append((pt.x, pt.y, pt.z))
+
+            form_types = {
+                om.MFnNurbsCurve.kOpen: "open",
+                om.MFnNurbsCurve.kClosed: "closed",
+                om.MFnNurbsCurve.kPeriodic: "periodic"
+            }
+
+            form = form_types.get(curve_fn.form, "unknown")
+            if form == "unknown":
+                om.MGlobal.displayWarning(f"Curve form unknown for {shape}")
+
+            knots = curve_fn.knots()
+            degree = curve_fn.degree
+
+            shape_data_list.append({
+
+                "name": shape.split("|")[-1],
+                "curve": {
+                    "cvs": cvs,
+                    "form": form,
+                    "knots": list(knots),
+                    "degree": degree
+                }
+            })
+            shapes_data.extend(shape_data_list)
+
 
     if joint_guides:
 
@@ -81,7 +140,6 @@ def get_guides_info():
                                  
     else:
         om.MGlobal.displayError("No joint guides found.")
-        return None
 
     if locator_guides:
 
@@ -95,7 +153,7 @@ def get_guides_info():
 
     else:
         om.MGlobal.displayInfo("No locator guides found.")
-
+     
 
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
@@ -110,6 +168,8 @@ def get_guides_info():
             "joint_matrix": joint_matrices[i],
             "parent": joint_parents[i],
             "isLocator": False,
+            "isJoint": True,
+            "isCurve": False,
             "children": list(reversed(children if children else [])),
     }
 
@@ -119,6 +179,18 @@ def get_guides_info():
             guides_data[guides_name][loc] = {
                 "locator_position": locator_positions[i],
                 "isLocator": True,
+                "isJoint": False,
+                "isCurve": False
+            }
+    
+    if curves_in_scene:
+        for shape_data in shapes_data:
+            shape_name = shape_data["name"]
+            guides_data[guides_name][shape_name] = {
+                "curve_data": shape_data["curve"],
+                "isLocator": False,
+                "isJoint": False,
+                "isCurve": True
             }
 
     if not os.path.exists(final_path):
@@ -166,7 +238,7 @@ def load_guides_info(filePath=None):
                         cmds.xform(locator, ws=True, m=data["locator_position"])
                         cmds.parent(locator, guides_node)
 
-                else:
+                elif "isJoint" in data and data["isJoint"]:
 
                     cmds.select(clear=True)
                     imported_joint = cmds.joint(name=guide, r=5)
@@ -177,7 +249,50 @@ def load_guides_info(filePath=None):
                         cmds.parent(imported_joint, guides_node)
                     else:
                         cmds.parent(imported_joint, data["parent"])
-            
+                
+                elif "isCurve" in data and data["isCurve"]:
+
+                    curve_name = guide
+                    dag_modifier = om.MDagModifier()
+                    transform_obj = dag_modifier.createNode("transform")
+                    dag_modifier.doIt()
+                    transform_fn = om.MFnDagNode(transform_obj)
+                    transform_fn.setName(curve_name.split("Shape")[0])
+                    dag_modifier.doIt()
+                    cmds.parent(transform_fn.name(), guides_node)
+
+                    
+                    curve_info = data["curve_data"]
+                    cvs = curve_info["cvs"]
+                    degree = curve_info["degree"]
+                    knots = curve_info["knots"]
+                    form = curve_info["form"]
+
+                    form_flags = {
+                        "open": om.MFnNurbsCurve.kOpen,
+                        "closed": om.MFnNurbsCurve.kClosed,
+                        "periodic": om.MFnNurbsCurve.kPeriodic
+                    }
+                    form_flag = form_flags.get(form, om.MFnNurbsCurve.kOpen)
+
+                    points = om.MPointArray()
+                    for pt in cvs:
+                        points.append(om.MPoint(pt[0], pt[1], pt[2]))
+
+                    curve_fn = om.MFnNurbsCurve()
+                    shape_obj = curve_fn.create(
+                        points,
+                        knots,
+                        degree,
+                        form_flag,
+                        False,    
+                        True,     
+                        transform_obj
+                    )
+
+                    shape_fn = om.MFnDagNode(shape_obj)
+                    shape_fn.setName(curve_name)
+
     else:
 
         om.MGlobal.displayError("Guides group 'C_guides_GRP' already exists. Please delete it before loading new guides.")
@@ -233,7 +348,7 @@ def get_guides(guide_export):
         
         else:
 
-            if guides_data[name][guide_export]["isLocator"] != True:
+            if guides_data[name][guide_export]["isJoint"] == True:
                 chain = []
 
                 joint_exported = cmds.joint(name=guide_export, r=5)
@@ -255,4 +370,45 @@ def get_guides(guide_export):
                 cmds.xform(locator, ws=True, m=guides_data[name][guide_export]["locator_position"])
                 return locator
             
+            elif guides_data[name][guide_export]["isCurve"] == True:
+
+                curve_name = guides_data[name][guide_export]["curve_data"]["name"]
+                dag_modifier = om.MDagModifier()
+                transform_obj = dag_modifier.createNode("transform")
+                dag_modifier.doIt()
+                transform_fn = om.MFnDagNode(transform_obj)
+                transform_fn.setName(curve_name.split("Shape")[0])
+                dag_modifier.doIt()
+    
+                curve_info = guides_data[name][guide_export]["curve_data"]
+                cvs = curve_info["cvs"]
+                degree = curve_info["degree"]
+                knots = curve_info["knots"]
+                form = curve_info["form"]
+
+                form_flags = {
+                    "open": om.MFnNurbsCurve.kOpen,
+                    "closed": om.MFnNurbsCurve.kClosed,
+                    "periodic": om.MFnNurbsCurve.kPeriodic
+                }
+                form_flag = form_flags.get(form, om.MFnNurbsCurve.kOpen)
+
+                points = om.MPointArray()
+                for pt in cvs:
+                    points.append(om.MPoint(pt[0], pt[1], pt[2]))
+
+                curve_fn = om.MFnNurbsCurve()
+                shape_obj = curve_fn.create(
+                    points,
+                    knots,
+                    degree,
+                    form_flag,
+                    False,    
+                    True,     
+                    transform_obj
+                )
+
+                shape_fn = om.MFnDagNode(shape_obj)
+                shape_fn.setName(curve_name)
             
+            return shape_fn.name()

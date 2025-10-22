@@ -277,8 +277,10 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[]):
 
         if not ctl:
             ctl = cmds.circle(name=f"{name}_CTL", ch=False)
+            cmds.setAttr(f"{ctl[0]}.lineWidth", 1.3)
         else:
             ctl = [ctl[0]]  # make sure ctl is a list with one element for consistency
+            cmds.setAttr(f"{ctl[0]}.lineWidth", 1.3)
 
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])

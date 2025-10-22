@@ -42,12 +42,12 @@ class UI(QtWidgets.QMainWindow):
         
     def load_icon(self):
 
-        if os.path.exists("C:/Users/laiap/Documents/maya/2024/scripts/icon.JSON"):
-            icon_path = "C:/Users/laiap/Documents/maya/2024/scripts/icon.JSON"
-        elif os.path.exists("C:/Users/laia.peris/Documents/maya/icon.JSON"):
-            icon_path = "C:/Users/laia.peris/Documents/maya/icon.JSON"
+        complete_path = os.path.realpath(__file__)
+        relative_path = complete_path.split("\scripts")[0]
+        icons_path = os.path.join(relative_path, "icons")
+        final_path = os.path.join(icons_path, "icon.JSON")
 
-        with open(icon_path, "r") as file:
+        with open(final_path, "r") as file:
             icon_data = json.load(file)
         return icon_data
 
@@ -336,12 +336,31 @@ class UI(QtWidgets.QMainWindow):
 
     def populate_skin_cluster_interactions(self):
 
-        self.export_skin_weights_button = QtWidgets.QPushButton("Export Skin Cluster Weights")
-        # self.export_skin_weights_button.setIcon(QtGui.QPixmap(pixmap))
+        data = self.load_icon()
+
+        pixmap = self.svg(data, "skin_cluster", "export")
+
+        pixmap = self.svg(data, "skin_cluster", "export")
+        self.export_skin_weights_button = QtWidgets.QPushButton("")
+        self.export_skin_weights_button.setIcon(QtGui.QPixmap(pixmap))
+        self.export_skin_weights_button.setText("Export Skin Cluster")
+        
+
         self.export_skin_weights_button.setToolTip("Export all the skin cluster weights of the selected mesh")
         self.export_skin_weights_button.setIconSize(QtCore.QSize(24, 24))
         self.export_skin_weights_button.setStyleSheet("padding: 5px;")
         self.export_skin_weights_button.setObjectName("modulesButtons")
+
+        pixmap = self.svg(data, "skin_cluster", "import")
+        self.import_skin_weights_button = QtWidgets.QPushButton("")
+        self.import_skin_weights_button.setIcon(QtGui.QPixmap(pixmap))
+        self.import_skin_weights_button.setText("Import Skin Cluster")
+        self.import_skin_weights_button.setToolTip("Import all the skin cluster weights of the selected mesh")
+        self.import_skin_weights_button.setIconSize(QtCore.QSize(24, 24))
+        self.import_skin_weights_button.setStyleSheet("padding: 5px;")
+        self.import_skin_weights_button.setObjectName("modulesButtons")
+
+
 
     def template_button_connections(self, type):
 
@@ -390,6 +409,13 @@ class UI(QtWidgets.QMainWindow):
         skin_cluster.export_joint_weights_json()
         print("Skin weights exported successfully!")
 
+    def import_skin_weights_connections(self):
+        from biped.tools import skin_cluster
+        reload(skin_cluster)
+
+        skin_cluster.import_joint_weights_json()
+        print("Skin weights imported successfully!")
+
     def create_connections(self):
 
         # Connect character template buttons
@@ -418,6 +444,7 @@ class UI(QtWidgets.QMainWindow):
 
         self.export_curves_button.clicked.connect(self.export_curves_connections)
         self.export_skin_weights_button.clicked.connect(self.export_skin_weights_connections)
+        self.import_skin_weights_button.clicked.connect(self.import_skin_weights_connections)
 
 
     def layouts(self):
@@ -560,6 +587,7 @@ class UI(QtWidgets.QMainWindow):
         # Skin Cluster Layout
         self.skin_cluster_layout = QtWidgets.QVBoxLayout()
         self.skin_cluster_layout.addWidget(self.export_skin_weights_button)
+        self.skin_cluster_layout.addWidget(self.import_skin_weights_button)
         self.skin_cluster_tab_layout.addLayout(self.skin_cluster_layout)
 
     def populate(self):
