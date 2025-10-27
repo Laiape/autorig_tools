@@ -45,14 +45,14 @@ class EyelidModule(object):
             self.module_trn = f"{self.module_name}Module_GRP"
             self.skeleton_grp = f"{self.module_name}Skinning_GRP"
             self.controllers_grp = f"{self.module_name}Controllers_GRP"
-            self.local_jnts_grp = f"{self.module_name}LocalJoints_GRP"
+            self.local_jnts_grp = f"{self.module_name}Local_GRP"
             self.curves_grp = f"{self.module_name}Curves_GRP"
         else:
             self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
-            self.local_jnts_grp = cmds.createNode("transform", name=f"{self.module_name}LocalJoints_GRP", ss=True, p=self.module_trn)
+            self.local_jnts_grp = cmds.createNode("transform", name=f"{self.module_name}Local_GRP", ss=True, p=self.module_trn)
             self.curves_grp = cmds.createNode("transform", name=f"{self.module_name}Curves_GRP", ss=True, p=self.module_trn)
         self.extra_controllers_grp = cmds.createNode("transform", name=f"{self.side}_eyelidExtraControllers_GRP", ss=True, p=self.controllers_grp)
 
@@ -87,18 +87,20 @@ class EyelidModule(object):
         Returns:
             str: The name of the local transform node.
         """
-        grp = ctl.replace("_CTL", "_GRP")
-
+        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.local_jnts_grp)
+        cmds.matchTransform(local_grp, ctl)
+        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
+    
         if "01" in ctl:
-            local_jnt = cmds.createNode("joint", name=ctl.replace("01_CTL", "01Local_JNT"), ss=True, p=self.local_jnts_grp)
+            local_jnt = cmds.createNode("joint", name=ctl.replace("01_CTL", "01Local_JNT"), ss=True, p=local_trn)
             cmds.delete(local_jnt.replace("01Local_JNT", "Local_JNT"))
         else:
-            local_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Local_JNT"), ss=True, p=self.local_jnts_grp)
-        cmds.connectAttr(f"{ctl}.matrix", f"{local_jnt}.offsetParentMatrix")
+            local_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Local_JNT"), ss=True, p=local_trn)
+        cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix")
         # cmds.matchTransform(local_jnt, grp)
         
 
-        return  local_jnt
+        return local_trn, local_jnt
     
     def create_curves(self):
 
@@ -196,7 +198,6 @@ class EyelidModule(object):
                     cmds.connectAttr(f"{self.eyelid_down_curve}.editPoints[{j}].zValueEp", f"{four_by_four_matrix}.in32")
                 self.guides_matrices.append(f"{four_by_four_matrix}.output")
 
-        print(self.guides_matrices)
 
     def create_main_eye_setup(self):
 
@@ -240,6 +241,8 @@ class EyelidModule(object):
 
         self.upper_local_jnt = []
         self.lower_local_jnt = []
+        self.upper_local_trn = []
+        self.lower_local_trn = []
 
         self.controllers = []
         self.nodes = []
@@ -247,7 +250,7 @@ class EyelidModule(object):
         for i, matrix in enumerate(self.guides_matrices):
             suffix = matrix.split("_")[-1]
             node, ctl = curve_tool.create_controller(name=matrix.replace(f"_{suffix}", ""), offset=["GRP"])
-            local_jnt = self.local(ctl)
+            local_trn, local_jnt = self.local(ctl)
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             
             # if "eyelidIn_" in matrix or "eyelidOut_" in matrix or "eyelidDown_" in matrix or "eyelidUp_" in matrix:
@@ -258,17 +261,20 @@ class EyelidModule(object):
             
             if "Up" in matrix:
                 self.upper_local_jnt.append(local_jnt)
+                self.upper_local_trn.append(local_trn)
             elif "Down" in matrix:
                 self.lower_local_jnt.append(local_jnt)
+                self.lower_local_trn.append(local_trn)
             elif "In" not in matrix or "Out" not in matrix:
                 self.upper_local_jnt.append(local_jnt)
                 self.lower_local_jnt.append(local_jnt)
+                self.upper_local_trn.append(local_trn)
+                self.lower_local_trn.append(local_trn)
 
-                    
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
 
             cmds.connectAttr(matrix, f"{node[0]}.offsetParentMatrix")
-            cmds.parent(node, self.controllers_grp)
+            cmds.parent(node[0], self.controllers_grp)
             self.controllers.append(ctl)
             self.nodes.append(node[0])
         
@@ -286,13 +292,19 @@ class EyelidModule(object):
         self.constraints_callback(guide=self.lower_guides[1], driven=self.lower_nodes[1], drivers=[self.lower_controllers[2], self.lower_controllers[0]], local_jnt=self.lower_local_jnt[1])
         self.constraints_callback(guide=self.lower_guides[-2], driven=self.lower_nodes[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]], local_jnt=self.lower_local_jnt[-2])
 
-        for jnt in self.upper_local_jnt + self.lower_local_jnt:
-            cmds.matchTransform(jnt, jnt.replace("Local_JNT", "_GRP"))
+        self.upper_local_grps = [trn.replace("TRN", "GRP") for trn in self.upper_local_trn]
+        self.lower_local_grps = [trn.replace("TRN", "GRP") for trn in self.lower_local_trn]
 
-        self.local_constraints_callback(driven_jnt=self.upper_local_jnt[1], drivers=[self.upper_controllers[2], self.upper_controllers[0]])
-        self.local_constraints_callback(driven_jnt=self.upper_local_jnt[-2], drivers=[self.upper_controllers[2], self.upper_controllers[-1]])
-        self.local_constraints_callback(driven_jnt=self.lower_local_jnt[1], drivers=[self.lower_controllers[2], self.lower_controllers[0]])
-        self.local_constraints_callback(driven_jnt=self.lower_local_jnt[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]])
+        for trn in self.upper_local_grps:
+
+            cmds.matchTransform(trn, trn.replace("Local_GRP", "_CTL"), pos=True, rot=True)
+        for trn in self.lower_local_grps:
+            cmds.matchTransform(trn, trn.replace("Local_GRP", "_CTL"), pos=True, rot=True)
+
+        self.local_constraints_callback(driven_jnt=self.upper_local_trn[1], drivers=[self.upper_controllers[2], self.upper_controllers[0]])
+        self.local_constraints_callback(driven_jnt=self.upper_local_trn[-2], drivers=[self.upper_controllers[2], self.upper_controllers[-1]])
+        self.local_constraints_callback(driven_jnt=self.lower_local_trn[1], drivers=[self.lower_controllers[2], self.lower_controllers[0]])
+        self.local_constraints_callback(driven_jnt=self.lower_local_trn[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]])
 
 
 
@@ -412,6 +424,12 @@ class EyelidModule(object):
         cmds.connectAttr(f"{decompose_matrix}.outputRotateY", f"{blend_colors_corners}.color1G")
         cmds.connectAttr(f"{decompose_matrix}.outputRotateZ", f"{blend_colors_corners}.color1B")
         cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy", f"{blend_colors_fleshy}.blender")
+        cmds.setAttr(f"{blend_colors_fleshy}.color2R", 0)
+        cmds.setAttr(f"{blend_colors_fleshy}.color2G", 0)
+        cmds.setAttr(f"{blend_colors_fleshy}.color2B", 0)
+        cmds.setAttr(f"{blend_colors_corners}.color2R", 0)
+        cmds.setAttr(f"{blend_colors_corners}.color2G", 0)
+        cmds.setAttr(f"{blend_colors_corners}.color2B", 0)
         cmds.connectAttr(f"{mult_double_linear}.output", f"{blend_colors_corners}.blender")
 
 
@@ -453,8 +471,6 @@ class EyelidModule(object):
                     else:
                         cmds.connectAttr(f"{blend_colors_corners}.output", f"{self.lower_local_jnt[i]}.rotate")
                 
-        for jnt in self.upper_local_jnt + self.lower_local_jnt:
-            cmds.matchTransform(jnt, jnt.replace("Local_JNT", "_GRP"))
 
     def skinning_joints(self):
         
@@ -540,6 +556,9 @@ class EyelidModule(object):
             cmds.connectAttr(f"{ctl}.matrix", f"{mult_matrix_skin}.matrixIn[0]")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skin}.matrixIn[1]")
             cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
+
+            cmds.xform(node[0], m=om.MMatrix.kIdentity)
+            cmds.setAttr(f"{node[0]}.inheritsTransform", 0)
 
             # cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
             # cmds.disconnectAttr(f"{ctl}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
@@ -656,46 +675,45 @@ class EyelidModule(object):
             driven_jnt (str): The name of the driven object.
             drivers (list): A list of driver objects. Driver[0] == 0.7 weight, Driver[1] == 0.3 weight
         """
-        driven_ctl = driven_jnt.replace("Local_JNT", "_CTL")
+        driven_ctl = driven_jnt.replace("Local_TRN", "_CTL")
 
-        row_from_matrix_driver_0 = cmds.createNode("rowFromMatrix", name=drivers[0].replace("CTL", "RFM"), ss=True)
-        row_from_matrix_driver_1 = cmds.createNode("rowFromMatrix", name=drivers[1].replace("CTL", "RFM"), ss=True)
-        multiply_divide_driver_0 = cmds.createNode("multiplyDivide", name=drivers[0].replace("CTL", "MDV"), ss=True)
-        multiply_divide_driver_1 = cmds.createNode("multiplyDivide", name=drivers[1].replace("CTL", "MDV"), ss=True)
-        four_by_four_matrix_driver_0 = cmds.createNode("fourByFourMatrix", name=drivers[0].replace("CTL", "F4X4"), ss=True)
-        four_by_four_matrix_driver_1 = cmds.createNode("fourByFourMatrix", name=drivers[1].replace("CTL", "F4X4"), ss=True)
-        mult_matrix = cmds.createNode("multMatrix", name=driven_jnt.replace("JNT", "MMT"), ss=True)
+        mult_matrix = cmds.createNode("multMatrix", name=driven_jnt.replace("TRN", "MMT"), ss=True)
 
-        cmds.setAttr(f"{row_from_matrix_driver_0}.input", 3)  # Get translation row
-        cmds.setAttr(f"{row_from_matrix_driver_1}.input", 3)  # Get translation row
-        cmds.setAttr(f"{multiply_divide_driver_0}.input2X", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0}.input2Y", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0}.input2Z", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_1}.input2X", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1}.input2Y", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1}.input2Z", 0.3)
-        cmds.connectAttr(f"{drivers[0]}.matrix", f"{row_from_matrix_driver_0}.matrix")
-        cmds.connectAttr(f"{drivers[1]}.matrix", f"{row_from_matrix_driver_1}.matrix")
-        cmds.connectAttr(f"{row_from_matrix_driver_0}.outputX", f"{multiply_divide_driver_0}.input1X")
-        cmds.connectAttr(f"{row_from_matrix_driver_0}.outputY", f"{multiply_divide_driver_0}.input1Y")
-        cmds.connectAttr(f"{row_from_matrix_driver_0}.outputZ", f"{multiply_divide_driver_0}.input1Z")
-        cmds.connectAttr(f"{row_from_matrix_driver_1}.outputX", f"{multiply_divide_driver_1}.input1X")
-        cmds.connectAttr(f"{row_from_matrix_driver_1}.outputY", f"{multiply_divide_driver_1}.input1Y")
-        cmds.connectAttr(f"{row_from_matrix_driver_1}.outputZ", f"{multiply_divide_driver_1}.input1Z")
-        cmds.connectAttr(f"{multiply_divide_driver_0}.outputX", f"{four_by_four_matrix_driver_0}.in30")
-        cmds.connectAttr(f"{multiply_divide_driver_0}.outputY", f"{four_by_four_matrix_driver_0}.in31")
-        cmds.connectAttr(f"{multiply_divide_driver_0}.outputZ", f"{four_by_four_matrix_driver_0}.in32")
-        cmds.connectAttr(f"{multiply_divide_driver_1}.outputX", f"{four_by_four_matrix_driver_1}.in30")
-        cmds.connectAttr(f"{multiply_divide_driver_1}.outputY", f"{four_by_four_matrix_driver_1}.in31")
-        cmds.connectAttr(f"{multiply_divide_driver_1}.outputZ", f"{four_by_four_matrix_driver_1}.in32")
+        multiply_divide_driver_0_rotate = cmds.createNode("multiplyDivide", name=drivers[0].replace("_CTL", f"Rotation00_MDV"), ss=True)
+        multiply_divide_driver_0_translate = cmds.createNode("multiplyDivide", name=drivers[0].replace("_CTL", f"Translation00_MDV"), ss=True)
+        multiply_divide_driver_1_rotate = cmds.createNode("multiplyDivide", name=drivers[1].replace("_CTL", f"Rotation00_MDV"), ss=True)
+        multiply_divide_driver_1_translate = cmds.createNode("multiplyDivide", name=drivers[1].replace("_CTL", f"Translation00_MDV"), ss=True)
+
+        compose_matrix_00 = cmds.createNode("composeMatrix", name=driven_jnt.replace("00_TRN", "00_CMT"), ss=True)
+        compose_matrix_01 = cmds.createNode("composeMatrix", name=driven_jnt.replace("01_TRN", "01_CMT"), ss=True)
+
+
+        cmds.setAttr(f"{multiply_divide_driver_0_rotate}.input2X", 0.7)
+        cmds.setAttr(f"{multiply_divide_driver_0_rotate}.input2Y", 0.7)
+        cmds.setAttr(f"{multiply_divide_driver_0_rotate}.input2Z", 0.7)
+        cmds.setAttr(f"{multiply_divide_driver_0_translate}.input2X", 0.7)
+        cmds.setAttr(f"{multiply_divide_driver_0_translate}.input2Y", 0.7)
+        cmds.setAttr(f"{multiply_divide_driver_0_translate}.input2Z", 0.7)
+
+        cmds.setAttr(f"{multiply_divide_driver_1_rotate}.input2X", 0.3)
+        cmds.setAttr(f"{multiply_divide_driver_1_rotate}.input2Y", 0.3)
+        cmds.setAttr(f"{multiply_divide_driver_1_rotate}.input2Z", 0.3)
+        cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2X", 0.3)
+        cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2Y", 0.3)
+        cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2Z", 0.3)
+
+        cmds.connectAttr(f"{drivers[0]}.rotate", f"{multiply_divide_driver_0_rotate}.input1")
+        cmds.connectAttr(f"{drivers[0]}.translate", f"{multiply_divide_driver_0_translate}.input1")
+        cmds.connectAttr(f"{drivers[1]}.rotate", f"{multiply_divide_driver_1_rotate}.input1")
+        cmds.connectAttr(f"{drivers[1]}.translate", f"{multiply_divide_driver_1_translate}.input1")
+        cmds.connectAttr(f"{multiply_divide_driver_0_rotate}.output", f"{compose_matrix_00}.inputRotate")
+        cmds.connectAttr(f"{multiply_divide_driver_0_translate}.output", f"{compose_matrix_00}.inputTranslate")
+        cmds.connectAttr(f"{multiply_divide_driver_1_rotate}.output", f"{compose_matrix_01}.inputRotate")
+        cmds.connectAttr(f"{multiply_divide_driver_1_translate}.output", f"{compose_matrix_01}.inputTranslate")
         cmds.connectAttr(f"{driven_ctl}.matrix", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{four_by_four_matrix_driver_0}.output", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{four_by_four_matrix_driver_1}.output", f"{mult_matrix}.matrixIn[2]")
+        cmds.connectAttr(f"{compose_matrix_00}.outputMatrix", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{compose_matrix_01}.outputMatrix", f"{mult_matrix}.matrixIn[2]")
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{driven_jnt}.offsetParentMatrix", force=True)
-
-
-
-
 
             
 
