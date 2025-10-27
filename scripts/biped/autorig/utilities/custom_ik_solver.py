@@ -70,14 +70,14 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.setAttr(float_constant+'.inFloat', 2)
         if use_stretch == False:
                 cmds.connectAttr(distance_between_up+'.distance', multiply_node+'.input[0]') # a
-                cmds.connectAttr(distance_between_low+'.distance', multiply_node+'.input[1]') # b
+                cmds.connectAttr(distance_between_eff+'.distance', multiply_node+'.input[1]') # c
         else:
                 cmds.connectAttr(distance_between_up+'.output', multiply_node+'.input[0]') # a
-                cmds.connectAttr(distance_between_low+'.output', multiply_node+'.input[1]') # b
-        cmds.connectAttr(float_constant+'.outFloat', multiply_node+'.input[2]') # *2
+                cmds.connectAttr(distance_between_eff+'.output', multiply_node+'.input[1]') # c
+        cmds.connectAttr(float_constant+'.outFloat', multiply_node+'.input[2]') # *2ac
 
         divide_node = cmds.createNode('divide', name=guides_00_name.replace('_GUIDE', 'CosineValue_DIV'), ss=True)
-        cmds.connectAttr(subtract_node+'.output', divide_node+'.input1') # a2+b2-c2
+        cmds.connectAttr(subtract_node+'.output', divide_node+'.input1') # a2+c2-b2
         cmds.connectAttr(multiply_node+'.output', divide_node+'.input2') # 2ac
 
         acos_node = cmds.createNode('acos', name=guides_00_name.replace('_GUIDE', 'Angle_ACOS'), ss=True)
@@ -110,10 +110,10 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.setAttr(aim_matrix+'.primaryInputAxis', *primary_mode, type="double3") # X axis
         cmds.setAttr(aim_matrix+'.secondaryInputAxis', *secondary_mode, type="double3") # Y axis
         cmds.setAttr(aim_matrix+'.secondaryTargetVector', *secondary_mode, type="double3") # Y axis
-        cmds.setAttr(aim_matrix+'.secondaryMode', 2) # Alingn to secondary axis
+        cmds.setAttr(aim_matrix+'.secondaryMode', 1) # Aim to secondary axis
         cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", aim_matrix+'.inputMatrix') # input
-        cmds.connectAttr(f"{controllers[1]}.worldMatrix[0]", aim_matrix+'.primaryTargetMatrix') # target
-        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", aim_matrix+'.secondaryTargetMatrix') # secondary target
+        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", aim_matrix+'.primaryTargetMatrix') # target
+        cmds.connectAttr(f"{controllers[1]}.worldMatrix[0]", aim_matrix+'.secondaryTargetMatrix') # secondary target
 
 
         sin_upper = cmds.createNode('sin', name=guides_00_name.replace('GUIDE', 'SIN'), ss=True)
@@ -187,7 +187,42 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         # ----- This will be used to connect it to the blend matrix later -----
 
         # Effector WM
-        
+        mult_matrix_eff = cmds.createNode('multMatrix', name=f"{name}EffectorLocalMatrix_MMT", ss=True) # world matrix mult for end effector
+        inverse_matrix_lower = cmds.createNode('inverseMatrix', name=guides_02_name.replace('_GUIDE', 'Lower_INV'), ss=True)
+        cmds.connectAttr(lower_lm, inverse_matrix_lower+'.inputMatrix') # connect lower local matrix to inverse
+        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", mult_matrix_eff+'.matrixIn[0]')
+        cmds.connectAttr(inverse_matrix_lower+'.outputMatrix', mult_matrix_eff+'.matrixIn[1]')
+
+        four_by_four_effector_position = cmds.createNode('fourByFourMatrix', name=f"{name}EffectorPosition_F4FX", ss=True) # local position matrix for end effector
+        if side == 'L':
+                if use_stretch == False:
+                        cmds.connectAttr(distance_between_low+'.distance', four_by_four_effector_position+'.in30') # position x
+                else:
+                        cmds.connectAttr(distance_between_low+'.output', four_by_four_effector_position+'.in30') # position x
+        else:
+                negate_eff_pos_x = cmds.createNode('negate', name=guides_02_name.replace('_GUIDE', 'EffPosX_NEG'), ss=True)
+                if use_stretch == False:
+                        cmds.connectAttr(distance_between_low+'.distance', negate_eff_pos_x+'.input') # negate position
+                else:
+                        cmds.connectAttr(distance_between_low+'.output', negate_eff_pos_x+'.input') # negate position
+                cmds.connectAttr(negate_eff_pos_x+'.output', four_by_four_effector_position+'.in30') # position x
+        pick_matrix_effector = cmds.createNode('pickMatrix', name=f"{name}EffectorPick_MMT", ss=True) # pick matrix for end effector
+        cmds.setAttr(f"{pick_matrix_effector}.useTranslate", 0)
+        cmds.connectAttr(mult_matrix_eff+'.matrixSum', pick_matrix_effector+'.inputMatrix') # connect world matrix mult to pick matrix
+        mult_matrix_add_effector_pos = cmds.createNode('multMatrix', name=f"{name}EffectorPos_MMT", ss=True) # final mult matrix for end effector
+        cmds.connectAttr(pick_matrix_effector+'.outputMatrix', mult_matrix_add_effector_pos+'.matrixIn[0]')
+        cmds.connectAttr(four_by_four_effector_position+'.output', mult_matrix_add_effector_pos+'.matrixIn[1]')
+        effector_mult_matrix_wm = cmds.createNode('multMatrix', name=f"{name}EffectorWM_MMT", ss=True) # world matrix mult for end effector
+        cmds.connectAttr(lower_wm, effector_mult_matrix_wm+'.matrixIn[1]') # connect lower world matrix to effector world matrix
+        cmds.connectAttr(mult_matrix_add_effector_pos+'.matrixSum', effector_mult_matrix_wm+'.matrixIn[0]')
+        effector_wm = effector_mult_matrix_wm+'.matrixSum' # effector world matrix
+        locator_effector = cmds.spaceLocator(name=f"{side}_armEffector_LOC")[0]
+        cmds.connectAttr(effector_wm, locator_effector+'.offsetParentMatrix') # connect effector
+        # ----- This will be used to connect it to the blend matrix
+
+        ik_matrices = [upper_wm, lower_wm, effector_wm]
+
+        return ik_matrices
 
 def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
 
