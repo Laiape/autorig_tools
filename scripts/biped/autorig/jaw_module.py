@@ -154,3 +154,21 @@ class JawModule(object):
         cmds.connectAttr(f"{float_constant_0}.outFloat", f"{attribute_blender}.input[0]")
         cmds.connectAttr(f"{clamp_jaw}.outputR", f"{attribute_blender}.input[1]")
         cmds.connectAttr(f"{attribute_blender}.output", f"{self.upper_jaw_nodes[1]}.rotateX")  # Connect the output of the blendTwoAttr to the rotateX of the upper jaw controller
+
+
+    def create_lips_curves(self):
+
+        """
+        Create lip curves for the jaw module.
+        """
+
+        self.upper_linear_lip_curve = guides_manager.get_guides("C_upperLipLinear_CRV")
+        self.lower_linear_lip_curve = guides_manager.get_guides("C_lowerLipLinear_CRV")
+
+        # From the linnear curves, create a curve degree 3 with 4 spans
+        self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve[0], ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=4, d=3, tol=0.01, name="C_upperLip_CRV")
+        self.lower_rebuild_lip_curve = cmds.rebuildCurve(self.lower_linear_lip_curve[0], ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=4, d=3, tol=0.01, name="C_lowerLip_CRV")
+
+        # Curves to beziers
+        cmds.select(self.upper_rebuild_lip_curve)
+        cmds.nurbsCurveToBezier()

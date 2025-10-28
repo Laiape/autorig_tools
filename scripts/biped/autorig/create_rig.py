@@ -84,21 +84,21 @@ class AutoRig(object):
         """
         # ---- Body mechanics  ----
         spine_module.SpineModule().make("C")
-        # arm_module.ArmModule().make("L") 
-        # arm_module.ArmModule().make("R")
+        arm_module.ArmModule().make("L") 
+        arm_module.ArmModule().make("R")
         # clavicle_module.ClavicleModule().make("L")
         # clavicle_module.ClavicleModule().make("R")
         # leg_module.LegModule().make("L")
         # leg_module.LegModule().make("R")
-        neck_module.NeckModule().make("C")
+        # neck_module.NeckModule().make("C")
         # fingers_module.FingersModule().make("L")
         # fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
         # eyebrow_module.EyebrowModule().make("L")
         # eyebrow_module.EyebrowModule().make("R")
-        eyelid_module.EyelidModule().make("L")
-        eyelid_module.EyelidModule().make("R")
+        # eyelid_module.EyelidModule().make("L")
+        # eyelid_module.EyelidModule().make("R")
         # ear_module.EarModule().make("L")
         # ear_module.EarModule().make("R")
         # nose_module.NoseModule().make("L")

@@ -13,8 +13,20 @@
         "local_chest_ctl": "C_localChest_CTL",
         "last_spine_jnt": "C_spine07_JNT"
     },
-    "neck_module": {
-        "head_ctl": "C_head_CTL",
-        "neck_ctl": "C_neck_CTL"
+    "arm_module": {
+        "L_shoulder_JNT": "L_shoulder_JNT",
+        "L_wrist_JNT": "L_wrist_JNT",
+        "L_armSettings": "L_armSettings_CTL",
+        "L_armIk": "L_armIkWrist_CTL",
+        "L_armPv": "L_armPv_CTL",
+        "L_shoulderFk": "L_shoulderFk_CTL",
+        "L_armIkRoot": "L_armIkRoot_CTL",
+        "R_shoulder_JNT": "R_shoulder_JNT",
+        "R_wrist_JNT": "R_wrist_JNT",
+        "R_armSettings": "R_armSettings_CTL",
+        "R_armIk": "R_armIkWrist_CTL",
+        "R_armPv": "R_armPv_CTL",
+        "R_shoulderFk": "R_shoulderFk_CTL",
+        "R_armIkRoot": "R_armIkRoot_CTL"
     }
 }

@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 
-def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
+def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=False, use_soft=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
         
         """Custom IK solver for biped characters. Cosinus theorem based.
         Args:
@@ -25,7 +25,16 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
 
         if use_stretch == True:
                 distance_between_eff, distance_between_up, distance_between_low = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers, trn_guides=trn_guides)
-
+        
+                if use_soft == True:
+                        upper_length_scaler, lower_length_scaler = soft_ik(side=side, limb=name.split('_')[1], ik_controller=controllers[2], upper_length_node=distance_between_up, lower_length_node=distance_between_low, effector_length_node=distance_between_eff)
+                        
+                        upper_length_scaled = cmds.createNode('multiply', name=f"{side}_{name.split('_')[1]}UpperLengthScaled_MULT", ss=True) # scaled upper length
+                        cmds.connectAttr(upper_length_scaler, upper_length_scaled+'.input[0]')
+                        cmds.connectAttr(distance_between_up+'.output', upper_length_scaled+'.input[1]')
+                        lower_length_scaled = cmds.createNode('multiply', name=f"{side}_{name.split('_')[1]}LowerLengthScaled_MULT", ss=True) # scaled lower length
+                        cmds.connectAttr(lower_length_scaler, lower_length_scaled+'.input[0]')
+                        cmds.connectAttr(distance_between_low+'.output', lower_length_scaled+'.input[1]')
 
         # Create nodes for the IK solver
         multiply_upper = cmds.createNode('multiply', name=guides_00_name.replace('_GUIDE', 'ASquared_MULT'), ss=True) # a squared
@@ -49,13 +58,23 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
                 cmds.connectAttr(distance_between_low+'.distance', multiply_lower+'.input[1]')
                 cmds.connectAttr(distance_between_eff+'.distance', multiply_eff+'.input[0]') # c2
                 cmds.connectAttr(distance_between_eff+'.distance', multiply_eff+'.input[1]')
+                if use_soft == True:
+                        upper_length_scaler, lower_length_scaler = soft_ik(side=side, limb=name.split('_')[1], ik_controller=controllers[2], upper_length_node=distance_between_up, lower_length_node=distance_between_low, effector_length_node=distance_between_eff)
         else:
-                cmds.connectAttr(distance_between_up+'.output', multiply_upper+'.input[0]') # a2
-                cmds.connectAttr(distance_between_up+'.output', multiply_upper+'.input[1]')
-                cmds.connectAttr(distance_between_low+'.output', multiply_lower+'.input[0]') # b2
-                cmds.connectAttr(distance_between_low+'.output', multiply_lower+'.input[1]')
-                cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[0]') # c2
-                cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[1]')
+                if use_soft == True:
+                        cmds.connectAttr(upper_length_scaled+'.output', multiply_upper+'.input[0]') # a2
+                        cmds.connectAttr(upper_length_scaled+'.output', multiply_upper+'.input[1]')
+                        cmds.connectAttr(lower_length_scaled+'.output', multiply_lower+'.input[0]') #b2
+                        cmds.connectAttr(lower_length_scaled+'.output', multiply_lower+'.input[1]')
+                        cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[0]') # c2
+                        cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[1]')
+                else:
+                        cmds.connectAttr(distance_between_up+'.output', multiply_upper+'.input[0]') # a2
+                        cmds.connectAttr(distance_between_up+'.output', multiply_upper+'.input[1]')
+                        cmds.connectAttr(distance_between_low+'.output', multiply_lower+'.input[0]') # b2
+                        cmds.connectAttr(distance_between_low+'.output', multiply_lower+'.input[1]')
+                        cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[0]') # c2
+                        cmds.connectAttr(distance_between_eff+'.output', multiply_eff+'.input[1]')
 
         sum_node = cmds.createNode('sum', name=guides_00_name.replace('_GUIDE', 'ASquaredPlusCSquared_UpperFull_SUM'), ss=True)
         cmds.connectAttr(multiply_upper+'.output', sum_node+'.input[0]') # a2+c2
@@ -72,8 +91,12 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
                 cmds.connectAttr(distance_between_up+'.distance', multiply_node+'.input[0]') # a
                 cmds.connectAttr(distance_between_eff+'.distance', multiply_node+'.input[1]') # c
         else:
-                cmds.connectAttr(distance_between_up+'.output', multiply_node+'.input[0]') # a
-                cmds.connectAttr(distance_between_eff+'.output', multiply_node+'.input[1]') # c
+                if use_soft == True:
+                        cmds.connectAttr(upper_length_scaled+'.output', multiply_node+'.input[0]') # a
+                        cmds.connectAttr(distance_between_eff+'.output', multiply_node+'.input[1]') # c
+                else:
+                        cmds.connectAttr(distance_between_up+'.output', multiply_node+'.input[0]') # a
+                        cmds.connectAttr(distance_between_eff+'.output', multiply_node+'.input[1]') # c
         cmds.connectAttr(float_constant+'.outFloat', multiply_node+'.input[2]') # *2ac
 
         divide_node = cmds.createNode('divide', name=guides_00_name.replace('_GUIDE', 'CosineValue_DIV'), ss=True)
@@ -97,8 +120,12 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
                 cmds.connectAttr(distance_between_up+'.distance', multiply_lower_2+'.input[0]') # a
                 cmds.connectAttr(distance_between_low+'.distance', multiply_lower_2+'.input[1]') # b
         else:
-                cmds.connectAttr(distance_between_up+'.output', multiply_lower_2+'.input[0]') # a
-                cmds.connectAttr(distance_between_low+'.output', multiply_lower_2+'.input[1]') # b
+                if use_soft == True:
+                        cmds.connectAttr(upper_length_scaled+'.output', multiply_lower_2+'.input[0]') # a
+                        cmds.connectAttr(lower_length_scaled+'.output', multiply_lower_2+'.input[1]') # b
+                else:
+                        cmds.connectAttr(distance_between_up+'.output', multiply_lower_2+'.input[0]') # a
+                        cmds.connectAttr(distance_between_low+'.output', multiply_lower_2+'.input[1]') # b
         cmds.connectAttr(float_constant+'.outFloat', multiply_lower_2+'.input[2]') # *2
 
         divide_lower = cmds.createNode('divide', name=guides_01_name.replace('GUIDE', 'CosValue_DIV'), ss=True)
@@ -154,7 +181,7 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.setAttr(float_constant_one+'.inFloat', 1) # constant 1
         cmds.connectAttr(float_constant_one+'.outFloat', subtract_to_sin+'.input1') # 1
         cmds.connectAttr(square_cos_lower+'.output', subtract_to_sin+'.input2') # cos2
-        power_to_sin = cmds.createNode('power', name=guides_01_name.replace('_GUIDE', 'Sin_POWER'), ss=True)
+        power_to_sin = cmds.createNode('power', name=guides_01_name.replace('_GUIDE', 'SinValue_POWER'), ss=True)
         cmds.setAttr(power_to_sin+'.exponent', 0.5) # square
         cmds.connectAttr(max_value+'.output', power_to_sin+'.input') # sin
         cmds.connectAttr(power_to_sin+'.output', negate_sin_lower+'.input') # negate sin
@@ -167,13 +194,19 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
                 if use_stretch == False:
                         cmds.connectAttr(distance_between_up+'.distance', four_by_four_low_local_rotation+'.in30') # position x, add the position
                 else:
-                        cmds.connectAttr(distance_between_up+'.output', four_by_four_low_local_rotation+'.in30') # position x, add the position
+                        if use_soft == True:
+                                cmds.connectAttr(upper_length_scaled+'.output', four_by_four_low_local_rotation+'.in30') # position x, add the position
+                        else:
+                                cmds.connectAttr(distance_between_up+'.output', four_by_four_low_local_rotation+'.in30') # position x, add the position
         else:
                 negate_position_x = cmds.createNode('negate', name=guides_01_name.replace('_GUIDE', 'PosX_NEG'), ss=True)
                 if use_stretch == False:
                         cmds.connectAttr(distance_between_up+'.distance', negate_position_x+'.input') # negate position
                 else:
-                        cmds.connectAttr(distance_between_up+'.output', negate_position_x+'.input') # negate position
+                        if use_soft == True:
+                                cmds.connectAttr(upper_length_scaled+'.output', negate_position_x+'.input') # negate position
+                        else:
+                                cmds.connectAttr(distance_between_up+'.output', negate_position_x+'.input') # negate position
                 cmds.connectAttr(negate_position_x+'.output', four_by_four_low_local_rotation+'.in30') # position x, add the position
 
 
@@ -198,13 +231,20 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
                 if use_stretch == False:
                         cmds.connectAttr(distance_between_low+'.distance', four_by_four_effector_position+'.in30') # position x
                 else:
-                        cmds.connectAttr(distance_between_low+'.output', four_by_four_effector_position+'.in30') # position x
+                        if use_soft == True:
+                                cmds.connectAttr(lower_length_scaled+'.output', four_by_four_effector_position+'.in30') # position x
+                        else:
+                                cmds.connectAttr(distance_between_low+'.output', four_by_four_effector_position+'.in30') # position x
         else:
                 negate_eff_pos_x = cmds.createNode('negate', name=guides_02_name.replace('_GUIDE', 'EffPosX_NEG'), ss=True)
                 if use_stretch == False:
                         cmds.connectAttr(distance_between_low+'.distance', negate_eff_pos_x+'.input') # negate position
                 else:
-                        cmds.connectAttr(distance_between_low+'.output', negate_eff_pos_x+'.input') # negate position
+                        if use_soft == True:
+                                cmds.connectAttr(lower_length_scaled+'.output', negate_eff_pos_x+'.input') # negate position
+                        else:
+                                cmds.connectAttr(distance_between_low+'.output', negate_eff_pos_x+'.input') # negate position
+
                 cmds.connectAttr(negate_eff_pos_x+'.output', four_by_four_effector_position+'.in30') # position x
         pick_matrix_effector = cmds.createNode('pickMatrix', name=f"{name}EffectorPick_MMT", ss=True) # pick matrix for end effector
         cmds.setAttr(f"{pick_matrix_effector}.useTranslate", 0)
@@ -290,3 +330,149 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{global_scale_factor}.output", f"{clamped_final_length}.input[1]")
 
         return clamped_final_length, multiply_upper_length, multiply_lower_length
+
+def soft_ik(side, limb, ik_controller, upper_length_node, lower_length_node, effector_length_node):
+
+        # Cosine law for the upper angle = ((a^2 + c^2 - b^2) / (2ac))
+        upper_soft_multiply = cmds.createNode('multiply', name=f"{side}_{limb}UpperLengthSquaredSoft_MUL", ss=True)
+        lower_soft_multiply = cmds.createNode('multiply', name=f"{side}_{limb}LowerLengthSquaredSoft_MUL", ss=True)
+        effector_soft_multiply = cmds.createNode('multiply', name=f"{side}_{limb}EffectorLengthSquaredSoft_MUL", ss=True)
+        float_constant = cmds.createNode('floatConstant', name=f"{side}_{limb}Soft2_FCN", ss=True)
+        cmds.setAttr(float_constant+'.inFloat', 2)
+
+        cmds.connectAttr(upper_length_node+'.output', upper_soft_multiply+'.input[0]') # a
+        cmds.connectAttr(upper_length_node+'.output', upper_soft_multiply+'.input[1]') # a
+        cmds.connectAttr(lower_length_node+'.output', lower_soft_multiply+'.input[0]') # b
+        cmds.connectAttr(lower_length_node+'.output', lower_soft_multiply+'.input[1]') # b
+        cmds.connectAttr(effector_length_node+'.output', effector_soft_multiply+'.input[0]') # c
+        cmds.connectAttr(effector_length_node+'.output', effector_soft_multiply+'.input[1]') # c
+
+        # Sum a^2 + c^2
+        sum_upper = cmds.createNode('sum', name=f"{side}_{limb}SoftUpperSum_SUM", ss=True)
+        cmds.connectAttr(upper_soft_multiply+'.output', sum_upper+'.input[0]') # a2
+        cmds.connectAttr(effector_soft_multiply+'.output', sum_upper+'.input[1]') # c2
+        # Subtract b^2
+        subtract_lower = cmds.createNode('subtract', name=f"{side}_{limb}SoftLowerSubtract_SUB", ss=True)
+        cmds.connectAttr(lower_soft_multiply+'.output', subtract_lower+'.input2') # b2
+        cmds.connectAttr(sum_upper+'.output', subtract_lower+'.input1') # a2 + c2
+        # Multiply 2ac
+        multiply_ac = cmds.createNode('multiply', name=f"{side}_{limb}Soft2ac_MUL", ss=True)
+        cmds.connectAttr(upper_length_node+'.output', multiply_ac+'.input[0]') # a
+        cmds.connectAttr(effector_length_node+'.output', multiply_ac+'.input[1]') # c
+        cmds.connectAttr(float_constant+'.outFloat', multiply_ac+'.input[2]') # *2
+        # Divide (a2 + c2 - b2) / 2ac
+        divide_cosine = cmds.createNode('divide', name=f"{side}_{limb}SoftCosineValue_DIV", ss=True)
+        cmds.connectAttr(subtract_lower+'.output', divide_cosine+'.input1') # a2 + c2 - b2
+        cmds.connectAttr(multiply_ac+'.output', divide_cosine+'.input2') # 2ac
+
+        # Square the sin height
+        cosine_upper_squared = cmds.createNode('multiply', name=f"{side}_{limb}SoftUpperHeightSquared_MUL", ss=True)
+        cmds.connectAttr(divide_cosine+'.output', cosine_upper_squared+'.input[0]') # sin height
+        cmds.connectAttr(divide_cosine+'.output', cosine_upper_squared+'.input[1]') # sin height
+        
+        float_constant_one = cmds.createNode('floatConstant', name=f"{side}_{limb}SoftOne_FCN", ss=True)
+        cmds.setAttr(float_constant_one+'.inFloat', 1)
+        subtract_to_cos = cmds.createNode('subtract', name=f"{side}_{limb}SoftToCos_SUB", ss=True)
+        float_constant_zero = cmds.createNode('floatConstant', name=f"{side}_{limb}SoftZero_FCN", ss=True)
+        cmds.setAttr(float_constant_zero+'.inFloat', 0)
+
+        max_cosine = cmds.createNode('max', name=f"{side}_{limb}SoftMaxCosine_MAX", ss=True)
+        cmds.connectAttr(float_constant_zero+'.outFloat', max_cosine+'.input[0]')
+        cmds.connectAttr(subtract_to_cos+'.output', max_cosine+'.input[1]')
+        cmds.connectAttr(float_constant_one+'.outFloat', subtract_to_cos+'.input1') # 1
+        cmds.connectAttr(cosine_upper_squared+'.output', subtract_to_cos+'.input2') # sin^2
+
+        power_to_cos = cmds.createNode('power', name=f"{side}_{limb}SoftCosValue_POWER", ss=True)
+        cmds.setAttr(power_to_cos+'.exponent', 0.5) # square root
+        cmds.connectAttr(max_cosine+'.output', power_to_cos+'.input') # cos
+
+        # Target length node
+        one_subtract_cosine = cmds.createNode('subtract', name=f"{side}_{limb}SoftLinearTargetLength_SUB", ss=True)
+        cmds.connectAttr(float_constant_one+'.outFloat', one_subtract_cosine+'.input1') # 1
+        cmds.connectAttr(divide_cosine+'.output', one_subtract_cosine+'.input2') # cos
+        
+        
+        quadratic_target_length = cmds.createNode('multiply', name=f"{side}_{limb}SoftQuadraticTargetLength_MUL", ss=True) # QUADRATIC CURVE
+        cmds.connectAttr(one_subtract_cosine+'.output', quadratic_target_length+'.input[0]') # 1 - cos
+        cmds.connectAttr(one_subtract_cosine+'.output', quadratic_target_length+'.input[1]') # 1 - cos
+        
+        cubic_target_length = cmds.createNode('multiply', name=f"{side}_{limb}SoftCubicTargetLength_MUL", ss=True) # CUBIC CURVE
+        cmds.connectAttr(quadratic_target_length+'.output', cubic_target_length+'.input[0]') # 1 - cos
+        cmds.connectAttr(quadratic_target_length+'.output', cubic_target_length+'.input[1]') # 1 - cos
+        cmds.connectAttr(quadratic_target_length+'.output', cubic_target_length+'.input[2]') # 1 -
+
+        remap_quadratic = cmds.createNode('remapValue', name=f"{side}_{limb}SoftCosineValueRemaped_RMV", ss=True) # LINEAR CURVE
+        cmds.setAttr(remap_quadratic+'.inputMin', 0)
+        cmds.setAttr(remap_quadratic+'.inputMax', 1)
+        cmds.setAttr(remap_quadratic+'.outputMin', 0)
+        cmds.setAttr(remap_quadratic+'.outputMax', 1)
+        cmds.connectAttr(divide_cosine+'.output', remap_quadratic+'.inputValue') # connect cosine value as input
+        cmds.connectAttr(f"{ik_controller}.Soft_Start", remap_quadratic+'.inputMin') # connect soft ik attribute
+
+        # Create blender between quadratic and linear
+        smooth_step = cmds.createNode('smoothStep', name=f"{side}_{limb}SoftSmoothStep_SST", ss=True)
+        cmds.setAttr(smooth_step+'.leftEdge', 1)
+        cmds.setAttr(smooth_step+'.rightEdge', 0)
+        cmds.connectAttr(remap_quadratic+'.outValue', smooth_step+'.input') # connect remap to smoothstep
+
+        cubic_curve_cosine = cmds.createNode('multiply', name=f"{side}_{limb}SoftCubicCurveCosine_MUL", ss=True) # CUBIC CURVE
+        cmds.connectAttr(remap_quadratic+'.outValue', cubic_curve_cosine+'.input[0]')
+        cmds.connectAttr(remap_quadratic+'.outValue', cubic_curve_cosine+'.input[1]')
+        cmds.connectAttr(remap_quadratic+'.outValue', cubic_curve_cosine+'.input[2]')
+
+
+        blend_two_curves = cmds.createNode('blendTwoAttr', name=f"{side}_{limb}SoftBlendTwoCurves_BLN", ss=True)
+        cmds.connectAttr(ik_controller+'.Soft', blend_two_curves+'.attributesBlender')
+        cmds.connectAttr(cubic_target_length+'.output', blend_two_curves+'.input[0]') # cubic
+        cmds.connectAttr(smooth_step+'.output', blend_two_curves+'.input[1]') # linear
+        
+        blend_two_height = cmds.createNode('blendTwoAttr', name=f"{side}_{limb}SoftBlendedHeight_BLN", ss=True)
+        cmds.connectAttr(blend_two_curves+'.output', blend_two_height+'.attributesBlender') # blended curve
+        cmds.connectAttr(power_to_cos+'.output', blend_two_height+'.input[0]') # linear height
+        cmds.connectAttr(one_subtract_cosine+'.output', blend_two_height+'.input[1]') # quadratic
+
+        blend_height_squared = cmds.createNode('multiply', name=f"{side}_{limb}SoftBlendedHeightSquared_MUL", ss=True)
+        cmds.connectAttr(blend_two_height+'.output', blend_height_squared+'.input[0]')
+        cmds.connectAttr(blend_two_height+'.output', blend_height_squared+'.input[1]')
+
+        add_blendedH_to_cosine = cmds.createNode('sum', name=f"{side}_{limb}SoftAddBlendedHeightToCosine_SUM", ss=True)
+        cmds.connectAttr(cosine_upper_squared+'.output', add_blendedH_to_cosine+'.input[0]') # original cosine squared
+        cmds.connectAttr(blend_height_squared+'.output', add_blendedH_to_cosine+'.input[1]') # blended height squared
+        upper_length_final_cosine = cmds.createNode('power', name=f"{side}_{limb}SoftFinalUpperScaler_POWER", ss=True)
+        cmds.setAttr(upper_length_final_cosine+'.exponent', 0.5) # square root
+        cmds.connectAttr(add_blendedH_to_cosine+'.output', upper_length_final_cosine+'.input')
+
+        # Lower length calculation with pythagoras
+        upper_ratio = cmds.createNode('divide', name=f"{side}_{limb}SoftUpperSegmentArmRatio_DIV", ss=True)
+        cmds.connectAttr(upper_length_node+'.output', upper_ratio+'.input1')
+        cmds.connectAttr(lower_length_node+'.output', upper_ratio+'.input2')
+
+        lower_soft_height = cmds.createNode('multiply', name=f"{side}_{limb}SoftLowerCosValue_MUL", ss=True)
+        cmds.connectAttr(power_to_cos+'.output', lower_soft_height+'.input[0]') # original height (cos)
+        cmds.connectAttr(upper_ratio+'.output', lower_soft_height+'.input[1]') # ratio
+
+        lower_soft_blended_height = cmds.createNode('multiply', name=f"{side}_{limb}SoftLowerBlendedHeight_MUL", ss=True)
+        cmds.connectAttr(blend_two_height+'.output', lower_soft_blended_height+'.input[0]') # blended height
+        cmds.connectAttr(upper_ratio+'.output', lower_soft_blended_height+'.input[1]') # ratio
+
+        lower_soft_height_squared = cmds.createNode('multiply', name=f"{side}_{limb}SoftLowerHeightSquared_MUL", ss=True)
+        cmds.connectAttr(lower_soft_height+'.output', lower_soft_height_squared+'.input[0]')
+        cmds.connectAttr(lower_soft_height+'.output', lower_soft_height_squared+'.input[1]')
+
+        one_minus_lower_height_squared = cmds.createNode('subtract', name=f"{side}_{limb}SoftOneMinusLowerCosValueSquared_SUB", ss=True) # 1 - lower height squared
+        cmds.connectAttr(float_constant_one+'.outFloat', one_minus_lower_height_squared+'.input1')
+        cmds.connectAttr(lower_soft_height_squared+'.output', one_minus_lower_height_squared+'.input2')
+
+        lower_soft_blended_height_squared = cmds.createNode('multiply', name=f"{side}_{limb}SoftLowerBlendedHeightSquared_MUL", ss=True)
+        cmds.connectAttr(lower_soft_blended_height+'.output', lower_soft_blended_height_squared+'.input[0]')
+        cmds.connectAttr(lower_soft_blended_height+'.output', lower_soft_blended_height_squared+'.input[1]')
+
+        add_lower_blendedH_to_cosine = cmds.createNode('sum', name=f"{side}_{limb}SoftAddLowerBlendedHeightToCosine_SUM", ss=True)
+        cmds.connectAttr(one_minus_lower_height_squared+'.output', add_lower_blendedH_to_cosine+'.input[0]') # original cosine squared
+        cmds.connectAttr(lower_soft_blended_height_squared+'.output', add_lower_blendedH_to_cosine+'.input[1]') # blended height squared
+
+        scaler_lower_length_final = cmds.createNode('power', name=f"{side}_{limb}SoftFinalLowerScaler_POWER", ss=True)
+        cmds.setAttr(scaler_lower_length_final+'.exponent', 0.5) # square root
+        cmds.connectAttr(add_lower_blendedH_to_cosine+'.output', scaler_lower_length_final+'.input')
+
+        return f"{upper_length_final_cosine}.output", f"{scaler_lower_length_final}.output"

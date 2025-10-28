@@ -556,15 +556,6 @@ class EyelidModule(object):
             cmds.connectAttr(f"{ctl}.matrix", f"{mult_matrix_skin}.matrixIn[0]")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skin}.matrixIn[1]")
             cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
-
-            cmds.xform(node[0], m=om.MMatrix.kIdentity)
-            cmds.setAttr(f"{node[0]}.inheritsTransform", 0)
-
-            # cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
-            # cmds.disconnectAttr(f"{ctl}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
-            # cmds.connectAttr(f"{ctl}.translate", f"{skinning_jnt}.translate")
-            # cmds.connectAttr(f"{ctl}.rotate", f"{skinning_jnt}.rotate")
-            # cmds.setAttr(f"{node[0]}.inheritsTransform", 0)
             four_by_four_matrix_temp = cmds.createNode("transform", name=f"{self.side}_{name}Eyelid0{i}_F4X4_TEMP", ss=True)
             cmds.connectAttr(f"{four_by_four_matrix_origin}.output", f"{four_by_four_matrix_temp}.offsetParentMatrix") # Connect the four by four matrix to the transform offset parent matrix
             cmds.parent(node[0], self.extra_controllers_grp)
@@ -572,10 +563,6 @@ class EyelidModule(object):
             cmds.delete(temp_trn)
             cmds.delete(four_by_four_matrix_temp)
 
-        # for i, node in enumerate(self.nodes):
-        #     cmds.matchTransform(node, self.locators[i], pos=True, rot=True)
-        #     if "UpIn_" in node or "UpOut_" in node or "DownIn_" in node or "DownOut_" in node:
-        #         cmds.xform(node, m=om.MMatrix.kIdentity)
 
 
     def get_offset_matrix(self, child, parent):
@@ -656,13 +643,6 @@ class EyelidModule(object):
         cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", self.get_offset_matrix(guide_trn_temp, drivers[1]), type="matrix") # Calculate offset matrix between driven and driver
         
         cmds.xform(driven, m=om.MMatrix.kIdentity)
-        
-
-        # mult_matrix = cmds.createNode("multMatrix", name=driven.replace(suffix, "MMT"), ss=True)
-        # cmds.connectAttr(f"{driven_ctl}.matrix", f"{mult_matrix}.matrixIn[0]")
-        # cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[1]")
-        # cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{local_jnt}.offsetParentMatrix", force=True)
-        # cmds.xform(local_jnt, m=om.MMatrix.kIdentity)
         cmds.delete(guide_trn_temp)
 
         return parent_matrix
@@ -702,17 +682,17 @@ class EyelidModule(object):
         cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2Y", 0.3)
         cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2Z", 0.3)
 
-        cmds.connectAttr(f"{drivers[0]}.rotate", f"{multiply_divide_driver_0_rotate}.input1")
-        cmds.connectAttr(f"{drivers[0]}.translate", f"{multiply_divide_driver_0_translate}.input1")
+        cmds.connectAttr(f"{drivers[0]}.rotate", f"{multiply_divide_driver_0_rotate}.input1") # Connect driver rotation to multiply divide
+        cmds.connectAttr(f"{drivers[0]}.translate", f"{multiply_divide_driver_0_translate}.input1") # Connect driver translation to multiply divide
         cmds.connectAttr(f"{drivers[1]}.rotate", f"{multiply_divide_driver_1_rotate}.input1")
         cmds.connectAttr(f"{drivers[1]}.translate", f"{multiply_divide_driver_1_translate}.input1")
-        cmds.connectAttr(f"{multiply_divide_driver_0_rotate}.output", f"{compose_matrix_00}.inputRotate")
-        cmds.connectAttr(f"{multiply_divide_driver_0_translate}.output", f"{compose_matrix_00}.inputTranslate")
+        cmds.connectAttr(f"{multiply_divide_driver_0_rotate}.output", f"{compose_matrix_00}.inputRotate") # Connect multiply divide output to compose matrix
+        cmds.connectAttr(f"{multiply_divide_driver_0_translate}.output", f"{compose_matrix_00}.inputTranslate") # Connect multiply divide output to compose matrix
         cmds.connectAttr(f"{multiply_divide_driver_1_rotate}.output", f"{compose_matrix_01}.inputRotate")
         cmds.connectAttr(f"{multiply_divide_driver_1_translate}.output", f"{compose_matrix_01}.inputTranslate")
-        cmds.connectAttr(f"{driven_ctl}.matrix", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{compose_matrix_00}.outputMatrix", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{compose_matrix_01}.outputMatrix", f"{mult_matrix}.matrixIn[2]")
+        cmds.connectAttr(f"{driven_ctl}.matrix", f"{mult_matrix}.matrixIn[0]") # Connect driven controller matrix to mult matrix
+        cmds.connectAttr(f"{compose_matrix_00}.outputMatrix", f"{mult_matrix}.matrixIn[1]") # Connect compose matrix 0.7 to mult matrix
+        cmds.connectAttr(f"{compose_matrix_01}.outputMatrix", f"{mult_matrix}.matrixIn[2]") # Connect compose matrix 0.3 to mult matrix
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{driven_jnt}.offsetParentMatrix", force=True)
 
             
