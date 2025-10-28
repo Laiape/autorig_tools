@@ -103,6 +103,7 @@ class SpineModule(object):
 
         self.lock_attributes(self.body_ctl, ["sx", "sy", "sz", "v"])
         self.lock_attributes(self.local_hip_ctl, ["sx", "sy", "sz", "v"])
+        self.lock_attributes(self.local_chest_ctl, ["sx", "sy", "sz", "v"])
 
         self.spine_nodes = []
         self.spine_ctls = []

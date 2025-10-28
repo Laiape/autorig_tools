@@ -274,6 +274,14 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{trn_guides[0]}.worldMatrix[0]", f"{limb_length}.inMatrix1") # start
         cmds.connectAttr(f"{trn_guides[2]}.worldMatrix[0]", f"{limb_length}.inMatrix2") # effector
 
+        current_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}CurrentLength_DBT", ss=True) # arm length distance between start and effector
+        cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", f"{current_length}.inMatrix1") # start
+        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", f"{current_length}.inMatrix2") # effector
+
+        global_scale_factor = cmds.createNode('divide', name=f"{side}_{limb}GlobalScale_DIV", ss=True)
+        cmds.connectAttr(f"{current_length}.distance", f"{global_scale_factor}.input1")
+        cmds.connectAttr(f"{master_walk_ctl}.globalScale", f"{global_scale_factor}.input2")
+
         limb_upper_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}UpperInitialLength_DBT", ss=True)
         cmds.connectAttr(f"{trn_guides[0]}.worldMatrix[0]", f"{limb_upper_length}.inMatrix1") # start
         cmds.connectAttr(f"{trn_guides[1]}.worldMatrix[0]", f"{limb_upper_length}.inMatrix2") # mid
@@ -287,7 +295,7 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{limb_lower_length}.distance", f"{sum_upper_lower}.input[1]") # lower length
 
         divide_length = cmds.createNode('divide', name=f"{side}_{limb}LengthRatio_DIV", ss=True)
-        cmds.connectAttr(f"{limb_length}.distance", f"{divide_length}.input1") # current length
+        cmds.connectAttr(f"{global_scale_factor}.output", f"{divide_length}.input1") # current length
         cmds.connectAttr(f"{sum_upper_lower}.output", f"{divide_length}.input2") # upper + lower length
 
         max_length = cmds.createNode('max', name=f"{side}_{limb}Scaler_MAX", ss=True) # max node to avoid scaling down
@@ -317,15 +325,8 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{multiply_upper_length}.output", f"{length_final}.input[0]")
         cmds.connectAttr(f"{multiply_lower_length}.output", f"{length_final}.input[1]")
 
-        current_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}CurrentLength_DBT", ss=True) # arm length distance between start and effector
-        cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", f"{current_length}.inMatrix1") # start
-        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", f"{current_length}.inMatrix2") # effector
 
-        global_scale_factor = cmds.createNode('divide', name=f"{side}_{limb}GlobalScale_DIV", ss=True)
-        cmds.connectAttr(f"{current_length}.distance", f"{global_scale_factor}.input1")
-        cmds.connectAttr(f"{master_walk_ctl}.globalScale", f"{global_scale_factor}.input2")
-
-        clamped_final_length = cmds.createNode('min', name=f"{side}_{limb}ClampedFinalLength_MIN", ss=True)
+        clamped_final_length = cmds.createNode('min', name=f"{side}_{limb}ClampedFinalLength_MIN", ss=True) 
         cmds.connectAttr(f"{length_final}.output", f"{clamped_final_length}.input[0]")
         cmds.connectAttr(f"{global_scale_factor}.output", f"{clamped_final_length}.input[1]")
 
@@ -411,8 +412,8 @@ def soft_ik(side, limb, ik_controller, upper_length_node, lower_length_node, eff
 
         # Create blender between quadratic and linear
         smooth_step = cmds.createNode('smoothStep', name=f"{side}_{limb}SoftSmoothStep_SST", ss=True)
-        cmds.setAttr(smooth_step+'.leftEdge', 1)
-        cmds.setAttr(smooth_step+'.rightEdge', 0)
+        cmds.setAttr(smooth_step+'.leftEdge', 0)
+        cmds.setAttr(smooth_step+'.rightEdge', 1)
         cmds.connectAttr(remap_quadratic+'.outValue', smooth_step+'.input') # connect remap to smoothstep
 
         cubic_curve_cosine = cmds.createNode('multiply', name=f"{side}_{limb}SoftCubicCurveCosine_MUL", ss=True) # CUBIC CURVE
@@ -423,8 +424,8 @@ def soft_ik(side, limb, ik_controller, upper_length_node, lower_length_node, eff
 
         blend_two_curves = cmds.createNode('blendTwoAttr', name=f"{side}_{limb}SoftBlendTwoCurves_BLN", ss=True)
         cmds.connectAttr(ik_controller+'.Soft', blend_two_curves+'.attributesBlender')
-        cmds.connectAttr(cubic_target_length+'.output', blend_two_curves+'.input[0]') # cubic
-        cmds.connectAttr(smooth_step+'.output', blend_two_curves+'.input[1]') # linear
+        cmds.connectAttr(quadratic_target_length+'.output', blend_two_curves+'.input[0]') # cubic length
+        cmds.connectAttr(smooth_step+'.output', blend_two_curves+'.input[1]') # smooth length
         
         blend_two_height = cmds.createNode('blendTwoAttr', name=f"{side}_{limb}SoftBlendedHeight_BLN", ss=True)
         cmds.connectAttr(blend_two_curves+'.output', blend_two_height+'.attributesBlender') # blended curve
