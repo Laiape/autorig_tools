@@ -264,6 +264,58 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
 
         return ik_matrices
 
+
+def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0), secondary_mode=(0,1,0)):
+
+        """Custom IK solver for single bone chains.
+        Args:
+                blend_matrix (list): Blend matrix that drives the controller. (ik-fk blend matrix)
+                controller (str): Name of the controller object that will constraint the single chain solver.
+                guides (list): List of the affected guide objects (start-end).
+        Returns:
+                matrix
+                """
+        side = blend_matrix[0].split('_')[0]
+        if side == 'R':
+                primary_mode = (-1,0,0)
+                secondary_mode = (0,1,0)
+
+        name_ctl = controller.split('_')[1]
+        name_guide = guides[1].split('_')[1]
+
+        distance = cmds.createNode('distanceBetween', name=f"{side}_{name_ctl}To{name_guide}_DBT", ss=True) # distance between controller and guide
+        cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{distance}.inMatrix1") # start
+        cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{distance}.inMatrix2") # end
+
+        controller_position = cmds.createNode('fourByFourMatrix', name=controller.replace('_CTL', 'CtlPosition_F4FX'), ss=True) # local position matrix for controller
+        if primary_mode == (1,0,0) or primary_mode == (-1,0,0):
+                cmds.connectAttr(distance+'.distance', controller_position+'.in30') # position x
+                if side == 'R':
+                        negate_pos_x = cmds.createNode('negate', name=controller.replace('_CTL', 'PosX_NEG'), ss=True)
+                        cmds.connectAttr(distance+'.distance', negate_pos_x+'.input') # negate position
+                        cmds.connectAttr(negate_pos_x+'.output', controller_position+'.in30') # position x
+        elif primary_mode == (0,1,0) or primary_mode == (0,-1,0):
+                cmds.connectAttr(distance+'.distance', controller_position+'.in31') # position y
+        elif primary_mode == (0,0,1) or primary_mode == (0,0,-1):
+                cmds.connectAttr(distance+'.distance', controller_position+'.in32') # position z
+
+        aim_matrix_rotation = cmds.createNode('aimMatrix', name=controller.replace('_CTL', '_AMX'), ss=True) # aim matrix for end controller,
+        cmds.setAttr(aim_matrix_rotation+'.primaryInputAxis', *primary_mode, type="double3") # X axis
+        cmds.setAttr(aim_matrix_rotation+'.secondaryInputAxis', *secondary_mode, type="double3") # Y axis
+        cmds.setAttr(aim_matrix_rotation+'.secondaryTargetVector', *secondary_mode, type="double3") # Y axis
+        cmds.setAttr(aim_matrix_rotation+'.secondaryMode', 2) # Align to secondary axis
+        cmds.connectAttr(f"{blend_matrix}.worldMatrix[0]", aim_matrix_rotation+'.inputMatrix') # input
+        cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.primaryTargetMatrix') # target
+        cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.secondaryTargetMatrix') # secondary target
+
+        mult_matrix_add_matrices = cmds.createNode('multMatrix', name=controller.replace('_CTL', 'SC_MMT'), ss=True) # final mult matrix for controller
+        cmds.connectAttr(aim_matrix_rotation+'.outputMatrix', mult_matrix_add_matrices+'.matrixIn[0]')
+        cmds.connectAttr(controller_position+'.output', mult_matrix_add_matrices+'.matrixIn[1]')
+
+        effector_wm = mult_matrix_add_matrices+'.matrixSum' # effector world matrix
+
+        return effector_wm
+
 def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
 
 

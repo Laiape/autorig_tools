@@ -28,5 +28,9 @@
         "R_armPv": "R_armPv_CTL",
         "R_shoulderFk": "R_shoulderFk_CTL",
         "R_armIkRoot": "R_armIkRoot_CTL"
+    },
+    "clavicle_module": {
+        "L_clavicle": "L_clavicle_CTL",
+        "R_clavicle": "R_clavicle_CTL"
     }
 }

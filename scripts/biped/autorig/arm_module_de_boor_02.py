@@ -100,7 +100,7 @@ class ArmModule(object):
         self.guides_matrices = []
         for i, guide in enumerate(self.guides):
             if i == 0:
-                guide_00 = cmds.createNode("aimMatrix", name=f"{self.side}_armGuide00_AMT", ss=True)
+                guide_00 = cmds.createNode("aimMatrix", name=f"{self.side}_shoulder_AMT", ss=True)
                 cmds.connectAttr(guide+".worldMatrix[0]", guide_00+".inputMatrix")
                 cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_00}.primaryTargetMatrix")
                 cmds.connectAttr(f"{self.guides[i+2]}.worldMatrix[0]", f"{guide_00}.secondaryTargetMatrix")
@@ -110,7 +110,7 @@ class ArmModule(object):
                 cmds.setAttr(f"{guide_00}.secondaryMode", 1) # Aim
                 self.guides_matrices.append(f"{guide_00}.outputMatrix")
             if i == 1:
-                guide_01 = cmds.createNode("aimMatrix", name=f"{self.side}_armGuide01_AMT", ss=True)
+                guide_01 = cmds.createNode("aimMatrix", name=f"{self.side}_elbow_AMT", ss=True)
                 cmds.connectAttr(guide+".worldMatrix[0]", guide_01+".inputMatrix")
                 cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_01}.primaryTargetMatrix") # Next guide
                 cmds.connectAttr(f"{self.guides[i-1]}.worldMatrix[0]", f"{guide_01}.secondaryTargetMatrix") # Previous guide
@@ -119,7 +119,7 @@ class ArmModule(object):
                 cmds.setAttr(f"{guide_01}.secondaryMode", 1) # Aim
                 self.guides_matrices.append(f"{guide_01}.outputMatrix")
             if i == 2:
-                guide_02 = cmds.createNode("blendMatrix", name=f"{self.side}_armGuide02_BLM", ss=True)
+                guide_02 = cmds.createNode("blendMatrix", name=f"{self.side}_wrist_BLM", ss=True)
                 cmds.connectAttr(f"{guide_01}.outputMatrix", f"{guide_02}.inputMatrix")
                 cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{guide_02}.target[0].targetMatrix")
                 cmds.setAttr(f"{guide_02}.target[0].weight", 1)
@@ -197,7 +197,7 @@ class ArmModule(object):
         cmds.connectAttr(self.guides_matrices[2], f"{self.ik_wrist_nodes[0]}.offsetParentMatrix")
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
-        self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.pv_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         
 
@@ -216,18 +216,24 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_pos}.target[0].weight")
         cmds.connectAttr(f"{pv_pos}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
 
-        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_armPv_CRV") # Create a line that points always to the PV
-        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPv_DCM", ss=True)
-        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPvCtl_DCM", ss=True)
-        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
-        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{decompose_knee}.inputMatrix")
-        cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
-        cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
-        cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
-        cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
-        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
 
-        cmds.parent(crv_point_pv, self.pv_ctl)
+        curve = cmds.curve(d=1, p=[(0, 0, 0), (0, 1, 0)], k=[0, 1], name=name+"_CTL")
+        cmds.delete(curve, ch=True)
+        for i, p in enumerate(parents):
+            decompose = cmds.createNode("decomposeMatrix", name=f"{name}0{i}_DCP", ss=True)
+            cmds.connectAttr(f"{p}.worldMatrix[0]", f"{decompose}.inputMatrix")
+            cmds.connectAttr(f"{decompose}.outputTranslate", f"{curve}.controlPoints[{i}]")
+        if parent_append:
+            cmds.parent(curve, parent_append)
+
+        cmds.setAttr(f"{curve}.overrideEnabled", 1)
+        cmds.setAttr(f"{curve}.overrideDisplayType", 1)
+        cmds.setAttr(f"{curve}.hiddenInOutliner ", 1)
+        cmds.setAttr(f"{curve}.inheritsTransform ", 0)
+
+        cmds.setAttr(f"{curve}.translate", 0, 0, 0, type="double3")
+        cmds.setAttr(f"{curve}.rotate", 0, 0, 0, type="double3")
+
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])

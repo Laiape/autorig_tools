@@ -12,7 +12,7 @@ from biped.autorig.utilities import matrix_manager
 from biped.autorig import arm_module_de_boor_02 as arm_module
 from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import clavicle_module
-from biped.autorig import leg_module_de_boor as leg_module
+from biped.autorig import leg_module_de_boor_02 as leg_module
 from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
@@ -86,10 +86,10 @@ class AutoRig(object):
         spine_module.SpineModule().make("C")
         arm_module.ArmModule().make("L") 
         arm_module.ArmModule().make("R")
-        # clavicle_module.ClavicleModule().make("L")
-        # clavicle_module.ClavicleModule().make("R")
-        # leg_module.LegModule().make("L")
-        # leg_module.LegModule().make("R")
+        clavicle_module.ClavicleModule().make("L")
+        clavicle_module.ClavicleModule().make("R")
+        leg_module.LegModule().make("L")
+        leg_module.LegModule().make("R")
         # neck_module.NeckModule().make("C")
         # fingers_module.FingersModule().make("L")
         # fingers_module.FingersModule().make("R")
