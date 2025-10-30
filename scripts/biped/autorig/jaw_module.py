@@ -200,12 +200,19 @@ class JawModule(object):
             # Create corner lip controller
             self.main_corner_nodes, self.main_corner_ctl = curve_tool.create_controller(f"{side}_lipMainCorner", offset=["GRP", "OFF"], parent=self.mouth_master_ctl) # Corner controller. Will drive secondary corner controller
             self.lock_attributes(self.main_corner_ctl, ["rx", "ry", "rz", "sx", "sz", "v"])
+            cmds.addAttr(self.main_corner_ctl, ln="EXTRA_ATTRIBUTES", at="enum", en="____", k=True)
+            cmds.setAttr(f"{self.main_corner_ctl}.EXTRA_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
+            cmds.addAttr(self.main_corner_ctl, ln="Extra_Controllers", at="float", min=0, max=1, dv=0, k=True)
+
             self.corner_nodes, self.corner_ctl = curve_tool.create_controller(f"{side}_lipCorner", offset=["GRP", "OFF"], parent=self.main_corner_ctl) # Secondary corner controller drived by the main corner but without constraints to other controllers
+            self.lock_attributes(self.corner_ctl, ["v"])
             corner_local_grp, corner_local_trn = self.local(self.corner_ctl) # Local transform for the corner controller
             four_by_four_upper = cmds.createNode("fourByFourMatrix", name=f"{side}_upperLipCorner_FBF", ss=True)
             four_by_four_lower = cmds.createNode("fourByFourMatrix", name=f"{side}_lowerLipCorner_FBF", ss=True)
 
             upper_corner_nodes, upper_corner_ctl = curve_tool.create_controller(f"{side}_upperLipCorner", offset=["GRP", "OFF"], parent=self.mouth_master_ctl)
+            self.lock_attributes(upper_corner_ctl, ["v"])
+            cmds.connectAttr(f"{self.main_corner_ctl}.Extra_Controllers", f"{upper_corner_nodes[0]}.v") # Connect visibility to main corner controller
             mult_matrix_negate_master_upper = cmds.createNode("multMatrix", name=f"{side}_upperLipCornerNegateMaster_MMX", ss=True)
             cmds.connectAttr(f"{four_by_four_upper}.output", f"{mult_matrix_negate_master_upper}.matrixIn[0]")
             cmds.connectAttr(f"{self.jaw_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_master_upper}.matrixIn[1]") # Negate the position of the master mouth controller
@@ -213,6 +220,8 @@ class JawModule(object):
             
 
             lower_corner_nodes, lower_corner_ctl = curve_tool.create_controller(f"{side}_lowerLipCorner", offset=["GRP", "OFF"], parent=self.mouth_master_ctl)
+            cmds.connectAttr(f"{self.main_corner_ctl}.Extra_Controllers", f"{lower_corner_nodes[0]}.v") # Connect visibility to main corner controller
+            self.lock_attributes(lower_corner_ctl, ["v"])
             mult_matrix_negate_master_lower = cmds.createNode("multMatrix", name=f"{side}_lowerLipCornerNegateMaster_MMX", ss=True)
             cmds.connectAttr(f"{four_by_four_lower}.output", f"{mult_matrix_negate_master_lower}.matrixIn[0]")
             cmds.connectAttr(f"{self.jaw_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_master_lower}.matrixIn[1]") # Negate the position of the master mouth controller
@@ -226,8 +235,6 @@ class JawModule(object):
                 cmds.connectAttr(f"{self.lower_linear_lip_curve}.editPoints[{0}].xValueEp", f"{four_by_four_lower}.in30")
                 cmds.connectAttr(f"{self.lower_linear_lip_curve}.editPoints[{0}].yValueEp", f"{four_by_four_lower}.in31")
                 cmds.connectAttr(f"{self.lower_linear_lip_curve}.editPoints[{0}].zValueEp", f"{four_by_four_lower}.in32")
-
-                
 
             elif side == "L":
                 cmds.connectAttr(f"{self.upper_linear_lip_curve}.editPoints[{num_cvs-1}].xValueEp", f"{four_by_four_upper}.in30")
