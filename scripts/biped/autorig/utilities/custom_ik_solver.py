@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 
-def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=False, use_soft=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
+def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=False, use_soft=False, ik_handle_manager=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
         
         """Custom IK solver for biped characters. Cosinus theorem based.
         Args:
@@ -22,10 +22,17 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         guides_01_name = side + "_" + guides[1].split('_')[1] + '_GUIDE'
         guides_02_name = side + "_" + guides[2].split('_')[1] + '_GUIDE'
 
+        if ik_handle_manager == True:
+
+                ik_handle_manager_mmx = cmds.createNode('multMatrix', name=f"{name}IkHandleManager_MMX", ss=True)
+                cmds.connectAttr(f"{guides[2]}", ik_handle_manager_mmx+'.matrixIn[0]') # connect ankle guide world matrix to ik handle manager
+                cmds.connectAttr(f"{trn_guides[-2]}.worldInverseMatrix[0]", ik_handle_manager_mmx+'.matrixIn[1]') # connect ball guide inverse world matrix to ik handle manager
+                cmds.connectAttr(f"{controllers[-1]}.worldMatrix[0]", ik_handle_manager_mmx+'.matrixIn[2]') # connect ball controller world matrix to ik handle manager
 
         if use_stretch == True:
-                distance_between_eff, distance_between_up, distance_between_low = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers, trn_guides=trn_guides)
-        
+                distance_between_eff, distance_between_up, distance_between_low, current_length = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers, trn_guides=trn_guides)
+                if ik_handle_manager == True:
+                        cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', current_length+'.inMatrix2', f=True) # connect ik handle manager output to current length
                 if use_soft == True:
                         upper_length_scaler, lower_length_scaler = soft_ik(side=side, limb=name.split('_')[1], ik_controller=controllers[2], upper_length_node=distance_between_up, lower_length_node=distance_between_low, effector_length_node=distance_between_eff)
                         
@@ -139,6 +146,8 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.setAttr(aim_matrix+'.secondaryTargetVector', *secondary_mode, type="double3") # Y axis
         cmds.setAttr(aim_matrix+'.secondaryMode', 1) # Aim to secondary axis
         cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", aim_matrix+'.inputMatrix') # input
+        if ik_handle_manager == True:
+                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', aim_matrix+'.inputMatrix', f=True) # connect ik handle manager output to aim matrix
         cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", aim_matrix+'.primaryTargetMatrix') # target
         cmds.connectAttr(f"{controllers[1]}.worldMatrix[0]", aim_matrix+'.secondaryTargetMatrix') # secondary target
 
@@ -224,6 +233,8 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         inverse_matrix_lower = cmds.createNode('inverseMatrix', name=guides_02_name.replace('_GUIDE', 'Lower_INV'), ss=True)
         cmds.connectAttr(lower_lm, inverse_matrix_lower+'.inputMatrix') # connect lower local matrix to inverse
         cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", mult_matrix_eff+'.matrixIn[0]')
+        if ik_handle_manager == True:
+                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', mult_matrix_eff+'.matrixIn[0]', f=True) # connect ik handle manager output to effector world matrix
         cmds.connectAttr(inverse_matrix_lower+'.outputMatrix', mult_matrix_eff+'.matrixIn[1]')
 
         four_by_four_effector_position = cmds.createNode('fourByFourMatrix', name=f"{name}EffectorPosition_F4FX", ss=True) # local position matrix for end effector
@@ -269,7 +280,7 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
 
         """Custom IK solver for single bone chains.
         Args:
-                blend_matrix (list): Blend matrix that drives the controller. (ik-fk blend matrix)
+                blend_matrix (list): Blend matrix of the controller. (ik-fk blend matrix)
                 controller (str): Name of the controller object that will constraint the single chain solver.
                 guides (list): List of the affected guide objects (start-end).
         Returns:
@@ -304,21 +315,33 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
         cmds.setAttr(aim_matrix_rotation+'.secondaryInputAxis', *secondary_mode, type="double3") # Y axis
         cmds.setAttr(aim_matrix_rotation+'.secondaryTargetVector', *secondary_mode, type="double3") # Y axis
         cmds.setAttr(aim_matrix_rotation+'.secondaryMode', 2) # Align to secondary axis
-        cmds.connectAttr(f"{blend_matrix}.worldMatrix[0]", aim_matrix_rotation+'.inputMatrix') # input
+        cmds.connectAttr(blend_matrix, aim_matrix_rotation+'.inputMatrix') # input
         cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.primaryTargetMatrix') # target
         cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.secondaryTargetMatrix') # secondary target
 
-        mult_matrix_add_matrices = cmds.createNode('multMatrix', name=controller.replace('_CTL', 'SC_MMT'), ss=True) # final mult matrix for controller
-        cmds.connectAttr(aim_matrix_rotation+'.outputMatrix', mult_matrix_add_matrices+'.matrixIn[0]')
-        cmds.connectAttr(controller_position+'.output', mult_matrix_add_matrices+'.matrixIn[1]')
+        parent_matrix = cmds.createNode('parentMatrix', name=guides[0].replace('_GUIDE', 'SC_MMT'), ss=True) # final mult matrix for controller
+        cmds.connectAttr(aim_matrix_rotation+'.outputMatrix', parent_matrix+'.inputMatrix') # connect aim matrix to parent matrix
+        cmds.connectAttr(controller_position+'.output', parent_matrix+'.target[0].targetMatrix') # connect position matrix to parent matrix
 
-        effector_wm = mult_matrix_add_matrices+'.matrixSum' # effector world matrix
+        effector_wm = parent_matrix+'.outputMatrix' # effector world matrix
 
         return effector_wm
 
 def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
 
-
+        """
+        Stretch system for limbs.
+        Args:
+                name (str): Name of the limb (e.g., "L_arm").
+                master_walk_ctl (str): Name of the master walk controller for global scale reference.
+                guides (list): List of guide objects.
+                controllers (list): List of controller objects.
+                trn_guides (list): List of transform guide objects.
+        Returns:
+                distance_between_eff (str): Node representing the distance between start and effector.
+                distance_between_up (str): Node representing the distance between start and mid.
+                distance_between_low (str): Node representing the distance between mid and effector.
+        """
 
         side = name.split('_')[0]
         limb = name.split('_')[1]
@@ -357,7 +380,7 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{divide_length}.output", f"{max_length}.input[1]") # connect division result
 
         remap_stretch = cmds.createNode('remapValue', name=f"{side}_{limb}Stretch_RMV", ss=True) # remap node to control stretch influence
-        cmds.connectAttr(f"{controllers[-1]}.Stretch", f"{remap_stretch}.inputValue") # connect stretch attribute
+        cmds.connectAttr(f"{controllers[2]}.Stretch", f"{remap_stretch}.inputValue") # connect stretch attribute
         cmds.setAttr(f"{remap_stretch}.inputMin", 0)
         cmds.setAttr(f"{remap_stretch}.inputMax", 1)
         cmds.setAttr(f"{remap_stretch}.outputMin", 1)
@@ -366,12 +389,12 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         multiply_upper_length = cmds.createNode('multiply', name=f"{side}_{limb}UpperLength_MULT", ss=True) # multiply upper length by scaler
         cmds.connectAttr(f"{limb_upper_length}.distance", f"{multiply_upper_length}.input[0]") # upper length
         cmds.connectAttr(f"{remap_stretch}.outValue", f"{multiply_upper_length}.input[1]") # max length
-        cmds.connectAttr(f"{controllers[-1]}.upperLengthMult", f"{multiply_upper_length}.input[2]") # connect stretch attribute
+        cmds.connectAttr(f"{controllers[2]}.upperLengthMult", f"{multiply_upper_length}.input[2]") # connect stretch attribute
 
         multiply_lower_length = cmds.createNode('multiply', name=f"{side}_{limb}LowerLength_MULT", ss=True) # multiply lower length by scaler
         cmds.connectAttr(f"{limb_lower_length}.distance", f"{multiply_lower_length}.input[0]") # lower length
         cmds.connectAttr(f"{remap_stretch}.outValue", f"{multiply_lower_length}.input[1]") # max length
-        cmds.connectAttr(f"{controllers[-1]}.lowerLengthMult", f"{multiply_lower_length}.input[2]") # connect stretch attribute
+        cmds.connectAttr(f"{controllers[2]}.lowerLengthMult", f"{multiply_lower_length}.input[2]") # connect stretch attribute
 
         length_final = cmds.createNode("sum", name=f"{side}_{limb}FinalLength_SUM", ss=True)
         cmds.connectAttr(f"{multiply_upper_length}.output", f"{length_final}.input[0]")
@@ -382,7 +405,7 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{length_final}.output", f"{clamped_final_length}.input[0]")
         cmds.connectAttr(f"{global_scale_factor}.output", f"{clamped_final_length}.input[1]")
 
-        return clamped_final_length, multiply_upper_length, multiply_lower_length
+        return clamped_final_length, multiply_upper_length, multiply_lower_length, current_length
 
 def soft_ik(side, limb, ik_controller, upper_length_node, lower_length_node, effector_length_node):
 

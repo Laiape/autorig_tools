@@ -9,10 +9,10 @@ from biped.utils import data_manager
 from biped.autorig.utilities import matrix_manager
 
 # Body mechanics
-from biped.autorig import arm_module_de_boor_02 as arm_module
+from biped.autorig import arm_module_de_boor as arm_module
 from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import clavicle_module
-from biped.autorig import leg_module_de_boor_02 as leg_module
+from biped.autorig import leg_module_de_boor as leg_module
 from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
@@ -90,20 +90,20 @@ class AutoRig(object):
         clavicle_module.ClavicleModule().make("R")
         leg_module.LegModule().make("L")
         leg_module.LegModule().make("R")
-        # neck_module.NeckModule().make("C")
-        # fingers_module.FingersModule().make("L")
-        # fingers_module.FingersModule().make("R")
+        neck_module.NeckModule().make("C")
+        fingers_module.FingersModule().make("L")
+        fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
-        # eyebrow_module.EyebrowModule().make("L")
-        # eyebrow_module.EyebrowModule().make("R")
-        # eyelid_module.EyelidModule().make("L")
-        # eyelid_module.EyelidModule().make("R")
-        # ear_module.EarModule().make("L")
-        # ear_module.EarModule().make("R")
-        # nose_module.NoseModule().make("L")
-        # nose_module.NoseModule().make("R")
-        # jaw_module.JawModule().make("C")
+        eyebrow_module.EyebrowModule().make("L")
+        eyebrow_module.EyebrowModule().make("R")
+        eyelid_module.EyelidModule().make("L")
+        eyelid_module.EyelidModule().make("R")
+        ear_module.EarModule().make("L")
+        ear_module.EarModule().make("R")
+        nose_module.NoseModule().make("L")
+        nose_module.NoseModule().make("R")
+        jaw_module.JawModule().make("C")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',

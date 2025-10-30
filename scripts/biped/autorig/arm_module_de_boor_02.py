@@ -216,24 +216,18 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_pos}.target[0].weight")
         cmds.connectAttr(f"{pv_pos}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
 
+        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_armPv_CRV") # Create a line that points always to the PV
+        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPv_DCM", ss=True)
+        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPvCtl_DCM", ss=True)
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
+        cmds.connectAttr(self.guides_matrices[1], f"{decompose_knee}.inputMatrix")
+        cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
+        cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
+        cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
+        cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
+        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
 
-        curve = cmds.curve(d=1, p=[(0, 0, 0), (0, 1, 0)], k=[0, 1], name=name+"_CTL")
-        cmds.delete(curve, ch=True)
-        for i, p in enumerate(parents):
-            decompose = cmds.createNode("decomposeMatrix", name=f"{name}0{i}_DCP", ss=True)
-            cmds.connectAttr(f"{p}.worldMatrix[0]", f"{decompose}.inputMatrix")
-            cmds.connectAttr(f"{decompose}.outputTranslate", f"{curve}.controlPoints[{i}]")
-        if parent_append:
-            cmds.parent(curve, parent_append)
-
-        cmds.setAttr(f"{curve}.overrideEnabled", 1)
-        cmds.setAttr(f"{curve}.overrideDisplayType", 1)
-        cmds.setAttr(f"{curve}.hiddenInOutliner ", 1)
-        cmds.setAttr(f"{curve}.inheritsTransform ", 0)
-
-        cmds.setAttr(f"{curve}.translate", 0, 0, 0, type="double3")
-        cmds.setAttr(f"{curve}.rotate", 0, 0, 0, type="double3")
-
+        cmds.parent(crv_point_pv, self.pv_ctl)
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])

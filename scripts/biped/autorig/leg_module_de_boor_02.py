@@ -85,7 +85,7 @@ class LegModule(object):
         self.heel_loc = guides_manager.get_guides(f"{self.side}_heel_LOCShape")
 
         self.primary_axis = (1, 0, 0) if self.side == "L" else (-1, 0, 0)
-        self.secondary_axis = (0, 1, 0)
+        self.secondary_axis = (0, -1, 0)
 
         self.guides = [] # List to store guide names
         for i, node in enumerate(self.leg_chain):
@@ -134,8 +134,8 @@ class LegModule(object):
                 cmds.connectAttr(guide+".worldMatrix[0]", guide_03+".inputMatrix")
                 cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_03}.primaryTargetMatrix") # Next guide
                 cmds.connectAttr(f"{self.guides[i-1]}.worldMatrix[0]", f"{guide_03}.secondaryTargetMatrix") # Previous guide
-                cmds.setAttr(f"{guide_03}.secondaryInputAxis", *self.secondary_axis, type="double3")
-                cmds.setAttr(f"{guide_03}.secondaryTargetVector", *self.secondary_axis, type="double3")
+                cmds.setAttr(f"{guide_03}.secondaryInputAxis", 0,1,0, type="double3")
+                cmds.setAttr(f"{guide_03}.secondaryTargetVector", 0,1,0, type="double3")
                 cmds.setAttr(f"{guide_03}.secondaryMode", 1) # Aim
                 self.guides_matrices.append(f"{guide_03}.outputMatrix")
             if i == 4:
@@ -253,13 +253,14 @@ class LegModule(object):
                     cmds.connectAttr(guide, f"{mult_matrix_inverse_before_ctl}.matrixIn[0]")
                     cmds.connectAttr(f"{self.ik_controllers[i-1]}.worldInverseMatrix[0]", f"{mult_matrix_inverse_before_ctl}.matrixIn[1]")
                     cmds.connectAttr(f"{mult_matrix_inverse_before_ctl}.matrixSum", f"{ik_node[0]}.offsetParentMatrix")
-
-            
-            if child:
-                    cmds.delete(guide) # Delete the locator guide
+                    
 
             if self.ik_controllers:
                 cmds.parent(ik_node[0], self.ik_controllers[-1])
+            if child:
+                    cmds.delete(guide) # Delete the locator guide
+            else:
+                cmds.xform(ik_node[0], m=om.MMatrix.kIdentity) # Reset ik node transform
             self.ik_nodes.append(ik_node[0])
             self.ik_sdk_nodes.append(ik_node[1])
             self.ik_controllers.append(ik_ctl)
@@ -275,7 +276,7 @@ class LegModule(object):
         cmds.parent(self.root_ik_nodes[0], ik_controllers_trn)
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP"])
-        self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.pv_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         
         cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA_ATTRIBUTES", enumName="———",attributeType="enum", keyable=True)
@@ -412,9 +413,9 @@ class LegModule(object):
         cmds.connectAttr(f"{pole_pos}.output3Dz", f'{fourByFour}.in32')
 
         aim_matrix = cmds.createNode('aimMatrix', name=f"{self.side}_{self.module_name}PvAim_AMX", ss=True)
-        cmds.setAttr(f'{aim_matrix}.primaryInputAxis', 0, 0, 1, type='double3')
-        cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', 1, 0, 0, type='double3')
-        cmds.setAttr(f'{aim_matrix}.secondaryTargetVector', 1, 0, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.primaryInputAxis', 0, 1, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', 0, 0, 1, type='double3')
+        cmds.setAttr(f'{aim_matrix}.secondaryTargetVector', 0, 0, -1, type='double3')
         cmds.setAttr(f'{aim_matrix}.primaryMode', 1)
         cmds.setAttr(f'{aim_matrix}.secondaryMode', 2)
         cmds.connectAttr(f'{fourByFour}.output', f'{aim_matrix}.inputMatrix')
@@ -519,12 +520,13 @@ class LegModule(object):
         cmds.addAttr(self.ik_controllers[0], shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
         cmds.addAttr(self.ik_controllers[0], shortName="Soft_Start", minValue=0, defaultValue=0.8, maxValue=1, keyable=True)
 
-        self.ik_matrices = custom_ik_solver.triangle_solver(name=f"{self.side}_legIk", guides=self.guides_matrices, controllers=[self.root_ik_ctl, self.pv_ctl, self.ik_controllers[0]], trn_guides=self.guides, use_stretch=True, use_soft=True)
+        self.ik_matrices = custom_ik_solver.triangle_solver(name=f"{self.side}_legIk", guides=self.guides_matrices, controllers=[self.root_ik_ctl, self.pv_ctl, self.ik_controllers[0], self.ik_controllers[-1]], trn_guides=self.guides, use_stretch=True, use_soft=True, ik_handle_manager=False, secondary_mode=(0, -1, 0))
         
         for ik_matrix, blend_matrix in zip(self.ik_matrices, self.blend_matrices):
             cmds.connectAttr(f"{ik_matrix}", f"{blend_matrix}.inputMatrix")
 
-    
+        ball_ik = custom_ik_solver.single_chain_solver(blend_matrix=self.guides_matrices[2], controller=self.ik_controllers[-1], guides=[self.guides[2], self.guides[-2]])
+        cmds.connectAttr(f"{ball_ik}", f"{self.blend_matrices[-2]}.inputMatrix") # Add ball matrix to the last blend matrix
 
     def fk_stretch(self):
 
@@ -577,7 +579,7 @@ class LegModule(object):
         cmds.connectAttr(f"{guides_aim}.outputMatrix", f"{nonRollMasterWalk_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{nonRollMasterWalk_mmx}.matrixIn[1]")
 
-        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
         cmds.connectAttr(f"{nonRollMasterWalk_mmx}.matrixSum", f"{nonRollAlign}.target[0].targetMatrix")
         cmds.setAttr(f"{nonRollAlign}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{nonRollAlign}.target[0].translateWeight", 0)
@@ -585,20 +587,18 @@ class LegModule(object):
         
 
         cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[1]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
+        print(self.blend_matrices)
+        ball_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_legBallSkinning_JNT", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[-2]}.outputMatrix", f"{ball_skinning_jnt}.offsetParentMatrix")
+        ankle_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_legAnkleSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(f"{self.blend_matrices[2]}.outputMatrix", f"{ankle_skinning_jnt}.offsetParentMatrix")
 
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper")
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout(first_sel=[nonRollAim], second_sel=self.blend_matrices[1], part="Upper")
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(first_sel=self.blend_matrices[1], second_sel=self.blend_matrices[2], part="Lower")
 
-        cmds.select(clear=True)
-        ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")
-        cmds.connectAttr(f"{self.guides[-2]}.worldMatrix[0]", f"{ball_skinning_jnt}.offsetParentMatrix")
-        cmds.select(clear=True)
-        ankle_skinning_jnt = cmds.joint(name=f"{self.module_name}AnkleSkinning_JNT")
-        cmds.connectAttr(f"{self.guides[-3]}.worldMatrix[0]", f"{ankle_skinning_jnt}.offsetParentMatrix")
-        cmds.parent(ankle_skinning_jnt, self.skeleton_grp)
-        cmds.parent(ball_skinning_jnt, self.skeleton_grp)
+        
 
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
@@ -613,6 +613,8 @@ class LegModule(object):
             second_sel_output = f"{second_sel[0]}.outputMatrix"
         elif cmds.objExists(f"{second_sel[0]}.worldMatrix[0]"):
             second_sel_output = f"{second_sel[0]}.worldMatrix[0]"
+        elif cmds.objExists(f"{second_sel}.outputMatrix"):
+            second_sel_output = f"{second_sel}.outputMatrix"
 
         main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}MainBendy", offset=["GRP"])
         up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}UpBendy", offset=["GRP"])
@@ -633,7 +635,7 @@ class LegModule(object):
         else:
             cmds.setAttr(f"{aim_matrix}.primaryInputAxis", -1, 0, 0, type="double3") # Aim X-
             
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, 1, 0, type="double3")
+        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, -1, 0, type="double3")
 
         blend_matrix = cmds.createNode("blendMatrix", name=f"{self.module_name}{part}MainBendy_BMT", ss=True)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")
@@ -645,9 +647,6 @@ class LegModule(object):
         for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
 
             self.lock_attributes(ctl, ["visibility"])
-
-            
-            
 
             if i == 0:
                 cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
