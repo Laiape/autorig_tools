@@ -78,8 +78,10 @@ class JawModule(object):
             local_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Local_JNT"), ss=True, p=local_trn)
         cmds.matchTransform(local_grp, ctl)
         cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix")
+
+        print(local_grp)
         
-        return local_grp, local_trn, joint if joint == True else None
+        return (local_grp, local_trn, local_jnt) if joint else (local_grp, local_trn, None)
     
     def load_guides(self):
 
@@ -91,8 +93,6 @@ class JawModule(object):
 
         self.jaw_guides = guides_manager.get_guides("C_jaw_JNT") # Jaw father, l_jaw_JNT, r_jaw_JNT and c_chin_JNT
 
-        # self.jaw_guides = 
-        
         for guide in self.jaw_guides:
             cmds.parent(guide, self.module_trn)
 
@@ -114,12 +114,12 @@ class JawModule(object):
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
         self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP", "OFF"], parent=self.jaw_ctl)
-        cmds.matchTransform(self.chin_nodes[0], self.jaw_guides[-2])
+        cmds.matchTransform(self.chin_nodes[0], self.chin_nodes[0].replace("C_chin_GRP", "C_chin_JNT"))
         self.lock_attributes(self.chin_ctl, ["v"])
 
         for side in ["L", "R"]:
-            self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_sideJaw", offset=["GRP", "OFF"], parent=self.jaw_ctl)
-            cmds.matchTransform(self.side_jaw_nodes[0], self.jaw_guides[1 if side == "L" else -1])
+            self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP", "OFF"], parent=self.jaw_ctl)
+            cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
             self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
 
     def collision_setup(self):
@@ -176,7 +176,7 @@ class JawModule(object):
         # Create master mouth controller
         self.mouth_master_nodes, self.mouth_master_ctl = curve_tool.create_controller("C_mouthMaster", offset=["GRP", "OFF"], parent=self.controllers_grp) # Doesnt follow jaws
         self.lock_attributes(self.mouth_master_ctl, ["v"])
-        mouth_master_local_grp, mouth_master_local_trn = self.local(self.mouth_master_ctl)
+        mouth_master_local_grp, mouth_master_local_trn, mouth_master_local_jnt = self.local(self.mouth_master_ctl)
         cmds.matchTransform(self.mouth_master_nodes[0], self.jaw_ctl, pos=True) # Only position
 
         # Create NURBS surface
@@ -202,7 +202,20 @@ class JawModule(object):
         # Create upper and lower lip corner controllers
         self.upper_lip_nodes, self.upper_lip_ctl = curve_tool.create_controller("C_upperLip", offset=["GRP", "OFF"], parent=self.mouth_master_ctl) # Main upper lip controller
         self.lock_attributes(self.upper_lip_ctl, ["v"])
+
+        self.upper_local_joints = []
+        self.lower_local_joints = []
+
+        # Local setup for upper lip controller
         self.upper_local_grp, self.upper_local_trn, self.upper_local_jnt = self.local(self.upper_lip_ctl, joint=True)
+        mult_matrix_upper_local = cmds.createNode("multMatrix", name="C_upperLipLocal_MMX", ss=True)
+        cmds.connectAttr(f"{self.upper_lip_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[0]")
+        cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[1]")
+        cmds.connectAttr(f"{self.upper_jaw_nodes[1]}.matrix", f"{mult_matrix_upper_local}.matrixIn[2]") # Add colision rotation
+        cmds.connectAttr(f"{self.mouth_master_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[3]") # Consider mouth master movement
+        cmds.connectAttr(f"{mult_matrix_upper_local}.matrixSum", f"{self.upper_local_trn}.offsetParentMatrix", f=True) # Local transform for the upper lip controller
+
+        # Place upper lip controller
         four_by_four_upper_main = cmds.createNode("fourByFourMatrix", name="C_upperLip_FBF", ss=True)
         cmds.connectAttr(f"{self.upper_linear_lip_curve}.editPoints[{num_cvs//2 - 1}].xValueEp", f"{four_by_four_upper_main}.in30")
         cmds.connectAttr(f"{self.upper_linear_lip_curve}.editPoints[{num_cvs//2 - 1}].yValueEp", f"{four_by_four_upper_main}.in31")
@@ -215,9 +228,19 @@ class JawModule(object):
         cmds.connectAttr(f"{mult_matrix_negate_master_upper_main}.matrixSum", f"{self.upper_lip_nodes[0]}.offsetParentMatrix") # Connect the output to the upper lip controller
         cmds.xform(self.upper_lip_nodes[0], m=om.MMatrix.kIdentity)
 
+        # Create lower lip controller
         self.lower_lip_nodes, self.lower_lip_ctl = curve_tool.create_controller("C_lowerLip", offset=["GRP", "OFF"], parent=self.mouth_master_ctl) # Main lower lip controller
         self.lock_attributes(self.lower_lip_ctl, ["v"])
+        
+        # Local setup for lower lip controller
         self.lower_local_grp, self.lower_local_trn, self.lower_local_jnt = self.local(self.lower_lip_ctl, joint=True)
+        mult_matrix_lower_local = cmds.createNode("multMatrix", name="C_lowerLipLocal_MMX", ss=True)
+        cmds.connectAttr(f"{self.lower_lip_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[0]")
+        cmds.connectAttr(f"{self.jaw_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[1]")
+        cmds.connectAttr(f"{self.mouth_master_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[2]") # Consider mouth master movement
+        cmds.connectAttr(f"{mult_matrix_lower_local}.matrixSum", f"{self.lower_local_trn}.offsetParentMatrix", f=True) # Local transform for the lower lip controller
+
+        # Place lower lip controller
         four_by_four_lower_main = cmds.createNode("fourByFourMatrix", name="C_lowerLip_FBF", ss=True)
         cmds.connectAttr(f"{self.lower_linear_lip_curve}.editPoints[{math.floor(num_cvs/2)}].xValueEp", f"{four_by_four_lower_main}.in30")
         cmds.connectAttr(f"{self.lower_linear_lip_curve}.editPoints[{math.floor(num_cvs/2)}].yValueEp", f"{four_by_four_lower_main}.in31")
@@ -240,28 +263,61 @@ class JawModule(object):
 
             self.corner_nodes, self.corner_ctl = curve_tool.create_controller(f"{side}_lipCorner", offset=["GRP", "OFF"], parent=self.main_corner_ctl) # Secondary corner controller drived by the main corner but without constraints to other controllers
             self.lock_attributes(self.corner_ctl, ["v"])
-            corner_local_grp, corner_local_trn = self.local(self.corner_ctl) # Local transform for the corner controller
+
             four_by_four_upper = cmds.createNode("fourByFourMatrix", name=f"{side}_upperLipCorner_FBF", ss=True)
             four_by_four_lower = cmds.createNode("fourByFourMatrix", name=f"{side}_lowerLipCorner_FBF", ss=True)
 
             upper_corner_nodes, upper_corner_ctl = curve_tool.create_controller(f"{side}_upperLipCorner", offset=["GRP", "OFF"], parent=self.mouth_master_ctl)
             self.lock_attributes(upper_corner_ctl, ["v"])
+            upper_local_grp, upper_local_trn, upper_local_jnt = self.local(upper_corner_ctl, joint=True)
+            self.upper_local_joints.append(upper_local_jnt)
+            if side == "L":
+                self.upper_local_joints.append(self.upper_local_jnt)
+
+            mult_matrix_upper_local = cmds.createNode("multMatrix", name=f"{side}_upperLipCornerLocal_MMX", ss=True)
+            cmds.connectAttr(f"{upper_corner_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[0]")
+            cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[1]")
+            cmds.connectAttr(f"{self.upper_jaw_nodes[1]}.matrix", f"{mult_matrix_upper_local}.matrixIn[2]") # Add colision rotation
+            cmds.connectAttr(f"{self.corner_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[3]")
+            cmds.connectAttr(f"{self.main_corner_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[4]")
+            cmds.connectAttr(f"{self.mouth_master_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[5]")
+            cmds.connectAttr(f"{mult_matrix_upper_local}.matrixSum", f"{upper_local_trn}.offsetParentMatrix", f=True) # Local transform for the upper lip corner controller
+
             cmds.connectAttr(f"{self.main_corner_ctl}.Extra_Controllers", f"{upper_corner_nodes[0]}.v") # Connect visibility to main corner controller
+
+            # Place upper lip corner controller
             mult_matrix_negate_master_upper = cmds.createNode("multMatrix", name=f"{side}_upperLipCornerNegateMaster_MMX", ss=True)
             cmds.connectAttr(f"{four_by_four_upper}.output", f"{mult_matrix_negate_master_upper}.matrixIn[0]")
             cmds.connectAttr(f"{self.jaw_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_master_upper}.matrixIn[1]") # Negate the position of the master mouth controller
             cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_negate_master_upper}.matrixIn[2]") # Consider upper jaw movement
-            cmds.connectAttr(f"{self.upper_jaw_nodes[1]}.matrix", f"{mult_matrix_negate_master_upper}.matrixIn[3]") # Add colision rotation
+            cmds.connectAttr(f"{self.upper_jaw_nodes[1]}.matrix", f"{mult_matrix_negate_master_upper}.matrixIn[3]")
+            cmds.connectAttr(f"{self.corner_ctl}.matrix", f"{mult_matrix_negate_master_upper}.matrixIn[4]")
+            cmds.connectAttr(f"{self.main_corner_ctl}.matrix", f"{mult_matrix_negate_master_upper}.matrixIn[5]")
             cmds.connectAttr(f"{mult_matrix_negate_master_upper}.matrixSum", f"{upper_corner_nodes[0]}.offsetParentMatrix") # Connect the output to the corner controller
             
 
             lower_corner_nodes, lower_corner_ctl = curve_tool.create_controller(f"{side}_lowerLipCorner", offset=["GRP", "OFF"], parent=self.mouth_master_ctl)
             cmds.connectAttr(f"{self.main_corner_ctl}.Extra_Controllers", f"{lower_corner_nodes[0]}.v") # Connect visibility to main corner controller
             self.lock_attributes(lower_corner_ctl, ["v"])
+            lower_local_grp, lower_local_trn, lower_local_jnt = self.local(lower_corner_ctl, joint=True)
+            self.lower_local_joints.append(lower_local_jnt)
+            if side == "L":
+                self.lower_local_joints.append(self.lower_local_jnt)
+
+            mult_matrix_lower_local = cmds.createNode("multMatrix", name=f"{side}_lowerLipCornerLocal_MMX", ss=True)
+            cmds.connectAttr(f"{lower_corner_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[0]")
+            cmds.connectAttr(f"{self.jaw_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[1]")
+            cmds.connectAttr(f"{self.corner_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[2]")
+            cmds.connectAttr(f"{self.main_corner_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[3]")
+            cmds.connectAttr(f"{self.mouth_master_ctl}.matrix", f"{mult_matrix_lower_local}.matrixIn[4]") # Consider mouth master movement
+            cmds.connectAttr(f"{mult_matrix_lower_local}.matrixSum", f"{lower_local_trn}.offsetParentMatrix", f=True) # Local transform for the lower lip corner controller
+
             mult_matrix_negate_master_lower = cmds.createNode("multMatrix", name=f"{side}_lowerLipCornerNegateMaster_MMX", ss=True)
             cmds.connectAttr(f"{four_by_four_lower}.output", f"{mult_matrix_negate_master_lower}.matrixIn[0]")
             cmds.connectAttr(f"{self.jaw_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_master_lower}.matrixIn[1]") # Negate the position of the master mouth controller
             cmds.connectAttr(f"{self.jaw_ctl}.matrix", f"{mult_matrix_negate_master_lower}.matrixIn[2]") # Consider lower jaw movement
+            cmds.connectAttr(f"{self.corner_ctl}.matrix", f"{mult_matrix_negate_master_lower}.matrixIn[3]")
+            cmds.connectAttr(f"{self.main_corner_ctl}.matrix", f"{mult_matrix_negate_master_lower}.matrixIn[4]")
             cmds.connectAttr(f"{mult_matrix_negate_master_lower}.matrixSum", f"{lower_corner_nodes[0]}.offsetParentMatrix") # Connect the output to the corner controller
 
             if side == "R":
@@ -301,7 +357,7 @@ class JawModule(object):
             # Create follicles for the corners
             row_matrix_corner = cmds.createNode("rowFromMatrix", name=f"{self.side}_lipCorner_RFM", ss=True)
             cmds.setAttr(f"{row_matrix_corner}.input", 3) # Translation row
-            cmds.connectAttr(f"{corner_local_trn}.worldMatrix[0]", f"{row_matrix_corner}.matrix")
+            cmds.connectAttr(f"{lower_local_trn}.worldMatrix[0]", f"{row_matrix_corner}.matrix")
 
             # Closest point on curve for corner
             closest_point_corner = cmds.createNode("closestPointOnSurface", name=f"{self.side}_lipCorner_CPS", ss=True)
@@ -310,24 +366,103 @@ class JawModule(object):
             cmds.connectAttr(f"{row_matrix_corner}.outputZ", f"{closest_point_corner}.inPositionZ")
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{closest_point_corner}.inputSurface") # Connect the NURBS surface to the closest point node
 
-            if self.side == "R": # Scale controllers in -Z
-                cmds.setAttr(f"{self.main_corner_nodes[1]}.scaleZ", -1)
-                cmds.setAttr(f"{self.corner_nodes[1]}.scaleZ", -1)
-                cmds.setAttr(f"{upper_corner_nodes[1]}.scaleZ", -1)
-                cmds.setAttr(f"{lower_corner_nodes[1]}.scaleZ", -1)
+            cmds.matchTransform(upper_local_grp, self.corner_ctl)
+            cmds.matchTransform(lower_local_grp, self.corner_ctl)
 
-
-
+        cmds.matchTransform(self.lower_local_grp, self.lower_lip_ctl)
+        cmds.matchTransform(self.upper_local_grp, self.upper_lip_ctl)
+        cmds.matchTransform(mouth_master_local_grp, self.mouth_master_ctl)
 
         # From the linear curves, create a curve degree 3 with 4 spans
-        # self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=6, d=3, tol=0.01, name="C_upperLip_CRV")
-        # self.lower_rebuild_lip_curve = cmds.rebuildCurve(self.lower_linear_lip_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=6, d=3, tol=0.01, name="C_lowerLip_CRV")
+        self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve, ch=0, rpo=0, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=6, d=3, tol=0.01, name="C_upperLip_CRV")[0]
+        self.lower_rebuild_lip_curve = cmds.rebuildCurve(self.lower_linear_lip_curve, ch=0, rpo=0, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=6, d=3, tol=0.01, name="C_lowerLip_CRV")[0]
+        cmds.parent(self.upper_rebuild_lip_curve, self.lower_rebuild_lip_curve, self.module_trn)
 
-        # # Curves to beziers
-        # cmds.select(self.upper_rebuild_lip_curve)
-        # cmds.nurbsCurveToBezier()
+        # Skin cluster to local joints
+        self.upper_skin_cluster = cmds.skinCluster(self.upper_local_joints, self.upper_rebuild_lip_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_upperLip_SKIN")[0]
+        self.lower_skin_cluster = cmds.skinCluster(self.lower_local_joints, self.lower_rebuild_lip_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_lowerLip_SKIN")[0]
 
-    
+        # Refine skin weights
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[0]", tv=[(self.upper_local_joints[-1], 1.0)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[1]", tv=[(self.upper_local_joints[-1], 0.8), (self.upper_local_joints[1], 0.2)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[2]", tv=[(self.upper_local_joints[-1], 0.4), (self.upper_local_joints[1], 0.6)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[3]", tv=[(self.upper_local_joints[-1], 0.2), (self.upper_local_joints[1], 0.8)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[4]", tv=[(self.upper_local_joints[1], 1.0)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[5]", tv=[(self.upper_local_joints[1], 0.8), (self.upper_local_joints[0], 0.2)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[6]", tv=[(self.upper_local_joints[1], 0.6), (self.upper_local_joints[0], 0.4)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[7]", tv=[(self.upper_local_joints[1], 0.2), (self.upper_local_joints[0], 0.8)])
+        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[8]", tv=[(self.upper_local_joints[0], 1.0)])
+
+
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[0]", tv=[(self.lower_local_joints[-1], 1.0)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[1]", tv=[(self.lower_local_joints[-1], 0.8), (self.lower_local_joints[1], 0.2)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[2]", tv=[(self.lower_local_joints[-1], 0.4), (self.lower_local_joints[1], 0.6)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[3]", tv=[(self.lower_local_joints[-1], 0.2), (self.lower_local_joints[1], 0.8)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[4]", tv=[(self.lower_local_joints[1], 1.0)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[5]", tv=[(self.lower_local_joints[1], 0.8), (self.lower_local_joints[0], 0.2)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[6]", tv=[(self.lower_local_joints[1], 0.6), (self.lower_local_joints[0], 0.4)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[7]", tv=[(self.lower_local_joints[1], 0.2), (self.lower_local_joints[0], 0.8)])
+        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[8]", tv=[(self.lower_local_joints[0], 1.0)])
+
+        # Create motion paths for the extra controllers
+        rebuilded_num_cvs = cmds.getAttr(f"{self.upper_rebuild_lip_curve}.spans") + cmds.getAttr(f"{self.upper_rebuild_lip_curve}.degree")
+        selected_indices = [1,2,3,4,5,6,7]  # Indices of the CVs to create extra controllers for
+        selected_indices = [i for i in selected_indices if i < rebuilded_num_cvs]
+        upper_cvs = [f"{self.upper_rebuild_lip_curve}.cv[{i}]" for i in selected_indices]
+        upper_cvs = cmds.ls(upper_cvs, fl=True)
+        lower_cvs = [f"{self.lower_rebuild_lip_curve}.cv[{i}]" for i in selected_indices]
+        lower_cvs = cmds.ls(lower_cvs, fl=True)
+
+        for i, cv in enumerate(upper_cvs + lower_cvs):
+
+            cv_pos = cmds.xform(cv, q=True, t=True, ws=True)
+
+            if cv in upper_cvs:
+                parameter = self.getClosestParamToPosition(self.upper_rebuild_lip_curve, cv_pos) # Get the closest parameter on the curve to the CV position
+            else:
+                parameter = self.getClosestParamToPosition(self.lower_rebuild_lip_curve, cv_pos) # Get the closest parameter on the curve to the CV position
+
+            mtp = cmds.createNode("motionPath", name=f"C_upperLipExtra_{i}_MTP", ss=True)
+            cmds.setAttr(f"{mtp}.uValue", parameter)
+            cmds.setAttr(f"{mtp}.fractionMode", 1)
+            if cv in upper_cvs:
+                cmds.connectAttr(f"{self.upper_rebuild_lip_curve}.worldSpace[0]", f"{mtp}.geometryPath")
+            else:
+                cmds.connectAttr(f"{self.lower_rebuild_lip_curve}.worldSpace[0]", f"{mtp}.geometryPath")
+            four_by_four_matrix = cmds.createNode("fourByFourMatrix", name=f"C_upperLipExtra0{i}_FBF", ss=True)
+            cmds.connectAttr(f"{mtp}.allCoordinates.xCoordinate", f"{four_by_four_matrix}.in30")
+            cmds.connectAttr(f"{mtp}.allCoordinates.yCoordinate", f"{four_by_four_matrix}.in31")
+            cmds.connectAttr(f"{mtp}.allCoordinates.zCoordinate", f"{four_by_four_matrix}.in32")
+
+            for j in range(3):
+                row_from_matrix = cmds.createNode("rowFromMatrix", name=f"C_upperLipExtra0{i}_RFM", ss=True)
+                cmds.setAttr(f"{row_from_matrix}.input", j)
+                if cv in upper_cvs:
+                    cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{row_from_matrix}.matrix")
+                else:
+                    cmds.connectAttr(f"{self.jaw_ctl}.matrix", f"{row_from_matrix}.matrix")
+                if j == 0:
+                    cmds.connectAttr(f"{row_from_matrix}.outputX", f"{four_by_four_matrix}.in00")
+                    cmds.connectAttr(f"{row_from_matrix}.outputY", f"{four_by_four_matrix}.in01")
+                    cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{four_by_four_matrix}.in02")
+                elif j == 1:
+                    cmds.connectAttr(f"{row_from_matrix}.outputX", f"{four_by_four_matrix}.in10")
+                    cmds.connectAttr(f"{row_from_matrix}.outputY", f"{four_by_four_matrix}.in11")
+                    cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{four_by_four_matrix}.in12")
+                elif j == 2:
+                    cmds.connectAttr(f"{row_from_matrix}.outputX", f"{four_by_four_matrix}.in20")
+                    cmds.connectAttr(f"{row_from_matrix}.outputY", f"{four_by_four_matrix}.in21")
+                    cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{four_by_four_matrix}.in22")
+
+            if cv in lower_cvs:
+                extra_nodes, extra_controller = curve_tool.create_controller(f"C_lowerLip0{i}", offset=["GRP", "OFF"], parent=self.mouth_master_ctl)
+            else:
+                extra_nodes, extra_controller = curve_tool.create_controller(f"C_upperLip0{i}", offset=["GRP", "OFF"], parent=self.mouth_master_ctl)
+            cmds.setAttr(f"{extra_nodes[0]}.inheritsTransform", 0)
+            self.lock_attributes(extra_controller, ["v"])
+            cmds.connectAttr(f"{four_by_four_matrix}.output", f"{extra_nodes[0]}.offsetParentMatrix")
+            cmds.xform(extra_nodes[0], m=om.MMatrix.kIdentity)
+
     def get_offset_matrix(self, child, parent):
 
         """
@@ -348,3 +483,33 @@ class JawModule(object):
 
         
         return offset_matrix
+    
+    def getClosestParamToPosition(self, curve, position):
+        """
+        Returns the closest parameter (u) on the given NURBS curve to a world-space position.
+        
+        Args:
+            curve (str or MObject or MDagPath): The curve to evaluate.
+            position (list or tuple): A 3D world-space position [x, y, z].
+
+        Returns:
+            float: The parameter (u) value on the curve closest to the given position.
+        """
+        if isinstance(curve, str):
+            sel = om.MSelectionList()
+            sel.add(curve)
+            curve_dag_path = sel.getDagPath(0)
+        elif isinstance(curve, om.MObject):
+            curve_dag_path = om.MDagPath.getAPathTo(curve)
+        elif isinstance(curve, om.MDagPath):
+            curve_dag_path = curve
+        else:
+            raise TypeError("Curve must be a string name, MObject, or MDagPath.")
+
+        curve_fn = om.MFnNurbsCurve(curve_dag_path)
+
+        point = om.MPoint(*position)
+
+        closest_point, paramU = curve_fn.closestPoint(point, space=om.MSpace.kWorld)
+
+        return paramU
