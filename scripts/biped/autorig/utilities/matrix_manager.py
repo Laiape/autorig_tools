@@ -114,9 +114,12 @@ def space_switches(target, sources = [None], default_value = 1):
     cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
     if len(sources) == 1:     
         cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=False)
-        cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
+        cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)
+        
     else:
         cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=True)
+        if len(sources) == 2:
+            cmds.setAttr(f"{target}.SpaceSwitch", keyable=False, channelBox=False)
 
     cmds.addAttr(target, longName="FollowValue", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
 
