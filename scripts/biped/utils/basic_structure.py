@@ -5,8 +5,11 @@ from biped.utils import curve_tool
 
 from importlib import reload
 
+from biped.utils import rig_manager
+
 reload(data_manager)
 reload(curve_tool)
+reload(rig_manager)
 
 def lock_attributes(ctl, attrs):
 
@@ -20,19 +23,28 @@ def lock_attributes(ctl, attrs):
         for attr in attrs:
             cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
+def create_assets_folders(character_name):
+
+    """
+    Create the asset folders for the character.
+    Args:
+        character_name (str): The name of the character.
+    """
+
+    rig_manager.create_assets_folders(character_name)
+
 def create_basic_structure():
 
     """ Create the basic structure for the rig, including character, rig, controls, meshes, and deformers groups."""
 
-    if cmds.objExists("Character"):
+    if cmds.objExists("rig_GRP"):
 
-        om.MGlobal.displayError("Basic structure already exists. Please delete it before creating a new one.")
-        return
+        cmds.file(new=True, force=True)
     
     else:
 
         answer = cmds.promptDialog(
-                title="INPUT DIALOG",
+                title="INPUT CHARACTER NAME",
                 message="INSERT CHARACTER NAME",
                 button=["OK", "Cancel"],
                 defaultButton="OK",
@@ -48,15 +60,19 @@ def create_basic_structure():
                             {
                                 "character_name": character_name
                             })
+    
+    create_assets_folders(character_name) # Create asset folders for the character
 
     nodes = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
 
     for i, node in enumerate(nodes):
 
-        cmds.createNode("transform", name=node, ss=True)
+        nod = cmds.createNode("transform", name=node, ss=True)
 
         if i != 0:
-            cmds.parent(node, nodes[0])
+            cmds.parent(nod, nodes[0])
+        if i == 3:
+            mesh = rig_manager.import_meshes()
 
     skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
     modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
@@ -109,4 +125,6 @@ def create_basic_structure():
                                 "preferences_ctl" : preferences_ctl
                             }
     )
+
+    return character_name
 

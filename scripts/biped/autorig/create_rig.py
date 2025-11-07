@@ -6,13 +6,14 @@ from importlib import reload
 from biped.utils import guides_manager
 from biped.utils import basic_structure
 from biped.utils import data_manager
+from biped.utils import rig_manager
 from biped.autorig.utilities import matrix_manager
 
 # Body mechanics
 from biped.autorig import arm_module_de_boor as arm_module
 from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import clavicle_module
-from biped.autorig import leg_module_de_boor as leg_module
+from biped.autorig import leg_module_de_boor_02 as leg_module
 from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
@@ -28,6 +29,7 @@ reload(guides_manager)
 reload(basic_structure)
 reload(data_manager)
 reload(matrix_manager)
+reload(rig_manager)
 
 # Reload body mechanics
 reload(arm_module)
@@ -58,10 +60,10 @@ class AutoRig(object):
         """
 
         data_manager.DataExportBiped().new_build()
-
+        
         self.basic_structure()
         self.make_rig()
-        self.space_switches()
+        # self.space_switches()
         self.label_joints()
         self.hide_connections()
         self.inherit_transforms()
@@ -75,7 +77,6 @@ class AutoRig(object):
         """
 
         basic_structure.create_basic_structure()
-    
 
     def make_rig(self):
 
@@ -84,13 +85,13 @@ class AutoRig(object):
         """
         # ---- Body mechanics  ----
         spine_module.SpineModule().make("C")
-        # arm_module.ArmModule().make("L") 
+        arm_module.ArmModule().make("L")
         # arm_module.ArmModule().make("R")
         # clavicle_module.ClavicleModule().make("L")
         # clavicle_module.ClavicleModule().make("R")
         # leg_module.LegModule().make("L")
         # leg_module.LegModule().make("R")
-        neck_module.NeckModule().make("C")
+        # neck_module.NeckModule().make("C")
         # fingers_module.FingersModule().make("L")
         # fingers_module.FingersModule().make("R")
 
@@ -103,7 +104,7 @@ class AutoRig(object):
         # ear_module.EarModule().make("R")
         # nose_module.NoseModule().make("L")
         # nose_module.NoseModule().make("R")
-        jaw_module.JawModule().make("C")
+        # jaw_module.JawModule().make("C")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',
@@ -185,8 +186,6 @@ class AutoRig(object):
             cmds.setAttr(jnt + ".type", 18)
             cmds.setAttr(jnt + ".otherType", jnt.split("_")[1], type= "string")
 
-        print("Joints labeled successfully.")
-
     def delete_unused_nodes(self):
 
         """
@@ -206,7 +205,6 @@ class AutoRig(object):
 
             cmds.delete(unused_nodes)
             
-            print(f"Deleted unused nodes")
     
     def hide_connections(self):
 
@@ -225,7 +223,6 @@ class AutoRig(object):
                 cmds.connectAttr(float_math + ".outFloat", node + ".isHistoricallyInteresting", force=True)
 
         cmds.delete(float_math)
-        print("Connections hidden successfully.")
 
     def inherit_transforms(self):
 
@@ -242,9 +239,7 @@ class AutoRig(object):
                try:
                    cmds.setAttr(crv + ".inheritsTransform", 0)
                except Exception as e:
-                   print(f"Error setting inherit transforms for {crv}: {e}")
-
-        print("Inherit transforms set successfully.")
+                   om.MGlobal.displayError(f"Error setting inherit transforms for {crv}: {e}")
 
     
     

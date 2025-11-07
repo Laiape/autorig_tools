@@ -6,10 +6,13 @@ import maya.OpenMayaUI as omui
 from shiboken2 import wrapInstance
 # import info
 import os
+import maya.api.OpenMaya as om
 
 from biped.utils import guides_manager
 from biped.autorig import spine_module_de_boor as spine_module
 from biped.autorig import create_rig
+import biped.utils.data_manager as data_manager
+from biped.utils import rig_manager
 
 
 # reload(icon_export)
@@ -175,44 +178,6 @@ class UI(QtWidgets.QMainWindow):
         
         self.quadruped_modules_buttons = [self.quadruped_leg, self.quadruped_spine, self.quadruped_neck, self.quadruped_facial]
         
-    def populate_tree(self):
-        
-        self.tree_widget = QtWidgets.QTreeWidget()
-        self.tree_widget.setHeaderLabel("Character Structure")
-        self.tree_widget.setColumnCount(1)
-        self.tree_widget.setColumnWidth(0, 20)
-
-        self.dummy_item = QtWidgets.QTreeWidgetItem(self.tree_widget, ["Dummy"])
-        self.dummy_item.setExpanded(True)
-        
-        self.tree_spine = QtWidgets.QTreeWidgetItem(self.tree_widget, ["Spine"])
-        self.tree_spine.setExpanded(True)
-        
-        self.tree_leg = QtWidgets.QTreeWidgetItem(self.tree_spine, ["Leg"])
-        
-        self.tree_arm = QtWidgets.QTreeWidgetItem(self.tree_spine, ["Arm"])
-        self.tree_arm.setExpanded(True)
-        self.tree_fingers = QtWidgets.QTreeWidgetItem(self.tree_arm, ["Fingers"])
-        
-        self.tree_neck = QtWidgets.QTreeWidgetItem(self.tree_spine, ["Head"])
-        self.tree_neck.setExpanded(True)
-        
-        self.tree_facial = QtWidgets.QTreeWidgetItem(self.tree_neck, ["Facial"])
-        self.tree_facial.setExpanded(True)
-    
-        self.tree_facial_eyes = QtWidgets.QTreeWidgetItem(self.tree_facial, ["Eyes"])
-        self.tree_facial_lips = QtWidgets.QTreeWidgetItem(self.tree_facial, ["Lips"])
-        self.tree_facial_eyebrows = QtWidgets.QTreeWidgetItem(self.tree_facial, ["Eyebrows"])
-        self.tree_facial_ears = QtWidgets.QTreeWidgetItem(self.tree_facial, ["Ears"])
-        self.tree_facial_nose = QtWidgets.QTreeWidgetItem(self.tree_facial, ["Nose"])
-
-    def populate_add_module_to_tree(self):
-
-        self.text_line = QtWidgets.QLineEdit()
-        self.text_line.setPlaceholderText("Enter new module...")
-        self.tree_widget.setItemWidget(self.dummy_item, 0, self.text_line)
-        self.introduced_text = self.text_line.text()
-
       
         
     def add_module_to_tree_connections(self):
@@ -379,11 +344,48 @@ class UI(QtWidgets.QMainWindow):
 
     def create_biped_rig_connections(self):
 
-        from biped.autorig import create_rig
-        reload(create_rig)
+        import shutil
+
+        rig_build_info = {
+            "rig_attributes": self.get_rig_attributes()
+        }
+
+        complete_path = os.path.realpath(__file__)
+        relative_path = complete_path.split("\scripts")[0]
+        relative_folder = os.path.join(relative_path, "build")
+        final_path = os.path.join(relative_folder, "character.build")
+
+        with open(final_path, 'w') as f:
+            json.dump(rig_build_info, f, indent=4)
 
         build_rig = create_rig.AutoRig()
         build_rig.build()
+
+        character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+        new_path = os.path.join(relative_folder, f"{character_name}_v001.build")
+        
+        try:
+            if os.path.exists(new_path):
+                os.remove(new_path)
+
+            os.rename(final_path, new_path)
+            # Prepare target assets folder and move the build file there
+            target_dir = os.path.join(relative_path, "assets", character_name, "build")
+            os.makedirs(target_dir, exist_ok=True)
+            target_path = os.path.join(target_dir, os.path.basename(new_path))
+
+            try:
+                if os.path.exists(target_path):
+                    os.remove(target_path)
+                shutil.move(new_path, target_path)
+                new_path = target_path  # update path for the success message below
+            except Exception as e:
+                om.MGlobal.displayError(f"Error moving file to assets: {e}")
+                return
+            print(f"Rig properties exported successfully to {new_path}!")
+        except Exception as e:
+            om.MGlobal.displayError(f"Error renaming file: {e}")
+            return
 
     def create_quadruped_rig_connections(self):
         from quadruped.autorig import create_rig
@@ -411,6 +413,7 @@ class UI(QtWidgets.QMainWindow):
 
     def import_skin_weights_connections(self):
         from biped.tools import skin_cluster
+
         reload(skin_cluster)
 
         skin_cluster.import_joint_weights_json()
@@ -434,10 +437,6 @@ class UI(QtWidgets.QMainWindow):
         self.quadruped_spine.clicked.connect(lambda: self.module_create_connections("Quadruped Spine"))
         self.quadruped_neck.clicked.connect(lambda: self.module_create_connections("Quadruped Neck"))
         self.quadruped_facial.clicked.connect(lambda: self.module_create_connections("Quadruped Facial"))
-
-
-        self.text_line.textEdited.connect(self.add_module_to_tree_connections)
-
 
         self.create_rig_button.clicked.connect(self.create_biped_rig_connections)
         self.delete_rig_button.clicked.connect(self.create_quadruped_rig_connections)
@@ -502,7 +501,6 @@ class UI(QtWidgets.QMainWindow):
         self.tree_attrs_layout = QtWidgets.QHBoxLayout()
         # Tree Layout
         self.tree_layout = QtWidgets.QVBoxLayout()
-        self.tree_layout.addWidget(self.tree_widget)
         self.tree_layout.addStretch()
         self.tree_attrs_layout.addLayout(self.tree_layout)
         
@@ -590,13 +588,48 @@ class UI(QtWidgets.QMainWindow):
         self.skin_cluster_layout.addWidget(self.import_skin_weights_button)
         self.skin_cluster_tab_layout.addLayout(self.skin_cluster_layout)
 
+    def get_rig_attributes(self):
+
+        """
+        Get the rig attributes from the UI elements, based on the selected modules.
+        """
+
+        rig_attributes = {
+            "arm": {
+                "twist_joints": self.twist_joints_number.value(),
+                "curvature": self.curvature_checkbox.isChecked(),
+                "soft_ik": self.soft_ik_checkbox.isChecked(),
+                "auto_stretch": self.auto_stretch_checkbox.isChecked(),
+                "finger_extra_attributes": self.finger_extra_attributes.isChecked()
+            },
+            "leg": {
+                "twist_joints": self.leg_twist_joints_number.value(),
+                "curvature": self.leg_curvature_checkbox.isChecked(),
+                "soft_ik": self.leg_soft_ik_checkbox.isChecked(),
+                "auto_stretch": self.leg_auto_stretch_checkbox.isChecked(),
+                "foot_extra_attributes": self.leg_finger_extra_attributes.isChecked()
+            },
+            "spine": {
+                "spine_joints": self.spine_twist_joints_number.value(),
+                "reverse_spine": self.spine_reverse_twist_checkbox.isChecked(),
+                "volume_preservation": self.spine_volume_checkbox.isChecked(),
+                "stretch": self.spine_stretch_checkbox.isChecked()
+            },
+            "neck": {
+                "volume_preservation": self.neck_volume_checkbox.isChecked(),
+                "stretch": self.neck_stretch_checkbox.isChecked(),
+                "follow": self.neck_follow_checkbox.isChecked()
+            }
+        }
+
+        return rig_attributes
+
+
     def populate(self):
         
         self.populate_template_menu()
         self.populate_modules_menu()
-        self.populate_tree()
         self.populate_rig_attributes()
-        self.populate_add_module_to_tree()
         self.populate_create_rig()
         self.populate_curves_interactions()
         self.populate_skin_cluster_interactions()

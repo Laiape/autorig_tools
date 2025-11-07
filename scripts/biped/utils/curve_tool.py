@@ -2,19 +2,20 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import json
 import os
+import glob
 
 from biped.utils import data_manager
+from biped.utils import rig_manager
 
-if os.path.exists("C:/GITHUB/curves"):
-    TEMPLATE_PATH = "C:/GITHUB/curves"
-elif os.path.exists("H:/GIT/biped_autorig/curves"):
-    TEMPLATE_PATH = "H:/GIT/biped_autorig/curves"
+CHARACTER_NAME = None
+
+
+
 final_path = None
 curves_name = None
 
 complete_path = os.path.realpath(__file__)
 relative_path = complete_path.split("\scripts")[0]
-CHARACTER_NAME = None
 TEMPLATE_FILE = None
 
 
@@ -30,19 +31,43 @@ def get_all_ctl_curves_data():
     transforms = cmds.ls("*_CTL*", type="transform", long=True)
 
     answer = cmds.promptDialog(
-                title="INPUT DIALOG",
+                title="EXPORT CONTROLLERS TEMPLATE",
                 message="INSERT FILE NAME",
-                button=["OK", "Cancel"],
-                defaultButton="OK",
+                button=["+1", "REPLACE", "Cancel"],
+                defaultButton="+1",
                 cancelButton="Cancel",
                 dismissString="Cancel")
     if answer == "Cancel":
         om.MGlobal.displayInfo("Operation cancelled by user.")
         return
     
-    curves_name = cmds.promptDialog(query=True, text=True)
-    CHARACTER_NAME = curves_name
-    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}.curves")
+    
+    later_versions = rig_manager.get_latest_version("curves", CHARACTER_NAME)
+    new_version = rig_manager.get_next_version_name("curves", CHARACTER_NAME)
+
+    if later_versions:
+
+        if answer == "+1":
+            curves_name = new_version
+
+        elif answer == "REPLACE":
+                
+                curves_name = new_version
+ 
+    else:
+        if answer == "+1":
+            curves_name = f"{CHARACTER_NAME}_v001"
+        elif answer == "REPLACE":
+            om.MGlobal.displayInfo("No existing version found to replace. Creating v001.")
+            curves_name = f"{CHARACTER_NAME}_v001"
+
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, CHARACTER_NAME)
+    TEMPLATE_PATH = os.path.join(character_path, "curves")
+    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{curves_name}.curves")
+
     if "_" in curves_name:
         curves_name = curves_name.split("_")[0]
 
@@ -142,7 +167,10 @@ def get_all_ctl_curves_data():
     with open(TEMPLATE_FILE, "w") as f:
         json.dump(ctl_data, f, indent=4)
 
-    print(f"Controllers template saved to: {TEMPLATE_FILE}")
+    if answer == "+1":
+        om.MGlobal.displayInfo(f"Controllers template saved as new version: {TEMPLATE_FILE}")
+    else:
+        om.MGlobal.displayInfo(f"Controllers template saved to: {TEMPLATE_FILE}")
 
 def build_curves_from_template(target_transform_name=None):
     """
@@ -155,7 +183,17 @@ def build_curves_from_template(target_transform_name=None):
         list: A list of created transform names.
     """
     CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
-    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}.curves")
+
+    # Set up the template file path
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, CHARACTER_NAME)
+    TEMPLATE_PATH = os.path.join(character_path, "curves")
+    last_version = rig_manager.get_latest_version(TEMPLATE_PATH, CHARACTER_NAME)
+
+    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, last_version)
+
 
     if not os.path.exists(TEMPLATE_FILE):
         # om.MGlobal.displayError("Template file does not exist.")

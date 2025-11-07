@@ -1,13 +1,18 @@
+from importlib import reload
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import json
 import os
 
 from biped.utils import data_manager
+from biped.utils import rig_manager
 
 GUIDES_PATH = "C:\GITHUB\guides"
 guides_node = "C_guides_GRP"
 CHARACTER_NAME = None
+
+reload(data_manager)
+reload(rig_manager)
 
 def get_guides_info():
 
@@ -27,17 +32,17 @@ def get_guides_info():
         return None
 
     answer = cmds.promptDialog(
-                title="INPUT DIALOG",
+                title="SAVE GUIDES AS",
                 message="INSERT FILE NAME",
-                button=["OK", "Cancel"],
-                defaultButton="OK",
+                button=["+1", "REPLACE", "CANCEL"],
+                defaultButton="+1",
                 cancelButton="Cancel",
                 dismissString="Cancel")
     if answer == "Cancel":
         om.MGlobal.displayInfo("Operation cancelled by user.")
         return
     
-    guides_name = cmds.promptDialog(query=True, text=True)
+    guides_name = cmds.promptDialog(query=True, text=False)
 
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
@@ -154,10 +159,14 @@ def get_guides_info():
     else:
         om.MGlobal.displayInfo("No locator guides found.")
      
-
+    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
-    final_path = os.path.join(relative_path, "guides")
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, CHARACTER_NAME)
+    TEMPLATE_PATH = os.path.join(character_path, "guides")
+    TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH, CHARACTER_NAME)
+    print("Template file path:", TEMPLATE_FILE)
     guides_data = {guides_name: {}}
     
 
@@ -185,7 +194,7 @@ def get_guides_info():
     
     if curves_in_scene:
         for shape_data in shapes_data:
-            shape_name = shape_data["name"]
+            shape_name = shape_data["name"] 
             guides_data[guides_name][shape_name] = {
                 "curve_data": shape_data["curve"],
                 "isLocator": False,
@@ -193,13 +202,13 @@ def get_guides_info():
                 "isCurve": True
             }
 
-    if not os.path.exists(final_path):
-        os.makedirs(final_path)
-    
-    with open(os.path.join(final_path, f"{guides_name}.guides"), "w") as output_file:
+    if not os.path.exists(TEMPLATE_FILE):
+        os.makedirs(TEMPLATE_FILE)
+
+    with open(TEMPLATE_FILE, "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
 
-    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(final_path, f'{guides_name}.guides')}")
+    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(TEMPLATE_FILE, f'{guides_name}.guides')}")
 
 def load_guides_info(filePath=None):
 
@@ -207,12 +216,13 @@ def load_guides_info(filePath=None):
 
     
     if not filePath:
-        
+
         complete_path = os.path.realpath(__file__)
         relative_path = complete_path.split("\scripts")[0]
-        guides_path = os.path.join(relative_path, "guides")
+        TEMPLATE_PATH = os.path.join(relative_path, "assets")
 
-        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=guides_path, fileFilter="*.guides")[0]
+        final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=TEMPLATE_PATH, fileFilter="*.guides")[0]
+        print("Selected file path:", final_path)
        
         if not final_path:
             om.MGlobal.displayError("No file selected.")
@@ -222,7 +232,10 @@ def load_guides_info(filePath=None):
 
         final_path = os.path.normpath(filePath)[0]
 
-    name = os.path.basename(final_path).split(".")[0]
+    if "v0" in final_path:
+        name = os.path.basename(final_path).split(".")[0].split("_v0")[0]
+    else:
+        name = os.path.basename(final_path).split(".")[0]
 
     with open(final_path, "r") as input_file:
         guides_data = json.load(input_file)
@@ -244,6 +257,17 @@ def load_guides_info(filePath=None):
                     imported_joint = cmds.joint(name=guide, r=5)
                     cmds.xform(imported_joint, ws=True, m=data["joint_matrix"])
                     cmds.makeIdentity(imported_joint, apply=True, r=True)
+                    
+                    # Make joint blue if L side, red if R side
+                    if guide.startswith("L_"):
+                        cmds.setAttr(f"{imported_joint}.overrideEnabled", 1)
+                        cmds.setAttr(f"{imported_joint}.overrideColor", 6)  # Blue
+                    elif guide.startswith("R_"):
+                        cmds.setAttr(f"{imported_joint}.overrideEnabled", 1)
+                        cmds.setAttr(f"{imported_joint}.overrideColor", 13)  # Red
+                    elif guide.startswith("C_"):
+                        cmds.setAttr(f"{imported_joint}.overrideEnabled", 1)
+                        cmds.setAttr(f"{imported_joint}.overrideColor", 17)  # Yellow
 
                     if data["parent"] == "C_root_JNT":
                         cmds.parent(imported_joint, guides_node)
@@ -292,6 +316,8 @@ def load_guides_info(filePath=None):
 
                     shape_fn = om.MFnDagNode(shape_obj)
                     shape_fn.setName(curve_name)
+
+        rig_manager.import_meshes()
 
     else:
 

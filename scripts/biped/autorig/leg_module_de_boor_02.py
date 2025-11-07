@@ -589,7 +589,6 @@ class LegModule(object):
         cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
         cmds.connectAttr(f"{self.blend_matrices[1]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
-        print(self.blend_matrices)
         ball_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_legBallSkinning_JNT", ss=True)
         cmds.connectAttr(f"{self.blend_matrices[-2]}.outputMatrix", f"{ball_skinning_jnt}.offsetParentMatrix")
         ankle_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_legAnkleSkinning_JNT", ss=True, p=self.skeleton_grp)
