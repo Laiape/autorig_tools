@@ -41,9 +41,17 @@ def get_all_ctl_curves_data():
         om.MGlobal.displayInfo("Operation cancelled by user.")
         return
     
+    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, CHARACTER_NAME)
+    TEMPLATE_PATH = os.path.join(character_path, "curves")
     
-    later_versions = rig_manager.get_latest_version("curves", CHARACTER_NAME)
-    new_version = rig_manager.get_next_version_name("curves", CHARACTER_NAME)
+
+    later_versions = rig_manager.get_latest_version(TEMPLATE_PATH)
+    new_version = rig_manager.get_next_version_name(TEMPLATE_PATH)
 
     if later_versions:
 
@@ -52,7 +60,7 @@ def get_all_ctl_curves_data():
 
         elif answer == "REPLACE":
                 
-                curves_name = new_version
+                curves_name = later_versions
  
     else:
         if answer == "+1":
@@ -61,11 +69,6 @@ def get_all_ctl_curves_data():
             om.MGlobal.displayInfo("No existing version found to replace. Creating v001.")
             curves_name = f"{CHARACTER_NAME}_v001"
 
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, CHARACTER_NAME)
-    TEMPLATE_PATH = os.path.join(character_path, "curves")
     TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{curves_name}.curves")
 
     if "_" in curves_name:
