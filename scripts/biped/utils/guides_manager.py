@@ -3,6 +3,7 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import json
 import os
+import pathlib
 
 from biped.utils import data_manager
 from biped.utils import rig_manager
@@ -13,6 +14,7 @@ CHARACTER_NAME = None
 
 reload(data_manager)
 reload(rig_manager)
+reload(pathlib)
 
 def get_guides_info():
 
@@ -22,6 +24,12 @@ def get_guides_info():
     """
 
     CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, CHARACTER_NAME)
+    TEMPLATE_PATH = os.path.join(character_path, "guides")
 
     try:
         guides_transform = cmds.ls(guides_node, type="transform")[0]
@@ -37,12 +45,21 @@ def get_guides_info():
                 button=["+1", "REPLACE", "CANCEL"],
                 defaultButton="+1",
                 cancelButton="Cancel",
-                dismissString="Cancel")
+                dismissString="Cancel",
+                bgc=(0, 0.09, 0.388))
     if answer == "Cancel":
         om.MGlobal.displayInfo("Operation cancelled by user.")
         return
-    
+    if answer == "+1":
+        file_name = rig_manager.get_next_version_name(last_version)
+        print("New file name:", file_name)
+    if answer == "REPLACE":
+        last_version = rig_manager.get_latest_version(TEMPLATE_PATH)
+        file_name = pathlib.Path(last_version).stem
+        print("Replacing file name:", file_name)
+
     guides_name = cmds.promptDialog(query=True, text=False)
+    guides_name = CHARACTER_NAME
 
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
@@ -165,8 +182,7 @@ def get_guides_info():
     path = os.path.join(relative_path, "assets")
     character_path = os.path.join(path, CHARACTER_NAME)
     TEMPLATE_PATH = os.path.join(character_path, "guides")
-    TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH, CHARACTER_NAME)
-    print("Template file path:", TEMPLATE_FILE)
+    TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH)
     guides_data = {guides_name: {}}
     
 
@@ -208,7 +224,7 @@ def get_guides_info():
     with open(TEMPLATE_FILE, "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
 
-    om.MGlobal.displayInfo(f"Guides data saved to {os.path.join(TEMPLATE_FILE, f'{guides_name}.guides')}")
+    om.MGlobal.displayInfo(f"Guides data saved to {TEMPLATE_FILE}")
 
 def load_guides_info(filePath=None):
 
@@ -216,6 +232,7 @@ def load_guides_info(filePath=None):
 
     
     if not filePath:
+        
 
         complete_path = os.path.realpath(__file__)
         relative_path = complete_path.split("\scripts")[0]
@@ -352,12 +369,17 @@ def get_guides(guide_export, parent=None):
 
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
-    guides_path = os.path.join(relative_path, "guides")
-    final_path = os.path.join(guides_path, f"{CHARACTER_NAME}.guides") # Update this line and put an attribute to file_name
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, CHARACTER_NAME)
+    TEMPLATE_PATH = os.path.join(character_path, "guides")
+    TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH)
 
-    name = os.path.basename(final_path).split(".")[0]
+    
+    path = pathlib.Path(TEMPLATE_FILE)
+    parts = path.parts # Get the parts of the path
+    name = parts[parts.index('assets') + 1] # Get the character name after 'assets'
 
-    if not os.path.exists(guides_path):
+    if not os.path.exists(TEMPLATE_FILE):
 
         om.MGlobal.displayError("Guides path does not exist. Please create the guides first.")
 
@@ -365,7 +387,7 @@ def get_guides(guide_export, parent=None):
     
     else:
 
-        with open(final_path, "r") as input_file:
+        with open(TEMPLATE_FILE, "r") as input_file:
             guides_data = json.load(input_file)
               
         try:

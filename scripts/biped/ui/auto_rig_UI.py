@@ -280,8 +280,6 @@ class UI(QtWidgets.QMainWindow):
         import quadruped.autorig.create_rig
         reload(quadruped.autorig.create_rig)
 
- 
-
     def populate_curves_interactions(self):
 
         data = self.load_icon()
@@ -296,24 +294,17 @@ class UI(QtWidgets.QMainWindow):
 
         # Curve creator: shapes, colors, sizes, offset_grps, etc.
         # Shapes: circle, square, cube, sphere, arrow, diamond, cross, star, heart, custom (load from file)
-        
-
 
     def populate_skin_cluster_interactions(self):
 
         data = self.load_icon()
 
         pixmap = self.svg(data, "skin_cluster", "export")
-
-        pixmap = self.svg(data, "skin_cluster", "export")
         self.export_skin_weights_button = QtWidgets.QPushButton("")
         self.export_skin_weights_button.setIcon(QtGui.QPixmap(pixmap))
         self.export_skin_weights_button.setText("Export Skin Cluster")
-        
-
         self.export_skin_weights_button.setToolTip("Export all the skin cluster weights of the selected mesh")
         self.export_skin_weights_button.setIconSize(QtCore.QSize(24, 24))
-        self.export_skin_weights_button.setStyleSheet("padding: 5px;")
         self.export_skin_weights_button.setObjectName("modulesButtons")
 
         pixmap = self.svg(data, "skin_cluster", "import")
@@ -322,10 +313,22 @@ class UI(QtWidgets.QMainWindow):
         self.import_skin_weights_button.setText("Import Skin Cluster")
         self.import_skin_weights_button.setToolTip("Import all the skin cluster weights of the selected mesh")
         self.import_skin_weights_button.setIconSize(QtCore.QSize(24, 24))
-        self.import_skin_weights_button.setStyleSheet("padding: 5px;")
         self.import_skin_weights_button.setObjectName("modulesButtons")
 
+        # Local skin cluster
+        self.local_skin_cluster_header = QtWidgets.QGroupBox("LOCAL SKIN CLUSTERS")
+        self.local_skin_cluster_header.setStyleSheet("font-weight: bold; font-size: 10px;")
 
+        self.body_skin_cluster_header = QtWidgets.QGroupBox("BODY SKIN CLUSTERS")
+        self.body_skin_cluster_header.setStyleSheet("font-weight: bold; font-size: 10px;")
+
+        self.local_skin_cluster_box = QtWidgets.QFrame()
+        self.local_skin_cluster_box.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.local_skin_cluster_box.setFrameShadow(QtWidgets.QFrame.Raised)
+
+        self.body_skin_cluster_box = QtWidgets.QFrame()
+        self.body_skin_cluster_box.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.body_skin_cluster_box.setFrameShadow(QtWidgets.QFrame.Raised)
 
     def template_button_connections(self, type):
 
@@ -584,9 +587,32 @@ class UI(QtWidgets.QMainWindow):
 
         # Skin Cluster Layout
         self.skin_cluster_layout = QtWidgets.QVBoxLayout()
+        # Skin Cluster Buttons
         self.skin_cluster_layout.addWidget(self.export_skin_weights_button)
         self.skin_cluster_layout.addWidget(self.import_skin_weights_button)
         self.skin_cluster_tab_layout.addLayout(self.skin_cluster_layout)
+
+        # Skin Cluster Boxes
+        skin_cluster_box_main_layout = QtWidgets.QHBoxLayout()
+        left_header_layout = QtWidgets.QVBoxLayout()
+        left_header_layout.addWidget(self.local_skin_cluster_header)
+        left_header_layout.addStretch()
+        right_header_layout = QtWidgets.QVBoxLayout()
+        right_header_layout.addWidget(self.body_skin_cluster_header)
+        right_header_layout.addStretch()
+
+        skin_cluster_box_main_layout.addLayout(left_header_layout)
+        skin_cluster_box_main_layout.addLayout(right_header_layout)
+        
+
+        second_box_layout = QtWidgets.QHBoxLayout()
+        second_box_layout.addWidget(self.local_skin_cluster_box)
+        second_box_layout.addWidget(self.body_skin_cluster_box)
+        self.skin_cluster_layout.addLayout(second_box_layout)
+
+        self.skin_cluster_layout.addLayout(skin_cluster_box_main_layout)
+        self.skin_cluster_layout.addLayout(second_box_layout)
+
 
     def get_rig_attributes(self):
 

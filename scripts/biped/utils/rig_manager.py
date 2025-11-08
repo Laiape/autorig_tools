@@ -56,7 +56,7 @@ def import_rig_properties_from_json(self):
                     widget.setValue(value)
 
 
-def get_latest_version(folder, base_name):
+def get_latest_version(folder):
     """
     Get the latest version number of a file in a given folder.
     Args:
@@ -65,6 +65,7 @@ def get_latest_version(folder, base_name):
     Returns:
         int: The latest version number, or None if no versions are found or folder is invalid.
     """
+
     folder = pathlib.Path(folder)
 
     if not folder.is_dir():
@@ -79,10 +80,8 @@ def get_latest_version(folder, base_name):
     else:
         latest_file = max(files, key=lambda f: f.stat().st_mtime)
         return latest_file
-    
-    
 
-def get_next_version_name(folder, base_name, ext):
+def get_next_version_name(folder):
 
     """
     Get the next version name for a file in a given folder.
@@ -92,8 +91,10 @@ def get_next_version_name(folder, base_name, ext):
     Returns:
         str: The next version name.
     """
-    latest = get_latest_version(folder=folder, base_name=base_name)
-    next_version = 1 if latest is None else latest + 1
+    latest_version  = get_latest_version(folder=folder)
+    base_name = latest_version.stem.split("_v")[0].split("/")[-1]
+    next_version = 1 if base_name is None else base_name + 1
+    ext = latest_version.split(".")[-1]
     
     return f"{base_name}_v{next_version:03d}.{ext}"
 
@@ -160,4 +161,17 @@ def import_skin_clusters():
     character_path = os.path.join(path, character_name)
     skin_clusters_path = os.path.join(character_path, "skin_clusters")
 
-    
+class CustomBuild(object):
+    """
+    Custom build class for different character rigging operations.
+    """
+
+    def __init__(self):
+        pass
+
+
+    def jamal(self):
+        """
+        System for Jamal character rigging.
+        """
+        pass

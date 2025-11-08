@@ -190,7 +190,7 @@ def build_curves_from_template(target_transform_name=None):
     path = os.path.join(relative_path, "assets")
     character_path = os.path.join(path, CHARACTER_NAME)
     TEMPLATE_PATH = os.path.join(character_path, "curves")
-    last_version = rig_manager.get_latest_version(TEMPLATE_PATH, CHARACTER_NAME)
+    last_version = rig_manager.get_latest_version(TEMPLATE_PATH)
 
     TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, last_version)
 
@@ -436,6 +436,14 @@ def scale_all_controllers(value):
         for cv in cvs:
             cmds.scale(value, value, value, cv, relative=True, ocp=True)
 
-   
+
+def replace_shapes():   
+    
+    """
+    Replaces the shapes of selected controllers with those from the template file.
+    """
+    pass
+    
+
 
 

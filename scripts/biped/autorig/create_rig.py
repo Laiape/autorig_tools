@@ -84,14 +84,14 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
         # ---- Body mechanics  ----
-        spine_module.SpineModule().make("C")
-        arm_module.ArmModule().make("L")
+        # spine_module.SpineModule().make("C")
+        # arm_module.ArmModule().make("L")
         # arm_module.ArmModule().make("R")
         # clavicle_module.ClavicleModule().make("L")
         # clavicle_module.ClavicleModule().make("R")
         # leg_module.LegModule().make("L")
         # leg_module.LegModule().make("R")
-        # neck_module.NeckModule().make("C")
+        neck_module.NeckModule().make("C")
         # fingers_module.FingersModule().make("L")
         # fingers_module.FingersModule().make("R")
 
@@ -104,7 +104,7 @@ class AutoRig(object):
         # ear_module.EarModule().make("R")
         # nose_module.NoseModule().make("L")
         # nose_module.NoseModule().make("R")
-        # jaw_module.JawModule().make("C")
+        jaw_module.JawModule().make("C")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',

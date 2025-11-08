@@ -6,10 +6,12 @@ from biped.utils import curve_tool
 from importlib import reload
 
 from biped.utils import rig_manager
+from biped.utils import guides_manager
 
 reload(data_manager)
 reload(curve_tool)
 reload(rig_manager)
+reload(guides_manager)
 
 def lock_attributes(ctl, attrs):
 
@@ -72,13 +74,16 @@ def create_basic_structure():
         if i != 0:
             cmds.parent(nod, nodes[0])
         if i == 3:
-            mesh = rig_manager.import_meshes()
+            rig_manager.import_meshes()
 
     skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
     modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
     preferences_node, preferences_ctl = curve_tool.create_controller(name="C_preferences", offset=["GRP"])
+    # preferences = guides_manager.get_guides("C_preferences_JNT")
+    # cmds.matchTransform(preferences_node, preferences)
+    # cmds.delete(preferences)
 
     lock_attributes(character_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
     lock_attributes(preferences_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
