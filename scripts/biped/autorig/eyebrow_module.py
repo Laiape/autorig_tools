@@ -30,6 +30,7 @@ class EyebrowModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        self.head_grp = self.head_ctl.replace("_CTL", "_GRP")
 
     def make(self, side):
 
@@ -139,7 +140,7 @@ class EyebrowModule(object):
         if self.side == "L":
             mid_eyebrow_nodes, mid_eyebrow_ctl = curve_tool.create_controller("C_eyebrowMid", offset=["GRP", "OFF"])
             cmds.parent(mid_eyebrow_nodes[0], self.controllers_grp)
-            cmds.matchTransform(mid_eyebrow_nodes[0], self.mid_eyebrow)
+            # cmds.matchTransform(mid_eyebrow_nodes[0], self.mid_eyebrow)
             self.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
             mid_local_grp, mid_local_trn = self.local(mid_eyebrow_ctl)
@@ -151,10 +152,15 @@ class EyebrowModule(object):
             parent_matrix = cmds.createNode("parentMatrix", name="C_eyebrowMid_PM", ss=True)
             cmds.connectAttr(f"{self.mid_eyebrow_guide}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
             cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+            mult_matrix = cmds.createNode("multMatrix", name="C_eyebrowMid_MM", ss=True)
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
+            cmds.connectAttr(f"{self.head_grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+            cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{mid_eyebrow_nodes[0]}.offsetParentMatrix")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mid_local_grp}.offsetParentMatrix")
             cmds.setAttr(f"{parent_matrix}.envelope", 0.5)
         
             cmds.xform(mid_local_grp, m=om.MMatrix.kIdentity)
+            cmds.xform(mid_eyebrow_nodes[0], m=om.MMatrix.kIdentity)
             
         else:
             parent_matrix = "C_eyebrowMid_PM"
