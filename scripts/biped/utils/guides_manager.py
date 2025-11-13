@@ -45,8 +45,8 @@ def get_guides_info():
                 button=["+1", "REPLACE", "CANCEL"],
                 defaultButton="+1",
                 cancelButton="Cancel",
-                dismissString="Cancel",
-                bgc=(0, 0.09, 0.388))
+                dismissString="Cancel")
+    
     if answer == "Cancel":
         om.MGlobal.displayInfo("Operation cancelled by user.")
         return
@@ -65,6 +65,72 @@ def get_guides_info():
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
     curves_in_scene = cmds.ls("*_CRV", type="transform", long=True)
+    nurbs_surfaces = cmds.ls("*_NURB", type="transform", long=True)
+
+    if nurbs_surfaces:
+
+        nurbs_shapes = cmds.listRelatives(nurbs_surfaces, shapes=True, type="nurbsSurface")[0]
+
+        if nurbs_shapes: 
+
+            surface_data = []
+
+            sel_list = om.MSelectionList()
+            sel_list.add(nurbs_shapes)
+            shape_obj = sel_list.getDependNode(0)
+            
+            fn_nurbs = om.MFnNurbsSurface(shape_obj)
+
+            degree_u = int(fn_nurbs.degreeInU)
+            degree_v = int(fn_nurbs.degreeInV)
+
+            form_types = {
+                om.MFnNurbsSurface.kOpen: "open",
+                om.MFnNurbsSurface.kClosed: "closed",
+                om.MFnNurbsSurface.kPeriodic: "periodic",
+                om.MFnNurbsSurface.kInvalid: "invalid",
+            }
+            form_u = form_types.get(fn_nurbs.formInU, "unknown")
+            form_v = form_types.get(fn_nurbs.formInV, "unknown")
+
+            knots_u = list(fn_nurbs.knotsInU())
+            knots_v = list(fn_nurbs.knotsInV())
+
+            num_cvs_u = int(fn_nurbs.numCVsInU)
+            num_cvs_v = int(fn_nurbs.numCVsInV)
+
+            cvs = []
+            is_rational = False
+
+            for u in range(num_cvs_u):
+                row = []
+                for v in range(num_cvs_v):
+                    pt = fn_nurbs.cvPosition(u, v)  # MPoint
+                    w = getattr(pt, "w", 1.0)
+                    # treat as rational if any CV has a weight different from 1.0
+                    if abs(w - 1.0) > 1e-6:
+                        is_rational = True
+                        row.append((pt.x, pt.y, pt.z, w))
+                    else:
+                        row.append((pt.x, pt.y, pt.z))
+                cvs.append(row)
+
+            surface_data.append({
+                "name": fn_nurbs.name(),
+                "surface": {
+                    "degreeInU": degree_u,
+                    "degreeInV": degree_v,
+                    "formInU": form_u,
+                    "formInV": form_v,
+                    "knotsInU": knots_u,
+                    "knotsInV": knots_v,
+                    "numCVsInU": num_cvs_u,
+                    "numCVsInV": num_cvs_v,
+                    "isRational": bool(is_rational),
+                    "cvs": cvs
+                }
+            })
+                     
 
     if curves_in_scene:
         shapes_data = []
@@ -195,6 +261,7 @@ def get_guides_info():
             "isLocator": False,
             "isJoint": True,
             "isCurve": False,
+            "isSurface": False,
             "children": list(reversed(children if children else [])),
     }
 
@@ -205,7 +272,8 @@ def get_guides_info():
                 "locator_position": locator_positions[i],
                 "isLocator": True,
                 "isJoint": False,
-                "isCurve": False
+                "isCurve": False,
+                "isSurface": False
             }
     
     if curves_in_scene:
@@ -215,7 +283,19 @@ def get_guides_info():
                 "curve_data": shape_data["curve"],
                 "isLocator": False,
                 "isJoint": False,
-                "isCurve": True
+                "isCurve": True,
+                "isSurface": False
+            }
+        
+    if nurbs_shapes:
+        for surface in surface_data:
+            surface_name = surface["name"]
+            guides_data[guides_name][surface_name] = {
+                "surface_data": surface["surface"],
+                "isLocator": False,
+                "isJoint": False,
+                "isCurve": False,
+                "isSurface": True
             }
 
     if not os.path.exists(TEMPLATE_FILE):
@@ -333,6 +413,61 @@ def load_guides_info(filePath=None):
 
                     shape_fn = om.MFnDagNode(shape_obj)
                     shape_fn.setName(curve_name)
+
+                elif "isSurface" in data and data["isSurface"]:
+
+                    surface_name = guide
+                    dag_modifier = om.MDagModifier()
+                    transform_obj = dag_modifier.createNode("transform")
+                    dag_modifier.doIt()
+                    transform_fn = om.MFnDagNode(transform_obj)
+                    transform_fn.setName(surface_name.split("Shape")[0])
+                    dag_modifier.doIt()
+                    cmds.parent(transform_fn.name(), guides_node)
+
+                    surface_info = data["surface_data"]
+                    degree_u = surface_info["degreeInU"]
+                    degree_v = surface_info["degreeInV"]
+                    form_u = surface_info["formInU"]
+                    form_v = surface_info["formInV"]
+                    knots_u = surface_info["knotsInU"]
+                    knots_v = surface_info["knotsInV"]
+                    cvs = surface_info["cvs"]
+                    is_rational = surface_info["isRational"]
+
+                    form_flags = {
+                        "open": om.MFnNurbsSurface.kOpen,
+                        "closed": om.MFnNurbsSurface.kClosed,
+                        "periodic": om.MFnNurbsSurface.kPeriodic
+                    }
+                    form_u_flag = form_flags.get(form_u, om.MFnNurbsSurface.kOpen)
+                    form_v_flag = form_flags.get(form_v, om.MFnNurbsSurface.kOpen)
+
+                    points = om.MPointArray()
+                    for row in cvs:
+                        for pt in row:
+                            num = +1
+                            print(num)
+                            if len(pt) == 4:
+                                points.append(om.MPoint(pt[0], pt[1], pt[2], pt[3]))
+                            else:
+                                points.append(om.MPoint(pt[0], pt[1], pt[2], 1.0))
+
+                    surface_fn = om.MFnNurbsSurface()
+                    shape_obj = surface_fn.create(
+                        points,
+                        knots_u,
+                        knots_v,
+                        degree_u,
+                        degree_v,
+                        form_u_flag,
+                        form_v_flag,
+                        bool(is_rational),        
+                        transform_obj
+                    )
+
+                    shape_fn = om.MFnDagNode(shape_obj)
+                    shape_fn.setName(surface_name)
 
         rig_manager.import_meshes()
 
@@ -467,7 +602,69 @@ def get_guides(guide_export, parent=None):
                     cmds.parent(transform_fn.name(), parent)
             
                 return shape_fn.name()
+            
+            elif guides_data[name][guide_export]["isSurface"] == True:
+
+                surface_name = guide_export
+                dag_modifier = om.MDagModifier()
+                transform_obj = dag_modifier.createNode("transform")
+                dag_modifier.doIt()
+                transform_fn = om.MFnDagNode(transform_obj)
+                transform_fn.setName(surface_name.split("Shape")[0])
+                dag_modifier.doIt()
+
+                surface_info = guides_data[name][guide_export]["surface_data"]
+                degree_u = surface_info["degreeInU"]
+                degree_v = surface_info["degreeInV"]
+                form_u = surface_info["formInU"]
+                form_v = surface_info["formInV"]
+                knots_u = surface_info["knotsInU"]
+                knots_v = surface_info["knotsInV"]
+                cvs = surface_info["cvs"]
+                is_rational = surface_info["isRational"]
+                num_spans_u = int(surface_info["numCVsInU"])
+                num_spans_v = int(surface_info["numCVsInV"])
+
+                form_flags = {
+                    "open": om.MFnNurbsSurface.kOpen,
+                    "closed": om.MFnNurbsSurface.kClosed,
+                    "periodic": om.MFnNurbsSurface.kPeriodic
+                }
+                form_u_flag = form_flags.get(form_u, om.MFnNurbsSurface.kOpen)
+                form_v_flag = form_flags.get(form_v, om.MFnNurbsSurface.kOpen)
+
+
+                cvs = surface_info["cvs"]
+                # cvs = [[om.MPoint(*cvs[u][v]) for u in range(num_spans_u)] for v in range(num_spans_v)]
+                points = om.MPointArray()
+                for u in range(num_spans_u):
+                    for v in range(num_spans_v):
+                        pt = cvs[u][v]
+                        points.append(pt)
+
+                surface_fn = om.MFnNurbsSurface()
+                shape_obj = surface_fn.create(
+                    points,
+                    om.MDoubleArray(knots_u),
+                    om.MDoubleArray(knots_v),
+                    degree_u,
+                    degree_v,
+                    form_u_flag,
+                    form_v_flag,
+                    bool(is_rational),        
+                    transform_obj
+                )
+
+                shape_fn = om.MFnDagNode(shape_obj)
+                shape_fn.setName(surface_name)
+            
+                if parent:
+                    cmds.parent(transform_fn.name(), parent)
+            
+                
+                return transform_fn.name()
         
         except KeyError:
             om.MGlobal.displayError(f"Guide '{guide_export}' not found in the guide export data.")
             return None
+        
