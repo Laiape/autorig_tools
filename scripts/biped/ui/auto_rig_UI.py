@@ -349,17 +349,22 @@ class UI(QtWidgets.QMainWindow):
 
         import shutil
 
-        rig_build_info = {
-            "rig_attributes": self.get_rig_attributes()
-        }
+        # rig_build_info = {
+        #     "rig_attributes": self.get_rig_attributes()
+        # }
 
-        complete_path = os.path.realpath(__file__)
-        relative_path = complete_path.split("\scripts")[0]
-        relative_folder = os.path.join(relative_path, "build")
-        final_path = os.path.join(relative_folder, "character.build")
+        try:
+            complete_path = os.path.realpath(__file__)
+            relative_path = complete_path.split("\scripts")[0]
+            relative_folder = os.path.join(relative_path, "build")
+            final_path = os.path.join(relative_folder, "character.build")
+        except:
+            relative_path = r"H:\GIT\biped_autorig"
+            relative_folder = os.path.join(relative_path, "build")
+            final_path = os.path.join(relative_folder, "character.build")
 
-        with open(final_path, 'w') as f:
-            json.dump(rig_build_info, f, indent=4)
+        # with open(final_path, 'w') as f:
+        #     json.dump(rig_build_info, f, indent=4)
 
         build_rig = create_rig.AutoRig()
         build_rig.build()

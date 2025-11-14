@@ -33,12 +33,20 @@ def import_rig_properties_from_json(self):
     """
     character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
 
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, character_name)
-    TEMPLATE_PATH = os.path.join(character_path, "build")
-    file_path = rig_manager.get_latest_version(TEMPLATE_PATH, character_name)
+    try:
+        complete_path = os.path.realpath(__file__)
+        relative_path = complete_path.split("\scripts")[0]
+        path = os.path.join(relative_path, "assets")
+        character_path = os.path.join(path, character_name)
+        TEMPLATE_PATH = os.path.join(character_path, "build")
+        file_path = rig_manager.get_latest_version(TEMPLATE_PATH, character_name)
+    
+    except:
+        relative_path = r"H:\GIT\biped_autorig"
+        path = os.path.join(relative_path, "assets")
+        character_path = os.path.join(path, character_name)
+        TEMPLATE_PATH = os.path.join(character_path, "build")
+        file_path = rig_manager.get_latest_version(TEMPLATE_PATH, character_name)
 
     with open(file_path, 'r') as f:
             data = json.load(f)

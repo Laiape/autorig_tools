@@ -271,7 +271,7 @@ class JawModule(object):
         self.upper_local_grp, self.upper_local_trn, self.upper_local_jnt = self.local(self.upper_lip_ctl, joint=True)
         mult_matrix_upper_local = cmds.createNode("multMatrix", name="C_upperLipLocal_MMX", ss=True)
         cmds.connectAttr(f"{self.upper_lip_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[0]")
-        cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[1]")
+        cmds.connectAttr(f"{upper_jaw_local_trn}.worldMatrix[0]", f"{mult_matrix_upper_local}.matrixIn[1]")
         cmds.connectAttr(f"{self.mouth_master_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[2]") # Consider mouth master movement
         cmds.connectAttr(f"{mult_matrix_upper_local}.matrixSum", f"{self.upper_local_trn}.offsetParentMatrix", f=True) # Local transform for the upper lip controller
         
@@ -284,7 +284,7 @@ class JawModule(object):
         mult_matrix_negate_master_upper_main = cmds.createNode("multMatrix", name="C_upperLipNegateMaster_MMX", ss=True)
         cmds.connectAttr(f"{four_by_four_upper_main}.output", f"{mult_matrix_negate_master_upper_main}.matrixIn[0]")
         cmds.connectAttr(f"{self.jaw_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_master_upper_main}.matrixIn[1]") # Negate the position of the master mouth controller
-        cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_negate_master_upper_main}.matrixIn[2]") # Consider upper jaw movement
+        cmds.connectAttr(f"{upper_jaw_local_trn}.worldMatrix[0]", f"{mult_matrix_negate_master_upper_main}.matrixIn[2]") # Consider upper jaw movement
         cmds.connectAttr(f"{mult_matrix_negate_master_upper_main}.matrixSum", f"{self.upper_lip_nodes[0]}.offsetParentMatrix") # Connect the output to the upper lip controller
         cmds.xform(self.upper_lip_nodes[0], m=om.MMatrix.kIdentity)
 
