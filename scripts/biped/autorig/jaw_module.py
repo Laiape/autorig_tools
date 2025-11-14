@@ -111,6 +111,7 @@ class JawModule(object):
         cmds.matchTransform(self.upper_jaw_nodes[0], self.jaw_guides[0], pos=True) # Only position
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
+
         self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP"], parent=self.jaw_ctl)
         cmds.matchTransform(self.chin_nodes[0], self.chin_nodes[0].replace("C_chin_GRP", "C_chin_JNT"))
         self.lock_attributes(self.chin_ctl, ["v"])
@@ -203,6 +204,10 @@ class JawModule(object):
 
         jaw_local_grp, jaw_local_trn, self.jaw_local_joint = self.local(self.jaw_ctl, joint=True)
         upper_jaw_local_grp, upper_jaw_local_trn, self.upper_jaw_local_joint = self.local(self.upper_jaw_ctl, joint=True)
+        upper_jaw_local_mult_matrix = cmds.createNode("multMatrix", n=f"{self.side}_localUpperJaw_MMX", ss=True)
+        cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{upper_jaw_local_mult_matrix}.matrixIn[0]")
+        cmds.connectAttr(f"{self.upper_jaw_nodes[0]}.worldInverseMatrix[0]", f"{upper_jaw_local_mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{upper_jaw_local_mult_matrix}.matrixSum", f"{upper_jaw_local_trn}.offsetParentMatrix", f=True)
 
         # Create constraints to upper and lower jaws
         jaw_nurbs_skin_cluster = cmds.skinCluster(
@@ -268,7 +273,6 @@ class JawModule(object):
         cmds.connectAttr(f"{self.upper_lip_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[0]")
         cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[1]")
         cmds.connectAttr(f"{self.mouth_master_ctl}.matrix", f"{mult_matrix_upper_local}.matrixIn[2]") # Consider mouth master movement
-        cmds.connectAttr(f"{self.compose_matrix_jaw}.outputMatrix", f"{mult_matrix_upper_local}.matrixIn[3]") # Consider collision rotation
         cmds.connectAttr(f"{mult_matrix_upper_local}.matrixSum", f"{self.upper_local_trn}.offsetParentMatrix", f=True) # Local transform for the upper lip controller
         
 
@@ -281,7 +285,6 @@ class JawModule(object):
         cmds.connectAttr(f"{four_by_four_upper_main}.output", f"{mult_matrix_negate_master_upper_main}.matrixIn[0]")
         cmds.connectAttr(f"{self.jaw_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_master_upper_main}.matrixIn[1]") # Negate the position of the master mouth controller
         cmds.connectAttr(f"{self.upper_jaw_ctl}.matrix", f"{mult_matrix_negate_master_upper_main}.matrixIn[2]") # Consider upper jaw movement
-        cmds.connectAttr(f"{self.compose_matrix_jaw}.outputMatrix", f"{mult_matrix_negate_master_upper_main}.matrixIn[3]") # Consider collision rotation
         cmds.connectAttr(f"{mult_matrix_negate_master_upper_main}.matrixSum", f"{self.upper_lip_nodes[0]}.offsetParentMatrix") # Connect the output to the upper lip controller
         cmds.xform(self.upper_lip_nodes[0], m=om.MMatrix.kIdentity)
 
