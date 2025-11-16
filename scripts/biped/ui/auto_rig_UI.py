@@ -353,15 +353,15 @@ class UI(QtWidgets.QMainWindow):
         #     "rig_attributes": self.get_rig_attributes()
         # }
 
-        try:
-            complete_path = os.path.realpath(__file__)
-            relative_path = complete_path.split("\scripts")[0]
-            relative_folder = os.path.join(relative_path, "build")
-            final_path = os.path.join(relative_folder, "character.build")
-        except:
-            relative_path = r"H:\GIT\biped_autorig"
-            relative_folder = os.path.join(relative_path, "build")
-            final_path = os.path.join(relative_folder, "character.build")
+        # try:
+        #     complete_path = os.path.realpath(__file__)
+        #     relative_path = complete_path.split("\scripts")[0]
+        #     relative_folder = os.path.join(relative_path, "build")
+        #     final_path = os.path.join(relative_folder, "character.build")
+        # except:
+        #     relative_path = r"H:\GIT\biped_autorig"
+        #     relative_folder = os.path.join(relative_path, "build")
+        #     final_path = os.path.join(relative_folder, "character.build")
 
         # with open(final_path, 'w') as f:
         #     json.dump(rig_build_info, f, indent=4)
@@ -369,31 +369,31 @@ class UI(QtWidgets.QMainWindow):
         build_rig = create_rig.AutoRig()
         build_rig.build()
 
-        character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
-        new_path = os.path.join(relative_folder, f"{character_name}_v001.build")
+        # character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+        # new_path = os.path.join(relative_folder, f"{character_name}_v001.build")
         
-        try:
-            if os.path.exists(new_path):
-                os.remove(new_path)
+        # try:
+        #     if os.path.exists(new_path):
+        #         os.remove(new_path)
 
-            os.rename(final_path, new_path)
-            # Prepare target assets folder and move the build file there
-            target_dir = os.path.join(relative_path, "assets", character_name, "build")
-            os.makedirs(target_dir, exist_ok=True)
-            target_path = os.path.join(target_dir, os.path.basename(new_path))
+        #     os.rename(final_path, new_path)
+        #     # Prepare target assets folder and move the build file there
+        #     target_dir = os.path.join(relative_path, "assets", character_name, "build")
+        #     os.makedirs(target_dir, exist_ok=True)
+        #     target_path = os.path.join(target_dir, os.path.basename(new_path))
 
-            try:
-                if os.path.exists(target_path):
-                    os.remove(target_path)
-                shutil.move(new_path, target_path)
-                new_path = target_path  # update path for the success message below
-            except Exception as e:
-                om.MGlobal.displayError(f"Error moving file to assets: {e}")
-                return
-            print(f"Rig properties exported successfully to {new_path}!")
-        except Exception as e:
-            om.MGlobal.displayError(f"Error renaming file: {e}")
-            return
+        #     try:
+        #         if os.path.exists(target_path):
+        #             os.remove(target_path)
+        #         shutil.move(new_path, target_path)
+        #         new_path = target_path  # update path for the success message below
+        #     except Exception as e:
+        #         om.MGlobal.displayError(f"Error moving file to assets: {e}")
+        #         return
+        #     print(f"Rig properties exported successfully to {new_path}!")
+        # except Exception as e:
+        #     om.MGlobal.displayError(f"Error renaming file: {e}")
+        #     return
 
     def create_quadruped_rig_connections(self):
         from quadruped.autorig import create_rig

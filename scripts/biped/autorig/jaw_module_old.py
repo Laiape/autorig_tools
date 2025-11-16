@@ -16,7 +16,7 @@ reload(curve_tool)
 
 reload(matrix_manager)
 
-class JawModule(object):
+class JawModuleOld(object):
 
     def __init__(self):
 
