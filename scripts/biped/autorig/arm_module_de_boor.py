@@ -466,7 +466,6 @@ class ArmModule(object):
 
         # Contraint settings controller to first skinning joint
         first_skinning_jnt = self.upper_skinning_jnt_trn[0]
-        print( first_skinning_jnt)
         parent_matrix = cmds.createNode("parentMatrix", name=first_skinning_jnt.replace("JNT", "PMX"), ss=True)
         settings_ctl_world_matrix = cmds.getAttr(f"{self.settings_node[0]}.worldMatrix[0]")
         cmds.setAttr(f"{parent_matrix}.inputMatrix", settings_ctl_world_matrix, type="matrix")

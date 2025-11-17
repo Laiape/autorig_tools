@@ -118,6 +118,9 @@ def create_basic_structure():
 
         cmds.setAttr(f"{masterwalk_ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
+    # Freeze jnt
+    cmds.createNode("joint", name="C_freeze_JNT", ss=True, p=skel_grp)
+
     cmds.parent(character_node[0], nodes[2])
     cmds.parent(preferences_node[0], masterwalk_ctl)
     cmds.parent(masterwalk_node[0], character_ctl)

@@ -454,7 +454,6 @@ class JawModule(object):
         # Cvs controllers for lips
         rebuilded_upper_lip_cvs = cmds.ls(f"{upper_bezier_curve}.cv[*]", fl=True)
         rebuilded_lower_lip_cvs = cmds.ls(f"{lower_bezier_curve}.cv[*]", fl=True)
-        max_curve_index = len(rebuilded_upper_lip_cvs) - 1
 
         cvs_ctls_upper = []
         cv_nodes_upper = []
@@ -496,7 +495,6 @@ class JawModule(object):
             cmds.connectAttr(f"{self.upper_rebuild_lip_curve}.worldSpace[0]", f"{mtp_cv}.geometryPath")
             paramU = self.getClosestParamToPosition(self.upper_rebuild_lip_curve, cmds.xform(cv, q=True, ws=True, t=True))
             cmds.setAttr(f"{mtp_cv}.uValue", paramU)
-            cmds.setAttr(f"{mtp_cv}.fractionMode", 1)
             fbf_cv = cmds.createNode("fourByFourMatrix", name=f"{side}_{name}_FBF", ss=True)
             cmds.connectAttr(f"{mtp_cv}.allCoordinates.xCoordinate", f"{fbf_cv}.in30")
             cmds.connectAttr(f"{mtp_cv}.allCoordinates.yCoordinate", f"{fbf_cv}.in31")
@@ -571,7 +569,6 @@ class JawModule(object):
             cmds.connectAttr(f"{self.lower_rebuild_lip_curve}.worldSpace[0]", f"{mtp_cv}.geometryPath")
             paramU = self.getClosestParamToPosition(self.lower_rebuild_lip_curve, cmds.xform(cv, q=True, ws=True, t=True))
             cmds.setAttr(f"{mtp_cv}.uValue", paramU)
-            cmds.setAttr(f"{mtp_cv}.fractionMode", 1)
             fbf_cv = cmds.createNode("fourByFourMatrix", name=f"{side}_{name}_FBF", ss=True)
             cmds.connectAttr(f"{mtp_cv}.allCoordinates.xCoordinate", f"{fbf_cv}.in30")
             cmds.connectAttr(f"{mtp_cv}.allCoordinates.yCoordinate", f"{fbf_cv}.in31")
@@ -665,20 +662,17 @@ class JawModule(object):
             cmds.connectAttr(f"{fourOrigPos}.output", f"{parent_matrix}.inputMatrix", f=True)
             joint = cmds.createNode("joint", n=f"{side}_{name}0{i}Skinning_JNT", ss=True, parent = self.skeleton_grp)
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
-
             out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=self.controllers_grp)
             self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
-
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
-
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
 
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
             cmds.parent(out_nodes[0], out_controllers)
-            # cmds.setAttr(f"{out_nodes[0]}.inheritsTransform", 0)
+
         
         for i, cv in enumerate(cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True)):
 
@@ -727,6 +721,10 @@ class JawModule(object):
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
             cmds.parent(out_nodes[0], out_controllers)
 
+
+
+
+        # Connect visibility of lips controllers
         cmds.addAttr(self.jaw_ctl, longName="Lips_Visibility", at="enum", enumName="Primary:Secondary:All", k=True)
         cmds.setAttr(f"{self.jaw_ctl}.Lips_Visibility", 1, k=False, cb=True)
 
@@ -752,15 +750,6 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_all}.firstTerm")
         cmds.connectAttr(f"{condition_all}.outColorR", f"{out_controllers}.visibility", f=True)
 
-
-
-        # mouth_master_ctl_nodes, mouth_master_ctl = curve_tool.create_controller("C_mouthMaster", offset=["GRP", "OFF"], parent=lips_controllers_grp)
-        # cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{mouth_master_ctl_nodes[0]}.offsetParentMatrix")
-        # self.lock_attributes(mouth_master_ctl, ["v"])
-
-        # cmds.parent(main_lips_controllers, mouth_master_ctl)
-        # cmds.parent(secondary_controllers_nodes, mouth_master_ctl)
-        # cmds.parent(out_controllers, mouth_master_ctl)
 
         
     def get_offset_matrix(self, child, parent):
