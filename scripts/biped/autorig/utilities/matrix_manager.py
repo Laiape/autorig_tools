@@ -133,24 +133,30 @@ def space_switches(target, sources = [None], default_value = 1):
 
 
 def get_offset_matrix(child, parent):
-
     """
     Calculate the offset matrix between a child and parent transform in Maya.
     Args:
-        child (str): The name of the child transform.
-        parent (str): The name of the parent transform. 
+        child (str): The name of the child transform or matrix attribute.
+        parent (str): The name of the parent transform or matrix attribute. 
     Returns:
-        om.MMatrix: The offset matrix that transforms the child into the parent's space.
+        list: The offset matrix as a flat list of 16 floats in row-major order that transforms the child into the parent's space.
     """
-    child_dag = om.MSelectionList().add(child).getDagPath(0)
-    parent_dag = om.MSelectionList().add(parent).getDagPath(0)
+    def get_world_matrix(node):
+        try:
+            dag = om.MSelectionList().add(node).getDagPath(0)
+            return dag.inclusiveMatrix()
+        except:
+            matrix = cmds.getAttr(node)
+            return om.MMatrix(matrix)
 
-    child_world_matrix = child_dag.inclusiveMatrix()
-    parent_world_matrix = parent_dag.inclusiveMatrix()
-    
+    child_world_matrix = get_world_matrix(child)
+    parent_world_matrix = get_world_matrix(parent)
+
     offset_matrix = child_world_matrix * parent_world_matrix.inverse()
 
-    
-    return offset_matrix
+    # Convert to Python list (row-major order)
+    offset_matrix_list = list(offset_matrix)
+
+    return offset_matrix_list
 
     

@@ -118,8 +118,7 @@ class NeckModule(object):
         throat_nodes, throat_ctl = curve_tool.create_controller(name=f"{self.side}_throat", offset=["GRP"], parent=self.neck_ctls[0])
         self.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
         cmds.matchTransform(throat_nodes[0], self.throat_guide[0], pos=True, rot=True, scl=False)
-        skin_throat_jnt = cmds.joint(name=f"{self.side}_throatSkinning_JNT")
-        cmds.parent(skin_throat_jnt, self.skeleton_grp)
+        skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{throat_ctl}.worldMatrix[0]", f"{skin_throat_jnt}.offsetParentMatrix")
         cmds.xform(skin_throat_jnt, m=om.MMatrix.kIdentity)
 
@@ -145,8 +144,9 @@ class NeckModule(object):
         Create the local head setup to have the head follow the neck's movement.
         """
 
-        self.head_jnt = cmds.joint(name=f"{self.side}_head_JNT")
-        cmds.parent(self.head_jnt, self.module_trn)
+
+        head_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_headSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.setAttr(f"{head_skinning_jnt}.inheritsTransform", 0)
 
         decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
         cmds.connectAttr(f"{self.output_joints[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
@@ -156,15 +156,9 @@ class NeckModule(object):
         cmds.connectAttr(f"{decompose_translation}.outputTranslate", f"{compose_head}.inputTranslate")
         cmds.connectAttr(f"{decompose_translation}.outputScale", f"{compose_head}.inputScale")
         cmds.connectAttr(f"{decompose_rotation}.outputRotate", f"{compose_head}.inputRotate")
-        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{self.head_jnt}.offsetParentMatrix")
-
-        head_skinning_jnt = cmds.joint(name=f"{self.side}_headSkinning_JNT")
-        cmds.setAttr(f"{head_skinning_jnt}.inheritsTransform", 0)
-        cmds.parent(head_skinning_jnt, self.skeleton_grp)
-        cmds.connectAttr(f"{self.head_jnt}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{head_skinning_jnt}.offsetParentMatrix")
 
         cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
-        cmds.xform(self.head_jnt, m=om.MMatrix.kIdentity)
         cmds.delete(self.neck_chain[0])
         
         matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=1) # Neck base and masterwalk

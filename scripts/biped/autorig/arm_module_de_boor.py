@@ -464,6 +464,19 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.arm_chain[-1]}.worldMatrix[0]", f"{wrist_skinning}.offsetParentMatrix")
         cmds.parent(wrist_skinning, self.skeleton_grp)
 
+        # Contraint settings controller to first skinning joint
+        first_skinning_jnt = self.upper_skinning_jnt_trn[0]
+        print( first_skinning_jnt)
+        parent_matrix = cmds.createNode("parentMatrix", name=first_skinning_jnt.replace("JNT", "PMX"), ss=True)
+        settings_ctl_world_matrix = cmds.getAttr(f"{self.settings_node[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{parent_matrix}.inputMatrix", settings_ctl_world_matrix, type="matrix")
+        cmds.connectAttr(f"{first_skinning_jnt}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+        offset_matrix = matrix_manager.get_offset_matrix(self.settings_node[0], first_skinning_jnt)
+        cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{self.settings_node[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
+        cmds.xform(self.settings_node[0], m=om.MMatrix.kIdentity)
+        cmds.setAttr(f"{self.settings_node[0]}.inheritsTransform", 0)
+
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
         if cmds.objExists(f"{first_sel[0]}.outputMatrix"):
@@ -549,6 +562,8 @@ class ArmModule(object):
 
         for t in temp:
             cmds.delete(t)
+
+        return output_joints
         
 
         

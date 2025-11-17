@@ -102,34 +102,52 @@ class LegModule(object):
         self.guides_matrices = []
         for i, guide in enumerate(self.guides):
             if i == 0:
-                guide_00 = cmds.createNode("aimMatrix", name=f"{self.side}_legGuide00_AMT", ss=True)
+                guide_00 = cmds.createNode("aimMatrix", name=f"{self.side}_hip_AMT", ss=True)
                 cmds.connectAttr(guide+".worldMatrix[0]", guide_00+".inputMatrix")
                 cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_00}.primaryTargetMatrix")
                 cmds.connectAttr(f"{self.guides[i+2]}.worldMatrix[0]", f"{guide_00}.secondaryTargetMatrix")
                 cmds.setAttr(f"{guide_00}.primaryInputAxis", *self.primary_axis, type="double3")
-                cmds.setAttr(f"{guide_00}.secondaryInputAxis", 0,0,1, type="double3")
-                cmds.setAttr(f"{guide_00}.secondaryTargetVector", 0,0,1, type="double3")
+                cmds.setAttr(f"{guide_00}.secondaryInputAxis", *self.secondary_axis, type="double3")
+                cmds.setAttr(f"{guide_00}.secondaryTargetVector", *self.secondary_axis, type="double3")
                 cmds.setAttr(f"{guide_00}.secondaryMode", 1) # Aim
                 self.guides_matrices.append(f"{guide_00}.outputMatrix")
             if i == 1:
-                guide_01 = cmds.createNode("aimMatrix", name=f"{self.side}_legGuide01_AMT", ss=True)
+                guide_01 = cmds.createNode("aimMatrix", name=f"{self.side}_knee_AMT", ss=True)
                 cmds.connectAttr(guide+".worldMatrix[0]", guide_01+".inputMatrix")
                 cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_01}.primaryTargetMatrix") # Next guide
                 cmds.connectAttr(f"{self.guides[i-1]}.worldMatrix[0]", f"{guide_01}.secondaryTargetMatrix") # Previous guide
-                cmds.setAttr(f"{guide_01}.secondaryInputAxis", 0,0,1, type="double3")
-                cmds.setAttr(f"{guide_01}.secondaryTargetVector", 0,0,1, type="double3")
+                cmds.setAttr(f"{guide_01}.secondaryInputAxis", *self.secondary_axis, type="double3")
+                cmds.setAttr(f"{guide_01}.secondaryTargetVector", *self.secondary_axis, type="double3")
                 cmds.setAttr(f"{guide_01}.secondaryMode", 1) # Aim
                 self.guides_matrices.append(f"{guide_01}.outputMatrix")
             if i == 2:
-                guide_02 = cmds.createNode("blendMatrix", name=f"{self.side}_legGuide02_BLM", ss=True)
-                cmds.connectAttr(f"{guide_01}.outputMatrix", f"{guide_02}.inputMatrix")
-                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{guide_02}.target[0].targetMatrix")
-                cmds.setAttr(f"{guide_02}.target[0].weight", 1)
-                cmds.setAttr(f"{guide_02}.target[0].scaleWeight", 0)
-                cmds.setAttr(f"{guide_02}.target[0].rotateWeight", 0)
-                cmds.setAttr(f"{guide_02}.target[0].shearWeight", 0)
-                cmds.setAttr(f"{guide_02}.target[0].translateWeight", 1)
+                guide_02 = cmds.createNode("aimMatrix", name=f"{self.side}_ankle_AMT", ss=True)
+                cmds.connectAttr(guide+".worldMatrix[0]", guide_02+".inputMatrix")
+                cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_02}.primaryTargetMatrix") # Next guide
+                cmds.connectAttr(f"{self.guides[i-1]}.worldMatrix[0]", f"{guide_02}.secondaryTargetMatrix") # Previous guide
+                cmds.setAttr(f"{guide_02}.secondaryInputAxis", *self.secondary_axis, type="double3")
+                cmds.setAttr(f"{guide_02}.secondaryTargetVector", *self.secondary_axis, type="double3")
+                cmds.setAttr(f"{guide_02}.secondaryMode", 1) # Aim
                 self.guides_matrices.append(f"{guide_02}.outputMatrix")
+            if i == 3:
+                guide_03 = cmds.createNode("aimMatrix", name=f"{self.side}_ball_AMT", ss=True)
+                cmds.connectAttr(guide+".worldMatrix[0]", guide_03+".inputMatrix")
+                cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_03}.primaryTargetMatrix") # Next guide
+                cmds.connectAttr(f"{self.guides[i-1]}.worldMatrix[0]", f"{guide_03}.secondaryTargetMatrix") # Previous guide
+                cmds.setAttr(f"{guide_03}.secondaryInputAxis", 0,1,0, type="double3")
+                cmds.setAttr(f"{guide_03}.secondaryTargetVector", 0,1,0, type="double3")
+                cmds.setAttr(f"{guide_03}.secondaryMode", 1) # Aim
+                self.guides_matrices.append(f"{guide_03}.outputMatrix")
+            if i == 4:
+                guide_04 = cmds.createNode("blendMatrix", name=f"{self.side}_toe_BLM", ss=True)
+                cmds.connectAttr(f"{self.guides[i-1]}.worldMatrix[0]", f"{guide_04}.inputMatrix")
+                cmds.connectAttr(guide+".worldMatrix[0]", f"{guide_04}.target[0].targetMatrix")
+                cmds.setAttr(f"{guide_04}.target[0].weight", 1)
+                cmds.setAttr(f"{guide_04}.target[0].rotateWeight", 0)
+                cmds.setAttr(f"{guide_04}.target[0].scaleWeight", 0)
+                cmds.setAttr(f"{guide_04}.target[0].shearWeight", 0)
+
+                self.guides_matrices.append(f"{guide_04}.outputMatrix")
 
 
     def create_chains(self):
@@ -292,6 +310,7 @@ class LegModule(object):
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
         cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
         cmds.parent(crv_point_pv, self.pv_ctl)
+        cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 
     def create_matrix_pole_vector(self, m1_attr, m2_attr, m3_attr, pole_distance=1.0, name="poleVector_LOC"):
         """
@@ -400,8 +419,11 @@ class LegModule(object):
         cmds.connectAttr(f"{pole_pos}.output3Dz", f'{fourByFour}.in32')
 
         aim_matrix = cmds.createNode('aimMatrix', name=f"{self.side}_{self.module_name}PvAim_AMX", ss=True)
-        cmds.setAttr(f'{aim_matrix}.primaryInputAxis', 0, 0, 1, type='double3')
-        cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', 1, 0, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.primaryInputAxis', 0, -1, 0, type='double3')
+        if self.side == "L":
+            cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', -1, 0, 0, type='double3')
+        else:
+            cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', 1, 0, 0, type='double3')
         cmds.setAttr(f'{aim_matrix}.secondaryTargetVector', 1, 0, 0, type='double3')
         cmds.setAttr(f'{aim_matrix}.primaryMode', 1)
         cmds.setAttr(f'{aim_matrix}.secondaryMode', 2)
@@ -779,6 +801,19 @@ class LegModule(object):
         cmds.parent(ankle_skinning_jnt, self.skeleton_grp)
         cmds.parent(ball_skinning_jnt, self.skeleton_grp)
 
+        # Contraint settings controller to first skinning joint
+        first_skinning_jnt = self.upper_skinning_jnt_trn[0]
+        parent_matrix = cmds.createNode("parentMatrix", name=first_skinning_jnt.replace("JNT", "PMX"), ss=True)
+        settings_ctl_world_matrix = cmds.getAttr(f"{self.settings_node[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{parent_matrix}.inputMatrix", settings_ctl_world_matrix, type="matrix")
+        cmds.connectAttr(f"{first_skinning_jnt}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+        offset_matrix = matrix_manager.get_offset_matrix(self.settings_node[0], first_skinning_jnt)
+        cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{self.settings_node[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
+        cmds.xform(self.settings_node[0], m=om.MMatrix.kIdentity)
+        cmds.setAttr(f"{self.settings_node[0]}.inheritsTransform", 0)
+
+
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
         if cmds.objExists(f"{first_sel[0]}.outputMatrix"):
@@ -864,5 +899,7 @@ class LegModule(object):
 
         for t in temp:
             cmds.delete(t)
+
+        return output_joints
 
         
