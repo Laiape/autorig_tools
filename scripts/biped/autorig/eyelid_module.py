@@ -306,8 +306,9 @@ class EyelidModule(object):
         self.local_constraints_callback(driven_jnt=self.lower_local_trn[1], drivers=[self.lower_controllers[2], self.lower_controllers[0]])
         self.local_constraints_callback(driven_jnt=self.lower_local_trn[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]])
 
-
-
+        self.primary_controller = [self.upper_controllers[0].replace("CTL", "GRP"), self.upper_controllers[2].replace("CTL", "GRP"), self.upper_controllers[-1].replace("CTL", "GRP"), self.lower_controllers[2].replace("CTL", "GRP")]
+        self.secondary_controller = [self.upper_controllers[1].replace("CTL", "GRP"), self.upper_controllers[-2].replace("CTL", "GRP"), self.lower_controllers[1].replace("CTL", "GRP"), self.lower_controllers[-2].replace("CTL", "GRP")]
+    
     def eye_direct(self):
 
         """
@@ -326,14 +327,37 @@ class EyelidModule(object):
         cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.2, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Fleshy", at="float", min=0, max=1, dv=0.1, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Fleshy_Corners", at="float", min=0, max=1, dv=0, k=True)
-        cmds.addAttr(self.eye_direct_ctl, ln="Extra_Controllers", at="float", min=0, max=1, dv=0, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Eyes_Visibility", at="enum", en="Primary:Secondary:All", dv=1, k=True)
+        cmds.setAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", keyable=False, channelBox=True)
+
+        condition_primary = cmds.createNode("condition", name="C_eyesPrimaryControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_primary}.operation", 3)  # Less Than
+        cmds.setAttr(f"{condition_primary}.secondTerm", 0)
+        cmds.setAttr(f"{condition_primary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_primary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", f"{condition_primary}.firstTerm")
+        for grp in self.primary_controller:
+            cmds.connectAttr(f"{condition_primary}.outColorR", f"{grp}.visibility", f=True)
+        condition_secondary = cmds.createNode("condition", name="C_eyesSecondaryControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than
+        cmds.setAttr(f"{condition_secondary}.secondTerm", 1)
+        cmds.setAttr(f"{condition_secondary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", f"{condition_secondary}.firstTerm")
+        for grp in self.secondary_controller:
+            cmds.connectAttr(f"{condition_secondary}.outColorR", f"{grp}.visibility", f=True)
+        condition_all = cmds.createNode("condition", name="C_eyesAllControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_all}.operation", 0)  # Equal
+        cmds.setAttr(f"{condition_all}.secondTerm", 2)
+        cmds.setAttr(f"{condition_all}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_all}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", f"{condition_all}.firstTerm")
+        cmds.connectAttr(f"{condition_all}.outColorR", f"{self.extra_controllers_grp}.visibility", f=True)
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
         cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_direct_nodes[1]}.offsetParentMatrix")
         cmds.setAttr(f"{self.eye_direct_nodes[1]}.inheritsTransform", 0)
 
-        # Connect visibility of extra controllers
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Extra_Controllers", f"{self.extra_controllers_grp}.visibility")
         cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
 
     def create_blink_setup(self):

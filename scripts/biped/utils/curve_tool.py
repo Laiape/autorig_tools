@@ -296,10 +296,8 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[]):
             cmds.delete(created_grps[0])
         return
     else:
-        if "preferences" in name:
-            ctl = [text_curve(f"{name}_CTL")]
-        else:
-            ctl = build_curves_from_template(f"{name}_CTL")
+        
+        ctl = build_curves_from_template(f"{name}_CTL")
 
         if not ctl:
             ctl = cmds.circle(name=f"{name}_CTL", ch=False)

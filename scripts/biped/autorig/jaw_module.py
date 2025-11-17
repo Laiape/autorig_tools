@@ -92,21 +92,56 @@ class JawModule(object):
         self.jaw_nodes, self.jaw_ctl = curve_tool.create_controller("C_jaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.jaw_nodes[0]}.offsetParentMatrix")
         self.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
-        
+        jaw_skinning_trn = cmds.createNode("transform", name="C_jawSkinning_TRN", ss=True, p=self.module_trn)
+        mult_matrix_jaw = cmds.createNode("multMatrix", name="C_jawSkinning_MMX")
+        cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{mult_matrix_jaw}.matrixIn[0]")
+        cmds.connectAttr(f"{self.jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_jaw}.matrixIn[1]")
+        grp_pos = cmds.getAttr(f"{self.jaw_nodes[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{mult_matrix_jaw}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
+        cmds.connectAttr(f"{mult_matrix_jaw}.matrixSum", f"{jaw_skinning_trn}.offsetParentMatrix")
+        jaw_skinning = cmds.createNode("joint", name="C_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(f"{jaw_skinning_trn}.worldMatrix[0]", f"{jaw_skinning}.offsetParentMatrix")
 
         self.upper_jaw_nodes, self.upper_jaw_ctl = curve_tool.create_controller("C_upperJaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.upper_jaw_nodes[0]}.offsetParentMatrix")
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
-
+        upper_jaw_skinning_trn = cmds.createNode("transform", name="C_upperJawSkinning_TRN", ss=True, p=self.module_trn)
+        mult_matrix_upper_jaw = cmds.createNode("multMatrix", name="C_upperJawSkinning_MMX")
+        cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_upper_jaw}.matrixIn[0]")
+        cmds.connectAttr(f"{self.upper_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_upper_jaw}.matrixIn[1]")
+        grp_pos = cmds.getAttr(f"{self.upper_jaw_nodes[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{mult_matrix_upper_jaw}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
+        cmds.connectAttr(f"{mult_matrix_upper_jaw}.matrixSum", f"{upper_jaw_skinning_trn}.offsetParentMatrix")
+        upper_jaw_skinning = cmds.createNode("joint", name="C_upperJawSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(f"{upper_jaw_skinning_trn}.worldMatrix[0]", f"{upper_jaw_skinning}.offsetParentMatrix")
 
         self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP"], parent=self.jaw_ctl)
         cmds.matchTransform(self.chin_nodes[0], self.chin_nodes[0].replace("C_chin_GRP", "C_chin_JNT"))
         self.lock_attributes(self.chin_ctl, ["v"])
+        chin_skinning_trn = cmds.createNode("transform", name="C_chinSkinning_TRN", ss=True, p=self.module_trn)
+        mult_matrix_chin = cmds.createNode("multMatrix", name="C_chinSkinning_MMX")
+        cmds.connectAttr(f"{self.chin_ctl}.worldMatrix[0]", f"{mult_matrix_chin}.matrixIn[0]")
+        cmds.connectAttr(f"{self.chin_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_chin}.matrixIn[1]")
+        grp_pos = cmds.getAttr(f"{self.chin_nodes[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{mult_matrix_chin}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
+        cmds.connectAttr(f"{mult_matrix_chin}.matrixSum", f"{chin_skinning_trn}.offsetParentMatrix")
+        chin_skinning = cmds.createNode("joint", name="C_chinSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(f"{chin_skinning_trn}.worldMatrix[0]", f"{chin_skinning}.offsetParentMatrix")
 
         for side in ["L", "R"]:
             self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP"], parent=self.jaw_ctl)
             cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
             self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
+            side_jaw_skinning_trn = cmds.createNode("transform", name=f"{side}_jawSkinning_TRN", ss=True, p=self.module_trn)
+            mult_matrix_side_jaw = cmds.createNode("multMatrix", name=f"{side}_jawSkinning_MMX")
+            cmds.connectAttr(f"{self.side_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[0]")
+            cmds.connectAttr(f"{self.side_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[1]")
+            grp_pos = cmds.getAttr(f"{self.side_jaw_nodes[0]}.worldMatrix[0]")
+            cmds.setAttr(f"{mult_matrix_side_jaw}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
+            cmds.connectAttr(f"{mult_matrix_side_jaw}.matrixSum", f"{side_jaw_skinning_trn}.offsetParentMatrix")
+            side_jaw_skinning = cmds.createNode("joint", name=f"{side}_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
+            cmds.connectAttr(f"{side_jaw_skinning_trn}.worldMatrix[0]", f"{side_jaw_skinning}.offsetParentMatrix")
+
 
     def collision_setup(self):
 
@@ -437,8 +472,6 @@ class JawModule(object):
             12: [11]
         }
 
-        print(len(rebuilded_upper_lip_cvs))
-
         for i, cv in enumerate(rebuilded_upper_lip_cvs):
             # Set the name based on the index
             if i % 3 == 0:
@@ -593,7 +626,7 @@ class JawModule(object):
         linear_cvs = cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", fl=True)
         upper_bezier_shape = cmds.listRelatives(upper_bezier_curve, s=True)[0]
 
-        out_ctl_nodes = cmds.createNode("transform", name="C_outputControllers_GRP", ss=True, p=lips_controllers_grp)
+        out_controllers = cmds.createNode("transform", name="C_outputControllers_GRP", ss=True, p=lips_controllers_grp)
         # Output joints
         for i, cv in enumerate(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)):
 
@@ -634,13 +667,17 @@ class JawModule(object):
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
 
             out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=self.controllers_grp)
+            self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
+
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
+
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
+
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
-            cmds.parent(out_nodes[0], out_ctl_nodes)
+            cmds.parent(out_nodes[0], out_controllers)
             # cmds.setAttr(f"{out_nodes[0]}.inheritsTransform", 0)
         
         for i, cv in enumerate(cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True)):
@@ -681,48 +718,49 @@ class JawModule(object):
             joint = cmds.createNode("joint", n=f"{side}_{name}0{i}Skinning_JNT", ss=True, parent = self.skeleton_grp)
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
-            out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=self.controllers_grp)
-            cmds.setAttr(f"{out_nodes[0]}.inheritsTransform", 0)
-            # cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
+            out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=secondary_controllers_nodes)
+            self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
-            
-            cmds.parent(out_nodes[0], out_ctl_nodes)
+            cmds.parent(out_nodes[0], out_controllers)
 
-        cmds.addAttr(self.jaw_ctl, longName="LIPS_VISIBILITY", attributeType="enum", enumName="____")
-        cmds.setAttr(f"{self.jaw_ctl}.LIPS_VISIBILITY", keyable=False, channelBox=True)
-        cmds.addAttr(self.jaw_ctl, longName="Lips_Controllers_Visibility", at="float", k=True, min=0, max=3, dv=2)
-        cmds.setAttr(f"{self.jaw_ctl}.Lips_Controllers_Visibility", 2, k=False, cb=True)
+        cmds.addAttr(self.jaw_ctl, longName="Lips_Visibility", at="enum", enumName="Primary:Secondary:All", k=True)
+        cmds.setAttr(f"{self.jaw_ctl}.Lips_Visibility", 1, k=False, cb=True)
 
-        for ctl in [upper_lip_nodes[0], lower_lip_nodes[0], corner_nodes_ctls[0], corner_nodes_ctls[1]]:
-            condition_node = cmds.createNode("condition", name=f"{ctl}_LipsVis1_COND", ss=True)
-            cmds.setAttr(f"{condition_node}.operation", 3)  # Equal
-            cmds.setAttr(f"{condition_node}.secondTerm", 1)
-            cmds.setAttr(f"{condition_node}.colorIfTrueR", 1)
-            cmds.setAttr(f"{condition_node}.colorIfFalseR", 0)
+        condition_primary = cmds.createNode("condition", name="C_lipsPrimaryControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_primary}.operation", 3)  # Less Than
+        cmds.setAttr(f"{condition_primary}.secondTerm", 0)
+        cmds.setAttr(f"{condition_primary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_primary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_primary}.firstTerm")
+        cmds.connectAttr(f"{condition_primary}.outColorR", f"{main_lips_controllers}.visibility", f=True)
+        condition_secondary = cmds.createNode("condition", name="C_lipsSecondaryControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than
+        cmds.setAttr(f"{condition_secondary}.secondTerm", 1)
+        cmds.setAttr(f"{condition_secondary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_secondary}.firstTerm")
+        cmds.connectAttr(f"{condition_secondary}.outColorR", f"{secondary_controllers_nodes}.visibility", f=True)
+        condition_all = cmds.createNode("condition", name="C_lipsAllControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_all}.operation", 0)  # Equal
+        cmds.setAttr(f"{condition_all}.secondTerm", 2)
+        cmds.setAttr(f"{condition_all}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_all}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_all}.firstTerm")
+        cmds.connectAttr(f"{condition_all}.outColorR", f"{out_controllers}.visibility", f=True)
 
-            cmds.connectAttr(f"{self.jaw_ctl}.Lips_Controllers_Visibility", f"{condition_node}.firstTerm")
-            cmds.connectAttr(f"{condition_node}.outColorR", f"{ctl}.visibility")
 
-        # main controllers visibility
-        condition_node = cmds.createNode("condition", name=f"{ctl}_LipsVis2_COND", ss=True)
-        cmds.setAttr(f"{condition_node}.operation", 3)  # Equal
-        cmds.setAttr(f"{condition_node}.secondTerm", 2)
-        cmds.setAttr(f"{condition_node}.colorIfTrueR", 1)
-        cmds.setAttr(f"{condition_node}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Controllers_Visibility", f"{condition_node}.firstTerm")
-        cmds.connectAttr(f"{condition_node}.outColorR", f"{secondary_controllers_nodes}.visibility")
 
-        # cvs out controllers visibility
-        condition_node = cmds.createNode("condition", name=f"{ctl}_LipsVis3_COND", ss=True)
-        cmds.setAttr(f"{condition_node}.operation", 3)  # Equal
-        cmds.setAttr(f"{condition_node}.secondTerm", 3)
-        cmds.setAttr(f"{condition_node}.colorIfTrueR", 1)
-        cmds.setAttr(f"{condition_node}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Controllers_Visibility", f"{condition_node}.firstTerm")
-        cmds.connectAttr(f"{condition_node}.outColorR", f"{out_ctl_nodes}.visibility")
+        # mouth_master_ctl_nodes, mouth_master_ctl = curve_tool.create_controller("C_mouthMaster", offset=["GRP", "OFF"], parent=lips_controllers_grp)
+        # cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{mouth_master_ctl_nodes[0]}.offsetParentMatrix")
+        # self.lock_attributes(mouth_master_ctl, ["v"])
+
+        # cmds.parent(main_lips_controllers, mouth_master_ctl)
+        # cmds.parent(secondary_controllers_nodes, mouth_master_ctl)
+        # cmds.parent(out_controllers, mouth_master_ctl)
 
         
     def get_offset_matrix(self, child, parent):
