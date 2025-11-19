@@ -1,12 +1,13 @@
-from PySide2 import QtWidgets, QtCore, QtGui
+try:
+    from PySide6 import QtWidgets, QtCore, QtGui # For maya 2026
+except:
+    from PySide2 import QtWidgets, QtCore, QtGui # For maya 2024
+from shiboken2 import wrapInstance
 import json
-# import icon_export
 from importlib import reload
 import maya.OpenMayaUI as omui
-from shiboken2 import wrapInstance
-# import info
-import os
 import maya.api.OpenMaya as om
+import os
 
 from biped.utils import guides_manager
 from biped.autorig import spine_module_de_boor as spine_module
@@ -14,9 +15,6 @@ from biped.autorig import create_rig
 import biped.utils.data_manager as data_manager
 from biped.utils import rig_manager
 
-
-# reload(icon_export)
-# reload(info)
 reload(guides_manager)
 reload(spine_module)
 reload(create_rig)

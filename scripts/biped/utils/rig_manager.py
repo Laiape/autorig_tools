@@ -11,7 +11,10 @@ from maya.api import OpenMaya as om
 import json
 
 import maya.cmds as cmds
-from PySide2 import QtWidgets, QtCore, QtGui
+try:
+    from PySide6 import QtWidgets, QtCore, QtGui
+except:
+    from PySide2 import QtWidgets, QtCore, QtGui
 # Ui import
 from biped.ui import auto_rig_UI
 # Utils import
