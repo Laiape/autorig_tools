@@ -122,6 +122,8 @@ class NeckModule(object):
         cmds.connectAttr(f"{throat_ctl}.worldMatrix[0]", f"{skin_throat_jnt}.offsetParentMatrix")
         cmds.xform(skin_throat_jnt, m=om.MMatrix.kIdentity)
 
+        
+
 
     def ribbon_setup(self):
 

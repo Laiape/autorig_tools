@@ -142,9 +142,13 @@ class NoseModule(object):
                 self.lock_attributes(ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "v"])
             cmds.matchTransform(nodes[0], guide)
             local_grp, local_trn = self.local(ctl)
-            if i != 0:
-                cmds.parent(nodes[0], "C_baseNose_CTL")
-                cmds.parent(local_grp, "C_baseNoseLocal_TRN")
+            if self.side == "L":
+                if i != 0:
+                    cmds.parent(nodes[0], "C_baseNose_CTL")
+                    cmds.parent(local_grp, "C_baseNoseLocal_TRN")
+            else:
+                cmds.parent(nodes[0], f"C_baseNose_CTL")
+                cmds.parent(local_grp, f"C_baseNoseLocal_TRN")
             
             
             jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint

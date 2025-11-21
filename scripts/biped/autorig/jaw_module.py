@@ -105,8 +105,8 @@ class JawModule(object):
         self.upper_jaw_nodes, self.upper_jaw_ctl = curve_tool.create_controller("C_upperJaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.upper_jaw_nodes[0]}.offsetParentMatrix")
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
-        upper_jaw_skinning_trn = cmds.createNode("transform", name="C_upperJawSkinning_TRN", ss=True, p=self.module_trn)
-        mult_matrix_upper_jaw = cmds.createNode("multMatrix", name="C_upperJawSkinning_MMX")
+        upper_jaw_skinning_trn = cmds.createNode("transform", name="C_upperJawLocal_TRN", ss=True, p=self.module_trn)
+        mult_matrix_upper_jaw = cmds.createNode("multMatrix", name="C_upperJawLocal_MMX")
         cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_upper_jaw}.matrixIn[0]")
         cmds.connectAttr(f"{self.upper_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_upper_jaw}.matrixIn[1]")
         grp_pos = cmds.getAttr(f"{self.upper_jaw_nodes[0]}.worldMatrix[0]")
@@ -118,8 +118,8 @@ class JawModule(object):
         self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP"], parent=self.jaw_ctl)
         cmds.matchTransform(self.chin_nodes[0], self.chin_nodes[0].replace("C_chin_GRP", "C_chin_JNT"))
         self.lock_attributes(self.chin_ctl, ["v"])
-        chin_skinning_trn = cmds.createNode("transform", name="C_chinSkinning_TRN", ss=True, p=self.module_trn)
-        mult_matrix_chin = cmds.createNode("multMatrix", name="C_chinSkinning_MMX")
+        chin_skinning_trn = cmds.createNode("transform", name="C_chinLocal_TRN", ss=True, p=self.module_trn)
+        mult_matrix_chin = cmds.createNode("multMatrix", name="C_chinLocal_MMX")
         cmds.connectAttr(f"{self.chin_ctl}.worldMatrix[0]", f"{mult_matrix_chin}.matrixIn[0]")
         cmds.connectAttr(f"{self.chin_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_chin}.matrixIn[1]")
         grp_pos = cmds.getAttr(f"{self.chin_nodes[0]}.worldMatrix[0]")
@@ -128,12 +128,13 @@ class JawModule(object):
         chin_skinning = cmds.createNode("joint", name="C_chinSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{chin_skinning_trn}.worldMatrix[0]", f"{chin_skinning}.offsetParentMatrix")
 
+        self.jaw_child = [chin_skinning_trn]
         for side in ["L", "R"]:
             self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP"], parent=self.jaw_ctl)
             cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
             self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
-            side_jaw_skinning_trn = cmds.createNode("transform", name=f"{side}_jawSkinning_TRN", ss=True, p=self.module_trn)
-            mult_matrix_side_jaw = cmds.createNode("multMatrix", name=f"{side}_jawSkinning_MMX")
+            side_jaw_skinning_trn = cmds.createNode("transform", name=f"{side}_jawLocal_TRN", ss=True, p=self.module_trn)
+            mult_matrix_side_jaw = cmds.createNode("multMatrix", name=f"{side}_jawLocal_MMX")
             cmds.connectAttr(f"{self.side_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[0]")
             cmds.connectAttr(f"{self.side_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[1]")
             grp_pos = cmds.getAttr(f"{self.side_jaw_nodes[0]}.worldMatrix[0]")
@@ -141,6 +142,7 @@ class JawModule(object):
             cmds.connectAttr(f"{mult_matrix_side_jaw}.matrixSum", f"{side_jaw_skinning_trn}.offsetParentMatrix")
             side_jaw_skinning = cmds.createNode("joint", name=f"{side}_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
             cmds.connectAttr(f"{side_jaw_skinning_trn}.worldMatrix[0]", f"{side_jaw_skinning}.offsetParentMatrix")
+            self.jaw_child.append(side_jaw_skinning_trn)
 
 
     def collision_setup(self):
@@ -225,7 +227,10 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_jaw_local}.matrixIn[1]")
         grp_pos = cmds.getAttr(f"{self.jaw_nodes[0]}.worldMatrix[0]")
         cmds.setAttr(f"{mult_matrix_jaw_local}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
-        cmds.matchTransform(self.jaw_jnt, self.jaw_ctl, pos=True)  # Only position
+        cmds.connectAttr(f"{mult_matrix_jaw_local}.matrixSum", f"{self.jaw_jnt}.offsetParentMatrix")
+
+        for child in self.jaw_child:
+            cmds.parent(child, self.jaw_jnt)
 
         # Upper jaw local joint
         self.upper_jaw_jnt = cmds.createNode("joint", name="C_upperJaw_JNT", ss=True, p=self.module_trn)

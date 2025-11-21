@@ -130,8 +130,15 @@ class EyelidModule(object):
         cmds.select(clear=True)
         self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT", parent=self.module_trn)
         self.eye_guide = cmds.createNode("transform", name=f"{self.side}_eye_GUIDE", ss=True, p=self.module_trn)
+        self.eye_end_guide = cmds.createNode("transform", name=f"{self.side}_eyeEnd_GUIDE", ss=True, p=self.module_trn)
         cmds.matchTransform(self.eye_guide, self.eye_joint[0])
+        cmds.matchTransform(self.eye_end_guide, self.eye_joint[1])
         cmds.delete(self.eye_joint[0])
+
+        self.eye_aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
+        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{self.eye_aim_matrix}.inputMatrix")
+        cmds.connectAttr(f"{self.eye_end_guide}.worldMatrix[0]", f"{self.eye_aim_matrix}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{self.eye_aim_matrix}.primaryInputAxis", 0, 0, 1)
 
     def curve_cvs_into_guides(self):
 
@@ -214,20 +221,20 @@ class EyelidModule(object):
             cmds.setAttr(f"{self.eye_guide}.tx", 0)
             cmds.matchTransform(self.main_aim_nodes[0], self.eye_guide)
             cmds.select(self.main_aim_nodes[0])
-            cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 0, 30, relative=True, objectSpace=True, worldSpaceDistance=True)
             cmds.xform(self.eye_guide, t=before_translate, ws=True)
 
         side_aim_nodes, self.side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
         cmds.parent(side_aim_nodes[0], self.controllers_grp)
         cmds.matchTransform(side_aim_nodes[0], self.eye_guide)
         cmds.select(side_aim_nodes[0])
-        cmds.move(0, 0, 10, relative=True, objectSpace=True, worldSpaceDistance=True)
+        cmds.move(0, 0,30, relative=True, objectSpace=True, worldSpaceDistance=True)
         self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
         cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
 
         # Aim setup
         self.eye_jnt_matrix = cmds.xform(self.eye_guide, q=True, m=True, ws=True)
-        self.aim = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
+        self.aim = cmds.createNode("aimMatrix", name=f"{self.side}_eyeController_AIM", ss=True)
         cmds.setAttr(f"{self.aim}.primaryInputAxis", 0, 0, 1)
         cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{self.aim}.inputMatrix")
         cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{self.aim}.primaryTargetMatrix")
@@ -249,7 +256,7 @@ class EyelidModule(object):
 
         for i, matrix in enumerate(self.guides_matrices):
             suffix = matrix.split("_")[-1]
-            node, ctl = curve_tool.create_controller(name=matrix.replace(f"_{suffix}", ""), offset=["GRP"])
+            node, ctl = curve_tool.create_controller(name=matrix.replace(f"_{suffix}", ""), offset=["GRP", "OFF"])
             local_trn, local_jnt = self.local(ctl)
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             
@@ -317,7 +324,12 @@ class EyelidModule(object):
 
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
-        cmds.matchTransform(self.eye_direct_nodes[0], self.eye_guide)
+        mult_matrix_eye_direct = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirect_MMX", ss=True)
+        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{mult_matrix_eye_direct}.matrixIn[0]")
+        inverse_head = cmds.getAttr(f"{self.head_ctl}.worldInverseMatrix[0]")
+        cmds.setAttr(f"{mult_matrix_eye_direct}.matrixIn[1]", inverse_head, type="matrix")
+        cmds.connectAttr(f"{mult_matrix_eye_direct}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
+        cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
         self.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
 
         cmds.addAttr(self.eye_direct_ctl, ln="EYE_ATTRIBUTES", at="enum", en="____", k=True)
@@ -355,8 +367,12 @@ class EyelidModule(object):
         cmds.connectAttr(f"{condition_all}.outColorR", f"{self.extra_controllers_grp}.visibility", f=True)
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
-        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_direct_nodes[1]}.offsetParentMatrix")
-        cmds.setAttr(f"{self.eye_direct_nodes[1]}.inheritsTransform", 0)
+        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectOffset_MMX", ss=True)
+        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
+        inverse_eye_direct = cmds.getAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]")
+        cmds.setAttr(f"{mult_matrix}.matrixIn[1]", inverse_eye_direct, type="matrix")
+        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix")
+        
 
         cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
 
@@ -438,7 +454,11 @@ class EyelidModule(object):
         blend_colors_fleshy = cmds.createNode("blendColors", name=f"{self.side}_fleshy_BLC", ss=True)
         blend_colors_corners = cmds.createNode("blendColors", name=f"{self.side}_fleshyCorners_BLC", ss=True)
 
-        cmds.connectAttr(f"{self.eye_direct_ctl}.matrix", f"{decompose_matrix}.inputMatrix")
+        mult_matrix_eye_direct_local = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectLocal_MMX", ss=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{mult_matrix_eye_direct_local}.matrixIn[0]")
+        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_eye_direct_local}.matrixIn[1]")
+
+        cmds.connectAttr(f"{mult_matrix_eye_direct_local}.matrixSum", f"{decompose_matrix}.inputMatrix")
         cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy", f"{mult_double_linear}.input1")
         cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy_Corners", f"{mult_double_linear}.input2")
         cmds.connectAttr(f"{decompose_matrix}.outputRotateX", f"{blend_colors_fleshy}.color1R")
@@ -456,44 +476,43 @@ class EyelidModule(object):
         cmds.setAttr(f"{blend_colors_corners}.color2B", 0)
         cmds.connectAttr(f"{mult_double_linear}.output", f"{blend_colors_corners}.blender")
 
+        compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_fleshy_CM", ss=True)
+        cmds.connectAttr(f"{blend_colors_fleshy}.output", f"{compose_matrix}.inputRotate")
 
-        fleshy_nodes = [node for node in self.upper_nodes + self.lower_nodes if "eyelidIn_" in node or "eyelidOut_" in node or "eyelidDown_" in node or "eyelidUp_" in node]
+        compose_matrix_corners = cmds.createNode("composeMatrix", name=f"{self.side}_fleshyCorners_CM", ss=True)
+        cmds.connectAttr(f"{blend_colors_corners}.output", f"{compose_matrix_corners}.inputRotate")
 
-        for i, node in enumerate(fleshy_nodes):
 
-            if cmds.objExists(node.replace("_GRP", "Fleshy_OFF")):
-                continue
+        corner_fleshy = []
+        fleshy = []
+
+        for i, ctl in enumerate(self.primary_controller):
+            if i == 0 or i == 2:
+                corner_fleshy.append(ctl.replace("GRP", "OFF")) 
+            if i == 1 or i == 3:
+                fleshy.append(ctl.replace("GRP", "OFF"))
+            
+            mult_matrix_position = cmds.createNode("multMatrix", name=f"{self.side}_fleshyPosition_MMX", ss=True)
+            cmds.connectAttr(f"{self.eye_aim_matrix}.outputMatrix", f"{mult_matrix_position}.matrixIn[0]")
+            if ctl in corner_fleshy:
+                cmds.connectAttr(f"{compose_matrix_corners}.outputMatrix", f"{mult_matrix_position}.matrixIn[1]")
             else:
-                fleshy_offset = cmds.createNode("transform", name=node.replace("_GRP", "Fleshy_OFF"), ss=True, p=self.controllers_grp)
-                fleshy_trn = cmds.createNode("transform", name=node.replace("_GRP", "Fleshy_TRN"), ss=True, p=fleshy_offset)
-                mult_matrix = cmds.createNode("multMatrix", name=node.replace("_GRP", "_MMT"), ss=True)
-                cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-                cmds.connectAttr(f"{self.head_ctl}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-                cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{fleshy_offset}.offsetParentMatrix")
-                cmds.delete(mult_matrix)
-                try:
-                    cmds.disconnectAttr(f"{node.replace('_GRP', '_FFX')}.output", f"{node}.offsetParentMatrix")
-                except:
-                    pass
-                try:
-                    cmds.connectionInfo(f"{node.replace('_GRP', '_BMX')}.outputMatrix", isDestination=True)
-                except:
-                    pass
-                cmds.parent(node, fleshy_trn)
+                cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{mult_matrix_position}.matrixIn[1]")
 
-                # Fleshy setup
-                if "Up_" in node or "Down_" in node:
-                    cmds.connectAttr(f"{blend_colors_fleshy}.output", f"{fleshy_trn}.rotate")
-                    if "Up_" in node:
-                        cmds.connectAttr(f"{blend_colors_fleshy}.output", f"{self.upper_local_jnt[i]}.rotate")
-                    else:
-                        cmds.connectAttr(f"{blend_colors_fleshy}.output", f"{self.lower_local_jnt[i]}.rotate")
-                else:
-                    cmds.connectAttr(f"{blend_colors_corners}.output", f"{fleshy_trn}.rotate")
-                    if "Up" in node:
-                        cmds.connectAttr(f"{blend_colors_corners}.output", f"{self.upper_local_jnt[i]}.rotate")
-                    else:
-                        cmds.connectAttr(f"{blend_colors_corners}.output", f"{self.lower_local_jnt[i]}.rotate")
+            parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_fleshyPosition_PMT", ss=True)
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(f"{mult_matrix_position}.matrixSum", f"{parent_matrix}.target[0].targetMatrix")
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(ctl, f"{mult_matrix_position}.matrixSum"), type="matrix")
+
+            mult_matrix_position_final = cmds.createNode("multMatrix", name=f"{self.side}_fleshyPositionFinal_MMX", ss=True)
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_position_final}.matrixIn[0]")
+            cmds.connectAttr(f"{ctl}.worldInverseMatrix[0]", f"{mult_matrix_position_final}.matrixIn[1]")
+            
+            decompose_matrix_final = cmds.createNode("decomposeMatrix", name=f"{self.side}_fleshyPositionFinal_DECM", ss=True)
+            cmds.connectAttr(f"{mult_matrix_position_final}.matrixSum", f"{decompose_matrix_final}.inputMatrix")
+            cmds.connectAttr(f"{decompose_matrix_final}.outputRotate", f"{ctl.replace('GRP', 'OFF')}.rotate")
+            cmds.connectAttr(f"{decompose_matrix_final}.outputRotate", f"{ctl.replace('_GRP', 'Local_TRN')}.rotate")
+     
                 
 
     def skinning_joints(self):
@@ -523,7 +542,8 @@ class EyelidModule(object):
             four_by_four_matrix = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{name}Eyelid0{i}_F4X4", ss=True)
 
             cmds.setAttr(f"{mtp}.uValue", parameter) # Set the parameter value
-            cmds.setAttr(f"{mtp}.fractionMode", 1) # Disable fraction mode
+            # cmds.setAttr(f"{mtp}.fractionMode", 1) # Disable fraction mode
+            
 
             if cv in upper_cvs:
                 cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.worldSpace[0]", f"{mtp}.geometryPath")
@@ -568,9 +588,9 @@ class EyelidModule(object):
                 skinning_jnt = cmds.createNode("joint", name=f"{self.side}_{name}Eyelid0{i-len(upper_cvs)}Skinning_JNT", ss=True, p=self.skeleton_grp)
             # cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
             if "upper" in name:
-                node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i}", offset=["GRP"])
+                node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i}", offset=["GRP", "OFF"])
             if "down" in name:
-                node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i - len(upper_cvs)}", offset=["GRP"])
+                node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i - len(upper_cvs)}", offset=["GRP", "OFF"])
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{node[0]}.offsetParentMatrix")
             decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{self.side}_{name}Eyelid0{i}_DECM", ss=True)
@@ -586,6 +606,13 @@ class EyelidModule(object):
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.get_offset_matrix(four_by_four_matrix_temp, temp_trn), type="matrix") # Calculate offset matrix between driven and driver
             cmds.delete(temp_trn)
             cmds.delete(four_by_four_matrix_temp)
+
+            cmds.setAttr(f"{mtp}.follow", 1) # Able follow
+            cmds.setAttr(f"{mtp}.frontAxis", 0) # X axis as front
+            cmds.setAttr(f"{mtp}.upAxis", 1) # Y axis as up
+            cmds.connectAttr(f"{mtp}.rotate", f"{skinning_jnt}.rotate", f=True)
+            cmds.connectAttr(f"{mtp}.rotate", f"{node[0]}.rotate", f=True)
+
 
 
 
