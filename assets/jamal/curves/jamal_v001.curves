@@ -16,58 +16,58 @@
                     "cvs": [
                         [
                             3.859878481887051,
-                            2.0642405981370056,
-                            -5.702335637221929
+                            3.0434022191627585,
+                            5.029720385963286
                         ],
                         [
                             2.657694679398911e-16,
-                            3.5963461570698745,
-                            -4.395411590951266
+                            4.575507778095627,
+                            6.33664443223395
                         ],
                         [
                             -3.859878481887051,
-                            2.064240598137005,
-                            -5.702335637221929
+                            3.0434022191627577,
+                            5.029720385963286
                         ],
                         [
                             -7.948660171423785,
-                            -1.2767192418730824,
-                            -8.847956462016128
+                            -0.2975576208473294,
+                            1.8840995611690863
                         ],
                         [
                             -3.315481272701711,
-                            -4.204511654099897,
-                            -2.7309818589498036
+                            -3.225350033074144,
+                            8.001074164235412
                         ],
                         [
                             -4.696801607399419e-16,
-                            -5.577828963046952,
-                            -2.7309818589498036
+                            -4.598667342021199,
+                            8.001074164235412
                         ],
                         [
                             3.315481272701711,
-                            -4.204511654099896,
-                            -2.7309818589498036
+                            -3.225350033074143,
+                            8.001074164235412
                         ],
                         [
                             7.948660171423785,
-                            -1.2767192418730833,
-                            -8.847956462016128
+                            -0.2975576208473303,
+                            1.8840995611690863
                         ],
                         [
                             3.859878481887051,
-                            2.0642405981370056,
-                            -5.702335637221929
+                            3.0434022191627585,
+                            5.029720385963286
                         ],
                         [
                             2.657694679398911e-16,
-                            3.5963461570698745,
-                            -4.395411590951266
+                            4.575507778095627,
+                            6.33664443223395
                         ],
                         [
                             -3.859878481887051,
-                            2.064240598137005,
-                            -5.702335637221929
+                            3.0434022191627577,
+                            5.029720385963286
                         ]
                     ],
                     "form": "periodic",
@@ -1869,7 +1869,7 @@
             }
         ]
     },
-    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|C_noseTip_GRP|C_noseTip_CTL": {
+    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|C_noseTip_GRP|C_noseTip_CTL": {
         "transform": {
             "name": "C_noseTip_CTL",
             "overrideEnabled": false,
@@ -4726,7 +4726,7 @@
                         ],
                         [
                             1.9315695961552527e-14,
-                            -1.460801535032313e-15,
+                            -1.4608015350323128e-15,
                             10.712072429622147
                         ],
                         [
@@ -5224,7 +5224,7 @@
                         ],
                         [
                             3.5145951679806606e-14,
-                            -1.460801535032313e-15,
+                            -1.4608015350323128e-15,
                             10.71207242962213
                         ],
                         [
@@ -13023,7 +13023,7 @@
             }
         ]
     },
-    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nose_GRP|L_nose_CTL": {
+    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|L_nose_GRP|L_nose_CTL": {
         "transform": {
             "name": "L_nose_CTL",
             "overrideEnabled": true,
@@ -13115,7 +13115,7 @@
             }
         ]
     },
-    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL": {
+    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|L_nosetril_GRP|L_nosetril_CTL": {
         "transform": {
             "name": "L_nosetril_CTL",
             "overrideEnabled": true,
@@ -17631,17 +17631,17 @@
                             7.626486379103803e-15
                         ],
                         [
-                            5.415997380811691e-14,
+                            5.4159973808116904e-14,
                             6.017153154029248,
                             -6.017153154029122
                         ],
                         [
-                            5.415997380811691e-14,
+                            5.4159973808116904e-14,
                             1.902624606664061e-13,
                             -8.50953959730404
                         ],
                         [
-                            5.415997380811691e-14,
+                            5.4159973808116904e-14,
                             -6.017153154028983,
                             -6.017153154029122
                         ],
@@ -17671,7 +17671,7 @@
                             7.626486379103803e-15
                         ],
                         [
-                            5.415997380811691e-14,
+                            5.4159973808116904e-14,
                             6.017153154029248,
                             -6.017153154029122
                         ]
@@ -18247,7 +18247,7 @@
                         ],
                         [
                             -9.16547841688897e-14,
-                            -1.460801535032313e-15,
+                            -1.4608015350323128e-15,
                             10.712072429622557
                         ],
                         [
@@ -26046,7 +26046,7 @@
             }
         ]
     },
-    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nose_GRP|R_nose_CTL": {
+    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|R_nose_GRP|R_nose_CTL": {
         "transform": {
             "name": "R_nose_CTL",
             "overrideEnabled": true,
@@ -26138,7 +26138,7 @@
             }
         ]
     },
-    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL": {
+    "|jamal|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_noseControllers_GRP|R_nosetril_GRP|R_nosetril_CTL": {
         "transform": {
             "name": "R_nosetril_CTL",
             "overrideEnabled": true,

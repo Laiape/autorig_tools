@@ -452,7 +452,11 @@ class ArmModule(object):
 
         cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
-        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
+        if self.side == "L":
+            cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
+        elif self.side == "R":
+            cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *[-x for x in primary_aim_vector], type="double3")
+
 
 
         # Placeholder for de Boor ribbon setup

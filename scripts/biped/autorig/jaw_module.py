@@ -414,6 +414,17 @@ class JawModule(object):
             if side == "L":
                 upper_local_jnts.append(upper_local_jnt)
                 lower_local_jnts.append(lower_local_jnt)
+            
+            # Aim constraint to keep corner oriented correctly
+            aim = cmds.aimConstraint(
+                upper_lip_ctl,
+                corner_nodes[0],
+                aimVector=(-1, 0, 0),
+                upVector=(0, 1, 0),
+                worldUpType="scene",
+                name=f"{side}_lipCorner_AIM"
+            )[0]
+            cmds.delete(aim)
 
 
         # Rebuild curves for better deformation
@@ -531,6 +542,16 @@ class JawModule(object):
                 cmds.connectAttr(f"{mult_matrix_tangent}.matrixSum", f"{cv_ctl_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_tangents_upper.append(mult_matrix_tangent)
             cmds.parent(cv_ctl_nodes[0], secondary_controllers_nodes)
+            if i == 0 or i == len(rebuilded_upper_lip_cvs) -1:
+                aim = cmds.aimConstraint(
+                    upper_lip_ctl,
+                    cv_ctl_nodes[0],
+                    aimVector=(-1, 0, 0),
+                    upVector=(0, 1, 0),
+                    worldUpType="scene",
+                    name=f"{side}_lipCorner_AIM"
+                )[0]
+                cmds.delete(aim)
 
         for index, tangent in dict_parents.items():
             for child_index in tangent:
@@ -605,6 +626,16 @@ class JawModule(object):
                 cmds.connectAttr(f"{mult_matrix_tangent}.matrixSum", f"{cv_ctl_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_tangents_lower.append(mult_matrix_tangent)
             cmds.parent(cv_ctl_nodes[0], secondary_controllers_nodes)
+            if i == 0 or i == len(rebuilded_lower_lip_cvs) -1:
+                aim = cmds.aimConstraint(
+                    lower_lip_ctl,
+                    cv_ctl_nodes[0],
+                    aimVector=(-1, 0, 0),
+                    upVector=(0, 1, 0),
+                    worldUpType="scene",
+                    name=f"{side}_lipCorner_AIM"
+                )[0]
+                cmds.delete(aim)
 
         for index, tangent in dict_parents.items():
             for child_index in tangent:

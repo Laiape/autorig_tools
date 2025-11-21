@@ -422,8 +422,8 @@ class UI(QtWidgets.QMainWindow):
 
         reload(skin_cluster)
 
-        skin_cluster.import_joint_weights_json()
-        print("Skin weights imported successfully!")
+        skin_cluster.create_skin_clusters()
+        # print("Skin weights imported successfully!")
 
     def create_connections(self):
 

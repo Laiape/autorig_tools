@@ -55,7 +55,7 @@ class ArmModule(object):
         self.ik_setup()
         self.fk_stretch()
         # self.soft_ik()
-        # self.de_boor_ribbon()
+        self.de_boor_ribbon()
         
         data_manager.DataExportBiped().append_data("arm_module",
                             {
@@ -434,7 +434,7 @@ class ArmModule(object):
         cmds.connectAttr(f"{guides_aim}.outputMatrix", f"{nonRollMasterWalk_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{nonRollMasterWalk_mmx}.matrixIn[1]")
 
-        cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
         cmds.connectAttr(f"{nonRollMasterWalk_mmx}.matrixSum", f"{nonRollAlign}.target[0].targetMatrix")
         cmds.setAttr(f"{nonRollAlign}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{nonRollAlign}.target[0].translateWeight", 0)
@@ -442,7 +442,7 @@ class ArmModule(object):
         
 
         cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[1]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
 
 
@@ -457,15 +457,17 @@ class ArmModule(object):
 
     def de_boor_ribbon_callout(self, first_sel, second_sel, part):
 
-        if f"{first_sel[0]}.outputMatrix":
-            first_sel_output = f"{first_sel[0]}.outputMatrix"
-        elif f"{first_sel[0]}.worldMatrix":
-            first_sel_output = f"{first_sel[0]}.worldMatrix"
+        if f"{first_sel}.outputMatrix":
+            first_sel_output = f"{first_sel}.outputMatrix"
+        elif f"{first_sel}.worldMatrix":
+            first_sel_output = f"{first_sel}.worldMatrix"
 
-        if f"{second_sel[0]}.outputMatrix":
-            second_sel_output = f"{second_sel[0]}.outputMatrix"
-        elif f"{second_sel[0]}.worldMatrix":
-            second_sel_output = f"{second_sel[0]}.worldMatrix"
+        if f"{second_sel}.outputMatrix":
+            second_sel_output = f"{second_sel}.outputMatrix"
+        elif f"{second_sel}.worldMatrix":
+            second_sel_output = f"{second_sel}.worldMatrix"
+        
+        print( first_sel_output, second_sel_output)
 
         main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}MainBendy", offset=["GRP"])
         up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.side}_{part}UpBendy", offset=["GRP"])

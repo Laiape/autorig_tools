@@ -87,6 +87,8 @@ def space_switches(target, sources = [None], default_value = 1):
     parent_matrix = cmds.createNode("parentMatrix", name=target.replace("CTL", "PMT"), ss=True)
     cmds.connectAttr(f"{target_grp}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
     mult_matrix = cmds.createNode("multMatrix", name=target.replace("CTL", "MMT"), ss=True)
+    blend_matrix = cmds.createNode("blendMatrix", name=target.replace("CTL", "BMT"), ss=True)
+    
     cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
     cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
     
