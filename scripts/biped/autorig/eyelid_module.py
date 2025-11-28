@@ -30,6 +30,7 @@ class EyelidModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
 
@@ -232,13 +233,6 @@ class EyelidModule(object):
         self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
         cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
 
-        # Aim setup
-        self.eye_jnt_matrix = cmds.xform(self.eye_guide, q=True, m=True, ws=True)
-        self.aim = cmds.createNode("aimMatrix", name=f"{self.side}_eyeController_AIM", ss=True)
-        cmds.setAttr(f"{self.aim}.primaryInputAxis", 0, 0, 1)
-        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{self.aim}.inputMatrix")
-        cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{self.aim}.primaryTargetMatrix")
-        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{self.eye_skinning_jnt}.offsetParentMatrix")
 
     def create_controllers(self):
 
@@ -324,11 +318,14 @@ class EyelidModule(object):
 
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
-        mult_matrix_eye_direct = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirect_MMX", ss=True)
-        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{mult_matrix_eye_direct}.matrixIn[0]")
-        inverse_head = cmds.getAttr(f"{self.head_ctl}.worldInverseMatrix[0]")
-        cmds.setAttr(f"{mult_matrix_eye_direct}.matrixIn[1]", inverse_head, type="matrix")
-        cmds.connectAttr(f"{mult_matrix_eye_direct}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
+        aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eyeDirect_AIM", ss=True)
+        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
+        cmds.connectAttr(f"{self.eye_end_guide}.worldMatrix[0]", f"{aim_matrix}.primaryTargetMatrix")
+        cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 0, 0, 1)
+        mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
+        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{mult_matrix_negate_head}.matrixIn[0]")
+        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[1]")
+        cmds.connectAttr(f"{mult_matrix_negate_head}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
         self.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
 
@@ -367,14 +364,23 @@ class EyelidModule(object):
         cmds.connectAttr(f"{condition_all}.outColorR", f"{self.extra_controllers_grp}.visibility", f=True)
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
-        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectOffset_MMX", ss=True)
-        cmds.connectAttr(f"{self.aim}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
-        inverse_eye_direct = cmds.getAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]")
-        cmds.setAttr(f"{mult_matrix}.matrixIn[1]", inverse_eye_direct, type="matrix")
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix")
-        
+        aim_eye_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eyeDirectEye_AIM", ss=True)
+        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{aim_eye_matrix}.inputMatrix")
+        cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{aim_eye_matrix}.primaryTargetMatrix")
+        cmds.setAttr(f"{aim_eye_matrix}.primaryInputAxis", 0, 0, 1)
+        cmds.setAttr(f"{aim_eye_matrix}.secondaryMode", 0)  # None
 
-        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
+        mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEye_MMX", ss=True)
+        cmds.connectAttr(f"{aim_eye_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
+        cmds.connectAttr(f"{self.eye_guide}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix", force=True)
+
+        mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEyeSkinning_MMX", ss=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{mult_matrix_skin}.matrixIn[0]")
+        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_skin}.matrixIn[1]")
+        eye_direct_matrix = cmds.getAttr(f"{self.eye_direct_nodes[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{mult_matrix_skin}.matrixIn[2]", eye_direct_matrix, type="matrix")
+        cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
 
     def create_blink_setup(self):
 

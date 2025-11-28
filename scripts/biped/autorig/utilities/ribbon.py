@@ -350,8 +350,16 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
             up_off_val = temp_mat * up_inverse
 
             up_off = cmds.createNode('multMatrix', n=f'{name}_upOffset_{i}_MM')
-            cmds.setAttr(f'{up_off}.matrixIn[0]', list(up_off_val), type='matrix')
-            cmds.connectAttr(f'{up}.matrixSum', f'{up_off}.matrixIn[1]')
+            # cmds.setAttr(f'{up_off}.matrixIn[0]', list(up_off_val), type='matrix')
+            fourByfour = cmds.createNode('fourByFourMatrix', n=f'{name}_upOffset_{i}_F4X4')
+            if up_axis == 'x':
+                cmds.setAttr(f'{fourByfour}.in30', 10)
+            elif up_axis == 'y':
+                cmds.setAttr(f'{fourByfour}.in31', 10)
+            elif up_axis == 'z':
+                cmds.setAttr(f'{fourByfour}.in32', 10)
+            cmds.connectAttr(f'{fourByfour}.output', f'{up_off}.matrixIn[0]')
+            cmds.connectAttr(f'{up}.matrixSum', f'{up_off}.matrixIn[2]')
 
             if skeleton_grp is not None:
                 up_plug = f'{up_off}.matrixSum'
@@ -407,8 +415,8 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
 
         cmds.setAttr(f'{aim}.primaryInputAxis', *aim_vector)
         cmds.setAttr(f'{aim}.secondaryInputAxis', *AXIS_VECTOR[up_axis])
-        cmds.setAttr(f'{aim}.secondaryMode', 2)
-        cmds.setAttr(f'{aim}.secondaryTargetVector', *AXIS_VECTOR[up_axis])
+        cmds.setAttr(f'{aim}.secondaryMode', 1) # Aim
+        # cmds.setAttr(f'{aim}.secondaryTargetVector', *AXIS_VECTOR[up_axis])
 
         if use_scale:
             scale_wam = create_wt_add_matrix(sca_off_plugs, wts, f'{name}_scale_{i}_WAM', tol=tol)

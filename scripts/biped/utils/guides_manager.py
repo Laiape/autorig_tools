@@ -65,71 +65,78 @@ def get_guides_info():
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
     curves_in_scene = cmds.ls("*_CRV", type="transform", long=True)
-    nurbs_surfaces = cmds.ls("*_NURB", type="transform", long=True)
+    nurbs_surfacess = cmds.ls("*_NURB", type="transform", long=True)
+    print("NURBS surfaces found:", nurbs_surfacess)
 
-    if nurbs_surfaces:
-
-        nurbs_shapes = cmds.listRelatives(nurbs_surfaces, shapes=True, type="nurbsSurface")[0]
-
-        if nurbs_shapes: 
-
-            surface_data = []
-
-            sel_list = om.MSelectionList()
-            sel_list.add(nurbs_shapes)
-            shape_obj = sel_list.getDependNode(0)
+    if nurbs_surfacess:
+        nurbs_data = []
+        for nurbs_surface in nurbs_surfacess:
             
-            fn_nurbs = om.MFnNurbsSurface(shape_obj)
+            nurbs_surface = nurbs_surface.split("|")[-1]
+            print("Processing NURBS surface:", nurbs_surface)
+            nurbs_shapes = cmds.listRelatives(nurbs_surface, shapes=True, type="nurbsSurface")[0]
 
-            degree_u = int(fn_nurbs.degreeInU)
-            degree_v = int(fn_nurbs.degreeInV)
+            if nurbs_shapes: 
 
-            form_types = {
-                om.MFnNurbsSurface.kOpen: "open",
-                om.MFnNurbsSurface.kClosed: "closed",
-                om.MFnNurbsSurface.kPeriodic: "periodic",
-                om.MFnNurbsSurface.kInvalid: "invalid",
-            }
-            form_u = form_types.get(fn_nurbs.formInU, "unknown")
-            form_v = form_types.get(fn_nurbs.formInV, "unknown")
+                surface_data = []
 
-            knots_u = list(fn_nurbs.knotsInU())
-            knots_v = list(fn_nurbs.knotsInV())
+                sel_list = om.MSelectionList()
+                sel_list.add(nurbs_shapes)
+                shape_obj = sel_list.getDependNode(0)
+                
+                fn_nurbs = om.MFnNurbsSurface(shape_obj)
 
-            num_cvs_u = int(fn_nurbs.numCVsInU)
-            num_cvs_v = int(fn_nurbs.numCVsInV)
+                degree_u = int(fn_nurbs.degreeInU)
+                degree_v = int(fn_nurbs.degreeInV)
 
-            cvs = []
-            is_rational = False
-
-            for u in range(num_cvs_u):
-                row = []
-                for v in range(num_cvs_v):
-                    pt = fn_nurbs.cvPosition(u, v)  # MPoint
-                    w = getattr(pt, "w", 1.0)
-                    # treat as rational if any CV has a weight different from 1.0
-                    if abs(w - 1.0) > 1e-6:
-                        is_rational = True
-                        row.append((pt.x, pt.y, pt.z, w))
-                    else:
-                        row.append((pt.x, pt.y, pt.z))
-                cvs.append(row)
-
-            surface_data.append({
-                "name": fn_nurbs.name(),
-                "surface": {
-                    "degreeInU": degree_u,
-                    "degreeInV": degree_v,
-                    "formInU": form_u,
-                    "formInV": form_v,
-                    "knotsInU": knots_u,
-                    "knotsInV": knots_v,
-                    "numCVsInU": num_cvs_u,
-                    "numCVsInV": num_cvs_v,
-                    "isRational": bool(is_rational),
-                    "cvs": cvs
+                form_types = {
+                    om.MFnNurbsSurface.kOpen: "open",
+                    om.MFnNurbsSurface.kClosed: "closed",
+                    om.MFnNurbsSurface.kPeriodic: "periodic",
+                    om.MFnNurbsSurface.kInvalid: "invalid",
                 }
-            })
+                form_u = form_types.get(fn_nurbs.formInU, "unknown")
+                form_v = form_types.get(fn_nurbs.formInV, "unknown")
+
+                knots_u = list(fn_nurbs.knotsInU())
+                knots_v = list(fn_nurbs.knotsInV())
+
+                num_cvs_u = int(fn_nurbs.numCVsInU)
+                num_cvs_v = int(fn_nurbs.numCVsInV)
+
+                cvs = []
+                is_rational = False
+
+                for u in range(num_cvs_u):
+                    row = []
+                    for v in range(num_cvs_v):
+                        pt = fn_nurbs.cvPosition(u, v)  # MPoint
+                        w = getattr(pt, "w", 1.0)
+                        # treat as rational if any CV has a weight different from 1.0
+                        if abs(w - 1.0) > 1e-6:
+                            is_rational = True
+                            row.append((pt.x, pt.y, pt.z, w))
+                        else:
+                            row.append((pt.x, pt.y, pt.z))
+                    cvs.append(row)
+
+                surface_data.append({
+                    "name": fn_nurbs.name(),
+                    "surface": {
+                        "degreeInU": degree_u,
+                        "degreeInV": degree_v,
+                        "formInU": form_u,
+                        "formInV": form_v,
+                        "knotsInU": knots_u,
+                        "knotsInV": knots_v,
+                        "numCVsInU": num_cvs_u,
+                        "numCVsInV": num_cvs_v,
+                        "isRational": bool(is_rational),
+                        "cvs": cvs
+                    }
+                })
+                nurbs_data.extend(surface_data)
+                print("NURBS surface data collected for:", nurbs_data)
                      
 
     if curves_in_scene:
@@ -288,7 +295,8 @@ def get_guides_info():
             }
         
     if nurbs_shapes:
-        for surface in surface_data:
+        for surface in nurbs_data:
+            print("Saving NURBS surface data for:", surface)
             surface_name = surface["name"]
             guides_data[guides_name][surface_name] = {
                 "surface_data": surface["surface"],

@@ -513,7 +513,7 @@ class ArmModule(object):
         else:
             cmds.setAttr(f"{aim_matrix}.primaryInputAxis", -1, 0, 0, type="double3") # Aim X-
             
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, 1, 0, type="double3")
+        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, 0, 1, type="double3")
 
         blend_matrix = cmds.createNode("blendMatrix", name=f"{self.module_name}{part}MainBendy_BMT", ss=True)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")
@@ -559,9 +559,9 @@ class ArmModule(object):
         params[-1] = 0.95
 
         if self.side == "L":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='z', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='z', skeleton_grp=self.skeleton_grp)
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
 
         for t in temp:
             cmds.delete(t)

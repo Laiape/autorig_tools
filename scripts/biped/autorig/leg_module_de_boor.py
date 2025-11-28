@@ -847,7 +847,7 @@ class LegModule(object):
         else:
             cmds.setAttr(f"{aim_matrix}.primaryInputAxis", -1, 0, 0, type="double3") # Aim X-
             
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, 1, 0, type="double3")
+        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, 0, 1, type="double3")
 
         blend_matrix = cmds.createNode("blendMatrix", name=f"{self.module_name}{part}MainBendy_BMT", ss=True)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")

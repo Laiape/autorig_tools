@@ -55,7 +55,8 @@ class NeckModule(object):
         data_manager.DataExportBiped().append_data("neck_module",
                             {
                                 "head_ctl": self.neck_ctls[-1],
-                                "neck_ctl": self.neck_ctls[0]
+                                "neck_ctl": self.neck_ctls[0],
+                                "head_guide": self.head_guide
                             })
         
 
@@ -80,6 +81,10 @@ class NeckModule(object):
         self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT", parent=self.module_trn)
         cmds.select(clear=True)
         self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
+
+        cmds.select(clear=True)
+        self.head_guide = cmds.createNode("transform", name=f"{self.side}_head_GUIDE", ss=True, p=self.module_trn)
+        cmds.matchTransform(self.head_guide, self.neck_chain[-1], pos=True, rot=True, scl=False)
        
 
     def controller_creation(self):

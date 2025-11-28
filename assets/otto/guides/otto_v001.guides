@@ -1,0 +1,5305 @@
+{
+    "otto": {
+        "R_eyebrow07_JNT": {
+            "joint_matrix": [
+                0.396669437527339,
+                0.5889617487787776,
+                0.7041146325756826,
+                0.0,
+                0.28907996212203124,
+                -0.8081609112518645,
+                0.5131361583674268,
+                0.0,
+                0.871255492281839,
+                -4.781173083817542e-16,
+                -0.49082977412615303,
+                0.0,
+                -7.8418099999999935,
+                137.507,
+                6.420149999999991,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow06_JNT": {
+            "joint_matrix": [
+                0.5674245182435105,
+                0.4439781266946135,
+                0.6934787949987091,
+                0.0,
+                0.2811534560579466,
+                -0.896037623661385,
+                0.343612152186052,
+                0.0,
+                0.773939371167272,
+                9.190062782276345e-16,
+                -0.6332597016684447,
+                0.0,
+                -7.496829999999995,
+                138.01,
+                7.027029999999996,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow05_JNT": {
+            "joint_matrix": [
+                0.5645018488266271,
+                0.389723653201797,
+                0.727635304810291,
+                0.0,
+                0.23888816803506088,
+                -0.9209318509721799,
+                0.3079236415701254,
+                0.0,
+                0.7901076545915577,
+                8.514620175420479e-17,
+                -0.6129681020704321,
+                0.0,
+                -7.066379999999997,
+                138.438,
+                7.61083,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow04_JNT": {
+            "joint_matrix": [
+                0.6886690812961578,
+                0.2266233080306053,
+                0.6887501526126666,
+                0.0,
+                0.16023744589103178,
+                -0.9739824825207409,
+                0.16025630932057952,
+                0.0,
+                0.7071483984292299,
+                -4.312530610201749e-15,
+                -0.7070651614943102,
+                0.0,
+                -6.538419999999995,
+                138.761,
+                8.151839999999998,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow03_JNT": {
+            "joint_matrix": [
+                0.8319304268895791,
+                0.14527458817265101,
+                0.5355250310177755,
+                0.0,
+                0.12215423859582725,
+                -0.9893913755593722,
+                0.07863235950807443,
+                0.0,
+                0.5412671307297316,
+                9.591194890398845e-14,
+                -0.8408506961355288,
+                0.0,
+                -5.878989999999997,
+                138.949,
+                8.645989999999996,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow02_JNT": {
+            "joint_matrix": [
+                0.8958543681156385,
+                0.12072387382370632,
+                0.4276338356785254,
+                0.0,
+                0.10894784039371316,
+                -0.9926861267737138,
+                0.052005978353917806,
+                0.0,
+                0.4307845391859789,
+                -2.9267501951896385e-14,
+                -0.9024548081750818,
+                0.0,
+                -5.226279999999995,
+                139.084,
+                9.034379999999993,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow01_JNT": {
+            "joint_matrix": [
+                0.953840580313118,
+                2.5308176679412474e-17,
+                0.30031341519808036,
+                0.0,
+                6.012384719626151e-17,
+                -1.0,
+                -1.066898346841871e-16,
+                0.0,
+                0.3003134151980803,
+                1.1982109171503246e-16,
+                -0.9538405803131179,
+                0.0,
+                -4.415389999999995,
+                139.146,
+                9.433799999999996,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrow00_JNT": {
+            "joint_matrix": [
+                0.941199744199002,
+                -0.12117672208631702,
+                0.31537159596918196,
+                0.0,
+                -0.11489819039096354,
+                -0.9926309495600142,
+                -0.03849940026112634,
+                0.0,
+                0.3177128378970786,
+                1.8001793620835032e-14,
+                -0.9481869818951242,
+                0.0,
+                -3.4889899999999945,
+                138.98,
+                9.78818,
+                1.0
+            ],
+            "parent": "R_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyebrowMain_JNT": {
+            "joint_matrix": [
+                0.8711886133901524,
+                6.162975822039155e-33,
+                0.4909484696985455,
+                0.0,
+                6.012384719626151e-17,
+                -1.0,
+                -1.066898346841871e-16,
+                0.0,
+                0.4909484696985455,
+                1.2246467991473532e-16,
+                -0.8711886133901523,
+                0.0,
+                -5.87334,
+                138.899,
+                8.54447,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_eyebrow00_JNT",
+                "R_eyebrow01_JNT",
+                "R_eyebrow02_JNT",
+                "R_eyebrow03_JNT",
+                "R_eyebrow04_JNT",
+                "R_eyebrow05_JNT",
+                "R_eyebrow06_JNT",
+                "R_eyebrow07_JNT"
+            ]
+        },
+        "L_eyebrow07_JNT": {
+            "joint_matrix": [
+                0.3966694375273385,
+                -0.5889617487787774,
+                -0.7041146325756832,
+                0.0,
+                0.2890799621220309,
+                0.8081609112518646,
+                -0.5131361583674269,
+                0.0,
+                0.8712554922818394,
+                2.4980018054066027e-16,
+                0.4908297741261526,
+                0.0,
+                7.841805696487427,
+                137.50726318359364,
+                6.420154571533203,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow06_JNT": {
+            "joint_matrix": [
+                0.5674245182435096,
+                -0.4439781266946139,
+                -0.6934787949987098,
+                0.0,
+                0.2811534560579457,
+                0.8960376236613847,
+                -0.34361215218605323,
+                0.0,
+                0.7739393711672731,
+                -1.6653345369377343e-16,
+                0.6332597016684436,
+                0.0,
+                7.496833801269531,
+                138.00975799560536,
+                7.027026414871216,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow05_JNT": {
+            "joint_matrix": [
+                0.5645018488266274,
+                -0.389723653201797,
+                -0.7276353048102909,
+                0.0,
+                0.23888816803506036,
+                0.92093185097218,
+                -0.3079236415701258,
+                0.0,
+                0.7901076545915577,
+                6.383782391594651e-16,
+                0.6129681020704322,
+                0.0,
+                7.066381931304932,
+                138.43844604492176,
+                7.610830307006837,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow04_JNT": {
+            "joint_matrix": [
+                0.6886690812961578,
+                -0.22662330803060513,
+                -0.6887501526126666,
+                0.0,
+                0.16023744589103486,
+                0.9739824825207409,
+                -0.16025630932057627,
+                0.0,
+                0.707148398429229,
+                -2.42861286636753e-17,
+                0.7070651614943111,
+                0.0,
+                6.538419008255005,
+                138.76113128662098,
+                8.1518394947052,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow03_JNT": {
+            "joint_matrix": [
+                0.8319304268895791,
+                -0.14527458817265088,
+                -0.5355250310177755,
+                0.0,
+                0.12215423859577483,
+                0.9893913755593722,
+                -0.07863235950815564,
+                0.0,
+                0.5412671307297436,
+                -2.957703526540456e-16,
+                0.8408506961355213,
+                0.0,
+                5.878988027572632,
+                138.94864654541004,
+                8.645988464355469,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow02_JNT": {
+            "joint_matrix": [
+                0.8958543681156391,
+                -0.12072387382370646,
+                -0.4276338356785241,
+                0.0,
+                0.10894784039372594,
+                0.9926861267737138,
+                -0.05200597835389136,
+                0.0,
+                0.4307845391859745,
+                2.888314587501384e-16,
+                0.9024548081750842,
+                0.0,
+                5.226284980773925,
+                139.08377838134754,
+                9.034381866455078,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow01_JNT": {
+            "joint_matrix": [
+                0.9538405803131181,
+                0.0,
+                -0.3003134151980798,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.3003134151980798,
+                0.0,
+                0.9538405803131181,
+                0.0,
+                4.415386915206908,
+                139.14627838134754,
+                9.433801651000977,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrow00_JNT": {
+            "joint_matrix": [
+                0.941199744199002,
+                0.12117672208631716,
+                -0.31537159596918185,
+                0.0,
+                -0.11489819039096935,
+                0.9926309495600142,
+                0.03849940026110933,
+                0.0,
+                0.31771283789707644,
+                -1.7000290064572714e-16,
+                0.948186981895125,
+                0.0,
+                3.4889860153198224,
+                138.97978210449207,
+                9.788180828094482,
+                1.0
+            ],
+            "parent": "L_eyebrowMain_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eyebrowMain_JNT": {
+            "joint_matrix": [
+                0.8711886133901524,
+                0.0,
+                -0.4909484696985455,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.4909484696985455,
+                0.0,
+                0.8711886133901524,
+                0.0,
+                5.8733364572219315,
+                138.8992829570611,
+                8.544471166008556,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_eyebrow00_JNT",
+                "L_eyebrow01_JNT",
+                "L_eyebrow02_JNT",
+                "L_eyebrow03_JNT",
+                "L_eyebrow04_JNT",
+                "L_eyebrow05_JNT",
+                "L_eyebrow06_JNT",
+                "L_eyebrow07_JNT"
+            ]
+        },
+        "R_nose_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -1.98814,
+                130.531,
+                11.3547,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_wrist_JNT": {
+            "joint_matrix": [
+                0.5805153123097617,
+                0.7985089821941812,
+                -0.15932789312958573,
+                0.0,
+                0.8030188138526563,
+                -0.5938281255032359,
+                -0.05028858677658869,
+                0.0,
+                -0.1347692723604793,
+                -0.09875000109633472,
+                -0.9859440554670945,
+                0.0,
+                -33.9047,
+                80.93220000000002,
+                -0.6476430000000022,
+                1.0
+            ],
+            "parent": "R_elbow_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_elbow_JNT": {
+            "joint_matrix": [
+                0.5805153123097617,
+                0.7985089821941812,
+                -0.15932789312958573,
+                0.0,
+                0.8030188103743192,
+                -0.5938281280519306,
+                -0.05028861222337919,
+                0.0,
+                -0.13476929308604826,
+                -0.09874998576988707,
+                -0.9859440541691675,
+                0.0,
+                -23.416099999999993,
+                95.3594,
+                -3.526339999999996,
+                1.0
+            ],
+            "parent": "R_shoulder_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_wrist_JNT"
+            ]
+        },
+        "R_shoulder_JNT": {
+            "joint_matrix": [
+                0.595939166282362,
+                0.8007240989999282,
+                0.06080647474929377,
+                0.0,
+                0.8030188138526562,
+                -0.593828125503236,
+                -0.050288586776588845,
+                0.0,
+                -0.004158688417830841,
+                0.07879768170489793,
+                -0.9968819542295755,
+                0.0,
+                -11.4183,
+                111.48,
+                -2.30215,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_elbow_JNT",
+                "R_wrist_JNT"
+            ]
+        },
+        "R_tip_JNT": {
+            "joint_matrix": [
+                8.4703294725430015e-22,
+                0.10958105072615376,
+                -0.9939778635974504,
+                0.0,
+                -2.3727468540957184e-05,
+                -0.9939778633176494,
+                -0.10958105069530721,
+                0.0,
+                -0.9999999997185036,
+                2.358457848891634e-05,
+                2.6000809337898456e-06,
+                0.0,
+                -6.51227,
+                1.7955599999999996,
+                13.279499999999995,
+                1.0
+            ],
+            "parent": "R_ball_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_ball_JNT": {
+            "joint_matrix": [
+                8.4703294725430015e-22,
+                0.10958105072615376,
+                -0.9939778635974504,
+                0.0,
+                -2.3727468540957184e-05,
+                -0.9939778633176494,
+                -0.10958105069530721,
+                0.0,
+                -0.9999999997185036,
+                2.358457848891634e-05,
+                2.6000809337898456e-06,
+                0.0,
+                -6.512269999999998,
+                2.4356999999999998,
+                7.472980000000005,
+                1.0
+            ],
+            "parent": "R_ankle_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_tip_JNT"
+            ]
+        },
+        "R_ankle_JNT": {
+            "joint_matrix": [
+                0.0,
+                0.5041209579642756,
+                -0.8636330585041201,
+                0.0,
+                0.0,
+                -0.8636330585041201,
+                -0.5041209579642756,
+                0.0,
+                -1.0,
+                0.0,
+                0.0,
+                0.0,
+                -6.51227,
+                7.763019999999997,
+                -1.6535000000000015,
+                1.0
+            ],
+            "parent": "R_knee_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ball_JNT",
+                "R_tip_JNT"
+            ]
+        },
+        "R_knee_JNT": {
+            "joint_matrix": [
+                0.0,
+                0.9990910705718591,
+                0.04262666657828722,
+                0.0,
+                0.0,
+                0.04262666657828722,
+                -0.9990910705718591,
+                0.0,
+                -1.0,
+                0.0,
+                0.0,
+                0.0,
+                -6.51227,
+                42.8718,
+                -0.155563,
+                1.0
+            ],
+            "parent": "R_hip_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ankle_JNT",
+                "R_ball_JNT",
+                "R_tip_JNT"
+            ]
+        },
+        "R_hip_JNT": {
+            "joint_matrix": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -1.0,
+                0.0,
+                -1.0,
+                0.0,
+                0.0,
+                0.0,
+                -6.51227,
+                72.4221,
+                -0.193276,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_knee_JNT",
+                "R_ankle_JNT",
+                "R_ball_JNT",
+                "R_tip_JNT"
+            ]
+        },
+        "C_eyebrowMid_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -4.7603506407320345e-17,
+                139.5532989501953,
+                10.440691471099854,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_ear02_JNT": {
+            "joint_matrix": [
+                0.370659932384614,
+                0.8672815885020525,
+                -0.33231590508127884,
+                0.0,
+                -0.6457512774965648,
+                0.4978178846178151,
+                0.5789496017497536,
+                0.0,
+                0.6675451311605738,
+                -2.4728636008999797e-17,
+                0.7445693371767415,
+                0.0,
+                10.834185123443609,
+                134.28529357910153,
+                -3.716892004013058,
+                1.0
+            ],
+            "parent": "L_ear01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_ear01_JNT": {
+            "joint_matrix": [
+                0.19107935016042848,
+                0.9815189632431373,
+                0.010450202695888075,
+                0.0,
+                -0.9800543677077278,
+                0.1913648995874553,
+                -0.053599547972802364,
+                0.0,
+                -0.05460877474613296,
+                -4.668145289275144e-16,
+                0.9985078275710841,
+                0.0,
+                10.270653247833259,
+                131.3905944824219,
+                -3.7477117776870776,
+                1.0
+            ],
+            "parent": "L_ear00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ear02_JNT"
+            ]
+        },
+        "L_ear00_JNT": {
+            "joint_matrix": [
+                0.39844761802837214,
+                0.39287584146671234,
+                -0.8287871070904391,
+                0.0,
+                -0.17022823604407883,
+                0.9195915251848631,
+                0.3540815929436303,
+                0.0,
+                0.9012557036384501,
+                -6.38378239159465e-16,
+                0.4332876142461981,
+                0.0,
+                8.91073226928711,
+                130.04969024658203,
+                -0.9190213233232498,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ear01_JNT",
+                "L_ear02_JNT"
+            ]
+        },
+        "R_nosetril_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -0.6355717182159424,
+                129.43434143066406,
+                11.619088172912598,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_nose_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                1.9881449341773987,
+                130.53060150146484,
+                11.354713439941406,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_nosetril_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.6355717182159424,
+                129.43434143066406,
+                11.619088172912598,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_noseTip_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                5.421689812274306e-17,
+                131.07432556152344,
+                13.14162540435791,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_noseMain_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                135.67182159423828,
+                9.966110706329346,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_throat_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                6.585459480498021e-18,
+                119.57308197021484,
+                2.7653322219848633,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_neck04_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                127.41635240595376,
+                0.0,
+                1.0
+            ],
+            "parent": "C_neck03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_neck03_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                124.41635240595376,
+                0.0,
+                1.0
+            ],
+            "parent": "C_neck02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_neck04_JNT"
+            ]
+        },
+        "C_neck02_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                121.41635240595376,
+                0.0,
+                1.0
+            ],
+            "parent": "C_neck01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_neck03_JNT",
+                "C_neck04_JNT"
+            ]
+        },
+        "C_neck01_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                118.41635240595376,
+                0.0,
+                1.0
+            ],
+            "parent": "C_neck00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_neck02_JNT",
+                "C_neck03_JNT",
+                "C_neck04_JNT"
+            ]
+        },
+        "C_neck00_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                115.41635240595376,
+                0.0,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_neck01_JNT",
+                "C_neck02_JNT",
+                "C_neck03_JNT",
+                "C_neck04_JNT"
+            ]
+        },
+        "C_spine07_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                100.23637955352191,
+                1.0658141036401503e-14,
+                1.0
+            ],
+            "parent": "C_spine06_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_spine06_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                97.03637955352191,
+                -2.842170943040401e-14,
+                1.0
+            ],
+            "parent": "C_spine05_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine07_JNT"
+            ]
+        },
+        "C_spine05_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                93.83637955352191,
+                -3.552713678800501e-15,
+                1.0
+            ],
+            "parent": "C_spine04_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine06_JNT",
+                "C_spine07_JNT"
+            ]
+        },
+        "C_spine04_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                90.6363795535219,
+                -7.105427357601002e-15,
+                1.0
+            ],
+            "parent": "C_spine03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine05_JNT",
+                "C_spine06_JNT",
+                "C_spine07_JNT"
+            ]
+        },
+        "C_spine03_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                87.4363795535219,
+                -7.105427357601002e-15,
+                1.0
+            ],
+            "parent": "C_spine02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine04_JNT",
+                "C_spine05_JNT",
+                "C_spine06_JNT",
+                "C_spine07_JNT"
+            ]
+        },
+        "C_spine02_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                84.2363795535219,
+                2.1316282072803006e-14,
+                1.0
+            ],
+            "parent": "C_spine01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine03_JNT",
+                "C_spine04_JNT",
+                "C_spine05_JNT",
+                "C_spine06_JNT",
+                "C_spine07_JNT"
+            ]
+        },
+        "C_spine01_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                81.0363795535219,
+                0.0,
+                1.0
+            ],
+            "parent": "C_spine00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine02_JNT",
+                "C_spine03_JNT",
+                "C_spine04_JNT",
+                "C_spine05_JNT",
+                "C_spine06_JNT",
+                "C_spine07_JNT"
+            ]
+        },
+        "C_spine00_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                77.8363795535219,
+                0.0,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_spine01_JNT",
+                "C_spine02_JNT",
+                "C_spine03_JNT",
+                "C_spine04_JNT",
+                "C_spine05_JNT",
+                "C_spine06_JNT",
+                "C_spine07_JNT"
+            ]
+        },
+        "L_tip_JNT": {
+            "joint_matrix": [
+                -2.2070742202672252e-16,
+                -0.10958105072615387,
+                0.9939778635974506,
+                0.0,
+                -2.3727478024926366e-05,
+                0.993977863317649,
+                0.10958105069530705,
+                0.0,
+                -0.9999999997185034,
+                -2.3584587915747583e-05,
+                -2.6000819732725325e-06,
+                0.0,
+                6.512269528745015,
+                1.795562080672895,
+                13.279526458705202,
+                1.0
+            ],
+            "parent": "L_ball_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_ball_JNT": {
+            "joint_matrix": [
+                -2.2070742202672252e-16,
+                -0.10958105072615387,
+                0.9939778635974506,
+                0.0,
+                -2.3727478024926366e-05,
+                0.993977863317649,
+                0.10958105069530705,
+                0.0,
+                -0.9999999997185034,
+                -2.3584587915747583e-05,
+                -2.6000819732725325e-06,
+                0.0,
+                6.512269528745016,
+                2.4357046752458205,
+                7.4729790279689885,
+                1.0
+            ],
+            "parent": "L_ankle_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_tip_JNT"
+            ]
+        },
+        "L_ankle_JNT": {
+            "joint_matrix": [
+                -1.9176506127574375e-16,
+                -0.5041209579642757,
+                0.8636330585041201,
+                0.0,
+                -1.1193733894560589e-16,
+                0.8636330585041201,
+                0.5041209579642757,
+                0.0,
+                -1.0,
+                0.0,
+                -2.220446049250313e-16,
+                0.0,
+                6.512269528745019,
+                7.763021419880793,
+                -1.6534950475550731,
+                1.0
+            ],
+            "parent": "L_knee_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ball_JNT",
+                "L_tip_JNT"
+            ]
+        },
+        "L_knee_JNT": {
+            "joint_matrix": [
+                9.465021339646994e-18,
+                -0.9990910705718591,
+                -0.042626666578288,
+                0.0,
+                -2.2184278204925497e-16,
+                -0.042626666578288,
+                0.9990910705718591,
+                0.0,
+                -1.0,
+                0.0,
+                -2.220446049250313e-16,
+                0.0,
+                6.512269528744947,
+                42.871813992384034,
+                -0.15556273784304533,
+                1.0
+            ],
+            "parent": "L_hip_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ankle_JNT",
+                "L_ball_JNT",
+                "L_tip_JNT"
+            ]
+        },
+        "L_hip_JNT": {
+            "joint_matrix": [
+                0.0,
+                -1.0,
+                0.0,
+                0.0,
+                -2.2204460492503126e-16,
+                0.0,
+                1.0,
+                0.0,
+                -1.0,
+                0.0,
+                -2.220446049250313e-16,
+                0.0,
+                6.512269528744916,
+                72.42206581608404,
+                -0.19327631965625014,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_knee_JNT",
+                "L_ankle_JNT",
+                "L_ball_JNT",
+                "L_tip_JNT"
+            ]
+        },
+        "L_wrist_JNT": {
+            "joint_matrix": [
+                0.5805153123097616,
+                -0.7985089821941812,
+                0.15932789312958584,
+                0.0,
+                0.8030188138526562,
+                0.5938281255032358,
+                0.05028858677658896,
+                0.0,
+                -0.13476927236047961,
+                0.09875000109633465,
+                0.9859440554670943,
+                0.0,
+                33.90472511467375,
+                80.9321599719648,
+                -0.6476430432671925,
+                1.0
+            ],
+            "parent": "L_elbow_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_elbow_JNT": {
+            "joint_matrix": [
+                0.5805153123097616,
+                -0.7985089821941812,
+                0.15932789312958584,
+                0.0,
+                0.8030188138526562,
+                0.5938281255032358,
+                0.05028858677658896,
+                0.0,
+                -0.13476927236047961,
+                0.09875000109633465,
+                0.9859440554670943,
+                0.0,
+                23.41610353259258,
+                95.35944270944688,
+                -3.5263439889114103,
+                1.0
+            ],
+            "parent": "L_shoulder_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_wrist_JNT"
+            ]
+        },
+        "L_shoulder_JNT": {
+            "joint_matrix": [
+                0.5959391662823619,
+                -0.8007240989999282,
+                -0.060806474749293724,
+                0.0,
+                0.8030188138526562,
+                0.5938281255032358,
+                0.05028858677658896,
+                0.0,
+                -0.004158688417830968,
+                -0.07879768170489798,
+                0.9968819542295753,
+                0.0,
+                11.418252974352788,
+                111.48016210790266,
+                -2.3021468924746284,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_elbow_JNT",
+                "L_wrist_JNT"
+            ]
+        },
+        "L_clavicle_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                3.4478544796370407,
+                211.75481131131815,
+                -11.684604611038864,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_thumb03End_JNT": {
+            "joint_matrix": [
+                -0.19509539430148787,
+                -0.6050654884186427,
+                0.7719025468587702,
+                0.0,
+                -0.06204594578325365,
+                0.7930634456958586,
+                0.6059708505471804,
+                0.0,
+                -0.9788197422070155,
+                0.0703286984503555,
+                -0.19226488613387116,
+                0.0,
+                63.69340281646798,
+                130.01649562735815,
+                21.977319915300615,
+                1.0
+            ],
+            "parent": "L_thumb02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_thumb02_JNT": {
+            "joint_matrix": [
+                -0.19509539430148787,
+                -0.6050654884186427,
+                0.7719025468587702,
+                0.0,
+                -0.06204594578325365,
+                0.7930634456958586,
+                0.6059708505471804,
+                0.0,
+                -0.9788197422070155,
+                0.0703286984503555,
+                -0.19226488613387116,
+                0.0,
+                64.68952941894534,
+                133.10586547851574,
+                18.036106109619183,
+                1.0
+            ],
+            "parent": "L_thumb01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_thumb03End_JNT"
+            ]
+        },
+        "L_thumb01_JNT": {
+            "joint_matrix": [
+                -0.20365857931559694,
+                -0.4301907890328955,
+                0.8794652171077644,
+                0.0,
+                -0.020858939017701462,
+                0.8999943106517584,
+                0.43540228003252585,
+                0.0,
+                -0.9788197422070155,
+                0.0703286984503555,
+                -0.19226488613387116,
+                0.0,
+                65.58465516826978,
+                134.99665178214028,
+                14.170656570915813,
+                1.0
+            ],
+            "parent": "L_thumb00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_thumb02_JNT",
+                "L_thumb03End_JNT"
+            ]
+        },
+        "L_thumb00_JNT": {
+            "joint_matrix": [
+                -0.20365857931559694,
+                -0.4301907890328955,
+                0.8794652171077644,
+                0.0,
+                -0.020858939017701462,
+                0.8999943106517584,
+                0.43540228003252585,
+                0.0,
+                -0.9788197422070155,
+                0.0703286984503555,
+                -0.19226488613387116,
+                0.0,
+                66.41201283542426,
+                136.74429064342314,
+                10.59785206243402,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_thumb01_JNT",
+                "L_thumb02_JNT",
+                "L_thumb03End_JNT"
+            ]
+        },
+        "L_index04End_JNT": {
+            "joint_matrix": [
+                0.02356114216621791,
+                -0.9252870250034235,
+                0.3785350630260517,
+                0.0,
+                0.9957144709165502,
+                0.05559030304677451,
+                0.07390812279135688,
+                0.0,
+                -0.08942910592865043,
+                0.3751714802160227,
+                0.9226314515803808,
+                0.0,
+                73.36779748510953,
+                114.83999252966403,
+                19.867572097865164,
+                1.0
+            ],
+            "parent": "L_index03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_index03_JNT": {
+            "joint_matrix": [
+                0.02356114216621791,
+                -0.9252870250034235,
+                0.3785350630260517,
+                0.0,
+                0.9957144709165502,
+                0.05559030304677451,
+                0.07390812279135688,
+                0.0,
+                -0.08942910592865043,
+                0.3751714802160227,
+                0.9226314515803808,
+                0.0,
+                73.25946273492033,
+                119.09448656055781,
+                18.127057941058137,
+                1.0
+            ],
+            "parent": "L_index02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_index04End_JNT"
+            ]
+        },
+        "L_index02_JNT": {
+            "joint_matrix": [
+                0.051413014250436595,
+                -0.9233692605014204,
+                0.3804548734432823,
+                0.0,
+                0.9946653391862443,
+                0.08145900314623372,
+                0.0632873907499374,
+                0.0,
+                -0.08942910592865043,
+                0.3751714802160227,
+                0.9226314515803808,
+                0.0,
+                73.03533707077013,
+                123.11974654157042,
+                16.468534268935105,
+                1.0
+            ],
+            "parent": "L_index01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_index03_JNT",
+                "L_index04End_JNT"
+            ]
+        },
+        "L_index01_JNT": {
+            "joint_matrix": [
+                0.249194273868283,
+                -0.8884526146143319,
+                0.3854272505366172,
+                0.0,
+                0.9643156375814204,
+                0.26438288904064056,
+                -0.014037061603589123,
+                0.0,
+                -0.08942910592865043,
+                0.3751714802160227,
+                0.9226314515803808,
+                0.0,
+                71.17449902456507,
+                129.75419444384667,
+                13.590387509343515,
+                1.0
+            ],
+            "parent": "L_index00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_index02_JNT",
+                "L_index03_JNT",
+                "L_index04End_JNT"
+            ]
+        },
+        "L_index00_JNT": {
+            "joint_matrix": [
+                0.2756338987709581,
+                -0.875964913654616,
+                0.39586793744174575,
+                0.0,
+                0.9554788787037679,
+                0.29477233052399887,
+                -0.013014818801677926,
+                0.0,
+                -0.10529038987158973,
+                0.3818307782297167,
+                0.9182152201946869,
+                0.0,
+                69.31930194889424,
+                135.65001333059675,
+                10.925936427061812,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_index01_JNT",
+                "L_index02_JNT",
+                "L_index03_JNT",
+                "L_index04End_JNT"
+            ]
+        },
+        "L_middle04End_JNT": {
+            "joint_matrix": [
+                0.08126564488716974,
+                -0.961197973181176,
+                0.2636178129669391,
+                0.0,
+                0.9911203819404152,
+                0.050004829282192395,
+                -0.12320675935493429,
+                0.0,
+                0.105243923641027,
+                0.2712894642275266,
+                0.95672657699877,
+                0.0,
+                73.65357229156528,
+                111.95954661612222,
+                15.033588512775111,
+                1.0
+            ],
+            "parent": "L_middle03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_middle03_JNT": {
+            "joint_matrix": [
+                0.08126564488716974,
+                -0.961197973181176,
+                0.2636178129669391,
+                0.0,
+                0.9911203819404152,
+                0.050004829282192395,
+                -0.12320675935493429,
+                0.0,
+                0.105243923641027,
+                0.2712894642275266,
+                0.95672657699877,
+                0.0,
+                73.25963530950114,
+                116.6189747083557,
+                13.755695427663706,
+                1.0
+            ],
+            "parent": "L_middle02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_middle04End_JNT"
+            ]
+        },
+        "L_middle02_JNT": {
+            "joint_matrix": [
+                0.06675481452713325,
+                -0.9618267463619076,
+                0.26539235995091304,
+                0.0,
+                0.992203361853854,
+                0.03593517193514609,
+                -0.1193362985176839,
+                0.0,
+                0.105243923641027,
+                0.2712894642275266,
+                0.95672657699877,
+                0.0,
+                72.90338257674647,
+                121.75198884756848,
+                12.339366820438325,
+                1.0
+            ],
+            "parent": "L_middle01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_middle03_JNT",
+                "L_middle04End_JNT"
+            ]
+        },
+        "L_middle01_JNT": {
+            "joint_matrix": [
+                0.203139853896842,
+                -0.947647915757418,
+                0.24636888504718166,
+                0.0,
+                0.9734772294693963,
+                0.1684204689453253,
+                -0.15484388701148435,
+                0.0,
+                0.105243923641027,
+                0.2712894642275266,
+                0.95672657699877,
+                0.0,
+                71.32231441276718,
+                129.1276757033163,
+                10.421840577946377,
+                1.0
+            ],
+            "parent": "L_middle00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_middle02_JNT",
+                "L_middle03_JNT",
+                "L_middle04End_JNT"
+            ]
+        },
+        "L_middle00_JNT": {
+            "joint_matrix": [
+                0.25082077105492695,
+                -0.9382068651070783,
+                0.2384466797281117,
+                0.0,
+                0.9622955145609138,
+                0.2148718335778106,
+                -0.16678560426744288,
+                0.0,
+                0.105243923641027,
+                0.2712894642275266,
+                0.95672657699877,
+                0.0,
+                69.76223210983915,
+                134.96323677181582,
+                8.938723993656854,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_middle01_JNT",
+                "L_middle02_JNT",
+                "L_middle03_JNT",
+                "L_middle04End_JNT"
+            ]
+        },
+        "L_ring04End_JNT": {
+            "joint_matrix": [
+                0.0659136940207882,
+                -0.9776259599698184,
+                0.1997570207367563,
+                0.0,
+                0.9662743487303482,
+                0.012593639531648541,
+                -0.2572066935930874,
+                0.0,
+                0.2489362728215303,
+                0.20997352841831723,
+                0.9454849810744149,
+                0.0,
+                72.1630369300232,
+                112.3356819759573,
+                10.033778858287118,
+                1.0
+            ],
+            "parent": "L_ring03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_ring03_JNT": {
+            "joint_matrix": [
+                0.0659136940207882,
+                -0.9776259599698184,
+                0.1997570207367563,
+                0.0,
+                0.9662743487303482,
+                0.012593639531648541,
+                -0.2572066935930874,
+                0.0,
+                0.2489362728215303,
+                0.20997352841831723,
+                0.9454849810744149,
+                0.0,
+                71.87584341799692,
+                116.59531022260423,
+                9.163414646576939,
+                1.0
+            ],
+            "parent": "L_ring02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ring04End_JNT"
+            ]
+        },
+        "L_ring02_JNT": {
+            "joint_matrix": [
+                0.012526919619676627,
+                -0.9768327837521039,
+                0.21363704938974737,
+                0.0,
+                0.9684388511199697,
+                -0.04133799645214213,
+                -0.2457994338698848,
+                0.0,
+                0.2489362728215303,
+                0.20997352841831723,
+                0.9454849810744149,
+                0.0,
+                71.81014506035132,
+                121.71838209783164,
+                8.042979319835691,
+                1.0
+            ],
+            "parent": "L_ring01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ring03_JNT",
+                "L_ring04End_JNT"
+            ]
+        },
+        "L_ring01_JNT": {
+            "joint_matrix": [
+                0.1038553045620969,
+                -0.9763748205096465,
+                0.1894895395241371,
+                0.0,
+                0.9629355159033438,
+                0.051022810960565115,
+                -0.26486197343832446,
+                0.0,
+                0.2489362728215303,
+                0.20997352841831723,
+                0.9454849810744149,
+                0.0,
+                71.07420570287599,
+                128.63716839469825,
+                6.700218730439252,
+                1.0
+            ],
+            "parent": "L_ring00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ring02_JNT",
+                "L_ring03_JNT",
+                "L_ring04End_JNT"
+            ]
+        },
+        "L_ring00_JNT": {
+            "joint_matrix": [
+                0.3670100045273297,
+                -0.9239896734736862,
+                0.107455757830096,
+                0.0,
+                0.9205571817821804,
+                0.3441630085656908,
+                -0.18473304686563813,
+                0.0,
+                0.13370913075066806,
+                0.16671804596084688,
+                0.9768965971406072,
+                0.0,
+                69.86870055340881,
+                134.30002315772313,
+                6.036035805215436,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_ring01_JNT",
+                "L_ring02_JNT",
+                "L_ring03_JNT",
+                "L_ring04End_JNT"
+            ]
+        },
+        "L_pinky04End_JNT": {
+            "joint_matrix": [
+                -0.09054594997580165,
+                -0.9857625642027881,
+                0.14168132537255412,
+                0.0,
+                0.9504985808937344,
+                -0.12800179676929513,
+                -0.2831395199240631,
+                0.0,
+                0.29724380340383294,
+                0.10903076189853939,
+                0.9485559626600043,
+                0.0,
+                69.44983168859847,
+                114.99034345217423,
+                5.477698386209184,
+                1.0
+            ],
+            "parent": "L_pinky03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_pinky03_JNT": {
+            "joint_matrix": [
+                -0.09054594997580165,
+                -0.9857625642027881,
+                0.14168132537255412,
+                0.0,
+                0.9504985808937344,
+                -0.12800179676929513,
+                -0.2831395199240631,
+                0.0,
+                0.29724380340383294,
+                0.10903076189853939,
+                0.9485559626600043,
+                0.0,
+                69.8343053290129,
+                119.17606044718187,
+                4.876095167520482,
+                1.0
+            ],
+            "parent": "L_pinky02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_pinky04End_JNT"
+            ]
+        },
+        "L_pinky02_JNT": {
+            "joint_matrix": [
+                -0.009250005019440746,
+                -0.9930832362405686,
+                0.11704752583929008,
+                0.0,
+                0.9547568060742817,
+                -0.04356579917530451,
+                -0.29417930314189883,
+                0.0,
+                0.29724380340383294,
+                0.10903076189853939,
+                0.9485559626600043,
+                0.0,
+                69.86566361114117,
+                122.54269476076999,
+                4.479294373356839,
+                1.0
+            ],
+            "parent": "L_pinky01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_pinky03_JNT",
+                "L_pinky04End_JNT"
+            ]
+        },
+        "L_pinky01_JNT": {
+            "joint_matrix": [
+                0.09497682225459365,
+                -0.9919078084692602,
+                0.08425142569789935,
+                0.0,
+                0.9500660632674144,
+                0.06504761684745515,
+                -0.30519384490848406,
+                0.0,
+                0.29724380340383294,
+                0.10903076189853939,
+                0.9485559626600043,
+                0.0,
+                69.30823405867552,
+                128.36431221055437,
+                3.9848133683436027,
+                1.0
+            ],
+            "parent": "L_pinky00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_pinky02_JNT",
+                "L_pinky03_JNT",
+                "L_pinky04End_JNT"
+            ]
+        },
+        "L_pinky00_JNT": {
+            "joint_matrix": [
+                0.10522247842096333,
+                -0.9894029703042359,
+                0.10004994946578022,
+                0.0,
+                0.9495442499950243,
+                0.07007010723011498,
+                -0.3057055730178089,
+                0.0,
+                0.2954554912949438,
+                0.12716895228755895,
+                0.9468548517263604,
+                0.0,
+                68.76350445929735,
+                133.48638395535002,
+                3.46686159883429,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_pinky01_JNT",
+                "L_pinky02_JNT",
+                "L_pinky03_JNT",
+                "L_pinky04End_JNT"
+            ]
+        },
+        "R_clavicle_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -1.0,
+                -1.2246467991473532e-16,
+                0.0,
+                0.0,
+                1.2246467991473532e-16,
+                -1.0,
+                0.0,
+                -3.44785,
+                211.755,
+                -11.6846,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_thumb03End_JNT": {
+            "joint_matrix": [
+                -0.19509539430148803,
+                0.6050654884186428,
+                -0.7719025468587702,
+                0.0,
+                -0.06204594578325408,
+                -0.7930634456958587,
+                -0.6059708505471804,
+                0.0,
+                -0.9788197422070155,
+                -0.07032869845035515,
+                0.1922648861338715,
+                0.0,
+                -63.693400000000025,
+                130.016,
+                21.977300000000028,
+                1.0
+            ],
+            "parent": "R_thumb02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_thumb02_JNT": {
+            "joint_matrix": [
+                -0.19509539430148803,
+                0.6050654884186428,
+                -0.7719025468587702,
+                0.0,
+                -0.06204594578325408,
+                -0.7930634456958587,
+                -0.6059708505471804,
+                0.0,
+                -0.9788197422070155,
+                -0.07032869845035515,
+                0.1922648861338715,
+                0.0,
+                -64.6895,
+                133.106,
+                18.03610000000001,
+                1.0
+            ],
+            "parent": "R_thumb01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_thumb03End_JNT"
+            ]
+        },
+        "R_thumb01_JNT": {
+            "joint_matrix": [
+                -0.20365857931559717,
+                0.4301907890328954,
+                -0.8794652171077646,
+                0.0,
+                -0.02085893901770183,
+                -0.8999943106517585,
+                -0.4354022800325257,
+                0.0,
+                -0.9788197422070155,
+                -0.07032869845035515,
+                0.1922648861338715,
+                0.0,
+                -65.5847,
+                134.99700000000004,
+                14.170700000000004,
+                1.0
+            ],
+            "parent": "R_thumb00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_thumb02_JNT",
+                "R_thumb03End_JNT"
+            ]
+        },
+        "R_thumb00_JNT": {
+            "joint_matrix": [
+                -0.20365857931559717,
+                0.4301907890328954,
+                -0.8794652171077646,
+                0.0,
+                -0.02085893901770183,
+                -0.8999943106517585,
+                -0.4354022800325257,
+                0.0,
+                -0.9788197422070155,
+                -0.07032869845035515,
+                0.1922648861338715,
+                0.0,
+                -66.412,
+                136.744,
+                10.5979,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_thumb01_JNT",
+                "R_thumb02_JNT",
+                "R_thumb03End_JNT"
+            ]
+        },
+        "R_index04End_JNT": {
+            "joint_matrix": [
+                0.023561142166223917,
+                0.9252870250034239,
+                -0.3785350630260509,
+                0.0,
+                0.9957144709165494,
+                -0.05559030304678353,
+                -0.07390812279136355,
+                0.0,
+                -0.08942910592865999,
+                -0.3751714802160208,
+                -0.9226314515803808,
+                0.0,
+                -73.36779999999975,
+                114.84000000000005,
+                19.867599999999918,
+                1.0
+            ],
+            "parent": "R_index03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_index03_JNT": {
+            "joint_matrix": [
+                0.023561142166223917,
+                0.9252870250034239,
+                -0.3785350630260509,
+                0.0,
+                0.9957144709165494,
+                -0.05559030304678353,
+                -0.07390812279136355,
+                0.0,
+                -0.08942910592865999,
+                -0.3751714802160208,
+                -0.9226314515803808,
+                0.0,
+                -73.25950000000003,
+                119.09399999999984,
+                18.12709999999982,
+                1.0
+            ],
+            "parent": "R_index02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_index04End_JNT"
+            ]
+        },
+        "R_index02_JNT": {
+            "joint_matrix": [
+                0.05141301425043668,
+                0.9233692605014212,
+                -0.3804548734432813,
+                0.0,
+                0.9946653391862438,
+                -0.08145900314623727,
+                -0.06328739074994637,
+                0.0,
+                -0.08942910592865999,
+                -0.3751714802160208,
+                -0.9226314515803808,
+                0.0,
+                -73.03529999999985,
+                123.11999999999941,
+                16.468500000000024,
+                1.0
+            ],
+            "parent": "R_index01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_index03_JNT",
+                "R_index04End_JNT"
+            ]
+        },
+        "R_index01_JNT": {
+            "joint_matrix": [
+                0.24919427386828574,
+                0.8884526146143311,
+                -0.38542725053661797,
+                0.0,
+                0.964315637581419,
+                -0.2643828890406467,
+                0.014037061603581247,
+                0.0,
+                -0.08942910592865999,
+                -0.3751714802160208,
+                -0.9226314515803808,
+                0.0,
+                -71.17450000000002,
+                129.754,
+                13.590399999999969,
+                1.0
+            ],
+            "parent": "R_index00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_index02_JNT",
+                "R_index03_JNT",
+                "R_index04End_JNT"
+            ]
+        },
+        "R_index00_JNT": {
+            "joint_matrix": [
+                0.27563389877096023,
+                0.8759649136546159,
+                -0.3958679374417453,
+                0.0,
+                0.9554788787037676,
+                -0.29477233052400087,
+                0.013014818801678294,
+                0.0,
+                -0.10529038987159003,
+                -0.3818307782297161,
+                -0.9182152201946874,
+                0.0,
+                -69.3193,
+                135.65,
+                10.9259,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_index01_JNT",
+                "R_index02_JNT",
+                "R_index03_JNT",
+                "R_index04End_JNT"
+            ]
+        },
+        "R_middle04End_JNT": {
+            "joint_matrix": [
+                0.08126564488716638,
+                0.961197973181176,
+                -0.2636178129669395,
+                0.0,
+                0.9911203819404153,
+                -0.05000482928218936,
+                0.12320675935493364,
+                0.0,
+                0.10524392364102725,
+                -0.27128946422752664,
+                -0.9567265769987701,
+                0.0,
+                -73.65359999999997,
+                111.96,
+                15.033600000000039,
+                1.0
+            ],
+            "parent": "R_middle03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_middle03_JNT": {
+            "joint_matrix": [
+                0.08126564488716638,
+                0.961197973181176,
+                -0.2636178129669395,
+                0.0,
+                0.9911203819404153,
+                -0.05000482928218936,
+                0.12320675935493364,
+                0.0,
+                0.10524392364102725,
+                -0.27128946422752664,
+                -0.9567265769987701,
+                0.0,
+                -73.25960000000015,
+                116.61899999999974,
+                13.755700000000227,
+                1.0
+            ],
+            "parent": "R_middle02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_middle04End_JNT"
+            ]
+        },
+        "R_middle02_JNT": {
+            "joint_matrix": [
+                0.06675481452713333,
+                0.9618267463619075,
+                -0.26539235995091304,
+                0.0,
+                0.9922033618538539,
+                -0.03593517193514639,
+                0.11933629851768418,
+                0.0,
+                0.10524392364102725,
+                -0.27128946422752664,
+                -0.9567265769987701,
+                0.0,
+                -72.90340000000003,
+                121.75200000000005,
+                12.339400000000024,
+                1.0
+            ],
+            "parent": "R_middle01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_middle03_JNT",
+                "R_middle04End_JNT"
+            ]
+        },
+        "R_middle01_JNT": {
+            "joint_matrix": [
+                0.2031398538968428,
+                0.9476479157574178,
+                -0.24636888504718155,
+                0.0,
+                0.9734772294693961,
+                -0.1684204689453263,
+                0.15484388701148483,
+                0.0,
+                0.10524392364102725,
+                -0.27128946422752664,
+                -0.9567265769987701,
+                0.0,
+                -71.32230000000048,
+                129.12800000000001,
+                10.421799999999966,
+                1.0
+            ],
+            "parent": "R_middle00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_middle02_JNT",
+                "R_middle03_JNT",
+                "R_middle04End_JNT"
+            ]
+        },
+        "R_middle00_JNT": {
+            "joint_matrix": [
+                0.25082077105492695,
+                0.9382068651070783,
+                -0.23844667972811173,
+                0.0,
+                0.9622955145609138,
+                -0.2148718335778108,
+                0.16678560426744315,
+                0.0,
+                0.10524392364102725,
+                -0.27128946422752664,
+                -0.9567265769987701,
+                0.0,
+                -69.7622,
+                134.963,
+                8.93872,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_middle01_JNT",
+                "R_middle02_JNT",
+                "R_middle03_JNT",
+                "R_middle04End_JNT"
+            ]
+        },
+        "R_ring04End_JNT": {
+            "joint_matrix": [
+                0.06591369402078888,
+                0.9776259599698185,
+                -0.19975702073675625,
+                0.0,
+                0.9662743539762874,
+                -0.012593643956510019,
+                0.25720667366848327,
+                0.0,
+                0.24893625245882278,
+                -0.2099735281529262,
+                -0.9454849864946401,
+                0.0,
+                -72.1630000000001,
+                112.33599999999987,
+                10.03379999999998,
+                1.0
+            ],
+            "parent": "R_ring03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_ring03_JNT": {
+            "joint_matrix": [
+                0.06591369402078888,
+                0.9776259599698185,
+                -0.19975702073675625,
+                0.0,
+                0.9662743539762874,
+                -0.012593643956510019,
+                0.25720667366848327,
+                0.0,
+                0.24893625245882278,
+                -0.2099735281529262,
+                -0.9454849864946401,
+                0.0,
+                -71.87579999999983,
+                116.59500000000021,
+                9.163409999999956,
+                1.0
+            ],
+            "parent": "R_ring02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ring04End_JNT"
+            ]
+        },
+        "R_ring02_JNT": {
+            "joint_matrix": [
+                0.012526919619677876,
+                0.976832783752104,
+                -0.2136370493897473,
+                0.0,
+                0.9684388511199693,
+                0.04133799645214141,
+                0.24579943386988726,
+                0.0,
+                0.24893627282153244,
+                -0.20997352841831737,
+                -0.9454849810744145,
+                0.0,
+                -71.81009999999988,
+                121.71799999999975,
+                8.042980000000098,
+                1.0
+            ],
+            "parent": "R_ring01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ring03_JNT",
+                "R_ring04End_JNT"
+            ]
+        },
+        "R_ring01_JNT": {
+            "joint_matrix": [
+                0.10385530456209639,
+                0.9763748205096465,
+                -0.1894895395241373,
+                0.0,
+                0.9629355159033434,
+                -0.0510228109605641,
+                0.26486197343832657,
+                0.0,
+                0.24893627282153244,
+                -0.20997352841831737,
+                -0.9454849810744145,
+                0.0,
+                -71.07420000000052,
+                128.6369999999998,
+                6.70022,
+                1.0
+            ],
+            "parent": "R_ring00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ring02_JNT",
+                "R_ring03_JNT",
+                "R_ring04End_JNT"
+            ]
+        },
+        "R_ring00_JNT": {
+            "joint_matrix": [
+                0.3670100045273297,
+                0.9239896734736862,
+                -0.10745575783009619,
+                0.0,
+                0.9205571817821804,
+                -0.3441630085656906,
+                0.18473304686563866,
+                0.0,
+                0.13370913075066845,
+                -0.16671804596084724,
+                -0.9768965971406072,
+                0.0,
+                -69.8687,
+                134.3,
+                6.03604,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ring01_JNT",
+                "R_ring02_JNT",
+                "R_ring03_JNT",
+                "R_ring04End_JNT"
+            ]
+        },
+        "R_pinky04End_JNT": {
+            "joint_matrix": [
+                -0.0905459499758016,
+                0.985762564202788,
+                -0.14168132537255507,
+                0.0,
+                0.9504985808937347,
+                0.12800179676929546,
+                0.2831395199240624,
+                0.0,
+                0.29724380340383233,
+                -0.1090307618985404,
+                -0.9485559626600042,
+                0.0,
+                -69.44979999999995,
+                114.99000000000011,
+                5.477699999999994,
+                1.0
+            ],
+            "parent": "R_pinky03_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_pinky03_JNT": {
+            "joint_matrix": [
+                -0.0905459499758016,
+                0.985762564202788,
+                -0.14168132537255507,
+                0.0,
+                0.9504985808937347,
+                0.12800179676929546,
+                0.2831395199240624,
+                0.0,
+                0.29724380340383233,
+                -0.1090307618985404,
+                -0.9485559626600042,
+                0.0,
+                -69.83429999999991,
+                119.17599999999953,
+                4.876100000000055,
+                1.0
+            ],
+            "parent": "R_pinky02_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_pinky04End_JNT"
+            ]
+        },
+        "R_pinky02_JNT": {
+            "joint_matrix": [
+                -0.009250005019440108,
+                0.9930832362405685,
+                -0.1170475258392909,
+                0.0,
+                0.954756806074282,
+                0.043565799175304246,
+                0.2941793031418983,
+                0.0,
+                0.29724380340383233,
+                -0.1090307618985404,
+                -0.9485559626600042,
+                0.0,
+                -69.86569999999998,
+                122.54300000000002,
+                4.479290000000023,
+                1.0
+            ],
+            "parent": "R_pinky01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_pinky03_JNT",
+                "R_pinky04End_JNT"
+            ]
+        },
+        "R_pinky01_JNT": {
+            "joint_matrix": [
+                0.09497682225459422,
+                0.9919078084692601,
+                -0.08425142569790026,
+                0.0,
+                0.9500660632674146,
+                -0.0650476168474553,
+                0.3051938449084836,
+                0.0,
+                0.29724380340383233,
+                -0.1090307618985404,
+                -0.9485559626600042,
+                0.0,
+                -69.30819999999996,
+                128.364,
+                3.984810000000013,
+                1.0
+            ],
+            "parent": "R_pinky00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_pinky02_JNT",
+                "R_pinky03_JNT",
+                "R_pinky04End_JNT"
+            ]
+        },
+        "R_pinky00_JNT": {
+            "joint_matrix": [
+                0.10522247842096355,
+                0.9894029703042359,
+                -0.10004994946578022,
+                0.0,
+                0.9495442499950245,
+                -0.07007010723011509,
+                0.30570557301780843,
+                0.0,
+                0.29545549129494325,
+                -0.127168952287559,
+                -0.9468548517263604,
+                0.0,
+                -68.7635,
+                133.486,
+                3.46686,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_pinky01_JNT",
+                "R_pinky02_JNT",
+                "R_pinky03_JNT",
+                "R_pinky04End_JNT"
+            ]
+        },
+        "L_jaw_JNT": {
+            "joint_matrix": [
+                0.9999999999141252,
+                -4.268146075070412e-06,
+                1.239081959647523e-05,
+                0.0,
+                4.268146075398062e-06,
+                0.9999999999908914,
+                -5.551115123125783e-17,
+                0.0,
+                -1.239081959636237e-05,
+                5.288591786722918e-11,
+                0.9999999999232339,
+                0.0,
+                7.7186365988709404,
+                127.74473546048297,
+                1.2253086988227766,
+                1.0
+            ],
+            "parent": "C_jaw_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_jaw_JNT": {
+            "joint_matrix": [
+                0.999999999975984,
+                -6.725459457609179e-06,
+                1.6734380680202176e-06,
+                0.0,
+                6.725459457618596e-06,
+                0.999999999977384,
+                0.0,
+                0.0,
+                -1.6734380679823724e-06,
+                1.125471937868383e-11,
+                0.9999999999985999,
+                0.0,
+                -7.719074055764209,
+                127.744872422666,
+                1.2250863330548518,
+                1.0
+            ],
+            "parent": "C_jaw_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_chin_JNT": {
+            "joint_matrix": [
+                0.9999999999759839,
+                -1.9058241313221758e-21,
+                6.930525092103181e-06,
+                0.0,
+                -4.2681590068264736e-06,
+                0.7878639750644904,
+                0.6158492971315003,
+                0.0,
+                -5.460311048348607e-06,
+                -0.6158492971462906,
+                0.7878639750455689,
+                0.0,
+                -1.9056208434148347e-16,
+                123.87628936767578,
+                10.557489395141612,
+                1.0
+            ],
+            "parent": "C_jaw_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "C_jaw_JNT": {
+            "joint_matrix": [
+                0.9999999999833237,
+                -1.8808638510879476e-06,
+                5.460311048348607e-06,
+                0.0,
+                -1.8808638510879476e-06,
+                0.7878639750622453,
+                0.6158492971462906,
+                0.0,
+                -5.460311048348607e-06,
+                -0.6158492971462906,
+                0.7878639750455689,
+                0.0,
+                -6.556510925292969e-05,
+                128.70250356134042,
+                0.0,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "C_chin_JNT",
+                "R_jaw_JNT",
+                "L_jaw_JNT"
+            ]
+        },
+        "L_eyeEnd_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.822916030883789,
+                135.23204040527344,
+                8.629577006663606,
+                1.0
+            ],
+            "parent": "L_eye_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "L_eye_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.822916030883789,
+                135.23204040527344,
+                7.193552017211914,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "L_eyeEnd_JNT"
+            ]
+        },
+        "C_nose_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                131.0,
+                10.0,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eyeEnd_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -4.82292,
+                135.232,
+                8.62958,
+                1.0
+            ],
+            "parent": "R_eye_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_eye_JNT": {
+            "joint_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -4.82292,
+                135.232,
+                7.19355,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_eyeEnd_JNT"
+            ]
+        },
+        "R_ear02_JNT": {
+            "joint_matrix": [
+                0.37065993238461414,
+                -0.8672815885020532,
+                0.33231590508127806,
+                0.0,
+                -0.6457512774965647,
+                -0.49781788461781457,
+                -0.5789496017497545,
+                0.0,
+                0.6675451311605741,
+                9.143478450532887e-16,
+                -0.7445693371767413,
+                0.0,
+                -10.83420000000001,
+                134.28500000000003,
+                -3.716889999999998,
+                1.0
+            ],
+            "parent": "R_ear01_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": []
+        },
+        "R_ear01_JNT": {
+            "joint_matrix": [
+                0.19107935016042643,
+                -0.9815189632431379,
+                -0.010450202695888477,
+                0.0,
+                -0.9800543677077285,
+                -0.1913648995874531,
+                0.05359954797280214,
+                0.0,
+                -0.05460877474613296,
+                9.399482948842987e-16,
+                -0.9985078275710844,
+                0.0,
+                -10.270700000000001,
+                131.391,
+                -3.7477100000000108,
+                1.0
+            ],
+            "parent": "R_ear00_JNT",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ear02_JNT"
+            ]
+        },
+        "R_ear00_JNT": {
+            "joint_matrix": [
+                0.3984476180283717,
+                -0.39287584146671306,
+                0.828787107090439,
+                0.0,
+                -0.17022823604408008,
+                -0.9195915251848628,
+                -0.35408159294363045,
+                0.0,
+                0.90125570363845,
+                -4.440892098500626e-16,
+                -0.4332876142461981,
+                0.0,
+                -8.91073,
+                130.05,
+                -0.919021,
+                1.0
+            ],
+            "parent": "C_guides_GRP",
+            "isLocator": false,
+            "isJoint": true,
+            "isCurve": false,
+            "isSurface": false,
+            "children": [
+                "R_ear01_JNT",
+                "R_ear02_JNT"
+            ]
+        },
+        "C_jawSlide_LOCShape": {
+            "locator_position": [
+                0.9999999999141252,
+                -4.268146075070413e-06,
+                1.239081959647518e-05,
+                0.0,
+                4.268146075398062e-06,
+                0.9999999999908914,
+                -3.2311742677852644e-27,
+                0.0,
+                -1.23908195963623e-05,
+                5.288582803166087e-11,
+                0.9999999999232322,
+                0.0,
+                12.80631542205808,
+                248.6265716552731,
+                2.0603196620936655,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "C_headRadius_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                9.700576782226562,
+                139.39971923828125,
+                -2.4365553855895996,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "L_heel_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999999999823544,
+                5.940630986364884e-06,
+                0.0,
+                0.0,
+                -5.940630986364884e-06,
+                0.9999999999823544,
+                0.0,
+                15.740996023425708,
+                0.0,
+                -12.0,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "R_heel_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999999999823544,
+                5.940630986364884e-06,
+                0.0,
+                0.0,
+                -5.940630986364884e-06,
+                0.9999999999823544,
+                0.0,
+                -15.741,
+                -3.856462564368631e-06,
+                -11.0,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "R_tip_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999999999823544,
+                5.940630986364884e-06,
+                0.0,
+                0.0,
+                -5.940630986364884e-06,
+                0.9999999999823544,
+                0.0,
+                -15.958353082183681,
+                2.4091409126866346,
+                30.67285497967178,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "L_tip_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.9999999999823544,
+                5.940630986364884e-06,
+                0.0,
+                0.0,
+                -5.940630986364884e-06,
+                0.9999999999823544,
+                0.0,
+                15.995014348933724,
+                2.4092035136758243,
+                30.667592035131545,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "R_bankOut_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000000000000002,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -24.5,
+                -6.993935445009924e-05,
+                9.83362905762232,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "R_bankIn_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000000000000002,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -9.0,
+                -6.993935445009924e-05,
+                9.83362905762232,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "L_bankIn_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000000000000002,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                9.0,
+                0.0,
+                9.83362905762232,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "L_bankOut_LOCShape": {
+            "locator_position": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0000000000000002,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                24.5,
+                0.0,
+                6.8336290576223195,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "R_legSettings_LOCShape": {
+            "locator_position": [
+                0.9999999999999841,
+                0.0,
+                -1.7819197093101368e-07,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.7819197093101368e-07,
+                0.0,
+                0.9999999999999841,
+                0.0,
+                -14.0,
+                120.0,
+                0.0,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "L_legSettings_LOCShape": {
+            "locator_position": [
+                0.9999999999999841,
+                0.0,
+                -1.7819197093101368e-07,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.7819197093101368e-07,
+                0.0,
+                0.9999999999999841,
+                0.0,
+                14.0,
+                120.0,
+                0.0,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "R_armSettings_LOCShape": {
+            "locator_position": [
+                0.9999999999999841,
+                0.0,
+                -1.7819197093101368e-07,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.7819197093101368e-07,
+                0.0,
+                0.9999999999999841,
+                0.0,
+                -30.0,
+                222.0,
+                -10.0,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "L_armSettings_LOCShape": {
+            "locator_position": [
+                0.9999999999999841,
+                0.0,
+                -1.7819197093101368e-07,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                1.7819197093101368e-07,
+                0.0,
+                0.9999999999999841,
+                0.0,
+                30.0,
+                222.0,
+                -9.999997179104424,
+                1.0
+            ],
+            "isLocator": true,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": false
+        },
+        "C_lowerLipLinear_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.948516607284546,
+                        127.0146484375,
+                        9.96749210357666
+                    ],
+                    [
+                        -2.7669947147369385,
+                        127.03160095214844,
+                        9.973355293273926
+                    ],
+                    [
+                        -2.5569539070129395,
+                        127.04817962646484,
+                        10.076986312866211
+                    ],
+                    [
+                        -2.222395896911621,
+                        127.0649185180664,
+                        10.291906356811523
+                    ],
+                    [
+                        -1.8450931310653687,
+                        127.07568359375,
+                        10.529504776000977
+                    ],
+                    [
+                        -1.4122238159179688,
+                        127.0588150024414,
+                        10.748866081237793
+                    ],
+                    [
+                        -0.9443573951721191,
+                        127.0271987915039,
+                        10.928400039672852
+                    ],
+                    [
+                        -0.4353001117706299,
+                        127.00888061523438,
+                        11.057317733764648
+                    ],
+                    [
+                        2.2861098300315896e-17,
+                        126.99555206298828,
+                        11.10702896118164
+                    ],
+                    [
+                        0.4353001117706299,
+                        127.00888061523438,
+                        11.057317733764648
+                    ],
+                    [
+                        0.9443573951721191,
+                        127.0271987915039,
+                        10.928400039672852
+                    ],
+                    [
+                        1.4122238159179688,
+                        127.0588150024414,
+                        10.748866081237793
+                    ],
+                    [
+                        1.8450931310653687,
+                        127.07568359375,
+                        10.529504776000977
+                    ],
+                    [
+                        2.222395896911621,
+                        127.0649185180664,
+                        10.291906356811523
+                    ],
+                    [
+                        2.5569539070129395,
+                        127.04817962646484,
+                        10.076986312866211
+                    ],
+                    [
+                        2.7669947147369385,
+                        127.03160095214844,
+                        9.973355293273926
+                    ],
+                    [
+                        2.948516607284546,
+                        127.0146484375,
+                        9.96749210357666
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0,
+                    15.0,
+                    16.0
+                ],
+                "degree": 1
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "C_upperLipLinear_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.948516607284546,
+                        127.0146484375,
+                        9.96749210357666
+                    ],
+                    [
+                        -2.7671639919281006,
+                        127.04270935058594,
+                        9.988258361816406
+                    ],
+                    [
+                        -2.5578272342681885,
+                        127.05990600585938,
+                        10.10410213470459
+                    ],
+                    [
+                        -2.252760648727417,
+                        127.08321380615234,
+                        10.311448097229004
+                    ],
+                    [
+                        -1.841637134552002,
+                        127.09730529785156,
+                        10.587985038757324
+                    ],
+                    [
+                        -1.40030837059021,
+                        127.09375,
+                        10.852946281433105
+                    ],
+                    [
+                        -0.9411649703979492,
+                        127.06398010253906,
+                        11.03847885131836
+                    ],
+                    [
+                        -0.43246814608573914,
+                        127.03602600097656,
+                        11.152970314025879
+                    ],
+                    [
+                        -1.6411080711572817e-16,
+                        127.02133178710938,
+                        11.172470092773438
+                    ],
+                    [
+                        0.43246814608573914,
+                        127.03602600097656,
+                        11.152970314025879
+                    ],
+                    [
+                        0.9411649703979492,
+                        127.06398010253906,
+                        11.03847885131836
+                    ],
+                    [
+                        1.40030837059021,
+                        127.09375,
+                        10.852946281433105
+                    ],
+                    [
+                        1.841637134552002,
+                        127.09730529785156,
+                        10.587985038757324
+                    ],
+                    [
+                        2.252760648727417,
+                        127.08321380615234,
+                        10.311448097229004
+                    ],
+                    [
+                        2.5578272342681885,
+                        127.05990600585938,
+                        10.10410213470459
+                    ],
+                    [
+                        2.7671639919281006,
+                        127.04270935058594,
+                        9.988258361816406
+                    ],
+                    [
+                        2.948516607284546,
+                        127.0146484375,
+                        9.96749210357666
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0,
+                    15.0,
+                    16.0
+                ],
+                "degree": 1
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "L_eyelidBlinkRef_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        2.6066889510663476,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        2.9479322566287505,
+                        134.22985446339925,
+                        8.598418933164197
+                    ],
+                    [
+                        3.651830301720695,
+                        134.0074171780121,
+                        8.87201287013892
+                    ],
+                    [
+                        4.857450001760924,
+                        133.98237683371914,
+                        8.5801636901573
+                    ],
+                    [
+                        5.97367110450204,
+                        134.23481322197605,
+                        7.9253504358793005
+                    ],
+                    [
+                        6.645546253282764,
+                        134.63434904761974,
+                        7.440171580996674
+                    ],
+                    [
+                        6.992307186126709,
+                        135.00015355075723,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "degree": 3
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "L_eyelidDownBlink_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        2.6066038608551025,
+                        134.77821350097653,
+                        8.505008697509766
+                    ],
+                    [
+                        2.730610450854582,
+                        133.9309398499481,
+                        8.713993234555195
+                    ],
+                    [
+                        3.122309360299461,
+                        133.09447422441968,
+                        9.471846055983136
+                    ],
+                    [
+                        5.7827202853085975,
+                        132.46696450423846,
+                        8.995272744384232
+                    ],
+                    [
+                        7.010775930265665,
+                        133.13234098268455,
+                        7.803002481705158
+                    ],
+                    [
+                        7.12104550619488,
+                        134.29443775470395,
+                        7.409524229917532
+                    ],
+                    [
+                        6.984379367071238,
+                        134.9978790283203,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "degree": 3
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "L_eyelidLowerLinear_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        2.6066038608551025,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        2.605193614959717,
+                        134.16490173339844,
+                        8.363972663879395
+                    ],
+                    [
+                        2.705217123031616,
+                        134.02981567382812,
+                        8.398287773132324
+                    ],
+                    [
+                        2.9859161376953125,
+                        133.89822387695312,
+                        8.538137435913086
+                    ],
+                    [
+                        3.4090585708618164,
+                        133.80123901367188,
+                        8.68350887298584
+                    ],
+                    [
+                        3.993520975112915,
+                        133.7008819580078,
+                        8.789002418518066
+                    ],
+                    [
+                        4.621000289916992,
+                        133.6350860595703,
+                        8.74948787689209
+                    ],
+                    [
+                        5.122517108917236,
+                        133.6425018310547,
+                        8.626585006713867
+                    ],
+                    [
+                        5.599382400512695,
+                        133.716552734375,
+                        8.453248023986816
+                    ],
+                    [
+                        5.974175453186035,
+                        133.8594207763672,
+                        8.256747245788574
+                    ],
+                    [
+                        6.292105674743652,
+                        134.0240936279297,
+                        8.0457763671875
+                    ],
+                    [
+                        6.545175552368164,
+                        134.2222442626953,
+                        7.822386741638184
+                    ],
+                    [
+                        6.750723838806152,
+                        134.4652099609375,
+                        7.583728790283203
+                    ],
+                    [
+                        6.903851509094238,
+                        134.7351837158203,
+                        7.354720592498779
+                    ],
+                    [
+                        6.992307186126709,
+                        134.9978790283203,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0
+                ],
+                "degree": 1
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "L_eyelidUpBlink_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        2.6066889510663476,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        2.859583777648496,
+                        135.4601118823826,
+                        8.991865053467729
+                    ],
+                    [
+                        2.8201277233262525,
+                        136.69989568736446,
+                        9.336598874997692
+                    ],
+                    [
+                        4.857450001760924,
+                        137.8052575941385,
+                        9.042587599551089
+                    ],
+                    [
+                        7.10958107565642,
+                        137.24089922519997,
+                        7.69793450289378
+                    ],
+                    [
+                        7.0108776707688785,
+                        135.8144267292563,
+                        7.368053810945815
+                    ],
+                    [
+                        6.992307186126709,
+                        134.99787902832028,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "degree": 3
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "L_eyelidUpperLinear_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        2.6066038608551025,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        2.9002304077148438,
+                        135.50341796875,
+                        8.86219596862793
+                    ],
+                    [
+                        3.392069101333618,
+                        136.02423095703125,
+                        9.133597373962402
+                    ],
+                    [
+                        4.039731025695801,
+                        136.41029357910156,
+                        9.21334171295166
+                    ],
+                    [
+                        4.644146919250488,
+                        136.58160400390625,
+                        9.106599807739258
+                    ],
+                    [
+                        5.183096885681152,
+                        136.62445068359375,
+                        8.924226760864258
+                    ],
+                    [
+                        5.653476238250732,
+                        136.55609130859375,
+                        8.697717666625977
+                    ],
+                    [
+                        6.026376247406006,
+                        136.43223571777344,
+                        8.465936660766602
+                    ],
+                    [
+                        6.321962833404541,
+                        136.2789764404297,
+                        8.23774242401123
+                    ],
+                    [
+                        6.555800914764404,
+                        136.11611938476562,
+                        8.012720108032227
+                    ],
+                    [
+                        6.73940372467041,
+                        135.9111328125,
+                        7.7563323974609375
+                    ],
+                    [
+                        6.865873336791992,
+                        135.70816040039062,
+                        7.515961647033691
+                    ],
+                    [
+                        6.960838794708252,
+                        135.4817657470703,
+                        7.266743183135986
+                    ],
+                    [
+                        7.008184432983398,
+                        135.27490234375,
+                        7.108874320983887
+                    ],
+                    [
+                        6.992307186126709,
+                        134.9978790283203,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0
+                ],
+                "degree": 1
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "R_eyelidBlinkRef_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.6066889510663476,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        -2.9479322566287505,
+                        134.22985446339925,
+                        8.598418933164197
+                    ],
+                    [
+                        -3.651830301720695,
+                        134.0074171780121,
+                        8.87201287013892
+                    ],
+                    [
+                        -4.857450001760924,
+                        133.98237683371914,
+                        8.5801636901573
+                    ],
+                    [
+                        -5.97367110450204,
+                        134.23481322197605,
+                        7.9253504358793005
+                    ],
+                    [
+                        -6.645546253282764,
+                        134.63434904761974,
+                        7.440171580996674
+                    ],
+                    [
+                        -6.992307186126709,
+                        135.00015355075723,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "degree": 3
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "R_eyelidDownBlink_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.6066038608551025,
+                        134.77821350097653,
+                        8.505008697509766
+                    ],
+                    [
+                        -2.730610450854582,
+                        133.9309398499481,
+                        8.713993234555195
+                    ],
+                    [
+                        -3.122309360299461,
+                        133.09447422441968,
+                        9.471846055983136
+                    ],
+                    [
+                        -5.7827202853085975,
+                        132.46696450423846,
+                        8.995272744384232
+                    ],
+                    [
+                        -7.010775930265665,
+                        133.13234098268455,
+                        7.803002481705158
+                    ],
+                    [
+                        -7.12104550619488,
+                        134.29443775470395,
+                        7.409524229917532
+                    ],
+                    [
+                        -6.984379367071238,
+                        134.9978790283203,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "degree": 3
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "R_eyelidLowerLinear_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.6066038608551025,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        -2.605193614959717,
+                        134.16490173339844,
+                        8.363972663879395
+                    ],
+                    [
+                        -2.705217123031616,
+                        134.02981567382812,
+                        8.398287773132324
+                    ],
+                    [
+                        -2.9859161376953125,
+                        133.89822387695312,
+                        8.538137435913086
+                    ],
+                    [
+                        -3.4090585708618164,
+                        133.80123901367188,
+                        8.68350887298584
+                    ],
+                    [
+                        -3.993520975112915,
+                        133.7008819580078,
+                        8.789002418518066
+                    ],
+                    [
+                        -4.621000289916992,
+                        133.6350860595703,
+                        8.74948787689209
+                    ],
+                    [
+                        -5.122517108917236,
+                        133.6425018310547,
+                        8.626585006713867
+                    ],
+                    [
+                        -5.599382400512695,
+                        133.716552734375,
+                        8.453248023986816
+                    ],
+                    [
+                        -5.974175453186035,
+                        133.8594207763672,
+                        8.256747245788574
+                    ],
+                    [
+                        -6.292105674743652,
+                        134.0240936279297,
+                        8.0457763671875
+                    ],
+                    [
+                        -6.545175552368164,
+                        134.2222442626953,
+                        7.822386741638184
+                    ],
+                    [
+                        -6.750723838806152,
+                        134.4652099609375,
+                        7.583728790283203
+                    ],
+                    [
+                        -6.903851509094238,
+                        134.7351837158203,
+                        7.354720592498779
+                    ],
+                    [
+                        -6.992307186126709,
+                        134.9978790283203,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0
+                ],
+                "degree": 1
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "R_eyelidUpBlink_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.6066889510663476,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        -2.859583777648496,
+                        135.4601118823826,
+                        8.991865053467729
+                    ],
+                    [
+                        -2.8201277233262525,
+                        136.69989568736446,
+                        9.336598874997692
+                    ],
+                    [
+                        -4.857450001760924,
+                        137.8052575941385,
+                        9.042587599551089
+                    ],
+                    [
+                        -7.10958107565642,
+                        137.24089922519997,
+                        7.69793450289378
+                    ],
+                    [
+                        -7.0108776707688785,
+                        135.8144267292563,
+                        7.368053810945815
+                    ],
+                    [
+                        -6.992307186126709,
+                        134.99787902832028,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "degree": 3
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "R_eyelidUpperLinear_CRVShape": {
+            "curve_data": {
+                "cvs": [
+                    [
+                        -2.6066038608551025,
+                        134.77821350097656,
+                        8.505008697509766
+                    ],
+                    [
+                        -2.9002304077148438,
+                        135.50341796875,
+                        8.86219596862793
+                    ],
+                    [
+                        -3.392069101333618,
+                        136.02423095703125,
+                        9.133597373962402
+                    ],
+                    [
+                        -4.039731025695801,
+                        136.41029357910156,
+                        9.21334171295166
+                    ],
+                    [
+                        -4.644146919250488,
+                        136.58160400390625,
+                        9.106599807739258
+                    ],
+                    [
+                        -5.183096885681152,
+                        136.62445068359375,
+                        8.924226760864258
+                    ],
+                    [
+                        -5.653476238250732,
+                        136.55609130859375,
+                        8.697717666625977
+                    ],
+                    [
+                        -6.026376247406006,
+                        136.43223571777344,
+                        8.465936660766602
+                    ],
+                    [
+                        -6.321962833404541,
+                        136.2789764404297,
+                        8.23774242401123
+                    ],
+                    [
+                        -6.555800914764404,
+                        136.11611938476562,
+                        8.012720108032227
+                    ],
+                    [
+                        -6.73940372467041,
+                        135.9111328125,
+                        7.7563323974609375
+                    ],
+                    [
+                        -6.865873336791992,
+                        135.70816040039062,
+                        7.515961647033691
+                    ],
+                    [
+                        -6.960838794708252,
+                        135.4817657470703,
+                        7.266743183135986
+                    ],
+                    [
+                        -7.008184432983398,
+                        135.27490234375,
+                        7.108874320983887
+                    ],
+                    [
+                        -6.992307186126709,
+                        134.9978790283203,
+                        7.17457389831543
+                    ]
+                ],
+                "form": "open",
+                "knots": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
+                    11.0,
+                    12.0,
+                    13.0,
+                    14.0
+                ],
+                "degree": 1
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": true,
+            "isSurface": false
+        },
+        "C_eyebrowSlide_NURBShape": {
+            "surface_data": {
+                "degreeInU": 3,
+                "degreeInV": 3,
+                "formInU": "open",
+                "formInV": "open",
+                "knotsInU": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "knotsInV": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    4.0,
+                    4.0
+                ],
+                "numCVsInU": 7,
+                "numCVsInV": 7,
+                "isRational": false,
+                "cvs": [
+                    [
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353774
+                        ]
+                    ],
+                    [
+                        [
+                            -10.53646883263292,
+                            137.48857160443063,
+                            0.7933575481637489
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.38410436242566,
+                            1.1193048158842571
+                        ],
+                        [
+                            -10.53646883263292,
+                            140.57826738348976,
+                            0.9444812182281166
+                        ],
+                        [
+                            -10.53646883263292,
+                            142.4201696774997,
+                            -1.7195753097536342
+                        ],
+                        [
+                            -10.53646883263292,
+                            141.60050867913793,
+                            -4.852937257043777
+                        ],
+                        [
+                            -10.53646883263292,
+                            139.59846307136974,
+                            -5.767665652644716
+                        ],
+                        [
+                            -10.53646883263292,
+                            138.64545701578737,
+                            -5.767665652644718
+                        ]
+                    ],
+                    [
+                        [
+                            -8.852645001272936,
+                            135.07827865301212,
+                            7.415583006456761
+                        ],
+                        [
+                            -8.85264500127294,
+                            137.83959368569967,
+                            8.420619485786855
+                        ],
+                        [
+                            -8.85264500127294,
+                            144.60514779875766,
+                            7.8815626796938965
+                        ],
+                        [
+                            -8.256499462555217,
+                            150.28452965026958,
+                            -0.3328764605506085
+                        ],
+                        [
+                            -8.256499462555217,
+                            147.75716008586485,
+                            -9.994387299388613
+                        ],
+                        [
+                            -8.256499462555217,
+                            141.5839870963771,
+                            -12.814890789684256
+                        ],
+                        [
+                            -8.256499462555217,
+                            138.64545701578737,
+                            -12.814890789684256
+                        ]
+                    ],
+                    [
+                        [
+                            6.732907620425041e-16,
+                            133.6270998482948,
+                            11.40266400400876
+                        ],
+                        [
+                            5.995204968535454e-16,
+                            137.51175704138555,
+                            12.816563592621911
+                        ],
+                        [
+                            6.390875815865269e-16,
+                            147.02963462486275,
+                            12.058210824290569
+                        ],
+                        [
+                            1.1583925857044786e-15,
+                            155.01946964934078,
+                            0.5020212133213606
+                        ],
+                        [
+                            1.819797584086881e-15,
+                            151.46393026258428,
+                            -13.089929408729635
+                        ],
+                        [
+                            2.0128828207082054e-15,
+                            142.77942285436322,
+                            -17.05785376434019
+                        ],
+                        [
+                            2.0128828207082054e-15,
+                            138.64545701578737,
+                            -17.057853764340198
+                        ]
+                    ],
+                    [
+                        [
+                            8.852645001272943,
+                            135.07827865301212,
+                            7.415583006456761
+                        ],
+                        [
+                            8.852645001272942,
+                            137.83959368569967,
+                            8.420619485786858
+                        ],
+                        [
+                            8.852645001272942,
+                            144.60514779875766,
+                            7.8815626796938965
+                        ],
+                        [
+                            8.256499462555224,
+                            150.28452965026958,
+                            -0.3328764605506085
+                        ],
+                        [
+                            8.256499462555224,
+                            147.75716008586485,
+                            -9.99438729938861
+                        ],
+                        [
+                            8.256499462555224,
+                            141.5839870963771,
+                            -12.814890789684256
+                        ],
+                        [
+                            8.256499462555224,
+                            138.64545701578737,
+                            -12.814890789684256
+                        ]
+                    ],
+                    [
+                        [
+                            10.53646883263292,
+                            137.48857160443063,
+                            0.7933575481637463
+                        ],
+                        [
+                            10.53646883263292,
+                            138.38410436242566,
+                            1.119304815884255
+                        ],
+                        [
+                            10.53646883263292,
+                            140.57826738348976,
+                            0.9444812182281126
+                        ],
+                        [
+                            10.53646883263292,
+                            142.4201696774997,
+                            -1.7195753097536355
+                        ],
+                        [
+                            10.53646883263292,
+                            141.60050867913793,
+                            -4.852937257043772
+                        ],
+                        [
+                            10.53646883263292,
+                            139.59846307136974,
+                            -5.7676656526447125
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -5.7676656526447125
+                        ]
+                    ],
+                    [
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ],
+                        [
+                            10.53646883263292,
+                            138.64545701578737,
+                            -2.3851589964353797
+                        ]
+                    ]
+                ]
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": true
+        },
+        "C_jaw_NURBShape": {
+            "surface_data": {
+                "degreeInU": 3,
+                "degreeInV": 3,
+                "formInU": "open",
+                "formInV": "open",
+                "knotsInU": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.25,
+                    0.5,
+                    0.75,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "knotsInV": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.25,
+                    0.5,
+                    0.75,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "numCVsInU": 7,
+                "numCVsInV": 7,
+                "isRational": false,
+                "cvs": [
+                    [
+                        [
+                            6.548358883499663,
+                            121.39866694913688,
+                            1.0038593303353576
+                        ],
+                        [
+                            6.548344283318651,
+                            121.39866694913688,
+                            3.4008540889154517
+                        ],
+                        [
+                            5.124851357200252,
+                            121.39866694913688,
+                            8.394813778290123
+                        ],
+                        [
+                            -0.029980694186674373,
+                            121.39866694913688,
+                            11.401502129901083
+                        ],
+                        [
+                            -5.184776117100308,
+                            121.39866694913688,
+                            8.394685678835751
+                        ],
+                        [
+                            -6.608208206228282,
+                            121.39866694913688,
+                            3.4006906157735237
+                        ],
+                        [
+                            -6.6081936060472835,
+                            121.39866694913688,
+                            1.0036958571934262
+                        ]
+                    ],
+                    [
+                        [
+                            6.685068319910315,
+                            122.56397887537244,
+                            1.0038595990301038
+                        ],
+                        [
+                            6.68505367173376,
+                            122.56397887537244,
+                            3.450668593183712
+                        ],
+                        [
+                            5.2319783128129105,
+                            122.56397887537244,
+                            8.548412834114096
+                        ],
+                        [
+                            -0.029980902382597874,
+                            122.56397887537244,
+                            11.61758716622315
+                        ],
+                        [
+                            -5.2919033686951,
+                            122.56397887537244,
+                            8.548284313555081
+                        ],
+                        [
+                            -6.744917690634484,
+                            122.56397887537244,
+                            3.450504582652292
+                        ],
+                        [
+                            -6.744903042457927,
+                            122.56397887537244,
+                            1.0036955884986851
+                        ]
+                    ],
+                    [
+                        [
+                            6.958487192731631,
+                            124.89460272784315,
+                            1.0038601364195965
+                        ],
+                        [
+                            6.958472448563965,
+                            124.89460272784315,
+                            3.5502976017202297
+                        ],
+                        [
+                            5.446232224038229,
+                            124.89460272784315,
+                            8.855610945762066
+                        ],
+                        [
+                            -0.029981318774447097,
+                            124.89460272784315,
+                            12.049757238867286
+                        ],
+                        [
+                            -5.506157871884652,
+                            124.89460272784315,
+                            8.855481582993743
+                        ],
+                        [
+                            -7.018336659446911,
+                            124.89460272784315,
+                            3.550132516409822
+                        ],
+                        [
+                            -7.01832191527925,
+                            124.89460272784315,
+                            1.003695051109185
+                        ]
+                    ],
+                    [
+                        [
+                            7.398440287495509,
+                            128.4330259183689,
+                            1.0038620651253873
+                        ],
+                        [
+                            7.39842519881311,
+                            128.4330259183689,
+                            3.7106098036542043
+                        ],
+                        [
+                            5.790983521214041,
+                            128.4330259183689,
+                            9.349918403391403
+                        ],
+                        [
+                            -0.029982813216338222,
+                            128.4330259183689,
+                            12.745153862232005
+                        ],
+                        [
+                            -5.8509112936365435,
+                            128.4330259183689,
+                            9.349786017910514
+                        ],
+                        [
+                            -7.458290098725557,
+                            128.4330259183689,
+                            3.710440860932212
+                        ],
+                        [
+                            -7.458275010043142,
+                            128.4330259183689,
+                            1.003693122403398
+                        ]
+                    ],
+                    [
+                        [
+                            7.420846384812712,
+                            131.37662534342041,
+                            1.0038482771295154
+                        ],
+                        [
+                            7.420833759008719,
+                            131.37662534342041,
+                            3.718760357779452
+                        ],
+                        [
+                            5.808548793660166,
+                            131.37662534342041,
+                            9.375081798817664
+                        ],
+                        [
+                            -0.02997212970061358,
+                            131.37662534342041,
+                            12.780569284018114
+                        ],
+                        [
+                            -5.86846137784282,
+                            131.37662534342041,
+                            9.374971022204488
+                        ],
+                        [
+                            -7.480693733164334,
+                            131.37662534342041,
+                            3.7186189910492136
+                        ],
+                        [
+                            -7.4806811073603425,
+                            131.37662534342041,
+                            1.0037069103992702
+                        ]
+                    ],
+                    [
+                        [
+                            7.455666973378786,
+                            133.36734990133536,
+                            1.0038398335466312
+                        ],
+                        [
+                            7.4556558558083434,
+                            133.36734990133536,
+                            3.731439853282417
+                        ],
+                        [
+                            5.835839262182808,
+                            133.36734990133536,
+                            9.414197589206776
+                        ],
+                        [
+                            -0.029965587259537463,
+                            133.36734990133536,
+                            12.835607241474495
+                        ],
+                        [
+                            -5.895742545292048,
+                            133.36734990133536,
+                            9.414100045572972
+                        ],
+                        [
+                            -7.515512813496871,
+                            133.36734990133536,
+                            3.7313153737179396
+                        ],
+                        [
+                            -7.515501695926426,
+                            133.36734990133536,
+                            1.0037153539821548
+                        ]
+                    ],
+                    [
+                        [
+                            7.4730772676618304,
+                            134.36271218029273,
+                            1.003835611755189
+                        ],
+                        [
+                            7.473066904208153,
+                            134.36271218029273,
+                            3.737779601033897
+                        ],
+                        [
+                            5.849484496444126,
+                            134.36271218029273,
+                            9.433755484401331
+                        ],
+                        [
+                            -0.029962316038999237,
+                            134.36271218029273,
+                            12.86312622020267
+                        ],
+                        [
+                            -5.909383129016658,
+                            134.36271218029273,
+                            9.433664557257245
+                        ],
+                        [
+                            -7.532922353663137,
+                            134.36271218029273,
+                            3.7376635650523067
+                        ],
+                        [
+                            -7.532911990209472,
+                            134.36271218029273,
+                            1.0037195757735955
+                        ]
+                    ]
+                ]
+            },
+            "isLocator": false,
+            "isJoint": false,
+            "isCurve": false,
+            "isSurface": true
+        }
+    }
+}

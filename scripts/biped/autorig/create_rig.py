@@ -63,7 +63,7 @@ class AutoRig(object):
         
         self.basic_structure()
         self.make_rig()
-        self.space_switches()
+        # self.space_switches()
         self.label_joints()
         self.hide_connections()
         self.inherit_transforms()
@@ -84,16 +84,16 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
         # ---- Body mechanics  ----
-        spine_module.SpineModule().make("C")
-        arm_module.ArmModule().make("L")
-        arm_module.ArmModule().make("R")
-        clavicle_module.ClavicleModule().make("L")
-        clavicle_module.ClavicleModule().make("R")
-        leg_module.LegModule().make("L")
-        leg_module.LegModule().make("R")
+        # spine_module.SpineModule().make("C")
+        # arm_module.ArmModule().make("L")
+        # arm_module.ArmModule().make("R")
+        # clavicle_module.ClavicleModule().make("L")
+        # clavicle_module.ClavicleModule().make("R")
+        # leg_module.LegModule().make("L")
+        # leg_module.LegModule().make("R")
         neck_module.NeckModule().make("C")
-        fingers_module.FingersModule().make("L")
-        fingers_module.FingersModule().make("R")
+        # fingers_module.FingersModule().make("L")
+        # fingers_module.FingersModule().make("R")
 
         # ---- Facial  ----
         eyebrow_module.EyebrowModule().make("L")
@@ -220,7 +220,10 @@ class AutoRig(object):
 
         for node in all_nodes:
             if node not in skin_clusters:
-                cmds.connectAttr(float_math + ".outFloat", node + ".isHistoricallyInteresting", force=True)
+                if cmds.objectType(node) == "fourByFourMatrix":
+                    continue
+                else:
+                    cmds.connectAttr(float_math + ".outFloat", node + ".isHistoricallyInteresting", force=True)
 
         cmds.delete(float_math)
 

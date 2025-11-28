@@ -122,13 +122,15 @@ class EyebrowModule(object):
 
         if self.side == "L":
             distance = cmds.getAttr(f"{self.radius_loc}.translateX")
-            self.sphere = cmds.sphere(name="C_eyebrowSlide_NRB", sections=4, startSweep=160, radius=distance)[0]
-            cmds.parent(self.sphere, self.module_trn)
-            cmds.setAttr(f"{self.radius_loc}.translateX", 0)
-            cmds.matchTransform(self.sphere, self.radius_loc)
-            cmds.delete(self.radius_loc)
+            # self.sphere = cmds.sphere(name="C_eyebrowSlide_NRB", sections=4, startSweep=160, radius=distance)[0]
+            cmds.select(clear=True)
+            self.sphere = guides_manager.get_guides("C_eyebrowSlide_NURBShape", parent=self.module_trn)
+            # cmds.parent(self.sphere, self.module_trn)
+            # cmds.setAttr(f"{self.radius_loc}.translateX", 0)
+            # cmds.matchTransform(self.sphere, self.radius_loc)
+            # cmds.delete(self.radius_loc)
         
-        self.sphere = cmds.ls("C_eyebrowSlide_NRB", long=True)[0]
+        self.sphere = cmds.ls("C_eyebrowSlide_NURB", long=True)[0]
             
         self.main_eyebrow_nodes, self.main_eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrowMain", offset=["GRP", "OFF"])
         cmds.matchTransform(self.main_eyebrow_nodes[0], self.main_eyebrow)
