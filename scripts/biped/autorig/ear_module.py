@@ -102,6 +102,7 @@ class EarModule(object):
         """
         ear_controllers = []
         skinning_joints = []
+        local_trns = []
 
         cmds.select(clear=True)
 
@@ -113,14 +114,31 @@ class EarModule(object):
             local_grp = cmds.createNode("transform", name=guide.replace("_JNT", "Local_GRP"), ss=True, p=self.module_trn)
             local_trn = cmds.createNode("transform", name=guide.replace("_JNT", "Local_TRN"), ss=True, p=local_grp)
             cmds.matchTransform(local_grp, ctl)
-            jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT")) # Create skinning joint
+            jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint
             cmds.parent(nodes[0], self.controllers_grp)
-            cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix") # Connect matrix to local transform
-            cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
-            cmds.parent(jnt, self.skeleton_grp) # Parent skinning joint to skeleton group
+
+            mult_matrix_local = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMT"))
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix_local}.matrixIn[0]")
+            cmds.connectAttr(f"{nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_local}.matrixIn[1]")
+            cmds.connectAttr(f"{mult_matrix_local}.matrixSum", f"{local_trn}.offsetParentMatrix")
+
+            if i > 0:
+                cmds.parent(nodes[0], ear_controllers[i-1]) # Parent controller to previous controller
+                mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Parent_MMT"))
+                cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
+                cmds.connectAttr(f"{local_trns[i-1]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+                cmds.connectAttr(f"{ear_controllers[i-1]}.matrix", f"{mult_matrix}.matrixIn[2]")
+                cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{jnt}.offsetParentMatrix")
+                cmds.parent(jnt, skinning_joints[i-1]) # Parent skinning joint to previous skinning joint
+                
+            else:
+                cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
+
+            cmds.xform(jnt, m=om.MMatrix.kIdentity) # Reset joint transformations
 
             ear_controllers.append(ctl)
             skinning_joints.append(jnt)
+            local_trns.append(local_trn)
 
         for i, jnt in enumerate(skinning_joints): # Reset joint transformations
             

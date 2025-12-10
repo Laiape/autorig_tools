@@ -97,7 +97,8 @@ class EyebrowModule(object):
         eyebrows = guides_manager.get_guides(f"{self.side}_eyebrowMain_JNT")
         cmds.parent(eyebrows[0], self.module_trn)
         self.main_eyebrow = eyebrows[0]
-        self.eyebrows = sorted(eyebrows[1:], key=lambda x: om.MVector(cmds.xform(x, q=True, ws=True, t=True)).x)
+        self.eyebrows = sorted(eyebrows[1:])
+        print(self.eyebrows)
         cmds.select(clear=True)
 
         for jnt in self.eyebrows:
@@ -128,7 +129,7 @@ class EyebrowModule(object):
             # cmds.parent(self.sphere, self.module_trn)
             # cmds.setAttr(f"{self.radius_loc}.translateX", 0)
             # cmds.matchTransform(self.sphere, self.radius_loc)
-            # cmds.delete(self.radius_loc)
+            cmds.delete(self.radius_loc)
         
         self.sphere = cmds.ls("C_eyebrowSlide_NURB", long=True)[0]
             

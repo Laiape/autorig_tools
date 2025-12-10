@@ -66,6 +66,7 @@ class EyelidModule(object):
         self.create_blink_setup()
         self.fleshy_setup()
         self.skinning_joints()
+        self.sockets()
 
     def lock_attributes(self, ctl, attrs):
 
@@ -323,7 +324,7 @@ class EyelidModule(object):
         cmds.connectAttr(f"{self.eye_end_guide}.worldMatrix[0]", f"{aim_matrix}.primaryTargetMatrix")
         cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 0, 0, 1)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
-        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{mult_matrix_negate_head}.matrixIn[0]")
+        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[0]")
         cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[1]")
         cmds.connectAttr(f"{mult_matrix_negate_head}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
@@ -365,14 +366,18 @@ class EyelidModule(object):
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
         aim_eye_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eyeDirectEye_AIM", ss=True)
-        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{aim_eye_matrix}.inputMatrix")
+        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldMatrix[0]", f"{aim_eye_matrix}.inputMatrix")
         cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{aim_eye_matrix}.primaryTargetMatrix")
         cmds.setAttr(f"{aim_eye_matrix}.primaryInputAxis", 0, 0, 1)
-        cmds.setAttr(f"{aim_eye_matrix}.secondaryMode", 0)  # None
+        cmds.setAttr(f"{aim_eye_matrix}.secondaryMode", 2)
+        cmds.setAttr(f"{aim_eye_matrix}.secondaryInputAxis", 0, 1, 0)
+        cmds.setAttr(f"{aim_eye_matrix}.secondaryTargetVector", 0, 1, 0)
+        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{aim_eye_matrix}.secondaryTargetMatrix")
+
 
         mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEye_MMX", ss=True)
         cmds.connectAttr(f"{aim_eye_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{self.eye_guide}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix", force=True)
 
         mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEyeSkinning_MMX", ss=True)
@@ -533,6 +538,9 @@ class EyelidModule(object):
         upper_cvs = cmds.ls(f"{self.linear_upper_curve}.cv[*]", fl=True)
         lower_cvs = cmds.ls(f"{self.linear_lower_curve}.cv[*]", fl=True)
 
+        skinning_jnts = []
+        skinning_aims = []
+
         for i, cv in enumerate(upper_cvs + lower_cvs):
 
             cv_pos = cmds.xform(cv, q=True, t=True, ws=True)
@@ -599,9 +607,7 @@ class EyelidModule(object):
                 node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i - len(upper_cvs)}", offset=["GRP", "OFF"])
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{node[0]}.offsetParentMatrix")
-            decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{self.side}_{name}Eyelid0{i}_DECM", ss=True)
-            cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{decompose_matrix}.inputMatrix")
-            cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{node[0]}.rotate")
+
             mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_MMT", ss=True)
             cmds.connectAttr(f"{ctl}.matrix", f"{mult_matrix_skin}.matrixIn[0]")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skin}.matrixIn[1]")
@@ -613,12 +619,95 @@ class EyelidModule(object):
             cmds.delete(temp_trn)
             cmds.delete(four_by_four_matrix_temp)
 
-            cmds.setAttr(f"{mtp}.follow", 1) # Able follow
-            cmds.setAttr(f"{mtp}.frontAxis", 0) # X axis as front
-            cmds.setAttr(f"{mtp}.upAxis", 1) # Y axis as up
-            cmds.connectAttr(f"{mtp}.rotate", f"{skinning_jnt}.rotate", f=True)
-            cmds.connectAttr(f"{mtp}.rotate", f"{node[0]}.rotate", f=True)
+            aim_matrix_final = cmds.createNode("aimMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_AIM", ss=True)
+            cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{aim_matrix_final}.inputMatrix")
+            cmds.connectAttr(f"{self.eye_skinning_jnt}.worldMatrix[0]", f"{aim_matrix_final}.primaryTargetMatrix")
+            if cv in upper_cvs:
+                cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, -1, 0)
+            else:
+                cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, 1, 0)
+            cmds.setAttr(f"{aim_matrix_final}.secondaryMode", 1) # Aim
+            cmds.setAttr(f"{aim_matrix_final}.secondaryInputAxis", 1, 0, 0)
 
+            skinning_jnts.append(skinning_jnt)
+            skinning_aims.append(aim_matrix_final)
+
+        for i, (jnt, aim) in enumerate(zip(skinning_jnts, skinning_aims)):
+
+            if i == len(skinning_jnts) - 1:
+                
+                cmds.connectAttr(f"{skinning_jnts[i-1]}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
+                cmds.setAttr(f"{aim}.secondaryInputAxis", -1, 0, 0)
+            else:
+                cmds.connectAttr(f"{skinning_jnts[i+1]}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
+
+            cmds.connectAttr(f"{aim}.outputMatrix", f"{jnt}.offsetParentMatrix", f=True)
+        
+
+    def sockets(self):
+
+        """
+        Sockets for the eyelid module.
+        """
+        cmds.addAttr(self.eye_direct_ctl, ln="Sockets_Visibility", at="enum", en="None:Main:All", dv=1, k=True)
+        cmds.setAttr(f"{self.eye_direct_ctl}.Sockets_Visibility", keyable=False, channelBox=True)
+
+        cmds.select(cl=True)
+        upper_socket = guides_manager.get_guides(guide_export=f"{self.side}_upperSocket_JNT")[0]
+        cmds.select(cl=True)
+        lower_socket = guides_manager.get_guides(guide_export=f"{self.side}_lowerSocket_JNT")[0]
+        cmds.select(cl=True)
+        in_socket = guides_manager.get_guides(guide_export=f"{self.side}_inSocket_JNT")[0]
+        cmds.select(cl=True)
+        out_socket = guides_manager.get_guides(guide_export=f"{self.side}_outSocket_JNT")[0]
+        cmds.select(cl=True)
+        up_in_socket = guides_manager.get_guides(guide_export=f"{self.side}_upInSocket_JNT")[0]
+        cmds.select(cl=True)
+        up_out_socket = guides_manager.get_guides(guide_export=f"{self.side}_upOutSocket_JNT")[0]
+        cmds.select(cl=True)
+        down_in_socket = guides_manager.get_guides(guide_export=f"{self.side}_downInSocket_JNT")[0]
+        cmds.select(cl=True)
+        down_out_socket = guides_manager.get_guides(guide_export=f"{self.side}_downOutSocket_JNT")[0]
+        cmds.select(cl=True)
+
+        sockets = [upper_socket, lower_socket, in_socket, out_socket, up_in_socket, up_out_socket, down_in_socket, down_out_socket]
+        main_sockets = cmds.createNode("transform", name=f"{self.side}_mainEyelidSockets_GRP", ss=True, p=self.controllers_grp)
+        main_condition = cmds.createNode("condition", name=f"{self.side}_mainEyelidSockets_COND", ss=True)
+        cmds.setAttr(f"{main_condition}.operation", 3)  # Equal
+        cmds.setAttr(f"{main_condition}.secondTerm", 1)
+        cmds.setAttr(f"{main_condition}.colorIfTrueR", 1)
+        cmds.setAttr(f"{main_condition}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Sockets_Visibility", f"{main_condition}.firstTerm")
+        cmds.connectAttr(f"{main_condition}.outColorR", f"{main_sockets}.visibility", f=True)
+        secondary_sockets = cmds.createNode("transform", name=f"{self.side}_secondaryEyelidSockets_GRP", ss=True, p=self.controllers_grp)
+        secondary_condition = cmds.createNode("condition", name=f"{self.side}_secondaryEyelidSockets_COND", ss=True)
+        cmds.setAttr(f"{secondary_condition}.operation", 3)  # Equal
+        cmds.setAttr(f"{secondary_condition}.secondTerm", 2)
+        cmds.setAttr(f"{secondary_condition}.colorIfTrueR", 1)
+        cmds.setAttr(f"{secondary_condition}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Sockets_Visibility", f"{secondary_condition}.firstTerm")
+        cmds.connectAttr(f"{secondary_condition}.outColorR", f"{secondary_sockets}.visibility", f=True)
+        for i, socket in enumerate(sockets):
+            if i < 4:
+                grp, ctl = curve_tool.create_controller(name=socket.replace("t_JNT", "t"), offset=["GRP", "OFF"],parent=main_sockets)
+                cmds.matchTransform(grp[0], socket)
+            else:
+                grp, ctl = curve_tool.create_controller(name=socket.replace("t_JNT", "t"), offset=["GRP", "OFF"],parent=secondary_sockets)
+
+            cmds.matchTransform(grp[0], socket)  
+            self.lock_attributes(ctl, ["v"])
+            cmds.delete(socket)
+            socket_skinning_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
+            socket_trn = cmds.createNode("transform", name=ctl.replace("CTL", "TRN"), ss=True, p=self.module_trn)
+            mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("CTL", "MMT"), ss=True)
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
+            cmds.connectAttr(f"{grp[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+            grp_wm = cmds.getAttr(f"{grp[0]}.worldMatrix[0]")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[2]", grp_wm, type="matrix")
+            cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{socket_trn}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{socket_trn}.worldMatrix[0]", f"{socket_skinning_jnt}.offsetParentMatrix", force=True)
+            
+            
 
 
 
