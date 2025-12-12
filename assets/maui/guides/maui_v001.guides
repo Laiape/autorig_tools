@@ -4501,7 +4501,7 @@
             "isCurve": false,
             "isSurface": false
         },
-        "curveShape6": {
+        "C_lowerLipLinear_CRVShape": {
             "curve_data": {
                 "cvs": [
                     [
@@ -4641,7 +4641,7 @@
             "isCurve": true,
             "isSurface": false
         },
-        "curveShape5": {
+        "C_upperLipLinear_CRVShape": {
             "curve_data": {
                 "cvs": [
                     [
@@ -4897,7 +4897,7 @@
             "isCurve": true,
             "isSurface": false
         },
-        "curveShape3": {
+        "L_eyelidLowerLinear_CRVShape": {
             "curve_data": {
                 "cvs": [
                     [
@@ -5107,7 +5107,7 @@
             "isCurve": true,
             "isSurface": false
         },
-        "curveShape4": {
+        "L_eyelidUpperLinear_CRVShape": {
             "curve_data": {
                 "cvs": [
                     [
@@ -5375,7 +5375,7 @@
             "isCurve": true,
             "isSurface": false
         },
-        "curveShape2": {
+        "R_eyelidLowerLinear_CRVShape": {
             "curve_data": {
                 "cvs": [
                     [
@@ -5585,7 +5585,7 @@
             "isCurve": true,
             "isSurface": false
         },
-        "curveShape1": {
+        "R_eyelidUpperLinear_CRVShape": {
             "curve_data": {
                 "cvs": [
                     [
