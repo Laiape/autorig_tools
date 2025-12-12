@@ -172,35 +172,35 @@ class LegModule(object):
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_armFkControllers_GRP", ss=True, p=self.controllers_grp)
 
         for i, guide in enumerate(self.guides):
+            if i < (len(self.guides) - 1): # Create FK controllers for hip, knee, ankle, ball
+                fk_node, fk_ctl = curve_tool.create_controller(name=guide.replace("_GUIDE", "Fk"), offset=["GRP"]) # create FK controllers
+                self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
 
-            fk_node, fk_ctl = curve_tool.create_controller(name=guide.replace("_GUIDE", "Fk"), offset=["GRP"]) # create FK controllers
-            self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+                if self.fk_controllers:
+                    cmds.parent(fk_node[0], self.fk_controllers[-1])
 
-            if self.fk_controllers:
-                cmds.parent(fk_node[0], self.fk_controllers[-1])
+                self.fk_nodes.append(fk_node[0])
+                self.fk_controllers.append(fk_ctl)
 
-            self.fk_nodes.append(fk_node[0])
-            self.fk_controllers.append(fk_ctl)
+                blend_matrix = cmds.createNode("blendMatrix", name=guide.replace("GUIDE", "BLM"), ss=True)
 
-            blend_matrix = cmds.createNode("blendMatrix", name=guide.replace("GUIDE", "BLM"), ss=True)
+                if i == 0:
+                    cmds.connectAttr(f"{self.guides_matrices[i]}", f"{fk_node[0]}.offsetParentMatrix") # First FK controller follows the guide
+                    
+                else:
+                    inverse_matrix = cmds.createNode("inverseMatrix", name=guide.replace("GUIDE", "INV"), ss=True)
+                    cmds.connectAttr(f"{self.guides_matrices[i-1]}", f"{inverse_matrix}.inputMatrix")
+                    mult_matrix = cmds.createNode("multMatrix", name=guide.replace("GUIDE", "MMT"), ss=True)
+                    cmds.connectAttr(f"{self.guides_matrices[i]}", f"{mult_matrix}.matrixIn[0]")
+                    cmds.connectAttr(f"{inverse_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[1]")
+                    cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{fk_node[0]}.offsetParentMatrix") # Other FK controllers follow the relative guide position
 
-            if i == 0:
-                cmds.connectAttr(f"{self.guides_matrices[i]}", f"{fk_node[0]}.offsetParentMatrix") # First FK controller follows the guide
-                
-            else:
-                inverse_matrix = cmds.createNode("inverseMatrix", name=guide.replace("GUIDE", "INV"), ss=True)
-                cmds.connectAttr(f"{self.guides_matrices[i-1]}", f"{inverse_matrix}.inputMatrix")
-                mult_matrix = cmds.createNode("multMatrix", name=guide.replace("GUIDE", "MMT"), ss=True)
-                cmds.connectAttr(f"{self.guides_matrices[i]}", f"{mult_matrix}.matrixIn[0]")
-                cmds.connectAttr(f"{inverse_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[1]")
-                cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{fk_node[0]}.offsetParentMatrix") # Other FK controllers follow the relative guide position
+                cmds.connectAttr(f"{fk_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+                cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{blend_matrix}.target[0].weight")
 
-            cmds.connectAttr(f"{fk_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
-            cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{blend_matrix}.target[0].weight")
+                cmds.xform(fk_node, m=om.MMatrix.kIdentity) # Reset fk node transform
 
-            cmds.xform(fk_node, m=om.MMatrix.kIdentity) # Reset fk node transform
-
-            self.blend_matrices.append(blend_matrix)
+                self.blend_matrices.append(blend_matrix)
 
         cmds.parent(self.fk_nodes[0], fk_controllers_trn)
         
