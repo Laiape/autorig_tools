@@ -52,11 +52,9 @@ def get_guides_info():
         return
     if answer == "+1":
         file_name = rig_manager.get_next_version_name(last_version)
-        print("New file name:", file_name)
     if answer == "REPLACE":
         last_version = rig_manager.get_latest_version(TEMPLATE_PATH)
         file_name = pathlib.Path(last_version).stem
-        print("Replacing file name:", file_name)
 
     guides_name = cmds.promptDialog(query=True, text=False)
     guides_name = CHARACTER_NAME
@@ -65,15 +63,14 @@ def get_guides_info():
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
     curves_in_scene = cmds.ls("*_CRV", type="transform", long=True)
+    print(curves_in_scene)
     nurbs_surfacess = cmds.ls("*_NURB", type="transform", long=True)
-    print("NURBS surfaces found:", nurbs_surfacess)
 
     if nurbs_surfacess:
         nurbs_data = []
         for nurbs_surface in nurbs_surfacess:
             
             nurbs_surface = nurbs_surface.split("|")[-1]
-            print("Processing NURBS surface:", nurbs_surface)
             nurbs_shapes = cmds.listRelatives(nurbs_surface, shapes=True, type="nurbsSurface")[0]
 
             if nurbs_shapes: 
@@ -136,7 +133,6 @@ def get_guides_info():
                     }
                 })
                 nurbs_data.extend(surface_data)
-                print("NURBS surface data collected for:", nurbs_data)
                      
 
     if curves_in_scene:
@@ -146,6 +142,8 @@ def get_guides_info():
         for curve in curves_in_scene:
 
             curve_guide.append(curve.split("|")[-1])
+
+        print(curve_guide)
 
         curve_shapes = cmds.listRelatives(curve_guide, allDescendents=True, type="nurbsCurve")
         
@@ -296,7 +294,6 @@ def get_guides_info():
         
     if nurbs_shapes:
         for surface in nurbs_data:
-            print("Saving NURBS surface data for:", surface)
             surface_name = surface["name"]
             guides_data[guides_name][surface_name] = {
                 "surface_data": surface["surface"],
@@ -328,9 +325,19 @@ def load_guides_info(filePath=None):
 
         final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=TEMPLATE_PATH, fileFilter="*.guides")[0]
         print("Selected file path:", final_path)
-       
         if not final_path:
             om.MGlobal.displayError("No file selected.")
+            return None
+
+        # get the folder name immediately after the "assets" folder in the selected path
+        character_name = None
+        parts = pathlib.Path(final_path).parts
+        try:
+            assets_idx = next(i for i, p in enumerate(parts) if p.lower() == "assets")
+            character_name = parts[assets_idx + 1]
+        except (StopIteration, IndexError):
+            om.MGlobal.displayWarning("Could not determine character name from path (no 'assets' folder found).")
+            character_name = None
             return None
         
     else:
@@ -455,7 +462,6 @@ def load_guides_info(filePath=None):
                     for row in cvs:
                         for pt in row:
                             num = +1
-                            print(num)
                             if len(pt) == 4:
                                 points.append(om.MPoint(pt[0], pt[1], pt[2], pt[3]))
                             else:
@@ -477,7 +483,11 @@ def load_guides_info(filePath=None):
                     shape_fn = om.MFnDagNode(shape_obj)
                     shape_fn.setName(surface_name)
 
-        rig_manager.import_meshes()
+        if character_name:
+            rig_manager.import_meshes_for_guides(character_name=character_name)
+
+        else:
+            rig_manager.import_meshes()
 
     else:
 

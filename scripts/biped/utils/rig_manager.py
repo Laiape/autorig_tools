@@ -159,6 +159,31 @@ def import_meshes():
 
     return mesh_files
 
+def import_meshes_for_guides(character_name):
+
+    """
+    Import meshes when guides are imported to.
+    """
+
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split("\scripts")[0]
+    path = os.path.join(relative_path, "assets")
+    character_path = os.path.join(path, character_name)
+    models_path = os.path.join(character_path, "models")
+
+    mesh_files = glob.glob(os.path.join(models_path, "*.mb")) + glob.glob(os.path.join(models_path, "*.ma"))
+
+    for mesh_file in mesh_files:
+        try:
+            cmds.file(mesh_file, i=True, type="mayaBinary" if mesh_file.endswith(".mb") else "mayaAscii", ignoreVersion=True, mergeNamespacesOnClash=False, namespace=":")
+            om.MGlobal.displayInfo(f"Imported mesh: {os.path.basename(mesh_file)}")
+        except Exception as e:
+            om.MGlobal.displayError(f"Failed to import {os.path.basename(mesh_file)}: {str(e)}")
+
+    return mesh_files
+
+
+
 def import_skin_clusters():
 
     """
