@@ -67,7 +67,7 @@ class CheekboneModule(object):
         Load cheekbone guides from the guide manager.
         """
         self.cheekbone_guides = guides_manager.get_guides(f"{self.side}_cheekbone_JNT")
-        self.cheekbone_guides.sort()
+        # self.cheekbone_guides.sort()
         cmds.select(clear=True)
         self.cheek_guide = guides_manager.get_guides(f"{self.side}_cheek_JNT")
 
@@ -82,7 +82,7 @@ class CheekboneModule(object):
         """
 
         mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
+        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=self.module_trn)
         cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
         cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
         grp_wm = cmds.getAttr(f"{grp}.worldMatrix[0]")
@@ -145,3 +145,4 @@ class CheekboneModule(object):
         cmds.matchTransform(grp[0], self.cheek_guide[0])
         skinning_jnt = cmds.createNode("joint", name=self.cheek_guide[0].replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
+        cmds.delete(self.cheek_guide)

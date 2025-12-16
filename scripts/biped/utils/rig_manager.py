@@ -197,6 +197,16 @@ def import_skin_clusters():
     character_path = os.path.join(path, character_name)
     skin_clusters_path = os.path.join(character_path, "skin_clusters")
 
+
+def skeleton_hierarchy():
+
+    """
+    Create the skeleton hierarchy for the rig.
+    """
+    
+    pass
+
+
 class CustomBuild(object):
     """
     Custom build class for different character rigging operations.
