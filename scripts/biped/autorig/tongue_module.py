@@ -97,10 +97,10 @@ class tongueModule(object):
         for jnt in self.tongue_guides:
 
             tongue_guide = cmds.createNode("transform", name=jnt.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
-            self.lock_attributes(tongue_guide, ["v"])
             cmds.matchTransform(tongue_guide, jnt)
 
             grp, ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"], parent=self.controllers_grp)
+            self.lock_attributes(ctl, ["v"])
             cmds.connectAttr(f"{tongue_guide}.worldMatrix[0]", f"{grp[0]}.offsetParentMatrix")
 
             local_grp, mmx = self.local_mmx(ctl, grp[0])
