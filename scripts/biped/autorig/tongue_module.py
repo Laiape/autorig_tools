@@ -30,7 +30,7 @@ class tongueModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
-        self.head_grp = self.head_ctl.replace("_CTL", "_GRP")
+        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
 
@@ -66,9 +66,7 @@ class tongueModule(object):
         """
         Load tongue guides from the guide manager.
         """
-        self.tongue_guides = guides_manager.get_guides(f"{self.side}_tongue_JNT")
-        # self.tongue_guides.sort()
-        cmds.select(clear=True)
+        self.tongue_guides = guides_manager.get_guides(f"{self.side}_tongue00_JNT")
 
     def local_mmx(self, ctl, grp):
 
@@ -89,3 +87,28 @@ class tongueModule(object):
         cmds.connectAttr(f"{mmx}.matrixSum", f"{local_grp}.offsetParentMatrix")
 
         return local_grp, mmx
+    
+    def create_controllers(self):
+
+        """
+        Create controllers for the tongue module.
+        """
+        de_boors_selection = []
+        for jnt in self.tongue_guides:
+
+            tongue_guide = cmds.createNode("transform", name=jnt.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
+            self.lock_attributes(tongue_guide, ["v"])
+            cmds.matchTransform(tongue_guide, jnt)
+
+            grp, ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"], parent=self.controllers_grp)
+            cmds.connectAttr(f"{tongue_guide}.worldMatrix[0]", f"{grp[0]}.offsetParentMatrix")
+
+            local_grp, mmx = self.local_mmx(ctl, grp[0])
+            de_boors_selection.append(local_grp)
+
+        # De Boor Tongue Ribbon
+        skinning_jnts, temp = ribbon.de_boor_ribbon(de_boors_selection, f"{self.side}_tongue", aim_axis="x", up_axis="y", num_joints=len(self.tongue_guides), skeleton_grp=self.skeleton_grp)
+
+        for t in temp:
+            cmds.delete(t)
+        
