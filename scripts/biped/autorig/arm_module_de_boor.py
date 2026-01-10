@@ -224,7 +224,7 @@ class ArmModule(object):
             if i < len(self.fk_controllers) -1:
                 cmds.setAttr(f"{ctl}.translateX", lock=False)
                 cmds.addAttr(ctl, longName="STRETCHY", attributeType="enum", enumName="____")
-                cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)
+                cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
         self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_armUpperDoubleMultLinear_MDL")
@@ -582,7 +582,7 @@ class ArmModule(object):
 
             if i == 0:
                 cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-                cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+                cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
                 cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
                 cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)

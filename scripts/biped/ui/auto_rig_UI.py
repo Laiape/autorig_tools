@@ -113,6 +113,7 @@ def import_skin_cluster():
 def rig():
     """Función para crear el rig bipedal"""
     from biped.autorig import create_rig
+    reload(create_rig)
     cmds.file(new=True, force=True)
     rig = create_rig.AutoRig()
     rig.build()

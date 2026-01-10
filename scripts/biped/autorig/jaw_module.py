@@ -155,7 +155,7 @@ class JawModule(object):
 
         # Add attribute to the jaw controller
         cmds.addAttr(self.jaw_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-        cmds.setAttr(f"{self.jaw_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+        cmds.setAttr(f"{self.jaw_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(self.jaw_ctl, longName="Auto_Collision", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
 
         # Create nodes for collision detection
@@ -378,7 +378,7 @@ class JawModule(object):
 
             # Create blending between upper and lower lips
             cmds.addAttr(corner_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-            cmds.setAttr(f"{corner_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+            cmds.setAttr(f"{corner_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
             cmds.addAttr(corner_ctl, longName="Jaw_Blend", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
             cmds.addAttr(corner_ctl, longName="Zip", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
@@ -535,7 +535,7 @@ class JawModule(object):
             if i % 3 == 0:
                 
                 cmds.addAttr(cv_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-                cmds.setAttr(f"{cv_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+                cmds.setAttr(f"{cv_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(cv_ctl, ln="Tan_Controllers_Visibility", at="bool", k=True)
                 cmds.setAttr(f"{cv_ctl}.Tan_Controllers_Visibility", k=False, cb=True)
                 cmds.connectAttr(f"{fbf_cv}.output", f"{cv_ctl_nodes[0]}.offsetParentMatrix")
@@ -623,7 +623,7 @@ class JawModule(object):
             if i % 3 == 0:
                 
                 cmds.addAttr(cv_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-                cmds.setAttr(f"{cv_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+                cmds.setAttr(f"{cv_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(cv_ctl, ln="Tan_Controllers_Visibility", at="bool", k=True)
                 cmds.setAttr(f"{cv_ctl}.Tan_Controllers_Visibility", k=False, cb=True)
                 cmds.connectAttr(f"{fbf_cv}.output", f"{cv_ctl_nodes[0]}.offsetParentMatrix")
@@ -817,10 +817,8 @@ class JawModule(object):
             cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
             cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
             cmds.connectAttr(f"{blend_matrix_mid}.outputMatrix", f"{joint}.offsetParentMatrix", f=True) # Final connection to joint
-            print("golaaa")
-
             cmds.parent(out_nodes[0], out_controllers)
-
+            print(f"Created lower lip output controller: {out_ctl}")
 
 
 

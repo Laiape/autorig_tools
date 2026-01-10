@@ -471,7 +471,7 @@ class LegModule(object):
         Add foot attributes to the leg module.
         """
         cmds.addAttr(self.ik_controllers[0], longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-        cmds.setAttr(f"{self.ik_controllers[0]}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+        cmds.setAttr(f"{self.ik_controllers[0]}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         
         attr_list = [
             "Ankle_Twist",
@@ -876,7 +876,7 @@ class LegModule(object):
 
             if i == 0:
                 cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-                cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+                cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", defaultValue=0.5, minValue=0, maxValue=1, keyable=True)
                 cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
                 cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)

@@ -150,6 +150,7 @@ class NoseModule(object):
                 cmds.parent(nodes[0], f"C_baseNose_CTL")
                 cmds.parent(local_grp, f"C_baseNoseLocal_TRN")
             
+            nose_controllers.append(ctl)
             
             jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint
             cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
