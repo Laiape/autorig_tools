@@ -351,21 +351,60 @@ def text_curve(ctl_name):
     cmds.move(offset[0], offset[1], offset[2], cvs, r=True, ws=True)
     return ctl_name
 
-def mirror_controllers():
+def mirror_curves():
+    """
+    Espeja controladores del lado L al R escalando a -1 en X y aplicando Freeze.
+    Lógica de colores: L(18) -> R(4), L(6) -> R(13).
+    """
+    # Buscamos controladores del lado L
+    left_controllers = cmds.ls("L_*_CTL", type="transform")
 
-    one_side_cotrollers = cmds.ls("*_CTL", type="transform")
+    if not left_controllers:
+        om.MGlobal.displayWarning("No se encontraron controladores con prefijo 'L_'.")
+        return
 
-    for controller in one_side_cotrollers:
+    for l_ctl in left_controllers:
+        r_ctl = l_ctl.replace("L_", "R_", 1)
 
-        if controller.startswith("L_") or controller.startswith("R_"):
+        if not cmds.objExists(r_ctl):
+            continue
+
+        # --- OPERACIÓN DE ESPEJADO (Escala -1 y Freeze) ---
+        # Guardamos el padre actual para no perder la jerarquía
+        parent = cmds.listRelatives(r_ctl, parent=True)
+        
+        # Desparentamos temporalmente para que el freeze no afecte a la jerarquía superior
+        if parent:
+            cmds.parent(r_ctl, world=True)
+
+        # Aplicamos escala negativa en X
+        cmds.setAttr(f"{r_ctl}.scaleX", -1)
+        
+        # Freeze Transformations (aplica escala, rotación y traslación)
+        cmds.makeIdentity(r_ctl, apply=True, t=1, r=1, s=1, n=0, pn=1)
+
+        # Re-parentamos a su sitio original
+        if parent:
+            cmds.parent(r_ctl, parent[0])
+
+        # --- LÓGICA DE COLORES ---
+        if cmds.getAttr(f"{l_ctl}.overrideEnabled"):
+            l_color = cmds.getAttr(f"{l_ctl}.overrideColor")
+            r_color = None
+
+            # Mapeo de colores: 18 -> 4 | 6 -> 13
+            if l_color == 18:
+                r_color = 4
+            elif l_color == 6:
+                r_color = 13
             
-            ctl_offset = cmds.ls(f"{controller.replace('CTL', 'GRP')}", type="transform")
+            if r_color is not None:
+                cmds.setAttr(f"{r_ctl}.overrideEnabled", True)
+                cmds.setAttr(f"{r_ctl}.overrideColor", r_color)
 
-            cmds.scale(-1, 1, 1, ctl_offset, relative=True)
-            trans = cmds.xform(ctl_offset, translation=True)
-            cmds.xform(ctl_offset, translation=(-trans[0], trans[1], trans[2]))
-            cmds.makeIdentity(ctl_offset, apply=True, t=1, r=1, s=1, n=0, pn=1)
+    om.MGlobal.displayInfo("Mirror completado: Escala -1 aplicada y transformaciones freezadas.")
 
+    
 def scale_selected_controller(value):
 
     """

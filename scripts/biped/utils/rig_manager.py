@@ -134,14 +134,125 @@ def create_assets_folders(asset_name):
         folder_path = os.path.join(main_folder, subfolder)
         os.makedirs(folder_path, exist_ok=True)
 
+import maya.cmds as cmds
+import os
 
-def import_meshes():
-
+def create_new_asset():
     """
-    Import meshes from the asset's models folder.
+    Muestra una ventana para ingresar el nombre del asset y crea la estructura de carpetas.
     """
-    character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    window_id = "createAssetWindow"
+    
+    # 1. Limpiar ventana si ya existe
+    if cmds.window(window_id, exists=True):
+        cmds.deleteUI(window_id)
+        
+    # 2. Crear ventana
+    cmds.window(window_id, title="Create New Asset", widthHeight=(300, 100), sizeable=False)
+    cmds.columnLayout(adjustableColumn=True, rowSpacing=10, columnOffset=['both', 10])
+    
+    cmds.text(label="Enter Asset Name:", align='left', height=25)
+    asset_name_field = cmds.textField(placeholderText="e.g. character_laia")
+    
+    # Botón que ejecuta la lógica interna
+    cmds.button(label="Create Folders", height=30, 
+                command=lambda x: execute_folder_creation(cmds.textField(asset_name_field, q=True, text=True), window_id))
+    
+    cmds.showWindow(window_id)
 
+    return asset_name_field
+
+def execute_folder_creation(asset_name, window_id):
+    """
+    Lógica de sistema de archivos para crear las carpetas.
+    """
+    # Validación básica
+    if not asset_name or asset_name.strip() == "":
+        cmds.warning("Asset name cannot be empty!")
+        return
+
+    # Limpiar el nombre de posibles espacios
+    asset_name = asset_name.strip()
+
+    # --- Lógica de Rutas ---
+    complete_path = os.path.realpath(__file__)
+    sep_token = os.sep + "scripts"
+    
+    if sep_token in complete_path:
+        relative_path = complete_path.split(sep_token)[0]
+    else:
+        relative_path = os.path.dirname(os.path.dirname(complete_path))
+
+    # Carpeta base 'assets'
+    base_path = os.path.join(relative_path, "assets")
+    main_folder = os.path.join(base_path, asset_name)
+    
+    # Crear carpeta principal y subcarpetas
+    subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters"]
+    
+    try:
+        os.makedirs(main_folder, exist_ok=True)
+        for subfolder in subfolders:
+            folder_path = os.path.join(main_folder, subfolder)
+            os.makedirs(folder_path, exist_ok=True)
+            
+        cmds.deleteUI(window_id)
+        cmds.confirmDialog(title='Success', message=f'Folder structure created for: {asset_name}', button=['OK'])
+        print(f"Asset created at: {main_folder}")
+        
+    except Exception as e:
+        cmds.error(f"Failed to create folders: {e}")
+
+def prepare_rig_scene():
+    """
+    1. Crea una nueva escena.
+    2. Renombra la escena a CHAR_"character_name"_v001.
+    3. Importa las mallas del asset actual.
+    4. Ejecuta el proceso de construcción del Rig.
+    """
+    
+    character_name = cmds.promptDialog(
+                title="INPUT CHARACTER NAME",
+                message="INSERT CHARACTER NAME",
+                button=["OK", "Cancel"],
+                defaultButton="OK",
+                cancelButton="Cancel",
+                dismissString="Cancel")
+    
+    if character_name == "Cancel":
+        om.MGlobal.displayInfo("Proceso cancelado por el usuario.")
+        return
+    
+    character_name = cmds.promptDialog(query=True, text=True)
+
+    # 1. Nueva escena forzada
+    cmds.file(new=True, force=True)
+    
+    # 2. Definir nombre y renombrar escena
+    # Formato: C_NombrePersonaje_v001
+    scene_name = f"CHAR_{character_name}_v001.ma"
+    cmds.file(rename=scene_name)
+    
+    om.MGlobal.displayInfo("Nueva escena creada y renombrada como: {}".format(scene_name))
+
+    # 3. Importar Meshes
+    # Usamos tu función existente
+    imported_files = import_meshes(character_name)
+    
+    if not imported_files:
+        cmds.warning("No se encontraron mallas para importar en la carpeta de {}".format(character_name))
+    else:
+        om.MGlobal.displayInfo("Mallas importadas correctamente en {}".format(scene_name))
+
+    return character_name, imported_files
+
+
+
+def import_meshes(character_name=None):
+    """
+    Importa meshes y devuelve una lista de los transforms raíz (main transforms)
+    importados en la escena.
+    """
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     path = os.path.join(relative_path, "assets")
@@ -149,15 +260,38 @@ def import_meshes():
     models_path = os.path.join(character_path, "models")
 
     mesh_files = glob.glob(os.path.join(models_path, "*.mb")) + glob.glob(os.path.join(models_path, "*.ma"))
+    
+    imported_main_transforms = []
 
     for mesh_file in mesh_files:
         try:
-            cmds.file(mesh_file, i=True, type="mayaBinary" if mesh_file.endswith(".mb") else "mayaAscii", ignoreVersion=True, mergeNamespacesOnClash=False, namespace=":")
-            om.MGlobal.displayInfo(f"Imported mesh: {os.path.basename(mesh_file)}")
+            # returnNewNodes=True devuelve todos los nodos creados por la importación
+            new_nodes = cmds.file(
+                mesh_file, 
+                i=True, 
+                type="mayaBinary" if mesh_file.endswith(".mb") else "mayaAscii", 
+                ignoreVersion=True, 
+                mergeNamespacesOnClash=False, 
+                namespace=":",
+                returnNewNodes=True
+            )
+
+            if new_nodes:
+                # Filtramos para obtener solo nodos de tipo 'transform' que sean RAÍZ (sin padre)
+                # Esto evita que devuelva shapes, joints o transforms hijos.
+                roots = [
+                    node for node in cmds.ls(new_nodes, type="transform") 
+                    if not cmds.listRelatives(node, parent=True)
+                ]
+                imported_main_transforms.extend(roots)
+
         except Exception as e:
+            import maya.api.OpenMaya as om
             om.MGlobal.displayError(f"Failed to import {os.path.basename(mesh_file)}: {str(e)}")
 
-    return mesh_files
+    # Devolvemos la lista de transforms principales (ej: ['maui_body_GEO', 'geo_GRP', etc.])
+    return imported_main_transforms
+
 
 def import_meshes_for_guides(character_name):
 
@@ -181,43 +315,3 @@ def import_meshes_for_guides(character_name):
             om.MGlobal.displayError(f"Failed to import {os.path.basename(mesh_file)}: {str(e)}")
 
     return mesh_files
-
-
-
-def import_skin_clusters():
-
-    """
-    Import skin clusters from the asset's skin_clusters folder.
-    """
-    character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
-
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, character_name)
-    skin_clusters_path = os.path.join(character_path, "skin_clusters")
-
-
-def skeleton_hierarchy():
-
-    """
-    Create the skeleton hierarchy for the rig.
-    """
-    
-    pass
-
-
-class CustomBuild(object):
-    """
-    Custom build class for different character rigging operations.
-    """
-
-    def __init__(self):
-        pass
-
-
-    def jamal(self):
-        """
-        System for Jamal character rigging.
-        """
-        pass

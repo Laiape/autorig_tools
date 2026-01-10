@@ -118,7 +118,8 @@ class JawModule(object):
         self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP"], parent=self.jaw_ctl)
         cmds.matchTransform(self.chin_nodes[0], self.chin_nodes[0].replace("C_chin_GRP", "C_chin_JNT"))
         self.lock_attributes(self.chin_ctl, ["v"])
-        chin_skinning_trn = cmds.createNode("transform", name="C_chinLocal_TRN", ss=True, p=self.module_trn)
+        chin_skinning_grp = cmds.createNode("transform", name="C_chinLocal_GRP", ss=True, p=self.module_trn)
+        chin_skinning_trn = cmds.createNode("transform", name="C_chinLocal_TRN", ss=True, p=chin_skinning_grp)
         mult_matrix_chin = cmds.createNode("multMatrix", name="C_chinLocal_MMX")
         cmds.connectAttr(f"{self.chin_ctl}.worldMatrix[0]", f"{mult_matrix_chin}.matrixIn[0]")
         cmds.connectAttr(f"{self.chin_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_chin}.matrixIn[1]")
@@ -133,12 +134,13 @@ class JawModule(object):
             self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP"], parent=self.jaw_ctl)
             cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
             self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
-            side_jaw_skinning_trn = cmds.createNode("transform", name=f"{side}_jawLocal_TRN", ss=True, p=self.module_trn)
+            side_jaw_skinning_grp = cmds.createNode("transform", name=f"{side}_jawLocal_GRP", ss=True, p=self.module_trn)
+            side_jaw_skinning_trn = cmds.createNode("transform", name=f"{side}_jawLocal_TRN", ss=True, p=side_jaw_skinning_grp)
+            cmds.matchTransform(side_jaw_skinning_grp, self.side_jaw_nodes[0])
             mult_matrix_side_jaw = cmds.createNode("multMatrix", name=f"{side}_jawLocal_MMX")
-            cmds.connectAttr(f"{self.side_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[0]")
+            cmds.connectAttr(f"{self.side_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[0]") 
             cmds.connectAttr(f"{self.side_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[1]")
-            grp_pos = cmds.getAttr(f"{self.side_jaw_nodes[0]}.worldMatrix[0]")
-            cmds.setAttr(f"{mult_matrix_side_jaw}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
+            # cmds.connectAttr(f"{self.jaw_ctl}.matrix", f"{mult_matrix_side_jaw}.matrixIn[2]") # Add jaw 
             cmds.connectAttr(f"{mult_matrix_side_jaw}.matrixSum", f"{side_jaw_skinning_trn}.offsetParentMatrix")
             side_jaw_skinning = cmds.createNode("joint", name=f"{side}_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
             cmds.connectAttr(f"{side_jaw_skinning_trn}.worldMatrix[0]", f"{side_jaw_skinning}.offsetParentMatrix")
@@ -205,7 +207,6 @@ class JawModule(object):
         """
              
         # Load guides
-        radius_loc = guides_manager.get_guides("C_jawSlide_LOCShape")
         self.upper_linear_lip_curve = guides_manager.get_guides("C_upperLipLinear_CRVShape", parent=self.module_trn)
         self.lower_linear_lip_curve = guides_manager.get_guides("C_lowerLipLinear_CRVShape", parent=self.module_trn)
 
@@ -213,11 +214,7 @@ class JawModule(object):
         # Create NURBS surface
         self.sphere = guides_manager.get_guides("C_jaw_NURBShape", parent=self.module_trn) # NURBS surface guide
         cmds.hide(self.sphere)
-        cmds.rotate(0, 90, 0, self.sphere, relative=True, objectSpace=True)
-        cmds.setAttr(f"{radius_loc}.translateX", 0)
         self.sphere_guide = cmds.createNode("transform", name="C_jawSlideGuide_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.sphere_guide, radius_loc)
-        cmds.delete(radius_loc)
 
         # Jaw local joint
         cmds.delete(self.jaw_jnt)
@@ -229,8 +226,8 @@ class JawModule(object):
         cmds.setAttr(f"{mult_matrix_jaw_local}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
         cmds.connectAttr(f"{mult_matrix_jaw_local}.matrixSum", f"{self.jaw_jnt}.offsetParentMatrix")
 
-        for child in self.jaw_child:
-            cmds.parent(child, self.jaw_jnt)
+        # for child in self.jaw_child:
+        #     cmds.parent(child, self.jaw_jnt)
 
         # Upper jaw local joint
         self.upper_jaw_jnt = cmds.createNode("joint", name="C_upperJaw_JNT", ss=True, p=self.module_trn)
@@ -475,6 +472,7 @@ class JawModule(object):
         cv_nodes_upper = []
         path_joints_upper = []
         mult_matrix_tangents_upper = []
+        tangent_mult_matrices_upper = []
 
         secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
 
@@ -524,6 +522,8 @@ class JawModule(object):
             mult_matrix_secondary = cmds.createNode("multMatrix", name=f"{side}_{name}_MMS", ss=True)
             cmds.connectAttr(f"{cv_ctl}.matrix", f"{mult_matrix_secondary}.matrixIn[0]")
             cmds.connectAttr(f"{fbf_cv}.output", f"{mult_matrix_secondary}.matrixIn[1]")
+            # ---- Must connect to tangents his parent matrix ----
+            tangent_mult_matrices_upper.append(mult_matrix_secondary)
             cmds.connectAttr(f"{mult_matrix_secondary}.matrixSum", f"{local_jnt_cv}.offsetParentMatrix")
             path_joints_upper.append(local_jnt_cv)
 
@@ -545,6 +545,7 @@ class JawModule(object):
                 mult_matrix_tangent = cmds.createNode("multMatrix", name=f"{side}_{name}_MMT", ss=True)
                 cmds.connectAttr(f"{fbf_cv}.output", f"{mult_matrix_tangent}.matrixIn[1]")
                 cmds.connectAttr(f"{mult_matrix_tangent}.matrixSum", f"{cv_ctl_nodes[0]}.offsetParentMatrix", f=True)
+
             mult_matrix_tangents_upper.append(mult_matrix_tangent)
             cmds.parent(cv_ctl_nodes[0], secondary_controllers_nodes)
             if i == 0 or i == len(rebuilded_upper_lip_cvs) -1:
@@ -565,11 +566,13 @@ class JawModule(object):
                     continue
                 else:
                     cmds.connectAttr(f"{cvs_ctls_upper[index]}.matrix", f"{mult_matrix_tangents_upper[child_index]}.matrixIn[0]")
+                    cmds.connectAttr(f"{cvs_ctls_upper[index]}.matrix", f"{tangent_mult_matrices_upper[child_index]}.matrixIn[2]") # Added to keep tangent joints aligned
 
         cvs_ctls_lower = []
         cv_nodes_lower = []
         path_joints_lower = []
         mult_matrix_tangents_lower = []
+        tangent_mult_matrices_lower = []
 
         for i, cv in enumerate(rebuilded_lower_lip_cvs):
             # Set the name based on the index
@@ -610,6 +613,7 @@ class JawModule(object):
             cmds.connectAttr(f"{fbf_cv}.output", f"{mult_matrix_secondary}.matrixIn[1]")
             cmds.connectAttr(f"{mult_matrix_secondary}.matrixSum", f"{local_jnt_cv}.offsetParentMatrix")
             path_joints_lower.append(local_jnt_cv)
+            tangent_mult_matrices_lower.append(mult_matrix_secondary)
 
             if side == "R" and i != 5:
                 
@@ -649,6 +653,7 @@ class JawModule(object):
                     continue
                 else:
                     cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{mult_matrix_tangents_lower[child_index]}.matrixIn[0]")
+                    cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{tangent_mult_matrices_lower[child_index]}.matrixIn[2]") # Added to keep tangent joints aligned
         
         
 

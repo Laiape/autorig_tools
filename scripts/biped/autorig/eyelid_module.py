@@ -634,10 +634,29 @@ class EyelidModule(object):
 
         for i, (jnt, aim) in enumerate(zip(skinning_jnts, skinning_aims)):
 
-            if i == len(skinning_jnts) - 1:
-                
-                cmds.connectAttr(f"{skinning_jnts[i-1]}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
+            if i == len(skinning_jnts) - 1 or i == (len(skinning_jnts) // 2) -1:
+                if "upper" in jnt:
+                    name = "upper"
+                else:
+                    name = "lower"
+                    
+                mpt_helper = cmds.createNode("motionPath", name=f"{self.side}_{name}EyelidEnd_AimHelper_MTP", ss=True)
+                cmds.setAttr(f"{mpt_helper}.uValue", 0.95)
+                cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{aim}.secondaryTargetVector")
+                aim_helper_trn = cmds.createNode("transform", name=f"{self.side}_{name}EyelidEndAimHelper_TRN", ss=True, p=self.module_trn)
+                compose_matrix_helper = cmds.createNode("composeMatrix", name=f"{self.side}_{name}EyelidEndAimHelper_CM", ss=True)
+                cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{compose_matrix_helper}.inputTranslate")
+                cmds.connectAttr(f"{mpt_helper}.rotate", f"{compose_matrix_helper}.inputRotate")
+                cmds.connectAttr(f"{compose_matrix_helper}.outputMatrix", f"{aim_helper_trn}.offsetParentMatrix") # Connect the compose matrix to the aim helper transform
+
+                cmds.connectAttr(f"{aim_helper_trn}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
                 cmds.setAttr(f"{aim}.secondaryInputAxis", -1, 0, 0)
+                
+                if "upper" in jnt:
+                    cmds.connectAttr(f"{self.eyelid_down_curve_rebuild}.worldSpace[0]", f"{mpt_helper}.geometryPath")
+                else:
+                    cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.worldSpace[0]", f"{mpt_helper}.geometryPath")
+                
             else:
                 cmds.connectAttr(f"{skinning_jnts[i+1]}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
 

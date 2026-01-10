@@ -98,7 +98,6 @@ class EyebrowModule(object):
         cmds.parent(eyebrows[0], self.module_trn)
         self.main_eyebrow = eyebrows[0]
         self.eyebrows = sorted(eyebrows[1:])
-        print(self.eyebrows)
         cmds.select(clear=True)
 
         for jnt in self.eyebrows:

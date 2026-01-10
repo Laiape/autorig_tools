@@ -8,6 +8,7 @@ from biped.utils import basic_structure
 from biped.utils import data_manager
 from biped.utils import rig_manager
 from biped.autorig.utilities import matrix_manager
+from biped.tools import skin_manager
 
 # Body mechanics
 from biped.autorig import arm_module_de_boor as arm_module
@@ -31,6 +32,7 @@ reload(basic_structure)
 reload(data_manager)
 reload(matrix_manager)
 reload(rig_manager)
+reload(skin_manager)
 
 # Reload body mechanics
 reload(arm_module)
@@ -67,9 +69,12 @@ class AutoRig(object):
         self.make_rig()
         self.space_switches()
         self.label_joints()
+        
+        skinner = skin_manager.SkinManager()
+        skinner.import_skins() # Import skin clusters after rig creation
+
         self.hide_connections()
         self.inherit_transforms()
-        
         
 
     def basic_structure(self):

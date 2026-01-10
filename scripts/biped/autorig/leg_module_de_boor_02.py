@@ -535,7 +535,7 @@ class LegModule(object):
         """
 
         for i, ctl in enumerate(self.fk_controllers):
-            if i < 2:  # Only for upper leg and lower leg FK controllers
+            if i != len(self.fk_controllers) - 1:
                 cmds.setAttr(f"{ctl}.translateX", lock=False)
                 cmds.addAttr(ctl, longName="STRETCHY", attributeType="enum", enumName="____")
                 cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)

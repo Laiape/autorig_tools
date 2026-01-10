@@ -63,7 +63,6 @@ def get_guides_info():
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
     curves_in_scene = cmds.ls("*_CRV", type="transform", long=True)
-    print(curves_in_scene)
     nurbs_surfacess = cmds.ls("*_NURB", type="transform", long=True)
 
     if nurbs_surfacess:
@@ -143,7 +142,6 @@ def get_guides_info():
 
             curve_guide.append(curve.split("|")[-1])
 
-        print(curve_guide)
 
         curve_shapes = cmds.listRelatives(curve_guide, allDescendents=True, type="nurbsCurve")
         
@@ -342,7 +340,7 @@ def load_guides_info(filePath=None):
         
     else:
 
-        final_path = os.path.normpath(filePath)[0]
+        final_path = os.path.normpath(filePath)
 
     if "v0" in final_path:
         name = os.path.basename(final_path).split(".")[0].split("_v0")[0]
@@ -686,3 +684,39 @@ def get_guides(guide_export, parent=None):
             om.MGlobal.displayError(f"Guide '{guide_export}' not found in the guide export data.")
             return None
         
+
+def create_new_guides():
+    """
+    1. Crea la estructura de carpetas para el nuevo personaje.
+    2. Localiza las guías maestras en la ruta assets/-/new/guides.
+    3. Carga la información de esas guías en la escena actual.
+    """
+    
+
+    # 1. Definir la ruta de la plantilla basándonos en tu estructura assets/-/new
+    complete_path = os.path.realpath(__file__)
+    relative_path = complete_path.split(os.sep + "scripts")[0]
+    
+    # Ruta específica según tu imagen: assets / - / new / guides
+    template_path = os.path.join(relative_path, "assets", "-", "new", "guides")
+    
+    # 2. Obtener el archivo de guías más reciente dentro de esa carpeta
+    try:
+        # Buscamos el archivo .guides en la carpeta de la plantilla
+        template_file = rig_manager.get_latest_version(template_path)
+        
+        if template_file and os.path.exists(template_file):
+            om.MGlobal.displayInfo(f"Cargando guías de plantilla desde: {template_file}")
+            
+            # 3. Cargar las guías usando tu función existente
+            # Pasamos el filePath para que no abra el explorador de archivos
+            load_guides_info(filePath=template_file)
+            
+        else:
+            om.MGlobal.displayError(f"No se encontró ningún archivo .guides en: {template_path}")
+            
+    except Exception as e:
+        om.MGlobal.displayError(f"Error al intentar automatizar las guías: {str(e)}")
+
+    # Ejecuta la creación de carpetas para el nuevo personaje
+    rig_manager.create_new_asset() 

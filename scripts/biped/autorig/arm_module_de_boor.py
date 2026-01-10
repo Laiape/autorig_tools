@@ -220,11 +220,12 @@ class ArmModule(object):
         Setup FK stretch for the arm module.
         """
 
-        for ctl in self.fk_controllers:
-            cmds.setAttr(f"{ctl}.translateX", lock=False)
-            cmds.addAttr(ctl, longName="STRETCHY", attributeType="enum", enumName="____")
-            cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)
-            cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
+        for i, ctl in enumerate(self.fk_controllers):
+            if i < len(self.fk_controllers) -1:
+                cmds.setAttr(f"{ctl}.translateX", lock=False)
+                cmds.addAttr(ctl, longName="STRETCHY", attributeType="enum", enumName="____")
+                cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)
+                cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
         self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_armUpperDoubleMultLinear_MDL")
         self.lower_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_armLowerDoubleMultLinear_MDL")
@@ -406,6 +407,7 @@ class ArmModule(object):
                 cmds.setAttr(f"{self.ik_chain[0]}.{attr}{axis}", 0)
                 cmds.setAttr(f"{self.arm_chain[0]}.{attr}{axis}", 0)
 
+
     def de_boor_ribbon(self):
 
         """
@@ -457,6 +459,55 @@ class ArmModule(object):
         elif self.side == "R":
             cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *[-x for x in primary_aim_vector], type="double3")
 
+        
+        # Add roll setup
+        upper_roll_jnt = cmds.createNode("joint", name=f"{self.side}_armUpperRoll_JNT", p=self.module_trn)
+        upper_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_armUpperRollEnd_JNT", p=upper_roll_jnt)
+
+        upper_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armUpperRoll_DBT", ss=True)
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{upper_distance}.inMatrix1")
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_distance}.inMatrix2")
+        normalize_upper_distance = cmds.createNode("divide", name=f"{self.side}_armUpperRollNormalize_DIV", ss=True)
+        cmds.connectAttr(f"{upper_distance}.distance", f"{normalize_upper_distance}.input1")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{normalize_upper_distance}.input2")
+
+        #Connect roll joints
+        pick_matrix_upper = cmds.createNode("pickMatrix", name=f"{self.side}_armUpperRollPickMatrix_PM", ss=True)
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_upper}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_upper}.useRotate", 0)
+        cmds.connectAttr(f"{pick_matrix_upper}.outputMatrix", f"{upper_roll_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{normalize_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
+
+        
+        lower_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armLowerRoll_DBT", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_distance}.inMatrix1")
+        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_distance}.inMatrix2")
+        normalize_lower_distance = cmds.createNode("divide", name=f"{self.side}_armLowerRollNormalize_DIV", ss=True)
+        cmds.connectAttr(f"{lower_distance}.distance", f"{normalize_lower_distance}.input1")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{normalize_lower_distance}.input2")
+        lower_roll_jnt = cmds.createNode("joint", name=f"{self.side}_armLowerRoll_JNT", p=self.module_trn)
+        lower_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_armLowerRollEnd_JNT", p=lower_roll_jnt)
+
+        pick_matrix_lower = cmds.createNode("pickMatrix", name=f"{self.side}_armLowerRollPickMatrix_PM", ss=True)
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_lower}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_lower}.useRotate", 0)
+        cmds.connectAttr(f"{pick_matrix_lower}.outputMatrix", f"{lower_roll_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{normalize_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
+        
+        upper_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_armUpperRoll_IKH", startJoint=upper_roll_jnt, endEffector=upper_roll_end_jnt, solver="ikSCsolver")[0]
+        lower_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_armLowerRoll_IKH", startJoint=lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
+
+        cmds.parent(upper_roll_ik_handle, self.module_trn)
+        cmds.parent(lower_roll_ik_handle, self.module_trn)
+
+        float_constant_freeze = cmds.createNode("floatConstant", name=f"{self.side}_armRollFreeze_FC", ss=True)
+        cmds.setAttr(f"{float_constant_freeze}.inFloat", 0)
+        for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
+            cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{upper_roll_ik_handle}.{attr}")
+            cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{lower_roll_ik_handle}.{attr}")
+
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_roll_ik_handle}.offsetParentMatrix") # Connect to upper arm blend matrix
+        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_roll_ik_handle}.offsetParentMatrix") # Connect to lower arm blend matrix
 
 
         # Placeholder for de Boor ribbon setup

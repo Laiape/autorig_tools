@@ -110,13 +110,12 @@ class CheekboneModule(object):
                 grp, ctl = curve_tool.create_controller(name=name, parent=self.controllers_grp, offset=["GRP", "OFF"])
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
+                self.lock_attributes(ctl, ["v"])
             else:
                 grp, ctl = curve_tool.create_controller(name=name, parent=cheeckbones_ctls[0], offset=["GRP", "OFF"])
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
-
-
-            self.lock_attributes(ctl, ["v"])
+                self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])    
 
             cmds.matchTransform(grp[0], guide)
             trn, mmx = self.local_mmx(ctl, grp[0])
@@ -138,7 +137,7 @@ class CheekboneModule(object):
             
         # Cheek 
         grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", ])
-        self.lock_attributes(ctl, ["v"])
+        self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
         trn, mmx = self.local_mmx(ctl, grp[0])
         cheek_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "_GUIDE"), ss=True, p=self.module_trn)
         cmds.matchTransform(cheek_trn, self.cheek_guide[0])

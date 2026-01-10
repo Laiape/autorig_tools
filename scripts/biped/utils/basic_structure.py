@@ -25,47 +25,22 @@ def lock_attributes(ctl, attrs):
         for attr in attrs:
             cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
-def create_assets_folders(character_name):
 
-    """
-    Create the asset folders for the character.
-    Args:
-        character_name (str): The name of the character.
-    """
-
-    rig_manager.create_assets_folders(character_name)
-
-def create_basic_structure():
+def create_basic_structure(character_name=None):
 
     """ Create the basic structure for the rig, including character, rig, controls, meshes, and deformers groups."""
 
-    if cmds.objExists("rig_GRP"):
 
-        cmds.file(new=True, force=True)
-    
-    else:
-
-        answer = cmds.promptDialog(
-                title="INPUT CHARACTER NAME",
-                message="INSERT CHARACTER NAME",
-                button=["OK", "Cancel"],
-                defaultButton="OK",
-                cancelButton="Cancel",
-                dismissString="Cancel")
-    if answer == "Cancel":
-        om.MGlobal.displayInfo("Operation cancelled by user.")
-        return
-    
-    character_name = cmds.promptDialog(query=True, text=True)
+    character_name, imported_files = rig_manager.prepare_rig_scene()
+    print("Character Name from prepare_rig_scene:", character_name)
 
     data_manager.DataExportBiped().append_data("basic_structure",
                             {
                                 "character_name": character_name
                             })
-    
-    create_assets_folders(character_name) # Create asset folders for the character
 
     nodes = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
+
 
     for i, node in enumerate(nodes):
 
@@ -73,17 +48,25 @@ def create_basic_structure():
 
         if i != 0:
             cmds.parent(nod, nodes[0])
-        if i == 3:
-            rig_manager.import_meshes()
 
+    # ---- CREATE SKELETON HIERARCHY ----
+    skeleton_grp = cmds.createNode("transform", name="skeletonHierarchy_GRP", ss=True, p=nodes[1])
+
+    # ---- CREATE TRANSFORMS FOR GEO_GRP ----
+    proxy = cmds.createNode("transform", name="PROXY", ss=True, p=nodes[3])
+    final_geo = cmds.createNode("transform", name="FINAL", ss=True, p=nodes[3])
+    local = cmds.createNode("transform", name="LOCAL", ss=True, p=nodes[3])
+
+    for imported_file in imported_files:
+        cmds.parent(imported_file, final_geo)
+
+    # Create skeleton and modules groups under rig_GRP
     skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
     modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
     preferences_node, preferences_ctl = curve_tool.create_controller(name="C_preferences", offset=["GRP"])
-    # preferences = guides_manager.get_guides("C_preferences_JNT")
-    # cmds.matchTransform(preferences_node, preferences)
-    # cmds.delete(preferences)
+
 
     lock_attributes(character_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
     lock_attributes(preferences_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
@@ -98,7 +81,7 @@ def create_basic_structure():
         if not cmds.attributeQuery(attr, node=preferences_ctl, exists=True):
             cmds.addAttr(f"{preferences_ctl}", longName=attr, attributeType="bool", keyable=True, defaultValue=1)
             cmds.setAttr(f"{preferences_ctl}.{attr}", keyable=False, channelBox=True)
-            if attr == "Show_Modules":
+            if attr == "Show_Modules" or attr == "Show_Skeleton":
                 cmds.setAttr(f"{preferences_ctl}.{attr}", 0)
 
     
