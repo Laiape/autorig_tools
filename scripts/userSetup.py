@@ -1,9 +1,8 @@
-import sys
 import maya.utils as mu
 import maya.cmds as cmds
 
-# --- TUS PUERTOS VS CODE (Igual que antes) ---
 def vs_code_ports():
+    # Abrir puertos para comunicación con VS Code
     if not cmds.commandPort(":4434", query=True):
         cmds.commandPort(name=":4434")
     if not cmds.commandPort("localhost:7001", query=True):
@@ -11,29 +10,21 @@ def vs_code_ports():
 
 def init_auto_rig_UI():
     try:
-        # 1. ELIMINAR MÓDULOS DE LA MEMORIA
-        # Buscamos todos los módulos cargados que empiecen por tu paquete "biped"
-        # y los borramos de sys.modules. Esto obliga a Python a leerlos 
-        # desde el disco de nuevo como si fuera la primera vez.
-        modules_to_delete = [key for key in sys.modules.keys() if key.startswith("biped")]
-        
-        for module in modules_to_delete:
-            del sys.modules[module]
-            print(f"Removed module: {module}")
-
-        # 2. IMPORTAR DE CERO
-        # Ahora hacemos el import limpio. No hace falta reload porque ya no existen en memoria.
+        # Importamos el módulo según tu estructura biped/ui/autorig_ui.py
         from biped.ui import auto_rig_UI
+        from importlib import reload
         
-        # 3. CREAR MENÚ
+        # Forzamos la recarga para que lea cambios recientes del archivo .py
+        reload(auto_rig_UI)
+        
+        # LLAMADA CORRECTA: Llamamos a la función que crea el menú
         auto_rig_UI.create_custom_menu()
-        print("Auto Rig UI initialized successfully.")
 
     except Exception as e:
         cmds.warning("Could not load auto_rig_UI: {}".format(e))
-        import traceback
-        traceback.print_exc() # Esto te ayudará a ver errores más detallados
 
-# Ejecución
+# Ejecutamos los puertos inmediatamente
 vs_code_ports()
+
+# Postergamos la creación de la UI hasta que Maya esté listo
 mu.executeDeferred(init_auto_rig_UI)

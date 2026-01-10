@@ -2,120 +2,128 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from biped.utils import data_manager
 from biped.utils import curve_tool
-
-from importlib import reload
-
 from biped.utils import rig_manager
 from biped.utils import guides_manager
+from importlib import reload
 
+# Recarga de módulos para desarrollo
 reload(data_manager)
 reload(curve_tool)
 reload(rig_manager)
 reload(guides_manager)
 
 def lock_attributes(ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
+    """Bloquea y oculta atributos en un controlador."""
+    for attr in attrs:
+        cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
 def create_basic_structure(character_name=None):
+    """Crea la estructura del rig con control de visibilidad centralizado."""
 
-    """ Create the basic structure for the rig, including character, rig, controls, meshes, and deformers groups."""
-
-
+    # 1. PREPARACIÓN
     character_name, imported_files = rig_manager.prepare_rig_scene()
-    print("Character Name from prepare_rig_scene:", character_name)
+    data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
 
-    data_manager.DataExportBiped().append_data("basic_structure",
-                            {
-                                "character_name": character_name
-                            })
-
+    # 2. NODOS
     nodes = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
-
-
     for i, node in enumerate(nodes):
-
         nod = cmds.createNode("transform", name=node, ss=True)
+        if i != 0: cmds.parent(nod, nodes[0])
 
-        if i != 0:
-            cmds.parent(nod, nodes[0])
-
-    # ---- CREATE SKELETON HIERARCHY ----
-    skeleton_grp = cmds.createNode("transform", name="skeletonHierarchy_GRP", ss=True, p=nodes[1])
-
-    # ---- CREATE TRANSFORMS FOR GEO_GRP ----
+    # 3. GEOMETRÍA
     proxy = cmds.createNode("transform", name="PROXY", ss=True, p=nodes[3])
     final_geo = cmds.createNode("transform", name="FINAL", ss=True, p=nodes[3])
     local = cmds.createNode("transform", name="LOCAL", ss=True, p=nodes[3])
+    
+    # Ocultar LOCAL por defecto
+    cmds.setAttr(f"{local}.visibility", 0)
 
     for imported_file in imported_files:
-        cmds.parent(imported_file, final_geo)
+        if cmds.objExists(imported_file): cmds.parent(imported_file, final_geo)
 
-    # Create skeleton and modules groups under rig_GRP
-    skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
-    modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
+    # 4. CONTROLES
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
     masterwalk_node, masterwalk_ctl = curve_tool.create_controller(name="C_masterwalk", offset=["GRP", "ANM"])
     preferences_node, preferences_ctl = curve_tool.create_controller(name="C_preferences", offset=["GRP"])
 
+    cmds.parent(character_node[0], nodes[2])
+    cmds.parent(masterwalk_node[0], character_ctl)
+    cmds.parent(preferences_node[0], masterwalk_ctl)
 
-    lock_attributes(character_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-    lock_attributes(preferences_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-    lock_attributes(masterwalk_ctl, ["visibility"])
+    # 5. ATRIBUTOS EN PREFERENCES
+    
+    # --- SECCIÓN GEO ---
+    cmds.addAttr(preferences_ctl, longName="GEO_SEP", niceName="GEOMETRY", attributeType="enum", enumName="----")
+    cmds.setAttr(f"{preferences_ctl}.GEO_SEP", keyable=False, channelBox=True, lock=True)
 
+    cmds.addAttr(preferences_ctl, longName="geometryType", niceName="Geometry Type", attributeType="enum", enumName="Final:Proxy", keyable=True)
+    
+    cmds.addAttr(preferences_ctl, longName="reference", niceName="Reference", attributeType="bool", keyable=True, defaultValue=1)
+    cmds.setAttr(f"{preferences_ctl}.reference", keyable=False, channelBox=True)
 
-    cmds.addAttr(f"{preferences_ctl}", longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-    cmds.setAttr(f"{preferences_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+    # --- SECCIÓN RIG VISIBILITY ---
+    cmds.addAttr(preferences_ctl, longName="RIG_VIS_SEP", niceName="RIG VISIBILITY", attributeType="enum", enumName="----")
+    cmds.setAttr(f"{preferences_ctl}.RIG_VIS_SEP", keyable=False, channelBox=True, lock=True)
 
-    for attr in ["Reference", "Show_Skeleton", "Show_Modules"]:
+    cmds.addAttr(preferences_ctl, longName="showSkeleton", niceName="Show Skeleton", attributeType="bool", keyable=True, defaultValue=0)
+    cmds.addAttr(preferences_ctl, longName="showModules", niceName="Show Modules", attributeType="bool", keyable=True, defaultValue=0)
 
-        if not cmds.attributeQuery(attr, node=preferences_ctl, exists=True):
-            cmds.addAttr(f"{preferences_ctl}", longName=attr, attributeType="bool", keyable=True, defaultValue=1)
-            cmds.setAttr(f"{preferences_ctl}.{attr}", keyable=False, channelBox=True)
-            if attr == "Show_Modules" or attr == "Show_Skeleton":
-                cmds.setAttr(f"{preferences_ctl}.{attr}", 0)
+    # --- SECCIÓN PLAYBLAST ---
+    cmds.addAttr(preferences_ctl, longName="PLAYBLAST_SEP", niceName="PLAYBLAST", attributeType="enum", enumName="----")
+    cmds.setAttr(f"{preferences_ctl}.PLAYBLAST_SEP", keyable=False, channelBox=True, lock=True)
+
+    cmds.addAttr(preferences_ctl, longName="hideControllersOnPlayblast", niceName="Hide Controllers on Playblast", attributeType="bool", keyable=True)
 
     
-    cmds.connectAttr(f"{preferences_ctl}.Reference", f"{nodes[3]}.overrideEnabled")
+
+    # 6. LÓGICA DE CONEXIONES
+
+    # Visibilidad Final vs Proxy (Enum)
+    # 0 = Final, 1 = Proxy. Usamos un condition node para alternar.
+    geo_cond = cmds.createNode("condition", name="C_geoVis_COND")
+    cmds.setAttr(f"{geo_cond}.secondTerm", 0) # Si el valor es 0...
+    cmds.connectAttr(f"{preferences_ctl}.geometryType", f"{geo_cond}.firstTerm")
+    
+    # Salidas: Final visible si 0, Proxy visible si 1
+    cmds.setAttr(f"{geo_cond}.colorIfTrueR", 1) # Final On
+    cmds.setAttr(f"{geo_cond}.colorIfTrueG", 0) # Proxy Off
+    cmds.setAttr(f"{geo_cond}.colorIfFalseR", 0) # Final Off
+    cmds.setAttr(f"{geo_cond}.colorIfFalseG", 1) # Proxy On
+    
+    cmds.connectAttr(f"{geo_cond}.outColorR", f"{final_geo}.visibility")
+    cmds.connectAttr(f"{geo_cond}.outColorG", f"{proxy}.visibility")
+
+    # Reference (Override Display Type)
+    cmds.connectAttr(f"{preferences_ctl}.reference", f"{nodes[3]}.overrideEnabled")
     cmds.setAttr(f"{nodes[3]}.overrideDisplayType", 2)
-    cmds.connectAttr(f"{preferences_ctl}.Show_Skeleton", f"{skel_grp}.visibility")
-    cmds.connectAttr(f"{preferences_ctl}.Show_Modules", f"{modules_grp}.visibility")
 
-    cmds.addAttr(masterwalk_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
-    cmds.setAttr(f"{masterwalk_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
+    # Hide Controllers (Reverse node)
+    pb_rev = cmds.createNode("reverse", name="C_playblast_REV")
+    cmds.connectAttr(f"{preferences_ctl}.hideControllersOnPlayblast", f"{pb_rev}.inputX")
+    cmds.connectAttr(f"{pb_rev}.outputX", f"{nodes[2]}.visibility")
+
+    # Rig Visibility
+    skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
+    modules_grp = cmds.createNode("transform", name="modules_GRP", ss=True, p=nodes[1])
+    cmds.connectAttr(f"{preferences_ctl}.showSkeleton", f"{skel_grp}.visibility")
+    cmds.connectAttr(f"{preferences_ctl}.showModules", f"{modules_grp}.visibility")
+
+    # 7. CIERRE Y BLOQUEOS
+    lock_attributes(character_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+    lock_attributes(preferences_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+    
+    # Global Scale en Masterwalk
     cmds.addAttr(masterwalk_ctl, longName="globalScale", attributeType="float", defaultValue=1, minValue=0.01, keyable=True)
-    cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scaleX")
-    cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scaleY")
-    cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scaleZ")
+    for axis in ["X", "Y", "Z"]: cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scale{axis}")
+    lock_attributes(masterwalk_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
-    for attr in ["scaleX", "scaleY", "scaleZ"]:
-
-        cmds.setAttr(f"{masterwalk_ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
-    # Freeze jnt
-    cmds.createNode("joint", name="C_freeze_JNT", ss=True, p=skel_grp)
-
-    cmds.parent(character_node[0], nodes[2])
-    cmds.parent(preferences_node[0], masterwalk_ctl)
-    cmds.parent(masterwalk_node[0], character_ctl)
-    data_manager.DataExportBiped().append_data("basic_structure",
-                            {
-                                "skel_GRP" : skel_grp,
-                                "modules_GRP" : modules_grp,
-                                "masterwalk_ctl" : masterwalk_ctl,
-                                "character_ctl" : character_ctl,
-                                "preferences_ctl" : preferences_ctl
-                            }
-    )
+    # 10. EXPORTACIÓN DE DATA FINAL
+    data_manager.DataExportBiped().append_data("basic_structure", {
+        "skel_GRP" : skel_grp,
+        "modules_GRP" : modules_grp,
+        "masterwalk_ctl" : masterwalk_ctl,
+        "character_ctl" : character_ctl,
+        "preferences_ctl" : preferences_ctl
+    })
 
     return character_name
-
