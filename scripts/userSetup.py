@@ -10,21 +10,12 @@ def vs_code_ports():
 
 def init_auto_rig_UI():
     try:
-        # Importamos el módulo según tu estructura biped/ui/autorig_ui.py
         from biped.ui import auto_rig_UI
-        from importlib import reload
-        
-        # Forzamos la recarga para que lea cambios recientes del archivo .py
-        reload(auto_rig_UI)
-        
-        # LLAMADA CORRECTA: Llamamos a la función que crea el menú
         auto_rig_UI.create_custom_menu()
 
     except Exception as e:
-        cmds.warning("Could not load auto_rig_UI: {}".format(e))
-
-# Ejecutamos los puertos inmediatamente
-vs_code_ports()
+        cmds.warning(f"Could not load auto_rig_UI: {e}")
+    vs_code_ports()
 
 # Postergamos la creación de la UI hasta que Maya esté listo
 mu.executeDeferred(init_auto_rig_UI)

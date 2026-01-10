@@ -380,6 +380,7 @@ class JawModule(object):
             cmds.addAttr(corner_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
             cmds.setAttr(f"{corner_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True)
             cmds.addAttr(corner_ctl, longName="Jaw_Blend", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
+            cmds.addAttr(corner_ctl, longName="Zip", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
             parent_matrix_blender = cmds.createNode("parentMatrix", name=f"{side}_lipCorner_PMX", ss=True)
             cmds.connectAttr(f"{fbf_corner_lip}.output", f"{parent_matrix_blender}.inputMatrix")
@@ -655,7 +656,15 @@ class JawModule(object):
                     cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{mult_matrix_tangents_lower[child_index]}.matrixIn[0]")
                     cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{tangent_mult_matrices_lower[child_index]}.matrixIn[2]") # Added to keep tangent joints aligned
         
-        
+        # ----- Sticky lips setup -----
+        mid_lip_crv = cmds.duplicate(upper_bezier_curve, name="C_midLips_CRV", renameChildren=True)[0]
+
+        # Blend shape between upper and lower lips
+        self.mid_lip_blend_shape = cmds.blendShape(upper_bezier_curve, lower_bezier_curve, mid_lip_crv, name="C_midLips_BS")[0]
+        cmds.setAttr(f"{self.mid_lip_blend_shape}.w[0]", 0.5) # Initial blend value
+        cmds.setAttr(f"{self.mid_lip_blend_shape}.{upper_bezier_curve}", 0.5)
+        cmds.setAttr(f"{self.mid_lip_blend_shape}.{lower_bezier_curve}", 0.5)
+
 
         # Skin bezier curves to path joints
         self.upper_bezier_skin_cluster = cmds.skinCluster(path_joints_upper, upper_bezier_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_upperLipBezier_SKIN")[0]
@@ -672,10 +681,13 @@ class JawModule(object):
 
             if i < (len(linear_cvs) -1) / 2 :
                 side = "R"
+                zip_ctl = "R_lipCorner_CTL"
             elif i == (len(linear_cvs) -1) / 2 :
                 side = "C"
+
             else:
                 side = "L"
+                zip_ctl = "L_lipCorner_CTL"
 
             cv_pos = cmds.xform(cv, q=True, ws=True, t=True)
             parameter = self.getClosestParamToPosition(upper_bezier_curve, cv_pos)
@@ -712,6 +724,29 @@ class JawModule(object):
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
 
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
+
+            # Add four by four martix to the mid lip curve to take the average position
+            mid_4b4 = cmds.createNode("fourByFourMatrix", name=f"{side}_{name}0{i}_Mid_4B4", ss=True)
+            # ---------- MUST CONNECT LATER TO THE CORRESPONDING CVS ----------
+            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].xValueEp", f"{mid_4b4}.in30", f=True)
+            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].yValueEp", f"{mid_4b4}.in31", f=True)
+            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].zValueEp", f"{mid_4b4}.in32", f=True)
+            # Add a blendMartix node to blend between average and original position
+            blend_matrix_mid = cmds.createNode("blendMatrix", name=f"{side}_{name}0{i}_Mid_BMT", ss=True)
+            cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{blend_matrix_mid}.inputMatrix")
+            remap_value_zip = cmds.createNode("remapValue", name=f"{side}_{name}0{i}_Zip_RMV", ss=True)
+            cmds.setAttr(f"{remap_value_zip}.value[0].value_Interp", 2)  # Set to smooth
+            cmds.connectAttr(f"{zip_ctl}.Zip", f"{remap_value_zip}.inputValue")
+            if side == "R":
+                input_min = (i / ((len(linear_cvs) -1) / 2))
+            else:
+                input_min = 0.5 * (i / ((len(linear_cvs) -1) / 2))
+
+            cmds.setAttr(f"{remap_value_zip}.inputMin", input_min)
+            cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
+            cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
+            cmds.connectAttr(f"{blend_matrix_mid}.outputMatrix", f"{joint}.offsetParentMatrix", f=True) # Final connection to joint
+
             cmds.parent(out_nodes[0], out_controllers)
 
         
@@ -721,11 +756,12 @@ class JawModule(object):
 
             if i < (len(linear_cvs) -1) / 2 :
                 side = "R"
+                zip_ctl = "R_lipCorner_CTL"
             elif i == (len(linear_cvs) -1) / 2 :
                 side = "C"
             else:
                 side = "L"
-
+                zip_ctl = "L_lipCorner_CTL"
             cv_pos = cmds.xform(cv, q=True, ws=True, t=True)
             parameter = self.getClosestParamToPosition(lower_bezier_curve, cv_pos)
 
@@ -760,6 +796,29 @@ class JawModule(object):
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
+
+            # Add four by four martix to the mid lip curve to take the average position
+            mid_4b4 = cmds.createNode("fourByFourMatrix", name=f"{side}_{name}0{i}_Mid_4B4", ss=True)
+            # ---------- MUST CONNECT LATER TO THE CORRESPONDING CVS ---------- 
+            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].xValueEp", f"{mid_4b4}.in30", f=True)
+            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].yValueEp", f"{mid_4b4}.in31", f=True)
+            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].zValueEp", f"{mid_4b4}.in32", f=True)
+            # Add a blendMartix node to blend between average and original position
+            blend_matrix_mid = cmds.createNode("blendMatrix", name=f"{side}_{name}0{i}_Mid_BMT", ss=True)
+            cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{blend_matrix_mid}.inputMatrix")
+            remap_value_zip = cmds.createNode("remapValue", name=f"{side}_{name}0{i}_Zip_RMV", ss=True)
+            cmds.setAttr(f"{remap_value_zip}.value[0].value_Interp", 2)  # Set to smooth
+            cmds.connectAttr(f"{zip_ctl}.Zip", f"{remap_value_zip}.inputValue")
+            if side == "R":
+                input_min = (i / ((len(linear_cvs) -1) / 2))
+            else:
+                input_min = 0.5 * (i / ((len(linear_cvs) -1) / 2))
+            cmds.setAttr(f"{remap_value_zip}.inputMin", input_min)
+            cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
+            cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
+            cmds.connectAttr(f"{blend_matrix_mid}.outputMatrix", f"{joint}.offsetParentMatrix", f=True) # Final connection to joint
+            print("golaaa")
+
             cmds.parent(out_nodes[0], out_controllers)
 
 
@@ -791,6 +850,9 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_all}.firstTerm")
         cmds.connectAttr(f"{condition_all}.outColorR", f"{out_controllers}.visibility", f=True)
 
+    
+        self.upper_bezier = upper_bezier_curve
+        self.lower_bezier = lower_bezier_curve
 
         
     def get_offset_matrix(self, child, parent):

@@ -5,11 +5,13 @@ from biped.tools import skin_manager
 from biped.utils import curve_tool
 from biped.utils import rig_manager
 from biped.utils import guides_manager
+from biped.autorig import create_rig
 
 reload(skin_manager)
 reload(curve_tool)
 reload(rig_manager)
 reload(guides_manager)
+reload(create_rig)
 
 def create_custom_menu():
     menu_id = "autorig_menu"
@@ -59,7 +61,7 @@ def create_custom_menu():
     cmds.menuItem(divider=True)
 
     # --- BOTÓN RESALTADO: CREAR RIG ---
-    cmds.menuItem(label="CREAR RIG", command=lambda x: create_rig(), boldFont=True, image="kinJoint.png")
+    cmds.menuItem(label="CREAR RIG", command=lambda x: rig(), boldFont=True, image="kinJoint.png")
 
 def rebuild_ui():
     from biped.ui import auto_rig_UI
@@ -104,13 +106,13 @@ def export_skin_cluster():
     cmds.inViewMessage(amg='Skins Exportadas.', pos='midCenter', fade=True)
 
 def import_skin_cluster():
-    skinner = skin_manager.SkinManager() 
+    skinner = skin_manager.SkinManager()
     skinner.import_skins()
     cmds.inViewMessage(amg='Skins Importadas y Reordenadas.', pos='midCenter', fade=True)
 
-def create_rig():
+def rig():
     """Función para crear el rig bipedal"""
-    cmds.file(new=True, force=True)
     from biped.autorig import create_rig
+    cmds.file(new=True, force=True)
     rig = create_rig.AutoRig()
     rig.build()
