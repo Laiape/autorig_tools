@@ -1,13 +1,13 @@
 import maya.cmds as cmds
 from importlib import reload
 
-from biped.tools import skin_manager
+from autorig_tools.scripts.biped.tools import skin_manager_api
 from biped.utils import curve_tool
 from biped.utils import rig_manager
 from biped.utils import guides_manager
 from biped.autorig import create_rig
 
-reload(skin_manager)
+reload(skin_manager_api)
 reload(curve_tool)
 reload(rig_manager)
 reload(guides_manager)
@@ -101,12 +101,12 @@ def replace_shapes():
     print("Funcionalidad para reemplazar formas de controladores.")
 
 def export_skin_cluster():
-    skinner = skin_manager.SkinManager()
+    skinner = skin_manager_api.SkinManager()
     skinner.export_skins()
     cmds.inViewMessage(amg='Skins Exportadas.', pos='midCenter', fade=True)
 
 def import_skin_cluster():
-    skinner = skin_manager.SkinManager()
+    skinner = skin_manager_api.SkinManager()
     skinner.import_skins()
     cmds.inViewMessage(amg='Skins Importadas y Reordenadas.', pos='midCenter', fade=True)
 

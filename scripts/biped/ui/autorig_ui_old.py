@@ -13,12 +13,12 @@ import maya.api.OpenMaya as om
 import maya.cmds as cmds
 
 # Importaciones de tus módulos
-from biped.tools import skin_manager # Asegúrate que el archivo anterior se llame skin_manager.py
+from autorig_tools.scripts.biped.tools import skin_manager_ng # Asegúrate que el archivo anterior se llame skin_manager.py
 from biped.autorig import create_rig
 import biped.utils as data_manager
 from biped.utils import guides_manager
 
-reload(skin_manager)
+reload(skin_manager_ng)
 reload(create_rig)
 reload(data_manager)
 reload(guides_manager)
@@ -155,13 +155,13 @@ class UI(QtWidgets.QMainWindow):
         self.import_skin_weights_button.clicked.connect(self.import_skin_weights_connections)
 
     def export_skin_weights_connections(self):
-        skinner = skin_manager.SkinManager()
+        skinner = skin_manager_ng.SkinManager()
         skinner.export_skins()
         cmds.inViewMessage(amg='Skins Exportadas.', pos='midCenter', fade=True)
 
     def import_skin_weights_connections(self):
         # 1. Creamos la instancia (los paréntesis () ejecutan el __init__)
-        skinner = skin_manager.SkinManager() 
+        skinner = skin_manager_ng.SkinManager() 
 
         # 2. Ahora llamamos al método desde el objeto creado
         skinner.import_skins()
