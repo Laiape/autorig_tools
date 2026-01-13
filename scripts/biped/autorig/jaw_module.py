@@ -818,7 +818,6 @@ class JawModule(object):
             cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
             cmds.connectAttr(f"{blend_matrix_mid}.outputMatrix", f"{joint}.offsetParentMatrix", f=True) # Final connection to joint
             cmds.parent(out_nodes[0], out_controllers)
-            print(f"Created lower lip output controller: {out_ctl}")
 
 
 

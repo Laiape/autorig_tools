@@ -8,7 +8,7 @@ from biped.utils import basic_structure
 from biped.utils import data_manager
 from biped.utils import rig_manager
 from biped.autorig.utilities import matrix_manager
-from autorig_tools.scripts.biped.tools import skin_manager_api
+from biped.tools import skin_manager_api
 
 # Body mechanics
 from biped.autorig import arm_module_de_boor as arm_module

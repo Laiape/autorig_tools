@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 from importlib import reload
 
-from autorig_tools.scripts.biped.tools import skin_manager_api
+from biped.tools import skin_manager_api
 from biped.utils import curve_tool
 from biped.utils import rig_manager
 from biped.utils import guides_manager
