@@ -117,7 +117,10 @@ def create_basic_structure(character_name=None):
     for axis in ["X", "Y", "Z"]: cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scale{axis}")
     lock_attributes(masterwalk_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
-    # 10. EXPORTACIÓN DE DATA FINAL
+    # 8. CREACION FREEZE JNT
+    freeze_jnt = cmds.createNode("joint", name="C_freeze_JNT", ss=True, p=skel_grp)
+
+    # 9. EXPORTACIÓN DE DATA FINAL
     data_manager.DataExportBiped().append_data("basic_structure", {
         "skel_GRP" : skel_grp,
         "modules_GRP" : modules_grp,

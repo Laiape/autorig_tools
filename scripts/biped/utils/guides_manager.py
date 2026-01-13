@@ -542,6 +542,7 @@ def get_guides(guide_export, parent=None):
             guides_data = json.load(input_file)
               
         try:
+            
             if guides_data[name][guide_export]["isJoint"] == True:
                 chain = []
 
@@ -568,8 +569,6 @@ def get_guides(guide_export, parent=None):
             elif guides_data[name][guide_export]["isLocator"] == True:
                 locator = cmds.spaceLocator(name=guide_export.replace("LOCShape", "LOC"))[0]
                 cmds.xform(locator, ws=True, m=guides_data[name][guide_export]["locator_position"])
-                if parent:
-                    cmds.parent(locator.split("Shape")[0], parent)
                 return locator
             
             elif guides_data[name][guide_export]["isCurve"] == True:
@@ -651,7 +650,6 @@ def get_guides(guide_export, parent=None):
 
 
                 cvs = surface_info["cvs"]
-                # cvs = [[om.MPoint(*cvs[u][v]) for u in range(num_spans_u)] for v in range(num_spans_v)]
                 points = om.MPointArray()
                 for u in range(num_spans_u):
                     for v in range(num_spans_v):
@@ -674,8 +672,10 @@ def get_guides(guide_export, parent=None):
                 shape_fn = om.MFnDagNode(shape_obj)
                 shape_fn.setName(surface_name)
             
-                if parent:
-                    cmds.parent(transform_fn.name(), parent)
+                parent_obj = om.MSelectionList().add(parent).getDagPath(0).node()
+                dag_modifier.reparentNode(transform_obj, parent_obj)
+                dag_modifier.doIt()
+
             
                 
                 return transform_fn.name()
