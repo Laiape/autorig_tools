@@ -112,7 +112,7 @@ def space_switches(target, sources = [None], default_value = 1):
         condition_nodes.append(condition)
         source_matrices.append(name)
 
-    cmds.addAttr(target, longName="SpaceSwitchSep", niceName = "SPACE_SWITCHES", attributeType="enum", enumName="____", keyable=True)
+    cmds.addAttr(target, longName="SpaceSwitchSep", niceName = "SPACE SWITCHES ------", attributeType="enum", enumName="------", keyable=True)
     cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
     if len(sources) == 1:     
         cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=False)

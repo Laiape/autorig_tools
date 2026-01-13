@@ -223,7 +223,7 @@ class ArmModule(object):
         for i, ctl in enumerate(self.fk_controllers):
             if i < len(self.fk_controllers) -1:
                 cmds.setAttr(f"{ctl}.translateX", lock=False)
-                cmds.addAttr(ctl, longName="STRETCHY", attributeType="enum", enumName="____")
+                cmds.addAttr(ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------")
                 cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
@@ -247,13 +247,13 @@ class ArmModule(object):
         """
 
         # --- Stretchy IK Controllers ---
-        cmds.addAttr(self.ik_wrist_ctl, shortName="STRETCHY____", attributeType="enum", enumName="____", keyable=True)
-        cmds.setAttr(f"{self.ik_wrist_ctl}.STRETCHY____", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.ik_wrist_ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.ik_wrist_ctl}.STRETCHY", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="upperLengthMult", minValue=0.001, defaultValue=1, keyable=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="lowerLengthMult", minValue=0.001, defaultValue=1, keyable=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="Stretch", minValue=0, defaultValue=0, maxValue=1, keyable=True)
-        cmds.addAttr(self.ik_wrist_ctl, shortName="SOFT____", attributeType="enum", enumName="____", keyable=True)
-        cmds.setAttr(f"{self.ik_wrist_ctl}.SOFT____", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.ik_wrist_ctl, longName="SOFT", niceName="SOFT ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.ik_wrist_ctl}.SOFT", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
 
         # Calculate full_length and initial_distance using vector positions
@@ -581,7 +581,7 @@ class ArmModule(object):
             
 
             if i == 0:
-                cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+                cmds.addAttr(ctl, longName = "EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
                 cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
                 cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)

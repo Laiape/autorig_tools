@@ -192,7 +192,7 @@ class SpineModule(object):
         Set up the ribbon for the spine module.
         """
         # Create the attribute for FK in the body controller
-        cmds.addAttr(self.body_ctl, longName="FK", attributeType="enum", enumName="____", keyable=True)
+        cmds.addAttr(self.body_ctl, longName="FK", niceName="ATTACHED FK ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.FK", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 

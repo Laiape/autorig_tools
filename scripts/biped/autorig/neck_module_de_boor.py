@@ -130,12 +130,8 @@ class NeckModule(object):
         self.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
         cmds.matchTransform(throat_nodes[0], self.throat_guide[0], pos=True, rot=True, scl=False)
         skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{throat_ctl}.worldMatrix[0]", f"{skin_throat_jnt}.offsetParentMatrix")
-        cmds.xform(skin_throat_jnt, m=om.MMatrix.kIdentity)
-
-        
-
-        
+        cmds.connectAttr(f"{throat_ctl}.matrix", f"{skin_throat_jnt}.offsetParentMatrix")
+        cmds.matchTransform(skin_throat_jnt, self.throat_guide[0], pos=True, rot=True, scl=False)
 
 
     def ribbon_setup(self):

@@ -284,7 +284,7 @@ class LegModule(object):
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         cmds.matchTransform(self.pv_nodes[0], self.leg_chain[1], pos=True, rot=True)
         
-        cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA_ATTRIBUTES", enumName="———",attributeType="enum", keyable=True)
+        cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA ATTRIBUTES ------", enumName="------",attributeType="enum", keyable=True)
         cmds.setAttr(self.pv_ctl+".extraAttr", channelBox=True, lock=True)
         cmds.addAttr(self.pv_ctl, shortName="pvOrientation", niceName="Pv Orientation",defaultValue=1, minValue=0, maxValue=1, keyable=True)
         cmds.addAttr(self.pv_ctl, shortName="pin", niceName="Pin",minValue=0,maxValue=1,defaultValue=0, keyable=True)
@@ -470,7 +470,7 @@ class LegModule(object):
         """
         Add foot attributes to the leg module.
         """
-        cmds.addAttr(self.ik_controllers[0], longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+        cmds.addAttr(self.ik_controllers[0], longName = "EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.ik_controllers[0]}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         
         attr_list = [
@@ -548,10 +548,10 @@ class LegModule(object):
         """
 
         for i, ctl in enumerate(self.fk_controllers):
-            if i != len(self.fk_controllers) -1:
+            if i != len(self.fk_controllers) - 2:
                 cmds.setAttr(f"{ctl}.translateX", lock=False)
-                cmds.addAttr(ctl, shortName="STRETCHY", attributeType="enum", enumName="____", keyable=True)
-                cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True)
+                cmds.addAttr(ctl, shortName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------", keyable=True)
+                cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
         self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_legUpperDoubleMultLinear_MDL")
@@ -561,7 +561,6 @@ class LegModule(object):
         cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input1")
         cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input1")
         cmds.connectAttr(f"{self.fk_controllers[2]}.Stretch", f"{ball_double_mult_linear}.input1")
-        cmds.connectAttr(f"{self.fk_controllers[3]}.Stretch", f"{tip_double_mult_linear}.input1")
 
         upper_distance = cmds.getAttr(f"{self.fk_nodes[1]}.translateX")
         lower_distance = cmds.getAttr(f"{self.fk_nodes[2]}.translateX")
@@ -584,13 +583,13 @@ class LegModule(object):
         """
 
         # --- Stretchy IK Controllers ---
-        cmds.addAttr(self.ik_controllers[0], shortName="STRETCHY____", attributeType="enum", enumName="____", keyable=True)
-        cmds.setAttr(f"{self.ik_controllers[0]}.STRETCHY____", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.ik_controllers[0], longName = "STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.ik_controllers[0]}.STRETCHY", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.ik_controllers[0], shortName="upperLengthMult", minValue=0.001, defaultValue=1, keyable=True)
         cmds.addAttr(self.ik_controllers[0], shortName="lowerLengthMult", minValue=0.001, defaultValue=1, keyable=True)
         cmds.addAttr(self.ik_controllers[0], shortName="Stretch", minValue=0, defaultValue=0, maxValue=1, keyable=True)
-        cmds.addAttr(self.ik_controllers[0], shortName="SOFT____", attributeType="enum", enumName="____", keyable=True)
-        cmds.setAttr(f"{self.ik_controllers[0]}.SOFT____", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.ik_controllers[0], longName = "SOFT", niceName="SOFT ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.ik_controllers[0]}.SOFT", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.ik_controllers[0], shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
 
         # Calculate full_length and initial_distance using vector positions
@@ -875,7 +874,7 @@ class LegModule(object):
             
 
             if i == 0:
-                cmds.addAttr(ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+                cmds.addAttr(ctl, longName = "EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
                 cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", defaultValue=0.5, minValue=0, maxValue=1, keyable=True)
                 cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)

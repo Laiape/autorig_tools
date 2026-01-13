@@ -252,8 +252,7 @@ class FingersModule(object):
 
     def attributes_setup(self):
 
-        
-        cmds.addAttr(self.finger_attributes_ctl, longName="FINGER_ATTRIBUTES", attributeType="enum", enumName="____")
+        cmds.addAttr(self.finger_attributes_ctl, longName="FINGER_ATTRIBUTES", niceName="FINGER ATTRIBUTES ------", attributeType="enum", enumName="____")
         cmds.setAttr(f"{self.finger_attributes_ctl}.FINGER_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.finger_attributes_ctl, longName="CURL", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
         cmds.addAttr(self.finger_attributes_ctl, longName="SPREAD", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)

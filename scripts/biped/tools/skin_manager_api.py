@@ -20,16 +20,43 @@ class SkinManager(object):
 
     def get_path_and_name(self):
         """Calcula la ruta del JSON basándose en la estructura del proyecto."""
-        script_path = os.path.realpath(__file__)
-        root_github = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(script_path))))
-        
+        # Intento obtener la ruta del script, si falla (Script Editor), uso el directorio actual de Maya
+        try:
+            script_path = os.path.realpath(__file__)
+            root_github = script_path
+            for _ in range(4):
+                root_github = os.path.dirname(root_github)
+        except NameError:
+
+            root_github = cmds.workspace(q=True, rd=True) 
+
         char_name = "asset"
-        if HAS_RIG_UTILS:
-            try: 
-                char_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
-            except: 
-                pass
         
+        all_assemblies = cmds.ls(assemblies=True)
+        scene_assemblies = [
+            obj for obj in all_assemblies 
+            if not cmds.listRelatives(obj, type='camera')
+        ]
+
+        if scene_assemblies:
+            # Usamos el último objeto que no sea una cámara (normalmente el grupo del asset)
+            char_name = scene_assemblies[-1]
+            print(f"  [INFO] Nombre detectado (excluyendo cámaras): '{char_name}'")
+        
+        # Intentar sobreescribir con Data Manager si existe
+        if HAS_RIG_UTILS:
+            try:
+                dm_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+                if dm_name:
+                    char_name = dm_name
+                    print(f"  [INFO] Nombre obtenido desde Data Manager: '{char_name}'")
+            except Exception as e:
+                print(f"  [WARN] Fallo al consultar Data Manager: {e}")
+
+        # Validar que root_github no sea None antes del join
+        if not root_github:
+            root_github = "C:/GIT/autorig_tools"  # Valor por defecto si no se puede determinar
+
         path = os.path.join(root_github, "assets", char_name, "skin_clusters")
         return os.path.normpath(path), char_name
 

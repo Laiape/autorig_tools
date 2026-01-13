@@ -70,7 +70,6 @@ def create_basic_structure(character_name=None):
     cmds.addAttr(settings_ctl, longName="PLAYBLAST_SEP", niceName="PLAYBLAST ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.PLAYBLAST_SEP", keyable=False, channelBox=True, lock=True)
     cmds.addAttr(settings_ctl, longName="hideControllersOnPlayblast", niceName="Hide Controllers on Playblast", attributeType="bool", keyable=True)
-
     
 
     # 6. LÓGICA DE CONEXIONES
@@ -124,9 +123,11 @@ def create_basic_structure(character_name=None):
 
     # 7. CIERRE Y BLOQUEOS
     lock_attributes(character_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-    lock_attributes(settings_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+    lock_attributes(settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
     
     # Global Scale en Masterwalk
+    cmds.addAttr(masterwalk_ctl, longName="GLOBAL_SCALE_SEP", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------")
+    cmds.setAttr(f"{masterwalk_ctl}.GLOBAL_SCALE_SEP", keyable=False, channelBox=True, lock=True)
     cmds.addAttr(masterwalk_ctl, longName="globalScale", attributeType="float", defaultValue=1, minValue=0.01, keyable=True)
     for axis in ["X", "Y", "Z"]: cmds.connectAttr(f"{masterwalk_ctl}.globalScale", f"{masterwalk_ctl}.scale{axis}")
     lock_attributes(masterwalk_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
