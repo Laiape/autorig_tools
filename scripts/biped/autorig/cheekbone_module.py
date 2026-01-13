@@ -114,6 +114,8 @@ class CheekboneModule(object):
         cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
         cmds.connectAttr(f"{mmx}.matrixSum", f"{local_trn}.offsetParentMatrix")
 
+        cmds.disconnectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
+
         return local_trn, mmx
 
     def create_controllers(self):
