@@ -31,6 +31,7 @@ class EyebrowModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
+        self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_grp = self.head_ctl.replace("_CTL", "_GRP")
 
     def make(self, side):
@@ -51,7 +52,10 @@ class EyebrowModule(object):
             self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.settings_ctl)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
+        
+            cmds.addAttr(self.face_ctl, longName="Brows", attributeType="double", defaultValue=2, max=3, min=0, keyable=True)
+
 
         self.load_guides()
         self.create_controllers()
@@ -122,19 +126,22 @@ class EyebrowModule(object):
         self.local_grps = []
 
         if self.side == "L":
-            distance = cmds.getAttr(f"{self.radius_loc}.translateX")
-            # self.sphere = cmds.sphere(name="C_eyebrowSlide_NRB", sections=4, startSweep=160, radius=distance)[0]
-            cmds.select(clear=True)
+
             self.sphere = guides_manager.get_guides("C_eyebrowSlide_NURBShape", parent=self.module_trn)
-            # cmds.parent(self.sphere, self.module_trn)
-            # cmds.setAttr(f"{self.radius_loc}.translateX", 0)
-            # cmds.matchTransform(self.sphere, self.radius_loc)
             cmds.delete(self.radius_loc)
         
         self.sphere = cmds.ls("C_eyebrowSlide_NURB", long=True)[0]
+
+        condition_primary = cmds.createNode("condition", name="C_eyebrowPrimary_COND", ss=True)
+        cmds.setAttr(f"{condition_primary}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_primary}.secondTerm", 1)
+        cmds.setAttr(f"{condition_primary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_primary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Brows", f"{condition_primary}.firstTerm") 
             
         self.main_eyebrow_nodes, self.main_eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrowMain", offset=["GRP", "OFF"])
         cmds.matchTransform(self.main_eyebrow_nodes[0], self.main_eyebrow)
+        cmds.connectAttr(f"{condition_primary}.outColorR", f"{self.main_eyebrow_nodes[0]}.visibility") # Connect visibility
         
         cmds.parent(self.main_eyebrow_nodes[0], self.controllers_grp)
         self.lock_attributes(self.main_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
@@ -142,6 +149,9 @@ class EyebrowModule(object):
 
         if self.side == "L":
             mid_eyebrow_nodes, mid_eyebrow_ctl = curve_tool.create_controller("C_eyebrowMid", offset=["GRP", "OFF"])
+
+            cmds.connectAttr(f"{condition_primary}.outColorR", f"{mid_eyebrow_nodes[0]}.visibility") # Connect visibility
+
             cmds.parent(mid_eyebrow_nodes[0], self.controllers_grp)
             # cmds.matchTransform(mid_eyebrow_nodes[0], self.mid_eyebrow)
             self.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
@@ -197,6 +207,16 @@ class EyebrowModule(object):
         cmds.parent(self.eyebrow_nodes[1], self.eyebrow_controllers[0]) # InTan to In
         cmds.parent(self.local_grps[-2], self.local_trns[-1]) # OutTan to Out
         cmds.parent(self.local_grps[1], self.local_trns[0]) # InTan to In
+
+        condition_secondary = cmds.createNode("condition", name="C_eyebrowSecondary_COND", ss=True)
+        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_secondary}.secondTerm", 2)
+        cmds.setAttr(f"{condition_secondary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Brows", f"{condition_secondary}.firstTerm")
+        cmds.connectAttr(f"{condition_secondary}.outColorR", f"{self.eyebrow_nodes[1][0]}.visibility") # InTan visibility
+        cmds.connectAttr(f"{condition_secondary}.outColorR", f"{self.eyebrow_nodes[-2][0]}.visibility") # OutTan visibility
+
 
     def ribbon_setup(self): 
 

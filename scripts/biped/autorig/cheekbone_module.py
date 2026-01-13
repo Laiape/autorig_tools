@@ -31,6 +31,7 @@ class CheekboneModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
+        self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
@@ -42,11 +43,22 @@ class CheekboneModule(object):
 
         """
         self.side = side
-        self.module_name = f"{self.side}_cheekbone"
-        self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.settings_ctl)
+        self.module_name = f"C_cheekbone"
+
+        if self.side == "L":
+        
+            self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
+            cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
+            self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
+            cmds.addAttr(self.face_ctl, longName="Cheekbones", attributeType="double", defaultValue=2, max=2, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Cheek", attributeType="double", defaultValue=1, max=1, min=0, keyable=True)
+        else:
+
+            self.module_trn = self.module_name + "Module_GRP"
+            self.skeleton_grp = self.module_name + "Skinning_GRP"
+            self.controllers_grp = self.module_name + "Controllers_GRP"
+
 
         self.load_guides()
         self.create_controllers()
@@ -109,6 +121,21 @@ class CheekboneModule(object):
         """
         Create controllers for the cheekbone module.
         """
+
+        condition_cheekbones = cmds.createNode("condition", name="C_cheekbonesControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_cheekbones}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_cheekbones}.secondTerm", 1)
+        cmds.setAttr(f"{condition_cheekbones}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_cheekbones}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Cheekbones", f"{condition_cheekbones}.firstTerm")
+
+        condition_secondary = cmds.createNode("condition", name="C_cheekboneControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_secondary}.operation", 0)  # Equal
+        cmds.setAttr(f"{condition_secondary}.secondTerm", 2)
+        cmds.setAttr(f"{condition_secondary}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Cheekbones", f"{condition_secondary}.firstTerm")
+
         
         cheeckbones_ctls = []
         cheeckbones_grps = []
@@ -121,16 +148,20 @@ class CheekboneModule(object):
 
             if i == 0:
                 grp, ctl = curve_tool.create_controller(name=name, parent=self.controllers_grp, offset=["GRP", "OFF"])
+                cmds.connectAttr(f"{condition_cheekbones}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
             else:
-                grp, ctl = curve_tool.create_controller(name=name, parent=cheeckbones_ctls[0], offset=["GRP", "OFF"])
+                grp, ctl = curve_tool.create_controller(name=name, offset=["GRP", "OFF"])
+                cmds.parent(grp[0], f"{cheeckbones_ctls[0]}")
+                cmds.connectAttr(f"{condition_secondary}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
             self.lock_attributes(ctl, ["v"])    
 
             cmds.matchTransform(grp[0], guide)
             trn, mmx = self.local_mmx(ctl, grp[0])
+            
             skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
             cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
 
@@ -142,16 +173,23 @@ class CheekboneModule(object):
                 cmds.parent(grp, local_trns[0])
                 local_trns.append(trn)
                 skinning_jnts.append(skinning_jnt)
-
             
         cmds.delete(self.cheekbone_guides)
             
         # Cheek 
-        grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", ])
+        grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", "ANM"])
         self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
         trn, mmx = self.local_mmx(ctl, grp[0])
         cheek_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "_GUIDE"), ss=True, p=self.module_trn)
         cmds.matchTransform(cheek_trn, self.cheek_guide[0])
+
+        condition_cheek = cmds.createNode("condition", name="C_cheekControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_cheek}.operation", 0)  # Equal
+        cmds.setAttr(f"{condition_cheek}.secondTerm", 1)
+        cmds.setAttr(f"{condition_cheek}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_cheek}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Cheek", f"{condition_cheek}.firstTerm")
+        cmds.connectAttr(f"{condition_cheek}.outColorR", f"{grp[0]}.visibility")
 
         if self.side == "L":
             mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "_MMX"), ss=True)

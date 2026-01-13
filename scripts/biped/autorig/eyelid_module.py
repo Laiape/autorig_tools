@@ -31,6 +31,8 @@ class EyelidModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
+        
         self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
@@ -53,10 +55,14 @@ class EyelidModule(object):
             self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.settings_ctl)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
             self.local_jnts_grp = cmds.createNode("transform", name=f"{self.module_name}Local_GRP", ss=True, p=self.module_trn)
             self.curves_grp = cmds.createNode("transform", name=f"{self.module_name}Curves_GRP", ss=True, p=self.module_trn)
+            cmds.addAttr(self.face_ctl, longName="Eyes", attributeType="double", defaultValue=2, max=3, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Sockets", attributeType="double", defaultValue=1, max=2, min=0, keyable=True)
         self.extra_controllers_grp = cmds.createNode("transform", name=f"{self.side}_eyelidExtraControllers_GRP", ss=True, p=self.controllers_grp)
+
+        
 
         self.create_curves()
         self.load_guides()
@@ -338,31 +344,30 @@ class EyelidModule(object):
         cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.2, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Fleshy", at="float", min=0, max=1, dv=0.1, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Fleshy_Corners", at="float", min=0, max=1, dv=0, k=True)
-        cmds.addAttr(self.eye_direct_ctl, ln="Eyes_Visibility", at="enum", en="Primary:Secondary:All", dv=1, k=True)
-        cmds.setAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", keyable=False, channelBox=True)
+
 
         condition_primary = cmds.createNode("condition", name="C_eyesPrimaryControllers_COND", ss=True)
-        cmds.setAttr(f"{condition_primary}.operation", 3)  # Less Than
-        cmds.setAttr(f"{condition_primary}.secondTerm", 0)
+        cmds.setAttr(f"{condition_primary}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_primary}.secondTerm", 1)
         cmds.setAttr(f"{condition_primary}.colorIfTrueR", 1)
         cmds.setAttr(f"{condition_primary}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", f"{condition_primary}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Eyes", f"{condition_primary}.firstTerm")
         for grp in self.primary_controller:
             cmds.connectAttr(f"{condition_primary}.outColorR", f"{grp}.visibility", f=True)
         condition_secondary = cmds.createNode("condition", name="C_eyesSecondaryControllers_COND", ss=True)
-        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than
-        cmds.setAttr(f"{condition_secondary}.secondTerm", 1)
+        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_secondary}.secondTerm", 2)
         cmds.setAttr(f"{condition_secondary}.colorIfTrueR", 1)
         cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", f"{condition_secondary}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Eyes", f"{condition_secondary}.firstTerm")
         for grp in self.secondary_controller:
             cmds.connectAttr(f"{condition_secondary}.outColorR", f"{grp}.visibility", f=True)
         condition_all = cmds.createNode("condition", name="C_eyesAllControllers_COND", ss=True)
         cmds.setAttr(f"{condition_all}.operation", 0)  # Equal
-        cmds.setAttr(f"{condition_all}.secondTerm", 2)
+        cmds.setAttr(f"{condition_all}.secondTerm", 3)
         cmds.setAttr(f"{condition_all}.colorIfTrueR", 1)
         cmds.setAttr(f"{condition_all}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Eyes_Visibility", f"{condition_all}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Eyes", f"{condition_all}.firstTerm")
         cmds.connectAttr(f"{condition_all}.outColorR", f"{self.extra_controllers_grp}.visibility", f=True)
 
         # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
@@ -669,8 +674,6 @@ class EyelidModule(object):
         """
         Sockets for the eyelid module.
         """
-        cmds.addAttr(self.eye_direct_ctl, ln="Sockets_Visibility", at="enum", en="None:Main:All", dv=1, k=True)
-        cmds.setAttr(f"{self.eye_direct_ctl}.Sockets_Visibility", keyable=False, channelBox=True)
 
         cmds.select(cl=True)
         upper_socket = guides_manager.get_guides(guide_export=f"{self.side}_upperSocket_JNT")[0]
@@ -697,7 +700,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{main_condition}.secondTerm", 1)
         cmds.setAttr(f"{main_condition}.colorIfTrueR", 1)
         cmds.setAttr(f"{main_condition}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Sockets_Visibility", f"{main_condition}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Sockets", f"{main_condition}.firstTerm")
         cmds.connectAttr(f"{main_condition}.outColorR", f"{main_sockets}.visibility", f=True)
         secondary_sockets = cmds.createNode("transform", name=f"{self.side}_secondaryEyelidSockets_GRP", ss=True, p=self.controllers_grp)
         secondary_condition = cmds.createNode("condition", name=f"{self.side}_secondaryEyelidSockets_COND", ss=True)
@@ -705,7 +708,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{secondary_condition}.secondTerm", 2)
         cmds.setAttr(f"{secondary_condition}.colorIfTrueR", 1)
         cmds.setAttr(f"{secondary_condition}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Sockets_Visibility", f"{secondary_condition}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Sockets", f"{secondary_condition}.firstTerm")
         cmds.connectAttr(f"{secondary_condition}.outColorR", f"{secondary_sockets}.visibility", f=True)
         for i, socket in enumerate(sockets):
             if i < 4:

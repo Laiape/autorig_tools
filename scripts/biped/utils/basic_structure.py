@@ -53,31 +53,30 @@ def create_basic_structure(character_name=None):
     # 5. ATRIBUTOS EN PREFERENCES
     
     # --- SECCIÓN GEO ---
-    cmds.addAttr(settings_ctl, longName="GEO_SEP", niceName="GEOMETRY", attributeType="enum", enumName="----")
+    cmds.addAttr(settings_ctl, longName="GEO_SEP", niceName="GEOMETRY ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.GEO_SEP", keyable=False, channelBox=True, lock=True)
 
-    cmds.addAttr(settings_ctl, longName="geometryType", niceName="Geom Type", attributeType="enum", enumName="Final:Proxy", keyable=True)
-    cmds.addAttr(settings_ctl, longName="geoDisplay", niceName="Geo Display", attributeType="enum", enumName="Selectable:Locked:Off", keyable=True)
+    cmds.addAttr(settings_ctl, longName="geometryType", niceName="Geo Type", attributeType="enum", enumName="Final:Proxy", keyable=True)
+    cmds.addAttr(settings_ctl, longName="geoDisplay", niceName="Geo Display", attributeType="enum", enumName="Selectable:Locked:Off", keyable=True, defaultValue=1)
     cmds.addAttr(settings_ctl, longName="geoSmooth", niceName="Geo Smooth", attributeType="float", defaultValue=0, minValue=0, maxValue=2, keyable=True)
 
     # --- SECCIÓN RIG VISIBILITY ---
-    cmds.addAttr(settings_ctl, longName="RIG_VIS_SEP", niceName="RIG VISIBILITY", attributeType="enum", enumName="----")
+    cmds.addAttr(settings_ctl, longName="RIG_VIS_SEP", niceName="RIG VISIBILITY ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.RIG_VIS_SEP", keyable=False, channelBox=True, lock=True)
     cmds.addAttr(settings_ctl, longName="showSkeleton", niceName="Show Skeleton", attributeType="bool", keyable=True, defaultValue=0)
     cmds.addAttr(settings_ctl, longName="showModules", niceName="Show Modules", attributeType="bool", keyable=True, defaultValue=0)
 
     # --- SECCIÓN PLAYBLAST ---
-    cmds.addAttr(settings_ctl, longName="PLAYBLAST_SEP", niceName="PLAYBLAST", attributeType="enum", enumName="----")
+    cmds.addAttr(settings_ctl, longName="PLAYBLAST_SEP", niceName="PLAYBLAST ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.PLAYBLAST_SEP", keyable=False, channelBox=True, lock=True)
     cmds.addAttr(settings_ctl, longName="hideControllersOnPlayblast", niceName="Hide Controllers on Playblast", attributeType="bool", keyable=True)
 
     
 
     # 6. LÓGICA DE CONEXIONES
-
     # Visibilidad Final vs Proxy (Enum)
     # 0 = Final, 1 = Proxy. Usamos un condition node para alternar.
-    geo_cond = cmds.createNode("condition", name="C_geoVis_COND")
+    geo_cond = cmds.createNode("condition", name="C_geoVis_COND", ss=True)
     cmds.setAttr(f"{geo_cond}.secondTerm", 0) # Si el valor es 0...
     cmds.connectAttr(f"{settings_ctl}.geometryType", f"{geo_cond}.firstTerm")
     
@@ -91,14 +90,24 @@ def create_basic_structure(character_name=None):
     cmds.connectAttr(f"{geo_cond}.outColorG", f"{proxy}.visibility")
 
     # Reference (Override Display Type)
-    ref_cond = cmds.createNode("condition", name="C_reference_COND")
+    ref_cond = cmds.createNode("condition", name="C_reference_COND", ss=True)
     cmds.setAttr(f"{ref_cond}.secondTerm", 0) # Si el valor es 0...
-    cmds.setAttr(f"{ref_cond}.colorIfTrueR", 0) # Selectable
+    cmds.setAttr(f"{ref_cond}.colorIfTrueR", 1) # Selectable
     cmds.setAttr(f"{ref_cond}.colorIfFalseR", 2) # Locked
     cmds.connectAttr(f"{settings_ctl}.geoDisplay", f"{ref_cond}.firstTerm")
-    
-    cmds.connectAttr(f"{settings_ctl}.geoDisplay", f"{nodes[3]}.overrideEnabled")
-    cmds.connectAttr(f"{ref_cond}.outColorR", f"{nodes[3]}.overrideDisplayType")
+
+    ref_cond_vis = cmds.createNode("condition", name="C_referenceVis_COND", ss=True)
+    cmds.setAttr(f"{ref_cond_vis}.secondTerm", 2) # Si el valor es 2...
+    cmds.setAttr(f"{ref_cond_vis}.colorIfTrueR", 0) # Off
+    cmds.setAttr(f"{ref_cond_vis}.colorIfFalseR", 1) # On
+    cmds.connectAttr(f"{settings_ctl}.geoDisplay", f"{ref_cond_vis}.firstTerm")
+
+    plus_minus_avg = cmds.createNode("plusMinusAverage", name="C_settings_PMA", ss=True)
+    cmds.connectAttr(f"{ref_cond}.outColorR", f"{plus_minus_avg}.input1D[0]")
+    cmds.connectAttr(f"{ref_cond_vis}.outColorR", f"{plus_minus_avg}.input1D[1]")
+
+    cmds.setAttr(f"{nodes[3]}.overrideEnabled", 1)
+    cmds.connectAttr(f"{plus_minus_avg}.output1D", f"{nodes[3]}.overrideDisplayType")
     
 
 

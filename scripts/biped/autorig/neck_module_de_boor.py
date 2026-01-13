@@ -54,7 +54,8 @@ class NeckModule(object):
                             {
                                 "head_ctl": self.neck_ctls[-1],
                                 "neck_ctl": self.neck_ctls[0],
-                                "head_guide": self.head_guide
+                                "head_guide": self.head_guide,
+                                "face_ctl": self.face_ctl,
                             })
         
 
@@ -93,6 +94,11 @@ class NeckModule(object):
 
         self.neck_nodes = []
         self.neck_ctls = []
+
+        face_nodes, self.face_ctl = curve_tool.create_controller(name=f"{self.side}_face", offset=["GRP", "ANM"])
+        self.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
+        cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
         
         for i, jnt in enumerate(self.neck_chain):
 
@@ -104,6 +110,8 @@ class NeckModule(object):
             if i == len(self.neck_chain) - 1:
 
                 corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP"])
+                cmds.parent(face_nodes[0], corner_ctl)
+                cmds.matchTransform(face_nodes[0], corner_ctl, pos=True, rot=True)
 
             if i == 0 or i == len(self.neck_chain) - 1:
 
@@ -124,6 +132,8 @@ class NeckModule(object):
         skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{throat_ctl}.worldMatrix[0]", f"{skin_throat_jnt}.offsetParentMatrix")
         cmds.xform(skin_throat_jnt, m=om.MMatrix.kIdentity)
+
+        
 
         
 

@@ -28,6 +28,7 @@ class EarModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
+        self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     def make(self, side):
@@ -48,7 +49,16 @@ class EarModule(object):
             self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.settings_ctl)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
+
+            cmds.addAttr(self.face_ctl, longName="Ears", attributeType="double", defaultValue=1, max=1, min=0, keyable=True)
+            condition_node = cmds.createNode("condition", name=f"{self.face_ctl}_Ears_COND")
+            cmds.connectAttr(f"{self.face_ctl}.Ears", f"{condition_node}.firstTerm")
+            cmds.setAttr(f"{condition_node}.secondTerm", 1)
+            cmds.setAttr(f"{condition_node}.operation", 3)  # Greater Than or Equal
+            cmds.setAttr(f"{condition_node}.colorIfTrueR", 1)
+            cmds.setAttr(f"{condition_node}.colorIfFalseR", 0)
+            cmds.connectAttr(f"{condition_node}.outColorR", f"{self.controllers_grp}.visibility")
 
         self.load_guides()
         self.create_controllers()

@@ -28,6 +28,8 @@ class JawModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
+        self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
+        
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
@@ -46,12 +48,15 @@ class JawModule(object):
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
+        cmds.addAttr(self.face_ctl, longName="Jaw", attributeType="double", defaultValue=1, max=2, min=0, keyable=True)
+        cmds.addAttr(self.face_ctl, longName="Lips", attributeType="double", defaultValue=2, max=3, min=0, keyable=True)
+
         self.load_guides()
         self.create_controllers()
         self.collision_setup()
         self.create_lips_setup()
 
-        cmds.parent(self.controllers_grp, self.settings_ctl)
+        cmds.parent(self.controllers_grp, self.face_ctl)
 
     def lock_attributes(self, ctl, attrs):
 
@@ -821,32 +826,45 @@ class JawModule(object):
             cmds.parent(out_nodes[0], out_controllers)
 
 
-
-        # Connect visibility of lips controllers
-        cmds.addAttr(self.jaw_ctl, longName="Lips_Visibility", at="enum", enumName="Primary:Secondary:All", k=True)
-        cmds.setAttr(f"{self.jaw_ctl}.Lips_Visibility", 1, k=False, cb=True)
-
         condition_primary = cmds.createNode("condition", name="C_lipsPrimaryControllers_COND", ss=True)
-        cmds.setAttr(f"{condition_primary}.operation", 3)  # Less Than
-        cmds.setAttr(f"{condition_primary}.secondTerm", 0)
+        cmds.setAttr(f"{condition_primary}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_primary}.secondTerm", 1)
         cmds.setAttr(f"{condition_primary}.colorIfTrueR", 1)
         cmds.setAttr(f"{condition_primary}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_primary}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Lips", f"{condition_primary}.firstTerm")
         cmds.connectAttr(f"{condition_primary}.outColorR", f"{main_lips_controllers}.visibility", f=True)
         condition_secondary = cmds.createNode("condition", name="C_lipsSecondaryControllers_COND", ss=True)
-        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than
-        cmds.setAttr(f"{condition_secondary}.secondTerm", 1)
+        cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_secondary}.secondTerm", 2)
         cmds.setAttr(f"{condition_secondary}.colorIfTrueR", 1)
         cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_secondary}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Lips", f"{condition_secondary}.firstTerm")
         cmds.connectAttr(f"{condition_secondary}.outColorR", f"{secondary_controllers_nodes}.visibility", f=True)
         condition_all = cmds.createNode("condition", name="C_lipsAllControllers_COND", ss=True)
         cmds.setAttr(f"{condition_all}.operation", 0)  # Equal
-        cmds.setAttr(f"{condition_all}.secondTerm", 2)
+        cmds.setAttr(f"{condition_all}.secondTerm", 3)
         cmds.setAttr(f"{condition_all}.colorIfTrueR", 1)
         cmds.setAttr(f"{condition_all}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.jaw_ctl}.Lips_Visibility", f"{condition_all}.firstTerm")
+        cmds.connectAttr(f"{self.face_ctl}.Lips", f"{condition_all}.firstTerm")
         cmds.connectAttr(f"{condition_all}.outColorR", f"{out_controllers}.visibility", f=True)
+
+        condition_jaw = cmds.createNode("condition", name="C_jawControllers_COND", ss=True)
+        cmds.setAttr(f"{condition_jaw}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_jaw}.secondTerm", 1)
+        cmds.setAttr(f"{condition_jaw}.colorIfTrueR", 1)
+        cmds.setAttr(f"{condition_jaw}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Jaw", f"{condition_jaw}.firstTerm")
+        cmds.connectAttr(f"{condition_jaw}.outColorR", f"{self.jaw_nodes[0]}.visibility")
+        cmds.connectAttr(f"{condition_jaw}.outColorR", f"{self.upper_jaw_nodes[0]}.visibility")
+
+        secondary_condition_jaw = cmds.createNode("condition", name="C_jawSecondaryControllers_COND", ss=True)
+        cmds.setAttr(f"{secondary_condition_jaw}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{secondary_condition_jaw}.secondTerm", 2)
+        cmds.setAttr(f"{secondary_condition_jaw}.colorIfTrueR", 1)
+        cmds.setAttr(f"{secondary_condition_jaw}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{self.face_ctl}.Jaw", f"{secondary_condition_jaw}.firstTerm")
+        cmds.connectAttr(f"{secondary_condition_jaw}.outColorR", f"{'L_jaw_GRP'}.visibility")
+        cmds.connectAttr(f"{secondary_condition_jaw}.outColorR", f"{'R_jaw_GRP'}.visibility")
 
     
         self.upper_bezier = upper_bezier_curve
