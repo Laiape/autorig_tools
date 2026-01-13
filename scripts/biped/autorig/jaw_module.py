@@ -27,6 +27,7 @@ class JawModule(object):
         self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+        self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
@@ -50,7 +51,7 @@ class JawModule(object):
         self.collision_setup()
         self.create_lips_setup()
 
-        cmds.parent(self.controllers_grp, self.head_ctl)
+        cmds.parent(self.controllers_grp, self.settings_ctl)
 
     def lock_attributes(self, ctl, attrs):
 

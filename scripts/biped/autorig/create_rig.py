@@ -169,7 +169,7 @@ class AutoRig(object):
             # Space switches
             matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik
             matrix_manager.space_switches(target=arm_pv, sources=[body, arm_ik, masterwalk, clavicle, chest], default_value=1) # Arm pv
-            matrix_manager.space_switches(target=leg_ik, sources=[local_hip, body, masterwalk], default_value=1) # Leg ik
+            matrix_manager.space_switches(target=leg_ik, sources=[masterwalk, local_hip, body], default_value=1) # Leg ik
             matrix_manager.space_switches(target=leg_pv, sources=[body, leg_ik, masterwalk], default_value=1) # Leg pv
             matrix_manager.space_switches(target=shoulder_fk, sources=[clavicle, chest, body], default_value=1) # Shoulder fk
             matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip, masterwalk], default_value=1) # Hip fk

@@ -5,7 +5,7 @@
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
         "character_ctl": "C_character_CTL",
-        "preferences_ctl": "C_preferences_CTL"
+        "preferences_ctl": "C_settings_CTL"
     },
     "spine_module": {
         "local_hip_ctl": "C_localHip_CTL",

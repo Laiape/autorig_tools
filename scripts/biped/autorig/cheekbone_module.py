@@ -30,6 +30,7 @@ class CheekboneModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
@@ -45,7 +46,7 @@ class CheekboneModule(object):
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
         cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.head_ctl)
+        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.settings_ctl)
 
         self.load_guides()
         self.create_controllers()
@@ -82,14 +83,26 @@ class CheekboneModule(object):
         """
 
         mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=self.module_trn)
+        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
+        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
+        
+        # Create fourByFourMatrix for translation
+        row_from_matrix = cmds.createNode("rowFromMatrix", name=ctl.replace("_CTL", "RFM"), ss=True)
+        cmds.setAttr(f"{row_from_matrix}.input", 3)
+        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
+    
+        fbf = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "FBF"), ss=True)
+        cmds.connectAttr(f"{row_from_matrix}.outputX", f"{fbf}.in30")
+        cmds.connectAttr(f"{row_from_matrix}.outputY", f"{fbf}.in31")
+        cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{fbf}.in32")
+        cmds.connectAttr(f"{fbf}.output", f"{local_grp}.offsetParentMatrix")
+
+        # Connect to multMatrix
         cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
         cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
-        grp_wm = cmds.getAttr(f"{grp}.worldMatrix[0]")
-        cmds.setAttr(f"{mmx}.matrixIn[2]", grp_wm, type="matrix")
-        cmds.connectAttr(f"{mmx}.matrixSum", f"{local_grp}.offsetParentMatrix")
+        cmds.connectAttr(f"{mmx}.matrixSum", f"{local_trn}.offsetParentMatrix")
 
-        return local_grp, mmx
+        return local_trn, mmx
 
     def create_controllers(self):
 
@@ -110,12 +123,11 @@ class CheekboneModule(object):
                 grp, ctl = curve_tool.create_controller(name=name, parent=self.controllers_grp, offset=["GRP", "OFF"])
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
-                self.lock_attributes(ctl, ["v"])
             else:
                 grp, ctl = curve_tool.create_controller(name=name, parent=cheeckbones_ctls[0], offset=["GRP", "OFF"])
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
-                self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])    
+            self.lock_attributes(ctl, ["v"])    
 
             cmds.matchTransform(grp[0], guide)
             trn, mmx = self.local_mmx(ctl, grp[0])
@@ -126,9 +138,8 @@ class CheekboneModule(object):
                 local_trns.append(trn)
                 skinning_jnts.append(skinning_jnt)
             else:
-                # cmds.connectAttr(f"{cheeckbones_ctls[0]}.matrix", f"{mmx}.matrixIn[3]")
-                cmds.parent(trn, local_trns[0])
-                # cmds.parent(skinning_jnt, skinning_jnts[0])
+                grp = trn.replace("_TRN", "_GRP")
+                cmds.parent(grp, local_trns[0])
                 local_trns.append(trn)
                 skinning_jnts.append(skinning_jnt)
 
