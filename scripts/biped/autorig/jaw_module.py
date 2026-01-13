@@ -58,6 +58,14 @@ class JawModule(object):
 
         cmds.parent(self.controllers_grp, self.face_ctl)
 
+        data_manager.DataExportBiped().append_data("jaw_module", 
+                                                
+                                                {"jaw_ctl": self.jaw_ctl,
+                                                 "upper_jaw_ctl": self.upper_jaw_ctl,
+                                                 "chin_ctl": self.chin_ctl,
+                                                 "jaw_child": self.jaw_child
+                                                })
+
     def lock_attributes(self, ctl, attrs):
 
         """

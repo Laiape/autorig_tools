@@ -25,6 +25,8 @@ from biped.autorig import ear_module
 from biped.autorig import nose_module
 from biped.autorig import jaw_module
 from biped.autorig import cheekbone_module
+from biped.autorig import tongue_module
+from biped.autorig import teeth_module
 
 # Reload utils
 reload(guides_manager) 
@@ -49,6 +51,9 @@ reload(ear_module)
 reload(nose_module)
 reload(jaw_module)
 reload(cheekbone_module)
+reload(tongue_module)
+reload(teeth_module)
+
 
 
 class AutoRig(object):
@@ -114,6 +119,8 @@ class AutoRig(object):
         jaw_module.JawModule().make("C")
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
+        tongue_module.TongueModule().make("C")
+        teeth_module.TeethModule().make("C")
 
         cmds.inViewMessage(
     amg='Completed <hl>BIPED RIG</hl> build.',
@@ -229,7 +236,7 @@ class AutoRig(object):
 
         for node in all_nodes:
             if node not in skin_clusters:
-                if cmds.objectType(node) == "fourByFourMatrix":
+                if cmds.objectType(node) == "fourByFourMatrix" or cmds.objectType(node) == "rowFromMatrix":
                     continue
                 else:
                     cmds.connectAttr(float_math + ".outFloat", node + ".isHistoricallyInteresting", force=True)

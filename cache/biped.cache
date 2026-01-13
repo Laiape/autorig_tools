@@ -54,5 +54,15 @@
         "neck_ctl": "C_neck_CTL",
         "head_guide": "C_head_GUIDE",
         "face_ctl": "C_face_CTL"
+    },
+    "jaw_module": {
+        "jaw_ctl": "C_jaw_CTL",
+        "upper_jaw_ctl": "C_upperJaw_CTL",
+        "chin_ctl": "C_chin_CTL",
+        "jaw_child": [
+            "C_chinLocal_TRN",
+            "L_jawLocal_TRN",
+            "R_jawLocal_TRN"
+        ]
     }
 }

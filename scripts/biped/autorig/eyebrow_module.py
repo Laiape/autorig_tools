@@ -239,7 +239,7 @@ class EyebrowModule(object):
 
         """
 
-        cmds.addAttr(self.main_eyebrow_ctl, longName="SLIDE", attributeType="enum", enumName="___")
+        cmds.addAttr(self.main_eyebrow_ctl, longName="SLIDE", niceName="SLIDE ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.main_eyebrow_ctl}.SLIDE", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(self.main_eyebrow_ctl, longName="slide", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 

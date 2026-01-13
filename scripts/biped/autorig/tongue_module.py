@@ -18,7 +18,7 @@ reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
 
-class tongueModule(object):
+class TongueModule(object):
 
     def __init__(self):
 
@@ -61,7 +61,7 @@ class tongueModule(object):
         self.load_guides()
         self.create_controllers()
 
-    def lock_attributes(self, ctl, attrs):
+    def _lock_attributes(self, ctl, attrs):
 
         """
         Lock and hide attributes on a controller.
@@ -105,21 +105,29 @@ class tongueModule(object):
         Create controllers for the tongue module.
         """
         de_boors_selection = []
+        tongue_ctrls = []
+
         for jnt in self.tongue_guides:
 
-            tongue_guide = cmds.createNode("transform", name=jnt.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
-            cmds.matchTransform(tongue_guide, jnt)
-
             grp, ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"], parent=self.controllers_grp)
-            self.lock_attributes(ctl, ["v"])
-            cmds.connectAttr(f"{tongue_guide}.worldMatrix[0]", f"{grp[0]}.offsetParentMatrix")
+            self._lock_attributes(ctl, ["v"])
+            cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{grp[0]}.offsetParentMatrix")
+            
+            if tongue_ctrls:
+                cmds.parent(grp[0], tongue_ctrls[-1])
+                cmds.connectAttr(f"{tongue_ctrls[-1]}.matrix", f"{mmx}.matrixIn[2]")
 
             local_grp, mmx = self.local_mmx(ctl, grp[0])
             de_boors_selection.append(local_grp)
+            tongue_ctrls.append(ctl)
+            cmds.matchTransform(grp[0], jnt, pos=True, rot=True)
+            cmds.matchTransform(local_grp, jnt, pos=True, rot=True) 
 
         # De Boor Tongue Ribbon
-        skinning_jnts, temp = ribbon.de_boor_ribbon(de_boors_selection, f"{self.side}_tongue", aim_axis="x", up_axis="y", num_joints=len(self.tongue_guides), skeleton_grp=self.skeleton_grp)
+        skinning_jnts, temp = ribbon.de_boor_ribbon(de_boors_selection, name=f"{self.side}_tongueSkinning", aim_axis="x", up_axis="y", num_joints=len(self.tongue_guides), skeleton_grp=self.skeleton_grp)
 
         for t in temp:
             cmds.delete(t)
+
+        cmds.delete(self.tongue_guides)
         
