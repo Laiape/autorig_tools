@@ -223,3 +223,80 @@ class SkinManager(object):
                 cmds.skinCluster(sc, e=True, ai=new_j, lw=True, wt=0)
                 
         return True
+    
+    def export_skins(self):
+        """
+        Exporta todos los skins de las mallas encontradas en geo_GRP a un único archivo JSON.
+        Inicializa capas de ngSkinTools si no existen.
+        """
+        if not NG_AVAILABLE:
+            cmds.warning("ngSkinTools2 no está instalado o no se pudo cargar.")
+            return
+
+        # Aseguramos que el directorio exista
+        if not os.path.exists(self.folder_path):
+            os.makedirs(self.folder_path)
+
+        print(f"\n# --- INICIANDO EXPORTACIÓN: {self.asset_name} ---")
+
+        # 1. Recolectar mallas objetivo (tu lógica original mejorada)
+        target_meshes = []
+        
+        # Buscamos grupos que terminen en geo_GRP (insensible a mayúsculas)
+        geo_groups = [t for t in cmds.ls(type="transform") if t.lower().endswith("geo_grp")]
+        
+        # Si no encuentra geo_GRP, intenta buscar todo en la escena (opcional, ajusta según necesidad)
+        if not geo_groups:
+            cmds.warning("No se encontró ningún grupo 'geo_GRP'.")
+            
+        for grp in geo_groups:
+            # Listar todas las formas (shapes) y obtener sus transform padres
+            relatives = cmds.listRelatives(grp, ad=True, type="mesh", f=True) or []
+            for m in relatives:
+                p = cmds.listRelatives(m, p=True, f=True)[0]
+                # Evitamos duplicados
+                if p not in target_meshes:
+                    target_meshes.append(p)
+
+        # 2. Diccionario maestro para guardar todo en un solo JSON
+        master_data = {}
+
+        for mesh in target_meshes:
+            # Validar que tenga skinCluster
+            hist = cmds.listHistory(mesh, pruneDagObjects=True) or []
+            if not cmds.ls(hist, type="skinCluster"):
+                continue
+
+            clean_name = mesh.split("|")[-1].split(":")[-1]
+
+            # --- LÓGICA NG SKIN TOOLS ---
+            try:
+                # Comprobamos si las capas existen
+                layers_handler = ngst_api.Layers(mesh)
+                
+                if not layers_handler.exists():
+                    print(f"  [INIT LAYERS] Inicializando capas NG para: {clean_name}")
+                    # Inicializa las capas basándose en el skinCluster existente
+                    ngst_api.init_layers(mesh)
+                
+                # Exportamos la data a una variable (sin pasar 'file' devuelve un diccionario)
+                mesh_data = ngst_api.export_json(mesh)
+                
+                # Agregamos al diccionario maestro
+                master_data[clean_name] = mesh_data
+                print(f"  [BUFFERED] Datos capturados para: {clean_name}")
+
+            except Exception as e:
+                cmds.warning(f"Error procesando {clean_name}: {e}")
+
+        # 3. Escribir el archivo JSON único
+        if master_data:
+            try:
+                with open(self.json_path, 'w') as f:
+                    json.dump(master_data, f, indent=2)
+                print(f"# --- EXPORTACIÓN COMPLETADA ---")
+                print(f"Archivo guardado en: {self.json_path}")
+            except IOError as e:
+                cmds.error(f"No se pudo guardar el archivo JSON: {e}")
+        else:
+            cmds.warning("No se encontraron datos de skin válidos para exportar.")
