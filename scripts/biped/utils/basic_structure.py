@@ -57,7 +57,7 @@ def create_basic_structure(character_name=None):
     cmds.setAttr(f"{settings_ctl}.GEO_SEP", keyable=False, channelBox=True, lock=True)
 
     cmds.addAttr(settings_ctl, longName="geometryType", niceName="Geo Type", attributeType="enum", enumName="Final:Proxy", keyable=True)
-    cmds.addAttr(settings_ctl, longName="geoDisplay", niceName="Geo Display", attributeType="enum", enumName="Selectable:Locked:Off", keyable=True, defaultValue=1)
+    cmds.addAttr(settings_ctl, longName="geoDisplay", niceName="Geo Display", attributeType="enum", enumName="Locked:Selectable:Off", keyable=True, defaultValue=0)
     cmds.addAttr(settings_ctl, longName="geoSmooth", niceName="Geo Smooth", attributeType="float", defaultValue=0, minValue=0, maxValue=2, keyable=True)
 
     # --- SECCIÓN RIG VISIBILITY ---
@@ -78,8 +78,6 @@ def create_basic_structure(character_name=None):
     geo_cond = cmds.createNode("condition", name="C_geoVis_COND", ss=True)
     cmds.setAttr(f"{geo_cond}.secondTerm", 0) # Si el valor es 0...
     cmds.connectAttr(f"{settings_ctl}.geometryType", f"{geo_cond}.firstTerm")
-    
-    # Salidas: Final visible si 0, Proxy visible si 1
     cmds.setAttr(f"{geo_cond}.colorIfTrueR", 1) # Final On
     cmds.setAttr(f"{geo_cond}.colorIfTrueG", 0) # Proxy Off
     cmds.setAttr(f"{geo_cond}.colorIfFalseR", 0) # Final Off
@@ -96,8 +94,8 @@ def create_basic_structure(character_name=None):
     cmds.connectAttr(f"{settings_ctl}.geoDisplay", f"{ref_cond}.firstTerm")
 
     ref_cond_vis = cmds.createNode("condition", name="C_referenceVis_COND", ss=True)
-    cmds.setAttr(f"{ref_cond_vis}.secondTerm", 2) # Si el valor es 2...
-    cmds.setAttr(f"{ref_cond_vis}.colorIfTrueR", 0) # Off
+    cmds.setAttr(f"{ref_cond_vis}.secondTerm", 1) # Si el valor es 1...
+    cmds.setAttr(f"{ref_cond_vis}.colorIfTrueR", 2) # Off
     cmds.setAttr(f"{ref_cond_vis}.colorIfFalseR", 1) # On
     cmds.connectAttr(f"{settings_ctl}.geoDisplay", f"{ref_cond_vis}.firstTerm")
 
@@ -107,8 +105,41 @@ def create_basic_structure(character_name=None):
 
     cmds.setAttr(f"{nodes[3]}.overrideEnabled", 1)
     cmds.connectAttr(f"{plus_minus_avg}.output1D", f"{nodes[3]}.overrideDisplayType")
-    
 
+    ref_off = cmds.createNode("condition", name="C_referenceOff_COND", ss=True)
+    cmds.setAttr(f"{ref_off}.secondTerm", 2) # Si el valor es 2...
+    cmds.setAttr(f"{ref_off}.colorIfTrueR", 0) # Visibility Off
+    cmds.setAttr(f"{ref_off}.colorIfFalseR", 1) # Visibility On
+    cmds.connectAttr(f"{settings_ctl}.geoDisplay", f"{ref_off}.firstTerm")
+    cmds.connectAttr(f"{ref_off}.outColorR", f"{nodes[3]}.visibility")
+    
+    # Geo Smooth
+    all_meshes = cmds.ls(type="mesh", long=True)
+    mesh_transforms = list(set(cmds.listRelatives(all_meshes, parent=True, fullPath=True)))
+
+    for i, mesh in enumerate(mesh_transforms):
+        # Nombre único para el nodo condition
+        cond_node = cmds.createNode("condition", name=f"{mesh.split('|')[-1]}_smooth_COND")
+        
+        # Configuración del Condition:
+        cmds.setAttr(f"{cond_node}.operation", 2) # Greater Than
+        cmds.setAttr(f"{cond_node}.secondTerm", 0)
+        
+        # Conexiones
+        cmds.connectAttr(f"{settings_ctl}.geoSmooth", f"{cond_node}.firstTerm")
+        cmds.connectAttr(f"{settings_ctl}.geoSmooth", f"{cond_node}.colorIfTrueR")
+        cmds.setAttr(f"{cond_node}.colorIfFalseR", 0)
+
+        # Condition -> Mesh (Atributos de Smooth Mesh)
+        shapes = cmds.listRelatives(mesh, shapes=True, fullPath=True)
+        if shapes:
+            for shape in shapes:
+                # Activamos el preview si el atributo es mayor que 0
+                cmds.connectAttr(f"{cond_node}.outColorR", f"{shape}.displaySmoothMesh", f=True)
+                # Seteamos el nivel de subdivisión
+                cmds.connectAttr(f"{settings_ctl}.geoSmooth", f"{shape}.smoothLevel", f=True)
+
+    print(f"Subdivisión configurada para {len(mesh_transforms)} objetos.")
 
     # Hide Controllers (Reverse node)
     pb_rev = cmds.createNode("reverse", name="C_playblast_REV")

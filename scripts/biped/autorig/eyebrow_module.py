@@ -54,7 +54,7 @@ class EyebrowModule(object):
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
         
-            cmds.addAttr(self.face_ctl, longName="Brows", attributeType="double", defaultValue=2, max=3, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Brows", attributeType="long", defaultValue=2, max=3, min=0, keyable=True)
 
 
         self.load_guides()

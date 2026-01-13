@@ -49,7 +49,7 @@ class tongueModule(object):
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
 
-        cmds.addAttr(self.face_ctl, longName="Tongue", attributeType="double", defaultValue=1, max=1, min=0, keyable=True)
+        cmds.addAttr(self.face_ctl, longName="Tongue", attributeType="long", defaultValue=1, max=1, min=0, keyable=True)
         condition_tongue = cmds.createNode("condition", name=f"{self.module_name}Controllers_COND", ss=True)
         cmds.setAttr(f"{condition_tongue}.operation", 0)  # Equal
         cmds.setAttr(f"{condition_tongue}.secondTerm", 1)

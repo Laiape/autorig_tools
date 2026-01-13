@@ -51,7 +51,7 @@ class NoseModule(object):
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
-            cmds.addAttr(self.face_ctl, longName="Nose", attributeType="double", defaultValue=1, max=1, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Nose", attributeType="long", defaultValue=1, max=1, min=0, keyable=True)
             
             condition_nose = cmds.createNode("condition", name="C_noseControllers_COND", ss=True)
             cmds.setAttr(f"{condition_nose}.operation", 0)  # Equal

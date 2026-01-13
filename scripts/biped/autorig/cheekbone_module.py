@@ -51,8 +51,8 @@ class CheekboneModule(object):
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
-            cmds.addAttr(self.face_ctl, longName="Cheekbones", attributeType="double", defaultValue=2, max=2, min=0, keyable=True)
-            cmds.addAttr(self.face_ctl, longName="Cheek", attributeType="double", defaultValue=1, max=1, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Cheekbones", attributeType="long", defaultValue=2, max=2, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Cheek", attributeType="long", defaultValue=1, max=1, min=0, keyable=True)
         else:
 
             self.module_trn = self.module_name + "Module_GRP"

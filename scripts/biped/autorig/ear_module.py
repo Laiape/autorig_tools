@@ -51,7 +51,7 @@ class EarModule(object):
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
 
-            cmds.addAttr(self.face_ctl, longName="Ears", attributeType="double", defaultValue=1, max=1, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Ears", attributeType="long", defaultValue=1, max=1, min=0, keyable=True)
             condition_node = cmds.createNode("condition", name=f"{self.face_ctl}_Ears_COND")
             cmds.connectAttr(f"{self.face_ctl}.Ears", f"{condition_node}.firstTerm")
             cmds.setAttr(f"{condition_node}.secondTerm", 1)

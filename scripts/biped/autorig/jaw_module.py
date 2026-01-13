@@ -48,8 +48,8 @@ class JawModule(object):
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
-        cmds.addAttr(self.face_ctl, longName="Jaw", attributeType="double", defaultValue=1, max=2, min=0, keyable=True)
-        cmds.addAttr(self.face_ctl, longName="Lips", attributeType="double", defaultValue=2, max=3, min=0, keyable=True)
+        cmds.addAttr(self.face_ctl, longName="Jaw", attributeType="long", defaultValue=1, max=2, min=0, keyable=True)
+        cmds.addAttr(self.face_ctl, longName="Lips", attributeType="long", defaultValue=2, max=3, min=0, keyable=True)
 
         self.load_guides()
         self.create_controllers()

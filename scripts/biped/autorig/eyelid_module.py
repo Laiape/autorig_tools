@@ -58,8 +58,8 @@ class EyelidModule(object):
             self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
             self.local_jnts_grp = cmds.createNode("transform", name=f"{self.module_name}Local_GRP", ss=True, p=self.module_trn)
             self.curves_grp = cmds.createNode("transform", name=f"{self.module_name}Curves_GRP", ss=True, p=self.module_trn)
-            cmds.addAttr(self.face_ctl, longName="Eyes", attributeType="double", defaultValue=2, max=3, min=0, keyable=True)
-            cmds.addAttr(self.face_ctl, longName="Sockets", attributeType="double", defaultValue=1, max=2, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Eyes", attributeType="long", defaultValue=2, max=3, min=0, keyable=True)
+            cmds.addAttr(self.face_ctl, longName="Sockets", attributeType="long", defaultValue=1, max=2, min=0, keyable=True)
         self.extra_controllers_grp = cmds.createNode("transform", name=f"{self.side}_eyelidExtraControllers_GRP", ss=True, p=self.controllers_grp)
 
         
