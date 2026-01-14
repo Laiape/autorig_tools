@@ -63,6 +63,9 @@ class EarModule(object):
         self.load_guides()
         self.create_controllers()
 
+        # Clean up
+        cmds.delete(self.ear_guides[0])
+
     def lock_attributes(self, ctl, attrs):
 
         """

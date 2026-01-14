@@ -62,6 +62,26 @@ class FingersModule(object):
         for attr in attrs:
             cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
     
+    def fk_constraint(self, current_ctl, parent_ctl=None):
+
+        """
+        Create an fk constraint from parent_ctl to current_ctl.
+        args:
+            current_ctl (str): The name of the current controller to constrain.
+            parent_ctl (str): The name of the parent controller to be constrained.
+        """
+        if cmds.objExists(current_ctl):
+            parent_grp = parent_ctl.replace("CTL", "GRP")
+        
+        mmx = cmds.createNode("multMatrix", name=current_ctl.replace("CTL", "MMX"), ss=True)
+        cmds.connectAttr(f"{current_ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
+        if parent_ctl:
+            cmds.connectAttr(f"{parent_grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{parent_ctl}.matrix", f"{mmx}.matrixIn[2]")
+
+
+
+    
     def load_guides(self):
 
         cmds.select(clear=True)

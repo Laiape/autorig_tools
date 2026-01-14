@@ -62,6 +62,12 @@ class EyebrowModule(object):
         self.ribbon_setup()
         self.slide_setup()
 
+        # Clean up
+        cmds.delete(self.main_eyebrow)
+        if self.side == "L":
+            cmds.delete(self.mid_eyebrow)
+
+
     def lock_attributes(self, ctl, attrs):
 
         """
@@ -131,6 +137,7 @@ class EyebrowModule(object):
             cmds.delete(self.radius_loc)
         
         self.sphere = cmds.ls("C_eyebrowSlide_NURB", long=True)[0]
+        cmds.hide(self.sphere)
 
         condition_primary = cmds.createNode("condition", name="C_eyebrowPrimary_COND", ss=True)
         cmds.setAttr(f"{condition_primary}.operation", 3)  # Greater Than or Equal
@@ -153,22 +160,28 @@ class EyebrowModule(object):
             cmds.connectAttr(f"{condition_primary}.outColorR", f"{mid_eyebrow_nodes[0]}.visibility") # Connect visibility
 
             cmds.parent(mid_eyebrow_nodes[0], self.controllers_grp)
-            # cmds.matchTransform(mid_eyebrow_nodes[0], self.mid_eyebrow)
             self.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
             mid_local_grp, mid_local_trn = self.local(mid_eyebrow_ctl)
-            self.mid_eyebrow_guide = cmds.createNode("transform", name="C_eyebrowMid_GUIDE", ss=True, p=self.module_trn)
-            cmds.matchTransform(self.mid_eyebrow_guide, self.mid_eyebrow)
+            mid_eyebrow_guide = cmds.createNode("transform", name="C_eyebrowMid_GUIDE", ss=True, p=self.module_trn)
+            cmds.matchTransform(mid_eyebrow_guide, self.mid_eyebrow)
             jnt = cmds.createNode("joint", name="C_eyebrowMidSkinning_JNT", ss=True, p=self.skeleton_grp)
-            cmds.connectAttr(f"{mid_local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{mid_local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
+
+            # Set up mid eyebrow parentMatrix
+            fbf_mid = cmds.createNode("fourByFourMatrix", name="C_eyebrowMid_FBF", ss=True)
+            cmds.setAttr(f"{fbf_mid}.in30", cmds.getAttr(f"{mid_eyebrow_guide}.translateX"))
+            cmds.setAttr(f"{fbf_mid}.in31", cmds.getAttr(f"{mid_eyebrow_guide}.translateY"))
+            cmds.setAttr(f"{fbf_mid}.in32", cmds.getAttr(f"{mid_eyebrow_guide}.translateZ"))
+            
             
             parent_matrix = cmds.createNode("parentMatrix", name="C_eyebrowMid_PM", ss=True)
-            cmds.connectAttr(f"{self.mid_eyebrow_guide}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(f"{fbf_mid}.output", f"{parent_matrix}.inputMatrix")
             cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
-            head_inverse = cmds.getAttr(f"{self.head_grp}.worldInverseMatrix[0]")
-            mult_matrix = cmds.createNode("multMatrix", name="C_eyebrowMid_MM", ss=True)
+
+            mult_matrix = cmds.createNode("multMatrix", name="C_eyebrowMid_MMX", ss=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
-            cmds.setAttr(f"{mult_matrix}.matrixIn[1]", head_inverse, type="matrix")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[1]", cmds.getAttr(f"{self.head_grp}.worldInverseMatrix[0]"), type="matrix")
             cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{mid_eyebrow_nodes[0]}.offsetParentMatrix")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mid_local_grp}.offsetParentMatrix")
             cmds.setAttr(f"{parent_matrix}.envelope", 0.5)
@@ -179,13 +192,14 @@ class EyebrowModule(object):
         else:
             parent_matrix = "C_eyebrowMid_PM"
             mid_eyebrow_nodes = "C_eyebrowMid_GRP" # Dummy for get_offset_matrix
-            self.mid_eyebrow_guide = "C_eyebrowMid_GUIDE" # Dummy for get_offset_matrix
+            mid_eyebrow_guide = "C_eyebrowMid_GUIDE" # Dummy for get_offset_matrix
             cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[1].targetMatrix")
 
         if self.side == "L":
-            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", *self.get_offset_matrix(self.mid_eyebrow_guide, main_local_trn), type="matrix")
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", *self.get_offset_matrix(mid_eyebrow_guide, main_local_trn), type="matrix")
         else:
-            cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *self.get_offset_matrix(self.mid_eyebrow_guide, main_local_trn), type="matrix")
+            cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *self.get_offset_matrix(mid_eyebrow_guide, main_local_trn), type="matrix")
+            cmds.delete(mid_eyebrow_guide)
 
         names = {"In": 0, "InTan": 1, "Mid": len(self.eyebrows) // 2, "OutTan": -2, "Out": -1}
 

@@ -305,11 +305,14 @@ class SkinManager(object):
         if not shapes: return
         final_shape = shapes[0]
 
+        # Obtener el SkinCluster del Main
         hist = cmds.listHistory(main_mesh, pruneDagObjects=True)
         main_sc = cmds.ls(hist, type="skinCluster")
         if not main_sc: return
+        main_sc_node = main_sc[0]
 
-        chain = [main_sc[0]]
+        # 1. Primero agregamos los Locales a la cadena
+        chain = []
         for local_name in local_keys:
             l_mesh = self.find_mesh_in_scene(local_name)
             if l_mesh:
@@ -317,14 +320,34 @@ class SkinManager(object):
                 l_sc = cmds.ls(l_hist, type="skinCluster")
                 if l_sc: chain.append(l_sc[0])
 
-        if len(chain) < 2: return
+        # 2. Y el Main va AL FINAL
+        chain.append(main_sc_node)
+        # ---------------------------------------------
 
+        # Si solo tenemos el Main (sin locales válidos), aseguramos que esté conectado al shape y salimos
+        if len(chain) < 2: 
+            # Opcional: asegurar conexión Main -> Shape si se rompió antes
+            last_output = f"{chain[-1]}.outputGeometry[0]"
+            if not cmds.isConnected(last_output, f"{final_shape}.inMesh"):
+                cmds.connectAttr(last_output, f"{final_shape}.inMesh", force=True)
+            return
+
+        # Conectar en serie: Local 1 -> Local 2 -> ... -> Main
+        print(f"  [CHAIN ORDER] {' -> '.join(chain)}") # Debug visual
+        
         for i in range(len(chain) - 1):
             src = f"{chain[i]}.outputGeometry[0]"
             dst = f"{chain[i+1]}.input[0].inputGeometry"
+            
+            # Verificación de seguridad para no reconectar lo mismo
             if not cmds.isConnected(src, dst):
-                cmds.connectAttr(src, dst, force=True)
+                try:
+                    cmds.connectAttr(src, dst, force=True)
+                except Exception as e:
+                    print(f"  [ERROR LINK] {src} -> {dst}: {e}")
         
+        # Conectar el ÚLTIMO elemento (que ahora es el Main) al Shape visible
         last_output = f"{chain[-1]}.outputGeometry[0]"
         if not cmds.isConnected(last_output, f"{final_shape}.inMesh"):
             cmds.connectAttr(last_output, f"{final_shape}.inMesh", force=True)
+            print(f"  [FINAL LINK] {chain[-1]} -> {final_shape}")

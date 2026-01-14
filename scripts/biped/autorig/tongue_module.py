@@ -49,7 +49,7 @@ class TongueModule(object):
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
 
-        cmds.addAttr(self.face_ctl, longName="Tongue", attributeType="long", defaultValue=1, max=1, min=0, keyable=True)
+        cmds.addAttr(self.face_ctl, longName="Tongue", attributeType="long", defaultValue=0, max=1, min=0, keyable=True)
         condition_tongue = cmds.createNode("condition", name=f"{self.module_name}Controllers_COND", ss=True)
         cmds.setAttr(f"{condition_tongue}.operation", 0)  # Equal
         cmds.setAttr(f"{condition_tongue}.secondTerm", 1)
@@ -107,17 +107,17 @@ class TongueModule(object):
         de_boors_selection = []
         tongue_ctrls = []
 
-        for jnt in self.tongue_guides:
+        for i, jnt in enumerate(self.tongue_guides):
 
             grp, ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"], parent=self.controllers_grp)
             self._lock_attributes(ctl, ["v"])
             cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{grp[0]}.offsetParentMatrix")
+            local_grp, mmx = self.local_mmx(ctl, grp[0])
             
             if tongue_ctrls:
                 cmds.parent(grp[0], tongue_ctrls[-1])
                 cmds.connectAttr(f"{tongue_ctrls[-1]}.matrix", f"{mmx}.matrixIn[2]")
 
-            local_grp, mmx = self.local_mmx(ctl, grp[0])
             de_boors_selection.append(local_grp)
             tongue_ctrls.append(ctl)
             cmds.matchTransform(grp[0], jnt, pos=True, rot=True)

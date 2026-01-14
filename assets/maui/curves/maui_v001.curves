@@ -1817,6 +1817,126 @@
             }
         ]
     },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_teethControllers_GRP|C_lowerTeeth_GRP|C_lowerTeeth_ANM|C_lowerTeeth_CTL": {
+        "transform": {
+            "name": "C_lowerTeeth_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_lowerTeeth_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 17,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            4.222298323639389,
+                            0.7014201505901468,
+                            8.329248446614233
+                        ],
+                        [
+                            4.222298323639389,
+                            0.7014201505901468,
+                            4.697379322380094
+                        ],
+                        [
+                            4.22229832363939,
+                            1.4839011870538399,
+                            4.697379322380094
+                        ],
+                        [
+                            4.22229832363939,
+                            1.4839011870538399,
+                            8.329248446614233
+                        ],
+                        [
+                            4.222298323639389,
+                            0.7014201505901468,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975991,
+                            0.7014201505901471,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975993,
+                            1.4839011870538399,
+                            8.329248446614233
+                        ],
+                        [
+                            4.22229832363939,
+                            1.4839011870538399,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975993,
+                            1.4839011870538399,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975993,
+                            1.4839011870538399,
+                            4.697379322380094
+                        ],
+                        [
+                            4.22229832363939,
+                            1.4839011870538399,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975993,
+                            1.4839011870538399,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975991,
+                            0.7014201505901471,
+                            4.697379322380094
+                        ],
+                        [
+                            4.222298323639389,
+                            0.7014201505901468,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975991,
+                            0.7014201505901471,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975991,
+                            0.7014201505901471,
+                            8.329248446614233
+                        ]
+                    ],
+                    "form": "open",
+                    "knots": [
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0,
+                        11.0,
+                        12.0,
+                        13.0,
+                        14.0,
+                        15.0
+                    ],
+                    "degree": 1
+                }
+            }
+        ]
+    },
     "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL": {
         "transform": {
             "name": "C_masterwalk_CTL",
@@ -3769,6 +3889,834 @@
             }
         ]
     },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL": {
+        "transform": {
+            "name": "C_tongue00_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue00_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL": {
+        "transform": {
+            "name": "C_tongue01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue01_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL": {
+        "transform": {
+            "name": "C_tongue02_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue02_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL": {
+        "transform": {
+            "name": "C_tongue03_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue03_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL": {
+        "transform": {
+            "name": "C_tongue04_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue04_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL": {
+        "transform": {
+            "name": "C_tongue05_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue05_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL|C_tongue06_GRP|C_tongue06_ANM|C_tongue06_CTL": {
+        "transform": {
+            "name": "C_tongue06_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue06_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL|C_tongue06_GRP|C_tongue06_ANM|C_tongue06_CTL|C_tongue07_GRP|C_tongue07_ANM|C_tongue07_CTL": {
+        "transform": {
+            "name": "C_tongue07_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue07_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL|C_tongue06_GRP|C_tongue06_ANM|C_tongue06_CTL|C_tongue07_GRP|C_tongue07_ANM|C_tongue07_CTL|C_tongue08_GRP|C_tongue08_ANM|C_tongue08_CTL": {
+        "transform": {
+            "name": "C_tongue08_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue08_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_upperJaw_GRP|C_upperJaw_OFF|C_upperJaw_CTL": {
         "transform": {
             "name": "C_upperJaw_CTL",
@@ -4525,6 +5473,126 @@
                         10.0
                     ],
                     "degree": 3
+                }
+            }
+        ]
+    },
+    "|maui|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_teethControllers_GRP|C_upperTeeth_GRP|C_upperTeeth_ANM|C_upperTeeth_CTL": {
+        "transform": {
+            "name": "C_upperTeeth_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_upperTeeth_CTLShape",
+                "overrideEnabled": true,
+                "overrideColor": 17,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            4.222298323639389,
+                            -0.39124051823184514,
+                            8.329248446614233
+                        ],
+                        [
+                            4.222298323639389,
+                            -0.39124051823184514,
+                            4.697379322380094
+                        ],
+                        [
+                            4.22229832363939,
+                            0.3912405182318478,
+                            4.697379322380094
+                        ],
+                        [
+                            4.22229832363939,
+                            0.3912405182318478,
+                            8.329248446614233
+                        ],
+                        [
+                            4.222298323639389,
+                            -0.39124051823184514,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975991,
+                            -0.3912405182318449,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975993,
+                            0.3912405182318479,
+                            8.329248446614233
+                        ],
+                        [
+                            4.22229832363939,
+                            0.3912405182318478,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975993,
+                            0.3912405182318479,
+                            8.329248446614233
+                        ],
+                        [
+                            -4.489738103975993,
+                            0.3912405182318479,
+                            4.697379322380094
+                        ],
+                        [
+                            4.22229832363939,
+                            0.3912405182318478,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975993,
+                            0.3912405182318479,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975991,
+                            -0.3912405182318449,
+                            4.697379322380094
+                        ],
+                        [
+                            4.222298323639389,
+                            -0.39124051823184514,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975991,
+                            -0.3912405182318449,
+                            4.697379322380094
+                        ],
+                        [
+                            -4.489738103975991,
+                            -0.3912405182318449,
+                            8.329248446614233
+                        ]
+                    ],
+                    "form": "open",
+                    "knots": [
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0,
+                        11.0,
+                        12.0,
+                        13.0,
+                        14.0,
+                        15.0
+                    ],
+                    "degree": 1
                 }
             }
         ]

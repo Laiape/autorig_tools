@@ -56,40 +56,6 @@ class TeethModule(object):
         self.load_guides()
         self.create_controllers()
 
-    def _local_mmx(self, ctl, grp):
-
-        """
-        Create a local matrix manager for a controller.
-        Args:
-            ctl (str): The name of the controller.
-        Returns:
-            matrix_manager.MatrixManager: The local matrix manager.
-        """
-
-        mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
-        
-        # Create fourByFourMatrix for translation
-        row_from_matrix = cmds.createNode("rowFromMatrix", name=ctl.replace("_CTL", "RFM"), ss=True)
-        cmds.setAttr(f"{row_from_matrix}.input", 3)
-        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
-    
-        fbf = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "FBF"), ss=True)
-        cmds.connectAttr(f"{row_from_matrix}.outputX", f"{fbf}.in30")
-        cmds.connectAttr(f"{row_from_matrix}.outputY", f"{fbf}.in31")
-        cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{fbf}.in32")
-        cmds.connectAttr(f"{fbf}.output", f"{local_grp}.offsetParentMatrix")
-
-        # Connect to multMatrix
-        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
-        cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
-        cmds.connectAttr(f"{mmx}.matrixSum", f"{local_trn}.offsetParentMatrix")
-
-        cmds.disconnectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
-
-        return local_trn, mmx
-
     def _lock_attributes(self, ctl, attrs):
 
         """
@@ -123,9 +89,9 @@ class TeethModule(object):
         self._lock_attributes(upper_teeth_ctl, ["v"])
         cmds.matchTransform(upper_teeth_nodes[0], self.upper_teeth_guide)
         cmds.delete(self.upper_teeth_guide)
-        upper_local_trn, upper_mmx = self._local_mmx(upper_teeth_ctl, upper_teeth_nodes[0])
+
         upper_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_upperTeeth_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{upper_local_trn}.worldMatrix[0]", f"{upper_teeth_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{upper_teeth_ctl}.worldMatrix[0]", f"{upper_teeth_skinning_jnt}.offsetParentMatrix")
         upper_jaw = data_manager.DataExportBiped().get_data("jaw_module", "upper_jaw_ctl")
         matrix_manager.space_switches(target=upper_teeth_ctl, sources=[upper_jaw, self.masterwalk_ctl], default_value=1) # Upper teeth
 
@@ -134,9 +100,9 @@ class TeethModule(object):
         self._lock_attributes(lower_teeth_ctl, ["v"])
         cmds.matchTransform(lower_teeth_nodes[0], self.lower_teeth_guide)
         cmds.delete(self.lower_teeth_guide)
-        lower_local_trn, lower_mmx = self._local_mmx(lower_teeth_ctl, lower_teeth_nodes[0])
+
         lower_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_lowerTeeth_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{lower_local_trn}.worldMatrix[0]", f"{lower_teeth_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{lower_teeth_ctl}.worldMatrix[0]", f"{lower_teeth_skinning_jnt}.offsetParentMatrix")
         jaw = data_manager.DataExportBiped().get_data("jaw_module", "jaw_ctl")
         matrix_manager.space_switches(target=lower_teeth_ctl, sources=[jaw, self.masterwalk_ctl], default_value=1) # Lower teeth
 

@@ -49,6 +49,9 @@ class NeckModule(object):
         self.ribbon_setup()
         self.local_head()
 
+        # Clean up and store data
+        cmds.delete(self.throat_guide)
+
 
         data_manager.DataExportBiped().append_data("neck_module",
                             {
@@ -132,6 +135,7 @@ class NeckModule(object):
         skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{throat_ctl}.matrix", f"{skin_throat_jnt}.offsetParentMatrix")
         cmds.matchTransform(skin_throat_jnt, self.throat_guide[0], pos=True, rot=True, scl=False)
+    
 
 
     def ribbon_setup(self):

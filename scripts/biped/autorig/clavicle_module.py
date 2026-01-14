@@ -45,7 +45,7 @@ class ClavicleModule(object):
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_clavicleControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.load_guides()
-        self.auto_clavicle_setup()
+        self.clavicle_setup()
 
         data_manager.DataExportBiped().append_data("clavicle_module",
                             {
@@ -96,17 +96,9 @@ class ClavicleModule(object):
        
         cmds.parent(self.clavicle_joint, self.module_trn)
 
-    def auto_clavicle_setup(self):
+    def clavicle_setup(self):
 
         cmds.select(clear=True)
-        shoulder = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_shoulder_JNT")
-        armIk = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_armIk") 
-        ctl_switch = data_manager.DataExportBiped().get_data("arm_module", f"{self.side}_armSettings") 
-        spine_joints = data_manager.DataExportBiped().get_data("spine_module", "last_spine_jnt") 
-        local_chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
-        body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
-
-        # cmds.scaleConstraint(self.masterwalk_ctl, self.module_trn, mo=True)
         
         created_grps, self.ctl_ik = curve_tool.create_controller(f"{self.side}_clavicle", ["GRP", "OFF"])
         cmds.parent(created_grps[0], self.controllers_grp)
@@ -125,78 +117,5 @@ class ClavicleModule(object):
         cmds.connectAttr(f"{self.ctl_ik}.worldMatrix[0]", f"{clavicle_skinning}.offsetParentMatrix")
         cmds.setAttr(f"{self.clavicle_joint[0]}.inheritsTransform", 0)
 
-        # ik_pos = cmds.xform(self.clavicle_joint, q=True, ws=True, t=True)
-        # armIk_pos = cmds.xform(shoulder, q=True, ws=True, t=True)
-        # distance = ((ik_pos[0] - armIk_pos[0]) ** 2 + (ik_pos[1] - armIk_pos[1]) ** 2 + (ik_pos[2] - armIk_pos[2]) ** 2) ** 0.5
-        # shoulder_matrix = cmds.getAttr(f"{shoulder}.worldMatrix")
-        
-
-        # sphere = cmds.sphere(name=f'{self.side}_armAutoClavicleSlide_NRB', radius=distance, sections=4, startSweep=160)[0]
-        # cmds.delete(sphere, ch=True)
-        # cmds.parent(sphere, self.module_trn)
-        # cmds.matchTransform(sphere, self.clavicle_joint, rotation=False)
-        # if self.side == "L":
-        #     cmds.rotate(-90,-90,0, sphere)
-        # elif self.side == "R":
-        #     cmds.rotate(-90,90,0, sphere)
-        
-        # cmds.select(clear=True)
-        # locator = cmds.spaceLocator(name=f'{self.side}_armAutoClavicleSlide_LOC')
-        # cmds.geometryConstraint(sphere, locator)
-        # float_constant_freeze = cmds.createNode("floatConstant", name=f"{self.side}_armAutoClavicleSlide_FCF")
-        # cmds.setAttr(f"{float_constant_freeze}.inFloat", 0.0)
-        # cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{locator[0]}.translateX")
-        # cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{locator[0]}.translateY")
-        # cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{locator[0]}.translateZ")
-        # cmds.parent(locator, self.module_trn)
-        
-        # dupe = cmds.spaceLocator(name=f'{self.side}_armAutoClavicleSlideReduced_LOC')
-        # parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_armAutoClavicleSlideReduced_PMA")
-
-        # cmds.setAttr(f"{parent_matrix}.inputMatrix", shoulder_matrix, type="matrix")
-        # cmds.connectAttr(f"{armIk}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
-        # offset_m = self.get_offset_matrix(shoulder, armIk)
-        # cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_m, type="matrix")
-        # pick_matrix = cmds.createNode("pickMatrix", name=f"{self.side}_armAutoClavicleSlideReduced_PMX")
-        # cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{pick_matrix}.inputMatrix")
-        # cmds.setAttr(f"{pick_matrix}.useRotate", 0) # Filter translation
-        # cmds.setAttr(f"{pick_matrix}.useScale", 0) 
-        # cmds.setAttr(f"{pick_matrix}.useShear", 0)
-        # cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{locator[0]}.offsetParentMatrix")
-
-        
-        # offset=cmds.createNode("transform", name=f"{self.side}_armAutoClavicleSlide_OFF",  p=self.module_trn)
-        # cmds.matchTransform(offset, shoulder, position=True, rotation=False)
-        # cmds.parent(dupe, offset)
-        # # cmds.matchTransform(dupe, shoulder, position=True, rotation=False)
-
-        # parent_matrix_reduced = cmds.createNode("blendMatrix", name=f"{self.side}_armAutoClavicleSlideReduced_BMX")
-        # cmds.connectAttr(f"{locator[0]}.worldMatrix[0]", f"{parent_matrix_reduced}.inputMatrix")
-        # cmds.connectAttr(f"{offset}.worldMatrix[0]", f"{parent_matrix_reduced}.target[1].targetMatrix")
-        # cmds.setAttr(f"{parent_matrix_reduced}.target[1].weight", 0.8)
-        # offset_mult_matrix  = cmds.createNode("multMatrix", name=f"{self.side}_armAutoClavicleSlide_MMX")
-        # cmds.connectAttr(f"{parent_matrix_reduced}.outputMatrix", f"{offset_mult_matrix}.matrixIn[0]")
-        # cmds.connectAttr(f"{offset}.worldInverseMatrix[0]", f"{offset_mult_matrix}.matrixIn[1]")
-        # cmds.connectAttr(f"{offset_mult_matrix}.matrixSum", f"{dupe[0]}.offsetParentMatrix")
-
-        # aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_armAutoClavicleSlide_AIM")
-        # cmds.connectAttr(f"{dupe[0]}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
-        # cmds.connectAttr(f"{spine_joints}.worldMatrix[0]", f"{aim_matrix}.primaryTargetMatrix")
-        # cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", 1)
-        # cmds.setAttr(f"{aim_matrix}.primaryInputAxisY", 0)
-        # cmds.setAttr(f"{aim_matrix}.primaryInputAxisZ", 0)
-        # cmds.setAttr(f"{aim_matrix}.secondaryInputAxisX", 0)
-        # cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 0)
-        # cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", 1)
-        # cmds.setAttr(f"{aim_matrix}.primaryMode", 1) # Aim
-        # cmds.setAttr(f"{aim_matrix}.secondaryMode", 2) # World Up
-        # cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{created_grps[1]}.offsetParentMatrix") # ctl offset grp
-
-        # cmds.addAttr(ctl_switch, shortName="autoClavicleIk", niceName="Auto Clavicle Ik", maxValue=1, minValue=0,defaultValue=0, keyable=True)
-        # cmds.connectAttr(f"{ctl_switch}.autoClavicleIk", f"{aim_matrix}.envelope")
-
-        # # cmds.connectAttr(f"{ctl_switch}.autoClavicleIk", f"{aim[0]}.{dupe[0]}W0")
-
-        # # # cmds.parent(shoulder, self.clavicle_joint)
-        # cmds.hide(sphere)
-        # cmds.delete(shoulder)
+        # Clean up
+        cmds.delete(self.clavicle_joint)

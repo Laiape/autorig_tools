@@ -48,6 +48,9 @@ class SpineModule(object):
         self.local_hip_chest_setup()
         # self.stretch_activate()
         self.ribbon_setup()
+
+        # Clean up
+        cmds.delete(self.spine_chain[0])
        
 
 

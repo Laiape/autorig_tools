@@ -386,12 +386,13 @@ class EyelidModule(object):
         cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix", force=True)
 
-        mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEyeSkinning_MMX", ss=True)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{mult_matrix_skin}.matrixIn[0]")
-        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_skin}.matrixIn[1]")
-        eye_direct_matrix = cmds.getAttr(f"{self.eye_direct_nodes[0]}.worldMatrix[0]")
-        cmds.setAttr(f"{mult_matrix_skin}.matrixIn[2]", eye_direct_matrix, type="matrix")
-        cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
+        # mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEyeSkinning_MMX", ss=True)
+        # cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{mult_matrix_skin}.matrixIn[0]")
+        # cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_skin}.matrixIn[1]")
+        # eye_direct_matrix = cmds.getAttr(f"{self.eye_direct_nodes[0]}.worldMatrix[0]")
+        # cmds.setAttr(f"{mult_matrix_skin}.matrixIn[2]", eye_direct_matrix, type="matrix")
+        # cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
 
     def create_blink_setup(self):
 
@@ -649,13 +650,11 @@ class EyelidModule(object):
                 mpt_helper = cmds.createNode("motionPath", name=f"{self.side}_{name}EyelidEnd_AimHelper_MTP", ss=True)
                 cmds.setAttr(f"{mpt_helper}.uValue", 0.95)
                 cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{aim}.secondaryTargetVector")
-                aim_helper_trn = cmds.createNode("transform", name=f"{self.side}_{name}EyelidEndAimHelper_TRN", ss=True, p=self.module_trn)
                 compose_matrix_helper = cmds.createNode("composeMatrix", name=f"{self.side}_{name}EyelidEndAimHelper_CM", ss=True)
                 cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{compose_matrix_helper}.inputTranslate")
                 cmds.connectAttr(f"{mpt_helper}.rotate", f"{compose_matrix_helper}.inputRotate")
-                cmds.connectAttr(f"{compose_matrix_helper}.outputMatrix", f"{aim_helper_trn}.offsetParentMatrix") # Connect the compose matrix to the aim helper transform
+                cmds.connectAttr(f"{compose_matrix_helper}.outputMatrix", f"{aim}.secondaryTargetMatrix")
 
-                cmds.connectAttr(f"{aim_helper_trn}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
                 cmds.setAttr(f"{aim}.secondaryInputAxis", -1, 0, 0)
                 
                 if "upper" in jnt:
@@ -720,15 +719,16 @@ class EyelidModule(object):
             cmds.matchTransform(grp[0], socket)  
             self.lock_attributes(ctl, ["v"])
             cmds.delete(socket)
+
+            # Create skinning joint for each socket
             socket_skinning_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
-            socket_trn = cmds.createNode("transform", name=ctl.replace("CTL", "TRN"), ss=True, p=self.module_trn)
+
             mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("CTL", "MMT"), ss=True)
             cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
             cmds.connectAttr(f"{grp[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
             grp_wm = cmds.getAttr(f"{grp[0]}.worldMatrix[0]")
             cmds.setAttr(f"{mult_matrix}.matrixIn[2]", grp_wm, type="matrix")
-            cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{socket_trn}.offsetParentMatrix", force=True)
-            cmds.connectAttr(f"{socket_trn}.worldMatrix[0]", f"{socket_skinning_jnt}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{socket_skinning_jnt}.offsetParentMatrix")
             
             
 
