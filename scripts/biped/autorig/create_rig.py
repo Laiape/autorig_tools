@@ -122,8 +122,10 @@ class AutoRig(object):
         tongue_module.TongueModule().make("C")
         teeth_module.TeethModule().make("C")
 
+        char_name = rig_manager.get_character_name_from_build().upper()
+
         cmds.inViewMessage(
-    amg='Completed <hl>BIPED RIG</hl> build.',
+    amg=f'Completed <hl>{char_name} RIG</hl> build.',
     pos='midCenter',
     fade=True,
     alpha=0.8)

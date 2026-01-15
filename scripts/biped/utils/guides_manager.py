@@ -23,7 +23,7 @@ def get_guides_info():
 
     """
 
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = rig_manager.get_character_name_from_scene(avoid=guides_node)
 
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
@@ -38,27 +38,8 @@ def get_guides_info():
 
         om.MGlobal.displayError("Not a guide transform.")
         return None
-
-    answer = cmds.promptDialog(
-                title="SAVE GUIDES AS",
-                message="INSERT FILE NAME",
-                button=["+1", "REPLACE", "CANCEL"],
-                defaultButton="+1",
-                cancelButton="Cancel",
-                dismissString="Cancel")
     
-    if answer == "Cancel":
-        om.MGlobal.displayInfo("Operation cancelled by user.")
-        return
-    if answer == "+1":
-        file_name = rig_manager.get_next_version_name(last_version)
-    if answer == "REPLACE":
-        last_version = rig_manager.get_latest_version(TEMPLATE_PATH)
-        file_name = pathlib.Path(last_version).stem
-
-    guides_name = cmds.promptDialog(query=True, text=False)
     guides_name = CHARACTER_NAME
-
     
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
@@ -245,7 +226,7 @@ def get_guides_info():
     else:
         om.MGlobal.displayInfo("No locator guides found.")
      
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = rig_manager.get_character_name_from_scene()
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     path = os.path.join(relative_path, "assets")
@@ -516,7 +497,7 @@ def get_guides(guide_export, parent=None):
         list: A list of guides found in the scene.
     """
 
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = rig_manager.get_character_name_from_build()
 
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]

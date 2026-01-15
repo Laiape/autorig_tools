@@ -92,6 +92,53 @@ def get_latest_version(folder):
         latest_file = max(files, key=lambda f: f.stat().st_mtime)
         return latest_file
 
+def create_new_scene():
+
+    """
+    Creates a new Maya scene.
+    """
+
+    cmds.file(new=True, force=True)
+    
+def get_character_name_from_scene(avoid=None):
+
+    """
+    Extracts the character name from the current Maya scene filename.
+    Returns:
+        str: The character name extracted from the scene filename.
+    """
+
+    char_name = "asset"
+        
+    all_assemblies = cmds.ls(assemblies=True)
+    scene_assemblies = [
+        obj for obj in all_assemblies 
+        if not cmds.listRelatives(obj, type='camera')
+    ]
+
+    for obj in scene_assemblies:
+        if obj == avoid:
+            continue
+        else:
+            char_name = obj
+            break
+
+    return char_name
+
+def get_character_name_from_build():
+
+    """
+    Extracts the character name from the build file name in the current Maya scene.
+    Returns:
+        str: The character name extracted from the build file name.
+    """
+
+    char_name = "asset"
+
+    char_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+
+    return char_name
+
 def get_next_version_name(folder):
 
     """
