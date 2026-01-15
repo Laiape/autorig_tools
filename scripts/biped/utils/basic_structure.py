@@ -144,7 +144,7 @@ def create_basic_structure(character_name=None):
     # Hide Controllers (Reverse node)
     pb_rev = cmds.createNode("reverse", name="C_playblast_REV")
     cmds.connectAttr(f"{settings_ctl}.hideControllersOnPlayblast", f"{pb_rev}.inputX")
-    cmds.connectAttr(f"{pb_rev}.outputX", f"{nodes[2]}.visibility")
+    cmds.connectAttr(f"{pb_rev}.outputX", f"{nodes[2]}.hideOnPlayback")
 
     # Rig Visibility
     skel_grp = cmds.createNode("transform", name="skel_GRP", ss=True, p=nodes[1])
