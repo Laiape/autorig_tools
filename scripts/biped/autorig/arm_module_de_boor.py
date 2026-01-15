@@ -176,6 +176,7 @@ class ArmModule(object):
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
         cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
+        cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 
         cmds.parent(crv_point_pv, self.pv_ctl)
 

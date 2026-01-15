@@ -41,7 +41,7 @@ def get_all_ctl_curves_data():
     #     om.MGlobal.displayInfo("Operation cancelled by user.")
     #     return
     
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = rig_manager.get_character_name_from_scene()
     curves_name = f"{CHARACTER_NAME}_v001"
 
     complete_path = os.path.realpath(__file__)
@@ -165,7 +165,7 @@ def build_curves_from_template(target_transform_name=None):
     Returns:
         list: A list of created transform names.
     """
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = rig_manager.get_character_name_from_build()
 
     # Set up the template file path
     complete_path = os.path.realpath(__file__)
@@ -274,7 +274,7 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[]):
         name (str): Name of the controller.
         suffixes (list): List of suffixes for the groups to be created. Default is ["GRP"].
     """
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+
     created_grps = []
     if offset:
         for suffix in offset:
@@ -303,6 +303,10 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[]):
             ctl = cmds.circle(name=f"{name}_CTL", ch=False)
         else:
             ctl = [ctl[0]]  # make sure ctl is a list with one element for consistency
+        
+        if locked_attrs:
+            for attr in locked_attrs:
+                cmds.setAttr(f"{ctl[0]}.{attr}", lock=True, keyable=False)
 
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])
@@ -321,7 +325,7 @@ def text_curve(ctl_name):
     Returns:
         str: The name of the created text curve.
     """
-    CHARACTER_NAME = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+    CHARACTER_NAME = rig_manager.get_character_name_from_build()
     letter = CHARACTER_NAME[0].upper()
     text_curve = cmds.textCurves(ch=False, t=letter)
     text_curve = cmds.rename(text_curve, ctl_name)

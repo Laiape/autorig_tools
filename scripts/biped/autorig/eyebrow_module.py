@@ -115,8 +115,6 @@ class EyebrowModule(object):
             cmds.parent(jnt, self.module_trn)
 
         if self.side == "L":
-            self.radius_loc = guides_manager.get_guides("C_headRadius_LOCShape")
-            cmds.select(clear=True)
             self.mid_eyebrow = guides_manager.get_guides("C_eyebrowMid_JNT")[0]
             cmds.parent(self.mid_eyebrow, self.module_trn)
             

@@ -100,8 +100,8 @@ def create_new_scene():
 
     cmds.file(new=True, force=True)
     
-def get_character_name_from_scene(avoid=None):
 
+def get_character_name_from_scene(avoid=None):
     """
     Extracts the character name from the current Maya scene filename.
     Returns:
@@ -109,20 +109,22 @@ def get_character_name_from_scene(avoid=None):
     """
 
     char_name = "asset"
-        
+    
     all_assemblies = cmds.ls(assemblies=True)
+    
     scene_assemblies = [
         obj for obj in all_assemblies 
         if not cmds.listRelatives(obj, type='camera')
     ]
 
     for obj in scene_assemblies:
-        if obj == avoid:
+        
+        if avoid and obj == avoid:
             continue
-        else:
-            char_name = obj
-            break
-
+        
+        char_name = obj
+        break
+    print(f"Final character name: {char_name}")
     return char_name
 
 def get_character_name_from_build():

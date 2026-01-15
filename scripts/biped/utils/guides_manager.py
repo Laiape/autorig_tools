@@ -8,7 +8,6 @@ import pathlib
 from biped.utils import data_manager
 from biped.utils import rig_manager
 
-GUIDES_PATH = "C:\GITHUB\guides"
 guides_node = "C_guides_GRP"
 CHARACTER_NAME = None
 
@@ -22,6 +21,7 @@ def get_guides_info():
     Get the guides transform and take the information from the joints and locators.
 
     """
+    guides_node = "C_guides_GRP"
 
     CHARACTER_NAME = rig_manager.get_character_name_from_scene(avoid=guides_node)
 
@@ -226,7 +226,7 @@ def get_guides_info():
     else:
         om.MGlobal.displayInfo("No locator guides found.")
      
-    CHARACTER_NAME = rig_manager.get_character_name_from_scene()
+
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split("\scripts")[0]
     path = os.path.join(relative_path, "assets")
@@ -294,6 +294,7 @@ def load_guides_info(filePath=None):
 
     """ Load guides information from a JSON file and create the guides in the scene."""
 
+    rig_manager.create_new_scene()
     
     if not filePath:
         
