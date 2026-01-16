@@ -119,13 +119,15 @@ class EyelidModule(object):
         # Get the guide curves
         self.linear_upper_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidUpperLinear_CRVShape", parent=self.curves_grp)
         self.linear_lower_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidLowerLinear_CRVShape", parent=self.curves_grp)
-        self.blink_ref_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidBlinkRef_CRVShape")
         self.up_blink_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidUpBlink_CRVShape")
         self.down_blink_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidDownBlink_CRVShape")
 
         # Rebuild the curves to have proper CV count and degree
         self.eyelid_up_curve = cmds.rebuildCurve(self.linear_upper_curve, n=f"{self.side}_eyelidUp_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=4)[0]
         self.eyelid_down_curve = cmds.rebuildCurve(self.linear_lower_curve, n=f"{self.side}_eyelidDown_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=4)[0]
+        
+        self.blink_ref_curve = cmds.duplicate(self.eyelid_up_curve, n=f"{self.side}_eyelidBlinkRef_CRV")[0]
+        
         self.eyelid_up_curve_rebuild = cmds.rebuildCurve(self.eyelid_up_curve, n=f"{self.side}_eyelidUpRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
         self.eyelid_down_curve_rebuild = cmds.rebuildCurve(self.eyelid_down_curve, n=f"{self.side}_eyelidDownRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
 
@@ -345,6 +347,8 @@ class EyelidModule(object):
         cmds.addAttr(self.eye_direct_ctl, ln="Fleshy", at="float", min=0, max=1, dv=0.1, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Fleshy_Corners", at="float", min=0, max=1, dv=0, k=True)
 
+        # ---- Connect blink curve to blend shape ----
+        # cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{self.blink_ref_blend_shape}.w[0]", force=True)
 
         condition_primary = cmds.createNode("condition", name="C_eyesPrimaryControllers_COND", ss=True)
         cmds.setAttr(f"{condition_primary}.operation", 3)  # Greater Than or Equal

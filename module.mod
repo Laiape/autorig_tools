@@ -1,1 +1,1 @@
-+ module 1.0 H:\GIT\biped_autorig
++ module 1.0 H:\GIT\autorig_tools

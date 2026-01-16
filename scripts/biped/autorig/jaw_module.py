@@ -196,24 +196,24 @@ class JawModule(object):
         cmds.connectAttr(f"{self.compose_matrix_jaw}.outputMatrix", f"{self.upper_jaw_ctl}.offsetParentMatrix")  # Connect the output of the blendTwoAttr to the rotateX of the upper jaw controller
 
         # Create set driven keyframes to improve jaw movement
-        cmds.select(self.jaw_nodes[1])
-        cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
-        cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=15, v=0)
-        cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=35, v=0)
-        cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=0)
-        cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=60, v=0)
-        cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=0)
+        # cmds.select(self.jaw_nodes[1])
+        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
+        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=15, v=0)
+        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=35, v=0)
+        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=0)
+        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=60, v=0)s
+        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=0)
 
-        cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
-        cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=15, v=2)
-        cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=30, v=1.75)
-        cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=1.5)
-        cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=60, v=1.25)
-        cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=-3.5)
+        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
+        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=15, v=2)
+        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=30, v=1.75)
+        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=1.5)
+        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=60, v=1.25)
+        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=-3.5)
 
-        cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
-        cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=2)
-        cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=15)
+        # cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
+        # cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=2)
+        # cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=15)
 
 
     def create_lips_setup(self):
@@ -739,21 +739,30 @@ class JawModule(object):
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
 
             # Add four by four martix to the mid lip curve to take the average position
+            mtp_mid = cmds.createNode("motionPath", n=f"{side}_{name}0{i}Mid_MTP")
+            cmds.connectAttr(f"{mid_lip_crv}Shape.worldSpace[0]", f"{mtp_mid}.geometryPath")
+            cmds.setAttr(f"{mtp_mid}.uValue", parameter)
             mid_4b4 = cmds.createNode("fourByFourMatrix", name=f"{side}_{name}0{i}_Mid_4B4", ss=True)
             # ---------- MUST CONNECT LATER TO THE CORRESPONDING CVS ----------
-            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].xValueEp", f"{mid_4b4}.in30", f=True)
-            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].yValueEp", f"{mid_4b4}.in31", f=True)
-            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].zValueEp", f"{mid_4b4}.in32", f=True)
+            cmds.connectAttr(f"{mtp_mid}.allCoordinates.xCoordinate", f"{mid_4b4}.in30")
+            cmds.connectAttr(f"{mtp_mid}.allCoordinates.yCoordinate", f"{mid_4b4}.in31")
+            cmds.connectAttr(f"{mtp_mid}.allCoordinates.zCoordinate", f"{mid_4b4}.in32")
+
             # Add a blendMartix node to blend between average and original position
             blend_matrix_mid = cmds.createNode("blendMatrix", name=f"{side}_{name}0{i}_Mid_BMT", ss=True)
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{blend_matrix_mid}.inputMatrix")
             remap_value_zip = cmds.createNode("remapValue", name=f"{side}_{name}0{i}_Zip_RMV", ss=True)
             cmds.setAttr(f"{remap_value_zip}.value[0].value_Interp", 2)  # Set to smooth
             cmds.connectAttr(f"{zip_ctl}.Zip", f"{remap_value_zip}.inputValue")
+
+            max_index = len(linear_cvs) - 1
+            denominator = max_index / 2.0 
+
             if side == "R":
-                input_min = (i / ((len(linear_cvs) -1) / 2))
+                input_min = i / denominator
             else:
-                input_min = 0.5 * (i / ((len(linear_cvs) -1) / 2))
+                input_min = (max_index - i) / denominator
+
 
             cmds.setAttr(f"{remap_value_zip}.inputMin", input_min)
             cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
@@ -810,22 +819,30 @@ class JawModule(object):
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
 
-            # Add four by four martix to the mid lip curve to take the average position
+            mtp_mid = cmds.createNode("motionPath", n=f"{side}_{name}0{i}Mid_MTP")
+            cmds.connectAttr(f"{mid_lip_crv}Shape.worldSpace[0]", f"{mtp_mid}.geometryPath")
+            cmds.setAttr(f"{mtp_mid}.uValue", parameter)
             mid_4b4 = cmds.createNode("fourByFourMatrix", name=f"{side}_{name}0{i}_Mid_4B4", ss=True)
-            # ---------- MUST CONNECT LATER TO THE CORRESPONDING CVS ---------- 
-            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].xValueEp", f"{mid_4b4}.in30", f=True)
-            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].yValueEp", f"{mid_4b4}.in31", f=True)
-            cmds.connectAttr(f"{mid_lip_crv}Shape.editPoints[{i}].zValueEp", f"{mid_4b4}.in32", f=True)
+            # ---------- MUST CONNECT LATER TO THE CORRESPONDING CVS ----------
+            cmds.connectAttr(f"{mtp_mid}.allCoordinates.xCoordinate", f"{mid_4b4}.in30")
+            cmds.connectAttr(f"{mtp_mid}.allCoordinates.yCoordinate", f"{mid_4b4}.in31")
+            cmds.connectAttr(f"{mtp_mid}.allCoordinates.zCoordinate", f"{mid_4b4}.in32")
             # Add a blendMartix node to blend between average and original position
             blend_matrix_mid = cmds.createNode("blendMatrix", name=f"{side}_{name}0{i}_Mid_BMT", ss=True)
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{blend_matrix_mid}.inputMatrix")
             remap_value_zip = cmds.createNode("remapValue", name=f"{side}_{name}0{i}_Zip_RMV", ss=True)
             cmds.setAttr(f"{remap_value_zip}.value[0].value_Interp", 2)  # Set to smooth
             cmds.connectAttr(f"{zip_ctl}.Zip", f"{remap_value_zip}.inputValue")
+
+            max_index = len(linear_cvs) - 1
+            denominator = max_index / 2.0 
+
             if side == "R":
-                input_min = (i / ((len(linear_cvs) -1) / 2))
+                input_min = i / denominator
             else:
-                input_min = 0.5 * (i / ((len(linear_cvs) -1) / 2))
+                input_min = (max_index - i) / denominator
+            
+
             cmds.setAttr(f"{remap_value_zip}.inputMin", input_min)
             cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
             cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
