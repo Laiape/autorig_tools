@@ -12,7 +12,7 @@ from tools import skin_manager_api
 
 # Body mechanics
 from biped.autorig import arm_module_de_boor as arm_module
-from biped.autorig import spine_module_de_boor as spine_module
+from biped.autorig import spine_module as spine_module
 from biped.autorig import clavicle_module
 from biped.autorig import leg_module_de_boor as leg_module
 from biped.autorig import neck_module_de_boor as neck_module

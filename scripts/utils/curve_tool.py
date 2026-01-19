@@ -266,7 +266,7 @@ def build_curves_from_template(target_transform_name=None):
     return created_transforms
 
 
-def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[]):
+def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=None):
     """
     Creates a controller with a specific name and offset transforms and returns the controller and the groups.
 
@@ -289,6 +289,8 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[]):
             created_grps.append(tra)
     if parent and created_grps:
         cmds.parent(created_grps[0], parent)
+    if match and created_grps:
+        cmds.matchTransform(created_grps[0], match, pos=True, rot=True, scl=False)
 
     if cmds.ls(f"{name}_CTL"):
         om.MGlobal.displayWarning(f"{name}_CTL already exists.")
