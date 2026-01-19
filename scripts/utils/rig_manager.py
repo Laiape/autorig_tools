@@ -5,6 +5,8 @@ import json
 from importlib import reload
 import re
 import pathlib
+
+from numpy import character
 import maya.api.OpenMaya as om
 
 # Maya commands import
@@ -16,59 +18,43 @@ try:
     from PySide6 import QtWidgets, QtCore, QtGui
 except:
     from PySide2 import QtWidgets, QtCore, QtGui
-# Ui import
+
+from utils import guides_manager
 from ui import auto_rig_UI
-# Utils import
+
 from utils import data_manager
 from utils import rig_manager
 
 reload(data_manager)
 reload(rig_manager)
+reload(guides_manager)
 reload(auto_rig_UI)
 reload(om)
 reload(glob)
 reload(pathlib)
 
-def import_rig_properties_from_json(self):
 
-    """
-    Imports rig properties from a JSON file and populates the UI elements accordingly.
-    Args:
-    """
-    character_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
+# Body mechanics
+from biped.autorig import arm_module_de_boor as arm_module
+from biped.autorig import spine_module as spine_module
+from biped.autorig import clavicle_module
+from biped.autorig import leg_module_de_boor as leg_module
+from biped.autorig import neck_module_de_boor as neck_module
+from biped.autorig import fingers_module
 
-    try:
-        complete_path = os.path.realpath(__file__)
-        relative_path = complete_path.split("\scripts")[0]
-        path = os.path.join(relative_path, "assets")
-        character_path = os.path.join(path, character_name)
-        TEMPLATE_PATH = os.path.join(character_path, "build")
-        file_path = rig_manager.get_latest_version(TEMPLATE_PATH, character_name)
-    
-    except:
-        relative_path = r"H:\GIT\biped_autorig"
-        path = os.path.join(relative_path, "assets")
-        character_path = os.path.join(path, character_name)
-        TEMPLATE_PATH = os.path.join(character_path, "build")
-        file_path = rig_manager.get_latest_version(TEMPLATE_PATH, character_name)
-
-    with open(file_path, 'r') as f:
-            data = json.load(f)
-
-    rig_attributes = data.get("rig_attributes", {})
-
-    for section, attrs in rig_attributes.items():
-        for key, value in attrs.items():
-            # Safely set widget values if they exist
-            widget = getattr(self, key, None)
-            if widget:
-                if isinstance(widget, QtWidgets.QCheckBox):
-                    widget.setChecked(value)
-                elif hasattr(widget, "setValue"):
-                    widget.setValue(value)
+# Facial
+from biped.autorig import eyebrow_module
+from biped.autorig import eyelid_module
+from biped.autorig import ear_module
+from biped.autorig import nose_module
+from biped.autorig import jaw_module
+from biped.autorig import cheekbone_module
+from biped.autorig import tongue_module
+from biped.autorig import teeth_module
 
 
 def get_latest_version(folder):
+
     """
     Get the latest version number of a file in a given folder.
     Args:
@@ -358,3 +344,96 @@ def import_meshes_for_guides(character_name):
             om.MGlobal.displayError(f"Failed to import {os.path.basename(mesh_file)}: {str(e)}")
 
     return mesh_files
+
+def guides_logic_into_build(character_name):
+
+    """
+    Logic to convert guides into build.
+
+    args:
+        character_name (str): The name of the character.
+    """
+
+    # ---- Biped logic ----
+    if guides_manager.read_guides_info(character_name, "L_hip_JNT") == True and guides_manager.read_guides_info(character_name, "R_hip_JNT") == True:
+        
+        if guides_manager.read_guides_info(character_name, "C_spine00_JNT") == True:
+            spine_module.SpineModule().make("C")
+
+        leg_module.LegModule().make("L")
+        leg_module.LegModule().make("R")
+
+        if guides_manager.read_guides_info(character_name, "L_shoulder_JNT") == True and guides_manager.read_guides_info(character_name, "R_shoulder_JNT") == True:
+            arm_module.ArmModule().make("L")
+            arm_module.ArmModule().make("R")
+        
+        if guides_manager.read_guides_info(character_name, "L_clavicle_JNT") == True and guides_manager.read_guides_info(character_name, "R_clavicle_JNT") == True:
+            clavicle_module.ClavicleModule().make("L")
+            clavicle_module.ClavicleModule().make("R") 
+
+        if guides_manager.read_guides_info(character_name, "C_neck00_JNT") == True:
+            neck_module.NeckModule().make("C")
+
+        if guides_manager.read_guides_info(character_name, "L_thumb00_JNT") == True and guides_manager.read_guides_info(character_name, "R_thumb00_JNT") == True:
+            fingers_module.FingersModule().make("L")
+            fingers_module.FingersModule().make("R")
+        
+        # Facial
+        if guides_manager.read_guides_info(character_name, "C_jaw_JNT") == True:
+            jaw_module.JawModule().make("C")
+        
+        if guides_manager.read_guides_info(character_name, "L_eyebrow_JNT") == True and guides_manager.read_guides_info(character_name, "R_eyebrow_JNT") == True:
+            eyebrow_module.EyebrowModule().make("L")
+            eyebrow_module.EyebrowModule().make("R")
+        
+        if guides_manager.read_guides_info(character_name, "L_eyelid_JNT") == True and guides_manager.read_guides_info(character_name, "R_eyelid_JNT") == True:
+            eyelid_module.EyelidModule().make("L")
+            eyelid_module.EyelidModule().make("R")
+
+        if guides_manager.read_guides_info(character_name, "C_tongue00_JNT") == True:
+            tongue_module.TongueModule().make("C")
+
+        if guides_manager.read_guides_info(character_name, "C_teeth_JNT") == True:
+            teeth_module.TeethModule().make("C")
+          
+        return "biped"
+    
+    elif guides_manager.read_guides_info(character_name, "C_spine00_JNT") == True:
+        
+    
+    
+
+        
+def write_build_info(character_name):
+
+    """
+    Write build information to a JSON file in the build folder.
+    args:
+        character_name (str): The name of the character.
+    """
+
+    complete_path = os.path.realpath(__file__)
+    sep_token = os.sep + "scripts"
+    if sep_token in complete_path:
+        relative_path = complete_path.split(sep_token)[0]
+    else:
+        relative_path = os.path.dirname(os.path.dirname(complete_path))
+
+    base_path = os.path.join(relative_path, "assets")
+    build_folder = os.path.join(base_path, character_name, "build")
+    os.makedirs(build_folder, exist_ok=True)
+
+    
+
+    build_info = {
+        "character_name": character_name,
+        "character_type": character_type,
+    }
+
+    build_file_path = os.path.join(build_folder, f"{character_name}_build_info.json")
+    try:
+        with open(build_file_path, 'w') as build_file:
+            json.dump(build_info, build_file, indent=4)
+        om.MGlobal.displayInfo(f"Build information written to {build_file_path}")
+    except Exception as e:
+        om.MGlobal.displayError(f"Failed to write build information: {str(e)}")

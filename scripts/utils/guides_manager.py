@@ -673,25 +673,17 @@ def create_new_guides():
     2. Localiza las guías maestras en la ruta assets/-/new/guides.
     3. Carga la información de esas guías en la escena actual.
     """
-    
 
-    # 1. Definir la ruta de la plantilla basándonos en tu estructura assets/-/new
     complete_path = os.path.realpath(__file__)
     relative_path = complete_path.split(os.sep + "scripts")[0]
     
-    # Ruta específica según tu imagen: assets / - / new / guides
     template_path = os.path.join(relative_path, "assets", "-", "new", "guides")
-    
-    # 2. Obtener el archivo de guías más reciente dentro de esa carpeta
     try:
-        # Buscamos el archivo .guides en la carpeta de la plantilla
         template_file = rig_manager.get_latest_version(template_path)
         
         if template_file and os.path.exists(template_file):
             om.MGlobal.displayInfo(f"Cargando guías de plantilla desde: {template_file}")
-            
-            # 3. Cargar las guías usando tu función existente
-            # Pasamos el filePath para que no abra el explorador de archivos
+        
             load_guides_info(filePath=template_file)
             
         else:
@@ -701,4 +693,59 @@ def create_new_guides():
         om.MGlobal.displayError(f"Error al intentar automatizar las guías: {str(e)}")
 
     # Ejecuta la creación de carpetas para el nuevo personaje
-    rig_manager.create_new_asset() 
+    rig_manager.create_new_asset()
+
+def read_guides_info(character_name, guide_name):
+    """
+    Lee la información de guías desde un JSON y verifica si una guía existe.
+    
+    Args:
+        character_name (str): Nombre del personaje (clave principal).
+        guide_name (str): Nombre de la guía a buscar.
+    
+    Returns:
+        bool: True si la guía existe, None si hay un error o no existe.
+    """
+    # 1. Definición de rutas
+    try:
+        complete_path = os.path.realpath(__file__)
+        relative_path = complete_path.split(os.sep + "scripts")[0]
+        base_path = os.path.join(relative_path, "assets")
+        character_path = os.path.join(base_path, character_name)
+        guides_folder = os.path.join(character_path, "guides")
+        
+        guides_file = rig_manager.get_latest_version(guides_folder)
+        
+    except Exception as e:
+        om.MGlobal.displayError(f"[LOG ERROR] Error al construir la ruta o buscar versiones: {str(e)}")
+        return None
+
+    if not guides_file or not os.path.exists(guides_file):
+        om.MGlobal.displayError(f"[LOG ERROR] No se encontró el archivo .guides para '{character_name}' en: {guides_folder}")
+        return None
+
+    try:
+        with open(guides_file, 'r') as file:
+            guides_info = json.load(file)
+            
+    except ValueError as e:
+        om.MGlobal.displayError(f"[LOG ERROR] El archivo JSON está corrupto o mal formateado: {str(e)}")
+        return None
+    except Exception as e:
+        om.MGlobal.displayError(f"[LOG ERROR] No se pudo leer el archivo: {str(e)}")
+        return None
+
+    character_data = guides_info.get(character_name)
+    
+    if character_data is None:
+        om.MGlobal.displayError(f"[LOG ERROR] El personaje '{character_name}' no existe en el archivo de guías.")
+        return None
+
+    if guide_name in character_data:
+        om.MGlobal.displayInfo(f"[LOG SUCCESS] Guía '{guide_name}' encontrada correctamente.")
+        return True
+    else:
+        om.MGlobal.displayWarning(f"[LOG WARNING] La guía '{guide_name}' no existe para el personaje '{character_name}'.")
+        return False
+        
+
