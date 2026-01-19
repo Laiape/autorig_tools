@@ -5,7 +5,7 @@ from tools import skin_manager_api
 from utils import curve_tool
 from utils import rig_manager
 from utils import guides_manager
-from biped.autorig import create_rig
+from utils import create_rig
 
 reload(skin_manager_api)
 reload(curve_tool)
@@ -112,8 +112,6 @@ def import_skin_cluster():
 
 def rig():
     """Función para crear el rig bipedal"""
-    from biped.autorig import create_rig
-    reload(create_rig)
     cmds.file(new=True, force=True)
     rig = create_rig.AutoRig()
     rig.build()

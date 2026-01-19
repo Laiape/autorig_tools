@@ -36,11 +36,16 @@ reload(pathlib)
 
 # Body mechanics
 from biped.autorig import arm_module_de_boor as arm_module
-from biped.autorig import spine_module as spine_module
+from biped.autorig import spine_module as biped_spine_module
 from biped.autorig import clavicle_module
 from biped.autorig import leg_module_de_boor as leg_module
 from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
+
+from quadruped.autorig import tail_module
+from quadruped.autorig import limb_module
+from quadruped.autorig import spine_module as quad_spine_module
+from quadruped.autorig import neck_module as neck_module_quad
 
 # Facial
 from biped.autorig import eyebrow_module
@@ -345,95 +350,83 @@ def import_meshes_for_guides(character_name):
 
     return mesh_files
 
-def guides_logic_into_build(character_name):
-
+def build_rig(character_name):
     """
     Logic to convert guides into build.
-
-    args:
-        character_name (str): The name of the character.
+    Captura la info del JSON una sola vez para mejorar el performance.
     """
+    
+    def check(guide):
+        return guides_manager.read_guides_info(character_name, guide) == True
 
-    # ---- Biped logic ----
-    if guides_manager.read_guides_info(character_name, "L_hip_JNT") == True and guides_manager.read_guides_info(character_name, "R_hip_JNT") == True:
-        
-        if guides_manager.read_guides_info(character_name, "C_spine00_JNT") == True:
-            spine_module.SpineModule().make("C")
-
+    # ---- BIPED / BODY ----
+    if check("L_hip_JNT") and check("R_hip_JNT"):
         leg_module.LegModule().make("L")
         leg_module.LegModule().make("R")
+        is_biped = True
+    
+    if check("C_spine00_JNT"):
+        if is_biped:
+            biped_spine_module.SpineModule().make("C")
+        else:
+            quad_spine_module.SpineModule().make("C")
+            
+    if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
+        clavicle_module.ClavicleModule().make("L")
+        clavicle_module.ClavicleModule().make("R") 
 
-        if guides_manager.read_guides_info(character_name, "L_shoulder_JNT") == True and guides_manager.read_guides_info(character_name, "R_shoulder_JNT") == True:
-            arm_module.ArmModule().make("L")
-            arm_module.ArmModule().make("R")
-        
-        if guides_manager.read_guides_info(character_name, "L_clavicle_JNT") == True and guides_manager.read_guides_info(character_name, "R_clavicle_JNT") == True:
-            clavicle_module.ClavicleModule().make("L")
-            clavicle_module.ClavicleModule().make("R") 
+    if check("L_shoulder_JNT") and check("R_shoulder_JNT"):
+        arm_module.ArmModule().make("L")
+        arm_module.ArmModule().make("R")
+    
+    if check("L_thumb00_JNT") and check("R_thumb00_JNT"):
+        fingers_module.FingersModule().make("L")
+        fingers_module.FingersModule().make("R")
 
-        if guides_manager.read_guides_info(character_name, "C_neck00_JNT") == True:
+    if check("C_neck00_JNT"):
+        if is_biped:
             neck_module.NeckModule().make("C")
-
-        if guides_manager.read_guides_info(character_name, "L_thumb00_JNT") == True and guides_manager.read_guides_info(character_name, "R_thumb00_JNT") == True:
-            fingers_module.FingersModule().make("L")
-            fingers_module.FingersModule().make("R")
+        else:
+            neck_module_quad.NeckModule().make("C")
         
-        # Facial
-        if guides_manager.read_guides_info(character_name, "C_jaw_JNT") == True:
-            jaw_module.JawModule().make("C")
-        
-        if guides_manager.read_guides_info(character_name, "L_eyebrow_JNT") == True and guides_manager.read_guides_info(character_name, "R_eyebrow_JNT") == True:
-            eyebrow_module.EyebrowModule().make("L")
-            eyebrow_module.EyebrowModule().make("R")
-        
-        if guides_manager.read_guides_info(character_name, "L_eyelid_JNT") == True and guides_manager.read_guides_info(character_name, "R_eyelid_JNT") == True:
-            eyelid_module.EyelidModule().make("L")
-            eyelid_module.EyelidModule().make("R")
+    # ---- QUADRUPED / OTHERS ----
+    if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
+        limb_module.LimbModule().make("L")
+        limb_module.LimbModule().make("R")
 
-        if guides_manager.read_guides_info(character_name, "C_tongue00_JNT") == True:
-            tongue_module.TongueModule().make("C")
+    if check("L_backLeg_JNT") and check("R_backLeg_JNT"):
+        limb_module.LimbModule().make("L")
+        limb_module.LimbModule().make("R")
 
-        if guides_manager.read_guides_info(character_name, "C_teeth_JNT") == True:
-            teeth_module.TeethModule().make("C")
-          
-        return "biped"
+    if check("C_tail00_JNT"):
+        tail_module.TailModule().make("C")
+        
+    # ---- FACIAL ----
+    if check("C_jaw_JNT"):
+        jaw_module.JawModule().make("C")
     
-    elif guides_manager.read_guides_info(character_name, "C_spine00_JNT") == True:
-        
+    if check("L_eyebrow_JNT") and check("R_eyebrow_JNT"):
+        eyebrow_module.EyebrowModule().make("L")
+        eyebrow_module.EyebrowModule().make("R")
     
+    if check("L_eyelid_JNT") and check("R_eyelid_JNT"):
+        eyelid_module.EyelidModule().make("L")
+        eyelid_module.EyelidModule().make("R")
+
+    if check("C_tongue00_JNT"):
+        tongue_module.TongueModule().make("C")
+
+    if check("C_teeth_JNT"):
+        teeth_module.TeethModule().make("C")
+
+    if check("L_ear_JNT") and check("R_ear_JNT"):
+        ear_module.EarModule().make("L")
+        ear_module.EarModule().make("R")
+
+    if check("C_nose_JNT"):
+        nose_module.NoseModule().make("L")
+        nose_module.NoseModule().make("R")
+
+    if check("C_cheekbone_JNT"):
+        cheekbone_module.CheekboneModule().make("C")
     
-
-        
-def write_build_info(character_name):
-
-    """
-    Write build information to a JSON file in the build folder.
-    args:
-        character_name (str): The name of the character.
-    """
-
-    complete_path = os.path.realpath(__file__)
-    sep_token = os.sep + "scripts"
-    if sep_token in complete_path:
-        relative_path = complete_path.split(sep_token)[0]
-    else:
-        relative_path = os.path.dirname(os.path.dirname(complete_path))
-
-    base_path = os.path.join(relative_path, "assets")
-    build_folder = os.path.join(base_path, character_name, "build")
-    os.makedirs(build_folder, exist_ok=True)
-
-    
-
-    build_info = {
-        "character_name": character_name,
-        "character_type": character_type,
-    }
-
-    build_file_path = os.path.join(build_folder, f"{character_name}_build_info.json")
-    try:
-        with open(build_file_path, 'w') as build_file:
-            json.dump(build_info, build_file, indent=4)
-        om.MGlobal.displayInfo(f"Build information written to {build_file_path}")
-    except Exception as e:
-        om.MGlobal.displayError(f"Failed to write build information: {str(e)}")

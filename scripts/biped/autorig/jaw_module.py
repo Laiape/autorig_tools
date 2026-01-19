@@ -80,7 +80,6 @@ class JawModule(object):
         for attr in attrs:
             cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
-        
     
     def load_guides(self):
 

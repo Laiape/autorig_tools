@@ -14,7 +14,7 @@ import maya.cmds as cmds
 
 # Importaciones de tus módulos
 from tools import skin_manager_ng # Asegúrate que el archivo anterior se llame skin_manager.py
-from biped.autorig import create_rig
+from scripts.utils import create_rig
 import utils as data_manager
 from utils import guides_manager
 

@@ -16,12 +16,12 @@ reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
 
-class LimbModule(object):
+class NeckModule(object):
 
     def __init__(self):
 
         """
-        Initialize the spineModule class, setting up the necessary groups and controllers.
+        Initialize the neckModule class, setting up the necessary groups and controllers.
         """
         
         self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
@@ -31,12 +31,8 @@ class LimbModule(object):
     def make(self, side):
 
         """ 
-        Create the limb module structure and controllers. Call this method with the side ('L' or 'R') to create the respective limb module.
+        Create the neck module structure and controllers. Call this method with the side ('L' or 'R') to create the respective neck module.
         Args:
-            side (str): The side of the limb ('L' or 'R').
+            side (str): The side of the neck ('L' or 'R').
 
         """
-        self.side = side
-        self.module_trn = cmds.createNode("transform", name=f"{self.side}_limbModule_GRP", ss=True, p=self.modules)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_limbSkinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_limbControllers_GRP", ss=True, p=self.masterwalk_ctl)
