@@ -344,8 +344,8 @@ class SpineModule(object):
 
         cmds.setAttr(f"{ik_handle}.dTwistControlEnable", 1)
         cmds.setAttr(f"{ik_handle}.dWorldUpType", 4) # Start/End Object Up
-        cmds.setAttr(f"{ik_handle}.dForwardAxis", 1) # Y Axis
-        cmds.setAttr(f"{ik_handle}.dWorldUpAxis", 0) # X Axis
+        cmds.setAttr(f"{ik_handle}.dForwardAxis", 2) # Y Axis positive
+        cmds.setAttr(f"{ik_handle}.dWorldUpAxis", 6) # X Axis positive
         cmds.setAttr(f"{ik_handle}.dWorldUpVectorX", 1)
         cmds.setAttr(f"{ik_handle}.dWorldUpVectorY", 0)
         cmds.setAttr(f"{ik_handle}.dWorldUpVectorZ", 0)

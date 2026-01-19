@@ -76,7 +76,7 @@ class AutoRig(object):
         self.label_joints()
         
         skinner = skin_manager_api.SkinManager()
-        skinner.import_skins() # Import skin clusters after rig creation
+        # skinner.import_skins() # Import skin clusters after rig creation
 
         self.hide_connections()
         self.inherit_transforms()
