@@ -78,7 +78,6 @@ class CheekboneModule(object):
         Load cheekbone guides from the guide manager.
         """
         self.cheekbone_guides = guides_manager.get_guides(f"{self.side}_cheekbone_JNT")
-        # self.cheekbone_guides.sort()
         cmds.select(clear=True)
         self.cheek_guide = guides_manager.get_guides(f"{self.side}_cheek_JNT")
 

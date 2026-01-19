@@ -8,287 +8,168 @@ import pathlib
 from utils import data_manager
 from utils import rig_manager
 
-guides_node = "C_guides_GRP"
-CHARACTER_NAME = None
-
+# Recarga de módulos
 reload(data_manager)
 reload(rig_manager)
-reload(pathlib)
 
 def get_guides_info():
-
     """
     Get the guides transform and take the information from the joints and locators.
-
     """
+    # --- 1. Inicialización de variables para evitar UnboundLocalError ---
     guides_node = "C_guides_GRP"
-
+    joint_guides = []
+    locator_guides = []
+    curves_in_scene = []
+    nurbs_surfaces = []
+    nurbs_data = []
+    shapes_data = []
+    joint_matrices = []
+    joint_parents = []
+    locator_positions = []
+    
+    # --- 2. Validación de escena y rutas ---
     CHARACTER_NAME = rig_manager.get_character_name_from_scene(avoid=guides_node)
-
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, CHARACTER_NAME)
-    TEMPLATE_PATH = os.path.join(character_path, "guides")
+    if not CHARACTER_NAME:
+        om.MGlobal.displayError("No se pudo determinar el nombre del personaje.")
+        return None
 
     try:
         guides_transform = cmds.ls(guides_node, type="transform")[0]
-
     except IndexError:
-
-        om.MGlobal.displayError("Not a guide transform.")
+        om.MGlobal.displayError(f"No se encontró el nodo principal de guías: {guides_node}")
         return None
-    
-    guides_name = CHARACTER_NAME
-    
-    joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint")
-    locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator")
-    curves_in_scene = cmds.ls("*_CRV", type="transform", long=True)
-    nurbs_surfacess = cmds.ls("*_NURB", type="transform", long=True)
 
-    if nurbs_surfacess:
-        nurbs_data = []
-        for nurbs_surface in nurbs_surfacess:
+    # --- 3. Recolección de datos de Maya (con guardas para evitar None) ---
+    joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint") or []
+    locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator") or []
+    curves_in_scene = cmds.ls("*_CRV", type="transform", long=True) or []
+    nurbs_surfaces = cmds.ls("*_NURB", type="transform", long=True) or []
+
+    # --- 4. Procesamiento de NURBS Surfaces ---
+    if nurbs_surfaces:
+        for nurbs_surface in nurbs_surfaces:
+            clean_name = nurbs_surface.split("|")[-1]
+            surface_shapes = cmds.listRelatives(nurbs_surface, shapes=True, type="nurbsSurface")
             
-            nurbs_surface = nurbs_surface.split("|")[-1]
-            nurbs_shapes = cmds.listRelatives(nurbs_surface, shapes=True, type="nurbsSurface")[0]
-
-            if nurbs_shapes: 
-
-                surface_data = []
-
+            if surface_shapes:
+                shape_path = surface_shapes[0]
                 sel_list = om.MSelectionList()
-                sel_list.add(nurbs_shapes)
+                sel_list.add(shape_path)
                 shape_obj = sel_list.getDependNode(0)
-                
                 fn_nurbs = om.MFnNurbsSurface(shape_obj)
 
-                degree_u = int(fn_nurbs.degreeInU)
-                degree_v = int(fn_nurbs.degreeInV)
-
-                form_types = {
-                    om.MFnNurbsSurface.kOpen: "open",
-                    om.MFnNurbsSurface.kClosed: "closed",
-                    om.MFnNurbsSurface.kPeriodic: "periodic",
-                    om.MFnNurbsSurface.kInvalid: "invalid",
-                }
-                form_u = form_types.get(fn_nurbs.formInU, "unknown")
-                form_v = form_types.get(fn_nurbs.formInV, "unknown")
-
-                knots_u = list(fn_nurbs.knotsInU())
-                knots_v = list(fn_nurbs.knotsInV())
-
-                num_cvs_u = int(fn_nurbs.numCVsInU)
-                num_cvs_v = int(fn_nurbs.numCVsInV)
-
+                # Extracción de data técnica
                 cvs = []
                 is_rational = False
-
-                for u in range(num_cvs_u):
+                for u in range(fn_nurbs.numCVsInU):
                     row = []
-                    for v in range(num_cvs_v):
-                        pt = fn_nurbs.cvPosition(u, v)  # MPoint
-                        w = getattr(pt, "w", 1.0)
-                        # treat as rational if any CV has a weight different from 1.0
-                        if abs(w - 1.0) > 1e-6:
+                    for v in range(fn_nurbs.numCVsInV):
+                        pt = fn_nurbs.cvPosition(u, v)
+                        if abs(pt.w - 1.0) > 1e-6:
                             is_rational = True
-                            row.append((pt.x, pt.y, pt.z, w))
+                            row.append((pt.x, pt.y, pt.z, pt.w))
                         else:
                             row.append((pt.x, pt.y, pt.z))
                     cvs.append(row)
 
-                surface_data.append({
-                    "name": fn_nurbs.name(),
+                nurbs_data.append({
+                    "name": clean_name,
                     "surface": {
-                        "degreeInU": degree_u,
-                        "degreeInV": degree_v,
-                        "formInU": form_u,
-                        "formInV": form_v,
-                        "knotsInU": knots_u,
-                        "knotsInV": knots_v,
-                        "numCVsInU": num_cvs_u,
-                        "numCVsInV": num_cvs_v,
-                        "isRational": bool(is_rational),
-                        "cvs": cvs
+                        "degreeInU": int(fn_nurbs.degreeInU),
+                        "degreeInV": int(fn_nurbs.degreeInV),
+                        "formInU": str(fn_nurbs.formInU),
+                        "formInV": str(fn_nurbs.formInV),
+                        "knotsInU": list(fn_nurbs.knotsInU()),
+                        "knotsInV": list(fn_nurbs.knotsInV()),
+                        "cvs": cvs,
+                        "isRational": is_rational
                     }
                 })
-                nurbs_data.extend(surface_data)
-                     
 
+    # --- 5. Procesamiento de CURVAS ---
     if curves_in_scene:
-        shapes_data = []
-        curve_guide = []
+        for crv in curves_in_scene:
+            c_shapes = cmds.listRelatives(crv, shapes=True, type="nurbsCurve")
+            if not c_shapes: continue
+            
+            for shp in c_shapes:
+                sel = om.MSelectionList()
+                sel.add(shp)
+                curve_fn = om.MFnNurbsCurve(sel.getDependNode(0))
+                
+                cvs = [ (pt.x, pt.y, pt.z) for pt in [curve_fn.cvPosition(i) for i in range(curve_fn.numCVs)] ]
+                
+                shapes_data.append({
+                    "name": shp.split("|")[-1],
+                    "curve": {
+                        "cvs": cvs,
+                        "degree": curve_fn.degree,
+                        "knots": list(curve_fn.knots()),
+                        "form": str(curve_fn.form)
+                    }
+                })
 
-        for curve in curves_in_scene:
-
-            curve_guide.append(curve.split("|")[-1])
-
-
-        curve_shapes = cmds.listRelatives(curve_guide, allDescendents=True, type="nurbsCurve")
-        
-        for shape in curve_shapes:
-
-            nurbs_shapes = []
-            if cmds.nodeType(shape) == "nurbsCurve":
-                nurbs_shapes.append(shape)
-
-            if not nurbs_shapes:
-                continue  
-
-            sel_list = om.MSelectionList()
-            shape_data_list = []
-            sel_list.clear()
-            sel_list.add(shape)
-            shape_obj = sel_list.getDependNode(0)
-            curve_fn = om.MFnNurbsCurve(shape_obj)
-
-            cvs = []
-            for i in range(curve_fn.numCVs):
-                pt = curve_fn.cvPosition(i)
-                cvs.append((pt.x, pt.y, pt.z))
-
-            form_types = {
-                om.MFnNurbsCurve.kOpen: "open",
-                om.MFnNurbsCurve.kClosed: "closed",
-                om.MFnNurbsCurve.kPeriodic: "periodic"
-            }
-
-            form = form_types.get(curve_fn.form, "unknown")
-            if form == "unknown":
-                om.MGlobal.displayWarning(f"Curve form unknown for {shape}")
-
-            knots = curve_fn.knots()
-            degree = curve_fn.degree
-
-            shape_data_list.append({
-
-                "name": shape.split("|")[-1],
-                "curve": {
-                    "cvs": cvs,
-                    "form": form,
-                    "knots": list(knots),
-                    "degree": degree
-                }
-            })
-            shapes_data.extend(shape_data_list)
-
-
+    # --- 6. Procesamiento de JOINTS ---
     if joint_guides:
-
-        joint_matrices = []
-        joint_parents = []
-        joint_prefered_angles = []
-        joint_joint_orient = []
-
-        left_guides = []
-        right_guides = []
-
         for jnt in joint_guides:
-
-            if jnt.startswith("L_"):
-                left_guides.append(jnt)
-
-            if jnt.startswith("R_"):
-                right_guides.append(jnt)
-
-            name = jnt.split("_")[1]
             joint_matrices.append(cmds.xform(jnt, q=True, ws=True, m=True))
-            joint_parent = cmds.listRelatives(jnt, parent=True)[0]
-            joint_parents.append(joint_parent)
-            joint_children = cmds.listRelatives(jnt, children=True)
- 
-
-        if len(left_guides) != len(right_guides):
-            om.MGlobal.displayInfo("The number of left and right guides are not the same.")
-
-
-            for left_guide in left_guides:
-                for right_guide in right_guides:
-                    if name in left_guide and name in right_guide:
-                        left_world_position = [round(coord, 3) for coord in cmds.xform(left_guide, q=True, ws=True, t=True)]
-                        right_world_position = [round(coord, 3) for coord in cmds.xform(right_guide, q=True, ws=True, t=True)]
-
-                        left_world_position[0] = right_world_position[0] * -1       
-                                 
+            parent = cmds.listRelatives(jnt, parent=True)
+            joint_parents.append(parent[0] if parent else None)
     else:
-        om.MGlobal.displayError("No joint guides found.")
+        om.MGlobal.displayWarning("No se encontraron joints bajo el grupo de guías.")
 
+    # --- 7. Procesamiento de LOCATORS ---
     if locator_guides:
-
-        locator_positions = []
-
         for loc in locator_guides:
-            side = loc.split("_")[0]
-
             parent_transform = cmds.listRelatives(loc, parent=True)[0]
             locator_positions.append(cmds.xform(parent_transform, q=True, ws=True, m=True))
 
-    else:
-        om.MGlobal.displayInfo("No locator guides found.")
-     
-
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, CHARACTER_NAME)
-    TEMPLATE_PATH = os.path.join(character_path, "guides")
-    TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH)
-    guides_data = {guides_name: {}}
-    
+    # --- 8. Construcción del Diccionario Final ---
+    guides_data = {CHARACTER_NAME: {}}
 
     for i, guide in enumerate(joint_guides):
-        children = cmds.listRelatives(guide, allDescendents=True)
-        key = guide[0] if isinstance(guide, list) else guide
-        guides_data[guides_name][key] = {
+        children = cmds.listRelatives(guide, children=True) or []
+        guides_data[CHARACTER_NAME][guide] = {
             "joint_matrix": joint_matrices[i],
             "parent": joint_parents[i],
-            "isLocator": False,
             "isJoint": True,
-            "isCurve": False,
-            "isSurface": False,
-            "children": list(reversed(children if children else [])),
-    }
+            "children": children
+        }
 
-        
-    if locator_guides:
-        for i, loc in enumerate(locator_guides):
-            guides_data[guides_name][loc] = {
-                "locator_position": locator_positions[i],
-                "isLocator": True,
-                "isJoint": False,
-                "isCurve": False,
-                "isSurface": False
-            }
+    for i, loc in enumerate(locator_guides):
+        guides_data[CHARACTER_NAME][loc] = {
+            "locator_position": locator_positions[i],
+            "isLocator": True
+        }
+
+    for s_data in shapes_data:
+        guides_data[CHARACTER_NAME][s_data["name"]] = {
+            "curve_data": s_data["curve"],
+            "isCurve": True
+        }
+
+    for n_data in nurbs_data:
+        guides_data[CHARACTER_NAME][n_data["name"]] = {
+            "surface_data": n_data["surface"],
+            "isSurface": True
+        }
+
+    # --- 9. Guardado de archivo ---
+    script_path = os.path.realpath(__file__)
+    assets_path = os.path.join(script_path.split("scripts")[0], "assets", CHARACTER_NAME, "guides")
     
-    if curves_in_scene:
-        for shape_data in shapes_data:
-            shape_name = shape_data["name"] 
-            guides_data[guides_name][shape_name] = {
-                "curve_data": shape_data["curve"],
-                "isLocator": False,
-                "isJoint": False,
-                "isCurve": True,
-                "isSurface": False
-            }
-        
-    if nurbs_shapes:
-        for surface in nurbs_data:
-            surface_name = surface["name"]
-            guides_data[guides_name][surface_name] = {
-                "surface_data": surface["surface"],
-                "isLocator": False,
-                "isJoint": False,
-                "isCurve": False,
-                "isSurface": True
-            }
+    # Creamos la carpeta si no existe
+    if not os.path.exists(assets_path):
+        os.makedirs(assets_path)
 
-    if not os.path.exists(TEMPLATE_FILE):
-        os.makedirs(TEMPLATE_FILE)
+    TEMPLATE_FILE = os.path.join(assets_path, f"{CHARACTER_NAME}_v001.guides")
 
     with open(TEMPLATE_FILE, "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
-
-    om.MGlobal.displayInfo(f"Guides data saved to {TEMPLATE_FILE}")
+    
+    om.MGlobal.displayInfo(f"Guías guardadas con éxito en: {TEMPLATE_FILE}")
+    return TEMPLATE_FILE
 
 def load_guides_info(filePath=None):
 
