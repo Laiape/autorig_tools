@@ -21,7 +21,7 @@ def create_basic_structure(character_name=None):
     """Crea la estructura del rig con control de visibilidad centralizado."""
 
     # 1. PREPARACIÓN
-    character_name, imported_files = rig_manager.prepare_rig_scene()
+    character_name, scene_assemblies = rig_manager.prepare_rig_scene()
     data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
 
     # 2. NODOS
@@ -38,8 +38,9 @@ def create_basic_structure(character_name=None):
     # Ocultar LOCAL por defecto
     cmds.setAttr(f"{local}.visibility", 0)
 
-    for imported_file in imported_files:
-        if cmds.objExists(imported_file): cmds.parent(imported_file, final_geo)
+    for assembly in scene_assemblies:
+        if cmds.objExists(assembly): 
+            cmds.parent(assembly, final_geo)
 
     # 4. CONTROLES
     character_node, character_ctl = curve_tool.create_controller(name="C_character", offset=["GRP", "ANM"])
@@ -139,7 +140,6 @@ def create_basic_structure(character_name=None):
                 # Seteamos el nivel de subdivisión
                 cmds.connectAttr(f"{settings_ctl}.geoSmooth", f"{shape}.smoothLevel", f=True)
 
-    print(f"Subdivisión configurada para {len(mesh_transforms)} objetos.")
 
     # Hide Controllers (Reverse node)
     pb_rev = cmds.createNode("reverse", name="C_playblast_REV")

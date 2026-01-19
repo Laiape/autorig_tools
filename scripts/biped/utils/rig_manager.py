@@ -99,6 +99,23 @@ def create_new_scene():
     """
 
     cmds.file(new=True, force=True)
+
+def get_main_assembly_nodes():
+
+    """
+    Retrieves all main assembly nodes in the current Maya scene, excluding cameras.
+    Returns:
+        list: A list of main assembly node names.
+    """
+
+    all_assemblies = cmds.ls(assemblies=True)
+    
+    scene_assemblies = [
+        obj for obj in all_assemblies 
+        if not cmds.listRelatives(obj, type='camera')
+    ]
+
+    return scene_assemblies
     
 
 def get_character_name_from_scene(avoid=None):
@@ -110,12 +127,7 @@ def get_character_name_from_scene(avoid=None):
 
     char_name = "asset"
     
-    all_assemblies = cmds.ls(assemblies=True)
-    
-    scene_assemblies = [
-        obj for obj in all_assemblies 
-        if not cmds.listRelatives(obj, type='camera')
-    ]
+    scene_assemblies = get_main_assembly_nodes()
 
     for obj in scene_assemblies:
         
@@ -253,6 +265,7 @@ def execute_folder_creation(asset_name, window_id):
         cmds.error(f"Failed to create folders: {e}")
 
 def prepare_rig_scene():
+
     """
     1. Crea una nueva escena.
     2. Renombra la escena a CHAR_"character_name"_v001.
@@ -274,72 +287,54 @@ def prepare_rig_scene():
     
     character_name = cmds.promptDialog(query=True, text=True)
 
-    # 1. Nueva escena forzada
     cmds.file(new=True, force=True)
     
-    # 2. Definir nombre y renombrar escena
-    # Formato: C_NombrePersonaje_v001
     scene_name = f"CHAR_{character_name}_v001.ma"
     cmds.file(rename=scene_name)
     
     om.MGlobal.displayInfo("Nueva escena creada y renombrada como: {}".format(scene_name))
 
-    # 3. Importar Meshes
-    # Usamos tu función existente
-    imported_files = import_meshes(character_name)
+    scene_to_open, scene_assemblies = open_model_scene(character_name)
     
-    if not imported_files:
+    if not scene_to_open:
         cmds.warning("No se encontraron mallas para importar en la carpeta de {}".format(character_name))
-    else:
-        om.MGlobal.displayInfo("Mallas importadas correctamente en {}".format(scene_name))
 
-    return character_name, imported_files
+    return character_name, scene_assemblies
 
 
+def open_model_scene(character_name):
 
-def import_meshes(character_name=None):
     """
-    Importa meshes y devuelve una lista de los transforms raíz (main transforms)
-    importados en la escena.
+    Busca el archivo .ma o .mb en la carpeta 'models' del asset actual y lo abre.
     """
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, character_name)
-    models_path = os.path.join(character_path, "models")
 
-    mesh_files = glob.glob(os.path.join(models_path, "*.mb")) + glob.glob(os.path.join(models_path, "*.ma"))
+    script_path = os.path.realpath(__file__)
+    root_github = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(script_path))))
+    models_dir = os.path.join(root_github, "assets", character_name, "models")
+    models_dir = os.path.normpath(models_dir)
+
+    if not os.path.exists(models_dir):
+        cmds.error(f"No se encontró la carpeta de modelos en: {models_dir}")
+        return
+
+    files = [f for f in os.listdir(models_dir) if f.endswith(".ma") or f.endswith(".mb")]
     
-    imported_main_transforms = []
+    if not files:
+        cmds.warning(f"No se encontraron escenas de Maya en {models_dir}")
+        return
 
-    for mesh_file in mesh_files:
-        try:
-            # returnNewNodes=True devuelve todos los nodos creados por la importación
-            new_nodes = cmds.file(
-                mesh_file, 
-                i=True, 
-                type="mayaBinary" if mesh_file.endswith(".mb") else "mayaAscii", 
-                ignoreVersion=True, 
-                mergeNamespacesOnClash=False, 
-                namespace=":",
-                returnNewNodes=True
-            )
+    files.sort()
+    scene_to_open = os.path.join(models_dir, files[-1]).replace("\\", "/")
 
-            if new_nodes:
-                # Filtramos para obtener solo nodos de tipo 'transform' que sean RAÍZ (sin padre)
-                # Esto evita que devuelva shapes, joints o transforms hijos.
-                roots = [
-                    node for node in cmds.ls(new_nodes, type="transform") 
-                    if not cmds.listRelatives(node, parent=True)
-                ]
-                imported_main_transforms.extend(roots)
+    # 4. Abrir la escena encontrada
+    try:
+        cmds.file(scene_to_open, open=True, force=True)
+    except Exception as e:
+        cmds.error(f"No se pudo abrir la escena: {e}")
 
-        except Exception as e:
-            import maya.api.OpenMaya as om
-            om.MGlobal.displayError(f"Failed to import {os.path.basename(mesh_file)}: {str(e)}")
+    scene_assemblies = get_main_assembly_nodes()
 
-    # Devolvemos la lista de transforms principales (ej: ['maui_body_GEO', 'geo_GRP', etc.])
-    return imported_main_transforms
+    return scene_to_open, scene_assemblies
 
 
 def import_meshes_for_guides(character_name):

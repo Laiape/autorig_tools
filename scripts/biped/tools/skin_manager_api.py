@@ -91,7 +91,7 @@ class SkinManager(object):
             om.MGlobal.displayError(f"Archivo JSON no encontrado: {self.json_path}")
             return
 
-        print(f"\n# --- INICIANDO IMPORTACIÓN OPENMAYA: {self.asset_name} ---")
+        print(f"\n# --- IMPORTANDO SKIN CLUSTERS: {self.asset_name} ---")
 
         with open(self.json_path, 'r') as f:
             data = json.load(f)
@@ -185,7 +185,6 @@ class SkinManager(object):
                 cmds.setAttr(f"{sc_name}.normalizeWeights", prev_norm)
 
         # --- AQUÍ SE AÑADE EL DAISY CHAIN ---
-        # Se ejecuta una vez que todas las mallas (base y locales) tienen sus SkinClusters
         print("# --- CONECTANDO JERARQUÍAS DAISY CHAIN ---")
         self.process_daisy_chains(local_keys)
         
