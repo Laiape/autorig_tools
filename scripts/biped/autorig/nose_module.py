@@ -4,17 +4,17 @@ from importlib import reload
 import os
 import math
 
-from biped.utils import data_manager
-from biped.utils import guides_manager
-from biped.utils import curve_tool
-
-from biped.autorig.utilities import matrix_manager
+from utils import data_manager
+from utils import guides_manager
+from utils import curve_tool
+from utils import matrix_manager
+from utils import ribbon
 
 reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
-
 reload(matrix_manager)
+reload(ribbon)
 
 class NoseModule(object):
 
