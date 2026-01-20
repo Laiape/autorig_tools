@@ -573,58 +573,64 @@ def create_new_guides():
     except Exception as e:
         om.MGlobal.displayError(f"Error al intentar automatizar las guías: {str(e)}")
 
-    # Ejecuta la creación de carpetas para el nuevo personaje
+    # Finalmente, crea el nuevo asset
     rig_manager.create_new_asset()
 
-def read_guides_info(character_name, guide_name):
+def read_guides_info(character_name, guide_name=None):
     """
-    Lee la información de guías desde un JSON y verifica si una guía existe.
+    Lee la información de guías. 
     
+    MODO 1: Si guide_name es None -> Devuelve TODO el diccionario de guías (para cache).
+    MODO 2: Si hay guide_name -> Devuelve True/False si existe.
+
     Args:
-        character_name (str): Nombre del personaje (clave principal).
-        guide_name (str): Nombre de la guía a buscar.
-    
+        character_name (str): Nombre del personaje.
+        guide_name (str, optional): Nombre de la guía específica. Defaults to None.
+
     Returns:
-        bool: True si la guía existe, None si hay un error o no existe.
+        dict: Si guide_name es None, devuelve todo el diccionario de datos.
+        bool: Si guide_name tiene valor, devuelve True/False.
+        None: Si hay error.
     """
-    # 1. Definición de rutas
+    # 1. Construcción de ruta (Robusta)
     try:
         complete_path = os.path.realpath(__file__)
+        # Usamos split con separador genérico para evitar errores entre Win/Linux
         relative_path = complete_path.split(os.sep + "scripts")[0]
         base_path = os.path.join(relative_path, "assets")
         character_path = os.path.join(base_path, character_name)
         guides_folder = os.path.join(character_path, "guides")
         
+        # Asumo que rig_manager devuelve la ruta completa al archivo .json
         guides_file = rig_manager.get_latest_version(guides_folder)
         
     except Exception as e:
-        om.MGlobal.displayError(f"[LOG ERROR] Error al construir la ruta o buscar versiones: {str(e)}")
+        om.MGlobal.displayError(f"[LOG ERROR] Error rutas: {str(e)}")
         return None
 
     if not guides_file or not os.path.exists(guides_file):
-        om.MGlobal.displayError(f"[LOG ERROR] No se encontró el archivo .guides para '{character_name}' en: {guides_folder}")
+        om.MGlobal.displayError(f"[LOG ERROR] No se encontró archivo de guías en: {guides_folder}")
         return None
 
+    # 2. Lectura del JSON (La parte pesada)
     try:
         with open(guides_file, 'r') as file:
             guides_info = json.load(file)
-            
-    except ValueError as e:
-        om.MGlobal.displayError(f"[LOG ERROR] El archivo JSON está corrupto o mal formateado: {str(e)}")
-        return None
     except Exception as e:
-        om.MGlobal.displayError(f"[LOG ERROR] No se pudo leer el archivo: {str(e)}")
+        om.MGlobal.displayError(f"[LOG ERROR] Error leyendo JSON: {str(e)}")
         return None
 
     character_data = guides_info.get(character_name)
     
     if character_data is None:
-        om.MGlobal.displayError(f"[LOG ERROR] El personaje '{character_name}' no existe en el archivo de guías.")
+        om.MGlobal.displayError(f"[LOG ERROR] El personaje '{character_name}' no está en el JSON.")
         return None
 
-    if guide_name in character_data:
-        return True
-    else:
-        return False
-        
+    # 3. Lógica Dual (La optimización)
+    
+    # CASO A: Queremos todos los datos para guardarlos en memoria (Cache)
+    if guide_name is None:
+        print(f"[LOG INFO] Cargando todas las guías para '{character_data}' en memoria.")
+        return character_data
+
 

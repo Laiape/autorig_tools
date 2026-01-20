@@ -44,7 +44,6 @@ class SpineModule(object):
         self.load_guides()
         self.controller_creation()
         self.local_hip_chest_setup()
-        # self.stretch_activate()
         self.ribbon_setup()
 
         data_manager.DataExportBiped().append_data("spine_module",
@@ -52,7 +51,6 @@ class SpineModule(object):
                                 "local_hip_ctl": self.local_hip_ctl,
                                 "body_ctl": self.body_ctl,
                                 "local_chest_ctl": self.local_chest_ctl,
-                                "last_spine_jnt": self.spine_chain[-1]
                             })
         
 
@@ -76,7 +74,7 @@ class SpineModule(object):
 
         self.spine_chain = guides_manager.get_guides(f"{self.side}_spine00_JNT")
         cmds.parent(self.spine_chain[0], self.module_trn)
-
+        print(f"Spine guides loaded for side {self.side}: {self.spine_chain}")
        
 
     def controller_creation(self):
@@ -85,30 +83,19 @@ class SpineModule(object):
         Create controllers for the spine module.
         """
 
-        self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC"])
-        cmds.matchTransform(self.body_nodes[0], self.spine_chain[0], pos=True, rot=True, scl=False)
-        cmds.parent(self.body_nodes[0], self.controllers_grp)
-
-        self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC"])
-        cmds.matchTransform(self.local_hip_nodes[0], self.spine_chain[0], pos=True, rot=True, scl=False)
-        cmds.parent(self.local_hip_nodes[0], self.controllers_grp)
-
-        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC"])
-        cmds.parent(self.local_chest_nodes[0], self.controllers_grp)
-
-        self.lock_attributes(self.body_ctl, ["sx", "sy", "sz", "v"])
-        self.lock_attributes(self.local_hip_ctl, ["sx", "sy", "sz", "v"])
-        self.lock_attributes(self.local_chest_ctl, ["sx", "sy", "sz", "v"])
+        self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC"], parent=self.controllers_grp, match=self.spine_chain[0], locked_attrs=["sx", "sy", "sz", "v"])
+        self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC"], match=self.spine_chain[0], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
 
         self.spine_nodes = []
         self.spine_ctls = []
+        
         
         for i, jnt in enumerate(self.spine_chain):
             
             if i == 0 or i == len(self.spine_chain) - 1:
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
-                self.lock_attributes(corner_ctl, [ "v"])
+                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"], locked_attrs=["v"])
                 
                 if i == len(self.spine_chain) - 1:
                     cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
@@ -129,21 +116,15 @@ class SpineModule(object):
 
             if i == (len(self.spine_chain) - 1) // 2:
 
-                mid_nodes, mid_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
-                self.lock_attributes(mid_ctl, [ "v"])
+                mid_nodes, mid_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"], locked_attrs=["v"], parent=self.spine_ctls[0], match=self.spine_chain[(len(self.spine_chain) // 2) - 1])
 
-                cmds.parent(mid_nodes[0], self.spine_ctls[0])
-                cmds.matchTransform(mid_nodes[0], self.spine_chain[(len(self.spine_chain) // 2) - 1], pos=True, rot=True, scl=False)
                 self.spine_nodes.append(mid_nodes[0])
                 self.spine_ctls.append(mid_ctl)
 
             
             if i == 1 or i == len(self.spine_chain) - 2:
 
-                tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP"])
-                self.lock_attributes(tan_ctl, ["v"])
-
-                cmds.matchTransform(tan_nodes[0], jnt, pos=True, rot=True, scl=False)
+                tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP"], locked_attrs=["v"], match=jnt)
 
                 if i == 1:
 

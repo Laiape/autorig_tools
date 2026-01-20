@@ -370,87 +370,146 @@ def import_meshes_for_guides(character_name):
 
     return mesh_files
 
+def get_character_data(character_name):
+    """
+    Carga la data completa del personaje una sola vez.
+    Retorna un diccionario con todas las guías existentes.
+    """
+    full_data = guides_manager.read_guides_info(character_name, return_all=True) 
+    return full_data if full_data else {}
+
+def define_biped_or_quadruped(guides_data):
+    """
+    Determina si es biped o quadruped basándose en qué guías existen en el diccionario.
+    """
+    if not guides_data:
+        return "biped"
+
+    if "L_frontLegHip_JNT" in guides_data or "R_frontLegHip_JNT" in guides_data or "L_backLegHip_JNT" in guides_data or "R_backLegHip_JNT" in guides_data:
+        return "quadruped"
+    
+    return "biped"
+
 def build_rig(character_name):
     """
-    Logic to convert guides into build.
-    Captura la info del JSON una sola vez para mejorar el performance.
+    Función principal de construcción del Rig.
+    Optimizado para leer el JSON una sola vez.
     """
     reload(guides_manager)
     
-    def check(guide):
-        return guides_manager.read_guides_info(character_name, guide) == True
-
-    is_biped = False
-    # ---- BIPED / BODY ----
-    if check("L_hip_JNT") and check("R_hip_JNT"):
-        
-        is_biped = True
+    all_guides_data = guides_manager.read_guides_info(character_name)
     
+    if not all_guides_data:
+        print(f"[ERROR] No se pudieron cargar las guías para: {character_name}")
+        return 
+
+    def check(guide_name):
+        return guide_name in all_guides_data
+
+    rig_type = define_biped_or_quadruped(all_guides_data)
+    print(f"--- Iniciando Build: {character_name} (Tipo: {rig_type.upper()}) ---")
+
+    # =========================================================================
+    # BUILD: BODY
+    # =========================================================================
+
+    # --- Spine ---
     if check("C_spine00_JNT"):
-        if is_biped: 
+        if rig_type == "biped":
+            reload(biped_spine_module)
             biped_spine_module.SpineModule().make("C")
+        elif rig_type == "quadruped":
+            reload(quad_spine_module)
+            quad_spine_module.SpineModule().make("C")
+
+    # --- Neck ---
+    if check("C_neck00_JNT"):
+        if rig_type == "biped":
+            reload(neck_module)
+            neck_module.NeckModule().make("C")
+        elif rig_type == "quadruped":
+            reload(neck_module_quad)
+            neck_module_quad.NeckModule().make("C")
+
+    # --- Legs (Solo Biped) ---
+    if rig_type == "biped":
+        if check("L_hip_JNT") and check("R_hip_JNT"):
+            reload(leg_module)
             leg_module.LegModule().make("L")
             leg_module.LegModule().make("R")
-        else:
-            quad_spine_module.SpineModule().make("C")
-            
+
+    # --- Limbs (Solo Quadruped) ---
+    if rig_type == "quadruped":
+        # Patas Delanteras
+        if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
+            reload(limb_module)
+            limb_module.LimbModule().make("L")
+            limb_module.LimbModule().make("R")
+        
+        # Patas Traseras
+        if check("L_backLeg_JNT") and check("R_backLeg_JNT"):
+            reload(limb_module)
+            limb_module.LimbModule().make("L") 
+            limb_module.LimbModule().make("R")
+
+    # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
+        reload(clavicle_module)
         clavicle_module.ClavicleModule().make("L")
         clavicle_module.ClavicleModule().make("R") 
 
     if check("L_shoulder_JNT") and check("R_shoulder_JNT"):
+        reload(arm_module)
         arm_module.ArmModule().make("L")
         arm_module.ArmModule().make("R")
     
     if check("L_thumb00_JNT") and check("R_thumb00_JNT"):
+        reload(fingers_module)
         fingers_module.FingersModule().make("L")
         fingers_module.FingersModule().make("R")
 
-    if check("C_neck00_JNT"):
-        if is_biped:
-            neck_module.NeckModule().make("C")
-        else:
-            neck_module_quad.NeckModule().make("C")
-        
-    # ---- QUADRUPED / OTHERS ----
-    if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
-        limb_module.LimbModule().make("L")
-        limb_module.LimbModule().make("R")
-
-    if check("L_backLeg_JNT") and check("R_backLeg_JNT"):
-        limb_module.LimbModule().make("L")
-        limb_module.LimbModule().make("R")
-
+    # --- Tail ---
     if check("C_tail00_JNT"):
+        reload(tail_module)
         tail_module.TailModule().make("C")
-        
-    # ---- FACIAL ----
+
+    # =========================================================================
+    # BUILD: FACIAL
+    # =========================================================================
+    
     if check("C_jaw_JNT"):
+        reload(jaw_module)
         jaw_module.JawModule().make("C")
     
     if check("L_eyebrow_JNT") and check("R_eyebrow_JNT"):
+        reload(eyebrow_module)
         eyebrow_module.EyebrowModule().make("L")
         eyebrow_module.EyebrowModule().make("R")
     
     if check("L_eye_JNT") and check("R_eye_JNT"):
+        reload(eyelid_module)
         eyelid_module.EyelidModule().make("L")
         eyelid_module.EyelidModule().make("R")
 
     if check("C_tongue00_JNT"):
+        reload(tongue_module)
         tongue_module.TongueModule().make("C")
 
     if check("C_upperTeeth_JNT"):
+        reload(teeth_module)
         teeth_module.TeethModule().make("C")
 
     if check("L_ear00_JNT") and check("R_ear00_JNT"):
+        reload(ear_module)
         ear_module.EarModule().make("L")
         ear_module.EarModule().make("R")
 
     if check("C_nose_JNT"):
+        reload(nose_module)
         nose_module.NoseModule().make("L")
         nose_module.NoseModule().make("R")
 
     if check("L_cheekbone_JNT") and check("R_cheekbone_JNT"):
+        reload(cheekbone_module)
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
-    

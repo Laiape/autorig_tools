@@ -48,11 +48,6 @@ class SpineModule(object):
         # self.ribbon_setup()
         self.ik_spine()
 
-        
-       
-
-
-
         data_manager.DataExportBiped().append_data("spine_module",
                             {
                                 "local_hip_ctl": self.local_hip_ctl,

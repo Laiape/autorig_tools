@@ -74,10 +74,9 @@ class AutoRig(object):
         self.make_rig()
         self.space_switches()
         self.label_joints()
-        skinner = skin_manager_api.SkinManager()
-        # skinner.import_skins() # Import skin clusters after rig creation
         self.hide_connections()
         self.inherit_transforms()
+        self.import_weights()
         
 
     def basic_structure(self):
@@ -97,10 +96,10 @@ class AutoRig(object):
         rig_manager.build_rig(char_name)
 
         cmds.inViewMessage(
-    amg=f'Completed <hl>{char_name} RIG</hl> build.',
-    pos='midCenter',
-    fade=True,
-    alpha=0.8)
+        amg=f'Completed <hl>{char_name} RIG</hl> build.',
+        pos='midCenter',
+        fade=True,
+        alpha=0.8)
 
     def space_switches(self):
 
@@ -233,6 +232,16 @@ class AutoRig(object):
                    cmds.setAttr(crv + ".inheritsTransform", 0)
                except Exception as e:
                    om.MGlobal.displayError(f"Error setting inherit transforms for {crv}: {e}")
+
+
+    def import_weights(self):
+
+        """
+        Import skin weights for the rig after creation.
+        """
+
+        skinner = skin_manager_api.SkinManager()
+        skinner.import_skins() # Import skin clusters after rig creation
 
     
     
