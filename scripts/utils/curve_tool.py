@@ -29,17 +29,6 @@ def get_all_ctl_curves_data():
     ctl_data = {}
 
     transforms = cmds.ls("*_CTL*", type="transform", long=True)
-
-    # answer = cmds.promptDialog(
-    #             title="EXPORT CONTROLLERS TEMPLATE",
-    #             message="INSERT FILE NAME",
-    #             button=["+1", "REPLACE", "Cancel"],
-    #             defaultButton="+1",
-    #             cancelButton="Cancel",
-    #             dismissString="Cancel")
-    # if answer == "Cancel":
-    #     om.MGlobal.displayInfo("Operation cancelled by user.")
-    #     return
     
     CHARACTER_NAME = rig_manager.get_character_name_from_scene()
     curves_name = f"{CHARACTER_NAME}_v001"
@@ -179,8 +168,7 @@ def build_curves_from_template(target_transform_name=None):
 
 
     if not os.path.exists(TEMPLATE_FILE):
-        # om.MGlobal.displayError("Template file does not exist.")
-        TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, "default.curves")
+        TEMPLATE_FILE = os.path.join(path, "-", "new", "curves", "new.curves")
 
     with open(TEMPLATE_FILE, "r") as f:
         ctl_data = json.load(f)

@@ -623,10 +623,8 @@ def read_guides_info(character_name, guide_name):
         return None
 
     if guide_name in character_data:
-        om.MGlobal.displayInfo(f"[LOG SUCCESS] Guía '{guide_name}' encontrada correctamente.")
         return True
     else:
-        om.MGlobal.displayWarning(f"[LOG WARNING] La guía '{guide_name}' no existe para el personaje '{character_name}'.")
         return False
         
 

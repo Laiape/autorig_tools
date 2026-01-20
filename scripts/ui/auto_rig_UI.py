@@ -76,21 +76,26 @@ def create_new_asset():
     cmds.inViewMessage(amg='New Asset Created.', pos='midCenter', fade=True)
 
 def create_new_guides():
+    reload(guides_manager)
     guides_manager.create_new_guides()
     cmds.inViewMessage(amg='New Guides Created.', pos='midCenter', fade=True)
 
 def import_guides():
+    reload(guides_manager)
     guides_manager.load_guides_info()
 
 def export_guides():
+    reload(guides_manager)
     guides_manager.get_guides_info()
     cmds.inViewMessage(amg='Guides Exportados.', pos='midCenter', fade=True)
 
 def export_all_controllers():
+    reload(curve_tool)
     curve_tool.get_all_ctl_curves_data()
     cmds.inViewMessage(amg='Controladores Exportados.', pos='midCenter', fade=True)
 
 def mirror_controllers():
+    reload(curve_tool)
     curve_tool.mirror_curves()
     cmds.inViewMessage(amg='Controladores Espejados.', pos='midCenter', fade=True)
 
@@ -101,17 +106,20 @@ def replace_shapes():
     print("Funcionalidad para reemplazar formas de controladores.")
 
 def export_skin_cluster():
+    reload(skin_manager_api)
     skinner = skin_manager_api.SkinManager()
     skinner.export_skins()
     cmds.inViewMessage(amg='Skins Exportadas.', pos='midCenter', fade=True)
 
 def import_skin_cluster():
     skinner = skin_manager_api.SkinManager()
+    reload(skin_manager_api)
     skinner.import_skins()
     cmds.inViewMessage(amg='Skins Importadas y Reordenadas.', pos='midCenter', fade=True)
 
 def rig():
     """Función para crear el rig bipedal"""
     cmds.file(new=True, force=True)
+    reload(create_rig)
     rig = create_rig.AutoRig()
     rig.build()

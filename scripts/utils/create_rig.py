@@ -74,10 +74,8 @@ class AutoRig(object):
         self.make_rig()
         self.space_switches()
         self.label_joints()
-        
         skinner = skin_manager_api.SkinManager()
-        skinner.import_skins() # Import skin clusters after rig creation
-
+        # skinner.import_skins() # Import skin clusters after rig creation
         self.hide_connections()
         self.inherit_transforms()
         
@@ -95,8 +93,8 @@ class AutoRig(object):
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
-        char_name = rig_manager.get_character_name_from_build().upper()
-        rig_manager.build_rig()
+        char_name = rig_manager.get_character_name_from_build()
+        rig_manager.build_rig(char_name)
 
         cmds.inViewMessage(
     amg=f'Completed <hl>{char_name} RIG</hl> build.',

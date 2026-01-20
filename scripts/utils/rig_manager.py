@@ -58,6 +58,26 @@ from biped.autorig import tongue_module
 from biped.autorig import teeth_module
 
 
+reload(arm_module)
+reload(biped_spine_module)
+reload(clavicle_module)
+reload(leg_module)
+reload(neck_module)
+reload(fingers_module)
+reload(tail_module)
+reload(limb_module)
+reload(quad_spine_module)
+reload(neck_module_quad)
+reload(eyebrow_module)
+reload(eyelid_module)
+reload(ear_module)
+reload(nose_module)
+reload(jaw_module)
+reload(cheekbone_module)
+reload(tongue_module)
+reload(teeth_module)
+
+
 def get_latest_version(folder):
 
     """
@@ -355,19 +375,22 @@ def build_rig(character_name):
     Logic to convert guides into build.
     Captura la info del JSON una sola vez para mejorar el performance.
     """
+    reload(guides_manager)
     
     def check(guide):
         return guides_manager.read_guides_info(character_name, guide) == True
 
+    is_biped = False
     # ---- BIPED / BODY ----
     if check("L_hip_JNT") and check("R_hip_JNT"):
-        leg_module.LegModule().make("L")
-        leg_module.LegModule().make("R")
+        
         is_biped = True
     
     if check("C_spine00_JNT"):
-        if is_biped:
+        if is_biped: 
             biped_spine_module.SpineModule().make("C")
+            leg_module.LegModule().make("L")
+            leg_module.LegModule().make("R")
         else:
             quad_spine_module.SpineModule().make("C")
             
@@ -409,17 +432,17 @@ def build_rig(character_name):
         eyebrow_module.EyebrowModule().make("L")
         eyebrow_module.EyebrowModule().make("R")
     
-    if check("L_eyelid_JNT") and check("R_eyelid_JNT"):
+    if check("L_eye_JNT") and check("R_eye_JNT"):
         eyelid_module.EyelidModule().make("L")
         eyelid_module.EyelidModule().make("R")
 
     if check("C_tongue00_JNT"):
         tongue_module.TongueModule().make("C")
 
-    if check("C_teeth_JNT"):
+    if check("C_upperTeeth_JNT"):
         teeth_module.TeethModule().make("C")
 
-    if check("L_ear_JNT") and check("R_ear_JNT"):
+    if check("L_ear00_JNT") and check("R_ear00_JNT"):
         ear_module.EarModule().make("L")
         ear_module.EarModule().make("R")
 
@@ -427,6 +450,7 @@ def build_rig(character_name):
         nose_module.NoseModule().make("L")
         nose_module.NoseModule().make("R")
 
-    if check("C_cheekbone_JNT"):
-        cheekbone_module.CheekboneModule().make("C")
+    if check("L_cheekbone_JNT") and check("R_cheekbone_JNT"):
+        cheekbone_module.CheekboneModule().make("L")
+        cheekbone_module.CheekboneModule().make("R")
     
