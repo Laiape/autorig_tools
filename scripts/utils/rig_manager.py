@@ -103,6 +103,33 @@ def get_latest_version(folder):
     else:
         latest_file = max(files, key=lambda f: f.stat().st_mtime)
         return latest_file
+    
+def asset_path(character_name, path):
+
+    """
+    Returns the asset path for a given character name.
+    Args:
+        character_name (str): The name of the character.
+    Returns:
+        str: The full path to the asset folder.
+    """
+
+    complete_path = os.path.realpath(__file__)
+    sep_token = os.sep + "scripts"
+    if sep_token in complete_path:
+        relative_path = complete_path.split(sep_token)[0]
+    else:
+        relative_path = os.path.dirname(os.path.dirname(complete_path))
+
+    base_path = os.path.join(relative_path, "assets")
+    if character_name == "":
+        return base_path
+    if path == "":
+        asset_path = os.path.join(base_path, character_name)
+    else:
+        asset_path = os.path.join(base_path, character_name, path)
+
+    return asset_path
 
 def create_new_scene():
 
@@ -188,17 +215,7 @@ def create_assets_folders(asset_name):
     Create necessary asset folders if they do not exist.
     """
 
-    # Set up main asset folder and subfolders
-    complete_path = os.path.realpath(__file__)
-    sep_token = os.sep + "scripts"
-    if sep_token in complete_path:
-        relative_path = complete_path.split(sep_token)[0]
-    else:
-        # fallback to parent directory if "scripts" is not found
-        relative_path = os.path.dirname(os.path.dirname(complete_path))
-
-    base_path = os.path.join(relative_path, "assets")
-    main_folder = os.path.join(base_path, asset_name)
+    main_folder = asset_path(asset_name, "")
     os.makedirs(main_folder, exist_ok=True)
 
     subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters"]
@@ -237,26 +254,8 @@ def execute_folder_creation(asset_name, window_id):
     """
     Lógica de sistema de archivos para crear las carpetas.
     """
-    # Validación básica
-    if not asset_name or asset_name.strip() == "":
-        cmds.warning("Asset name cannot be empty!")
-        return
 
-    # Limpiar el nombre de posibles espacios
-    asset_name = asset_name.strip()
-
-    # --- Lógica de Rutas ---
-    complete_path = os.path.realpath(__file__)
-    sep_token = os.sep + "scripts"
-    
-    if sep_token in complete_path:
-        relative_path = complete_path.split(sep_token)[0]
-    else:
-        relative_path = os.path.dirname(os.path.dirname(complete_path))
-
-    # Carpeta base 'assets'
-    base_path = os.path.join(relative_path, "assets")
-    main_folder = os.path.join(base_path, asset_name)
+    main_folder = asset_path(asset_name, asset_name)
     
     # Crear carpeta principal y subcarpetas
     subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters"]
@@ -318,10 +317,7 @@ def open_model_scene(character_name):
     Busca el archivo .ma o .mb en la carpeta 'models' del asset actual y lo abre.
     """
 
-    script_path = os.path.realpath(__file__)
-    root_github = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(script_path))))
-    models_dir = os.path.join(root_github, "autorig_tools", "assets", character_name, "models")
-    models_dir = os.path.normpath(models_dir)
+    models_dir = asset_path(character_name, "models")
 
     if not os.path.exists(models_dir):
         cmds.error(f"No se encontró la carpeta de modelos en: {models_dir}")
@@ -353,11 +349,7 @@ def import_meshes_for_guides(character_name):
     Import meshes when guides are imported to.
     """
 
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, character_name)
-    models_path = os.path.join(character_path, "models")
+    models_path = asset_path(character_name, "models")
 
     mesh_files = glob.glob(os.path.join(models_path, "*.mb")) + glob.glob(os.path.join(models_path, "*.ma"))
 
@@ -391,6 +383,7 @@ def define_biped_or_quadruped(guides_data):
     return "biped"
 
 def build_rig(character_name):
+
     """
     Función principal de construcción del Rig.
     Optimizado para leer el JSON una sola vez.
@@ -398,6 +391,7 @@ def build_rig(character_name):
     reload(guides_manager)
     
     all_guides_data = guides_manager.read_guides_info(character_name)
+    modules_data = build_rig_from_data(character_name)
     
     if not all_guides_data:
         print(f"[ERROR] No se pudieron cargar las guías para: {character_name}")
@@ -513,3 +507,102 @@ def build_rig(character_name):
         reload(cheekbone_module)
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
+
+
+def create_rig_settings(guides_transform):
+
+    """
+    Crea los atributos de configuración del Rig en el transform de las guías.
+    """
+    print("--- Creando ajustes del Rig ---")
+    rig_settings = {
+        "Rig_Type": ("biped", "quadruped"),
+        "spine_skinning_jnts": 8,
+        "spine_controllers": 5,
+        "neck_skinning_jnts": 5,
+        "neck_controllers": 2,
+        "arm_skinning_jnts": 5,
+        "leg_skinning_jnts": 5,
+        "tail_skinning_jnts": 5,
+        "tail_controllers": 5
+    }
+
+    if not cmds.objExists(guides_transform):
+        om.MGlobal.displayError(f"No existe el objeto: {guides_transform}")
+        return
+    
+    lock_attrs = ["translate", "rotate", "scale", "visibility"]
+    for i, attr in enumerate(lock_attrs):
+        if i < 3:
+            for axis in ['X', 'Y', 'Z']:
+                cmds.setAttr(f"{guides_transform}.{attr}{axis}", lock=True, keyable=False, channelBox=False)
+        else:
+            cmds.setAttr(f"{guides_transform}.{attr}", lock=True, keyable=False, channelBox=False)
+
+    for key, value in rig_settings.items():
+        attr_path = f"{guides_transform}.{key}"
+        key_attr_path = f"{guides_transform}.{key.split('_')[0].upper()}"
+        
+        if cmds.objExists(attr_path):
+            om.MGlobal.displayInfo(f"El ajuste ya existe: {key}")
+            continue
+
+        if isinstance(value, tuple):
+            enum_options = ":".join(value).upper()
+            if not cmds.objExists(key_attr_path):
+                cmds.addAttr(guides_transform, longName=key.split('_')[0].upper(), niceName=f"{key.split('_')[0].upper()} -----", attributeType='enum', enumName="-----", keyable=True)
+                cmds.setAttr(key_attr_path, lock=True, channelBox=True)
+            cmds.addAttr(guides_transform, longName=key, attributeType='enum', enumName=enum_options, keyable=True)
+        
+        elif isinstance(value, int):
+            cmds.addAttr(guides_transform, longName=key, attributeType='long', defaultValue=value, minValue=2, maxValue=10, keyable=True)
+
+    return rig_settings
+
+def get_rig_data(character_name, guides_transform):
+
+    """
+    Exporta la data del rig a un archivo JSON en la carpeta 'build' del asset.
+    """
+
+    build_path = asset_path(character_name, "build")
+    os.makedirs(build_path, exist_ok=True)
+
+    rig_data = {}
+
+    for attr in cmds.attributeQuery(guides_transform):
+        name = attr
+        value = cmds.getAttr(f"{guides_transform}.{name}")
+        rig_data[name] = value
+
+
+    json_path = os.path.join(build_path, f"{character_name}_v001.build")
+
+    with open(json_path, 'w') as json_file:
+        json.dump(rig_data, json_file, indent=4)
+    
+    om.MGlobal.displayInfo(f"Rig data exported for {character_name} to {build_path}")
+
+    return json_path
+
+def build_rig_from_data(character_name):
+
+    """
+    Construye el rig basándose en la data proporcionada.
+    """
+
+    build_path = asset_path(character_name, "build")
+    build_file = get_latest_version(build_path)
+
+    if not build_file:
+        om.MGlobal.displayError(f"No se encontró un archivo de build para: {character_name}")
+        return
+    
+    with open(build_file, 'r') as json_file:
+        rig_data = json.load(json_file)
+    
+
+
+
+    
+    

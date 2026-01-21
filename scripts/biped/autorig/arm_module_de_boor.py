@@ -81,12 +81,9 @@ class ArmModule(object):
 
     def create_chains(self):
 
-        self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_armSettings", offset=["GRP"])
-        self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-        cmds.matchTransform(self.settings_node[0], self.settings_loc, pos=True, rot=True)
+        self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_armSettings", offset=["GRP"], parent=self.controllers_grp, locked_attrs=["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"], match=self.settings_loc)
         cmds.delete(self.settings_loc)
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=1, minValue=0, maxValue=1, keyable=True)
-        cmds.parent(self.settings_node[0], self.controllers_grp)
 
         self.fk_chain = []
         self.ik_chain = []

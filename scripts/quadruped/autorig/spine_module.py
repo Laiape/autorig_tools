@@ -28,30 +28,39 @@ class SpineModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-    def make(self, side):
+        self.primary_input_axis = (0, 0, 1)
+        self.secondary_input_axis = (0, 1, 0)
+
+    def make(self, side, spine_joints, spine_controllers):
 
         """ 
         Create the spine module structure and controllers. Call this method with the side ('L' or 'R') to create the respective spine module.
         Args:
             side (str): The side of the spine ('L' or 'R').
+            spine_joints (int): The number of spine joints.
+            spine_controllers (int): The number of spine controllers.
 
         """
+
+        self.spine_joints = spine_joints
+        self.spine_controllers = spine_controllers
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_spineModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_spineSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_spineControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.load_guides()
+        self.create_guides_logic()
         self.controller_creation()
         self.local_hip_chest_setup()
         self.ribbon_setup()
 
-        data_manager.DataExportBiped().append_data("spine_module",
-                            {
-                                "local_hip_ctl": self.local_hip_ctl,
-                                "body_ctl": self.body_ctl,
-                                "local_chest_ctl": self.local_chest_ctl,
-                            })
+        # data_manager.DataExportBiped().append_data("spine_module",
+        #                     {
+        #                         "local_hip_ctl": self.local_hip_ctl,
+        #                         "body_ctl": self.body_ctl,
+        #                         "local_chest_ctl": self.local_chest_ctl,
+        #                     })
         
 
     def lock_attributes(self, ctl, attrs):
@@ -75,6 +84,50 @@ class SpineModule(object):
         self.spine_chain = guides_manager.get_guides(f"{self.side}_spine00_JNT")
         cmds.parent(self.spine_chain[0], self.module_trn)
         print(f"Spine guides loaded for side {self.side}: {self.spine_chain}")
+
+    def create_guides_logic(self):
+
+        """
+        Create the logic for spine guides.
+        """
+        guide_root = cmds.createNode("transform", name=f"{self.side}_spineRoot_Guide", ss=True, p=self.module_trn)
+        cmds.matchTransform(guide_root, self.spine_chain[0], pos=True)
+
+        guide_end = cmds.createNode("transform", name=f"{self.side}_spineEnd_Guide", ss=True, p=guide_root)
+        cmds.matchTransform(guide_end, self.spine_chain[-1], pos=True)
+
+        cmds.delete(self.spine_chain[0])
+
+        # Build the guides logic
+        aim_matrix_guide_00 = cmds.createNode("aimMatrix", name=f"{self.side}_spine00_AIM", ss=True)
+        cmds.setAttr(f"{aim_matrix_guide_00}.primaryInputAxis", *self.primary_input_axis, type="double3")
+        cmds.setAttr(f"{aim_matrix_guide_00}.secondaryInputAxis", *self.secondary_input_axis, type="double3")
+        cmds.connectAttr(f"{guide_root}.worldMatrix[0]", f"{aim_matrix_guide_00}.inputMatrix")
+        cmds.connectAttr(f"{guide_end}.worldMatrix[0]", f"{aim_matrix_guide_00}.primaryTargetMatrix")
+
+        blend_matrix_guide_04 = cmds.createNode("blendMatrix", name=f"{self.side}_spine04_BLM", ss=True)
+        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].weight", 1)
+        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].rotateWeight", 0)
+        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].shearWeight", 0)
+        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].translateWeight", 0)
+        cmds.connectAttr(f"{guide_end}.worldMatrix[0]", f"{blend_matrix_guide_04}.inputMatrix")
+        cmds.connectAttr(f"{aim_matrix_guide_00}.outputMatrix", f"{blend_matrix_guide_04}.target[0].targetMatrix")
+
+        self.spine_guides_matrices = [f"{aim_matrix_guide_00}.outputMatrix"]
+
+        for i in range(3): # We assume there are 5 guides for the spine (3 + 2 ends)
+
+            blend_matrix_guide = cmds.createNode("blendMatrix", name=f"{self.side}_spine0{i+1}_BLM", ss=True)
+            cmds.setAttr(f"{blend_matrix_guide}.target[0].weight", (i + 1) / 4)
+            cmds.setAttr(f"{blend_matrix_guide}.target[0].scaleWeight", 0)
+            cmds.setAttr(f"{blend_matrix_guide}.target[0].rotateWeight", 0)
+            cmds.setAttr(f"{blend_matrix_guide}.target[0].shearWeight", 0)
+            cmds.connectAttr(f"{aim_matrix_guide_00}.outputMatrix", f"{blend_matrix_guide}.inputMatrix")
+            cmds.connectAttr(f"{blend_matrix_guide_04}.outputMatrix", f"{blend_matrix_guide}.target[0].targetMatrix")
+            self.spine_guides_matrices.append(f"{blend_matrix_guide}.outputMatrix")
+
+        self.spine_guides_matrices.append(f"{blend_matrix_guide_04}.outputMatrix")
        
 
     def controller_creation(self):
@@ -83,55 +136,24 @@ class SpineModule(object):
         Create controllers for the spine module.
         """
 
-        self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC"], parent=self.controllers_grp, match=self.spine_chain[0], locked_attrs=["sx", "sy", "sz", "v"])
-        self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC"], match=self.spine_chain[0], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
-        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+
+        cmds.connectAttr(f"{self.spine_guides_matrices[0]}", f"{self.body_nodes[0]}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.spine_guides_matrices[0]}", f"{self.local_hip_nodes[0]}.offsetParentMatrix")
+
+         # Create the spine controllers
 
         self.spine_nodes = []
         self.spine_ctls = []
         
-        
-        for i, jnt in enumerate(self.spine_chain):
-            
-            if i == 0 or i == len(self.spine_chain) - 1:
+        for i, matrix in enumerate(self.spine_guides_matrices):
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"], locked_attrs=["v"])
-                
-                if i == len(self.spine_chain) - 1:
-                    cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
-
-                if i == 0:
-
-                    cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix") # Parent the first spine ctl to body ctl
-                    cmds.setAttr(f"{corner_nodes[0]}.inheritsTransform", 0) # Don't inherit the transform from body ctl
-                    cmds.parent(corner_nodes[0], self.controllers_grp)
-
-                else:
-
-                    cmds.parent(self.spine_nodes[-1], corner_ctl)
-                    cmds.parent(corner_nodes[0], self.spine_ctls[(len(self.spine_ctls) // 2)])
-
-                self.spine_nodes.append(corner_nodes[0])
-                self.spine_ctls.append(corner_ctl)
-
-            if i == (len(self.spine_chain) - 1) // 2:
-
-                mid_nodes, mid_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"], locked_attrs=["v"], parent=self.spine_ctls[0], match=self.spine_chain[(len(self.spine_chain) // 2) - 1])
-
-                self.spine_nodes.append(mid_nodes[0])
-                self.spine_ctls.append(mid_ctl)
-
-            
-            if i == 1 or i == len(self.spine_chain) - 2:
-
-                tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP"], locked_attrs=["v"], match=jnt)
-
-                if i == 1:
-
-                    cmds.parent(tan_nodes[0], self.spine_ctls[-1])
-
-                self.spine_nodes.append(tan_nodes[0])
-                self.spine_ctls.append(tan_ctl)
+            spine_node, spine_ctl = curve_tool.create_controller(name=f"{self.side}_spine0{i}", offset=["GRP", "SPC", "ANM"], parent=self.body_ctl, locked_attrs=["v"])
+            cmds.connectAttr(matrix, f"{spine_node[0]}.offsetParentMatrix")
+            self.spine_nodes.append(spine_node)
+            self.spine_ctls.append(spine_ctl)
 
     def local_hip_chest_setup(self):
 
@@ -177,9 +199,9 @@ class SpineModule(object):
         self.fk_nodes = []
         self.fk_controllers = []
         
-        for i, jnt in enumerate(self.spine_chain):
+        for i in range(self.spine_joints):
             
-            fk_node, fk_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "FK"), offset=["GRP"])
+            fk_node, fk_ctl = curve_tool.create_controller(name=f"{self.side}_spine0{i}AttatchedFk", offset=["GRP"])
             if i == 0:
                 cmds.setAttr(f"{fk_node[0]}.inheritsTransform", 0)
                 cmds.parent(fk_node[0], self.controllers_grp)
@@ -192,7 +214,7 @@ class SpineModule(object):
             self.fk_controllers.append(fk_ctl)
 
         sel = (self.spine_ctls[0], self.spine_ctls[1], self.spine_ctls[2], self.spine_ctls[3], self.spine_ctls[4])
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="z", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
         for t in temp:
             cmds.delete(t)
     
@@ -216,91 +238,5 @@ class SpineModule(object):
                 cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
                 jnt_connections.append(jnt_connection)
 
-        # Clean up
-        cmds.delete(self.spine_chain[0])
 
-    def stretch_activate(self):
-
-        """
-        Stretch activate
-        """
-        # Create the guides for the aim and blend matrix nodes
-        guide_00 = cmds.createNode("transform", name=f"{self.side}_spine00_Guide", ss=True, p=self.module_trn)
-        guide_01 = cmds.createNode("transform", name=f"{self.side}_spine01_Guide", ss=True, p=self.module_trn)
-        cmds.matchTransform(guide_00, self.spine_chain[0], pos=True, rot=True, scl=False)
-        cmds.matchTransform(guide_01, self.spine_chain[-1], pos=True, rot=True, scl=False)
-
-        aim_matrix_spine_00 = cmds.createNode("aimMatrix", name=f"{self.side}_spine00_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix_spine_00}.primaryInputAxis", 0, 1, 0, type="double3")
-        cmds.connectAttr(f"{guide_00}.worldMatrix[0]", f"{aim_matrix_spine_00}.inputMatrix")
-        cmds.connectAttr(f"{guide_01}.worldMatrix[0]", f"{aim_matrix_spine_00}.primaryTargetMatrix") # Aim at the next guide
-
-        blend_matrix_guide_04 = cmds.createNode("blendMatrix", name=f"{self.side}_spine04_BLM", ss=True)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].weight", 1)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].rotateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].shearWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].translateWeight", 0)
-        cmds.connectAttr(f"{guide_01}.worldMatrix[0]", f"{blend_matrix_guide_04}.inputMatrix") # First target is the guide itself
-        cmds.connectAttr(f"{aim_matrix_spine_00}.outputMatrix", f"{blend_matrix_guide_04}.target[0].targetMatrix")
-
-        blend_matrix_spine = cmds.createNode("blendMatrix", name=f"{self.side}_spine_BLM", ss=True)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].weight", 1)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].rotateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_spine}.target[0].shearWeight", 0)
-        cmds.connectAttr(f"{aim_matrix_spine_00}.outputMatrix", f"{blend_matrix_spine}.inputMatrix") # First target is the guide itself
-        cmds.connectAttr(f"{guide_01}.worldMatrix[0]", f"{blend_matrix_spine}.target[0].targetMatrix")
-
-        # Create the stretch attribute in the body controller
-        cmds.addAttr(self.body_ctl, longName="STRETCH", attributeType="enum", enumName="____", keyable=True)
-        cmds.setAttr(f"{self.body_ctl}.STRETCH", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.body_ctl, longName="Stretch", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
-
-        # Create the nodes to drive the stretch
-        distance_node = cmds.createNode("distanceBetween", name=f"{self.side}_spineStretch_DTB")
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{distance_node}.inMatrix1")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{distance_node}.inMatrix2") # Distance between the first and last spine joint
-
-        divide_node = cmds.createNode("divide", name=f"{self.side}_spineStretch_DIV")
-        cmds.connectAttr(f"{distance_node}.distance", f"{divide_node}.input1")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{divide_node}.input2")
-
-        distance_matrix_node = cmds.createNode("distanceBetween", name=f"{self.side}_spineStretchMatrix_DTB")
-        cmds.connectAttr(f"{aim_matrix_spine_00}.outputMatrix", f"{distance_matrix_node}.inMatrix1")
-        cmds.connectAttr(f"{blend_matrix_guide_04}.outputMatrix", f"{distance_matrix_node}.inMatrix2") # Distance between the first aim matrix and the last blend matrix
-
-        blend_two_attr_node = cmds.createNode("blendTwoAttr", name=f"{self.side}_spineStretch_B2A")
-        cmds.connectAttr(f"{self.body_ctl}.Stretch", f"{blend_two_attr_node}.attributesBlender")
-        cmds.connectAttr(f"{divide_node}.output", f"{blend_two_attr_node}.input[0]")   
-        cmds.connectAttr(f"{distance_matrix_node}.distance", f"{blend_two_attr_node}.input[1]") # Blend between no stretch and full stretch
-
-        four_by_four_matrix_node = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spineStretch_44M", ss=True)
-        cmds.connectAttr(f"{blend_two_attr_node}.output", f"{four_by_four_matrix_node}.in31")
-
-        blend_matrix_ctls = cmds.createNode("aimMatrix", name=f"{self.side}_spineStretch_AIM", ss=True)
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{blend_matrix_ctls}.inputMatrix")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_ctls}.primaryTargetMatrix") # Second target is the stretch matrix
-        cmds.setAttr(f"{blend_matrix_ctls}.primaryInputAxis", 0, 1, 0, type="double3")
-        
-        mult_matrix_stretch_node = cmds.createNode("multMatrix", name=f"{self.side}_spineStretch_MMX", ss=True)
-        cmds.connectAttr(f"{blend_matrix_ctls}.outputMatrix", f"{mult_matrix_stretch_node}.matrixIn[0]")
-        cmds.connectAttr(f"{four_by_four_matrix_node}.output", f"{mult_matrix_stretch_node}.matrixIn[1]") # Apply the stretch to the final blend matrix
-
-        
-
-        index = [1, 1- 1/len(self.spine_chain), 0.5, 1/len(self.spine_chain),  0]
-
-        self.blend_matrices = []
-        for i, ctl in enumerate(self.spine_ctls):
-            
-            blend_matrix_node = cmds.createNode("blendMatrix", name=ctl.replace("CTL", "BLM"), ss=True)
-            cmds.setAttr(f"{blend_matrix_node}.target[0].weight", index[i])
-            cmds.setAttr(f"{blend_matrix_node}.target[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix_node}.target[0].rotateWeight", 0)
-            cmds.setAttr(f"{blend_matrix_node}.target[0].shearWeight", 0)
-            cmds.connectAttr(f"{mult_matrix_stretch_node}.matrixSum", f"{blend_matrix_node}.inputMatrix", force=True)
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix", force=True) # Second target is the aim matrix
-            self.blend_matrices.append(blend_matrix_node)
-
-        cmds.delete(self.spine_chain[0])
+    

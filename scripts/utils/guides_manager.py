@@ -18,6 +18,7 @@ def get_guides_info():
     """
     # --- 1. Inicialización de variables para evitar UnboundLocalError ---
     guides_node = "C_guides_GRP"
+    
     joint_guides = []
     locator_guides = []
     curves_in_scene = []
@@ -156,8 +157,7 @@ def get_guides_info():
         }
 
     # --- 9. Guardado de archivo ---
-    script_path = os.path.realpath(__file__)
-    assets_path = os.path.join(script_path.split("scripts")[0], "assets", CHARACTER_NAME, "guides")
+    assets_path = rig_manager.asset_path(CHARACTER_NAME, "guides")
     
     # Creamos la carpeta si no existe
     if not os.path.exists(assets_path):
@@ -169,20 +169,21 @@ def get_guides_info():
         json.dump(guides_data, output_file, indent=4)
     
     om.MGlobal.displayInfo(f"Guías guardadas con éxito en: {TEMPLATE_FILE}")
+
+    rig_manager.get_rig_data(character_name=CHARACTER_NAME, guides_transform=guides_node)
     return TEMPLATE_FILE
 
 def load_guides_info(filePath=None):
 
     """ Load guides information from a JSON file and create the guides in the scene."""
-
+    
+    guides_node = "C_guides_GRP"
     rig_manager.create_new_scene()
+    character_name = rig_manager.get_character_name_from_build()
     
     if not filePath:
-        
-
-        complete_path = os.path.realpath(__file__)
-        relative_path = complete_path.split("\scripts")[0]
-        TEMPLATE_PATH = os.path.join(relative_path, "assets")
+    
+        TEMPLATE_PATH = rig_manager.asset_path("", "") # Get base assets path
 
         final_path = cmds.fileDialog2(fileMode=1, caption="Select a file", dir=TEMPLATE_PATH, fileFilter="*.guides")[0]
         print("Selected file path:", final_path)
@@ -216,6 +217,7 @@ def load_guides_info(filePath=None):
     if not cmds.ls("C_guides_GRP"):
 
         guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
+        rig_manager.create_rig_settings(guides_node)
 
         for guide, data in reversed(list(guides_data[name].items())):
                 
@@ -380,12 +382,7 @@ def get_guides(guide_export, parent=None):
     """
 
     CHARACTER_NAME = rig_manager.get_character_name_from_build()
-
-    complete_path = os.path.realpath(__file__)
-    relative_path = complete_path.split("\scripts")[0]
-    path = os.path.join(relative_path, "assets")
-    character_path = os.path.join(path, CHARACTER_NAME)
-    TEMPLATE_PATH = os.path.join(character_path, "guides")
+    TEMPLATE_PATH = rig_manager.asset_path(CHARACTER_NAME, "guides")
     TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH)
 
     
@@ -592,16 +589,13 @@ def read_guides_info(character_name, guide_name=None):
         bool: Si guide_name tiene valor, devuelve True/False.
         None: Si hay error.
     """
-    # 1. Construcción de ruta (Robusta)
     try:
         complete_path = os.path.realpath(__file__)
-        # Usamos split con separador genérico para evitar errores entre Win/Linux
         relative_path = complete_path.split(os.sep + "scripts")[0]
         base_path = os.path.join(relative_path, "assets")
         character_path = os.path.join(base_path, character_name)
         guides_folder = os.path.join(character_path, "guides")
         
-        # Asumo que rig_manager devuelve la ruta completa al archivo .json
         guides_file = rig_manager.get_latest_version(guides_folder)
         
     except Exception as e:
@@ -612,7 +606,6 @@ def read_guides_info(character_name, guide_name=None):
         om.MGlobal.displayError(f"[LOG ERROR] No se encontró archivo de guías en: {guides_folder}")
         return None
 
-    # 2. Lectura del JSON (La parte pesada)
     try:
         with open(guides_file, 'r') as file:
             guides_info = json.load(file)
@@ -626,11 +619,8 @@ def read_guides_info(character_name, guide_name=None):
         om.MGlobal.displayError(f"[LOG ERROR] El personaje '{character_name}' no está en el JSON.")
         return None
 
-    # 3. Lógica Dual (La optimización)
     
-    # CASO A: Queremos todos los datos para guardarlos en memoria (Cache)
     if guide_name is None:
-        print(f"[LOG INFO] Cargando todas las guías para '{character_data}' en memoria.")
         return character_data
 
 

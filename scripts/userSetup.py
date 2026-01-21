@@ -11,7 +11,7 @@ def vs_code_ports():
 
 def init_auto_rig_UI():
     try:
-        from biped.ui import auto_rig_UI
+        from ui import auto_rig_UI
         reload(auto_rig_UI) 
         auto_rig_UI.create_custom_menu()
         
