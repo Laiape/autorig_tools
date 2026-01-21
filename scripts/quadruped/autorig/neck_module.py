@@ -117,7 +117,7 @@ class NeckModule(object):
             self.neck_guides_matrices.append(f"{blend_matrix}.outputMatrix")
         
         self.neck_guides_matrices.append(f"{blend_matrix_end}.outputMatrix")
-       
+        cmds.delete(self.neck_chain[0])
 
     def controller_creation(self):
 
@@ -133,40 +133,39 @@ class NeckModule(object):
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
         
-        for i, jnt in enumerate(self.neck_chain):
+        for i, matrix in enumerate(self.neck_guides_matrices):
 
-            if i == 0:
-
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_neck", offset=["GRP"], locked_attrs=[ "v"])
-                cmds.connectAttr(f"{corner_ctl}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
+            corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_neck{str(i).zfill(2)}", offset=["GRP", "ANM"], locked_attrs=["v"], parent=self.controllers_grp) 
+            cmds.connectAttr(f"{matrix}", f"{corner_nodes[0]}.offsetParentMatrix")
                 
-            if i == len(self.neck_chain) - 1:
+            self.neck_nodes.append(corner_nodes[0])
+            self.neck_ctls.append(corner_ctl)
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP"], locked_attrs=[ "v"])
-                cmds.parent(face_nodes[0], corner_ctl)
-                cmds.matchTransform(face_nodes[0], corner_ctl, pos=True, rot=True)
+        # Make hierarchy
+        for i, node in enumerate(self.neck_nodes):
+            if i == 1:
+                cmds.parent(node, self.neck_ctls[0])
+            elif i == len(self.neck_nodes) // 2:
+                ctl = self.neck_ctls[i]
+                cmds.addAttr(ctl, longName="TANGENT_VISIBILITY", niceName="TANGENT VISIBILITY -----", attributeType="enum", enumName="-----")
+                cmds.setAttr(f"{ctl}.TANGENT_VISIBILITY", lock=True, keyable=False, channelBox=True)
+                cmds.addAttr(ctl, longName="Controllers_Visibility", niceName="Controllers Visibility", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+                cmds.parent(node, self.neck_ctls[0])
+            elif i == len(self.neck_nodes) - 2:
+                cmds.parent(node, self.neck_ctls[-1])
+            elif i == len(self.neck_nodes) - 1:
+                cmds.parent(node, self.neck_ctls[len(self.neck_ctls)// 2])
 
-            if i == 0 or i == len(self.neck_chain) - 1:
-
-                cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
-                cmds.parent(corner_nodes[0], self.controllers_grp)
-                
-                self.neck_nodes.append(corner_nodes[0])
-                self.neck_ctls.append(corner_ctl)
-
-
-        cmds.xform(self.neck_chain[0], m=om.MMatrix.kIdentity)
-        for i , ctl in enumerate(self.neck_ctls):
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
-
+        self.head_nodes, self.head_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
+        cmds.parent(face_nodes[0], self.controllers_grp)
     
     def ribbon_setup(self, skinning_joints_number):
 
         """
         Set up the ribbon for the neck module.
         """
-        sel = (self.neck_ctls[0], self.neck_ctls[-1])
-        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number) # Do the ribbon setup, with the created controllers
+        sel = self.neck_ctls
+        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number) # Do the ribbon setup, with the created controllers
 
         for t in temp:
             cmds.delete(t)
@@ -181,22 +180,16 @@ class NeckModule(object):
         Create the local head setup to have the head follow the neck's movement.
         """
 
+        cmds.addAttr(self.head_ctl, longName="NECK_FOLLOW", niceName="LOCAL HEAD -----", attributeType="enum", enumName="-----")
+        cmds.setAttr(f"{self.head_ctl}.NECK_FOLLOW", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.head_ctl, longName="HEAD_FOLLOW", niceName="Head Follow", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+
+        
+        blend_matrix_head = cmds.createNode("blendMatrix", name=f"{self.side}_headLocal_BLM", ss=True)
+        cmds.connectAttr(self.neck_guides_matrices[-1], f"{blend_matrix_head}.inputMatrix")
+        cmds.connectAttr(f"{self.head_guide}.worldMatrix[0]", f"{blend_matrix_head}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.head_ctl}.HEAD_FOLLOW", f"{blend_matrix_head}.target[0].weight")
+        cmds.connectAttr(f"{blend_matrix_head}.outputMatrix", f"{self.head_nodes[0]}.offsetParentMatrix")
 
         head_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_headSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.setAttr(f"{head_skinning_jnt}.inheritsTransform", 0)
-
-        decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
-        cmds.connectAttr(f"{self.output_joints[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
-        decompose_rotation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headRotation_DCM")
-        cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation}.inputMatrix")
-        compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")
-        cmds.connectAttr(f"{decompose_translation}.outputTranslate", f"{compose_head}.inputTranslate")
-        cmds.connectAttr(f"{decompose_translation}.outputScale", f"{compose_head}.inputScale")
-        cmds.connectAttr(f"{decompose_rotation}.outputRotate", f"{compose_head}.inputRotate")
-        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{head_skinning_jnt}.offsetParentMatrix")
-
-        cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
-        cmds.delete(self.neck_chain[0])
-        
-        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=1) # Neck base and masterwalk
-         
+        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")

@@ -3,7 +3,7 @@
     "spine_skinning_jnts": 8,
     "spine_controllers": 5,
     "neck_skinning_jnts": 8,
-    "neck_controllers": 4,
+    "neck_controllers": 5,
     "arm_skinning_jnts": 5,
     "leg_skinning_jnts": 5,
     "tail_skinning_jnts": 5,

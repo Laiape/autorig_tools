@@ -8,8 +8,8 @@
         "preferences_ctl": "C_settings_CTL"
     },
     "neck_module": {
-        "head_ctl": "C_head_CTL",
-        "neck_ctl": "C_neck_CTL",
+        "head_ctl": "C_neck04_CTL",
+        "neck_ctl": "C_neck00_CTL",
         "head_guide": "C_neckEnd_Guide",
         "face_ctl": "C_face_CTL"
     }
