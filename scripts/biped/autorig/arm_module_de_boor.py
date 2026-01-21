@@ -28,7 +28,7 @@ class ArmModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-    def make(self, side):
+    def make(self, side, skinning_jnts):
 
         """ 
         Create the arm module structure and controllers. Call this method with the side ('L' or 'R') to create the respective arm module.
@@ -36,6 +36,7 @@ class ArmModule(object):
             side (str): The side of the arm ('L' or 'R').
 
         """
+        self.skinning_joint_numbers = skinning_jnts
         self.side = side
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
@@ -48,7 +49,7 @@ class ArmModule(object):
         self.ik_setup()
         self.fk_stretch()
         self.soft_ik()
-        self.de_boor_ribbon()
+        self.de_boor_ribbon(self.skinning_joint_numbers)
         
         data_manager.DataExportBiped().append_data("arm_module",
                             {
@@ -404,7 +405,7 @@ class ArmModule(object):
                 cmds.setAttr(f"{self.arm_chain[0]}.{attr}{axis}", 0)
 
 
-    def de_boor_ribbon(self):
+    def de_boor_ribbon(self, skinning_joint_numbers):
 
         """
         Create a de Boor ribbon setup.
@@ -507,8 +508,8 @@ class ArmModule(object):
 
 
         # Placeholder for de Boor ribbon setup
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper")
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper", skinning_joint_numbers)
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower", skinning_joint_numbers)
 
         cmds.select(clear=True)
         wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")
@@ -527,7 +528,7 @@ class ArmModule(object):
         cmds.xform(self.settings_node[0], m=om.MMatrix.kIdentity)
         cmds.setAttr(f"{self.settings_node[0]}.inheritsTransform", 0)
 
-    def de_boor_ribbon_callout(self, first_sel, second_sel, part):
+    def de_boor_ribbon_callout(self, first_sel, second_sel, part, skinning_joint_numbers):
 
         if cmds.objExists(f"{first_sel[0]}.outputMatrix"):
             first_sel_output = f"{first_sel[0]}.outputMatrix"
@@ -606,17 +607,15 @@ class ArmModule(object):
         params[-1] = 0.95
 
         if self.side == "L":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y', skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y', skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
 
         for t in temp:
             cmds.delete(t)
 
         return output_joints
-        
-
-        
+  
 
     def curvature(self):
 

@@ -103,6 +103,20 @@ def get_latest_version(folder):
     else:
         latest_file = max(files, key=lambda f: f.stat().st_mtime)
         return latest_file
+
+def create_new_folder(path):
+
+    """
+    Creates a new folder if it does not exist.
+    Args:
+        path (str): The path of the folder to create.
+    """
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+        return path
+    else:
+        return path
     
 def asset_path(character_name, path):
 
@@ -125,11 +139,12 @@ def asset_path(character_name, path):
     if character_name == "":
         return base_path
     if path == "":
-        asset_path = os.path.join(base_path, character_name)
+        full_path = os.path.join(base_path, character_name)
     else:
-        asset_path = os.path.join(base_path, character_name, path)
+        full_path = os.path.join(base_path, character_name, path)
 
-    return asset_path
+    create_new_folder(full_path)
+    return full_path
 
 def create_new_scene():
 
@@ -165,16 +180,21 @@ def get_character_name_from_scene(avoid=None):
     """
 
     char_name = "asset"
+    avoid_always = "_GRP"
     
     scene_assemblies = get_main_assembly_nodes()
 
     for obj in scene_assemblies:
-        
         if avoid and obj == avoid:
             continue
         
         char_name = obj
+
+        if avoid_always in char_name:
+            char_name = char_name.replace(avoid_always, "")
+        
         break
+
     print(f"Final character name: {char_name}")
     return char_name
 
@@ -370,17 +390,6 @@ def get_character_data(character_name):
     full_data = guides_manager.read_guides_info(character_name, return_all=True) 
     return full_data if full_data else {}
 
-def define_biped_or_quadruped(guides_data):
-    """
-    Determina si es biped o quadruped basándose en qué guías existen en el diccionario.
-    """
-    if not guides_data:
-        return "biped"
-
-    if "L_frontLegHip_JNT" in guides_data or "R_frontLegHip_JNT" in guides_data or "L_backLegHip_JNT" in guides_data or "R_backLegHip_JNT" in guides_data:
-        return "quadruped"
-    
-    return "biped"
 
 def build_rig(character_name):
 
@@ -392,6 +401,23 @@ def build_rig(character_name):
     
     all_guides_data = guides_manager.read_guides_info(character_name)
     modules_data = build_rig_from_data(character_name)
+
+    # Define modules attributes based on build data
+    if modules_data:
+
+        rig_type = modules_data.get("Rig_Type") # 0: Biped, 1: Quadruped
+        spine_skinning_jnts = modules_data.get("spine_skinning_jnts")
+        spine_controllers = modules_data.get("spine_controllers")
+        neck_skinning_jnts = modules_data.get("neck_skinning_jnts")
+        neck_controllers = modules_data.get("neck_controllers")
+        arm_skinning_jnts = modules_data.get("arm_skinning_jnts")
+        leg_skinning_jnts = modules_data.get("leg_skinning_jnts")
+        tail_skinning_jnts = modules_data.get("tail_skinning_jnts")
+        tail_controllers = modules_data.get("tail_controllers")
+
+    else:
+        om.MGlobal.displayError(f"No se pudo cargar la data del build para: {character_name}")
+        return
     
     if not all_guides_data:
         print(f"[ERROR] No se pudieron cargar las guías para: {character_name}")
@@ -400,8 +426,7 @@ def build_rig(character_name):
     def check(guide_name):
         return guide_name in all_guides_data
 
-    rig_type = define_biped_or_quadruped(all_guides_data)
-    print(f"--- Iniciando Build: {character_name} (Tipo: {rig_type.upper()}) ---")
+    print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
     # =========================================================================
     # BUILD: BODY
@@ -409,42 +434,42 @@ def build_rig(character_name):
 
     # --- Spine ---
     if check("C_spine00_JNT"):
-        if rig_type == "biped":
+        if rig_type == 0:
             reload(biped_spine_module)
-            biped_spine_module.SpineModule().make("C")
-        elif rig_type == "quadruped":
+            biped_spine_module.SpineModule().make("C", spine_skinning_jnts, spine_controllers)
+        else:
             reload(quad_spine_module)
-            quad_spine_module.SpineModule().make("C")
+            quad_spine_module.SpineModule().make("C", spine_skinning_jnts, spine_controllers)
 
     # --- Neck ---
     if check("C_neck00_JNT"):
-        if rig_type == "biped":
+        if rig_type == 0:
             reload(neck_module)
-            neck_module.NeckModule().make("C")
-        elif rig_type == "quadruped":
+            neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
+        else:
             reload(neck_module_quad)
-            neck_module_quad.NeckModule().make("C")
+            neck_module_quad.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
 
     # --- Legs (Solo Biped) ---
-    if rig_type == "biped":
+    if rig_type == 0:
         if check("L_hip_JNT") and check("R_hip_JNT"):
             reload(leg_module)
-            leg_module.LegModule().make("L")
-            leg_module.LegModule().make("R")
+            leg_module.LegModule().make("L", leg_skinning_jnts)
+            leg_module.LegModule().make("R", leg_skinning_jnts)
 
     # --- Limbs (Solo Quadruped) ---
-    if rig_type == "quadruped":
+    if rig_type == 1:
         # Patas Delanteras
         if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
             reload(limb_module)
-            limb_module.LimbModule().make("L")
-            limb_module.LimbModule().make("R")
+            limb_module.LimbModule().make("L", leg_skinning_jnts)
+            limb_module.LimbModule().make("R", leg_skinning_jnts)
         
         # Patas Traseras
         if check("L_backLeg_JNT") and check("R_backLeg_JNT"):
             reload(limb_module)
-            limb_module.LimbModule().make("L") 
-            limb_module.LimbModule().make("R")
+            limb_module.LimbModule().make("L", leg_skinning_jnts)
+            limb_module.LimbModule().make("R", leg_skinning_jnts)
 
     # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
@@ -454,8 +479,8 @@ def build_rig(character_name):
 
     if check("L_shoulder_JNT") and check("R_shoulder_JNT"):
         reload(arm_module)
-        arm_module.ArmModule().make("L")
-        arm_module.ArmModule().make("R")
+        arm_module.ArmModule().make("L", arm_skinning_jnts)
+        arm_module.ArmModule().make("R", arm_skinning_jnts)
     
     if check("L_thumb00_JNT") and check("R_thumb00_JNT"):
         reload(fingers_module)
@@ -465,7 +490,7 @@ def build_rig(character_name):
     # --- Tail ---
     if check("C_tail00_JNT"):
         reload(tail_module)
-        tail_module.TailModule().make("C")
+        tail_module.TailModule().make("C", tail_skinning_jnts, tail_controllers)
 
     # =========================================================================
     # BUILD: FACIAL
@@ -564,42 +589,44 @@ def get_rig_data(character_name, guides_transform):
     """
     Exporta la data del rig a un archivo JSON en la carpeta 'build' del asset.
     """
-
-    build_path = asset_path(character_name, "build")
+    build_path = asset_path(character_name, "build") 
     os.makedirs(build_path, exist_ok=True)
 
     rig_data = {}
+    custom_attrs = cmds.listAttr(guides_transform, userDefined=True) or []
 
-    for attr in cmds.attributeQuery(guides_transform):
-        name = attr
-        value = cmds.getAttr(f"{guides_transform}.{name}")
-        rig_data[name] = value
-
+    for attr in custom_attrs:
+        value = cmds.getAttr(f"{guides_transform}.{attr}")
+        rig_data[attr] = value
 
     json_path = os.path.join(build_path, f"{character_name}_v001.build")
 
-    with open(json_path, 'w') as json_file:
-        json.dump(rig_data, json_file, indent=4)
-    
-    om.MGlobal.displayInfo(f"Rig data exported for {character_name} to {build_path}")
+    try:
+        with open(json_path, 'w') as json_file:
+            json.dump(rig_data, json_file, indent=4)
+        om.MGlobal.displayInfo(f"Rig data exported for {character_name} to {json_path}")
+    except Exception as e:
+        om.MGlobal.displayError(f"Error al guardar el archivo: {str(e)}")
 
     return json_path
 
 def build_rig_from_data(character_name):
 
     """
-    Construye el rig basándose en la data proporcionada.
+    Construye el rig basándose en la data proporcionada en el archivo JSON.
     """
 
     build_path = asset_path(character_name, "build")
-    build_file = get_latest_version(build_path)
+    build_file = get_latest_version(build_path) # Asumiendo que esta función busca el archivo más reciente
 
-    if not build_file:
+    if not build_file or not os.path.exists(build_file):
         om.MGlobal.displayError(f"No se encontró un archivo de build para: {character_name}")
         return
     
     with open(build_file, 'r') as json_file:
         rig_data = json.load(json_file)
+    
+    return rig_data
     
 
 

@@ -19,5 +19,4 @@ def init_auto_rig_UI():
         cmds.warning(f"Could not load auto_rig_UI: {e}")
     vs_code_ports()
 
-# Postergamos la creación de la UI hasta que Maya esté listo
 mu.executeDeferred(init_auto_rig_UI)

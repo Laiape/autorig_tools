@@ -28,7 +28,10 @@ class TailModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-    def make(self, side):
+        self.primary_axis = (1,0,0)
+        self.secondary_axis = (0,1,0)
+
+    def make(self, side, skinning_joints_number, controllers_number):
 
         """ 
         Create the tail module structure and controllers. Call this method with the side ('L' or 'R') to create the respective tail module.
@@ -37,14 +40,18 @@ class TailModule(object):
 
         """
         self.side = side
+        self.skinning_joints_number = skinning_joints_number
+        self.controllers_number = controllers_number
+
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_tailModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_tailSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_tailControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         self.import_guides()
         self.fk_setup()
-        self.ik_setup()
-        self.pair_blends_setup()
+        # self.ik_setup()
+        # self.pair_blends_setup()
+        self.de_boors_call()
 
     
     def import_guides(self):
@@ -55,6 +62,44 @@ class TailModule(object):
 
         self.tail_chain = guides_manager.get_guides(f"{self.side}_tail00_JNT")
 
+        tail_root_guide = cmds.createNode("transform", name=f"{self.side}_tailRoot_Guide", ss=True, p=self.module_trn)
+        cmds.matchTransform(tail_root_guide, self.tail_chain[0], pos=True, rot=True)
+
+        tail_end_guide = cmds.createNode("transform", name=f"{self.side}_tailEnd_Guide", ss=True, p=tail_root_guide)
+        cmds.matchTransform(tail_end_guide, self.tail_chain[-1], pos=True, rot=True)
+
+        # Create aim matrix for tail root
+        aim_matrix_root = cmds.createNode("aimMatrix", name=f"{self.side}_tail00_AIM", ss=True)
+        cmds.setAttr(f"{aim_matrix_root}.aimVector", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{aim_matrix_root}.upVector", *self.secondary_axis, type="double3")
+        cmds.connectAttr(f"{tail_root_guide}.worldMatrix[0]", f"{aim_matrix_root}.inputMatrix")
+        cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{aim_matrix_root}.primaryTargetMatrix")
+
+        blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}_tailEnd_BLM", ss=True)
+        cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{blend_matrix_end}.inputMatrix")
+        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.input[0].targetMatrix")
+        cmds.setAttr(f"{blend_matrix_end}.input[0].weight", 1)
+        cmds.setAttr(f"{blend_matrix_end}.input[0].translateWeight", 0)
+        cmds.setAttr(f"{blend_matrix_end}.input[0].scaleWeight", 0)
+        cmds.setAttr(f"{blend_matrix_end}.input[0].shearWeight", 0)
+
+        self.tail_guides_matrices = []
+        self.tail_guides_matrices.append(f"{aim_matrix_root}.outputMatrix")
+
+        for i in range(self.controllers_number - 2):
+            
+            blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_tail{str(i+1).zfill(2)}_BLM", ss=True)
+            cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix}.inputMatrix")
+            cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix}.input[0].targetMatrix")
+            weight = (i + 1) / (self.controllers_number - 1)
+            cmds.setAttr(f"{blend_matrix}.input[0].weight", weight)
+            cmds.setAttr(f"{blend_matrix}.input[0].translateWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.input[0].scaleWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.input[0].shearWeight", 0)
+            self.tail_guides_matrices.append(f"{blend_matrix}.outputMatrix")
+        
+        self.tail_guides_matrices.append(f"{blend_matrix_end}.outputMatrix")
+
     def fk_setup(self):
 
         """
@@ -63,13 +108,14 @@ class TailModule(object):
 
         self.tail_controllers = []
 
-        for jnt in self.tail_chain:
+        for i in range(self.controllers_number):
+            
+            controller_name = f"{self.side}_tailFk{str(i).zfill(2)}"
             
             nodes, ctl = curve_tool.create_controller(
-                name=jnt.replace("_JNT", "_CTL"),
+                name=controller_name,
                 offset=["GRP", "ANM"],
-                parent=self.controllers_grp,
-                match=jnt)
+                parent=self.controllers_grp)
             
             if self.tail_controllers:
                 cmds.parent(nodes[0], self.tail_controllers[-1])
@@ -83,15 +129,16 @@ class TailModule(object):
         """
         ik_controllers = []
         
-        for i, jnt in enumerate(self.tail_chain):
+        for i in range(self.controllers_number):
+
+            controller_name = f"{self.side}_tailIk{str(i).zfill(2)}"
 
             if i == 0 or  i == len(self.tail_chain) // 2 or i == len(self.tail_chain) - 1:
 
                 nodes, ctl = curve_tool.create_controller(
-                    name=jnt.replace("_JNT", ""),
+                    name=controller_name,
                     offset=["GRP", "ANM"],
-                    parent=self.controllers_grp,
-                    match=jnt)
+                    parent=self.controllers_grp)
                 
                 if i == len(self.tail_chain) // 2:
                     cmds.parent(nodes[0], ik_controllers[0])
@@ -101,10 +148,9 @@ class TailModule(object):
             if i == 1 or i == len(self.tail_chain) - 2:
 
                 tan_nodes, tan_ctl = curve_tool.create_controller(
-                    name=jnt.replace("_JNT", "Tan"),
+                    name=controller_name,
                     offset=["GRP", "ANM"],
-                    parent=ik_controllers[-1],
-                    match=jnt)
+                    parent=ik_controllers[-1])
                     
             ik_controllers.append(ctl)
         
@@ -145,7 +191,7 @@ class TailModule(object):
         Set up the de Boor's algorithm for smooth tail deformation.
         """
         ribbon_drivers = self.blend_matrices_out 
-        skinning_jnts, temp = ribbon.de_boor_ribbon(cvs=ribbon_drivers, name=f"{self.side}_tail", num_joints=5, skeleton_grp=self.skeleton_grp)
+        skinning_jnts, temp = ribbon.de_boor_ribbon(cvs=ribbon_drivers, name=f"{self.side}_tail", num_joints=self.skinning_joints_number, skeleton_grp=self.skeleton_grp)
 
         for t in temp:
             cmds.delete(t)

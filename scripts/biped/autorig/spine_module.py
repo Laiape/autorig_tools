@@ -28,7 +28,7 @@ class SpineModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-    def make(self, side):
+    def make(self, side, spine_skinning_jnts, spine_controllers):
 
         """ 
         Create the spine module structure and controllers. Call this method with the side ('L' or 'R') to create the respective spine module.
@@ -36,6 +36,8 @@ class SpineModule(object):
             side (str): The side of the spine ('L' or 'R').
 
         """
+        self.spine_skinning_jnts = spine_skinning_jnts
+        self.spine_controllers = spine_controllers
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_spineModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_spineSkinning_GRP", ss=True, p=self.skel_grp)
@@ -212,7 +214,7 @@ class SpineModule(object):
             self.fk_controllers.append(fk_ctl)
 
         sel = (self.spine_ctls[0], self.spine_ctls[1], self.spine_ctls[2], self.spine_ctls[3], self.spine_ctls[4])
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=len(self.spine_chain), skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="y", up_axis="z", num_joints=self.spine_skinning_jnts, skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
         for t in temp:
             cmds.delete(t)
     
@@ -451,8 +453,8 @@ class SpineModule(object):
         self.fk_controllers = []
         
         for i, jnt in enumerate(self.spine_chain):
-            
-            fk_node, fk_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "AttatchedFk"), offset=["GRP", "ANM"], locked_attrs=["sx", "sy", "sz", "v"])
+            fk_name = f"{self.side}_spine{str(i+1).zfill(2)}AttatchedFk"
+            fk_node, fk_ctl = curve_tool.create_controller(name=fk_name, offset=["GRP", "ANM"], locked_attrs=["sx", "sy", "sz", "v"])
             if i == 0:
                 cmds.setAttr(f"{fk_node[0]}.inheritsTransform", 0)
                 cmds.parent(fk_node[0], self.controllers_grp)
@@ -485,11 +487,11 @@ class SpineModule(object):
         val_start = 0.05
         val_end = 0.95
 
-        if len(self.spine_chain) > 1:
-            step = (val_end - val_start) / (len(self.spine_chain) - 1)
-            squash_values = [val_start + (i * step) for i in range(len(self.spine_chain))]
+        if len(self.spine_skinning_jnts) > 1:
+            step = (val_end - val_start) / (len(self.spine_skinning_jnts) - 1)
+            squash_values = [val_start + (i * step) for i in range(len(self.spine_skinning_jnts))]
         else:
-            squash_values = [val_start] # Caso borde: solo un joint
+            squash_values = [val_start]
 
         for i, val in enumerate(squash_values, 1):
             suffix = str(i).zfill(2)

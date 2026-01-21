@@ -29,7 +29,7 @@ class LegModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.local_hip_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
 
-    def make(self, side):
+    def make(self, side, skinning_jnts):
 
         """ 
         Create the leg module structure and controllers. Call this method with the side ('L' or 'R') to create the respective leg module.
@@ -37,6 +37,7 @@ class LegModule(object):
             side (str): The side of the leg ('L' or 'R').
 
         """
+        self.skinning_joint_numbers = skinning_jnts
         self.side = side
         self.module_name = f"{self.side}_leg"
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_legModule_GRP", ss=True, p=self.modules)
@@ -50,7 +51,7 @@ class LegModule(object):
         self.foot_attributes()
         self.fk_stretch()
         self.soft_ik()
-        self.de_boor_ribbon()
+        self.de_boor_ribbon(self.skinning_joint_numbers)
 
         data_manager.DataExportBiped().append_data("leg_module",
                             {
@@ -754,7 +755,7 @@ class LegModule(object):
         # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateZ", f"{self.ik_chain[2]}.rotateZ")
 
 
-    def de_boor_ribbon(self):
+    def de_boor_ribbon(self, skinning_joint_numbers):
 
         """
         Create a de Boor ribbon setup.
@@ -797,8 +798,8 @@ class LegModule(object):
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
 
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper")
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower")
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper", skinning_joint_numbers)
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower", skinning_joint_numbers)
 
         cmds.select(clear=True)
         ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")
@@ -822,7 +823,7 @@ class LegModule(object):
         cmds.setAttr(f"{self.settings_node[0]}.inheritsTransform", 0)
 
 
-    def de_boor_ribbon_callout(self, first_sel, second_sel, part):
+    def de_boor_ribbon_callout(self, first_sel, second_sel, part, skinning_joint_numbers):
 
         if cmds.objExists(f"{first_sel[0]}.outputMatrix"):
             first_sel_output = f"{first_sel[0]}.outputMatrix"
@@ -901,9 +902,9 @@ class LegModule(object):
         params[-1] = 0.95
 
         if self.side == "L":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='z', skeleton_grp=self.skeleton_grp) # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='z', skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='z', skeleton_grp=self.skeleton_grp)
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='z', skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers)
 
         for t in temp:
             cmds.delete(t)

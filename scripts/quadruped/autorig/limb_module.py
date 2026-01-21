@@ -28,7 +28,7 @@ class LimbModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-    def make(self, side):
+    def make(self, side, skinning_joints_number):
 
         """ 
         Create the limb module structure and controllers. Call this method with the side ('L' or 'R') to create the respective limb module.

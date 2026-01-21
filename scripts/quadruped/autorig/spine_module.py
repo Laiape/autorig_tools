@@ -116,10 +116,10 @@ class SpineModule(object):
 
         self.spine_guides_matrices = [f"{aim_matrix_guide_00}.outputMatrix"]
 
-        for i in range(3): # We assume there are 5 guides for the spine (3 + 2 ends)
+        for i in range(self.spine_controllers - 2): # We assume there are 5 guides for the spine (3 + 2 ends)
 
             blend_matrix_guide = cmds.createNode("blendMatrix", name=f"{self.side}_spine0{i+1}_BLM", ss=True)
-            cmds.setAttr(f"{blend_matrix_guide}.target[0].weight", (i + 1) / 4)
+            cmds.setAttr(f"{blend_matrix_guide}.target[0].weight", (i + 1) / (self.spine_controllers - 1))
             cmds.setAttr(f"{blend_matrix_guide}.target[0].scaleWeight", 0)
             cmds.setAttr(f"{blend_matrix_guide}.target[0].rotateWeight", 0)
             cmds.setAttr(f"{blend_matrix_guide}.target[0].shearWeight", 0)
