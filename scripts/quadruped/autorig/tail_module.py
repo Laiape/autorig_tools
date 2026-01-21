@@ -78,7 +78,7 @@ class TailModule(object):
         blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}_tailEnd_BLM", ss=True)
         cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{blend_matrix_end}.inputMatrix")
         cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.target[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix_end}.target[0].weight", 1)
+        cmds.setAttr(f"{blend_matrix_end}.envelope", 1)
         cmds.setAttr(f"{blend_matrix_end}.target[0].translateWeight", 0)
         cmds.setAttr(f"{blend_matrix_end}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{blend_matrix_end}.target[0].shearWeight", 0)
@@ -92,10 +92,7 @@ class TailModule(object):
             cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix}.inputMatrix")
             cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
             weight = (i + 1) / (self.controllers_number - 1)
-            cmds.setAttr(f"{blend_matrix}.target[0].weight", weight)
-            cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.target[0].shearWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.envelope", weight)
             self.tail_guides_matrices.append(f"{blend_matrix}.outputMatrix")
         
         self.tail_guides_matrices.append(f"{blend_matrix_end}.outputMatrix")
@@ -115,7 +112,8 @@ class TailModule(object):
             nodes, ctl = curve_tool.create_controller(
                 name=controller_name,
                 offset=["GRP", "ANM"],
-                parent=self.controllers_grp)
+                parent=self.controllers_grp,
+                locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"])
             
             cmds.connectAttr(f"{self.tail_guides_matrices[i]}", f"{nodes[0]}.offsetParentMatrix")
             

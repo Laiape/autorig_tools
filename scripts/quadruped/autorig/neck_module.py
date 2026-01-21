@@ -99,7 +99,7 @@ class NeckModule(object):
         blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}_neckEnd_BLM", ss=True)
         cmds.connectAttr(f"{neck_end_guide}.worldMatrix[0]", f"{blend_matrix_end}.inputMatrix")
         cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.target[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix_end}.target[0].weight", 1)
+        cmds.setAttr(f"{blend_matrix_end}.envelope", 1)
         cmds.setAttr(f"{blend_matrix_end}.target[0].translateWeight", 0)
         cmds.setAttr(f"{blend_matrix_end}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{blend_matrix_end}.target[0].shearWeight", 0)
@@ -113,11 +113,8 @@ class NeckModule(object):
             cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix}.inputMatrix")
             cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
             weight = (i + 1) / (self.controllers_number - 1)
-            cmds.setAttr(f"{blend_matrix}.target[0].weight", weight)
-            cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.input[0].shearWeight", 0)
-            self.neck_guides_matrices.target(f"{blend_matrix}.outputMatrix")
+            cmds.setAttr(f"{blend_matrix}.envelope", weight)
+            self.neck_guides_matrices.append(f"{blend_matrix}.outputMatrix")
         
         self.neck_guides_matrices.append(f"{blend_matrix_end}.outputMatrix")
        
@@ -140,12 +137,12 @@ class NeckModule(object):
 
             if i == 0:
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_neck", offset=["GRP"])
+                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_neck", offset=["GRP"], locked_attrs=[ "v"])
                 cmds.connectAttr(f"{corner_ctl}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
                 
             if i == len(self.neck_chain) - 1:
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP"])
+                corner_nodes, corner_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP"], locked_attrs=[ "v"])
                 cmds.parent(face_nodes[0], corner_ctl)
                 cmds.matchTransform(face_nodes[0], corner_ctl, pos=True, rot=True)
 
@@ -201,5 +198,5 @@ class NeckModule(object):
         cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
         cmds.delete(self.neck_chain[0])
         
-        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=0) # Neck base and masterwalk
+        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_value=1) # Neck base and masterwalk
          
