@@ -166,7 +166,7 @@ class NeckModule(object):
         Set up the ribbon for the neck module.
         """
         sel = (self.neck_ctls[0], self.neck_ctls[-1])
-        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="y", up_axis="z", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number) # Do the ribbon setup, with the created controllers
+        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neckSkinning", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number) # Do the ribbon setup, with the created controllers
 
         for t in temp:
             cmds.delete(t)

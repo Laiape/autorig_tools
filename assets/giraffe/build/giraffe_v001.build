@@ -2,7 +2,7 @@
     "Rig_Type": 1,
     "spine_skinning_jnts": 8,
     "spine_controllers": 5,
-    "neck_skinning_jnts": 5,
+    "neck_skinning_jnts": 8,
     "neck_controllers": 4,
     "arm_skinning_jnts": 5,
     "leg_skinning_jnts": 5,
