@@ -191,7 +191,6 @@ def load_guides_info(filePath=None):
             om.MGlobal.displayError("No file selected.")
             return None
 
-        # get the folder name immediately after the "assets" folder in the selected path
         character_name = None
         parts = pathlib.Path(final_path).parts
         try:
@@ -217,7 +216,7 @@ def load_guides_info(filePath=None):
     if not cmds.ls("C_guides_GRP"):
 
         guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
-        rig_manager.create_rig_settings(guides_node)
+        rig_manager.create_rig_settings(guides_node, load=True)
 
         for guide, data in reversed(list(guides_data[name].items())):
                 

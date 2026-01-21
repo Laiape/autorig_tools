@@ -395,29 +395,11 @@ def build_rig(character_name):
 
     """
     Función principal de construcción del Rig.
-    Optimizado para leer el JSON una sola vez.
+
     """
     reload(guides_manager)
-    
+
     all_guides_data = guides_manager.read_guides_info(character_name)
-    modules_data = build_rig_from_data(character_name)
-
-    # Define modules attributes based on build data
-    if modules_data:
-
-        rig_type = modules_data.get("Rig_Type") # 0: Biped, 1: Quadruped
-        spine_skinning_jnts = modules_data.get("spine_skinning_jnts")
-        spine_controllers = modules_data.get("spine_controllers")
-        neck_skinning_jnts = modules_data.get("neck_skinning_jnts")
-        neck_controllers = modules_data.get("neck_controllers")
-        arm_skinning_jnts = modules_data.get("arm_skinning_jnts")
-        leg_skinning_jnts = modules_data.get("leg_skinning_jnts")
-        tail_skinning_jnts = modules_data.get("tail_skinning_jnts")
-        tail_controllers = modules_data.get("tail_controllers")
-
-    else:
-        om.MGlobal.displayError(f"No se pudo cargar la data del build para: {character_name}")
-        return
     
     if not all_guides_data:
         print(f"[ERROR] No se pudieron cargar las guías para: {character_name}")
@@ -425,9 +407,30 @@ def build_rig(character_name):
 
     def check(guide_name):
         return guide_name in all_guides_data
+    
+    # =========================================================================
+    # LOAD RIG SETTINGS
+    # =========================================================================
+    rig_settings = build_rig_from_data(character_name)
+    
+    if not rig_settings:
+        om.MGlobal.displayError(f"No se encontró configuración de atributos para: {character_name}")
+        return
 
+    # --- Acceso a los datos del diccionario ---
+    # Usamos .get(key, default) para mayor seguridad
+    rig_type            = rig_settings.get("Rig_Type", 0)
+    spine_skinning_jnts = rig_settings.get("spine_skinning_jnts", 8)
+    spine_controllers   = rig_settings.get("spine_controllers", 5)
+    neck_skinning_jnts  = rig_settings.get("neck_skinning_jnts", 5)
+    neck_controllers   = rig_settings.get("neck_controllers", 2)
+    arm_skinning_jnts   = rig_settings.get("arm_skinning_jnts", 5)
+    leg_skinning_jnts   = rig_settings.get("leg_skinning_jnts", 5)
+    tail_skinning_jnts  = rig_settings.get("tail_skinning_jnts", 5)
+    tail_controllers    = rig_settings.get("tail_controllers", 5)
     print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
+    # CREATE MODULES BASED ON GUIDES
     # =========================================================================
     # BUILD: BODY
     # =========================================================================
@@ -534,68 +537,112 @@ def build_rig(character_name):
         cheekbone_module.CheekboneModule().make("R")
 
 
-def create_rig_settings(guides_transform):
-
+def create_rig_settings(guides_transform, load=False):
     """
     Crea los atributos de configuración del Rig en el transform de las guías.
     """
-    print("--- Creando ajustes del Rig ---")
-    rig_settings = {
+    # Inicializamos valores por defecto
+    defaults = {
+        "Rig_Type": 0,
+        "spine_skinning_jnts": 8, "spine_controllers": 5,
+        "neck_skinning_jnts": 5, "neck_controllers": 2,
+        "arm_skinning_jnts": 5, "leg_skinning_jnts": 5,
+        "tail_skinning_jnts": 5, "tail_controllers": 5
+    }
+
+    # Si load es True, intentamos obtener los valores existentes
+    if load:
+        loaded_values = load_rig_settings(guides_transform)
+        if loaded_values:
+            defaults.update(loaded_values)
+
+    rig_settings_config = {
         "Rig_Type": ("biped", "quadruped"),
-        "spine_skinning_jnts": 8,
-        "spine_controllers": 5,
-        "neck_skinning_jnts": 5,
-        "neck_controllers": 2,
-        "arm_skinning_jnts": 5,
-        "leg_skinning_jnts": 5,
-        "tail_skinning_jnts": 5,
-        "tail_controllers": 5
+        "spine_skinning_jnts": defaults["spine_skinning_jnts"],
+        "spine_controllers": defaults["spine_controllers"],
+        "neck_skinning_jnts": defaults["neck_skinning_jnts"],
+        "neck_controllers": defaults["neck_controllers"],
+        "arm_skinning_jnts": defaults["arm_skinning_jnts"],
+        "leg_skinning_jnts": defaults["leg_skinning_jnts"],
+        "tail_skinning_jnts": defaults["tail_skinning_jnts"],
+        "tail_controllers": defaults["tail_controllers"]
     }
 
     if not cmds.objExists(guides_transform):
         om.MGlobal.displayError(f"No existe el objeto: {guides_transform}")
         return
     
+    # Bloquear atributos básicos de transformación
     lock_attrs = ["translate", "rotate", "scale", "visibility"]
-    for i, attr in enumerate(lock_attrs):
-        if i < 3:
+    for attr in lock_attrs:
+        if attr == "visibility":
+            cmds.setAttr(f"{guides_transform}.{attr}", lock=True, keyable=False, channelBox=False)
+        else:
             for axis in ['X', 'Y', 'Z']:
                 cmds.setAttr(f"{guides_transform}.{attr}{axis}", lock=True, keyable=False, channelBox=False)
-        else:
-            cmds.setAttr(f"{guides_transform}.{attr}", lock=True, keyable=False, channelBox=False)
 
-    for key, value in rig_settings.items():
+    print("--- Creando/Actualizando ajustes del Rig ---")
+    
+    for key, value in rig_settings_config.items():
         attr_path = f"{guides_transform}.{key}"
-        key_attr_path = f"{guides_transform}.{key.split('_')[0].upper()}"
         
+        # Evitar duplicados
         if cmds.objExists(attr_path):
-            om.MGlobal.displayInfo(f"El ajuste ya existe: {key}")
             continue
 
-        if isinstance(value, tuple):
-            enum_options = ":".join(value).upper()
-            if not cmds.objExists(key_attr_path):
-                cmds.addAttr(guides_transform, longName=key.split('_')[0].upper(), niceName=f"{key.split('_')[0].upper()} -----", attributeType='enum', enumName="-----", keyable=True)
-                cmds.setAttr(key_attr_path, lock=True, channelBox=True)
-            cmds.addAttr(guides_transform, longName=key, attributeType='enum', enumName=enum_options, keyable=True)
-        
-        elif isinstance(value, int):
-            cmds.addAttr(guides_transform, longName=key, attributeType='long', defaultValue=value, minValue=2, maxValue=10, keyable=True)
+        # Crear separadores visuales (Header) si es necesario
+        header_name = key.split('_')[0].upper()
+        header_path = f"{guides_transform}.{header_name}_SEP" # Sufijo para evitar conflicto con el attr real
+        if not cmds.objExists(header_path):
+            cmds.addAttr(guides_transform, longName=f"{header_name}_SEP", niceName=f"--- {header_name} ---", attributeType='enum', enumName="-", keyable=True)
+            cmds.setAttr(header_path, lock=True)
 
-    return rig_settings
+        # Crear Atributos
+        if isinstance(value, tuple): # Enums
+            enum_options = ":".join(value)
+            cmds.addAttr(guides_transform, longName=key, attributeType='enum', enumName=enum_options, keyable=True)
+        elif isinstance(value, int): # Integers
+            cmds.addAttr(guides_transform, longName=key, attributeType='long', defaultValue=value, minValue=1, maxValue=20, keyable=True)
+
+    return rig_settings_config
+
+def load_rig_settings(guides_transform):
+    """
+    Lee los atributos actuales del objeto en Maya y los devuelve en un diccionario.
+    """
+    if not cmds.objExists(guides_transform):
+        return None
+
+    # Lista de atributos que queremos intentar leer
+    attrs_to_read = [
+        "Rig_Type", "spine_skinning_jnts", "spine_controllers", 
+        "neck_skinning_jnts", "neck_controllers", "arm_skinning_jnts", 
+        "leg_skinning_jnts", "tail_skinning_jnts", "tail_controllers"
+    ]
+    
+    data = {}
+    for attr in attrs_to_read:
+        if cmds.attributeQuery(attr, node=guides_transform, exists=True):
+            data[attr] = cmds.getAttr(f"{guides_transform}.{attr}")
+            
+    return data if data else None
 
 def get_rig_data(character_name, guides_transform):
-
     """
     Exporta la data del rig a un archivo JSON en la carpeta 'build' del asset.
     """
+    # Asumimos que asset_path es una función externa ya definida
     build_path = asset_path(character_name, "build") 
-    os.makedirs(build_path, exist_ok=True)
+    if not os.path.exists(build_path):
+        os.makedirs(build_path, exist_ok=True)
 
     rig_data = {}
     custom_attrs = cmds.listAttr(guides_transform, userDefined=True) or []
 
     for attr in custom_attrs:
+        if attr.endswith("_SEP"):
+            continue
+            
         value = cmds.getAttr(f"{guides_transform}.{attr}")
         rig_data[attr] = value
 
@@ -604,29 +651,30 @@ def get_rig_data(character_name, guides_transform):
     try:
         with open(json_path, 'w') as json_file:
             json.dump(rig_data, json_file, indent=4)
-        om.MGlobal.displayInfo(f"Rig data exported for {character_name} to {json_path}")
+        om.MGlobal.displayInfo(f"Rig data exported: {json_path}")
     except Exception as e:
         om.MGlobal.displayError(f"Error al guardar el archivo: {str(e)}")
 
     return json_path
 
 def build_rig_from_data(character_name):
-
     """
-    Construye el rig basándose en la data proporcionada en el archivo JSON.
+    Carga la data desde el JSON más reciente.
     """
-
     build_path = asset_path(character_name, "build")
-    build_file = get_latest_version(build_path) # Asumiendo que esta función busca el archivo más reciente
+    build_file = get_latest_version(build_path) 
 
     if not build_file or not os.path.exists(build_file):
-        om.MGlobal.displayError(f"No se encontró un archivo de build para: {character_name}")
-        return
+        om.MGlobal.displayError(f"No se encontró build para: {character_name}")
+        return None
     
-    with open(build_file, 'r') as json_file:
-        rig_data = json.load(json_file)
-    
-    return rig_data
+    try:
+        with open(build_file, 'r') as json_file:
+            rig_data = json.load(json_file)
+        return rig_data
+    except Exception as e:
+        om.MGlobal.displayError(f"Error leyendo JSON: {str(e)}")
+        return None
     
 
 
