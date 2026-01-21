@@ -155,8 +155,7 @@ def get_guides_info():
             "surface_data": n_data["surface"],
             "isSurface": True
         }
-
-    # --- 9. Guardado de archivo ---
+    # --- 9. Guardado del JSON ---
     assets_path = rig_manager.asset_path(CHARACTER_NAME, "guides")
     
     # Creamos la carpeta si no existe
@@ -213,10 +212,21 @@ def load_guides_info(filePath=None):
     with open(final_path, "r") as input_file:
         guides_data = json.load(input_file)
     
-    if not cmds.ls("C_guides_GRP"):
-
+    if not cmds.objExists("C_guides_GRP"):
         guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
-        rig_manager.create_rig_settings(guides_node, load=True)
+        rig_manager.create_rig_settings(guides_node, load=False) 
+
+        rig_data = rig_manager.build_rig_from_data(character_name)
+
+        if rig_data:
+            print(f"--- Aplicando ajustes desde el build de {character_name} ---")
+            for attr, value in rig_data.items():
+                attr_path = f"C_guides_GRP.{attr}"
+                if cmds.objExists(attr_path):
+                    try:
+                        cmds.setAttr(attr_path, value)
+                    except Exception as e:
+                        print(f"No se pudo setear {attr}: {e}")
 
         for guide, data in reversed(list(guides_data[name].items())):
                 

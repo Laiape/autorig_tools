@@ -398,7 +398,6 @@ def build_rig(character_name):
 
     """
     reload(guides_manager)
-
     all_guides_data = guides_manager.read_guides_info(character_name)
     
     if not all_guides_data:
@@ -418,7 +417,6 @@ def build_rig(character_name):
         return
 
     # --- Acceso a los datos del diccionario ---
-    # Usamos .get(key, default) para mayor seguridad
     rig_type            = rig_settings.get("Rig_Type", 0)
     spine_skinning_jnts = rig_settings.get("spine_skinning_jnts", 8)
     spine_controllers   = rig_settings.get("spine_controllers", 5)
