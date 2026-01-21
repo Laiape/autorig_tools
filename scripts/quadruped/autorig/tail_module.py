@@ -70,18 +70,18 @@ class TailModule(object):
 
         # Create aim matrix for tail root
         aim_matrix_root = cmds.createNode("aimMatrix", name=f"{self.side}_tail00_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix_root}.aimVector", *self.primary_axis, type="double3")
-        cmds.setAttr(f"{aim_matrix_root}.upVector", *self.secondary_axis, type="double3")
+        cmds.setAttr(f"{aim_matrix_root}.primaryInputAxis", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{aim_matrix_root}.secondaryInputAxis", *self.secondary_axis, type="double3")
         cmds.connectAttr(f"{tail_root_guide}.worldMatrix[0]", f"{aim_matrix_root}.inputMatrix")
         cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{aim_matrix_root}.primaryTargetMatrix")
 
         blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}_tailEnd_BLM", ss=True)
         cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{blend_matrix_end}.inputMatrix")
-        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.input[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix_end}.input[0].weight", 1)
-        cmds.setAttr(f"{blend_matrix_end}.input[0].translateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_end}.input[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_end}.input[0].shearWeight", 0)
+        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.target[0].targetMatrix")
+        cmds.setAttr(f"{blend_matrix_end}.target[0].weight", 1)
+        cmds.setAttr(f"{blend_matrix_end}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{blend_matrix_end}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{blend_matrix_end}.target[0].shearWeight", 0)
 
         self.tail_guides_matrices = []
         self.tail_guides_matrices.append(f"{aim_matrix_root}.outputMatrix")
@@ -90,12 +90,12 @@ class TailModule(object):
             
             blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_tail{str(i+1).zfill(2)}_BLM", ss=True)
             cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix}.inputMatrix")
-            cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix}.input[0].targetMatrix")
+            cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
             weight = (i + 1) / (self.controllers_number - 1)
-            cmds.setAttr(f"{blend_matrix}.input[0].weight", weight)
-            cmds.setAttr(f"{blend_matrix}.input[0].translateWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.input[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix}.input[0].shearWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.target[0].weight", weight)
+            cmds.setAttr(f"{blend_matrix}.target[0].translateWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.target[0].scaleWeight", 0)
+            cmds.setAttr(f"{blend_matrix}.target[0].shearWeight", 0)
             self.tail_guides_matrices.append(f"{blend_matrix}.outputMatrix")
         
         self.tail_guides_matrices.append(f"{blend_matrix_end}.outputMatrix")
@@ -116,6 +116,8 @@ class TailModule(object):
                 name=controller_name,
                 offset=["GRP", "ANM"],
                 parent=self.controllers_grp)
+            
+            cmds.connectAttr(f"{self.tail_guides_matrices[i]}", f"{nodes[0]}.offsetParentMatrix")
             
             if self.tail_controllers:
                 cmds.parent(nodes[0], self.tail_controllers[-1])
@@ -190,7 +192,12 @@ class TailModule(object):
         """
         Set up the de Boor's algorithm for smooth tail deformation.
         """
-        ribbon_drivers = self.blend_matrices_out 
+        # if cmds.objExists(self.blend_matrices_out[0]):
+        #     ribbon_drivers = self.blend_matrices_out
+        # else:
+        cmds.delete(self.tail_chain[0])
+        ribbon_drivers = self.tail_controllers
+
         skinning_jnts, temp = ribbon.de_boor_ribbon(cvs=ribbon_drivers, name=f"{self.side}_tail", num_joints=self.skinning_joints_number, skeleton_grp=self.skeleton_grp)
 
         for t in temp:

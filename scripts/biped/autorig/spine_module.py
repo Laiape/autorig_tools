@@ -40,6 +40,9 @@ class SpineModule(object):
         self.spine_controllers = spine_controllers
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_spineModule_GRP", ss=True, p=self.modules)
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleX")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleY")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.module_trn}.scaleZ")
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_spineSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_spineControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
@@ -487,9 +490,9 @@ class SpineModule(object):
         val_start = 0.05
         val_end = 0.95
 
-        if len(self.spine_skinning_jnts) > 1:
-            step = (val_end - val_start) / (len(self.spine_skinning_jnts) - 1)
-            squash_values = [val_start + (i * step) for i in range(len(self.spine_skinning_jnts))]
+        if (self.spine_skinning_jnts) > 1:
+            step = (val_end - val_start) / (self.spine_skinning_jnts - 1)
+            squash_values = [val_start + (i * step) for i in range(self.spine_skinning_jnts)]
         else:
             squash_values = [val_start]
 
