@@ -29,7 +29,6 @@ class JawModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
@@ -229,6 +228,7 @@ class JawModule(object):
         # Create NURBS surface
         self.sphere = guides_manager.get_guides("C_jaw_NURBShape", parent=self.module_trn) # NURBS surface guide
         cmds.hide(self.sphere)
+        cmds.parent(self.sphere, self.module_trn)
 
         # Jaw local joint
         cmds.delete(self.jaw_jnt)

@@ -157,7 +157,7 @@ class NeckModule(object):
                 cmds.parent(node, self.neck_ctls[len(self.neck_ctls)// 2])
 
         self.head_nodes, self.head_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
-        cmds.parent(face_nodes[0], self.controllers_grp)
+        cmds.parent(face_nodes[0], self.head_ctl)
     
     def ribbon_setup(self, skinning_joints_number):
 
@@ -173,6 +173,8 @@ class NeckModule(object):
         for jnt in self.output_joints:
             cmds.setAttr(f"{jnt}.inheritsTransform", 1)
 
+        cmds.rename(self.output_joints[-1], f"{self.side}_headSkinning_JNT")
+
     
     def local_head(self):
 
@@ -186,10 +188,9 @@ class NeckModule(object):
 
         
         blend_matrix_head = cmds.createNode("blendMatrix", name=f"{self.side}_headLocal_BLM", ss=True)
-        cmds.connectAttr(self.neck_guides_matrices[-1], f"{blend_matrix_head}.inputMatrix")
-        cmds.connectAttr(f"{self.head_guide}.worldMatrix[0]", f"{blend_matrix_head}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.head_guide}.worldMatrix[0]", f"{blend_matrix_head}.inputMatrix")
+        cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_head}.target[0].targetMatrix")
         cmds.connectAttr(f"{self.head_ctl}.HEAD_FOLLOW", f"{blend_matrix_head}.target[0].weight")
         cmds.connectAttr(f"{blend_matrix_head}.outputMatrix", f"{self.head_nodes[0]}.offsetParentMatrix")
 
-        head_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_headSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{head_skinning_jnt}.offsetParentMatrix")
+        

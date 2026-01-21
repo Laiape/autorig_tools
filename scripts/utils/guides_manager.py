@@ -50,7 +50,7 @@ def get_guides_info():
     # --- 4. Procesamiento de NURBS Surfaces ---
     if nurbs_surfaces:
         for nurbs_surface in nurbs_surfaces:
-            clean_name = nurbs_surface.split("|")[-1]
+            clean_name = nurbs_surface.split("|")[-1]+"Shape"
             surface_shapes = cmds.listRelatives(nurbs_surface, shapes=True, type="nurbsSurface")
             
             if surface_shapes:
@@ -135,25 +135,37 @@ def get_guides_info():
             "joint_matrix": joint_matrices[i],
             "parent": joint_parents[i],
             "isJoint": True,
+            "isLocator": False,
+            "isCurve": False,
+            "isSurface": False,
             "children": children
         }
 
     for i, loc in enumerate(locator_guides):
         guides_data[CHARACTER_NAME][loc] = {
             "locator_position": locator_positions[i],
-            "isLocator": True
+            "isLocator": True,
+            "isJoint": False,
+            "isCurve": False,
+            "isSurface": False
         }
 
     for s_data in shapes_data:
         guides_data[CHARACTER_NAME][s_data["name"]] = {
             "curve_data": s_data["curve"],
-            "isCurve": True
+            "isCurve": True,
+            "isLocator": False,
+            "isJoint": False,
+            "isSurface": False
         }
 
     for n_data in nurbs_data:
         guides_data[CHARACTER_NAME][n_data["name"]] = {
             "surface_data": n_data["surface"],
-            "isSurface": True
+            "isSurface": True,
+            "isCurve": False,
+            "isLocator": False,
+            "isJoint": False
         }
     # --- 9. Guardado del JSON ---
     assets_path = rig_manager.asset_path(CHARACTER_NAME, "guides")
@@ -497,6 +509,7 @@ def get_guides(guide_export, parent=None):
                 transform_fn.setName(surface_name.split("Shape")[0])
                 dag_modifier.doIt()
 
+
                 surface_info = guides_data[name][guide_export]["surface_data"]
                 degree_u = surface_info["degreeInU"]
                 degree_v = surface_info["degreeInV"]
@@ -506,8 +519,6 @@ def get_guides(guide_export, parent=None):
                 knots_v = surface_info["knotsInV"]
                 cvs = surface_info["cvs"]
                 is_rational = surface_info["isRational"]
-                num_spans_u = int(surface_info["numCVsInU"])
-                num_spans_v = int(surface_info["numCVsInV"])
 
                 form_flags = {
                     "open": om.MFnNurbsSurface.kOpen,
@@ -517,19 +528,20 @@ def get_guides(guide_export, parent=None):
                 form_u_flag = form_flags.get(form_u, om.MFnNurbsSurface.kOpen)
                 form_v_flag = form_flags.get(form_v, om.MFnNurbsSurface.kOpen)
 
-
-                cvs = surface_info["cvs"]
                 points = om.MPointArray()
-                for u in range(num_spans_u):
-                    for v in range(num_spans_v):
-                        pt = cvs[u][v]
-                        points.append(pt)
+                for row in cvs:
+                    for pt in row:
+                        num = +1
+                        if len(pt) == 4:
+                            points.append(om.MPoint(pt[0], pt[1], pt[2], pt[3]))
+                        else:
+                            points.append(om.MPoint(pt[0], pt[1], pt[2], 1.0))
 
                 surface_fn = om.MFnNurbsSurface()
                 shape_obj = surface_fn.create(
                     points,
-                    om.MDoubleArray(knots_u),
-                    om.MDoubleArray(knots_v),
+                    knots_u,
+                    knots_v,
                     degree_u,
                     degree_v,
                     form_u_flag,
@@ -541,14 +553,8 @@ def get_guides(guide_export, parent=None):
                 shape_fn = om.MFnDagNode(shape_obj)
                 shape_fn.setName(surface_name)
             
-                parent_obj = om.MSelectionList().add(parent).getDagPath(0).node()
-                dag_modifier.reparentNode(transform_obj, parent_obj)
-                dag_modifier.doIt()
-
-            
-                
-                return transform_fn.name()
-        
+            return transform_fn.name()
+    
         except KeyError:
             om.MGlobal.displayError(f"Guide '{guide_export}' not found in the guide export data.")
             return None
