@@ -164,10 +164,14 @@ def get_main_assembly_nodes():
 
     all_assemblies = cmds.ls(assemblies=True)
     
-    scene_assemblies = [
-        obj for obj in all_assemblies 
-        if not cmds.listRelatives(obj, type='camera')
-    ]
+    scene_assemblies = []
+    
+    for obj in all_assemblies:
+        # 1. Verificamos que sea un nodo de tipo 'transform'
+        if cmds.nodeType(obj) == 'transform':
+            # 2. Excluimos si tiene una cámara como hijo directo
+            if not cmds.listRelatives(obj, type='camera'):
+                scene_assemblies.append(obj)
 
     return scene_assemblies
     
