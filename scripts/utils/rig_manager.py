@@ -157,23 +157,19 @@ def create_new_scene():
 def get_main_assembly_nodes():
 
     """
-    Retrieves all main assembly nodes in the current Maya scene, excluding cameras.
-    Returns:
-        list: A list of main assembly node names.
+    Busca en los assemblies de la escena y retorna el nombre del personaje,
+    ignorando el grupo de guías y cámaras.
     """
-
-    all_assemblies = cmds.ls(assemblies=True)
-    
-    scene_assemblies = []
-    
+    all_assemblies = cmds.ls(assemblies=True, transforms=True, dagObjects=True)
+    ignore_list = ["C_guides_GRP", "Mechanic_sets_grp", "defaultLightSet", "defaultObjectSet"]
     for obj in all_assemblies:
-        # 1. Verificamos que sea un nodo de tipo 'transform'
-        if cmds.nodeType(obj) == 'transform':
-            # 2. Excluimos si tiene una cámara como hijo directo
-            if not cmds.listRelatives(obj, type='camera'):
-                scene_assemblies.append(obj)
+        if obj in ignore_list:
+            continue
+        if cmds.listRelatives(obj, type='camera', noIntermediate=True):
+            continue
+        return [obj]
 
-    return scene_assemblies
+    return None
     
 
 def get_character_name_from_scene(avoid=None):
@@ -279,7 +275,7 @@ def execute_folder_creation(asset_name, window_id):
     Lógica de sistema de archivos para crear las carpetas.
     """
 
-    main_folder = asset_path(asset_name, asset_name)
+    main_folder = asset_path(asset_name, "")
     
     # Crear carpeta principal y subcarpetas
     subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters"]

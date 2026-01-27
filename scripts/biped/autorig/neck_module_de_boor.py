@@ -51,7 +51,6 @@ class NeckModule(object):
         # Clean up and store data
         cmds.delete(self.throat_guide)
 
-
         data_manager.DataExportBiped().append_data("neck_module",
                             {
                                 "head_ctl": self.neck_ctls[-1],
