@@ -72,7 +72,7 @@ class AutoRig(object):
         
         self.basic_structure()
         self.make_rig()
-        self.space_switches()
+        # self.space_switches()
         self.label_joints()
         self.hide_connections()
         self.inherit_transforms()

@@ -30,7 +30,6 @@ class EyebrowModule(object):
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        self.head_grp = self.head_ctl.replace("_CTL", "_GRP")
 
     def make(self, side):
 
@@ -176,7 +175,7 @@ class EyebrowModule(object):
 
             mult_matrix = cmds.createNode("multMatrix", name="C_eyebrowMid_MMX", ss=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
-            cmds.setAttr(f"{mult_matrix}.matrixIn[1]", cmds.getAttr(f"{self.head_grp}.worldInverseMatrix[0]"), type="matrix")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[1]", cmds.getAttr(f"{self.head_ctl}.worldInverseMatrix[0]"), type="matrix")
             cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{mid_eyebrow_nodes[0]}.offsetParentMatrix")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mid_local_grp}.offsetParentMatrix")
             cmds.setAttr(f"{parent_matrix}.envelope", 0.5)

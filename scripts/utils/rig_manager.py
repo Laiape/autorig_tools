@@ -501,7 +501,7 @@ def build_rig(character_name):
         reload(jaw_module)
         jaw_module.JawModule().make("C")
     
-    if check("L_eyebrow_JNT") and check("R_eyebrow_JNT"):
+    if check("L_eyebrowMain_JNT") and check("R_eyebrowMain_JNT"):
         reload(eyebrow_module)
         eyebrow_module.EyebrowModule().make("L")
         eyebrow_module.EyebrowModule().make("R")
