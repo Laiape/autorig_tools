@@ -130,15 +130,16 @@ def get_guides_info():
     guides_data = {CHARACTER_NAME: {}}
 
     for i, guide in enumerate(joint_guides):
-        children = cmds.listRelatives(guide, children=True) or []
-        guides_data[CHARACTER_NAME][guide] = {
-            "joint_matrix": joint_matrices[i],
-            "parent": joint_parents[i],
-            "isJoint": True,
-            "isLocator": False,
-            "isCurve": False,
-            "isSurface": False,
-            "children": children
+            children = cmds.listRelatives(guide, allDescendents=True)
+            key = guide[0] if isinstance(guide, list) else guide
+            guides_data[CHARACTER_NAME][key] = {
+                "joint_matrix": joint_matrices[i],
+                "parent": joint_parents[i],
+                "isLocator": False,
+                "isJoint": True,
+                "isCurve": False,
+                "isSurface": False,
+                "children": list(reversed(children if children else [])),
         }
 
     for i, loc in enumerate(locator_guides):
@@ -423,7 +424,6 @@ def get_guides(guide_export, parent=None):
             guides_data = json.load(input_file)
               
         try:
-            
             if guides_data[name][guide_export]["isJoint"] == True:
                 chain = []
 

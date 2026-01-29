@@ -30,7 +30,6 @@ class EyelidModule(object):
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        
         self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
@@ -470,7 +469,7 @@ class EyelidModule(object):
         Create the fleshy setup for the eyelid module.
         """
         decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{self.side}_fleshy_DECM", ss=True)
-        mult_double_linear = cmds.createNode("multDoubleLinear", name=f"{self.side}_fleshy_MDL", ss=True)
+        multiply_fleshy = cmds.createNode("multiply", name=f"{self.side}_fleshy_MLT", ss=True)
         blend_colors_fleshy = cmds.createNode("blendColors", name=f"{self.side}_fleshy_BLC", ss=True)
         blend_colors_corners = cmds.createNode("blendColors", name=f"{self.side}_fleshyCorners_BLC", ss=True)
 
@@ -479,8 +478,8 @@ class EyelidModule(object):
         cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_eye_direct_local}.matrixIn[1]")
 
         cmds.connectAttr(f"{mult_matrix_eye_direct_local}.matrixSum", f"{decompose_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy", f"{mult_double_linear}.input1")
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy_Corners", f"{mult_double_linear}.input2")
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy", f"{multiply_fleshy}.input[0]")
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Fleshy_Corners", f"{multiply_fleshy}.input[1]")
         cmds.connectAttr(f"{decompose_matrix}.outputRotateX", f"{blend_colors_fleshy}.color1R")
         cmds.connectAttr(f"{decompose_matrix}.outputRotateY", f"{blend_colors_fleshy}.color1G")
         cmds.connectAttr(f"{decompose_matrix}.outputRotateZ", f"{blend_colors_fleshy}.color1B")
@@ -494,7 +493,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{blend_colors_corners}.color2R", 0)
         cmds.setAttr(f"{blend_colors_corners}.color2G", 0)
         cmds.setAttr(f"{blend_colors_corners}.color2B", 0)
-        cmds.connectAttr(f"{mult_double_linear}.output", f"{blend_colors_corners}.blender")
+        cmds.connectAttr(f"{multiply_fleshy}.output", f"{blend_colors_corners}.blender")
 
         compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_fleshy_CM", ss=True)
         cmds.connectAttr(f"{blend_colors_fleshy}.output", f"{compose_matrix}.inputRotate")
