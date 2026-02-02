@@ -43,19 +43,19 @@ class NeckModule(object):
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_neckSkinning_GRP", ss=True, p=self.skel_grp)
         # mGear integration
-        self.mGear_integration()
+        # self.mGear_integration()
 
-        # self.load_guides()
-        # self.controller_creation()
-        # self.ribbon_setup(skinning_joints_number)
-        # self.local_head()
+        self.load_guides()
+        self.controller_creation()
+        self.ribbon_setup(skinning_joints_number)
+        self.local_head()
         # Clean up and store data
-        # cmds.delete(self.throat_guide)
+        cmds.delete(self.throat_guide)
 
         data_manager.DataExportBiped().append_data("neck_module",
                             {
-                                "head_ctl": self.head_ctl[0],
-                                # "neck_ctl": self.neck_ctls[0],
+                                "head_ctl": self.neck_ctls[-1],
+                                "neck_ctl": self.neck_ctls[0],
                                 "head_guide": self.head_guide,
                                 "face_ctl": self.face_ctl,
                             })

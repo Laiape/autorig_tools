@@ -224,16 +224,16 @@ class ArmModule(object):
                 cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
-        self.upper_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_armUpperDoubleMultLinear_MDL")
-        self.lower_double_mult_linear = cmds.createNode("multDoubleLinear", n=f"{self.side}_armLowerDoubleMultLinear_MDL")
-        cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input1")
-        cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input1")
+        self.upper_double_mult_linear = cmds.createNode("multiply", n=f"{self.side}_armUpper_MUL")
+        self.lower_double_mult_linear = cmds.createNode("multiply", n=f"{self.side}_armLower_MUL")
+        cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input[0]")
+        cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input[0]")
 
         upper_distance = cmds.getAttr(f"{self.fk_nodes[1]}.translateX")
         lower_distance = cmds.getAttr(f"{self.fk_nodes[-1]}.translateX")
 
-        cmds.setAttr(f"{self.upper_double_mult_linear}.input2", upper_distance)
-        cmds.setAttr(f"{self.lower_double_mult_linear}.input2", lower_distance)
+        cmds.setAttr(f"{self.upper_double_mult_linear}.input[1]", upper_distance)
+        cmds.setAttr(f"{self.lower_double_mult_linear}.input[1]", lower_distance)
         cmds.connectAttr(f"{self.upper_double_mult_linear}.output", f"{self.fk_nodes[1]}.translateX")
         cmds.connectAttr(f"{self.lower_double_mult_linear}.output", f"{self.fk_nodes[-1]}.translateX")
 
