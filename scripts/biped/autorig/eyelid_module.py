@@ -629,44 +629,42 @@ class EyelidModule(object):
 
             aim_matrix_final = cmds.createNode("aimMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_AIM", ss=True)
             cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{aim_matrix_final}.inputMatrix")
-            cmds.connectAttr(f"{self.eye_skinning_jnt}.worldMatrix[0]", f"{aim_matrix_final}.primaryTargetMatrix")
-            if cv in upper_cvs:
-                cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, -1, 0)
-            else:
-                cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, 1, 0)
-            cmds.setAttr(f"{aim_matrix_final}.secondaryMode", 1) # Aim
-            cmds.setAttr(f"{aim_matrix_final}.secondaryInputAxis", 1, 0, 0)
+            cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{aim_matrix_final}.primaryTargetMatrix")
+            
+            cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, 0, -1)
+
+            cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{skinning_jnt}.offsetParentMatrix", f=True)
 
             skinning_jnts.append(skinning_jnt)
             skinning_aims.append(aim_matrix_final)
 
-        for i, (jnt, aim) in enumerate(zip(skinning_jnts, skinning_aims)):
+        # for i, (jnt, aim) in enumerate(zip(skinning_jnts, skinning_aims)):
 
-            if i == len(skinning_jnts) - 1 or i == (len(skinning_jnts) // 2) -1:
-                if "upper" in jnt:
-                    name = "upper"
-                else:
-                    name = "lower"
+        #     if i == len(skinning_jnts) - 1 or i == (len(skinning_jnts) // 2) -1:
+        #         if "upper" in jnt:
+        #             name = "upper"
+        #         else:
+        #             name = "lower"
                     
-                mpt_helper = cmds.createNode("motionPath", name=f"{self.side}_{name}EyelidEnd_AimHelper_MTP", ss=True)
-                cmds.setAttr(f"{mpt_helper}.uValue", 0.95)
-                cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{aim}.secondaryTargetVector")
-                compose_matrix_helper = cmds.createNode("composeMatrix", name=f"{self.side}_{name}EyelidEndAimHelper_CM", ss=True)
-                cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{compose_matrix_helper}.inputTranslate")
-                cmds.connectAttr(f"{mpt_helper}.rotate", f"{compose_matrix_helper}.inputRotate")
-                cmds.connectAttr(f"{compose_matrix_helper}.outputMatrix", f"{aim}.secondaryTargetMatrix")
+        #         mpt_helper = cmds.createNode("motionPath", name=f"{self.side}_{name}EyelidEnd_AimHelper_MTP", ss=True)
+        #         cmds.setAttr(f"{mpt_helper}.uValue", 0.95)
+        #         cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{aim}.secondaryTargetVector")
+        #         compose_matrix_helper = cmds.createNode("composeMatrix", name=f"{self.side}_{name}EyelidEndAimHelper_CM", ss=True)
+        #         cmds.connectAttr(f"{mpt_helper}.allCoordinates", f"{compose_matrix_helper}.inputTranslate")
+        #         cmds.connectAttr(f"{mpt_helper}.rotate", f"{compose_matrix_helper}.inputRotate")
+        #         cmds.connectAttr(f"{compose_matrix_helper}.outputMatrix", f"{aim}.secondaryTargetMatrix")
 
-                cmds.setAttr(f"{aim}.secondaryInputAxis", -1, 0, 0)
+        #         cmds.setAttr(f"{aim}.secondaryInputAxis", -1, 0, 0)
                 
-                if "upper" in jnt:
-                    cmds.connectAttr(f"{self.eyelid_down_curve_rebuild}.worldSpace[0]", f"{mpt_helper}.geometryPath")
-                else:
-                    cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.worldSpace[0]", f"{mpt_helper}.geometryPath")
+        #         if "upper" in jnt:
+        #             cmds.connectAttr(f"{self.eyelid_down_curve_rebuild}.worldSpace[0]", f"{mpt_helper}.geometryPath")
+        #         else:
+        #             cmds.connectAttr(f"{self.eyelid_up_curve_rebuild}.worldSpace[0]", f"{mpt_helper}.geometryPath")
                 
-            else:
-                cmds.connectAttr(f"{skinning_jnts[i+1]}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
+        #     else:
+        #         cmds.connectAttr(f"{skinning_jnts[i+1]}.worldMatrix[0]", f"{aim}.secondaryTargetMatrix")
 
-            cmds.connectAttr(f"{aim}.outputMatrix", f"{jnt}.offsetParentMatrix", f=True)
+        #     cmds.connectAttr(f"{aim}.outputMatrix", f"{jnt}.offsetParentMatrix", f=True)
         
 
     def sockets(self):

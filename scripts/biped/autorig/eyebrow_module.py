@@ -129,6 +129,7 @@ class EyebrowModule(object):
         if self.side == "L":
 
             self.sphere = guides_manager.get_guides("C_eyebrowSlide_NURBShape", parent=self.module_trn)
+            cmds.parent(self.sphere, self.module_trn)
         
         self.sphere = cmds.ls("C_eyebrowSlide_NURB", long=True)[0]
         cmds.hide(self.sphere)

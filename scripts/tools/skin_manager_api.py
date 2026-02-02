@@ -13,7 +13,7 @@ except ImportError:
 
 class SkinManager(object):
     def __init__(self):
-        self.geo_root = "geo_GRP"
+        self.geo_root = "geo_GRP" or "geo"
         self.local_group = "LOCAL" 
         self.folder_path, self.asset_name = self.get_path_and_name()
         self.json_path = os.path.join(self.folder_path, f"{self.asset_name}.json")
@@ -290,7 +290,7 @@ class SkinManager(object):
     def process_daisy_chains(self, local_keys):
         hierarchy_map = {}
         for l_key in local_keys:
-            base_name = l_key.split("_local")[0]
+            base_name = l_key.split("_localq")[0]
             if base_name not in hierarchy_map: hierarchy_map[base_name] = []
             hierarchy_map[base_name].append(l_key)
 
