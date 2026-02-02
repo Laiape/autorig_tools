@@ -386,13 +386,6 @@ class EyelidModule(object):
         cmds.connectAttr(f"{aim_eye_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
         cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix", force=True)
-
-        # mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEyeSkinning_MMX", ss=True)
-        # cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{mult_matrix_skin}.matrixIn[0]")
-        # cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_skin}.matrixIn[1]")
-        # eye_direct_matrix = cmds.getAttr(f"{self.eye_direct_nodes[0]}.worldMatrix[0]")
-        # cmds.setAttr(f"{mult_matrix_skin}.matrixIn[2]", eye_direct_matrix, type="matrix")
-        # cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
 
     def create_blink_setup(self):
@@ -518,14 +511,18 @@ class EyelidModule(object):
             else:
                 cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{mult_matrix_position}.matrixIn[1]")
 
+            ctl_connection = cmds.listConnections(f"{ctl}.offsetParentMatrix", plugs=True, source=True)[0]
             parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_fleshyPosition_PMT", ss=True)
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(ctl_connection, f"{parent_matrix}.inputMatrix")
             cmds.connectAttr(f"{mult_matrix_position}.matrixSum", f"{parent_matrix}.target[0].targetMatrix")
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(ctl, f"{mult_matrix_position}.matrixSum"), type="matrix")
 
             mult_matrix_position_final = cmds.createNode("multMatrix", name=f"{self.side}_fleshyPositionFinal_MMX", ss=True)
+            
+            inverse_matrix_node = cmds.createNode("inverseMatrix", name=f"{self.side}_fleshyPositionFinal_INV", ss=True)
+            cmds.connectAttr(ctl_connection, f"{inverse_matrix_node}.inputMatrix")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_position_final}.matrixIn[0]")
-            cmds.connectAttr(f"{ctl}.worldInverseMatrix[0]", f"{mult_matrix_position_final}.matrixIn[1]")
+            cmds.connectAttr(f"{inverse_matrix_node}.outputMatrix", f"{mult_matrix_position_final}.matrixIn[1]")
             
             decompose_matrix_final = cmds.createNode("decomposeMatrix", name=f"{self.side}_fleshyPositionFinal_DECM", ss=True)
             cmds.connectAttr(f"{mult_matrix_position_final}.matrixSum", f"{decompose_matrix_final}.inputMatrix")
