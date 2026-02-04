@@ -122,6 +122,28 @@ class TailModule(object):
             
             self.tail_controllers.append(ctl)
 
+        self.bendy_controllers = []
+        #Create bendys
+        for i, ctl in enumerate(self.tail_controllers):
+            if i < self.controllers_number -1:
+                bendy_name = f"{self.side}_tailBendy{str(i).zfill(2)}"
+                bendy_nodes, bendy_ctl = curve_tool.create_controller(
+                    name=bendy_name,
+                    offset=["GRP", "ANM"],
+                    parent=self.controllers_grp,
+                    locked_attrs=["v"])
+                
+                cmds.addAttr(bendy_ctl, ln="EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ----", at="enum", en="-----", k=True)
+                cmds.setAttr(f"{bendy_ctl}.EXTRA_ATTRIBUTES", e=True, keyable=False, channelBox=True)
+                cmds.addAttr(bendy_ctl, ln="Bendy", at="double", min=0, max=1, dv=0.5, k=True)
+                
+                blend_matrix_node = cmds.createNode("blendMatrix", name=bendy_name.replace("CTL", "BLM"))
+                cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix")
+                cmds.connectAttr(f"{self.tail_controllers[i+1]}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
+                cmds.connectAttr(f"{bendy_ctl}.Bendy", f"{blend_matrix_node}.envelope")
+                cmds.connectAttr(f"{blend_matrix_node}.outputMatrix", f"{bendy_nodes[0]}.offsetParentMatrix")
+                self.bendy_controllers.append(bendy_ctl)
+
     def ik_setup(self):
 
         """
@@ -131,44 +153,62 @@ class TailModule(object):
         
         for i in range(self.controllers_number):
 
-            controller_name = f"{self.side}_tailIk{str(i).zfill(2)}"
+            if i == 0 or  i == self.controllers_number // 2 or i == self.controllers_number - 1:
 
-            if i == 0 or  i == len(self.tail_chain) // 2 or i == len(self.tail_chain) - 1:
+                controller_name = f"{self.side}_tailIk{str(i).zfill(2)}"
 
                 nodes, ctl = curve_tool.create_controller(
                     name=controller_name,
                     offset=["GRP", "ANM"],
-                    parent=self.controllers_grp)
+                    parent=self.controllers_grp,
+                    locked_attrs=["v"])
                 
-                if i == len(self.tail_chain) // 2:
+                if i == self.controllers_number // 2:
                     cmds.parent(nodes[0], ik_controllers[0])
-                elif i == len(self.tail_chain) - 1:
+                elif i == self.controllers_number - 1:
                     cmds.parent(nodes[0], ik_controllers[-2])
+                ik_controllers.append(ctl)
                 
-            if i == 1 or i == len(self.tail_chain) - 2:
+            if i == 1 or i == self.controllers_number - 2:
 
-                tan_nodes, tan_ctl = curve_tool.create_controller(
+                controller_name = f"{self.side}_tailIkTan{str(i).zfill(2)}"
+
+                nodes, tan_ctl = curve_tool.create_controller(
                     name=controller_name,
                     offset=["GRP", "ANM"],
-                    parent=ik_controllers[-1])
-                    
-            ik_controllers.append(ctl)
+                    parent=ik_controllers[-1],
+                    locked_attrs=["v"])
+                
+                ik_controllers.append(tan_ctl)
+
+            # Connect IK controllers to tail guides matrices
+            cmds.connectAttr(f"{self.tail_guides_matrices[i]}", f"{nodes[0]}.offsetParentMatrix")
+
+        # Create IK chain
+        ik_chain = []
+        for ctl in range(self.controllers_number):
+
+            jnt = cmds.createNode("joint", name=f"{self.side}_tailIk{str(ctl).zfill(2)}_JNT", ss=True, p=self.module_trn)
+            if ik_chain:
+                cmds.parent(jnt, ik_chain[-1])
+            ik_chain.append(jnt)
         
+        # Create IK curve 
         ik_curve = cmds.curve(
             name=f"{self.side}_tailIk_CRV",
             degree=3,
-            point=[cmds.xform(jnt, q=True, ws=True, t=True) for jnt in self.tail_chain])
+            point=[cmds.xform(jnt, q=True, ws=True, t=True) for jnt in ik_chain])
         
-        cmds.parent(ik_curve, self.module_trn)
-
+        # Create IK handle
         ik_handle = cmds.ikHandle(
             name=f"{self.side}_tailIk_HDL",
-            startJoint=self.tail_chain[0],
-            endEffector=self.tail_chain[-1],
+            startJoint=ik_chain[0],
+            endEffector=ik_chain[-1],
             solver="ikSplineSolver",
             createCurve=False,
             curve=ik_curve)[0]
-
+        
+        cmds.parent(ik_curve, self.module_trn)
         cmds.parent(ik_handle, self.module_trn)
 
     def pair_blends_setup(self):
@@ -176,12 +216,14 @@ class TailModule(object):
         """
         Set up pair blend constraints between tail controllers and joints for smooth deformation.
         """
+        # Create pair blends between ik controllers and fk controllers
         self.blend_matrices_out = []
+
         for ctl, jnt in zip(self.tail_controllers, self.tail_chain):
             
             blend_matrix_node = cmds.createNode("blendMatrix", name=jnt.replace("JNT", "BLM"))
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix[0]")
-            cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{blend_matrix_node}.input[0].targetMatrix")
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix")
+            cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
             self.blend_matrices_out.append(blend_matrix_node)
 
 
@@ -190,11 +232,14 @@ class TailModule(object):
         """
         Set up the de Boor's algorithm for smooth tail deformation.
         """
-        # if cmds.objExists(self.blend_matrices_out[0]):
-        #     ribbon_drivers = self.blend_matrices_out
-        # else:
-        cmds.delete(self.tail_chain[0])
-        ribbon_drivers = self.tail_controllers
+
+        first_driver = [self.tail_controllers[0], self.bendy_controllers[0]]
+        last_driver = [self.bendy_controllers[-1], self.tail_controllers[-1]]
+        middle_drivers = self.tail_controllers[1:-1] if len(self.tail_controllers) > 2 else []
+        ribbon_drivers = first_driver + middle_drivers + last_driver
+
+        if self.tail_chain and cmds.objExists(self.tail_chain[0]):
+            cmds.delete(self.tail_chain[0])
 
         skinning_jnts, temp = ribbon.de_boor_ribbon(cvs=ribbon_drivers, name=f"{self.side}_tail", num_joints=self.skinning_joints_number, skeleton_grp=self.skeleton_grp)
 

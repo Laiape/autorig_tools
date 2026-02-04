@@ -29,7 +29,6 @@ class NoseModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     def make(self, side):
@@ -160,6 +159,9 @@ class NoseModule(object):
                 if i != 0:
                     cmds.parent(nodes[0], "C_baseNose_CTL")
                     cmds.parent(local_grp, "C_baseNoseLocal_TRN")
+                    if guide.endswith("nose_JNT") and cmds.objExists(f"{self.side}_nosetril_CTL"):
+                        cmds.parent(ctl, f"{self.side}_nosetril_CTL")
+                        cmds.parent(local_grp, f"{self.side}_nosetrilLocal_TRN")
             else:
                 cmds.parent(nodes[0], f"C_baseNose_CTL")
                 cmds.parent(local_grp, f"C_baseNoseLocal_TRN")
@@ -172,6 +174,4 @@ class NoseModule(object):
             cmds.delete(guide)
         
         
-# nose = NoseModule().make("L")
-# nose = NoseModule().make("R")
 

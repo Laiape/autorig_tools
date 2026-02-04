@@ -29,7 +29,7 @@ class NeckModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.preferences_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
 
-    def make(self, side, skinning_joints_number, controllers_number):
+    def make(self, side, skinning_joints_number, controllers_number, mGear_integration=False):
 
         """ 
         Create the neck module structure and controllers. Call this method with the side ('L' or 'R') to create the respective neck module.
@@ -42,24 +42,34 @@ class NeckModule(object):
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_neckModule_GRP", ss=True, p=self.modules)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_neckSkinning_GRP", ss=True, p=self.skel_grp)
-        # mGear integration
-        # self.mGear_integration()
-
+        
         self.load_guides()
-        self.controller_creation()
-        self.ribbon_setup(skinning_joints_number)
-        self.local_head()
-        # Clean up and store data
-        cmds.delete(self.throat_guide)
 
-        data_manager.DataExportBiped().append_data("neck_module",
+        if mGear_integration:
+            self.mGear_integration()
+            # Store data for later use
+            data_manager.DataExportBiped().append_data("neck_module",
+                            {
+                                "head_ctl": self.head_ctl,
+                                "face_ctl": self.face_ctl,
+                            })
+            
+        else:
+            self.controller_creation()
+            self.ribbon_setup(skinning_joints_number)
+            self.local_head()
+
+            # Store data for later use
+            data_manager.DataExportBiped().append_data("neck_module",
                             {
                                 "head_ctl": self.neck_ctls[-1],
                                 "neck_ctl": self.neck_ctls[0],
                                 "head_guide": self.head_guide,
                                 "face_ctl": self.face_ctl,
                             })
-        
+            # Clean up and store data
+            cmds.delete(self.throat_guide)
+   
 
     def lock_attributes(self, ctl, attrs):
 
@@ -183,8 +193,8 @@ class NeckModule(object):
         Integrate the neck module with mGear by adding the necessary attributes to the preferences controller.
         """
 
-        self.head_ctl = cmds.ls(f"{self.side}_head_CTL")
-        face_nodes, self.face_ctl = curve_tool.create_controller(name=f"{self.side}_face", offset=["GRP", "ANM"], parent=self.head_ctl[0])
+        self.head_ctl = cmds.ls(f"{self.side}_head_CTL")[0]
+        face_nodes, self.face_ctl = curve_tool.create_controller(name=f"{self.side}_face", offset=["GRP", "ANM"], parent=self.head_ctl)
         self.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)

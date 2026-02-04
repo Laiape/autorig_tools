@@ -7,5 +7,6 @@
     "arm_skinning_jnts": 5,
     "leg_skinning_jnts": 5,
     "tail_skinning_jnts": 5,
-    "tail_controllers": 5
+    "tail_controllers": 5,
+    "mGear_integration": 1
 }

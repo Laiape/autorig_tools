@@ -426,6 +426,7 @@ def build_rig(character_name):
     leg_skinning_jnts   = rig_settings.get("leg_skinning_jnts", 5)
     tail_skinning_jnts  = rig_settings.get("tail_skinning_jnts", 5)
     tail_controllers    = rig_settings.get("tail_controllers", 5)
+    mGear_integration   = rig_settings.get("mGear_integration", 0)
     print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
     # CREATE MODULES BASED ON GUIDES
@@ -445,8 +446,12 @@ def build_rig(character_name):
     # --- Neck ---
     if check("C_neck00_JNT"):
         if rig_type == 0:
-            reload(neck_module)
-            neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
+            if mGear_integration:
+                reload(neck_module)
+                neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers, mGear_integration=True)
+            else:
+                reload(neck_module)
+                neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
         else:
             reload(neck_module_quad)
             neck_module_quad.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
@@ -545,7 +550,8 @@ def create_rig_settings(guides_transform, load=False):
         "spine_skinning_jnts": 8, "spine_controllers": 5,
         "neck_skinning_jnts": 5, "neck_controllers": 2,
         "arm_skinning_jnts": 5, "leg_skinning_jnts": 5,
-        "tail_skinning_jnts": 5, "tail_controllers": 5
+        "tail_skinning_jnts": 5, "tail_controllers": 5,
+        "mGear_integration": 0
     }
 
     # Si load es True, intentamos obtener los valores existentes
@@ -563,7 +569,8 @@ def create_rig_settings(guides_transform, load=False):
         "arm_skinning_jnts": defaults["arm_skinning_jnts"],
         "leg_skinning_jnts": defaults["leg_skinning_jnts"],
         "tail_skinning_jnts": defaults["tail_skinning_jnts"],
-        "tail_controllers": defaults["tail_controllers"]
+        "tail_controllers": defaults["tail_controllers"],
+        "mGear_integration": ("disabled", "enabled")
     }
 
     if not cmds.objExists(guides_transform):

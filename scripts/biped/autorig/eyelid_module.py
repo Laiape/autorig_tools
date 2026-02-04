@@ -59,8 +59,7 @@ class EyelidModule(object):
             cmds.addAttr(self.face_ctl, longName="Sockets", attributeType="long", defaultValue=1, max=2, min=0, keyable=True)
         self.extra_controllers_grp = cmds.createNode("transform", name=f"{self.side}_eyelidExtraControllers_GRP", ss=True, p=self.controllers_grp)
 
-        
-
+        # Call methods to build the eyelid module
         self.create_curves()
         self.load_guides()
         self.curve_cvs_into_guides()
@@ -103,7 +102,6 @@ class EyelidModule(object):
         else:
             local_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Local_JNT"), ss=True, p=local_trn)
         cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix")
-        # cmds.matchTransform(local_jnt, grp)
         
 
         return local_trn, local_jnt

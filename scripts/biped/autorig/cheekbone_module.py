@@ -158,11 +158,12 @@ class CheekboneModule(object):
                 cheeckbones_grps.append(grp)
             self.lock_attributes(ctl, ["v"])    
 
-            cmds.matchTransform(grp[0], guide)
+            cmds.matchTransform(grp[0], guide, pos=True)
             trn, mmx = self.local_mmx(ctl, grp[0])
             
-            skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
-            cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
+            if i > 0: # Avoid the first guide which is the parent
+                skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
+                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
 
             if i == 0:
                 local_trns.append(trn)
@@ -180,7 +181,7 @@ class CheekboneModule(object):
         self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
         trn, mmx = self.local_mmx(ctl, grp[0])
         cheek_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "_GUIDE"), ss=True, p=self.module_trn)
-        cmds.matchTransform(cheek_trn, self.cheek_guide[0])
+        cmds.matchTransform(cheek_trn, self.cheek_guide[0], pos=True)
 
         condition_cheek = cmds.createNode("condition", name="C_cheekControllers_COND", ss=True)
         cmds.setAttr(f"{condition_cheek}.operation", 0)  # Equal
@@ -207,7 +208,6 @@ class CheekboneModule(object):
         cmds.xform(grp[0], m=om.MMatrix.kIdentity)
 
         
-
         if self.side == "R":
             four_by_four = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "Flip_MMX"), ss=True)
             cmds.setAttr(f"{four_by_four}.in00", -1)

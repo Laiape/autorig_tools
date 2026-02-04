@@ -100,7 +100,7 @@ class ArmModule(object):
                 cmds.connectAttr(guide+".worldMatrix[0]", guide_00+".inputMatrix")
                 cmds.connectAttr(f"{self.guides[i+1]}.worldMatrix[0]", f"{guide_00}.primaryTargetMatrix")
                 cmds.connectAttr(f"{self.guides[i+2]}.worldMatrix[0]", f"{guide_00}.secondaryTargetMatrix")
-                cmds.setAttr(f"{guide_00}.primaryInputAxis", *self.primary_axis, type="double3")
+                cmds.setAttr(f"{guide_00}.primaryInputAxis", self.primary_axis, type="double3")
                 cmds.setAttr(f"{guide_00}.secondaryInputAxis", 0,0,1, type="double3")
                 cmds.setAttr(f"{guide_00}.secondaryTargetVector", 0,0,1, type="double3")
                 cmds.setAttr(f"{guide_00}.secondaryMode", 1) # Aim

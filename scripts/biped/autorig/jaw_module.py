@@ -354,6 +354,9 @@ class JawModule(object):
         cmds.connectAttr(f"{lower_lip_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_offset_lower}.matrixIn[1]")
         cmds.connectAttr(f"{mult_matrix_offset_lower}.matrixSum", f"{lower_lip_nodes[1]}.offsetParentMatrix")
 
+        cmds.select(self.sphere)
+        temp_joint = cmds.joint(name="tempLip_JNT")
+
         upper_local_jnts = []
         lower_local_jnts = []
 
@@ -431,16 +434,20 @@ class JawModule(object):
                 lower_local_jnts.append(lower_local_jnt)
             
             # Aim constraint to keep corner oriented correctly
+
+            aim_vector = (0, 0, -1) if side == "L" else (0, 0, 1)
+            
             aim = cmds.aimConstraint(
-                upper_lip_ctl,
+                self.jaw_ctl,
                 corner_nodes[0],
-                aimVector=(-1, 0, 0),
+                aimVector=aim_vector,
                 upVector=(0, 1, 0),
                 worldUpType="scene",
                 name=f"{side}_lipCorner_AIM"
             )[0]
             cmds.delete(aim)
 
+        # cmds.delete(temp_joint)
 
         # Rebuild curves for better deformation
         self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve, ch=0, rpo=0, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=4, d=3, tol=0.01, name="C_upperLip_CRV")[0]
