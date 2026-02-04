@@ -96,7 +96,7 @@ class AutoRig(object):
         rig_manager.build_rig(char_name)
 
         cmds.inViewMessage(
-        amg=f'Completed <hl>{char_name} RIG</hl> build.',
+        amg=f'Completed <hl>{char_name.upper()} RIG</hl> build.',
         pos='midCenter',
         fade=True,
         alpha=0.8)

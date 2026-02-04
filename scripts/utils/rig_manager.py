@@ -179,24 +179,8 @@ def get_character_name_from_scene(avoid=None):
         str: The character name extracted from the scene filename.
     """
 
-    char_name = "asset"
-    avoid_always = "_GRP"
-    
-    scene_assemblies = get_main_assembly_nodes()
-
-    for obj in scene_assemblies:
-        if avoid and obj == avoid:
-            continue
-        
-        char_name = obj
-
-        if avoid_always in char_name:
-            char_name = char_name.replace(avoid_always, "")
-        
-        break
-
-    print(f"Final character name: {char_name}")
-    return char_name
+    asset_name = cmds.optionVar(q="currentAssetRigName")
+    return asset_name
 
 def get_character_name_from_build():
 
@@ -206,11 +190,8 @@ def get_character_name_from_build():
         str: The character name extracted from the build file name.
     """
 
-    char_name = "asset"
-
-    char_name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
-
-    return char_name
+    asset_name = cmds.optionVar(q="currentAssetRigName")
+    return asset_name
 
 def get_next_version_name(folder):
 
@@ -302,19 +283,7 @@ def prepare_rig_scene():
     4. Ejecuta el proceso de construcción del Rig.
     """
     
-    character_name = cmds.promptDialog(
-                title="INPUT CHARACTER NAME",
-                message="INSERT CHARACTER NAME",
-                button=["OK", "Cancel"],
-                defaultButton="OK",
-                cancelButton="Cancel",
-                dismissString="Cancel")
-    
-    if character_name == "Cancel":
-        om.MGlobal.displayInfo("Proceso cancelado por el usuario.")
-        return
-    
-    character_name = cmds.promptDialog(query=True, text=True)
+    character_name = cmds.optionVar(q="currentAssetRigName")
 
     cmds.file(new=True, force=True)
     

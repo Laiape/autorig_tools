@@ -70,7 +70,7 @@ class NeckModule(object):
                                 "face_ctl": self.face_ctl,
                             })
             # Clean up and store data
-            if cmds.objExists(self.throat_guide):
+            if cmds.objExists(self.throat_guide[0]):
                 cmds.delete(self.throat_guide)
    
 

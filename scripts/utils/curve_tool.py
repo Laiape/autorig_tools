@@ -17,7 +17,7 @@ relative_path = complete_path.split("\scripts")[0]
 TEMPLATE_FILE = None
 
 
-def get_all_ctl_curves_data():
+def get_all_ctl_curves_data(path=None):
     """
     Collects data from all controller curves in the scene and saves it to a JSON file.
     This function retrieves information about each controller's transform and its associated nurbsCurve shapes,
@@ -36,7 +36,11 @@ def get_all_ctl_curves_data():
     path = os.path.join(relative_path, "assets")
     character_path = os.path.join(path, CHARACTER_NAME)
     TEMPLATE_PATH = os.path.join(character_path, "curves")
-    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{curves_name}.curves")
+    
+    if path:
+        TEMPLATE_FILE = os.path.normpath(path)
+    else:
+        TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{curves_name}.curves")
 
     if "_" in curves_name:
         curves_name = curves_name.split("_")[0]

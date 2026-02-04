@@ -14,8 +14,22 @@ except ImportError:
 class SkinManager(object):
     def __init__(self):
         # --- Configuración de Rutas (Tu lógica original) ---
+        ext = ".skc"
         self.folder_path, self.asset_name = self.get_path_and_name()
-        self.json_path = os.path.join(self.folder_path, f"{self.asset_name}.json")
+        files = [f for f in os.listdir(self.folder_path) if f.endswith(ext)]
+        version = 1
+        if files:
+            files.sort()
+            try:
+                last = files[-1]
+                if "_v" in last:
+                    ver_str = last.split("_v")[-1].split(".")[0]
+                    version = int(ver_str) + 1
+            except: pass
+        
+        # 3. Construir path final
+        asset_name = os.path.basename(self.folder_path)
+        self.json_path = os.path.join(self.folder_path, f"{asset_name}_{version:03d}{ext}")
 
         # --- Configuración de Skin (Lógica de referencia) ---
         self.k_skin_attrs = [
@@ -107,10 +121,11 @@ class SkinManager(object):
     # ----------------------------------------------------------------
     # --- EXPORT SKINS (Lógica Referencia: Sparse & Stack) ---
     # ----------------------------------------------------------------
-    def export_skins(self):
+    def export_skins(self, in_path=None):
         if not os.path.exists(self.folder_path):
             os.makedirs(self.folder_path)
-
+        if in_path:
+            self.json_path = os.path.normpath(in_path)
         om.MGlobal.displayInfo(f"--- Exportando Skins a: {self.json_path} ---")
         
         sel = om.MGlobal.getActiveSelectionList()
@@ -238,6 +253,11 @@ class SkinManager(object):
                 mesh_skins_data.append(skin_entry)
 
             full_data[mesh_name] = mesh_skins_data
+
+        if path:
+            self.json_path = os.path.normpath(path)
+        else:            
+            self.json_path = os.path.join(self.folder_path, f"{self.asset_name}.json")
 
         with open(self.json_path, 'w') as f:
             json.dump(full_data, f, separators=(',', ':')) # Separators comprime el JSON

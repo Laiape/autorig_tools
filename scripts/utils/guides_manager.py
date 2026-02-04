@@ -12,7 +12,7 @@ from utils import rig_manager
 reload(data_manager)
 reload(rig_manager)
 
-def get_guides_info():
+def get_guides_info(path=None):
     """
     Get the guides transform and take the information from the joints and locators.
     """
@@ -175,7 +175,10 @@ def get_guides_info():
     if not os.path.exists(assets_path):
         os.makedirs(assets_path)
 
-    TEMPLATE_FILE = os.path.join(assets_path, f"{CHARACTER_NAME}_v001.guides")
+    if path:
+        TEMPLATE_FILE = os.path.normpath(path)
+    else: 
+        TEMPLATE_FILE = os.path.join(assets_path, f"{CHARACTER_NAME}_v001.guides")
 
     with open(TEMPLATE_FILE, "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
