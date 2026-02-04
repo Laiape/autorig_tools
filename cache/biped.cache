@@ -9,7 +9,8 @@
     },
     "neck_module": {
         "head_ctl": "C_head_CTL",
-        "face_ctl": "C_face_CTL"
+        "face_ctl": "C_face_CTL",
+        "head_guide": "C_head_GUIDE1"
     },
     "jaw_module": {
         "jaw_ctl": "C_jaw_CTL",

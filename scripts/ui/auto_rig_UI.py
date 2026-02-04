@@ -63,6 +63,9 @@ def create_custom_menu():
     # --- BOTÓN RESALTADO: CREAR RIG ---
     cmds.menuItem(label="CREAR RIG", command=lambda x: rig(), boldFont=True, image="kinJoint.png")
 
+    # ---- BOTÓN DE CHARACTER MANAGER UI ---
+    cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="characterMap.png")
+
 def rebuild_ui():
     from ui import auto_rig_UI
     reload(auto_rig_UI)
@@ -123,3 +126,8 @@ def rig():
     reload(create_rig)
     rig = create_rig.AutoRig()
     rig.build()
+
+def show_character_manager_ui():
+    from utils import character_manager
+    reload(character_manager)
+    character_manager.show_ui()

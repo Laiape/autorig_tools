@@ -160,15 +160,13 @@ class CheekboneModule(object):
 
             cmds.matchTransform(grp[0], guide, pos=True)
             trn, mmx = self.local_mmx(ctl, grp[0])
-            
+            if i == 0:
+                local_trns.append(trn)
+                # cmds.matchTransform(trn, guide)
+
             if i > 0: # Avoid the first guide which is the parent
                 skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
                 cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
-
-            if i == 0:
-                local_trns.append(trn)
-                skinning_jnts.append(skinning_jnt)
-            else:
                 grp = trn.replace("_TRN", "_GRP")
                 cmds.parent(grp, local_trns[0])
                 local_trns.append(trn)

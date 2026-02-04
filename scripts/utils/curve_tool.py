@@ -6,11 +6,9 @@ import glob
 
 from utils import data_manager
 from utils import rig_manager
+from importlib import reload
 
 CHARACTER_NAME = None
-
-
-
 final_path = None
 curves_name = None
 

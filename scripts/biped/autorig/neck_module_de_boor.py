@@ -42,6 +42,7 @@ class NeckModule(object):
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_neckModule_GRP", ss=True, p=self.modules)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_neckControllers_GRP", ss=True, p=self.masterwalk_ctl)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_neckSkinning_GRP", ss=True, p=self.skel_grp)
+        self.mGear_integration_ = mGear_integration
         
         self.load_guides()
 
@@ -52,6 +53,7 @@ class NeckModule(object):
                             {
                                 "head_ctl": self.head_ctl,
                                 "face_ctl": self.face_ctl,
+                                "head_guide": self.head_guide,
                             })
             
         else:
@@ -68,7 +70,8 @@ class NeckModule(object):
                                 "face_ctl": self.face_ctl,
                             })
             # Clean up and store data
-            cmds.delete(self.throat_guide)
+            if cmds.objExists(self.throat_guide):
+                cmds.delete(self.throat_guide)
    
 
     def lock_attributes(self, ctl, attrs):
@@ -91,7 +94,8 @@ class NeckModule(object):
 
         self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT", parent=self.module_trn)
         cmds.select(clear=True)
-        self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
+        if self.mGear_integration_ == False:
+            self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
 
         cmds.select(clear=True)
         self.head_guide = cmds.createNode("transform", name=f"{self.side}_head_GUIDE", ss=True, p=self.module_trn)
