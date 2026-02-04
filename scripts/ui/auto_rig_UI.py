@@ -130,4 +130,5 @@ def rig():
 def show_character_manager_ui():
     from utils import character_manager
     reload(character_manager)
-    character_manager.show_ui()
+    pro_asset_manager = character_manager.AssetManagerUI()
+    pro_asset_manager.show()

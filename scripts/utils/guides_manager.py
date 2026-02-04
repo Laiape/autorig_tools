@@ -195,7 +195,7 @@ def load_guides_info(filePath=None):
     guides_node = "C_guides_GRP"
     rig_manager.create_new_scene()
     character_name = rig_manager.get_character_name_from_build()
-    
+
     if not filePath:
     
         TEMPLATE_PATH = rig_manager.asset_path("", "") # Get base assets path

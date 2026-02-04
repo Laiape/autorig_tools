@@ -267,10 +267,12 @@ class SkinManager(object):
     # ----------------------------------------------------------------
     # --- IMPORT SKINS (Lógica Referencia: Reorder & Sparse) ---
     # ----------------------------------------------------------------
-    def import_skins(self):
+    def import_skins(self, in_path=None):
         if not os.path.exists(self.json_path):
             om.MGlobal.displayError(f"Archivo JSON no encontrado: {self.json_path}")
             return
+        if in_path:
+            self.json_path = os.path.normpath(in_path)
 
         om.MGlobal.displayInfo(f"--- Importando Skins de: {self.json_path} ---")
 

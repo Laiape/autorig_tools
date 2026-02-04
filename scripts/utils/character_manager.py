@@ -232,14 +232,40 @@ class VersionTab(QtWidgets.QWidget):
             self.import_file(item.text())
 
     def import_file(self, filename):
-        path = os.path.join(self.full_path, filename)
-        cmds.file(path, i=True, namespace=":", force=True)
-        print(f"Imported: {path}")
+
+        full_path = os.path.join(self.full_path, filename)
+        
+        try:
+            if self.sub_folder == "guides":
+                reload(guides_manager)
+                guides_manager.load_guides_info(filePath=full_path)
+
+            elif self.sub_folder == "controllers":
+                reload(curve_tool)
+                curve_tool.get_all_ctl_curves_data(path=full_path)
+
+            elif self.sub_folder == "models":
+                cmds.file(open=full_path)
+
+            elif self.sub_folder == "skin":
+                reload(skin_manager_api)
+                skinner = skin_manager_api.SkinManager()
+                skinner.import_skins(path=full_path)
+
+            # Feedback de éxito
+            cmds.inViewMessage(amg=f'<hl>{self.sub_folder.capitalize()}</hl> Imported.', 
+                            pos='midCenter', fade=True)
+        
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "Import Error", 
+                                          f"Failed to import {self.sub_folder}:\n{str(e)}")
+
+        
 
 
 # --- UI PRINCIPAL ---
 class AssetManagerUI(QtWidgets.QWidget):
-    def __init__(self, parent=get_maya_window()):
+    def __init__(self, parent=get_maya_main_window()):
         super(AssetManagerUI, self).__init__(parent)
         self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint)
         self.setWindowTitle("Pipeline")
@@ -583,5 +609,3 @@ try:
         pro_asset_manager.deleteLater()
 except: pass
 
-# pro_asset_manager = AssetManagerUI()
-# pro_asset_manager.show()
