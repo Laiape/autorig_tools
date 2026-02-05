@@ -114,7 +114,7 @@ class TongueModule(object):
             if tongue_ctrls:
                 cmds.parent(grp[0], tongue_ctrls[-1])
 
-            de_boors_selection.append(mmx)
+            de_boors_selection.append(f"{mmx}.matrixSum")
             tongue_ctrls.append(ctl)
             cmds.matchTransform(grp[0], jnt, pos=True, rot=True)
 

@@ -164,6 +164,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
             cmds.connectAttr(f'{cv}.outputMatrix', f'{temp_node}.offsetParentMatrix')
         elif cmds.objExists(f"{cv}.output"):
             cmds.connectAttr(f'{cv}.output', f'{temp_node}.offsetParentMatrix')
+        elif cmds.objExists(f"{cv}.matrix"):
+            cmds.connectAttr(f'{cv}.matrix', f'{temp_node}.offsetParentMatrix')
+        elif cmds.objExists(f"{cv}.matrixSum"):
+            cmds.connectAttr(f'{cv}.matrixSum', f'{temp_node}.offsetParentMatrix')
         temp_nodes.append(temp_node)
 
     if skeleton_grp is None:
@@ -224,7 +228,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 cmds.connectAttr(f'{ctl}.outputMatrix', f'{par_off}.matrixIn[0]')
             elif cmds.objExists(f"{ctl}.output"):
                 cmds.connectAttr(f'{ctl}.output', f'{par_off}.matrixIn[0]')
-                
+            elif cmds.objExists(f"{ctl}.matrix"):
+                cmds.connectAttr(f'{ctl}.matrix', f'{par_off}.matrixIn[0]')
+            elif cmds.objExists(f"{ctl}.matrixSum"):
+                cmds.connectAttr(f'{ctl}.matrixSum', f'{par_off}.matrixIn[0]')
             cmds.connectAttr(f'{skeleton_grp}.worldInverseMatrix', f'{par_off}.matrixIn[1]') # First guide
 
             par_off_plugs.append(f'{par_off}.matrixSum')
@@ -236,6 +243,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 par_off_plugs.append(f'{ctl}.outputMatrix')
             elif cmds.objExists(f"{ctl}.output"):
                 par_off_plugs.append(f'{ctl}.output')
+            elif cmds.objExists(f"{ctl}.matrix"):
+                par_off_plugs.append(f'{ctl}.matrix')
+            elif cmds.objExists(f"{ctl}.matrixSum"):
+                par_off_plugs.append(f'{ctl}.matrixSum')
             
 
         trans_off = cmds.createNode('pickMatrix', n=f'{name}_translation_{i}_PM')
@@ -249,6 +260,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                 cmds.connectAttr(f'{ctl}.outputMatrix', f'{trans_off}.inputMatrix')
             elif cmds.objExists(f"{ctl}.output"):
                 cmds.connectAttr(f'{ctl}.output', f'{trans_off}.inputMatrix')
+            elif cmds.objExists(f"{ctl}.matrix"):
+                cmds.connectAttr(f'{ctl}.matrix', f'{trans_off}.inputMatrix')
+            elif cmds.objExists(f"{ctl}.matrixSum"):
+                cmds.connectAttr(f'{ctl}.matrixSum', f'{trans_off}.inputMatrix')
             
 
         for attr in 'useRotate', 'useScale', 'useShear':
@@ -268,6 +283,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                     cmds.connectAttr(f'{ctl}.outputMatrix', f'{sca_off}.inputMatrix')
                 elif cmds.objExists(f"{ctl}.output"):
                     cmds.connectAttr(f'{ctl}.output', f'{sca_off}.inputMatrix')
+                elif cmds.objExists(f"{ctl}.matrix"):
+                    cmds.connectAttr(f'{ctl}.matrix', f'{sca_off}.inputMatrix')
+                elif cmds.objExists(f"{ctl}.matrixSum"):
+                    cmds.connectAttr(f'{ctl}.matrixSum', f'{sca_off}.inputMatrix')
 
             for attr in 'useRotate', 'useShear', 'useTranslate':
                 cmds.setAttr(f'{sca_off}.{attr}', False)
@@ -370,8 +389,12 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
                     up_plug = f'{ctl}.outputMatrix'
                 elif cmds.objExists(f"{ctl}.output"):
                     up_plug = f'{ctl}.output'
-                elif cmds.objExists(f"{skeleton_grp}.matrix"):
-                    up_plug = f'{skeleton_grp}.matrix'
+                elif cmds.objExists(f"{ctl}.matrix"):
+                    up_plug = f'{ctl}.matrix'
+                elif cmds.objExists(f"{ctl}.matrixSum"):
+                    up_plug = f'{ctl}.matrixSum'
+                elif cmds.objExists(f"{temp}.matrix"):
+                    up_plug = f'{temp}.matrix'
 
             cmds.delete(temp)
 

@@ -16,11 +16,6 @@ class SkinManager(object):
         self.ext = ".skc"
         self.folder_path, self.asset_name = self.get_path_and_name()
         self.json_path = self.get_latest_version_path()
-        
-        print(f"SkinManager initialized.")
-        print(f"Folder: {self.folder_path}")
-        print(f"Asset: {self.asset_name}")
-        print(f"Latest File Found: {self.json_path}")
 
         # Configuración de atributos y tolerancia
         self.k_skin_attrs = ["skinningMethod", "normalizeWeights", "maintainMaxInfluences", "maxInfluences", "weightDistribution"]
