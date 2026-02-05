@@ -217,11 +217,34 @@ class VersionTab(QtWidgets.QWidget):
 
     def replace_file(self, filename):
         path = os.path.join(self.full_path, filename)
-        res = QtWidgets.QMessageBox.warning(self, "Overwrite", f"Are you sure you want to replace:\n{filename}?", 
-                                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        if res == QtWidgets.QMessageBox.Yes:
-            cmds.file(rename=path)
-            cmds.file(save=True, type="mayaAscii")
+        try:
+            if self.sub_folder == "guides":
+                reload(guides_manager)
+                guides_manager.get_guides_info(path=path)
+
+            elif self.sub_folder == "controllers":
+                reload(curve_tool)
+                curve_tool.get_all_ctl_curves_data(path=path)
+
+            elif self.sub_folder == "models":
+                cmds.file(rename=path)
+                cmds.file(save=True, type="mayaAscii")
+
+            elif self.sub_folder == "skin":
+                reload(skin_manager_api)
+                skinner = skin_manager_api.SkinManager()
+                skinner.export_skins(path=path)
+
+            # Feedback de éxito
+            cmds.inViewMessage(amg=f'<hl>{self.sub_folder.capitalize()}</hl> {path} Exported.', 
+                               pos='midCenter', fade=True)
+            
+            # Actualizar la tabla para ver el nuevo archivo
+            self.refresh_list()
+
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "Export Error", 
+                                          f"Failed to export {self.sub_folder}:\n{str(e)}")
             print(f"Replaced: {path}")
             self.refresh_list()
 
@@ -234,7 +257,6 @@ class VersionTab(QtWidgets.QWidget):
     def import_file(self, filename):
 
         full_path = os.path.join(self.full_path, filename)
-        
         try:
             if self.sub_folder == "guides":
                 reload(guides_manager)
@@ -259,8 +281,6 @@ class VersionTab(QtWidgets.QWidget):
         except Exception as e:
             QtWidgets.QMessageBox.warning(self, "Import Error", 
                                           f"Failed to import {self.sub_folder}:\n{str(e)}")
-
-        
 
 
 # --- UI PRINCIPAL ---

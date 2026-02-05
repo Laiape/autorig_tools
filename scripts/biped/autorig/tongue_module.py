@@ -89,14 +89,12 @@ class TongueModule(object):
         """
 
         mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=self.module_trn)
         cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
         cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
         grp_wm = cmds.getAttr(f"{grp}.worldMatrix[0]")
         cmds.setAttr(f"{mmx}.matrixIn[2]", grp_wm, type="matrix")
-        cmds.connectAttr(f"{mmx}.matrixSum", f"{local_grp}.offsetParentMatrix")
 
-        return local_grp, mmx
+        return f"{mmx}.matrixSum"
     
     def create_controllers(self):
 
@@ -111,16 +109,14 @@ class TongueModule(object):
             grp, ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"], parent=self.controllers_grp)
             self._lock_attributes(ctl, ["v"])
             cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{grp[0]}.offsetParentMatrix")
-            local_grp, mmx = self.local_mmx(ctl, grp[0])
+            mmx = self.local_mmx(ctl, grp[0])
             
             if tongue_ctrls:
                 cmds.parent(grp[0], tongue_ctrls[-1])
-                cmds.connectAttr(f"{tongue_ctrls[-1]}.matrix", f"{mmx}.matrixIn[2]")
 
-            de_boors_selection.append(local_grp)
+            de_boors_selection.append(mmx)
             tongue_ctrls.append(ctl)
             cmds.matchTransform(grp[0], jnt, pos=True, rot=True)
-            cmds.matchTransform(local_grp, jnt, pos=True, rot=True) 
 
         # De Boor Tongue Ribbon
         skinning_jnts, temp = ribbon.de_boor_ribbon(de_boors_selection, name=f"{self.side}_tongueSkinning", aim_axis="x", up_axis="y", num_joints=len(self.tongue_guides), skeleton_grp=self.skeleton_grp)

@@ -1,10 +1,10 @@
+import glob
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import maya.api.OpenMayaAnim as oma
 import os
 import json
 
-# --- DEPENDENCIAS OPCIONALES ---
 try:
     from utils import data_manager
     HAS_RIG_UTILS = True
@@ -13,37 +13,53 @@ except ImportError:
 
 class SkinManager(object):
     def __init__(self):
-        # --- Configuración de Rutas (Tu lógica original) ---
-        ext = ".skc"
+        self.ext = ".skc"
         self.folder_path, self.asset_name = self.get_path_and_name()
-        files = [f for f in os.listdir(self.folder_path) if f.endswith(ext)]
-        version = 1
-        if files:
-            files.sort()
-            try:
-                last = files[-1]
-                if "_v" in last:
-                    ver_str = last.split("_v")[-1].split(".")[0]
-                    version = int(ver_str) + 1
-            except: pass
+        self.json_path = self.get_latest_version_path()
         
-        # 3. Construir path final
-        asset_name = os.path.basename(self.folder_path)
-        self.json_path = os.path.join(self.folder_path, f"{asset_name}_{version:03d}{ext}")
+        print(f"SkinManager initialized.")
+        print(f"Folder: {self.folder_path}")
+        print(f"Asset: {self.asset_name}")
+        print(f"Latest File Found: {self.json_path}")
 
-        # --- Configuración de Skin (Lógica de referencia) ---
-        self.k_skin_attrs = [
-            "skinningMethod",
-            "normalizeWeights",
-            "maintainMaxInfluences",
-            "maxInfluences",
-            "weightDistribution"
-        ]
-        self.tolerance = 1e-5 
+        # Configuración de atributos y tolerancia
+        self.k_skin_attrs = ["skinningMethod", "normalizeWeights", "maintainMaxInfluences", "maxInfluences", "weightDistribution"]
+        self.tolerance = 1e-5
 
-    # ----------------------------------------------------------------
-    # --- PATH & NAME HELPERS (Original) ---
-    # ----------------------------------------------------------------
+    def get_latest_version_path(self):
+        """
+        Escanea la carpeta skin_clusters y devuelve el path del archivo con la versión más alta.
+        Si no existe ninguno, devuelve la ruta para una v001 por defecto.
+        """
+        if not os.path.exists(self.folder_path):
+            os.makedirs(self.folder_path)
+            return os.path.join(self.folder_path, f"{self.asset_name}_v001{self.ext}")
+
+        pattern = f"{self.asset_name}_v*{self.ext}"
+        files = glob.glob(os.path.join(self.folder_path, pattern))
+
+        if not files:
+            return os.path.join(self.folder_path, f"{self.asset_name}_v001{self.ext}")
+
+        highest_version = -1
+        latest_file = files[0]
+
+        for f in files:
+            try:
+                filename = os.path.basename(f)
+                ver_part = filename.split("_v")[-1].split(self.ext)[0]
+                
+                if ver_part.isdigit():
+                    version_num = int(ver_part)
+                    if version_num > highest_version:
+                        highest_version = version_num
+                        latest_file = f
+            except (ValueError, IndexError):
+                continue
+
+        return os.path.normpath(latest_file)
+
+
     def get_path_and_name(self):
         """Calcula la ruta del JSON basándose en la estructura del proyecto."""
         try:
@@ -95,7 +111,6 @@ class SkinManager(object):
         """
         history = cmds.listHistory(dag_path.fullPathName(), pruneDagObjects=True, interestLevel=1) or []
         skins = [x for x in history if cmds.nodeType(x) == "skinCluster"]
-        # listHistory devuelve [Outer... Inner], invertimos para tener [Inner... Outer]
         return list(reversed(skins))
 
     def _get_meshes_from_skin(self, skin_mobj):
@@ -122,10 +137,27 @@ class SkinManager(object):
     # --- EXPORT SKINS (Lógica Referencia: Sparse & Stack) ---
     # ----------------------------------------------------------------
     def export_skins(self, in_path=None):
-        if not os.path.exists(self.folder_path):
-            os.makedirs(self.folder_path)
+        """
+        Exporta los pesos. Si in_path es None, genera una NUEVA versión 
+        basada en la más alta encontrada para no sobrescribir.
+        """
         if in_path:
-            self.json_path = os.path.normpath(in_path)
+            save_path = os.path.normpath(in_path)
+        else:
+            # Lógica para generar la SIGUIENTE versión al exportar
+            current_latest = self.get_latest_version_path()
+            filename = os.path.basename(current_latest)
+            
+            try:
+                # Si existe v005, la nueva será v006
+                ver_str = filename.split("_v")[-1].split(self.ext)[0]
+                new_version = int(ver_str) + 1
+            except:
+                new_version = 1
+                
+            save_path = os.path.join(self.folder_path, f"{self.asset_name}_v{new_version:03d}{self.ext}")
+
+        self.json_path = save_path
         om.MGlobal.displayInfo(f"--- Exportando Skins a: {self.json_path} ---")
         
         sel = om.MGlobal.getActiveSelectionList()
@@ -257,7 +289,7 @@ class SkinManager(object):
         if path:
             self.json_path = os.path.normpath(path)
         else:            
-            self.json_path = os.path.join(self.folder_path, f"{self.asset_name}.json")
+            self.json_path = os.path.join(self.folder_path, f"{self.asset_name}_v001{self.ext}")
 
         with open(self.json_path, 'w') as f:
             json.dump(full_data, f, separators=(',', ':')) # Separators comprime el JSON
@@ -268,11 +300,29 @@ class SkinManager(object):
     # --- IMPORT SKINS (Lógica Referencia: Reorder & Sparse) ---
     # ----------------------------------------------------------------
     def import_skins(self, in_path=None):
-        if not os.path.exists(self.json_path):
-            om.MGlobal.displayError(f"Archivo JSON no encontrado: {self.json_path}")
-            return
+        """
+        Importa los pesos desde un archivo JSON (.skc).
+        Si in_path es None, busca automáticamente la versión más reciente.
+        """
+        # 1. Determinar la ruta de importación
         if in_path:
             self.json_path = os.path.normpath(in_path)
+        else:
+            # Si no se da ruta, usamos nuestra lógica de "buscar el último"
+            self.json_path = self.get_latest_version_path()
+
+        # 2. Verificación de existencia
+        if not os.path.exists(self.json_path):
+            om.MGlobal.displayError(f"No se encontró el archivo de skin: {self.json_path}")
+            return
+
+        # 3. Lectura del archivo
+        try:
+            with open(self.json_path, 'r') as f:
+                full_data = json.load(f)
+        except Exception as e:
+            om.MGlobal.displayError(f"Error al leer el JSON: {e}")
+            return
 
         om.MGlobal.displayInfo(f"--- Importando Skins de: {self.json_path} ---")
 
@@ -283,7 +333,6 @@ class SkinManager(object):
             # Buscar Mesh en escena
             mesh_path = self._get_dag_path(mesh_name)
             if not mesh_path:
-                # Intento de búsqueda laxa si falla el nombre exacto
                 found = self.find_mesh_in_scene(mesh_name)
                 if found: mesh_path = self._get_dag_path(found)
             
@@ -294,11 +343,6 @@ class SkinManager(object):
             mesh_path.extendToShape()
             mf_mesh = om.MFnMesh(mesh_path)
             processed_skins = []
-
-            # Limpiar skins previos si se desea una importación limpia (Opcional)
-            # current_hist = cmds.listHistory(mesh_path.fullPathName(), pruneDagObjects=True)
-            # old_skins = [x for x in current_hist if cmds.nodeType(x) == "skinCluster"]
-            # if old_skins: cmds.delete(old_skins)
 
             for skin_data in skins_list:
                 skin_name = skin_data["name"]
