@@ -394,17 +394,18 @@ class JawModule(object):
             # Create blending between upper and lower lips
             cmds.addAttr(corner_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
             cmds.setAttr(f"{corner_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
-            cmds.addAttr(corner_ctl, longName="Jaw_Blend", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
+            cmds.addAttr(corner_ctl, longName="Height", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
             cmds.addAttr(corner_ctl, longName="Zip", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+            cmds.addAttr(corner_ctl, longName="Roll", attributeType="float", defaultValue=0, keyable=True)
 
             parent_matrix_blender = cmds.createNode("parentMatrix", name=f"{side}_lipCorner_PMX", ss=True)
             cmds.connectAttr(f"{fbf_corner_lip}.output", f"{parent_matrix_blender}.inputMatrix")
             cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{parent_matrix_blender}.target[0].targetMatrix")
             cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{parent_matrix_blender}.target[1].targetMatrix")
             reverse_blender = cmds.createNode("reverse", name=f"{side}_lipCorner_REV", ss=True)
-            cmds.connectAttr(f"{corner_ctl}.Jaw_Blend", f"{reverse_blender}.inputX")
+            cmds.connectAttr(f"{corner_ctl}.Height", f"{reverse_blender}.inputX")
             cmds.connectAttr(f"{reverse_blender}.outputX", f"{parent_matrix_blender}.target[0].weight")
-            cmds.connectAttr(f"{corner_ctl}.Jaw_Blend", f"{parent_matrix_blender}.target[1].weight")
+            cmds.connectAttr(f"{corner_ctl}.Height", f"{parent_matrix_blender}.target[1].weight")
             mult_matrix_corner_offset = cmds.createNode("multMatrix", name=f"{side}_lipCornerOffset_MMT", ss=True)
             cmds.connectAttr(f"{parent_matrix_blender}.outputMatrix", f"{mult_matrix_corner_offset}.matrixIn[0]")
             cmds.connectAttr(f"{corner_nodes[0]}.parentInverseMatrix[0]", f"{mult_matrix_corner_offset}.matrixIn[1]")
@@ -760,6 +761,7 @@ class JawModule(object):
             remap_value_zip = cmds.createNode("remapValue", name=f"{side}_{name}0{i}_Zip_RMV", ss=True)
             cmds.setAttr(f"{remap_value_zip}.value[0].value_Interp", 2)  # Set to smooth
             cmds.connectAttr(f"{zip_ctl}.Zip", f"{remap_value_zip}.inputValue")
+            #
 
             max_index = len(linear_cvs) - 1
             denominator = max_index / 2.0 
@@ -774,7 +776,10 @@ class JawModule(object):
             cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
             cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
             cmds.connectAttr(f"{blend_matrix_mid}.outputMatrix", f"{joint}.offsetParentMatrix", f=True) # Final connection to joint
-
+            # ---- Roll setup ----
+            multiply = cmds.createNode("multiply", name=f"{side}_{name}0{i}Roll_MUL", ss=True)
+            cmds.connectAttr(f"{zip_ctl}.Roll", f"{multiply}.input[1]")
+            cmds.connectAttr(f"{multiply}.output", f"{joint}.rotateX")  # Connect to controller for manual tweaking
             cmds.parent(out_nodes[0], out_controllers)
 
         
@@ -853,6 +858,10 @@ class JawModule(object):
             cmds.connectAttr(f"{remap_value_zip}.outValue", f"{blend_matrix_mid}.target[0].weight") # Weight based on Zip attribute
             cmds.connectAttr(f"{mid_4b4}.output", f"{blend_matrix_mid}.target[0].targetMatrix")
             cmds.connectAttr(f"{blend_matrix_mid}.outputMatrix", f"{joint}.offsetParentMatrix", f=True) # Final connection to joint
+            # ---- Roll setup for each output joint ----
+            multiply = cmds.createNode("multiply", name=f"{side}_{name}0{i}Roll_Mult", ss=True)
+            cmds.connectAttr(f"{zip_ctl}.Roll", f"{multiply}.input[1]")
+            cmds.connectAttr(f"{multiply}.output", f"{joint}.rotateX", f=True)  # Assuming roll affects X rotation
             cmds.parent(out_nodes[0], out_controllers)
 
 

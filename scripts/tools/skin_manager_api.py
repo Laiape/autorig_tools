@@ -281,11 +281,6 @@ class SkinManager(object):
 
             full_data[mesh_name] = mesh_skins_data
 
-        if path:
-            self.json_path = os.path.normpath(path)
-        else:            
-            self.json_path = os.path.join(self.folder_path, f"{self.asset_name}_v001{self.ext}")
-
         with open(self.json_path, 'w') as f:
             json.dump(full_data, f, separators=(',', ':')) # Separators comprime el JSON
             

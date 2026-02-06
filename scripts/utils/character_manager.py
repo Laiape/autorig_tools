@@ -590,8 +590,12 @@ class AssetManagerUI(QtWidgets.QWidget):
                 import rabbitSkinningTools as rst
                 rst.showUI()
             elif tool_name == "Kangaroo":
-                import kangarooMaya
-                kangarooMaya.showUI()
+                import maya.utils
+                import createShelfKangarooBuilder
+                def main():
+                    createShelfKangarooBuilder.createShelf()
+
+                maya.utils.executeDeferred(main)
             elif tool_name == "mGear":
                 import mgear.maya
                 mgear.maya.showMainWindow()
