@@ -509,35 +509,16 @@ def build_rig(character_name):
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
 
-    if rig_type == 0:
-        if mGear_integration == 0:
+    if rig_type == 0 and mGear_integration == 0:
             biped_space_switches()
     
 def biped_space_switches():
 
         """
-        Els controls han de tenir els següents spaceSwitches de translació i rotació:
-
-        armIk: masterWalk, chest, body, localHip, head (per defecte ha d'estar a masterWalk)
-
-        armPv: masterWalk, armIk, clavicle, chest, body (per defecte ha d'estar a armIk)
-
-        legIk: masterWalk, body, localHip (per defecte ha d'estar a masterWalk)
-
-        legPv: masterWalk, legIk, body (per defecte ha d'estar a legIk)
-
-        Els controls han de tenir els següents spaceSwitches de només rotació, però han de seguir el seu hook:
-
-        armFk00: clavicle, chest, body (per defecte ha d'estar en clavicle)
-
-        legFk00: masterWalk, localHip, body (per defecte ha d'estar en localHip)
-
-        El control del head ha de tenir un spaceSwitch de només rotació que a més a més hi hagi un atribut de tipus float amb màxim a 1 i mínim a 0 i valor per defecte a 1 que permeti escollir la quantitat d’space que s’està aplicant. 
-
-        head: masterWalk, neck, chest, body (per defecte ha d’estar a chest)
+        Crea los space switches para el Rig Biped.
         """
 
-        # Drivens
+        # ---- Drivers ----
         masterwalk = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
         body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
@@ -545,9 +526,13 @@ def biped_space_switches():
         head = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         neck = data_manager.DataExportBiped().get_data("neck_module", "neck_ctl")
 
+        # ---- Space switches ----
+        matrix_manager.space_switches(target=neck, sources=[chest, body], default_value=1) # Neck
+        matrix_manager.space_switches(target=local_hip, sources=[body, masterwalk], default_value=1) # Local hip
+
         for side in ["L", "R"]:
 
-            # Drivers
+            # ---- Drivers ----
             arm_ik = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIk")
             arm_pv = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armPv")
             leg_ik = data_manager.DataExportBiped().get_data("leg_module", f"{side}_legIk")
@@ -558,7 +543,7 @@ def biped_space_switches():
             root_ik = data_manager.DataExportBiped().get_data("leg_module", f"{side}_rootIk")
             arm_ik_root = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIkRoot")
 
-            # Space switches
+            # ---- Space switches ----
             matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik
             matrix_manager.space_switches(target=arm_pv, sources=[body, arm_ik, masterwalk, clavicle, chest], default_value=1) # Arm pv
             matrix_manager.space_switches(target=leg_ik, sources=[masterwalk, local_hip, body], default_value=1) # Leg ik
@@ -567,9 +552,7 @@ def biped_space_switches():
             matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip, masterwalk], default_value=1) # Hip fk
             matrix_manager.space_switches(target=root_ik, sources=[local_hip, masterwalk], default_value=1) # Root ik
             matrix_manager.space_switches(target=clavicle, sources=[chest, body], default_value=1) # Clavicle
-            matrix_manager.space_switches(target=arm_ik_root, sources=[clavicle, chest, masterwalk], default_value=1) # Arm ik root
-        matrix_manager.space_switches(target=neck, sources=[chest, body], default_value=1) # Neck
-        matrix_manager.space_switches(target=local_hip, sources=[body, masterwalk], default_value=1) # Local hip
+            matrix_manager.space_switches(target=arm_ik_root, sources=[clavicle, chest, masterwalk], default_value=1) # Arm ik root       
 
 
 def create_rig_settings(guides_transform, load=False):

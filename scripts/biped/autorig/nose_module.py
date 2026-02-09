@@ -120,13 +120,13 @@ class NoseModule(object):
             self.nose_guides = [
             self.nose_main_guide,
             self.nose_tip_guide,
-            self.side_nose_guide,
-            self.nostrils_guide
+            self.nostrils_guide,
+            self.side_nose_guide
             ]
         elif self.side == "R":
             self.nose_guides = [
+            self.nostrils_guide,
             self.side_nose_guide,
-            self.nostrils_guide
             ]
 
  
@@ -159,8 +159,8 @@ class NoseModule(object):
                 if i != 0:
                     cmds.parent(nodes[0], "C_baseNose_CTL")
                     cmds.parent(local_grp, "C_baseNoseLocal_TRN")
-                    if guide.endswith("nose_JNT") and cmds.objExists(f"{self.side}_nosetril_CTL"):
-                        cmds.parent(ctl, f"{self.side}_nosetril_CTL")
+                    if guide == ("L_nose_JNT") or guide == ("R_nose_JNT"):
+                        cmds.parent(nodes[0], f"{self.side}_nosetril_CTL")
                         cmds.parent(local_grp, f"{self.side}_nosetrilLocal_TRN")
             else:
                 cmds.parent(nodes[0], f"C_baseNose_CTL")

@@ -383,98 +383,6 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL|C_chin_GRP|C_chin_CTL": {
-        "transform": {
-            "name": "C_chin_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_chin_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": null,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.1851226143092727,
-                            0.3133277579292538,
-                            0.0009917422490928183
-                        ],
-                        [
-                            1.1945764745805926e-06,
-                            0.36834104189409156,
-                            -0.03076994036106198
-                        ],
-                        [
-                            -0.1851199288133582,
-                            0.3133280290551581,
-                            0.000992089104043189
-                        ],
-                        [
-                            -0.1851207122249975,
-                            0.1805142689497239,
-                            0.07767164586340554
-                        ],
-                        [
-                            -0.18512022515632354,
-                            0.04770105109747452,
-                            0.15435189633428542
-                        ],
-                        [
-                            1.1945764745455885e-06,
-                            -0.007312232867631031,
-                            0.18611357894458094
-                        ],
-                        [
-                            0.1851223179663076,
-                            0.04770077997156962,
-                            0.15435154947933538
-                        ],
-                        [
-                            0.18512310137794616,
-                            0.18051454007700354,
-                            0.07767199271997216
-                        ],
-                        [
-                            0.1851226143092727,
-                            0.3133277579292538,
-                            0.0009917422490928183
-                        ],
-                        [
-                            1.1945764745805926e-06,
-                            0.36834104189409156,
-                            -0.03076994036106198
-                        ],
-                        [
-                            -0.1851199288133582,
-                            0.3133280290551581,
-                            0.000992089104043189
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL": {
         "transform": {
             "name": "C_eyeMain_CTL",
@@ -2437,98 +2345,6 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL": {
-        "transform": {
-            "name": "C_spine00FK_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_spine00FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            -5.243714822350137,
-                            0.0,
-                            -5.233054176851487
-                        ],
-                        [
-                            -7.415732618984401,
-                            0.0,
-                            -9.049309678988139e-16
-                        ],
-                        [
-                            -5.243714822350137,
-                            0.0,
-                            5.233054176851485
-                        ],
-                        [
-                            -1.978908841552244e-15,
-                            0.0,
-                            5.430250002026207
-                        ],
-                        [
-                            5.2437148223501335,
-                            0.0,
-                            5.233054176851485
-                        ],
-                        [
-                            7.415732618984401,
-                            0.0,
-                            0.0
-                        ],
-                        [
-                            5.243714822350133,
-                            0.0,
-                            -5.233054176851487
-                        ],
-                        [
-                            -5.831951096727803e-16,
-                            0.0,
-                            -5.430250002026207
-                        ],
-                        [
-                            -5.243714822350137,
-                            0.0,
-                            -5.233054176851487
-                        ],
-                        [
-                            -7.415732618984401,
-                            0.0,
-                            -9.049309678988139e-16
-                        ],
-                        [
-                            -5.243714822350137,
-                            0.0,
-                            5.233054176851485
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_CTL": {
         "transform": {
             "name": "C_spine00_CTL",
@@ -2621,75 +2437,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine01FK_CTL",
+            "name": "C_spine01AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine01FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine01AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -5.072058577305858,
-                            6.132547259140377e-15,
-                            -5.06174691462531
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -7.172974029176726,
-                            6.132547259140377e-15,
-                            -9.61376322349903e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -5.072058577305858,
-                            6.132547259140377e-15,
-                            5.06174691462531
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.914128037764456e-15,
-                            6.132547259140377e-15,
-                            5.252487412606486
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            5.07205857730585,
-                            6.132547259140377e-15,
-                            5.06174691462531
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            7.172974029176726,
-                            6.132547259140377e-15,
-                            -8.606882888408073e-17
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            5.072058577305848,
-                            6.132547259140377e-15,
-                            -5.06174691462531
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -5.641038573743299e-16,
-                            6.132547259140377e-15,
-                            -5.252487412606486
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -5.072058577305858,
-                            6.132547259140377e-15,
-                            -5.06174691462531
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -7.172974029176726,
-                            6.132547259140377e-15,
-                            -9.61376322349903e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -5.072058577305858,
-                            6.132547259140377e-15,
-                            5.06174691462531
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -2805,75 +2621,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine02FK_CTL",
+            "name": "C_spine02AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine02FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine02AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -4.958214306824771,
-                            0.0,
-                            -4.948134093307796
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -7.011973917863899,
-                            0.0,
-                            -8.30695546140744e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.958214306824771,
-                            0.0,
-                            4.948134093307795
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.8711647109918283e-15,
-                            0.0,
-                            5.1345933487692195
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            4.958214306824758,
-                            0.0,
-                            4.948134093307795
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            7.011973917863899,
-                            0.0,
-                            2.4965340031125795e-17
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            4.958214306824758,
-                            0.0,
-                            -4.948134093307796
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -5.514423332338766e-16,
-                            0.0,
-                            -5.1345933487692195
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -4.958214306824771,
-                            0.0,
-                            -4.948134093307796
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -7.011973917863899,
-                            0.0,
-                            -8.30695546140744e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.958214306824771,
-                            0.0,
-                            4.948134093307795
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -2897,75 +2713,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL|C_spine03AttatchedFk_GRP|C_spine03AttatchedFk_ANM|C_spine03AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine03FK_CTL",
+            "name": "C_spine03AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine03FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine03AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -4.212820420245298,
-                            -6.1923289409690166e-15,
-                            -5.233054176851487
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.95782777415323,
-                            -6.1923289409690166e-15,
-                            -9.049309678988135e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.212820420245298,
-                            -6.1923289409690166e-15,
-                            5.233054176851485
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.5898628853654675e-15,
-                            -6.1923289409690166e-15,
-                            5.430250002026208
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            4.212820420245295,
-                            -6.1923289409690166e-15,
-                            5.233054176851485
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            5.95782777415323,
-                            -6.1923289409690166e-15,
-                            -4.931642638800246e-32
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            4.212820420245294,
-                            -6.1923289409690166e-15,
-                            -5.233054176851487
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -4.685411679034728e-16,
-                            -6.1923289409690166e-15,
-                            -5.430250002026208
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -4.212820420245298,
-                            -6.1923289409690166e-15,
-                            -5.233054176851487
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.95782777415323,
-                            -6.1923289409690166e-15,
-                            -9.049309678988135e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.212820420245298,
-                            -6.1923289409690166e-15,
-                            5.233054176851485
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -3081,75 +2897,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL|C_spine03AttatchedFk_GRP|C_spine03AttatchedFk_ANM|C_spine03AttatchedFk_CTL|C_spine04AttatchedFk_GRP|C_spine04AttatchedFk_ANM|C_spine04AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine04FK_CTL",
+            "name": "C_spine04AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine04FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine04AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -3.9018296612070964,
-                            -6.2035515361734954e-15,
-                            -4.846749675779889
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.518020424948693,
-                            -6.2035515361734954e-15,
-                            -8.293962291567618e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -3.9018296612070964,
-                            -6.2035515361734954e-15,
-                            4.846749675779889
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.4724990729631126e-15,
-                            -6.2035515361734954e-15,
-                            5.029388488494369
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            3.901829661207094,
-                            -6.2035515361734954e-15,
-                            4.846749675779889
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            5.518020424948693,
-                            -6.2035515361734954e-15,
-                            8.732658304063315e-18
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            3.9018296612070937,
-                            -6.2035515361734954e-15,
-                            -4.846749675779889
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -4.33953419337997e-16,
-                            -6.2035515361734954e-15,
-                            -5.029388488494369
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -3.9018296612070964,
-                            -6.2035515361734954e-15,
-                            -4.846749675779889
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.518020424948693,
-                            -6.2035515361734954e-15,
-                            -8.293962291567618e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -3.9018296612070964,
-                            -6.2035515361734954e-15,
-                            4.846749675779889
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -3173,75 +2989,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL|C_spine03AttatchedFk_GRP|C_spine03AttatchedFk_ANM|C_spine03AttatchedFk_CTL|C_spine04AttatchedFk_GRP|C_spine04AttatchedFk_ANM|C_spine04AttatchedFk_CTL|C_spine05AttatchedFk_GRP|C_spine05AttatchedFk_ANM|C_spine05AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine05FK_CTL",
+            "name": "C_spine05AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine05FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine05AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -3.8458026162958063,
-                            0.0,
-                            -4.777154361443513
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.438786218175452,
-                            0.0,
-                            -8.105915506590736e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -3.8458026162958063,
-                            0.0,
-                            4.77715436144351
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.4513552048663148e-15,
-                            0.0,
-                            4.957170631953187
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            3.8458026162958046,
-                            0.0,
-                            4.77715436144351
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            5.438786218175452,
-                            0.0,
-                            1.5502499585231048e-17
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            3.8458026162958037,
-                            0.0,
-                            -4.777154361443513
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -4.277222073616298e-16,
-                            0.0,
-                            -4.957170631953187
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -3.8458026162958063,
-                            0.0,
-                            -4.777154361443513
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.438786218175452,
-                            0.0,
-                            -8.105915506590736e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -3.8458026162958063,
-                            0.0,
-                            4.77715436144351
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -3265,75 +3081,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL|C_spine03AttatchedFk_GRP|C_spine03AttatchedFk_ANM|C_spine03AttatchedFk_CTL|C_spine04AttatchedFk_GRP|C_spine04AttatchedFk_ANM|C_spine04AttatchedFk_CTL|C_spine05AttatchedFk_GRP|C_spine05AttatchedFk_ANM|C_spine05AttatchedFk_CTL|C_spine06AttatchedFk_GRP|C_spine06AttatchedFk_ANM|C_spine06AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine06FK_CTL",
+            "name": "C_spine06AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine06FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine06AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -4.247159288578946,
-                            0.0,
-                            -5.27570901148393
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -6.006390267467215,
-                            0.0,
-                            -8.901641100764604e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.247159288578946,
-                            0.0,
-                            5.275709011483927
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.6028219215557537e-15,
-                            0.0,
-                            5.474512187744424
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            4.247159288578944,
-                            0.0,
-                            5.275709011483927
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            6.006390267467215,
-                            0.0,
-                            2.2142986462536294e-17
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            4.247159288578944,
-                            0.0,
-                            -5.27570901148393
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -4.723602657686974e-16,
-                            0.0,
-                            -5.474512187744424
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -4.247159288578946,
-                            0.0,
-                            -5.27570901148393
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -6.006390267467215,
-                            0.0,
-                            -8.901641100764604e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.247159288578946,
-                            0.0,
-                            5.275709011483927
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -3449,75 +3265,75 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00FK_GRP|C_spine00FK_CTL|C_spine01FK_GRP|C_spine01FK_CTL|C_spine02FK_GRP|C_spine02FK_CTL|C_spine03FK_GRP|C_spine03FK_CTL|C_spine04FK_GRP|C_spine04FK_CTL|C_spine05FK_GRP|C_spine05FK_CTL|C_spine06FK_GRP|C_spine06FK_CTL|C_spine07FK_GRP|C_spine07FK_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL|C_spine03AttatchedFk_GRP|C_spine03AttatchedFk_ANM|C_spine03AttatchedFk_CTL|C_spine04AttatchedFk_GRP|C_spine04AttatchedFk_ANM|C_spine04AttatchedFk_CTL|C_spine05AttatchedFk_GRP|C_spine05AttatchedFk_ANM|C_spine05AttatchedFk_CTL|C_spine06AttatchedFk_GRP|C_spine06AttatchedFk_ANM|C_spine06AttatchedFk_CTL|C_spine07AttatchedFk_GRP|C_spine07AttatchedFk_ANM|C_spine07AttatchedFk_CTL": {
         "transform": {
-            "name": "C_spine07FK_CTL",
+            "name": "C_spine07AttatchedFk_CTL",
             "overrideEnabled": false,
             "overrideColor": null
         },
         "shapes": [
             {
-                "name": "C_spine07FK_CTLShape",
-                "overrideEnabled": true,
-                "overrideColor": 14,
+                "name": "C_spine07AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
                 "alwaysDrawOnTop": false,
                 "lineWidth": -1.0,
                 "curve": {
                     "cvs": [
                         [
-                            -4.241859284880777,
-                            0.0,
-                            -5.269125486974613
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.998894930356634,
-                            0.0,
-                            -9.368019594399166e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.241859284880777,
-                            0.0,
-                            5.269125486974612
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -1.6008217700345696e-15,
-                            0.0,
-                            5.467680577986164
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
                         ],
                         [
-                            4.241859284880772,
-                            0.0,
-                            5.269125486974612
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
                         ],
                         [
-                            5.998894930356634,
-                            0.0,
-                            -2.563332526057916e-17
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
                         ],
                         [
-                            4.241859284880772,
-                            0.0,
-                            -5.269125486974613
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
                         ],
                         [
-                            -4.717708103267571e-16,
-                            0.0,
-                            -5.467680577986164
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
                         ],
                         [
-                            -4.241859284880777,
-                            0.0,
-                            -5.269125486974613
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
                         ],
                         [
-                            -5.998894930356634,
-                            0.0,
-                            -9.368019594399166e-16
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
                         ],
                         [
-                            -4.241859284880777,
-                            0.0,
-                            5.269125486974612
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -3610,6 +3426,98 @@
                             -4.335873900889169,
                             -8.400893332270964e-06,
                             5.069607144022649
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine01AttatchedFk_GRP|C_spine01AttatchedFk_ANM|C_spine01AttatchedFk_CTL|C_spine02AttatchedFk_GRP|C_spine02AttatchedFk_ANM|C_spine02AttatchedFk_CTL|C_spine03AttatchedFk_GRP|C_spine03AttatchedFk_ANM|C_spine03AttatchedFk_CTL|C_spine04AttatchedFk_GRP|C_spine04AttatchedFk_ANM|C_spine04AttatchedFk_CTL|C_spine05AttatchedFk_GRP|C_spine05AttatchedFk_ANM|C_spine05AttatchedFk_CTL|C_spine06AttatchedFk_GRP|C_spine06AttatchedFk_ANM|C_spine06AttatchedFk_CTL|C_spine07AttatchedFk_GRP|C_spine07AttatchedFk_ANM|C_spine07AttatchedFk_CTL|C_spine08AttatchedFk_GRP|C_spine08AttatchedFk_ANM|C_spine08AttatchedFk_CTL": {
+        "transform": {
+            "name": "C_spine08AttatchedFk_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_spine08AttatchedFk_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": null,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -21339,7 +21247,7 @@
             }
         ]
     },
-    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nose_GRP|L_nose_CTL": {
+    "|moana|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL|L_nose_GRP|L_nose_CTL": {
         "transform": {
             "name": "L_nose_CTL",
             "overrideEnabled": true,

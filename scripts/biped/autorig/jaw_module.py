@@ -58,13 +58,12 @@ class JawModule(object):
         cmds.parent(self.controllers_grp, self.face_ctl)
 
         # Clean up
-        cmds.delete("L_jaw_JNT", "R_jaw_JNT", "C_chin_JNT")
+        cmds.delete("L_jaw_JNT", "R_jaw_JNT")
 
         data_manager.DataExportBiped().append_data("jaw_module", 
                                                 
                                                 {"jaw_ctl": self.jaw_ctl,
                                                  "upper_jaw_ctl": self.upper_jaw_ctl,
-                                                 "chin_ctl": self.chin_ctl,
                                                 })
 
     def lock_attributes(self, ctl, attrs):
@@ -130,19 +129,6 @@ class JawModule(object):
         cmds.setAttr(f"{mult_matrix_upper_jaw}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
         cmds.connectAttr(f"{mult_matrix_upper_jaw}.matrixSum", f"{upper_jaw_skinning}.offsetParentMatrix")
 
-        # ---- Side jaw and chin controllers ----
-        self.chin_nodes, self.chin_ctl = curve_tool.create_controller("C_chin", offset=["GRP"], parent=self.jaw_ctl)
-        cmds.matchTransform(self.chin_nodes[0], self.chin_nodes[0].replace("C_chin_GRP", "C_chin_JNT"))
-        self.lock_attributes(self.chin_ctl, ["v"])
-
-        chin_skinning = cmds.createNode("joint", name="C_chinSkinning_JNT", ss=True, p=self.skeleton_grp)
-
-        mult_matrix_chin = cmds.createNode("multMatrix", name="C_chinLocal_MMX")
-        cmds.connectAttr(f"{self.chin_ctl}.worldMatrix[0]", f"{mult_matrix_chin}.matrixIn[0]")
-        cmds.connectAttr(f"{self.chin_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_chin}.matrixIn[1]")
-        grp_pos = cmds.getAttr(f"{self.chin_nodes[0]}.worldMatrix[0]")
-        cmds.setAttr(f"{mult_matrix_chin}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
-        cmds.connectAttr(f"{mult_matrix_chin}.matrixSum", f"{chin_skinning}.offsetParentMatrix")
         
 
         for side in ["L", "R"]:
@@ -158,8 +144,6 @@ class JawModule(object):
             cmds.setAttr(f"{mult_matrix_side_jaw}.matrixIn[2]", cmds.getAttr(f"{self.side_jaw_ctl}.worldMatrix[0]"), type="matrix")
             cmds.connectAttr(f"{mult_matrix_side_jaw}.matrixSum", f"{side_jaw_skinning}.offsetParentMatrix")
             
-
-
 
     def collision_setup(self):
 
@@ -368,7 +352,7 @@ class JawModule(object):
             # Create corner controller and place them
 
             corner_nodes, corner_ctl = curve_tool.create_controller(f"{side}_lipCorner", offset=["GRP", "OFF"], parent=main_lips_controllers)
-            self.lock_attributes(corner_ctl, ["sx", "sz", "v"])
+            self.lock_attributes(corner_ctl, ["rx", "ry", "rz", "sx", "sz", "v"])
             mtp_corner_lip = cmds.createNode("motionPath", name=f"{side}_lipCorner_MTP", ss=True)
             cmds.connectAttr(f"{self.upper_linear_lip_curve}.worldSpace[0]", f"{mtp_corner_lip}.geometryPath")
             corner_nodes_ctls.append(corner_nodes[0])
@@ -435,8 +419,10 @@ class JawModule(object):
                 lower_local_jnts.append(lower_local_jnt)
             
             # Aim constraint to keep corner oriented correctly
-
-            aim_vector = (0, 0, -1) if side == "L" else (0, 0, 1)
+            if self.side == "L":
+                aim_vector = (0, 0, 1)
+            else:
+                aim_vector = (0, 0, -1)
             
             aim = cmds.aimConstraint(
                 self.jaw_ctl,
