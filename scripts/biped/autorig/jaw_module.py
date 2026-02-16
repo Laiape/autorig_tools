@@ -352,7 +352,7 @@ class JawModule(object):
             # Create corner controller and place them
 
             corner_nodes, corner_ctl = curve_tool.create_controller(f"{side}_lipCorner", offset=["GRP", "OFF"], parent=main_lips_controllers)
-            self.lock_attributes(corner_ctl, ["rx", "ry", "rz", "sx", "sz", "v"])
+            self.lock_attributes(corner_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             mtp_corner_lip = cmds.createNode("motionPath", name=f"{side}_lipCorner_MTP", ss=True)
             cmds.connectAttr(f"{self.upper_linear_lip_curve}.worldSpace[0]", f"{mtp_corner_lip}.geometryPath")
             corner_nodes_ctls.append(corner_nodes[0])
