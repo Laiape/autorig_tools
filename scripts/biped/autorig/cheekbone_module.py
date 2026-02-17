@@ -31,6 +31,7 @@ class CheekboneModule(object):
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
+        self.mGear = data_manager.DataExportBiped().get_data("neck_module", "mGear")
 
     def make(self, side):
 
@@ -81,39 +82,25 @@ class CheekboneModule(object):
         cmds.select(clear=True)
         self.cheek_guide = guides_manager.get_guides(f"{self.side}_cheek_JNT")
 
-    def local_mmx(self, ctl, grp):
+    def local_mmx(self, ctl):
 
         """
         Create a local matrix manager for a controller.
         Args:
-            ctl (str): The name of the controller.
+            ctl (str): The name of the controller. 
         Returns:
             matrix_manager.MatrixManager: The local matrix manager.
         """
 
         mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
-        
-        # Create fourByFourMatrix for translation
-        row_from_matrix = cmds.createNode("rowFromMatrix", name=ctl.replace("_CTL", "RFM"), ss=True)
-        cmds.setAttr(f"{row_from_matrix}.input", 3)
-        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
-    
-        fbf = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "FBF"), ss=True)
-        cmds.connectAttr(f"{row_from_matrix}.outputX", f"{fbf}.in30")
-        cmds.connectAttr(f"{row_from_matrix}.outputY", f"{fbf}.in31")
-        cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{fbf}.in32")
-        cmds.connectAttr(f"{fbf}.output", f"{local_grp}.offsetParentMatrix")
+        grp = ctl.replace("_CTL", "_GRP")
 
-        # Connect to multMatrix
         cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
         cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
-        cmds.connectAttr(f"{mmx}.matrixSum", f"{local_trn}.offsetParentMatrix")
+        grp_matrix_values = cmds.getAttr(f"{grp}.worldMatrix[0]")
+        cmds.setAttr(f"{mmx}.matrixIn[2]", *grp_matrix_values, type="matrix")
 
-        cmds.disconnectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
-
-        return local_trn, mmx
+        return mmx
 
     def create_controllers(self):
 
@@ -138,8 +125,8 @@ class CheekboneModule(object):
         
         cheeckbones_ctls = []
         cheeckbones_grps = []
-        local_trns = []
         skinning_jnts = []
+        main_cheek_mmx = None
 
         for i, guide in enumerate(self.cheekbone_guides):
 
@@ -159,17 +146,15 @@ class CheekboneModule(object):
             self.lock_attributes(ctl, ["v"])    
 
             cmds.matchTransform(grp[0], guide, pos=True)
-            trn, mmx = self.local_mmx(ctl, grp[0])
+            mmx = self.local_mmx(ctl)
+
             if i == 0:
-                local_trns.append(trn)
-                # cmds.matchTransform(trn, guide)
+                main_cheek_mmx = mmx
 
             if i > 0: # Avoid the first guide which is the parent
                 skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
-                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
-                grp = trn.replace("_TRN", "_GRP")
-                cmds.parent(grp, local_trns[0])
-                local_trns.append(trn)
+                cmds.connectAttr(f"{mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
+                cmds.connectAttr(f"{main_cheek_mmx}.matrixSum", f"{mmx}.matrixIn[2]")
                 skinning_jnts.append(skinning_jnt)
             
         cmds.delete(self.cheekbone_guides)
@@ -177,7 +162,7 @@ class CheekboneModule(object):
         # Cheek 
         grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", "ANM"])
         self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
-        trn, mmx = self.local_mmx(ctl, grp[0])
+        
         cheek_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "_GUIDE"), ss=True, p=self.module_trn)
         cmds.matchTransform(cheek_trn, self.cheek_guide[0], pos=True)
 
@@ -204,15 +189,13 @@ class CheekboneModule(object):
 
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{grp[0]}.offsetParentMatrix")
         cmds.xform(grp[0], m=om.MMatrix.kIdentity)
-
+        mmx = self.local_mmx(ctl)
         
         if self.side == "R":
             four_by_four = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "Flip_MMX"), ss=True)
             cmds.setAttr(f"{four_by_four}.in00", -1)
             cmds.connectAttr(f"{four_by_four}.output", f"{mmx}.matrixIn[3]")
 
-        cmds.matchTransform(trn, self.cheek_guide[0])
-            
         skinning_jnt = cmds.createNode("joint", name=self.cheek_guide[0].replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
         cmds.delete(self.cheek_guide)

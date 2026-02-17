@@ -160,6 +160,3 @@ class EarModule(object):
             cmds.setAttr(f"{jnt}.jointOrient", 0, 0, 0)
             cmds.setAttr(f"{jnt}.translate", 0, 0, 0)
             cmds.setAttr(f"{jnt}.rotate", 0, 0, 0)
-
-# ear = EarModule().make("L")
-# ear = EarModule().make("R")

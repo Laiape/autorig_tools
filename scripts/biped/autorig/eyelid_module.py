@@ -618,7 +618,7 @@ class EyelidModule(object):
             four_by_four_matrix_temp = cmds.createNode("transform", name=f"{self.side}_{name}Eyelid0{i}_F4X4_TEMP", ss=True)
             cmds.connectAttr(f"{four_by_four_matrix_origin}.output", f"{four_by_four_matrix_temp}.offsetParentMatrix") # Connect the four by four matrix to the transform offset parent matrix
             cmds.parent(node[0], self.extra_controllers_grp)
-            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.get_offset_matrix(four_by_four_matrix_temp, temp_trn), type="matrix") # Calculate offset matrix between driven and driver
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(four_by_four_matrix_temp, temp_trn), type="matrix") # Calculate offset matrix between driven and driver
             cmds.delete(temp_trn)
             cmds.delete(four_by_four_matrix_temp)
 
@@ -723,31 +723,6 @@ class EyelidModule(object):
             grp_wm = cmds.getAttr(f"{grp[0]}.worldMatrix[0]")
             cmds.setAttr(f"{mult_matrix}.matrixIn[2]", grp_wm, type="matrix")
             cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{socket_skinning_jnt}.offsetParentMatrix")
-            
-            
-
-
-
-    def get_offset_matrix(self, child, parent):
-
-        """
-        Calculate the offset matrix between a child and parent transform in Maya.
-        Args:
-            child (str): The name of the child transform.
-            parent (str): The name of the parent transform. 
-        Returns:
-            om.MMatrix: The offset matrix that transforms the child into the parent's space.
-        """
-        child_dag = om.MSelectionList().add(child).getDagPath(0)
-        parent_dag = om.MSelectionList().add(parent).getDagPath(0)
-
-        child_world_matrix = child_dag.inclusiveMatrix()
-        parent_world_matrix = parent_dag.inclusiveMatrix()
-        
-        offset_matrix = child_world_matrix * parent_world_matrix.inverse()
-
-        
-        return offset_matrix
     
 
     def getClosestParamToPosition(self, curve, position):
@@ -802,8 +777,8 @@ class EyelidModule(object):
         cmds.setAttr(f"{driven}.inheritsTransform", 0)
         guide_trn_temp = cmds.createNode("transform", name="temp_TRN", ss=True)
         cmds.connectAttr(guide, f"{guide_trn_temp}.offsetParentMatrix")
-        cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.get_offset_matrix(guide_trn_temp, drivers[0]), type="matrix") # Calculate offset matrix between driven and driver
-        cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", self.get_offset_matrix(guide_trn_temp, drivers[1]), type="matrix") # Calculate offset matrix between driven and driver
+        cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(guide_trn_temp, drivers[0]), type="matrix") # Calculate offset matrix between driven and driver
+        cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", matrix_manager.get_offset_matrix(guide_trn_temp, drivers[1]), type="matrix") # Calculate offset matrix between driven and driver
         
         cmds.xform(driven, m=om.MMatrix.kIdentity)
         cmds.delete(guide_trn_temp)

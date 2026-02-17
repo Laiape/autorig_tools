@@ -48,12 +48,14 @@ class NeckModule(object):
 
         if mGear_integration:
             self.mGear_integration()
+            self.mGear = True
             # Store data for later use
             data_manager.DataExportBiped().append_data("neck_module",
                             {
                                 "head_ctl": self.head_ctl,
                                 "face_ctl": self.face_ctl,
                                 "head_guide": self.head_guide,
+                                "mGear": self.mGear,
                             })
             
         else:
@@ -202,5 +204,5 @@ class NeckModule(object):
         self.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
-        self.head_guide = cmds.createNode("transform", name=f"{self.side}_head_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.head_guide, self.head_ctl, pos=True, rot=True)
+        cmds.matchTransform(self.head_guide, self.head_ctl, pos=True, rot=True, scl=False)
+        cmds.matchTransform(face_nodes[0], self.head_ctl, pos=True, rot=True)

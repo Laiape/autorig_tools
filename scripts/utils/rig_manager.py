@@ -612,7 +612,7 @@ def create_rig_settings(guides_transform, load=False):
 
         # Crear separadores visuales (Header) si es necesario
         header_name = key.split('_')[0].upper()
-        header_path = f"{guides_transform}.{header_name}_SEP" # Sufijo para evitar conflicto con el attr real
+        header_path = f"{guides_transform}.{header_name}_SEP"
         if not cmds.objExists(header_path):
             cmds.addAttr(guides_transform, longName=f"{header_name}_SEP", niceName=f"--- {header_name} ---", attributeType='enum', enumName="-", keyable=True)
             cmds.setAttr(header_path, lock=True)
