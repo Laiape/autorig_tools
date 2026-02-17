@@ -291,12 +291,12 @@ def prepare_rig_scene():
     scene_name = f"CHAR_{character_name}_v001.ma"
     cmds.file(rename=scene_name)
     
-    om.MGlobal.displayInfo("Nueva escena creada y renombrada como: {}".format(scene_name))
+    om.MGlobal.displayInfo(f"Nueva escena creada y renombrada como: {scene_name}")
 
     scene_to_open, scene_assemblies = open_model_scene(character_name)
     
     if not scene_to_open:
-        cmds.warning("No se encontraron mallas para importar en la carpeta de {}".format(character_name))
+        cmds.warning(f"No se encontraron mallas para importar en la carpeta de {character_name}")
 
     return character_name, scene_assemblies
 
@@ -322,7 +322,6 @@ def open_model_scene(character_name):
     files.sort()
     scene_to_open = os.path.join(models_dir, files[-1]).replace("\\", "/")
 
-    # 4. Abrir la escena encontrada
     try:
         cmds.file(scene_to_open, open=True, force=True)
     except Exception as e:
@@ -399,10 +398,6 @@ def build_rig(character_name):
     mGear_integration   = rig_settings.get("mGear_integration", 0)
     print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
-    # CREATE MODULES BASED ON GUIDES
-    # =========================================================================
-    # BUILD: BODY
-    # =========================================================================
 
     # --- Spine ---
     if check("C_spine00_JNT"):

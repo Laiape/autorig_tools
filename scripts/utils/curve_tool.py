@@ -44,19 +44,13 @@ def get_dag_path_safe(node_name):
     except RuntimeError:
         return None
 
-# -----------------------------------------------------------------------------
-# FUNCIÓN PRINCIPAL
-# -----------------------------------------------------------------------------
-
 def get_all_ctl_curves_data(path=None, root_filter=None):
     """
     Recopila datos de curvas de controladores.
-    Args:
-        path (str): Ruta de guardado manual.
-        root_filter (str): Nombre de un grupo (ej: 'face_setup'). Si existe, solo exporta sus hijos.
+    CENTRALIZACIÓN: Fuerza que el color y los overrides residan en el Transform
+    para evitar que Maya seleccione el nodo Shape por error.
     """
     
-    # --- 1. CONFIGURACIÓN DE RUTAS Y NOMBRE ---
     try:
         char_name = rig_manager.get_character_name_from_scene()
     except:
@@ -65,123 +59,101 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
     if path:
         save_file_path = os.path.normpath(path)
     else:
-        # Lógica automática basada en tu estructura de carpetas
         curves_name = f"{char_name}_v001"
         current_script_path = os.path.realpath(__file__)
-        # Asumiendo que este script está en /scripts/utils/ y queremos ir a /assets/
         root_path = current_script_path.split("scripts")[0] 
         assets_path = os.path.join(root_path, "assets", char_name, "curves")
         
-        # Asegurar que el directorio existe
         if not os.path.exists(assets_path):
             try:
                 os.makedirs(assets_path)
             except OSError:
-                pass # Si no se puede crear, probablemente fallará al guardar, pero seguimos.
+                pass
 
         save_file_path = os.path.join(assets_path, f"{curves_name}.curves")
 
-    # --- 2. SELECCIÓN DE CONTROLADORES (FILTRADO) ---
     ctl_data = {}
     transforms = []
 
     if root_filter and cmds.objExists(root_filter):
-        # Buscar solo dentro del grupo especificado
         found_nodes = cmds.listRelatives(root_filter, allDescendents=True, type="transform", fullPath=True) or []
         transforms = [t for t in found_nodes if t.endswith("_CTL")]
-        om.MGlobal.displayInfo(f"--- Exportando controles bajo: '{root_filter}' ---")
+        om.MGlobal.displayInfo(f"--- Exportando bajo: '{root_filter}' ---")
     else:
-        # Buscar en toda la escena
         transforms = cmds.ls("*_CTL", type="transform", long=True)
-        om.MGlobal.displayInfo("--- Exportando TODOS los controles (_CTL) de la escena ---")
 
-    # --- 3. PROCESAMIENTO DE DATOS ---
     for transform_name in transforms:
         
-        # A. Obtener MDagPath del Transform
         transform_dag = get_dag_path_safe(transform_name)
         if not transform_dag:
-            print(f"Skipping invalid transform: {transform_name}")
             continue
         
         transform_obj = transform_dag.node()
 
-        # B. Obtener Overrides del Transform
         trans_ov_enabled, trans_ov_color = get_override_info_safe(transform_obj)
 
-        # C. Buscar Shapes (Filtrando intermediate objects de mGear)
-        # Usamos fullPath=True para evitar confusiones de nombres
         all_shapes = cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []
         valid_shapes = []
         
         for shp in all_shapes:
-            # Solo curvas NURBS y que NO sean objetos intermedios (fantasmas de mGear)
             if cmds.nodeType(shp) == "nurbsCurve" and not cmds.getAttr(f"{shp}.intermediateObject"):
                 valid_shapes.append(shp)
 
         if not valid_shapes:
             continue
 
-        shape_data_list = []
+        final_enabled = trans_ov_enabled
+        final_color = trans_ov_color
 
-        # D. Procesar cada Shape
+        if not final_enabled:
+            for shp in valid_shapes:
+                s_dag = get_dag_path_safe(shp)
+                s_enabled, s_color = get_override_info_safe(s_dag.node())
+                if s_enabled:
+                    final_enabled = True
+                    final_color = s_color
+                    break
+
+        shape_data_list = []
         for shape_name in valid_shapes:
-            # -------------------------------------------------------------
-            # BLOQUE DE SEGURIDAD MGEAR: Todo lo que toque la API va en try
-            # -------------------------------------------------------------
             try:
                 shape_dag = get_dag_path_safe(shape_name)
-                if not shape_dag:
-                    continue
+                if not shape_dag: continue
                 
-                shape_obj = shape_dag.node()
-                
-                # 1. Overrides del Shape
-                shp_ov_enabled, shp_ov_color = get_override_info_safe(shape_obj)
-
-                # 2. Datos geométricos de la curva
                 curve_fn = om.MFnNurbsCurve(shape_dag)
                 
-                # Obtener CVs (Intentamos en bloque, si falla, uno a uno)
                 cvs = []
                 try:
                     points = curve_fn.cvPositions(om.MSpace.kObject)
-                    for p in points:
-                        cvs.append((p.x, p.y, p.z))
+                    for p in points: cvs.append((p.x, p.y, p.z))
                 except:
                     for i in range(curve_fn.numCVs):
                         p = curve_fn.cvPosition(i, om.MSpace.kObject)
                         cvs.append((p.x, p.y, p.z))
 
-                # 3. Datos de topología
                 knots = list(curve_fn.knots())
                 degree = curve_fn.degree
-                
                 form_map = {
                     om.MFnNurbsCurve.kOpen: "open",
                     om.MFnNurbsCurve.kClosed: "closed",
                     om.MFnNurbsCurve.kPeriodic: "periodic"
                 }
                 form = form_map.get(curve_fn.form, "unknown")
-
-                # 4. Atributos extra (AlwaysOnTop, LineWidth)
-                # AlwaysOnTop via API
+                shape_obj = shape_dag.node()
                 try:
                     fn_dep = om.MFnDependencyNode(shape_obj)
                     always_on_top = fn_dep.findPlug('alwaysDrawOnTop', False).asBool()
                 except:
                     always_on_top = False
 
-                # LineWidth via cmds (más seguro para atributos dinámicos)
                 line_width = None
                 if cmds.attributeQuery("lineWidth", node=shape_name, exists=True):
                     line_width = cmds.getAttr(f"{shape_name}.lineWidth")
 
-                # Agregar datos a la lista
                 shape_data_list.append({
-                    "name": shape_name.split("|")[-1], # Nombre corto para el JSON
-                    "overrideEnabled": shp_ov_enabled,
-                    "overrideColor": shp_ov_color,
+                    "name": shape_name.split("|")[-1],
+                    "overrideEnabled": False, 
+                    "overrideColor": 0,
                     "alwaysDrawOnTop": always_on_top,
                     "lineWidth": line_width,
                     "curve": {
@@ -192,24 +164,19 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
                     }
                 })
 
-            except Exception as e:
-                # Si falla este shape específico, lo ignoramos y seguimos con el siguiente.
-                # Esto evita que una curva corrupta de mGear detenga todo el script.
-                # print(f"Warning: Error procesando shape {shape_name}: {e}")
+            except Exception:
                 continue
 
-        # Solo añadimos el control si se logró extraer info de algún shape
         if shape_data_list:
             ctl_data[transform_name] = {
                 "transform": {
                     "name": transform_name.split("|")[-1],
-                    "overrideEnabled": trans_ov_enabled,
-                    "overrideColor": trans_ov_color
+                    "overrideEnabled": final_enabled,
+                    "overrideColor": final_color
                 },
                 "shapes": shape_data_list
             }
 
-    # --- 4. GUARDADO DEL ARCHIVO ---
     try:
         folder = os.path.dirname(save_file_path)
         if not os.path.exists(folder):
@@ -218,19 +185,12 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
         with open(save_file_path, "w") as f:
             json.dump(ctl_data, f, indent=4)
         
-        om.MGlobal.displayInfo(f"Success: Curves saved to: {save_file_path}")
+        om.MGlobal.displayInfo(f"Success: Curves data exported to: {save_file_path}")
         
     except Exception as e:
         om.MGlobal.displayError(f"Error saving file: {e}")
 
-# -----------------------------------------------------------------------------
-# EJEMPLO DE USO (COMENTADO)
-# -----------------------------------------------------------------------------
-# Opción A: Exportar todo (filtrando automáticamente objetos corruptos de mGear)
-# get_all_ctl_curves_data()
 
-# Opción B: Exportar SOLO faciales
-# get_all_ctl_curves_data(root_filter="face_setup_grp")
 
 def build_curves_from_template(target_transform_name=None):
     """
