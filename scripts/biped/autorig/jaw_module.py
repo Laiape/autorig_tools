@@ -480,6 +480,7 @@ class JawModule(object):
         path_joints_upper = []
         mult_matrix_tangents_upper = []
         tangent_mult_matrices_upper = []
+        new_mult_matrix_secondaries = []
 
         secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
 
@@ -523,7 +524,6 @@ class JawModule(object):
 
             cvs_ctls_upper.append(cv_ctl)
             cv_nodes_upper.append(cv_ctl_nodes[0])
-            
 
             local_jnt_cv = cmds.createNode("joint", name=f"{side}_{name}_JNT", ss=True, p=self.module_trn)
             mult_matrix_secondary = cmds.createNode("multMatrix", name=f"{side}_{name}_MMS", ss=True)
@@ -531,8 +531,12 @@ class JawModule(object):
             cmds.connectAttr(f"{fbf_cv}.output", f"{mult_matrix_secondary}.matrixIn[1]")
             # ---- Must connect to tangents his parent matrix ----
             tangent_mult_matrices_upper.append(mult_matrix_secondary)
-            cmds.connectAttr(f"{mult_matrix_secondary}.matrixSum", f"{local_jnt_cv}.offsetParentMatrix")
+            
+            new_mult_matrix_secondary = cmds.createNode("multMatrix", name=f"{side}_{name}_MMS_Tangent", ss=True)
+            cmds.connectAttr(f"{mult_matrix_secondary}.matrixSum", f"{new_mult_matrix_secondary}.matrixIn[1]")
+            cmds.connectAttr(f"{new_mult_matrix_secondary}.matrixSum", f"{local_jnt_cv}.offsetParentMatrix")
             path_joints_upper.append(local_jnt_cv)
+            new_mult_matrix_secondaries.append(new_mult_matrix_secondary)
 
             if side == "R" and i != 5:
 
@@ -573,13 +577,15 @@ class JawModule(object):
                     continue
                 else:
                     cmds.connectAttr(f"{cvs_ctls_upper[index]}.matrix", f"{mult_matrix_tangents_upper[child_index]}.matrixIn[0]")
-                    cmds.connectAttr(f"{cvs_ctls_upper[index]}.matrix", f"{tangent_mult_matrices_upper[child_index]}.matrixIn[2]") # Added to keep tangent joints aligned
+                    cmds.connectAttr(f"{cvs_ctls_upper[index]}.matrix", f"{new_mult_matrix_secondaries[child_index]}.matrixIn[0]") # Added to keep tangent joints aligned
 
         cvs_ctls_lower = []
         cv_nodes_lower = []
         path_joints_lower = []
         mult_matrix_tangents_lower = []
         tangent_mult_matrices_lower = []
+        new_mult_matrix_secondaries_lower = []
+
 
         for i, cv in enumerate(rebuilded_lower_lip_cvs):
             # Set the name based on the index
@@ -618,9 +624,13 @@ class JawModule(object):
             mult_matrix_secondary = cmds.createNode("multMatrix", name=f"{side}_{name}_MMS", ss=True)
             cmds.connectAttr(f"{cv_ctl}.matrix", f"{mult_matrix_secondary}.matrixIn[0]")
             cmds.connectAttr(f"{fbf_cv}.output", f"{mult_matrix_secondary}.matrixIn[1]")
-            cmds.connectAttr(f"{mult_matrix_secondary}.matrixSum", f"{local_jnt_cv}.offsetParentMatrix")
+            
             path_joints_lower.append(local_jnt_cv)
             tangent_mult_matrices_lower.append(mult_matrix_secondary)
+            new_mult_matrix_secondary = cmds.createNode("multMatrix", name=f"{side}_{name}_MMS_Tangent", ss=True)
+            cmds.connectAttr(f"{mult_matrix_secondary}.matrixSum", f"{new_mult_matrix_secondary}.matrixIn[1]")
+            cmds.connectAttr(f"{new_mult_matrix_secondary}.matrixSum", f"{local_jnt_cv}.offsetParentMatrix")
+            new_mult_matrix_secondaries_lower.append(new_mult_matrix_secondary)
 
             if side == "R" and i != 5:
                 
@@ -660,7 +670,7 @@ class JawModule(object):
                     continue
                 else:
                     cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{mult_matrix_tangents_lower[child_index]}.matrixIn[0]")
-                    cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{tangent_mult_matrices_lower[child_index]}.matrixIn[2]") # Added to keep tangent joints aligned
+                    cmds.connectAttr(f"{cvs_ctls_lower[index]}.matrix", f"{new_mult_matrix_secondaries_lower[child_index]}.matrixIn[0]")
         
         # ----- Sticky lips setup -----
         mid_lip_crv = cmds.duplicate(upper_bezier_curve, name="C_midLips_CRV", renameChildren=True)[0]
@@ -728,7 +738,6 @@ class JawModule(object):
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skinning}.matrixIn[1]", f=True)
-
             cmds.connectAttr(f"{mult_matrix_skinning}.matrixSum", f"{joint}.offsetParentMatrix", f=True)
 
             # Add four by four martix to the mid lip curve to take the average position
@@ -747,7 +756,6 @@ class JawModule(object):
             remap_value_zip = cmds.createNode("remapValue", name=f"{side}_{name}0{i}_Zip_RMV", ss=True)
             cmds.setAttr(f"{remap_value_zip}.value[0].value_Interp", 2)  # Set to smooth
             cmds.connectAttr(f"{zip_ctl}.Zip", f"{remap_value_zip}.inputValue")
-            #
 
             max_index = len(linear_cvs) - 1
             denominator = max_index / 2.0 

@@ -159,12 +159,16 @@ class NoseModule(object):
                 if i != 0:
                     cmds.parent(nodes[0], "C_baseNose_CTL")
                     cmds.parent(local_grp, "C_baseNoseLocal_TRN")
-                    if guide == ("L_nose_JNT") or guide == ("R_nose_JNT"):
+                    if guide == f"{self.side}_nose_JNT":
                         cmds.parent(nodes[0], f"{self.side}_nosetril_CTL")
                         cmds.parent(local_grp, f"{self.side}_nosetrilLocal_TRN")
+                
             else:
                 cmds.parent(nodes[0], f"C_baseNose_CTL")
                 cmds.parent(local_grp, f"C_baseNoseLocal_TRN")
+                if guide == f"{self.side}_nose_JNT":
+                    cmds.parent(nodes[0], f"{self.side}_nosetril_CTL")
+                    cmds.parent(local_grp, f"{self.side}_nosetrilLocal_TRN")
             
             nose_controllers.append(ctl)
             

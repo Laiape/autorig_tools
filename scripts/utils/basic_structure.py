@@ -20,14 +20,11 @@ def lock_attributes(ctl, attrs):
 def create_basic_structure(character_name=None):
     """Crea la estructura del rig con control de visibilidad centralizado."""
 
-    # 1. PREPARACIÓN
     character_name, scene_assemblies = rig_manager.prepare_rig_scene()
     data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
 
-    # 2. NODOS PRINCIPALES (Evitar duplicados y jerarquía segura)
-    # Usamos un diccionario para rastrear el nombre real del nodo en Maya
     structure_names = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
-    nodes = {} # Diccionario para mapear nombre_deseado -> nombre_real_en_maya
+    nodes = {}
 
     for i, name in enumerate(structure_names):
         if cmds.objExists(name):
@@ -35,11 +32,10 @@ def create_basic_structure(character_name=None):
         else:
             res = cmds.createNode("transform", name=name, ss=True)
             nodes[name] = res
-            # Si no es el root, emparentar al primero (character_name)
             if i != 0:
                 cmds.parent(res, nodes[character_name])
 
-    # 3. GEOMETRÍA (Usando los nombres reales del diccionario)
+
     def create_sub_geo(name, parent):
         if cmds.objExists(name): return name
         return cmds.createNode("transform", name=name, ss=True, p=parent)

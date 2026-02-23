@@ -190,12 +190,6 @@ class CheekboneModule(object):
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{grp[0]}.offsetParentMatrix")
         cmds.xform(grp[0], m=om.MMatrix.kIdentity)
         mmx = self.local_mmx(ctl)
-        
-        if self.side == "R":
-            four_by_four = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "Flip_MMX"), ss=True)
-            cmds.setAttr(f"{four_by_four}.in00", -1)
-            cmds.connectAttr(f"{four_by_four}.output", f"{mmx}.matrixIn[3]")
-
         skinning_jnt = cmds.createNode("joint", name=self.cheek_guide[0].replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
         cmds.delete(self.cheek_guide)
