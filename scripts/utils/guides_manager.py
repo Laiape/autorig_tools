@@ -641,4 +641,100 @@ def read_guides_info(character_name, guide_name=None):
     if guide_name is None:
         return character_data
 
+def mirror_guide(guide_name):
+    """
+    Espeja una guía específica usando matemáticas de matrices en memoria.
+    """
+      
+    type_obj = cmds.objectType(guide_name) # Aseguramos que el objeto existe y obtenemos su tipo
+    guide_parent = cmds.listRelatives(guide_name, parent=True, fullPath=True)
 
+    if type_obj in ["joint", "transform"]: # Si es un joint o un transform, procedemos
+        print(f"Espejando guía padre: {guide_name} (Tipo: {type_obj})")
+        if guide_parent and guide_parent[0] == "C_guides_GRP":
+            
+            if guide_name.startswith("L_"):
+                new_name = guide_name.replace("L_", "R_", 1)
+            elif guide_name.startswith("R_"):
+                new_name = guide_name.replace("R_", "L_", 1)
+            else:
+                return
+
+            if not cmds.objExists(new_name):
+                om.MGlobal.displayWarning(f"La guía destino '{new_name}' no existe. Omitiendo.")
+                return
+
+            mirror_matrix = om.MMatrix([
+                -1.0, 0.0, 0.0, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                0.0, 0.0, 1.0, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            ])
+
+            source_mat_list = cmds.getAttr(f"{guide_name}.worldMatrix[0]")
+            source_mat = om.MMatrix(source_mat_list)
+
+            result_mat = mirror_matrix * source_mat * mirror_matrix
+
+            cmds.setAttr(f"{new_name}.offsetParentMatrix", list(result_mat), type="matrix")
+            
+            for attr in ["translate", "rotate", "scale"]:
+                if type_obj == "joint":
+                    cmds.setAttr(f"{new_name}.{attr}", 0,0,0) if attr != "scale" else cmds.setAttr(f"{new_name}.{attr}", 1,1,1)
+                    cmds.setAttr(f"{new_name}.jointOrient", 0,0,0)
+                else:
+                    cmds.setAttr(f"{new_name}.{attr}", 0,0,0) if attr != "scale" else cmds.setAttr(f"{new_name}.{attr}", 1,1,1)
+        
+        elif guide_parent and guide_parent[0] != "C_guides_GRP":
+            print(f"Espejando guía hijo: {guide_name}")
+            guide_matrix = cmds.getAttr(f"{guide_name}.worldMatrix[0]")
+            source_mat = om.MMatrix(guide_matrix)
+            
+            if guide_name.startswith("L_"):
+                new_name = guide_name.replace("L_", "R_", 1)
+                cmds.setAttr(f"{new_name}.offsetParentMatrix", list(source_mat), type="matrix")
+            
+            cmds.setAttr(f"{new_name}.translate", 0,0,0)
+            cmds.setAttr(f"{new_name}.rotate", 0,0,0)
+            cmds.setAttr(f"{new_name}.scale", 1,1,1)
+            cmds.setAttr(f"{new_name}.jointOrient", 0,0,0) if type_obj == "joint" else None
+
+
+def mirror_guides():
+    """
+    Función principal para espejar guías. 
+    Si hay selección, espeja las seleccionadas. Si no, espeja todas las "L_".
+    """
+    if not cmds.objExists("C_guides_GRP"):
+        om.MGlobal.displayError("El grupo 'C_guides_GRP' no existe en la escena.")
+        return
+        
+    guides_in_scene = cmds.listRelatives("C_guides_GRP", allDescendents=True, fullPath=True) or []
+    if not guides_in_scene:
+        om.MGlobal.displayError("No se encontraron joints (guías) dentro de 'C_guides_GRP'.")
+        return
+
+    selected = cmds.ls(sl=True, type="joint", long=True) or []
+    
+    if selected:
+        guides_to_process = [g for g in selected if g in guides_in_scene]
+    else:
+        guides_to_process = guides_in_scene
+
+    if not guides_to_process:
+        om.MGlobal.displayError("Ninguna de las guías seleccionadas es válida para espejar.")
+        return
+
+    count = 0
+    for guide_path in guides_to_process:
+        guide_name = guide_path.split("|")[-1]
+        
+        if guide_name.startswith("L_"): 
+            mirror_guide(guide_name)
+            count += 1
+        elif guide_name.startswith("R_") and selected:
+            continue
+        else:
+            continue
+
+    om.MGlobal.displayInfo(f"--- Espejado completado con éxito: {count} guías procesadas. ---")

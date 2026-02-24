@@ -40,6 +40,7 @@ def create_custom_menu():
     cmds.menuItem(label="Create New Guides", command=lambda x: create_new_guides(), image="confirm.png")
     cmds.menuItem(label="Import Guides", command=lambda x: import_guides(), image="move_M.png")
     cmds.menuItem(label="Export Guides", command=lambda x: export_guides(), image="copySelected.png")
+    cmds.menuItem(label="Mirror Guides", command=lambda x: mirror_guides(), image="copySelected.png")
     cmds.setParent('..', menu=True)
 
     # --- CONTROLLERS MANAGER ---
@@ -91,6 +92,11 @@ def export_guides():
     reload(guides_manager)
     guides_manager.get_guides_info()
     cmds.inViewMessage(amg='Guides Exportados.', pos='midCenter', fade=True)
+
+def mirror_guides():
+    reload(guides_manager)
+    guides_manager.mirror_guides()
+    cmds.inViewMessage(amg='Guides Espejados.', pos='midCenter', fade=True)
 
 def export_all_controllers():
     reload(curve_tool)
