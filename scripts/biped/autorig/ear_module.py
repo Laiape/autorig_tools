@@ -31,6 +31,9 @@ class EarModule(object):
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
+        self.primaryInputAxis = 0, 1, 0
+        self.secondaryInputAxis = 0, 0, 1
+
     def make(self, side):
 
         """ 
@@ -108,6 +111,35 @@ class EarModule(object):
         self.ear_guides = guides_manager.get_guides(f"{self.side}_ear00_JNT")
         cmds.parent(self.ear_guides[0], self.module_trn)
  
+    def orient_guides(self):
+
+        """
+        Orient the ear guides to ensure they are properly aligned for controller creation.
+        """
+
+        ear_guide_root = cmds.createNode("transform", name=f"{self.side}earRoot_GUIDE", ss=True, p=self.module_trn)
+        cmds.matchTransform(ear_guide_root, self.ear_guides[0], pos=True)
+        ear_guide_end = cmds.createNode("transform", name=f"{self.side}earEnd_GUIDE", ss=True, p=ear_guide_root)
+        cmds.matchTransform(ear_guide_end, self.ear_guides[-1], pos=True)
+
+        aim_matrix_root = cmds.createNode("aimMatrix", name=f"{self.side}earRoot_AIM", ss=True, p=self.module_trn)
+        cmds.connectAttr(f"{ear_guide_root}.worldMatrix[0]", f"{aim_matrix_root}.inputMatrix")
+        cmds.connectAttr(f"{ear_guide_end}.worldMatrix[0]", f"{aim_matrix_root}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{aim_matrix_root}.primaryInputAxis", *self.primaryInputAxis)
+        cmds.setAttr(f"{aim_matrix_root}.secondaryInputAxis", *self.secondaryInputAxis)
+
+        blend_matrix_mid = cmds.createNode("blendMatrix", name=f"{self.side}earMid_BLM")
+        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_mid}.inputMatrix")
+        cmds.connectAttr(f"{ear_guide_end}.worldMatrix[0]", f"{blend_matrix_mid}.target[0].targetMatrix")
+        cmds.setAttr(f"{blend_matrix_mid}.target[0].weight", 0.5)
+
+        blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}earEnd_BLM")
+        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.inputMatrix")
+        cmds.connectAttr(f"{ear_guide_end}.worldMatrix[0]", f"{blend_matrix_end}.target[0].targetMatrix")
+        cmds.setAttr(f"{blend_matrix_end}.target[0].weight", 1)
+
+
+
 
     def create_controllers(self):
 

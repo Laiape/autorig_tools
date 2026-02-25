@@ -676,28 +676,18 @@ def mirror_guide(guide_name):
 
             result_mat = mirror_matrix * source_mat * mirror_matrix
 
-            cmds.setAttr(f"{new_name}.offsetParentMatrix", list(result_mat), type="matrix")
-            
             for attr in ["translate", "rotate", "scale"]:
                 if type_obj == "joint":
-                    cmds.setAttr(f"{new_name}.{attr}", 0,0,0) if attr != "scale" else cmds.setAttr(f"{new_name}.{attr}", 1,1,1)
-                    cmds.setAttr(f"{new_name}.jointOrient", 0,0,0)
+
+                    cmds.mirrorJoint(guide_name, mirrorYZ=True, mirrorBehavior=2, searchReplace=(guide_name, new_name))
                 else:
+                    cmds.setAttr(f"{new_name}.offsetParentMatrix", list(result_mat), type="matrix")
                     cmds.setAttr(f"{new_name}.{attr}", 0,0,0) if attr != "scale" else cmds.setAttr(f"{new_name}.{attr}", 1,1,1)
         
         elif guide_parent and guide_parent[0] != "C_guides_GRP":
-            print(f"Espejando guía hijo: {guide_name}")
-            guide_matrix = cmds.getAttr(f"{guide_name}.worldMatrix[0]")
-            source_mat = om.MMatrix(guide_matrix)
+            if type_obj == "joint":
+                pass
             
-            if guide_name.startswith("L_"):
-                new_name = guide_name.replace("L_", "R_", 1)
-                cmds.setAttr(f"{new_name}.offsetParentMatrix", list(source_mat), type="matrix")
-            
-            cmds.setAttr(f"{new_name}.translate", 0,0,0)
-            cmds.setAttr(f"{new_name}.rotate", 0,0,0)
-            cmds.setAttr(f"{new_name}.scale", 1,1,1)
-            cmds.setAttr(f"{new_name}.jointOrient", 0,0,0) if type_obj == "joint" else None
 
 
 def mirror_guides():

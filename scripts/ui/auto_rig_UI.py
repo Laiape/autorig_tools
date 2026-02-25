@@ -67,6 +67,7 @@ def create_custom_menu():
     # ---- BOTÓN DE CHARACTER MANAGER UI ---
     cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="characterMap.png")
 
+
 def rebuild_ui():
     from ui import auto_rig_UI
     reload(auto_rig_UI)
@@ -125,7 +126,7 @@ def import_skin_cluster():
     reload(skin_manager_api)
     skinner.import_skins()
     cmds.inViewMessage(amg='Skins Importadas y Reordenadas.', pos='midCenter', fade=True)
-
+    
 def rig():
     """Función para crear el rig bipedal"""
     cmds.file(new=True, force=True)
