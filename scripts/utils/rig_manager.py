@@ -433,12 +433,26 @@ def build_rig(character_name):
         # Patas Delanteras
         if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
             reload(limb_module)
+
+            data_manager.DataExportBiped().append_data("limb_module",
+                            {
+                                "guides_data" : ["L_frontLeg_JNT", "R_frontLeg_JNT"],
+                            })
+
             limb_module.LimbModule().make("L", leg_skinning_jnts)
             limb_module.LimbModule().make("R", leg_skinning_jnts)
+
+            
         
         # Patas Traseras
-        if check("L_backLeg_JNT") and check("R_backLeg_JNT"):
+        if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
             reload(limb_module)
+
+            data_manager.DataExportBiped().append_data("limb_module",
+                            {
+                                "guides_data" : ["L_backLegHip_JNT", "R_backLegHip_JNT"],
+                            })
+            
             limb_module.LimbModule().make("L", leg_skinning_jnts)
             limb_module.LimbModule().make("R", leg_skinning_jnts)
 

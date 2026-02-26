@@ -77,6 +77,7 @@ class ArmModule(object):
     def load_guides(self):
 
         self.arm_chain = guides_manager.get_guides(f"{self.side}_shoulder_JNT")
+        print(f"Guides loaded for {self.side} arm module: {self.arm_chain}")
         cmds.parent(self.arm_chain[0], self.module_trn)
         self.settings_loc = guides_manager.get_guides(f"{self.side}_armSettings_LOCShape")
 

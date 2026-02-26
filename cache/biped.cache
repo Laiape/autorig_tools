@@ -1,6 +1,6 @@
 {
     "basic_structure": {
-        "character_name": "yin",
+        "character_name": "giraffe",
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",
@@ -8,10 +8,16 @@
         "preferences_ctl": "C_settings_CTL"
     },
     "neck_module": {
-        "head_ctl": "C_head_CTL",
-        "face_ctl": "C_face_CTL",
-        "head_guide": "C_head_GUIDE",
-        "mGear": true
+        "head_ctl": "C_neck04_CTL",
+        "neck_ctl": "C_neck00_CTL",
+        "head_guide": "C_neckEnd_Guide",
+        "face_ctl": "C_face_CTL"
+    },
+    "limb_module": {
+        "guides_data": [
+            "L_backLegHip_JNT",
+            "R_backLegHip_JNT"
+        ]
     },
     "jaw_module": {
         "jaw_ctl": "C_jaw_CTL",
