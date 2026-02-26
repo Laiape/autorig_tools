@@ -1,5 +1,6 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
+from utils import data_manager
 
 def fk_constraint(joint, before_jnt, pair_blend, settings_ctl):
 
@@ -89,8 +90,18 @@ def space_switches(target, sources = [None], default_value = 1):
     mult_matrix = cmds.createNode("multMatrix", name=target.replace("CTL", "MMT"), ss=True)
     blend_matrix = cmds.createNode("blendMatrix", name=target.replace("CTL", "BMT"), ss=True)
     
-    cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
+    masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl") 
+
+    masterwalk_mmx = cmds.createNode("multMatrix", name=target.replace("CTL", "MW_MMT"), ss=True)
+    cmds.connectAttr(f"{masterwalk_ctl}.worldMatrix[0]", f"{masterwalk_mmx}.matrixIn[0]")
+    cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{masterwalk_mmx}.matrixIn[1]")
+
+    cmds.connectAttr(f"{masterwalk_mmx}.matrixSum", f"{blend_matrix}.inputMatrix")
+    cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
+
+    cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
     cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+    
     
     condition_nodes = []
     source_matrices = []
@@ -106,6 +117,8 @@ def space_switches(target, sources = [None], default_value = 1):
         cmds.setAttr(f"{condition}.firstTerm", i)
         cmds.setAttr(f"{condition}.operation", 0)
         cmds.setAttr(f"{condition}.colorIfFalseR", 0)
+        cmds.setAttr(f"{condition}.colorIfFalseG", 0)
+        cmds.setAttr(f"{condition}.colorIfTrueG", 1)
 
         name = matrix.split("_")[1].capitalize()
 
@@ -123,12 +136,16 @@ def space_switches(target, sources = [None], default_value = 1):
         if len(sources) == 2:
             cmds.setAttr(f"{target}.SpaceSwitch", keyable=False, channelBox=False)
 
-    cmds.addAttr(target, longName="FollowValue", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
+    cmds.addAttr(target, longName="Translate_Value", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
+    cmds.addAttr(target, longName="Rotate_Value", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
 
     for i, condition in enumerate(condition_nodes):
         cmds.connectAttr(f"{target}.SpaceSwitch", f"{condition}.secondTerm")
-        cmds.connectAttr(f"{target}.FollowValue", f"{condition}.colorIfTrueR")
-        cmds.connectAttr(f"{condition}.outColorR", f"{parent_matrix}.target[{i}].weight")
+        cmds.connectAttr(f"{target}.Translate_Value", f"{condition}.colorIfTrueR")
+        cmds.connectAttr(f"{target}.Rotate_Value", f"{condition}.colorIfTrueG")
+        
+        cmds.connectAttr(f"{condition}.outColorR", f"{blend_matrix}.target[{i}].translateWeight")
+        cmds.connectAttr(f"{condition}.outColorG", f"{blend_matrix}.target[{i}].rotateWeight")
 
     
     cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{target}.offsetParentMatrix")

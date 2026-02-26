@@ -203,6 +203,9 @@ def create_basic_structure(character_name=None):
     safe_connect(f"{settings_ctl}.showSkeleton", f"{skel_grp}.visibility")
     safe_connect(f"{settings_ctl}.showModules", f"{modules_grp}.visibility")
 
+    cmds.setAttr(f"{settings_ctl}.showSkeleton", 0)
+    cmds.setAttr(f"{settings_ctl}.showModules", 0)
+
     # --- 7. BLOQUEOS ---
     lock_attributes(character_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
     lock_attributes(settings_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])

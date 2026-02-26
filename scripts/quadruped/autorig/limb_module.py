@@ -86,28 +86,25 @@ class LimbModule(object):
         
         for i, trn in enumerate(self.trn_guides):
             
-            if i == 0:
+            if i == len(self.trn_guides) - 1:
+                matrix_node = cmds.createNode("blendMatrix", name=trn.replace("GUIDE", "BLM"), ss=True)
+                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+                cmds.connectAttr(self.guides_matrices[-1], f"{matrix_node}.target[0].targetMatrix")
+                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", 1)
+                cmds.setAttr(f"{matrix_node}.target[0].translateWeight", 0)
+                cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 0)
+                cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 0)
+            else:
                 matrix_node = cmds.createNode("aimMatrix", name=trn.replace("GUIDE", "AIM"), ss=True)
                 cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{self.trn_guides[-1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+                cmds.connectAttr(f"{self.trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+                cmds.connectAttr(f"{self.trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
                 cmds.setAttr(f"{matrix_node}.primaryInputAxis", *self.primaryInputAxis)
                 cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *self.secondaryInputAxis)
+                cmds.setAttr(f"{matrix_node}.secondaryMode", 2)
                 self.guides_matrices.append(f"{matrix_node}.outputMatrix")
 
-            elif i == len(self.trn_guides) - 1:
-                matrix_node = cmds.createNode("blendMatrix", name=trn.replace("GUIDE", "BLM"), ss=True)
-                cmds.connectAttr(self.guides_matrices[0], f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.target[0].targetMatrix")
-                cmds.setAttr(f"{matrix_node}.target[0].weight", 1)
-                self.guides_matrices.append(f"{matrix_node}.outputMatrix")
-
-            else:
-                matrix_node = cmds.createNode("blendMatrix", name=trn.replace("GUIDE", "BLM"), ss=True)
-                cmds.connectAttr(self.guides_matrices[0], f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.target[0].targetMatrix")
-                weight = i / (len(self.trn_guides) - 1)
-                cmds.setAttr(f"{matrix_node}.target[0].weight", weight)
-                self.guides_matrices.append(f"{matrix_node}.outputMatrix")
+            
 
         cmds.delete(self.guides[0])
     
@@ -124,19 +121,21 @@ class LimbModule(object):
 
             node_name = self.trn_guides[i].replace("_GUIDE", "Fk")
 
-            fk_nodes, fk_ctl = curve_tool.create_controller(name=node_name, offset=["GRP", "ANM"])
+            fk_nodes, fk_ctl = curve_tool.create_controller(name=node_name, offset=["GRP", "ANM"], parent=self.controllers_grp)
             
             if self.fk_controls:
                 cmds.parent(fk_nodes[0], self.fk_controls[-1])
                 mmx = cmds.createNode("multMatrix", name=f"{node_name}_MMX", ss=True)
                 cmds.connectAttr(matrix, f"{mmx}.matrixIn[0]")
-                cmds.connectAttr(f"{self.trn_guides[i-1]}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
+                cmds.connectAttr(f"{self.fk_nodes[i-1]}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
                 cmds.connectAttr(f"{mmx}.matrixSum", f"{fk_nodes[0]}.offsetParentMatrix")
             
             else:
                 cmds.connectAttr(matrix, f"{fk_nodes[0]}.offsetParentMatrix")
 
-            self.fk_nodes.append(fk_nodes)
+            cmds.xform(fk_nodes[0], m=om.MMatrix.kIdentity)
+
+            self.fk_nodes.append(fk_nodes[0])
             self.fk_controls.append(fk_ctl)
 
     def ik_setup(self, solvers=[]):

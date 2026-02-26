@@ -641,90 +641,69 @@ def read_guides_info(character_name, guide_name=None):
     if guide_name is None:
         return character_data
 
-def mirror_guide(guide_name):
+
+def mirror_specific_guide(guide_name, is_joint):
     """
-    Espeja una guía específica usando matemáticas de matrices en memoria.
+    Espeja la guía. Si es un joint y ya existe el destino, lo borra primero.
     """
-      
-    type_obj = cmds.objectType(guide_name) # Aseguramos que el objeto existe y obtenemos su tipo
-    guide_parent = cmds.listRelatives(guide_name, parent=True, fullPath=True)
-
-    if type_obj in ["joint", "transform"]: # Si es un joint o un transform, procedemos
-        print(f"Espejando guía padre: {guide_name} (Tipo: {type_obj})")
-        if guide_parent and guide_parent[0] == "C_guides_GRP":
-            
-            if guide_name.startswith("L_"):
-                new_name = guide_name.replace("L_", "R_", 1)
-            elif guide_name.startswith("R_"):
-                new_name = guide_name.replace("R_", "L_", 1)
-            else:
-                return
-
-            if not cmds.objExists(new_name):
-                om.MGlobal.displayWarning(f"La guía destino '{new_name}' no existe. Omitiendo.")
-                return
-
-            mirror_matrix = om.MMatrix([
-                -1.0, 0.0, 0.0, 0.0,
-                0.0, 1.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            ])
-
-            source_mat_list = cmds.getAttr(f"{guide_name}.worldMatrix[0]")
-            source_mat = om.MMatrix(source_mat_list)
-
-            result_mat = mirror_matrix * source_mat * mirror_matrix
-
-            for attr in ["translate", "rotate", "scale"]:
-                if type_obj == "joint":
-
-                    cmds.mirrorJoint(guide_name, mirrorYZ=True, mirrorBehavior=2, searchReplace=(guide_name, new_name))
-                else:
-                    cmds.setAttr(f"{new_name}.offsetParentMatrix", list(result_mat), type="matrix")
-                    cmds.setAttr(f"{new_name}.{attr}", 0,0,0) if attr != "scale" else cmds.setAttr(f"{new_name}.{attr}", 1,1,1)
-        
-        elif guide_parent and guide_parent[0] != "C_guides_GRP":
-            if type_obj == "joint":
-                pass
-            
-
-
-def mirror_guides():
-    """
-    Función principal para espejar guías. 
-    Si hay selección, espeja las seleccionadas. Si no, espeja todas las "L_".
-    """
-    if not cmds.objExists("C_guides_GRP"):
-        om.MGlobal.displayError("El grupo 'C_guides_GRP' no existe en la escena.")
-        return
-        
-    guides_in_scene = cmds.listRelatives("C_guides_GRP", allDescendents=True, fullPath=True) or []
-    if not guides_in_scene:
-        om.MGlobal.displayError("No se encontraron joints (guías) dentro de 'C_guides_GRP'.")
-        return
-
-    selected = cmds.ls(sl=True, type="joint", long=True) or []
-    
-    if selected:
-        guides_to_process = [g for g in selected if g in guides_in_scene]
+    if guide_name.startswith("L_"):
+        new_name = guide_name.replace("L_", "R_", 1)
+    elif guide_name.startswith("R_"):
+        new_name = guide_name.replace("R_", "L_", 1)
     else:
-        guides_to_process = guides_in_scene
+        return 
 
-    if not guides_to_process:
-        om.MGlobal.displayError("Ninguna de las guías seleccionadas es válida para espejar.")
+    if is_joint:
+        if cmds.objExists(new_name):
+            cmds.delete(new_name)
+        
+        cmds.mirrorJoint(guide_name, 
+                         mirrorYZ=True, 
+                         mirrorBehavior=True, 
+                         searchReplace=("L_", "R_"))
+    
+    else:
+        if not cmds.objExists(new_name):
+            om.MGlobal.displayWarning(f"La guía destino '{new_name}' no existe para aplicar matriz.")
+            return
+
+        mirror_matrix = om.MMatrix([
+            -1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        ])
+
+        source_mat_list = cmds.getAttr(f"{guide_name}.worldMatrix[0]")
+        source_mat = om.MMatrix(source_mat_list)
+        result_mat = mirror_matrix * source_mat * mirror_matrix
+
+        cmds.setAttr(f"{new_name}.offsetParentMatrix", list(result_mat), type="matrix")
+        
+        for attr in [".t", ".r"]:
+            cmds.setAttr(new_name + attr, 0, 0, 0)
+        for attr in [".sx", ".sy", ".sz"]:
+            cmds.setAttr(new_name + attr, 1)
+
+def run_mirror_guides():
+    container = "C_guides_GRP"
+    if not cmds.objExists(container):
+        om.MGlobal.displayError(f"No existe el grupo {container}")
         return
+    children = cmds.listRelatives(container, children=True, fullPath=False) or []
+    
+    selected = cmds.ls(sl=True)
+    guides_to_process = [g for g in children if g in selected] if selected else children
 
     count = 0
-    for guide_path in guides_to_process:
-        guide_name = guide_path.split("|")[-1]
-        
-        if guide_name.startswith("L_"): 
-            mirror_guide(guide_name)
-            count += 1
-        elif guide_name.startswith("R_") and selected:
+    for guide in guides_to_process:
+        if not selected and not guide.startswith("L_"):
             continue
-        else:
-            continue
+            
+        obj_type = cmds.objectType(guide)
+        mirror_specific_guide(guide, (obj_type == "joint"))
+        count += 1
 
-    om.MGlobal.displayInfo(f"--- Espejado completado con éxito: {count} guías procesadas. ---")
+    om.MGlobal.displayInfo(f"Proceso finalizado: {count} elementos raíz procesados.")
+
+run_mirror_guides()

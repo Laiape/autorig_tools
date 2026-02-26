@@ -528,7 +528,6 @@ def biped_space_switches():
         """
 
         # ---- Drivers ----
-        masterwalk = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
         body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
         local_hip = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
@@ -537,7 +536,7 @@ def biped_space_switches():
 
         # ---- Space switches ----
         matrix_manager.space_switches(target=neck, sources=[chest, body], default_value=1) # Neck
-        matrix_manager.space_switches(target=local_hip, sources=[body, masterwalk], default_value=1) # Local hip
+        matrix_manager.space_switches(target=local_hip, sources=[body], default_value=1) # Local hip
 
         for side in ["L", "R"]:
 
@@ -553,15 +552,15 @@ def biped_space_switches():
             arm_ik_root = data_manager.DataExportBiped().get_data("arm_module", f"{side}_armIkRoot")
 
             # ---- Space switches ----
-            matrix_manager.space_switches(target=arm_ik, sources=[body, masterwalk, clavicle, chest, local_hip, head], default_value=1) # Arm ik
-            matrix_manager.space_switches(target=arm_pv, sources=[body, arm_ik, masterwalk, clavicle, chest], default_value=1) # Arm pv
-            matrix_manager.space_switches(target=leg_ik, sources=[masterwalk, local_hip, body], default_value=1) # Leg ik
-            matrix_manager.space_switches(target=leg_pv, sources=[body, leg_ik, masterwalk], default_value=1) # Leg pv
+            matrix_manager.space_switches(target=arm_ik, sources=[body, clavicle, chest, local_hip, head], default_value=1) # Arm ik
+            matrix_manager.space_switches(target=arm_pv, sources=[body, arm_ik, clavicle, chest], default_value=1) # Arm pv
+            matrix_manager.space_switches(target=leg_ik, sources=[local_hip, body], default_value=1) # Leg ik
+            matrix_manager.space_switches(target=leg_pv, sources=[body, leg_ik], default_value=1) # Leg pv
             matrix_manager.space_switches(target=shoulder_fk, sources=[clavicle, chest, body], default_value=1) # Shoulder fk
-            matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip, masterwalk], default_value=1) # Hip fk
-            matrix_manager.space_switches(target=root_ik, sources=[local_hip, masterwalk], default_value=1) # Root ik
+            matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip], default_value=1) # Hip fk
+            matrix_manager.space_switches(target=root_ik, sources=[local_hip], default_value=1) # Root ik
             matrix_manager.space_switches(target=clavicle, sources=[chest, body], default_value=1) # Clavicle
-            matrix_manager.space_switches(target=arm_ik_root, sources=[clavicle, chest, masterwalk], default_value=1) # Arm ik root       
+            matrix_manager.space_switches(target=arm_ik_root, sources=[clavicle, chest], default_value=1) # Arm ik root       
 
 
 def create_rig_settings(guides_transform, load=False):
