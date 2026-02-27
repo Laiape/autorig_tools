@@ -96,13 +96,16 @@ class ClavicleModule(object):
        
         cmds.parent(self.clavicle_joint, self.module_trn)
 
+        self.clavicle_guide = cmds.createNode("transform", name=f"{self.side}_clavicle_GUIDE", ss=True, p=self.module_trn)
+        cmds.matchTransform(self.clavicle_guide, self.clavicle_joint)
+
     def clavicle_setup(self):
 
         cmds.select(clear=True)
         
         created_grps, self.ctl_ik = curve_tool.create_controller(f"{self.side}_clavicle", ["GRP", "OFF"])
         cmds.parent(created_grps[0], self.controllers_grp)
-        cmds.matchTransform(created_grps[0], self.clavicle_joint)
+        cmds.connectAttr(f"{self.clavicle_guide}.worldMatrix[0]", f"{created_grps[0]}.offsetParentMatrix")
         cmds.connectAttr(f"{self.ctl_ik}.worldMatrix[0]", f"{self.clavicle_joint[0]}.offsetParentMatrix")
 
         self.lock_attributes(self.ctl_ik, [ "sx", "sy", "sz", "v"])

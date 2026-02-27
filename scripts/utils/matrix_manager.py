@@ -192,4 +192,128 @@ def get_offset_matrix(child, parent):
     
     return list(offset_matrix)
 
-    
+
+def create_matrix_pole_vector(self, m1_attr, m2_attr, m3_attr, pole_distance=1.0, name="poleVector_LOC"):
+        """
+        Given three matrix attributes (e.g. joint.worldMatrix[0]), compute a proper pole vector
+        position using Maya matrix and math nodes (no Python vector math).
+        """
+        def matrix_to_translation(matrix_attr, prefix):
+            dm = cmds.createNode('rowFromMatrix', name=f"{self.side}_{self.module_name}Pv{prefix.capitalize()}Offset_RFM", ss=True)
+            cmds.connectAttr(matrix_attr, f'{dm}.matrix')
+            cmds.setAttr(f'{dm}.input', 3)
+            return f'{dm}.output'
+
+        def create_vector_subtract(name, inputA, inputB):
+            node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
+            cmds.setAttr(f'{node}.operation', 2)
+            for i, input in enumerate([inputA, inputB]):
+                try:
+                    cmds.connectAttr(input, f'{node}.input3D[{i}]')
+                except:
+                    for attr in ["X", "Y", "Z"]:
+                        cmds.connectAttr(f'{input}.output{attr}', f'{node}.input3D[{i}].input3D{attr.lower()}')
+            return node, f'{node}.output3D'
+
+        def normalize_vector(input_vec, name):
+            vp = cmds.createNode('normalize', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_NRM", ss=True)
+            cmds.connectAttr(input_vec, f'{vp}.input')
+            return f'{vp}.output'
+
+        def scale_vector(input_vec, scalar_attr, name):
+            md = cmds.createNode('multiplyDivide', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_MDV", ss=True)
+            cmds.setAttr(f'{md}.operation', 1)
+            cmds.connectAttr(input_vec, f'{md}.input1')
+            for axis in 'XYZ':
+                cmds.connectAttr(scalar_attr, f'{md}.input2{axis}')
+            return md, f'{md}.output'
+
+        def add_vectors(vecA, vecB, name):
+            node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
+            for i, vector in enumerate([vecA, vecB]):
+                try:
+                    cmds.connectAttr(vector, f'{node}.input3D[{i}]')
+                except:
+                    for attr in ["X", "Y", "Z"]:
+                        cmds.connectAttr(f'{vector}.output{attr}', f'{node}.input3D[{i}].input3D{attr.lower()}')
+            return node, f'{node}.output3D'
+
+        vec1_attr = matrix_to_translation(m1_attr, 'vec1')
+        vec2_attr = matrix_to_translation(m2_attr, 'vec2')
+        vec3_attr = matrix_to_translation(m3_attr, 'vec3')
+
+        dist1 = cmds.createNode('distanceBetween', name=f"{self.side}_{self.module_name}PvVec1Vec2_DBT", ss=True)
+        for attr in ["X", "Y", "Z"]:
+            cmds.connectAttr(f'{vec1_attr}{attr}', f'{dist1}.point1{attr}')
+            cmds.connectAttr(f'{vec2_attr}{attr}', f'{dist1}.point2{attr}')
+
+        dist2 = cmds.createNode('distanceBetween', name=f"{self.side}_{self.module_name}PvVec2Vec3_DBT", ss=True)
+        for attr in ["X", "Y", "Z"]:
+            cmds.connectAttr(f'{vec2_attr}{attr}', f'{dist2}.point1{attr}')
+            cmds.connectAttr(f'{vec3_attr}{attr}', f'{dist2}.point2{attr}')
+
+        avg = cmds.createNode('sum', name=f"{self.side}_{self.module_name}PvAvgDist_SUM", ss=True)
+        cmds.connectAttr(f'{dist1}.distance', f'{avg}.input[0]')
+        cmds.connectAttr(f'{dist2}.distance', f'{avg}.input[1]')
+
+        half = cmds.createNode('divide', name=f"{self.side}_{self.module_name}PvHalfDist_DIV", ss=True)
+        cmds.setAttr(f'{half}.input2', 2.0 / pole_distance)
+        cmds.connectAttr(f'{avg}.output', f'{half}.input1')
+
+        vec1_sub_node, vec1_sub = create_vector_subtract('vec1MinusVec2', vec1_attr, vec2_attr)
+        vec1_norm = normalize_vector(vec1_sub, 'vec1Norm')
+
+        vec3_sub_node, vec3_sub = create_vector_subtract('vec3MinusVec2', vec3_attr, vec2_attr)
+        vec3_norm = normalize_vector(vec3_sub, 'vec3Norm')
+
+        vec1_scaled_node, vec1_scaled = scale_vector(vec1_norm, f'{half}.output', 'vec1Scaled')
+        vec3_scaled_node, vec3_scaled = scale_vector(vec3_norm, f'{half}.output', 'vec3Scaled')
+
+        vec1_final_node, vec1_final = add_vectors(vec2_attr, vec1_scaled, 'vec1Final')
+        vec3_final_node, vec3_final = add_vectors(vec2_attr, vec3_scaled, 'vec3Final')
+
+        proj_dir_node, proj_dir = create_vector_subtract('projDir', vec3_final, vec1_final)
+
+        proj_dir_norm = normalize_vector(proj_dir, 'projDirNorm')
+
+        vec_to_project_node, vec_to_project = create_vector_subtract('vecToProject', vec2_attr, vec1_final)
+
+        dot_node = cmds.createNode('vectorProduct', name=f"{self.side}_{self.module_name}PvDot_VCP", ss=True)
+        cmds.setAttr(f'{dot_node}.operation', 1)
+        cmds.connectAttr(vec_to_project, f'{dot_node}.input1')
+        cmds.connectAttr(proj_dir_norm, f'{dot_node}.input2')
+
+        proj_vec_node, proj_vec = scale_vector(proj_dir_norm, f'{dot_node}.outputX', 'projVector')
+
+        mid_node, mid = add_vectors(vec1_final, proj_vec, 'midPoint')
+
+        pointer_node, pointer_vec = create_vector_subtract('pointerVec', vec2_attr, mid)
+
+        pointer_norm = normalize_vector(pointer_vec, 'pointerNorm')
+        pointer_scaled_node, pointer_scaled = scale_vector(pointer_norm, f'{half}.output', 'pointerScaled')
+
+        pole_pos_node, pole_pos = add_vectors(vec2_attr, pointer_scaled, 'poleVectorPos')
+
+        fourByFour = cmds.createNode('fourByFourMatrix', name=f"{self.side}_{self.module_name}PvFourByFour_FBM", ss=True)
+        cmds.connectAttr(f"{pole_pos}.output3Dx", f'{fourByFour}.in30')
+        cmds.connectAttr(f"{pole_pos}.output3Dy", f'{fourByFour}.in31')
+        cmds.connectAttr(f"{pole_pos}.output3Dz", f'{fourByFour}.in32')
+
+        aim_matrix = cmds.createNode('aimMatrix', name=f"{self.side}_{self.module_name}PvAim_AMX", ss=True)
+        cmds.setAttr(f'{aim_matrix}.primaryInputAxis', 0, -1, 0, type='double3')
+        if self.side == "L":
+            cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', -1, 0, 0, type='double3')
+        else:
+            cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', 1, 0, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.secondaryTargetVector', 1, 0, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.primaryMode', 1)
+        cmds.setAttr(f'{aim_matrix}.secondaryMode', 2)
+        cmds.connectAttr(f'{fourByFour}.output', f'{aim_matrix}.inputMatrix')
+        cmds.connectAttr(f'{m2_attr}', f"{aim_matrix}.primaryTargetMatrix")
+        cmds.connectAttr(f'{m2_attr}', f'{aim_matrix}.secondaryTargetMatrix')
+
+        blend_matrix = cmds.createNode('blendMatrix', name=f"{self.side}_{self.module_name}PvBlend_BLM", ss=True)
+        cmds.connectAttr(f'{fourByFour}.output', f'{blend_matrix}.inputMatrix')
+        cmds.connectAttr(f'{aim_matrix}.outputMatrix', f'{blend_matrix}.target[0].targetMatrix')
+
+        return blend_matrix

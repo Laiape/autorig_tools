@@ -27,7 +27,7 @@ class ArmModule(object):
         self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
-
+        
     def make(self, side, skinning_jnts):
 
         """ 
@@ -38,6 +38,8 @@ class ArmModule(object):
         """
         self.skinning_joint_numbers = skinning_jnts
         self.side = side
+        self.primaryInputAxis = (1, 0, 0) if self.side == "L" else (-1, 0, 0)
+        self.secondaryInputAxis = (0, 1, 0)
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
@@ -80,7 +82,7 @@ class ArmModule(object):
         cmds.parent(self.arm_chain[0], self.module_trn)
         self.settings_loc = guides_manager.get_guides(f"{self.side}_armSettings_LOCShape")
 
-        self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.arm_chain)
+        self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.arm_chain, self.primaryInputAxis, self.secondaryInputAxis)
         cmds.parent(self.guides_trns[0], self.module_trn)
 
     def create_chains(self):
@@ -236,46 +238,44 @@ class ArmModule(object):
         """
 
         for i, ctl in enumerate(self.fk_controllers):
-            if i < len(self.fk_controllers) -1:
+            if i < len(self.fk_controllers) - 1:
+                
                 cmds.setAttr(f"{ctl}.translateX", lock=False)
                 cmds.addAttr(ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------")
                 cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
 
-        self.upper_double_mult_linear = cmds.createNode("multiply", n=f"{self.side}_armUpper_MUL")
-        self.lower_double_mult_linear = cmds.createNode("multiply", n=f"{self.side}_armLower_MUL")
-        cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input[0]")
-        cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input[0]")
+                label = ctl.split("_")[1]
+                mult_node = cmds.createNode("multiply", n=f"{self.side}_arm{label}_MUL")
+                dist_node = cmds.createNode("distanceBetween", name=f"{self.side}_arm{label}DistanceBetween_DBT", ss=True)
 
-        distance_between_up = cmds.createNode("distanceBetween", name=f"{self.side}_armUpDistanceBetween_DBT", ss=True)
-        cmds.connectAttr(self.guides_matrices[0], f"{distance_between_up}.inMatrix1")
-        cmds.connectAttr(self.guides_matrices[1], f"{distance_between_up}.inMatrix2")
+                cmds.connectAttr(f"{ctl}.Stretch", f"{mult_node}.input[0]")
+                cmds.connectAttr(self.guides_matrices[i], f"{dist_node}.inMatrix1")
+                cmds.connectAttr(self.guides_matrices[i+1], f"{dist_node}.inMatrix2")
+                
+                if self.side == "R":
+                    multiply_negate = cmds.createNode("multiply", name=f"{self.side}_arm{label}_Negate_MUL", ss=True)
+                    cmds.connectAttr(f"{dist_node}.distance", f"{multiply_negate}.input[0]")
+                    cmds.setAttr(f"{multiply_negate}.input[1]", -1)
+                    cmds.connectAttr(f"{multiply_negate}.output", f"{mult_node}.input[1]")
+                else:
+                    cmds.connectAttr(f"{dist_node}.distance", f"{mult_node}.input[1]")
 
-        distance_between_low = cmds.createNode("distanceBetween", name=f"{self.side}_armLowDistanceBetween_DBT", ss=True)
-        cmds.connectAttr(self.guides_matrices[1], f"{distance_between_low}.inMatrix1")
-        cmds.connectAttr(self.guides_matrices[2], f"{distance_between_low}.inMatrix2")
+                target_node = self.fk_nodes[i+1]
+                
+                row_from_matrix = cmds.createNode("rowFromMatrix", name=f"{self.side}_arm{label}RowFromMatrix_RFM", ss=True)
+                cmds.setAttr(f"{row_from_matrix}.input", 3)
+                
+                connection = cmds.listConnections(f"{target_node}.offsetParentMatrix", source=True, destination=False, plugs=True)[0]
+                cmds.connectAttr(connection, f"{row_from_matrix}.matrix")
 
-
-        cmds.connectAttr(f"{distance_between_up}.distance", f"{self.upper_double_mult_linear}.input[1]")
-        cmds.connectAttr(f"{distance_between_low}.distance", f"{self.lower_double_mult_linear}.input[1]")
-
-        decompose_upper = cmds.createNode("decomposeMatrix", name=f"{self.side}_armUpperDecompose_DCM", ss=True)
-        elbow_fk_connection = cmds.listConnections(f"{self.fk_nodes[1]}.offsetParentMatrix", source=True, destination=False, plugs=True)[0]
-        cmds.connectAttr(elbow_fk_connection, f"{decompose_upper}.inputMatrix")
-        fbf_upper = cmds.createNode("fourByFourMatrix", name=f"{self.side}_armUpper_FBF", ss=True)
-        cmds.connectAttr(f"{self.upper_double_mult_linear}.output", f"{fbf_upper}.in30")
-        cmds.connectAttr(f"{decompose_upper}.outputTranslateY", f"{fbf_upper}.in31")
-        cmds.connectAttr(f"{decompose_upper}.outputTranslateZ", f"{fbf_upper}.in32")
-        cmds.connectAttr(f"{fbf_upper}.output", f"{self.fk_nodes[1]}.offsetParentMatrix", force=True)
-
-        decompose_lower = cmds.createNode("decomposeMatrix", name=f"{self.side}_armLowerDecompose_DCM", ss=True)
-        wrist_fk_connection = cmds.listConnections(f"{self.fk_nodes[2]}.offsetParentMatrix", source=True, destination=False, plugs=True)[0]
-        cmds.connectAttr(wrist_fk_connection, f"{decompose_lower}.inputMatrix")
-        fbf_lower = cmds.createNode("fourByFourMatrix", name=f"{self.side}_armLower_FBF", ss=True)
-        cmds.connectAttr(f"{self.lower_double_mult_linear}.output", f"{fbf_lower}.in30")
-        cmds.connectAttr(f"{decompose_lower}.outputTranslateY", f"{fbf_lower}.in31")
-        cmds.connectAttr(f"{decompose_lower}.outputTranslateZ", f"{fbf_lower}.in32")
-        cmds.connectAttr(f"{fbf_lower}.output", f"{self.fk_nodes[2]}.offsetParentMatrix", force=True)
+                fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_arm{label}_FBF", ss=True)
+                
+                cmds.connectAttr(f"{mult_node}.output", f"{fbf}.in30")
+                cmds.connectAttr(f"{row_from_matrix}.outputY", f"{fbf}.in31")
+                cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{fbf}.in32")
+                
+                cmds.connectAttr(f"{fbf}.output", f"{target_node}.offsetParentMatrix", force=True)
 
 
     def soft_ik(self):
