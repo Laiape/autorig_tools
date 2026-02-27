@@ -606,17 +606,10 @@ class LegModule(object):
         primary_aim_vector = (1, 0, 0)
         secondary_aim_vector = (0, -1, 0)
 
-        guides = []
-        for node in self.leg_chain:
-            
-            guide = cmds.createNode("transform", name=node.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
-            cmds.matchTransform(guide, node, pos=True, rot=True)
-            guides.append(guide)
-
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_legGuides_AIM", ss=True)
-        cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(f"{guides[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
         cmds.setAttr(f"{guides_aim}.primaryInputAxis", *primary_aim_vector, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *secondary_aim_vector, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
