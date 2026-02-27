@@ -133,7 +133,12 @@ class NeckModule(object):
 
             if i == 0 or i == len(self.neck_chain) - 1:
 
-                cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
+                
+                if i == len(self.neck_chain) - 1:
+                    cmds.connectAttr(f"{self.head_guide}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix")
+                    cmds.xform(corner_nodes[0], m=om.MMatrix.kIdentity)
+                else:
+                    cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
                 cmds.parent(corner_nodes[0], self.controllers_grp)
                 
                 self.neck_nodes.append(corner_nodes[0])

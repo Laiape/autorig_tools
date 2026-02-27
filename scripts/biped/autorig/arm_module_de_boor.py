@@ -77,9 +77,11 @@ class ArmModule(object):
     def load_guides(self):
 
         self.arm_chain = guides_manager.get_guides(f"{self.side}_shoulder_JNT")
-        print(f"Guides loaded for {self.side} arm module: {self.arm_chain}")
         cmds.parent(self.arm_chain[0], self.module_trn)
         self.settings_loc = guides_manager.get_guides(f"{self.side}_armSettings_LOCShape")
+
+        self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.arm_chain)
+        cmds.parent(self.guides_trns[0], self.module_trn)
 
     def create_chains(self):
 
@@ -127,10 +129,11 @@ class ArmModule(object):
 
         for i, joint in enumerate(self.fk_chain):
 
-            fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP"]) # create FK controllers
+            fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP", "ANM"]) # create FK controllers
             self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
             
-            cmds.matchTransform(fk_node[0], self.arm_chain[i], pos=True, rot=True)
+            # cmds.matchTransform(fk_node[0], self.arm_chain[i], pos=True, rot=True)
+            cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix")
 
             if self.fk_controllers:
                 cmds.parent(fk_node[0], self.fk_controllers[-1])
@@ -140,8 +143,20 @@ class ArmModule(object):
 
             if i == 0:
                 blend_matrix = matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
+
             else:
                 blend_matrix = matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
+
+                mmx_negate = cmds.createNode("multMatrix", name=joint.replace("JNT", "MMX"), ss=True)
+                inverse_matrix = cmds.createNode("inverseMatrix", name=joint.replace("JNT", "INV"), ss=True)
+                cmds.connectAttr(self.guides_matrices[i-1], f"{inverse_matrix}.inputMatrix")
+
+                cmds.connectAttr(self.guides_matrices[i], f"{mmx_negate}.matrixIn[0]")
+                cmds.connectAttr(f"{inverse_matrix}.outputMatrix", f"{mmx_negate}.matrixIn[1]")
+
+                cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{fk_node[0]}.offsetParentMatrix", force=True)
+            
+            cmds.xform(fk_node[0], m=om.MMatrix.kIdentity)  
 
             self.blend_matrices.append(blend_matrix)
 
@@ -156,7 +171,8 @@ class ArmModule(object):
         self.ik_wrist_nodes, self.ik_wrist_ctl = curve_tool.create_controller(name=f"{self.side}_armIkWrist", offset=["GRP", "SPC"])
         self.lock_attributes(self.ik_wrist_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_wrist_nodes[0], ik_controllers_trn)
-        cmds.matchTransform(self.ik_wrist_nodes[0], self.arm_chain[-1], pos=True, rot=True)
+        # cmds.matchTransform(self.ik_wrist_nodes[0], self.arm_chain[-1], pos=True, rot=True)
+        cmds.connectAttr(self.guides_matrices[-1], f"{self.ik_wrist_nodes[0]}.offsetParentMatrix")
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
@@ -180,7 +196,8 @@ class ArmModule(object):
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_root_nodes[0], ik_controllers_trn)
-        cmds.matchTransform(self.ik_root_nodes[0], self.arm_chain[0], pos=True, rot=True)
+        # cmds.matchTransform(self.ik_root_nodes[0], self.arm_chain[0], pos=True, rot=True)
+        cmds.connectAttr(self.guides_matrices[0], f"{self.ik_root_nodes[0]}.offsetParentMatrix")
 
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_armIkFK_REV", ss=True)
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{reverse_node}.inputX")
@@ -230,13 +247,36 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.fk_controllers[0]}.Stretch", f"{self.upper_double_mult_linear}.input[0]")
         cmds.connectAttr(f"{self.fk_controllers[1]}.Stretch", f"{self.lower_double_mult_linear}.input[0]")
 
-        upper_distance = cmds.getAttr(f"{self.fk_nodes[1]}.translateX")
-        lower_distance = cmds.getAttr(f"{self.fk_nodes[-1]}.translateX")
+        distance_between_up = cmds.createNode("distanceBetween", name=f"{self.side}_armUpDistanceBetween_DBT", ss=True)
+        cmds.connectAttr(self.guides_matrices[0], f"{distance_between_up}.inMatrix1")
+        cmds.connectAttr(self.guides_matrices[1], f"{distance_between_up}.inMatrix2")
 
-        cmds.setAttr(f"{self.upper_double_mult_linear}.input[1]", upper_distance)
-        cmds.setAttr(f"{self.lower_double_mult_linear}.input[1]", lower_distance)
-        cmds.connectAttr(f"{self.upper_double_mult_linear}.output", f"{self.fk_nodes[1]}.translateX")
-        cmds.connectAttr(f"{self.lower_double_mult_linear}.output", f"{self.fk_nodes[-1]}.translateX")
+        distance_between_low = cmds.createNode("distanceBetween", name=f"{self.side}_armLowDistanceBetween_DBT", ss=True)
+        cmds.connectAttr(self.guides_matrices[1], f"{distance_between_low}.inMatrix1")
+        cmds.connectAttr(self.guides_matrices[2], f"{distance_between_low}.inMatrix2")
+
+
+        cmds.connectAttr(f"{distance_between_up}.distance", f"{self.upper_double_mult_linear}.input[1]")
+        cmds.connectAttr(f"{distance_between_low}.distance", f"{self.lower_double_mult_linear}.input[1]")
+
+        decompose_upper = cmds.createNode("decomposeMatrix", name=f"{self.side}_armUpperDecompose_DCM", ss=True)
+        elbow_fk_connection = cmds.listConnections(f"{self.fk_nodes[1]}.offsetParentMatrix", source=True, destination=False, plugs=True)[0]
+        cmds.connectAttr(elbow_fk_connection, f"{decompose_upper}.inputMatrix")
+        fbf_upper = cmds.createNode("fourByFourMatrix", name=f"{self.side}_armUpper_FBF", ss=True)
+        cmds.connectAttr(f"{self.upper_double_mult_linear}.output", f"{fbf_upper}.in30")
+        cmds.connectAttr(f"{decompose_upper}.outputTranslateY", f"{fbf_upper}.in31")
+        cmds.connectAttr(f"{decompose_upper}.outputTranslateZ", f"{fbf_upper}.in32")
+        cmds.connectAttr(f"{fbf_upper}.output", f"{self.fk_nodes[1]}.offsetParentMatrix", force=True)
+
+        decompose_lower = cmds.createNode("decomposeMatrix", name=f"{self.side}_armLowerDecompose_DCM", ss=True)
+        wrist_fk_connection = cmds.listConnections(f"{self.fk_nodes[2]}.offsetParentMatrix", source=True, destination=False, plugs=True)[0]
+        cmds.connectAttr(wrist_fk_connection, f"{decompose_lower}.inputMatrix")
+        fbf_lower = cmds.createNode("fourByFourMatrix", name=f"{self.side}_armLower_FBF", ss=True)
+        cmds.connectAttr(f"{self.lower_double_mult_linear}.output", f"{fbf_lower}.in30")
+        cmds.connectAttr(f"{decompose_lower}.outputTranslateY", f"{fbf_lower}.in31")
+        cmds.connectAttr(f"{decompose_lower}.outputTranslateZ", f"{fbf_lower}.in32")
+        cmds.connectAttr(f"{fbf_lower}.output", f"{self.fk_nodes[2]}.offsetParentMatrix", force=True)
+
 
     def soft_ik(self):
 
@@ -415,17 +455,11 @@ class ArmModule(object):
         primary_aim_vector = (1, 0, 0)
         secondary_aim_vector = (0, 0, 1)
 
-        guides = []
-        for node in self.arm_chain:
-            
-            guide = cmds.createNode("transform", name=node.replace("_JNT", "_GUIDE"), ss=True, p=self.module_trn)
-            cmds.matchTransform(guide, node, pos=True, rot=True)
-            guides.append(guide)
 
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
-        cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(f"{guides[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
         cmds.setAttr(f"{guides_aim}.primaryInputAxis", *primary_aim_vector, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *secondary_aim_vector, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim

@@ -33,6 +33,7 @@ def fk_constraint(joint, before_jnt, pair_blend, settings_ctl):
         cmds.connectAttr(f"{mult_matrix_offset}.matrixSum", f"{joint}.offsetParentMatrix", force=True)
 
     blend_matrices = []
+
     if pair_blend == True:
 
         blend_matrix = cmds.createNode("blendMatrix", name=joint.replace("JNT", "BM"), ss=True)
@@ -92,11 +93,20 @@ def space_switches(target, sources = [None], default_value = 1):
     
     masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl") 
 
-    masterwalk_mmx = cmds.createNode("multMatrix", name=target.replace("CTL", "MW_MMT"), ss=True)
-    cmds.connectAttr(f"{masterwalk_ctl}.worldMatrix[0]", f"{masterwalk_mmx}.matrixIn[0]")
-    cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{masterwalk_mmx}.matrixIn[1]")
+    masterwalk_parent_matrix = cmds.createNode("parentMatrix", name=target.replace("_CTL", "MasterWalk_PM"), ss=True)
+    cmds.connectAttr(f"{masterwalk_ctl}.worldMatrix[0]", f"{masterwalk_parent_matrix}.inputMatrix")
+    try:
+        grp_connections = cmds.listConnections(f"{target_grp}.offsetParentMatrix", source=True, destination=False, plugs=True)
+        print(f"Connections to {target_grp}.offsetParentMatrix: {grp_connections}")
+    except TypeError:
+        grp_connections = None
 
-    cmds.connectAttr(f"{masterwalk_mmx}.matrixSum", f"{blend_matrix}.inputMatrix")
+    if grp_connections:
+        cmds.connectAttr(grp_connections[0], f"{masterwalk_parent_matrix}.target[0].targetMatrix")
+        offset = get_offset_matrix(target_grp, grp_connections[0])
+        cmds.setAttr(f"{masterwalk_parent_matrix}.target[0].offsetMatrix", offset, type="matrix")
+
+    cmds.connectAttr(f"{masterwalk_parent_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")
     cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
 
     cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
@@ -153,29 +163,33 @@ def space_switches(target, sources = [None], default_value = 1):
 
 def get_offset_matrix(child, parent):
     """
-    Calculate the offset matrix between a child and parent transform in Maya.
-    Args:
-        child (str): The name of the child transform or matrix attribute.
-        parent (str): The name of the parent transform or matrix attribute. 
-    Returns:
-        list: The offset matrix as a flat list of 16 floats in row-major order that transforms the child into the parent's space.
+    Calcula la matriz de offset. Acepta tanto objetos DAG como atributos de matriz.
     """
-    def get_world_matrix(node):
+    def get_matrix_input(node_or_attr):
+        if "." in node_or_attr:
+            try:
+                mat_vals = cmds.getAttr(node_or_attr)
+                return om.MMatrix(mat_vals)
+            except Exception as e:
+                raise ValueError(f"No se pudo leer el atributo {node_or_attr}: {e}")
+
         try:
-            dag = om.MSelectionList().add(node).getDagPath(0)
+            sel = om.MSelectionList()
+            sel.add(node_or_attr)
+            dag = sel.getDagPath(0)
             return dag.inclusiveMatrix()
         except:
-            matrix = cmds.getAttr(node)
-            return om.MMatrix(matrix)
+            if cmds.attributeQuery("worldMatrix", node=node_or_attr, exists=True):
+                mat_vals = cmds.getAttr(f"{node_or_attr}.worldMatrix[0]")
+                return om.MMatrix(mat_vals)
+            else:
+                raise ValueError(f"No se pudo obtener una matriz de: {node_or_attr}")
 
-    child_world_matrix = get_world_matrix(child)
-    parent_world_matrix = get_world_matrix(parent)
+    child_matrix = get_matrix_input(child)
+    parent_matrix = get_matrix_input(parent)
 
-    offset_matrix = child_world_matrix * parent_world_matrix.inverse()
-
-    # Convert to Python list (row-major order)
-    offset_matrix_list = list(offset_matrix)
-
-    return offset_matrix_list
+    offset_matrix = child_matrix * parent_matrix.inverse()
+    
+    return list(offset_matrix)
 
     

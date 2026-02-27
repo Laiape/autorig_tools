@@ -685,7 +685,7 @@ def mirror_specific_guide(guide_name, is_joint):
         for attr in [".sx", ".sy", ".sz"]:
             cmds.setAttr(new_name + attr, 1)
 
-def run_mirror_guides():
+def mirror_guides():
     container = "C_guides_GRP"
     if not cmds.objExists(container):
         om.MGlobal.displayError(f"No existe el grupo {container}")
@@ -706,4 +706,70 @@ def run_mirror_guides():
 
     om.MGlobal.displayInfo(f"Proceso finalizado: {count} elementos raíz procesados.")
 
-run_mirror_guides()
+
+def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0), ribbon=False):
+
+    """
+    Orienta las guías. Para cada guía, si tiene hijos, se orienta hacia el primer hijo. Si no tiene hijos, se orienta hacia el padre.
+    """
+    guide_suffix = guides[0].split("_")[-1] if guides else "GUIDE"
+
+    trn_guides = [] # Lista para almacenar los nuevos transform orientadores de las guías
+
+    for guide in guides:
+        
+        trn_guide = cmds.createNode("transform", name=guide.replace(guide_suffix, "GUIDE"), ss=True)
+        cmds.matchTransform(trn_guide, guide, pos=True)
+        if trn_guides:
+            cmds.parent(trn_guide, trn_guides[-1])
+        trn_guides.append(trn_guide)
+
+    guides_matrices = [] # Lista para almacenar las matrices de las guías
+
+    for i, guide in enumerate(trn_guides):
+
+        guide_suffix = guide.split("_")[-1]
+        
+        if i == 0:
+
+            matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
+            cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+            cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+            cmds.setAttr(f"{matrix_node}.primaryInputAxis", *primaryInputAxis)
+            cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
+
+        elif i == len(trn_guides) - 1:
+            if ribbon:
+                matrix_node = cmds.createNode("blendMatrix", name=guide.replace(guide_suffix, "BLM"), ss=True)
+                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+                cmds.connectAttr(guides_matrices[0], f"{matrix_node}.target[0].targetMatrix")
+                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", 0)
+                cmds.setAttr(f"{matrix_node}.target[0].translateWeight", 1)
+                cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 1)
+                cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 1)
+            else:
+                matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
+                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+                cmds.connectAttr(f"{trn_guides[i-1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+                cmds.setAttr(f"{matrix_node}.primaryInputAxis", *[-x for x in primaryInputAxis])
+                cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
+
+        else:
+            if ribbon:
+                matrix_node = cmds.createNode("blendMatrix", name=guide.replace(guide_suffix, "BLM"), ss=True)
+                weight = 1.0 - (i / (len(trn_guides) - 1))
+                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+                cmds.connectAttr(guides_matrices[0], f"{matrix_node}.target[0].targetMatrix")
+                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", weight)
+            else:
+                matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
+                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+                cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+                cmds.setAttr(f"{matrix_node}.primaryInputAxis", *primaryInputAxis)
+                cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
+                
+        if cmds.nodeType(matrix_node) == "aimMatrix":
+            cmds.setAttr(f"{matrix_node}.secondaryMode", 2)
+        guides_matrices.append(f"{matrix_node}.outputMatrix")
+
+    return guides_matrices, trn_guides
