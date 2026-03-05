@@ -100,6 +100,8 @@ class NeckModule(object):
             self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
 
         cmds.select(clear=True)
+        self.neck_guide = cmds.createNode("transform", name=f"{self.side}_neck_GUIDE", ss=True, p=self.module_trn)
+        cmds.matchTransform(self.neck_guide, self.neck_chain[0], pos=True, rot=True, scl=False)
         self.head_guide = cmds.createNode("transform", name=f"{self.side}_head_GUIDE", ss=True, p=self.module_trn)
         cmds.matchTransform(self.head_guide, self.neck_chain[-1], pos=True, rot=True, scl=False)
        
@@ -138,7 +140,8 @@ class NeckModule(object):
                     cmds.connectAttr(f"{self.head_guide}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix")
                     cmds.xform(corner_nodes[0], m=om.MMatrix.kIdentity)
                 else:
-                    cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
+                    cmds.connectAttr(f"{self.neck_guide}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix")
+                    cmds.xform(corner_nodes[0], m=om.MMatrix.kIdentity)
                 cmds.parent(corner_nodes[0], self.controllers_grp)
                 
                 self.neck_nodes.append(corner_nodes[0])

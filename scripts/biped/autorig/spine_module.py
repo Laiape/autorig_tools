@@ -83,6 +83,9 @@ class SpineModule(object):
         self.spine_chain = guides_manager.get_guides(f"{self.side}_spine00_JNT")
         cmds.parent(self.spine_chain[0], self.module_trn)
 
+        self.body_guide = cmds.createNode("transform", name=f"{self.side}_body_GUIDE", ss=True, p=self.module_trn)
+        cmds.matchTransform(self.body_guide, self.spine_chain[0], pos=True, rot=True, scl=False)
+
        
 
     def controller_creation(self):
@@ -92,11 +95,13 @@ class SpineModule(object):
         """
 
         self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC"])
-        cmds.matchTransform(self.body_nodes[0], self.spine_chain[0], pos=True, rot=True, scl=False)
+        cmds.connectAttr(f"{self.body_guide}.worldMatrix[0]", f"{self.body_nodes[0]}.offsetParentMatrix")
+        cmds.xform(self.body_nodes[0], m=om.MMatrix.kIdentity)
         cmds.parent(self.body_nodes[0], self.controllers_grp)
 
         self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC"])
-        cmds.matchTransform(self.local_hip_nodes[0], self.spine_chain[0], pos=True, rot=True, scl=False)
+        cmds.connectAttr(f"{self.body_guide}.worldMatrix[0]", f"{self.local_hip_nodes[0]}.offsetParentMatrix")
+        cmds.xform(self.local_hip_nodes[0], m=om.MMatrix.kIdentity)
         cmds.parent(self.local_hip_nodes[0], self.controllers_grp)
 
         self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC"])
