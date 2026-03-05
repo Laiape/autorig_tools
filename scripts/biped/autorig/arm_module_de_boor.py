@@ -28,18 +28,20 @@ class ArmModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         
-    def make(self, side, skinning_jnts):
+    def make(self, side, skinning_jnts, primaryInputAxis = (1, 0, 0), secondaryInputAxis = (0, 1, 0)):
 
         """ 
         Create the arm module structure and controllers. Call this method with the side ('L' or 'R') to create the respective arm module.
         Args:
             side (str): The side of the arm ('L' or 'R').
+            primaryInputAxis (tuple): The primary axis for orientation.
+            secondaryInputAxis (tuple): The secondary axis for orientation.
 
         """
         self.skinning_joint_numbers = skinning_jnts
         self.side = side
-        self.primaryInputAxis = (1, 0, 0) if self.side == "L" else (-1, 0, 0)
-        self.secondaryInputAxis = (0, 1, 0)
+        self.primaryInputAxis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
+        self.secondaryInputAxis = secondaryInputAxis
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
@@ -179,7 +181,8 @@ class ArmModule(object):
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        cmds.matchTransform(self.pv_nodes[0], self.arm_chain[1], pos=True, rot=True)
+        cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
+        cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_armPv_CRV") # Create a line that points always to the PV
         decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPv_DCM", ss=True)
@@ -198,8 +201,8 @@ class ArmModule(object):
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
         self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_root_nodes[0], ik_controllers_trn)
-        # cmds.matchTransform(self.ik_root_nodes[0], self.arm_chain[0], pos=True, rot=True)
         cmds.connectAttr(self.guides_matrices[0], f"{self.ik_root_nodes[0]}.offsetParentMatrix")
+        cmds.xform(self.ik_root_nodes[0], m=om.MMatrix.kIdentity)
 
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_armIkFK_REV", ss=True)
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{reverse_node}.inputX")
@@ -452,16 +455,13 @@ class ArmModule(object):
         Create a de Boor ribbon setup.
         """
 
-        primary_aim_vector = (1, 0, 0)
-        secondary_aim_vector = (0, 0, 1)
-
 
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
         cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
         cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
         cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
-        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *primary_aim_vector, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *secondary_aim_vector, type="double3")
+        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
+        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondaryInputAxis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
 
 
@@ -486,10 +486,8 @@ class ArmModule(object):
 
         cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
-        if self.side == "L":
-            cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *primary_aim_vector, type="double3")
-        elif self.side == "R":
-            cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *[-x for x in primary_aim_vector], type="double3")
+        cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
+       
 
         
         # Add roll setup
@@ -591,12 +589,8 @@ class ArmModule(object):
         cmds.connectAttr(first_sel_output, f"{aim_matrix}.inputMatrix")
         cmds.connectAttr(second_sel_output, f"{aim_matrix}.primaryTargetMatrix")
 
-        if self.side == "L":   
-            cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 1, 0, 0, type="double3") # Aim X+
-        else:
-            cmds.setAttr(f"{aim_matrix}.primaryInputAxis", -1, 0, 0, type="double3") # Aim X-
-            
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", 0, 0, 1, type="double3")
+        cmds.setAttr(f"{aim_matrix}.primaryInputAxis", *self.primaryInputAxis, type="double3")
+        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", *self.secondaryInputAxis, type="double3")
 
         blend_matrix = cmds.createNode("blendMatrix", name=f"{self.module_name}{part}MainBendy_BMT", ss=True)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")
@@ -641,10 +635,26 @@ class ArmModule(object):
         params = [i / (len(sel) - 1) for i in range(len(sel))] # Custom parameter to place the last joint in the 0.95 position
         params[-1] = 0.95
 
+        def get_axis_info(axis_tuple):
+            for i, val in enumerate(axis_tuple):
+                if val != 0:
+                    return i, val
+            return 0, 1
+
+        aim_idx, aim_sign = get_axis_info(self.primary_axis)
+        up_idx, up_sign = get_axis_info(self.secondary_axis)
+
+        # 3. Mapeo a letras
+        axis_map = ['x', 'y', 'z']
+        aim_axis = axis_map[aim_idx]
+        up_axis = axis_map[up_idx]
+        aim_axis_signed = f"{'-' if aim_sign < 0 else ''}{aim_axis}"
+        up_axis_signed = f"{'-' if up_sign < 0 else ''}{up_axis}"
+
         if self.side == "L":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='x', up_axis='y', skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis=up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
         elif self.side == "R":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis='-x', up_axis='y', skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
+            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis=up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
 
         for t in temp:
             cmds.delete(t)
