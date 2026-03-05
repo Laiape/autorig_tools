@@ -69,96 +69,88 @@ def ik_constraint(source, target):
         om.MGlobal.displayError("Source or target does not exist.")
         return
 
-def space_switches(target, sources = [None], default_value = 1):
-
+def space_switches(target, sources=[], default_rotate=1, default_translate=1, sources_names=[], pv=False):
     """
-    Create space switches for a given target and a list of source objects.
-    Args:
-        target (str): The name of the target object.
-        sources (list): A list of source objects to switch between.
-        default_value (int): The default value for the space switch.
+    Versión optimizada de space_switches siguiendo la lógica de fk_switch.
     """
-    
     target_grp = target.replace("CTL", "GRP")
-
-    if not cmds.objExists(target_grp): 
-
-        om.MGlobal.displayError(f"Target group {target_grp} does not exist.")
+    if not cmds.objExists(target):
+        target_grp = target
+        
+    if not cmds.objExists(target_grp):
+        om.MGlobal.displayError(f"El grupo objetivo '{target_grp}' no existe.")
         return
 
-    parent_matrix = cmds.createNode("parentMatrix", name=target.replace("CTL", "PMT"), ss=True)
-    cmds.connectAttr(f"{target_grp}.worldMatrix[0]", f"{parent_matrix}.inputMatrix")
-    mult_matrix = cmds.createNode("multMatrix", name=target.replace("CTL", "MMT"), ss=True)
-    blend_matrix = cmds.createNode("blendMatrix", name=target.replace("CTL", "BMT"), ss=True)
-    
-    masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl") 
+    cmds.setAttr(f"{target_grp}.inheritsTransform", 0)
 
-    masterwalk_parent_matrix = cmds.createNode("parentMatrix", name=target.replace("_CTL", "MasterWalk_PM"), ss=True)
-    cmds.connectAttr(f"{masterwalk_ctl}.worldMatrix[0]", f"{masterwalk_parent_matrix}.inputMatrix")
-    try:
-        grp_connections = cmds.listConnections(f"{target_grp}.offsetParentMatrix", source=True, destination=False, plugs=True)
-        print(f"Connections to {target_grp}.offsetParentMatrix: {grp_connections}")
-    except TypeError:
-        grp_connections = None
+    conn = cmds.listConnections(f"{target_grp}.offsetParentMatrix", plugs=True, source=True, destination=False)
+    input_connection = conn[0] if conn else None
 
-    if grp_connections:
-        cmds.connectAttr(grp_connections[0], f"{masterwalk_parent_matrix}.target[0].targetMatrix")
-        offset = get_offset_matrix(target_grp, grp_connections[0])
-        cmds.setAttr(f"{masterwalk_parent_matrix}.target[0].offsetMatrix", offset, type="matrix")
+    pm_master = cmds.createNode("parentMatrix", name=target.replace("_CTL", "_MasterSpace_PMT"), ss=True)
+    pm_sources = cmds.createNode("parentMatrix", name=target.replace("_CTL", "_SourcesSpace_PMT"), ss=True)
+    bmx_final = cmds.createNode("blendMatrix", name=target.replace("_CTL", "_Space_BMX"), ss=True)
 
-    cmds.connectAttr(f"{masterwalk_parent_matrix}.outputMatrix", f"{blend_matrix}.inputMatrix")
-    cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
-
-    cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
-    cmds.connectAttr(f"{target_grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-    
-    
-    condition_nodes = []
-    source_matrices = []
-
-    for i, matrix in enumerate(sources):
-
-        offset = get_offset_matrix(target_grp, matrix)
-
-        cmds.connectAttr(f"{matrix}.worldMatrix[0]", f"{parent_matrix}.target[{i}].targetMatrix")
-        cmds.setAttr(f"{parent_matrix}.target[{i}].offsetMatrix", offset, type="matrix")
-
-        condition = cmds.createNode("condition", name=sources[i].replace("CTL", "COND"), ss=True)
-        cmds.setAttr(f"{condition}.firstTerm", i)
-        cmds.setAttr(f"{condition}.operation", 0)
-        cmds.setAttr(f"{condition}.colorIfFalseR", 0)
-        cmds.setAttr(f"{condition}.colorIfFalseG", 0)
-        cmds.setAttr(f"{condition}.colorIfTrueG", 1)
-
-        name = matrix.split("_")[1].capitalize()
-
-        condition_nodes.append(condition)
-        source_matrices.append(name)
-
-    cmds.addAttr(target, longName="SpaceSwitchSep", niceName = "SPACE SWITCHES ------", attributeType="enum", enumName="------", keyable=True)
-    cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)   
-    if len(sources) == 1:     
-        cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=False)
+    if not cmds.attributeQuery("SpaceSwitchSep", node=target, exists=True):
+        cmds.addAttr(target, longName="SpaceSwitchSep", niceName="Space Switches ———", attributeType="enum", enumName="———", keyable=True)
         cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)
-        
-    else:
-        cmds.addAttr(target, longName="SpaceSwitch", attributeType="enum", enumName=":".join(source_matrices), keyable=True)
-        if len(sources) == 2:
-            cmds.setAttr(f"{target}.SpaceSwitch", keyable=False, channelBox=False)
 
-    cmds.addAttr(target, longName="Translate_Value", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
-    cmds.addAttr(target, longName="Rotate_Value", attributeType="float", min=0, max=1, defaultValue=default_value, keyable=True)
+    if not sources_names:
+        sources_names = [src.split("_")[1] for src in sources]
 
-    for i, condition in enumerate(condition_nodes):
-        cmds.connectAttr(f"{target}.SpaceSwitch", f"{condition}.secondTerm")
-        cmds.connectAttr(f"{target}.Translate_Value", f"{condition}.colorIfTrueR")
-        cmds.connectAttr(f"{target}.Rotate_Value", f"{condition}.colorIfTrueG")
-        
-        cmds.connectAttr(f"{condition}.outColorR", f"{blend_matrix}.target[{i}].translateWeight")
-        cmds.connectAttr(f"{condition}.outColorG", f"{blend_matrix}.target[{i}].rotateWeight")
-
+    if len(sources) > 0:
+        cmds.addAttr(target, longName="SpaceFollow", attributeType="enum", enumName=":".join(sources_names), keyable=True)
     
-    cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{target}.offsetParentMatrix")
+    cmds.addAttr(target, longName="TranslateValue", attributeType="float", min=0, max=1, defaultValue=default_translate, keyable=True)
+    cmds.addAttr(target, longName="RotateValue", attributeType="float", min=0, max=1, defaultValue=default_rotate, keyable=True)
+
+
+    data_exporter = data_manager.DataExportBiped()
+    masterwalk_ctl = data_exporter.get_data("basic_structure", "masterwalk_ctl")
+
+    if input_connection:
+        cmds.connectAttr(input_connection, f"{pm_master}.inputMatrix")
+        cmds.connectAttr(input_connection, f"{pm_sources}.inputMatrix")
+        
+    offset_master = get_offset_matrix(target_grp, masterwalk_ctl)
+    cmds.connectAttr(f"{masterwalk_ctl}.worldMatrix[0]", f"{pm_master}.target[0].targetMatrix")
+    cmds.setAttr(f"{pm_master}.target[0].offsetMatrix", offset_master, type="matrix")
+
+    for i, driver in enumerate(sources):
+     
+        cond = cmds.createNode("condition", name=target.replace('_CTL', f"_Space{i:02d}_CON"), ss=True)
+        cmds.setAttr(f"{cond}.firstTerm", i)
+        cmds.connectAttr(f"{target}.SpaceFollow", f"{cond}.secondTerm")
+        cmds.setAttr(f"{cond}.operation", 0) # Equal
+        cmds.setAttr(f"{cond}.colorIfTrueR", 1)
+        cmds.setAttr(f"{cond}.colorIfFalseR", 0)
+
+        cmds.connectAttr(f"{cond}.outColorR", f"{pm_sources}.target[{i}].weight")
+        driver_attr = driver if "." in driver else f"{driver}.worldMatrix[0]"
+        cmds.connectAttr(driver_attr, f"{pm_sources}.target[{i}].targetMatrix")
+        if pv:
+            mmx_live = cmds.createNode("multMatrix", name=target.replace("_CTL", f"_Src{i:02d}Live_MMT"), ss=True)
+            if input_connection:
+                cmds.connectAttr(input_connection, f"{mmx_live}.matrixIn[0]")
+            inv_matrix = cmds.getAttr(f"{driver}.worldInverseMatrix[0]")
+            cmds.setAttr(f"{mmx_live}.matrixIn[1]", inv_matrix, type="matrix")
+            cmds.connectAttr(f"{mmx_live}.matrixSum", f"{pm_sources}.target[{i}].offsetMatrix")
+        else:
+            off_mat = get_offset_matrix(target_grp, driver)
+            cmds.setAttr(f"{pm_sources}.target[{i}].offsetMatrix", off_mat, type="matrix")
+
+
+    cmds.connectAttr(f"{pm_master}.outputMatrix", f"{bmx_final}.inputMatrix")
+    cmds.connectAttr(f"{pm_sources}.outputMatrix", f"{bmx_final}.target[0].targetMatrix")
+
+    cmds.connectAttr(f"{target}.TranslateValue", f"{bmx_final}.target[0].translateWeight")
+    cmds.connectAttr(f"{target}.RotateValue", f"{bmx_final}.target[0].rotateWeight")
+    
+    cmds.setAttr(f"{bmx_final}.target[0].scaleWeight", 0)
+    cmds.setAttr(f"{bmx_final}.target[0].shearWeight", 0)
+
+    cmds.connectAttr(f"{bmx_final}.outputMatrix", f"{target_grp}.offsetParentMatrix", force=True)
+
+    # om.MGlobal.displayInfo(f"Space Switch creado con éxito para: {target}")
 
 
 def get_offset_matrix(child, parent):
