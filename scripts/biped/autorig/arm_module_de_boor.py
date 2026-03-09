@@ -641,8 +641,8 @@ class ArmModule(object):
                     return i, val
             return 0, 1
 
-        aim_idx, aim_sign = get_axis_info(self.primary_axis)
-        up_idx, up_sign = get_axis_info(self.secondary_axis)
+        aim_idx, aim_sign = get_axis_info(self.primaryInputAxis)
+        up_idx, up_sign = get_axis_info(self.secondaryInputAxis)
 
         # 3. Mapeo a letras
         axis_map = ['x', 'y', 'z']
