@@ -43,6 +43,8 @@ class LegModule(object):
         self.primary_axis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
         self.secondary_axis = secondaryInputAxis if self.side == "L" else tuple(-x for x in secondaryInputAxis)
 
+        print(f"Creating leg module for side: {self.side}, with primary input axis: {self.primary_axis} and secondary input axis: {self.secondary_axis}")
+
         # Set the axis information based on the primary and secondary input axes
         def get_axis_info(axis_tuple):
             for i, val in enumerate(axis_tuple):
@@ -56,8 +58,10 @@ class LegModule(object):
         axis_map = ['x', 'y', 'z']
         aim_axis = axis_map[aim_idx]
         up_axis = axis_map[up_idx]
-        self.aim_axis_signed = f"{'' if aim_sign < 0 else ''}{aim_axis}"
+        self.aim_axis_signed = (f"{'-' if aim_sign < 0 else ''}{aim_axis}")
         self.up_axis_signed = f"{'' if up_sign < 0 else ''}{up_axis}"
+
+        print(f"Aim axis: {self.aim_axis_signed}, Up axis: {self.up_axis_signed}")
 
         # Create the main groups for the leg module
         self.module_name = f"{self.side}_leg"
@@ -250,11 +254,7 @@ class LegModule(object):
 
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_legRootIk", offset=["GRP", "ANM"])
         self.lock_attributes(self.root_ik_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-
-        if self.side == "R": # Mirror the root IK 
-            matrix_manager.mirror_controllers(controllers_grp=[self.root_ik_nodes[0]], input_matrix=self.guides_matrices[0], secondary_axis=self.secondary_axis, rotate_180=False)
-        else:
-            cmds.connectAttr(self.guides_matrices[0], f"{self.root_ik_nodes[0]}.offsetParentMatrix")
+        cmds.connectAttr(self.guides_matrices[0], f"{self.root_ik_nodes[0]}.offsetParentMatrix")
 
         cmds.xform(self.root_ik_nodes[0], m=om.MMatrix.kIdentity)
         cmds.xform(self.ik_chain[0], m=om.MMatrix.kIdentity)
@@ -269,8 +269,9 @@ class LegModule(object):
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP", "ANM"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
+        
         if self.side == "R": # Mirror the PV controller
-            matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=self.guides_matrices[1], secondary_axis=self.secondary_axis, rotate_180=True)
+                matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=self.guides_matrices[1], secondary_axis=(1,0,0), rotate_180=True)
         else:
             cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
@@ -295,9 +296,17 @@ class LegModule(object):
 
         cmds.select(self.pv_nodes[0])
         if self.secondary_axis == (0, 1, 0):
-            cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            if self.side == "L":
+                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            else:
+                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
         elif self.secondary_axis == (0, -1, 0):
-            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            if self.side == "L":
+                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            else:
+                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+
+        
 
     
     def ik_setup(self):
@@ -324,7 +333,9 @@ class LegModule(object):
             cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.ball_handle}.{attr}")
             cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.toe_handle}.{attr}")
 
-        cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
+        pv_c = cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)[0]
+        if self.secondary_axis == (0, 1, 0) and self.side == "R":
+            cmds.setAttr(f"{pv_c}.offsetY", -180)
 
     def foot_attributes(self):
 
@@ -649,8 +660,76 @@ class LegModule(object):
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primary_axis, type="double3")
 
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper", skinning_joint_numbers)
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower", skinning_joint_numbers)
+        # Add roll setup
+        upper_roll_jnt = cmds.createNode("joint", name=f"{self.side}_legUpperRoll_JNT", p=self.module_trn)
+        upper_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_legUpperRollEnd_JNT", p=upper_roll_jnt)
+
+        upper_distance = cmds.createNode("distanceBetween", name=f"{self.side}_legUpperRoll_DBT", ss=True)
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{upper_distance}.inMatrix1")
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_distance}.inMatrix2")
+        normalize_upper_distance = cmds.createNode("divide", name=f"{self.side}_legUpperRollNormalize_DIV", ss=True)
+        cmds.connectAttr(f"{upper_distance}.distance", f"{normalize_upper_distance}.input1")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{normalize_upper_distance}.input2")
+
+        #Connect roll joints
+        pick_matrix_upper = cmds.createNode("pickMatrix", name=f"{self.side}_legUpperRollPickMatrix_PM", ss=True)
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_upper}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_upper}.useRotate", 0)
+        cmds.connectAttr(f"{pick_matrix_upper}.outputMatrix", f"{upper_roll_jnt}.offsetParentMatrix")
+        if self.side == "R":
+            negate_upper_distance = cmds.createNode("negate", name=f"{self.side}_legUpperRoll_NEG", ss=True)
+            cmds.connectAttr(f"{normalize_upper_distance}.output", f"{negate_upper_distance}.input")
+            cmds.connectAttr(f"{negate_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
+        else:
+            cmds.connectAttr(f"{normalize_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
+
+        
+        lower_distance = cmds.createNode("distanceBetween", name=f"{self.side}_legLowerRoll_DBT", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_distance}.inMatrix1")
+        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_distance}.inMatrix2")
+        normalize_lower_distance = cmds.createNode("divide", name=f"{self.side}_legLowerRollNormalize_DIV", ss=True)
+        cmds.connectAttr(f"{lower_distance}.distance", f"{normalize_lower_distance}.input1")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{normalize_lower_distance}.input2")
+        lower_roll_jnt = cmds.createNode("joint", name=f"{self.side}_legLowerRoll_JNT", p=self.module_trn)
+        lower_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_legLowerRollEnd_JNT", p=lower_roll_jnt)
+
+        pick_matrix_lower = cmds.createNode("pickMatrix", name=f"{self.side}_legLowerRollPickMatrix_PM", ss=True)
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_lower}.inputMatrix")
+        cmds.setAttr(f"{pick_matrix_lower}.useRotate", 0)
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_roll_jnt}.offsetParentMatrix")
+        if self.side == "R":
+            negate_lower_distance = cmds.createNode("negate", name=f"{self.side}_legLowerRoll_NEG", ss=True)
+            cmds.connectAttr(f"{normalize_lower_distance}.output", f"{negate_lower_distance}.input")
+            cmds.connectAttr(f"{negate_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
+        else:
+            cmds.connectAttr(f"{normalize_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
+        
+        upper_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_legUpperRoll_IKH", startJoint=upper_roll_jnt, endEffector=upper_roll_end_jnt, solver="ikSCsolver")[0]
+        lower_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_legLowerRoll_IKH", startJoint=lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
+
+        cmds.parent(upper_roll_ik_handle, self.module_trn)
+        cmds.parent(lower_roll_ik_handle, self.module_trn)
+
+        float_constant_freeze = cmds.createNode("floatConstant", name=f"{self.side}_legRollFreeze_FC", ss=True)
+        cmds.setAttr(f"{float_constant_freeze}.inFloat", 0)
+        for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
+            cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{upper_roll_ik_handle}.{attr}")
+            cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{lower_roll_ik_handle}.{attr}")
+
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_roll_ik_handle}.offsetParentMatrix") # Connect to upper leg blend matrix
+        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_roll_ik_handle}.offsetParentMatrix") # Connect to lower leg blend matrix
+
+        #Up Roll Blend Matrix
+        up_roll_blm = cmds.createNode("blendMatrix", name=f"{self.side}_legUpperRoll_BLM", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{up_roll_blm}.inputMatrix")
+        cmds.connectAttr(f"{upper_roll_end_jnt}.worldMatrix[0]", f"{up_roll_blm}.target[0].targetMatrix")
+        cmds.setAttr(f"{up_roll_blm}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{up_roll_blm}.target[0].rotateWeight", 1)
+        cmds.setAttr(f"{up_roll_blm}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{up_roll_blm}.target[0].shearWeight", 0)
+
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], [up_roll_blm], "Upper", skinning_joint_numbers)
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], [lower_roll_end_jnt], "Lower", skinning_joint_numbers)
 
         cmds.select(clear=True)
         ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")

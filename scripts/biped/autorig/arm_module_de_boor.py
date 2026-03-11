@@ -1,3 +1,5 @@
+from turtle import up
+
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
@@ -493,7 +495,6 @@ class ArmModule(object):
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
        
 
-        
         # Add roll setup
         upper_roll_jnt = cmds.createNode("joint", name=f"{self.side}_armUpperRoll_JNT", p=self.module_trn)
         upper_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_armUpperRollEnd_JNT", p=upper_roll_jnt)
@@ -510,7 +511,12 @@ class ArmModule(object):
         cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_upper}.inputMatrix")
         cmds.setAttr(f"{pick_matrix_upper}.useRotate", 0)
         cmds.connectAttr(f"{pick_matrix_upper}.outputMatrix", f"{upper_roll_jnt}.offsetParentMatrix")
-        cmds.connectAttr(f"{normalize_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
+        if self.side == "R":
+            negate_upper_distance = cmds.createNode("negate", name=f"{self.side}_armUpperRoll_NEG", ss=True)
+            cmds.connectAttr(f"{normalize_upper_distance}.output", f"{negate_upper_distance}.input")
+            cmds.connectAttr(f"{negate_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
+        else:
+            cmds.connectAttr(f"{normalize_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
 
         
         lower_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armLowerRoll_DBT", ss=True)
@@ -525,8 +531,13 @@ class ArmModule(object):
         pick_matrix_lower = cmds.createNode("pickMatrix", name=f"{self.side}_armLowerRollPickMatrix_PM", ss=True)
         cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_lower}.inputMatrix")
         cmds.setAttr(f"{pick_matrix_lower}.useRotate", 0)
-        cmds.connectAttr(f"{pick_matrix_lower}.outputMatrix", f"{lower_roll_jnt}.offsetParentMatrix")
-        cmds.connectAttr(f"{normalize_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_roll_jnt}.offsetParentMatrix")
+        if self.side == "R":
+            negate_lower_distance = cmds.createNode("negate", name=f"{self.side}_armLowerRoll_NEG", ss=True)
+            cmds.connectAttr(f"{normalize_lower_distance}.output", f"{negate_lower_distance}.input")
+            cmds.connectAttr(f"{negate_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
+        else:
+            cmds.connectAttr(f"{normalize_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
         
         upper_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_armUpperRoll_IKH", startJoint=upper_roll_jnt, endEffector=upper_roll_end_jnt, solver="ikSCsolver")[0]
         lower_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_armLowerRoll_IKH", startJoint=lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
@@ -543,10 +554,19 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_roll_ik_handle}.offsetParentMatrix") # Connect to upper arm blend matrix
         cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_roll_ik_handle}.offsetParentMatrix") # Connect to lower arm blend matrix
 
-
+        #Up Roll Blend Matrix
+        up_roll_blm = cmds.createNode("blendMatrix", name=f"{self.side}_armUpperRoll_BLM", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{up_roll_blm}.inputMatrix")
+        cmds.connectAttr(f"{upper_roll_end_jnt}.worldMatrix[0]", f"{up_roll_blm}.target[0].targetMatrix")
+        cmds.setAttr(f"{up_roll_blm}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{up_roll_blm}.target[0].rotateWeight", 1)
+        cmds.setAttr(f"{up_roll_blm}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{up_roll_blm}.target[0].shearWeight", 0)
+                                        
+        
         # Placeholder for de Boor ribbon setup
-        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], self.blend_matrices[1], "Upper", skinning_joint_numbers)
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], self.blend_matrices[2], "Lower", skinning_joint_numbers)
+        self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], [up_roll_blm], "Upper", skinning_joint_numbers)
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], [lower_roll_end_jnt], "Lower", skinning_joint_numbers)
 
         cmds.select(clear=True)
         wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")

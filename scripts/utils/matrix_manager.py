@@ -317,10 +317,12 @@ def mirror_controllers(controllers_grp = [], input_matrix=None, secondary_axis=(
 
         name = ctl.replace("_GRP", "")
 
-        if rotate_180 and secondary_axis == (0, 1, 0):
+        if rotate_180 and secondary_axis == (0, 1, 0) or secondary_axis == (0, -1, 0):
             rotate_axis = "Y"
-        elif rotate_180 and secondary_axis == (0, 0, 1):
+        elif rotate_180 and secondary_axis == (0, 0, 1) or secondary_axis == (0, 0, -1):
             rotate_axis = "Z"
+        elif rotate_180 and secondary_axis == (1, 0, 0) or secondary_axis == (-1, 0, 0):
+            rotate_axis = "X"
 
         mmx_negate = cmds.createNode("multMatrix", name=f"{name}_MMX", ss=True)
         compose_matrix_mirror = cmds.createNode("composeMatrix", name=f"{name}_Mirror_CMP", ss=True)
