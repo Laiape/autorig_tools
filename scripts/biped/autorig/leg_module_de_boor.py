@@ -29,7 +29,7 @@ class LegModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.local_hip_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
 
-    def make(self, side, skinning_jnts, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
+    def make(self, side, skinning_jnts, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, -1, 0)):
 
         """ 
         Create the leg module structure and controllers. Call this method with the side ('L' or 'R') to create the respective leg module.
@@ -88,9 +88,6 @@ class LegModule(object):
         self.bank_out_loc = guides_manager.get_guides(f"{self.side}_bankOut_LOCShape")
         self.bank_in_loc = guides_manager.get_guides(f"{self.side}_bankIn_LOCShape")
         self.heel_loc = guides_manager.get_guides(f"{self.side}_heel_LOCShape")
-
-        self.primary_axis = self.primary_axis
-        self.secondary_axis = self.secondary_axis
 
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(guides=self.leg_chain, primaryInputAxis=self.primary_axis, secondaryInputAxis=self.secondary_axis)
         cmds.parent(self.guides_trns[0], self.module_trn)
@@ -267,8 +264,10 @@ class LegModule(object):
         cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 
         cmds.select(self.pv_nodes[0])
-        cmds.move(0, 0, 20, relative=True, objectSpace=True, worldSpaceDistance=True)
-        
+        if self.secondary_axis == (0, 1, 0):
+            cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+        elif self.secondary_axis == (0, -1, 0):
+            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
     
     def ik_setup(self):
@@ -468,12 +467,8 @@ class LegModule(object):
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_legSoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
         cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", 1)
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxisY", 0)
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxisZ", 0)
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxisX", 0)
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 1)
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", 0)
+        cmds.setAttr(f"{aim_matrix}.primaryInputAxis", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", *self.secondary_axis, type="double3")
         cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
 
@@ -750,10 +745,8 @@ class LegModule(object):
         print(f"Aim Axis: {aim_axis_signed} | Up Axis: {up_axis_signed}")
 
         # Create ribbon
-        if self.side == "L":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis, up_axis=up_axis, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
-        elif self.side == "R":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis, up_axis=up_axis, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers)
+
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers)
 
         for t in temp:
             cmds.delete(t)

@@ -603,9 +603,6 @@ class ArmModule(object):
 
             self.lock_attributes(ctl, ["visibility"])
 
-            
-            
-
             if i == 0:
                 cmds.addAttr(ctl, longName = "EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
                 cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
@@ -641,8 +638,8 @@ class ArmModule(object):
                     return i, val
             return 0, 1
 
-        aim_idx, aim_sign = get_axis_info(self.primary_axis)
-        up_idx, up_sign = get_axis_info(self.secondary_axis)
+        aim_idx, aim_sign = get_axis_info(self.primaryInputAxis)
+        up_idx, up_sign = get_axis_info(self.secondaryInputAxis)
 
         # 3. Mapeo a letras
         axis_map = ['x', 'y', 'z']
@@ -650,11 +647,8 @@ class ArmModule(object):
         up_axis = axis_map[up_idx]
         aim_axis_signed = f"{'-' if aim_sign < 0 else ''}{aim_axis}"
         up_axis_signed = f"{'-' if up_sign < 0 else ''}{up_axis}"
-
-        if self.side == "L":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis=up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
-        elif self.side == "R":
-            output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis=up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
+        
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis=up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
 
         for t in temp:
             cmds.delete(t)

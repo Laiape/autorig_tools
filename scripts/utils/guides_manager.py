@@ -737,6 +737,10 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
             cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
             cmds.setAttr(f"{matrix_node}.primaryInputAxis", *primaryInputAxis)
             cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
+            try:
+                    cmds.connectAttr(f"{trn_guides[i+2]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
+            except:
+                pass
 
         elif i == len(trn_guides) - 1:
             if ribbon:
@@ -767,9 +771,13 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
                 cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
                 cmds.setAttr(f"{matrix_node}.primaryInputAxis", *primaryInputAxis)
                 cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
+                try:
+                    cmds.connectAttr(f"{trn_guides[i+2]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
+                except:
+                    pass
                 
         if cmds.nodeType(matrix_node) == "aimMatrix":
-            cmds.setAttr(f"{matrix_node}.secondaryMode", 2)
+            cmds.setAttr(f"{matrix_node}.secondaryMode", 1)
         guides_matrices.append(f"{matrix_node}.outputMatrix")
 
     return guides_matrices, trn_guides
