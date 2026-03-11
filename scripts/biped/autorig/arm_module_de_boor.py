@@ -28,7 +28,7 @@ class ArmModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         
-    def make(self, side, skinning_jnts, primaryInputAxis = (1, 0, 0), secondaryInputAxis = (0, 1, 0)):
+    def make(self, side, skinning_jnts, primaryInputAxis = (1, 0, 0), secondaryInputAxis = (0, 0, 1)):
 
         """ 
         Create the arm module structure and controllers. Call this method with the side ('L' or 'R') to create the respective arm module.
@@ -40,8 +40,12 @@ class ArmModule(object):
         """
         self.skinning_joint_numbers = skinning_jnts
         self.side = side
+
         self.primaryInputAxis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
         self.secondaryInputAxis = secondaryInputAxis if self.side == "L" else tuple(-x for x in secondaryInputAxis)
+
+        print(f"Creating arm module for side: {self.side}, with primary input axis: {self.primaryInputAxis} and secondary input axis: {self.secondaryInputAxis}")
+
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
@@ -228,9 +232,9 @@ class ArmModule(object):
 
         cmds.select(self.pv_nodes[0])
         if self.side == "L":
-            cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
         else:
-            cmds.move(0, 0, 20, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
@@ -646,7 +650,7 @@ class ArmModule(object):
         aim_axis = axis_map[aim_idx]
         up_axis = axis_map[up_idx]
         aim_axis_signed = f"{'-' if aim_sign < 0 else ''}{aim_axis}"
-        up_axis_signed = f"{'-' if up_sign < 0 else ''}{up_axis}"
+        up_axis_signed = f"{'' if up_sign < 0 else ''}{up_axis}"
         
         output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis=up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers) # Call the ribbon script to create de Boors system
 
