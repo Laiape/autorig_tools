@@ -57,6 +57,7 @@ def create_custom_menu():
     cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
     cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
     cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
+    cmds.menuItem(label="Copy Skin Cluster", command=lambda x: copy_skin_cluster(), image="copySelected.png")
     cmds.setParent('..', menu=True)
 
     cmds.menuItem(divider=True)
@@ -126,6 +127,12 @@ def import_skin_cluster():
     reload(skin_manager_api)
     skinner.import_skins()
     cmds.inViewMessage(amg='Skins Importadas y Reordenadas.', pos='midCenter', fade=True)
+
+def copy_skin_cluster():
+    skinner = skin_manager_api.SkinManager()
+    reload(skin_manager_api)
+    skinner.copy_skin_cluster()
+    cmds.inViewMessage(amg='Skin Cluster Copiado.', pos='midCenter', fade=True)
     
 def rig():
     """Función para crear el rig bipedal"""

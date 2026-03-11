@@ -466,7 +466,7 @@ class SkinManager(object):
         return matches[0] if matches else None
     
 
-    def transfer_multi_skin_clusters():
+    def copy_skin_cluster():
         """
         Transfers all skinClusters from Source to Target mesh.
         - Matches joints exactly.
