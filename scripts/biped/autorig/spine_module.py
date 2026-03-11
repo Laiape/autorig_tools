@@ -413,8 +413,8 @@ class SpineModule(object):
         cmds.connectAttr(f"{initial_length_multiply}.output", f"{strecht_factor_divide}.input2")
 
         cmds.connectAttr(f"{strecht_factor_divide}.output", f"{stretch_factor_clamp}.inputR")
-        cmds.setAttr(f"{stretch_factor_clamp}.minR", cmds.getAttr(f"{self.body_ctl}.spineStretchMin"))
-        cmds.setAttr(f"{stretch_factor_clamp}.maxR", cmds.getAttr(f"{self.body_ctl}.spineStretchMax"))
+        cmds.connectAttr(f"{self.body_ctl}.spineStretchMin", f"{stretch_factor_clamp}.minR")
+        cmds.connectAttr(f"{self.body_ctl}.spineStretchMax", f"{stretch_factor_clamp}.maxR")
 
         cmds.connectAttr(f"{self.body_ctl}.spineStretch", f"{stretch_blend_node}.attributesBlender")
         cmds.connectAttr(f"{base_stretch_constant}.outFloat", f"{stretch_blend_node}.input[0]")
@@ -454,7 +454,8 @@ class SpineModule(object):
         # ----- Attatched FK attributes ------
         cmds.addAttr(self.body_ctl, longName="FK", niceName="ATTACHED FK ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.FK", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+        cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="bool", min=0, max=1, defaultValue=0, keyable=True)
+        cmds.setAttr(f"{self.body_ctl}.FK_Vis", lock=True, keyable=False, channelBox=True)
 
         # ------ Attatched FK setup ------
         self.fk_nodes = []
