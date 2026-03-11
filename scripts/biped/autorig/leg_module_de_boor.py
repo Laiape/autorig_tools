@@ -266,21 +266,35 @@ class LegModule(object):
 
         cmds.parent(self.root_ik_nodes[0], ik_controllers_trn)
 
+        # Create PV controller
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP", "ANM"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        
-        if self.side == "R": # Mirror the PV controller
-                matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=self.guides_matrices[1], secondary_axis=(1,0,0), rotate_180=True)
-        else:
-            cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
-        cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
-        
+
+        # Create pv orientation and pin attributes on the PV controller
         cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA ATTRIBUTES ------", enumName="------",attributeType="enum", keyable=True)
         cmds.setAttr(self.pv_ctl+".extraAttr", channelBox=True, lock=True)
         cmds.addAttr(self.pv_ctl, shortName="pvOrientation", niceName="Pv Orientation",defaultValue=1, minValue=0, maxValue=1, keyable=True)
         cmds.addAttr(self.pv_ctl, shortName="pin", niceName="Pin",minValue=0,maxValue=1,defaultValue=0, keyable=True)
 
+        # Orient setup for the PV controller
+        pv_world_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_legPvOrient_BLM", ss=True)
+        
+        
+        fbf_pv = cmds.createNode("fourByFourMatrix", name=f"{self.side}_legPv_FBB", ss=True)
+        
+
+        cmds.connectAttr(f"{fbf_pv}.output", f"{pv_world_matrix}.inputMatrix")
+        cmds.connectAttr(f"{self.guides_matrices[1]}", f"{pv_world_matrix}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_world_matrix}.target[0].rotateWeight")
+        cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_world_matrix}.target[0].weight")
+
+        if self.side == "R": # Mirror the PV controller
+                matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=f"{pv_world_matrix}.outputMatrix", secondary_axis=(1,0,0), rotate_180=True)
+        else:
+            cmds.connectAttr(f"{pv_world_matrix}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix")
+        cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
+        
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_legPv_CRV") # Create a line that points always to the PV
         decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPv_DCM", ss=True)
         decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPvCtl_DCM", ss=True)
@@ -306,7 +320,13 @@ class LegModule(object):
             else:
                 cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
-        
+        pv_world_position = cmds.getAttr(f"{self.pv_ctl}.worldMatrix[0]")[12:15]
+        cmds.setAttr(f"{fbf_pv}.in30", pv_world_position[0])
+        cmds.setAttr(f"{fbf_pv}.in31", pv_world_position[1])
+        cmds.setAttr(f"{fbf_pv}.in32", pv_world_position[2])
+
+        pin_blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_legPv_Pin_BLM", ss=True)
+        cmds.connectAttr(f"{pv_world_matrix}.outputMatrix", f"{pin_blend_matrix}.inputMatrix")
 
     
     def ik_setup(self):
