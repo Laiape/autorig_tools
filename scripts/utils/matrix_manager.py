@@ -309,3 +309,38 @@ def create_matrix_pole_vector(self, m1_attr, m2_attr, m3_attr, pole_distance=1.0
         cmds.connectAttr(f'{aim_matrix}.outputMatrix', f'{blend_matrix}.target[0].targetMatrix')
 
         return blend_matrix
+
+
+def mirror_controllers(controllers_grp = [], input_matrix=None, secondary_axis=(0, 1, 0), rotate_180=False):
+
+    for ctl in controllers_grp:
+
+        name = ctl.replace("_GRP", "")
+
+        if rotate_180 and secondary_axis == (0, 1, 0):
+            rotate_axis = "Y"
+        elif rotate_180 and secondary_axis == (0, 0, 1):
+            rotate_axis = "Z"
+
+        mmx_negate = cmds.createNode("multMatrix", name=f"{name}_MMX", ss=True)
+        compose_matrix_mirror = cmds.createNode("composeMatrix", name=f"{name}_Mirror_CMP", ss=True)
+        
+        if secondary_axis[0] == 1 or secondary_axis[0] == -1: # Set the matrix to mirror in the correct axis based on the primary input axis
+            cmds.setAttr(f"{compose_matrix_mirror}.inputScaleX", -1)
+        
+        elif secondary_axis[1] == 1 or secondary_axis[1] == -1:
+            cmds.setAttr(f"{compose_matrix_mirror}.inputScaleZ", -1)
+        
+        elif secondary_axis[2] == 1 or secondary_axis[2] == -1:
+            cmds.setAttr(f"{compose_matrix_mirror}.inputScaleY", -1)
+        
+        if rotate_180:
+            cmds.setAttr(f"{compose_matrix_mirror}.inputRotate{rotate_axis}", 180)
+
+        matrix_values = cmds.getAttr(f"{compose_matrix_mirror}.outputMatrix")
+
+        cmds.setAttr(f"{mmx_negate}.matrixIn[0]", *matrix_values, type="matrix")
+        cmds.connectAttr(input_matrix, f"{mmx_negate}.matrixIn[1]")
+        cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{ctl}.offsetParentMatrix", force=True)
+
+        cmds.delete(compose_matrix_mirror)

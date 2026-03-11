@@ -1,14 +1,6 @@
 {
     "basic_structure": {
-<<<<<<< HEAD
         "character_name": "thaiz",
-=======
-<<<<<<< HEAD
-        "character_name": "thaiz",
-=======
-        "character_name": "freya",
->>>>>>> 76bf030c270d6311eba56dd66d0edefcb1bf9315
->>>>>>> 70079fe7883019a3067911f9e3ed45c4db4a8a64
         "skel_GRP": "skel_GRP",
         "modules_GRP": "modules_GRP",
         "masterwalk_ctl": "C_masterwalk_CTL",

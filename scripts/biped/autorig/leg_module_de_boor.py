@@ -41,13 +41,32 @@ class LegModule(object):
         self.side = side
 
         self.primary_axis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
-        self.secondary_axis = secondaryInputAxis
+        self.secondary_axis = secondaryInputAxis if self.side == "L" else tuple(-x for x in secondaryInputAxis)
 
+        # Set the axis information based on the primary and secondary input axes
+        def get_axis_info(axis_tuple):
+            for i, val in enumerate(axis_tuple):
+                if val != 0:
+                    return i, val
+            return 0, 1
+
+        aim_idx, aim_sign = get_axis_info(self.primary_axis)
+        up_idx, up_sign = get_axis_info(self.secondary_axis)
+
+        axis_map = ['x', 'y', 'z']
+        aim_axis = axis_map[aim_idx]
+        up_axis = axis_map[up_idx]
+        self.aim_axis_signed = f"{'' if aim_sign < 0 else ''}{aim_axis}"
+        self.up_axis_signed = f"{'' if up_sign < 0 else ''}{up_axis}"
+
+        # Create the main groups for the leg module
         self.module_name = f"{self.side}_leg"
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_legModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_legSkinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_legControllers_GRP", ss=True, p=self.masterwalk_ctl)
 
+        
+        # Build the leg module by calling the respective methods
         self.load_guides()
         self.create_chains()
         self.controllers_creation()
@@ -211,7 +230,10 @@ class LegModule(object):
                 pick_matrix = cmds.createNode("pickMatrix", name=f"{self.side}_{name}_PKM", ss=True)
                 cmds.setAttr(f"{pick_matrix}.useRotate", 0)
                 cmds.connectAttr(self.guides_matrices[2], f"{pick_matrix}.inputMatrix")
-                cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{ik_node[0]}.offsetParentMatrix")
+                if self.side == "R":
+                    matrix_manager.mirror_controllers(controllers_grp=[ik_node[0]], input_matrix=f"{pick_matrix}.outputMatrix", secondary_axis=self.secondary_axis, rotate_180=True)
+                else:
+                    cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{ik_node[0]}.offsetParentMatrix")
             else:
                 cmds.matchTransform(ik_node[0], guide, pos=True, rot=True)
             child = cmds.listRelatives(guide, children=True, type="locator")
@@ -228,7 +250,12 @@ class LegModule(object):
 
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_legRootIk", offset=["GRP", "ANM"])
         self.lock_attributes(self.root_ik_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-        cmds.connectAttr(self.guides_matrices[0], f"{self.root_ik_nodes[0]}.offsetParentMatrix")
+
+        if self.side == "R": # Mirror the root IK 
+            matrix_manager.mirror_controllers(controllers_grp=[self.root_ik_nodes[0]], input_matrix=self.guides_matrices[0], secondary_axis=self.secondary_axis, rotate_180=False)
+        else:
+            cmds.connectAttr(self.guides_matrices[0], f"{self.root_ik_nodes[0]}.offsetParentMatrix")
+
         cmds.xform(self.root_ik_nodes[0], m=om.MMatrix.kIdentity)
         cmds.xform(self.ik_chain[0], m=om.MMatrix.kIdentity)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
@@ -242,7 +269,10 @@ class LegModule(object):
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP", "ANM"])
         self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
+        if self.side == "R": # Mirror the PV controller
+            matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=self.guides_matrices[1], secondary_axis=self.secondary_axis, rotate_180=True)
+        else:
+            cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
         
         cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA ATTRIBUTES ------", enumName="------",attributeType="enum", keyable=True)
@@ -572,27 +602,18 @@ class LegModule(object):
 
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix1")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.created_nodes[1]}.floatB")
-
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
-        if self.side == "L":
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
+        
+        if self.side == "R":
+            negate_soft_trn = cmds.createNode("multiply", name=f"{self.side}_legSoftTrnNegate_MUL", ss=True)
+            cmds.setAttr(f"{negate_soft_trn}.input[1]", -1)
+            cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{negate_soft_trn}.input[0]")
+            cmds.connectAttr(f"{negate_soft_trn}.output", f"{self.soft_trn}.translateX")
         else:
-            abs_up = cmds.createNode("floatMath", n=f"{self.side}_legAbsUpper_FLM")
-            abs_low = cmds.createNode("floatMath", n=f"{self.side}_legAbsLower_FLM")
-            cmds.setAttr(f"{abs_up}.operation", 2)
-            cmds.setAttr(f"{abs_low}.operation", 2)
-            cmds.setAttr(f"{abs_up}.floatB", -1)
-            cmds.setAttr(f"{abs_low}.floatB", -1)
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{abs_up}.floatA")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{abs_low}.floatA")
-            cmds.connectAttr(f"{abs_up}.outFloat", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{abs_low}.outFloat", f"{self.ik_chain[2]}.translateX")
+            cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
 
         cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
-        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateX", f"{self.ik_chain[2]}.rotateX")
-        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateY", f"{self.ik_chain[2]}.rotateY")
-        # cmds.connectAttr(f"{self.ik_controllers[0]}.rotateZ", f"{self.ik_chain[2]}.rotateZ")
 
 
     def de_boor_ribbon(self, skinning_joint_numbers):
@@ -724,29 +745,9 @@ class LegModule(object):
         params = [i / (len(sel) - 1) for i in range(len(sel))] # Custom parameter to place the last joint in the 0.95 position
         params[-1] = 0.95
 
-
-        def get_axis_info(axis_tuple):
-            for i, val in enumerate(axis_tuple):
-                if val != 0:
-                    return i, val
-            return 0, 1
-
-        aim_idx, aim_sign = get_axis_info(self.primary_axis)
-        up_idx, up_sign = get_axis_info(self.secondary_axis)
-
-        # 3. Mapeo a letras
-        axis_map = ['x', 'y', 'z']
-        aim_axis = axis_map[aim_idx]
-        up_axis = axis_map[up_idx]
-        aim_axis_signed = f"{'-' if aim_sign < 0 else ''}{aim_axis}"
-        up_axis_signed = f"{'-' if up_sign < 0 else ''}{up_axis}"
-
-        print(f"Side: {self.side}")
-        print(f"Aim Axis: {aim_axis_signed} | Up Axis: {up_axis_signed}")
-
         # Create ribbon
 
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=aim_axis_signed, up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers)
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.module_name}{part}", custom_parameter=params, aim_axis=self.aim_axis_signed, up_axis=self.up_axis_signed, skeleton_grp=self.skeleton_grp, num_joints=skinning_joint_numbers)
 
         for t in temp:
             cmds.delete(t)
