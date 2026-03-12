@@ -83,6 +83,7 @@ def create_basic_structure(character_name=None):
         settings_node, settings_ctl = curve_tool.create_controller(name="C_settings", offset=["GRP"])
         try:
             cmds.parent(settings_node[0], character_ctl)
+            guide_head
         except:
             pass
     else:
@@ -225,15 +226,7 @@ def create_basic_structure(character_name=None):
     if not cmds.listRelatives(freeze_jnt, parent=True):
         cmds.parent(freeze_jnt, skel_grp)
 
-    # --- 9. POSICIONAR SETTINGS EN LA CABEZA ---
-    try:
-        guide_head = "C_neck00_JNT"
-        if cmds.objExists(guide_head):
-            cmds.matchTransform(settings_node[0], guide_head, pos=True, rot=True, scl=False)
-    except Exception as e:
-        om.MGlobal.displayWarning(f"No se pudo posicionar C_settings: {e}")
-
-    # --- 10. EXPORTACIÓN ---
+    # --- 9. EXPORTACIÓN ---
     data_manager.DataExportBiped().append_data("basic_structure", {
         "skel_GRP" : skel_grp,
         "modules_GRP" : modules_grp,
