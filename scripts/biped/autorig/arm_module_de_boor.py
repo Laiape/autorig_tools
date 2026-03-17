@@ -185,7 +185,7 @@ class ArmModule(object):
         cmds.connectAttr(self.guides_matrices[-1], f"{self.ik_wrist_nodes[0]}.offsetParentMatrix")
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
-        self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
@@ -234,9 +234,9 @@ class ArmModule(object):
 
         cmds.select(self.pv_nodes[0])
         if self.side == "L":
-            cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
         else:
-            cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
@@ -249,7 +249,7 @@ class ArmModule(object):
         for i, ctl in enumerate(self.fk_controllers):
             if i < len(self.fk_controllers) - 1:
                 
-                cmds.setAttr(f"{ctl}.translateX", lock=False)
+                # cmds.setAttr(f"{ctl}.translateX", lock=False)
                 cmds.addAttr(ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------")
                 cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)
@@ -313,6 +313,8 @@ class ArmModule(object):
         full_length = upper_length + lower_length
         initial_distance = (end_pos - start_pos).length()
         soft_distance = full_length - initial_distance
+        if soft_distance < 0.01:
+            soft_distance = 0.1
 
         self.soft_off = cmds.createNode("transform", name=f"{self.side}_armSoft_OFF", p=self.module_trn)
         

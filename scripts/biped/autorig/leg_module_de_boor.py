@@ -268,7 +268,7 @@ class LegModule(object):
 
         # Create PV controller
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP", "ANM"])
-        self.lock_attributes(self.pv_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
 
         # Create pv orientation and pin attributes on the PV controller
@@ -441,9 +441,8 @@ class LegModule(object):
 
 
         for i, ctl in enumerate(self.fk_controllers):
-            if i < len(self.fk_controllers) - 1:
+            if i < len(self.fk_controllers) - 2:
                 
-                cmds.setAttr(f"{ctl}.translateX", lock=False)
                 cmds.addAttr(ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------")
                 cmds.setAttr(f"{ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
                 cmds.addAttr(ctl, shortName="Stretch", minValue=0, defaultValue=1, keyable=True)

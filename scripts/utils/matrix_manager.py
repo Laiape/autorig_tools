@@ -91,7 +91,7 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
     bmx_final = cmds.createNode("blendMatrix", name=target.replace("_CTL", "_Space_BMX"), ss=True)
 
     if not cmds.attributeQuery("SpaceSwitchSep", node=target, exists=True):
-        cmds.addAttr(target, longName="SpaceSwitchSep", niceName="Space Switches ———", attributeType="enum", enumName="———", keyable=True)
+        cmds.addAttr(target, longName="SpaceSwitchSep", niceName="Space Switches ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)
 
     if not sources_names:
