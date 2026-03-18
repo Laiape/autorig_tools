@@ -607,10 +607,10 @@ class JawModule(object):
                 else:
                     side = "L"
 
-                fbf_linear = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}LipLinear_FBF", ss=True)
-                cps_nurbs = cmds.createNode("closestPointOnSurface", name=f"{side}_{part}Lip_CPS", ss=True)
-                fbf_nurbs = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}LipNurbs_FBF", ss=True)
-                parent_matrix_blender = cmds.createNode("parentMatrix", name=f"{side}_{part}LipBlend_PMX", ss=True)
+                fbf_linear = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}0{index}LipLinear_FBF", ss=True)
+                cps_nurbs = cmds.createNode("closestPointOnSurface", name=f"{side}_{part}0{index}Lip_CPS", ss=True)
+                fbf_nurbs = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}0{index}LipNurbs_FBF", ss=True)
+                parent_matrix_blender = cmds.createNode("parentMatrix", name=f"{side}_{part}0{index}LipBlend_PMX", ss=True)
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{cps_nurbs}.inputSurface")
                 cmds.connectAttr(f"{nurbs}.cv[{index}]", f"{cps_nurbs}.inPosition")
                 cmds.connectAttr(f"{cps_nurbs}.positionX", f"{fbf_nurbs}.in30")
