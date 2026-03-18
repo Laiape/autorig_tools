@@ -498,6 +498,7 @@ class JawModule(object):
     
             cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
             curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
+            linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
 
             mid_point = max_index // 2
 
@@ -588,6 +589,42 @@ class JawModule(object):
                     cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
 
             skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
+
+        for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
+
+            cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
+            curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
+            linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
+
+            for i in range(0, len(cvs) - 1, 3):
+
+                index = i // 3
+
+                if index < mid_point:
+                    side = "R"
+                elif index == mid_point:
+                    side = "C"
+                else:
+                    side = "L"
+
+                fbf_linear = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}LipLinear_FBF", ss=True)
+                cps_nurbs = cmds.createNode("closestPointOnSurface", name=f"{side}_{part}Lip_CPS", ss=True)
+                fbf_nurbs = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}LipNurbs_FBF", ss=True)
+                parent_matrix_blender = cmds.createNode("parentMatrix", name=f"{side}_{part}LipBlend_PMX", ss=True)
+                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{cps_nurbs}.inputSurface")
+                cmds.connectAttr(f"{nurbs}.cv[{index}]", f"{cps_nurbs}.inPosition")
+                cmds.connectAttr(f"{cps_nurbs}.positionX", f"{fbf_nurbs}.in30")
+                cmds.connectAttr(f"{cps_nurbs}.positionY", f"{fbf_nurbs}.in31")
+                cmds.connectAttr(f"{cps_nurbs}.positionZ", f"{fbf_nurbs}.in32")
+                cmds.connectAttr(f"{linear_curve}.editPoints[{index}].xValueEp", f"{fbf_linear}.in30")
+                cmds.connectAttr(f"{linear_curve}.editPoints[{index}].yValueEp", f"{fbf_linear}.in31")
+                cmds.connectAttr(f"{linear_curve}.editPoints[{index}].zValueEp", f"{fbf_linear}.in32")
+                cmds.connectAttr(f"{fbf_linear}.output", f"{parent_matrix_blender}.inputMatrix")
+                cmds.connectAttr(f"{fbf_nurbs}.output", f"{parent_matrix_blender}.target[0].targetMatrix")
+                
+                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(index).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
+                cmds.connectAttr(f"{fbf_linear}.output", f"{out_joint}.offsetParentMatrix")
+
 
         # ------ Conditions to control visibility of lip controllers ------
         condition_primary = cmds.createNode("condition", name="C_lipsPrimaryControllers_COND", ss=True)
