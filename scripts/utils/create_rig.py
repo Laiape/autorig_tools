@@ -10,50 +10,6 @@ from utils import rig_manager
 from utils import matrix_manager
 from tools import skin_manager_api
 
-# Body mechanics
-from biped.autorig import arm_module_de_boor as arm_module
-from biped.autorig import spine_module as spine_module
-from biped.autorig import clavicle_module
-from biped.autorig import leg_module_de_boor as leg_module
-from biped.autorig import neck_module_de_boor as neck_module
-from biped.autorig import fingers_module
-
-# Facial
-from biped.autorig import eyebrow_module
-from biped.autorig import eyelid_module
-from biped.autorig import ear_module
-from biped.autorig import nose_module
-from biped.autorig import jaw_module
-from biped.autorig import cheekbone_module
-from biped.autorig import tongue_module
-from biped.autorig import teeth_module
-
-# Reload utils
-reload(guides_manager) 
-reload(basic_structure)
-reload(data_manager)
-reload(matrix_manager)
-reload(rig_manager)
-reload(skin_manager_api)
-
-# Reload body mechanics
-reload(arm_module)
-reload(spine_module)
-reload(leg_module)
-reload(neck_module)
-reload(fingers_module)
-reload(clavicle_module)
-
-# Reload facial
-reload(eyebrow_module)
-reload(eyelid_module)
-reload(ear_module)
-reload(nose_module)
-reload(jaw_module)
-reload(cheekbone_module)
-reload(tongue_module)
-reload(teeth_module)
-
 
 
 class AutoRig(object):
@@ -72,10 +28,10 @@ class AutoRig(object):
         
         self.basic_structure()
         self.make_rig()
-        self.label_joints()
-        self.hide_connections()
-        self.inherit_transforms()
-        self.import_weights()
+        # self.label_joints()
+        # self.hide_connections()
+        # self.inherit_transforms()
+        # self.import_weights()
 
     def basic_structure(self):
 

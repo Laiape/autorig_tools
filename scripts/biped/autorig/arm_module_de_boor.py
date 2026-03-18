@@ -59,7 +59,7 @@ class ArmModule(object):
         self.ik_setup()
         self.fk_stretch()
         self.soft_ik()
-        self.de_boor_ribbon(self.skinning_joint_numbers)
+        skel_env = self.de_boor_ribbon(self.skinning_joint_numbers)
         
         data_manager.DataExportBiped().append_data("arm_module",
                             {
@@ -70,6 +70,7 @@ class ArmModule(object):
                                 f"{self.side}_armPv": self.pv_ctl,
                                 f"{self.side}_shoulderFk": self.fk_controllers[0],
                                 f"{self.side}_armIkRoot": self.ik_root_ctl,
+                                f"{self.side}_skinningJoints": skel_env
                             })
 
     def lock_attributes(self, ctl, attrs):

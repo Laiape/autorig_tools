@@ -463,49 +463,131 @@ class JawModule(object):
 
 
         # Make rebuilded bezier
-        upper_rebuilded_cvs = cmds.ls(f"{self.upper_rebuild_lip_curve}.cv[*]", flatten=True)
-        lower_rebuilded_cvs = cmds.ls(f"{self.lower_rebuild_lip_curve}.cv[*]", flatten=True)
+        upper_curve_dup = cmds.duplicate(self.upper_rebuild_lip_curve, name="C_upperLipToNurbs_CRV")[0]
+        lower_curve_dup = cmds.duplicate(self.lower_rebuild_lip_curve, name="C_lowerLipToNurbs_CRV")[0]
 
-        secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
+        upper_nurbs_surface = cmds.loft([upper_curve_dup, lower_curve_dup], ch=0, u=1, c=0, name="C_upperLip_NURB")[0]
+        lower_nurbs_surface = cmds.loft([upper_curve_dup, lower_curve_dup], ch=0, u=1, c=0, name="C_lowerLip_NURB")[0]
+        cmds.delete(upper_curve_dup, lower_curve_dup)
 
-        for prefix, cv_list in [("Upper", upper_rebuilded_cvs), ("Lower", lower_rebuilded_cvs)]: # Make a loop between upper and lower curves
+        # Rebuild nurbs surfaces for better deformation and make it bezier (rt=7)
+        self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=7, end=1, kr=0, kcp=0, su=1, sv=3, du=3, dv=3, tol=0.01, name="C_upperLip_NURB")[0]
+        self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=7, end=1, kr=0, kcp=0, su=1, sv=3, du=3, dv=3, tol=0.01, name="C_lowerLip_NURB")[0]
+        cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
 
-            if prefix == "Upper":
-                curve = self.upper_rebuild_lip_curve
-            else:
-                curve = self.lower_rebuild_lip_curve
+        # Create secondary nodes GRP to control visibility
+        secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, parent=lips_controllers_grp)
 
-            
-            for i, cv in enumerate(cv_list): # Loop between the cvs of the corresponding curve
+        # ----- Start nurbs setup -----
+        upper_nurbs_surface_cvs = cmds.ls(f"{self.upper_lip_nurbs}.cv[*]", flatten=True)
+        lower_nurbs_surface_cvs = cmds.ls(f"{self.lower_lip_nurbs}.cv[*]", flatten=True)
 
-                if i < (len(cv_list) -1) / 2 :
+        # Get spans and degree to calculate CV indices
+        spans_v = cmds.getAttr(f"{self.upper_lip_nurbs}.spansV")
+        degree_v = cmds.getAttr(f"{self.upper_lip_nurbs}.degreeV")
+        max_index = (spans_v + degree_v - 1) # Calculate the maximum CV index in V direction
+        
+
+        dict_parents = {} # Dictionary to store parent-child relationships for tangent controllers
+
+        for i in range(0, max_index + 1, 3):
+            neighbors = [n for n in [i-1, i+1] if 0 <= n <= max_index]
+            dict_parents[i] = neighbors
+
+        for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
+    
+            cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
+            curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
+
+            mid_point = max_index // 2
+
+            secondary_grps = []
+            secondary_ctls = []
+            secondary_local_joints_mmx = []
+            secondary_joints = []
+
+            for i in range(0, len(cvs) - 1, 3):
+
+                index = i // 3
+
+                if index > max_index:
+                    break
+
+                if index < mid_point:
                     side = "R"
-                elif i == (len(cv_list) -1) / 2 :
+                elif index == mid_point:
                     side = "C"
                 else:
                     side = "L"
 
-                ctl_name = f"{side}_{prefix}Lip0{i}"
-                secondary_nodes, secondary_ctl = curve_tool.create_controller(ctl_name, offset=["GRP", "ANM"], parent=secondary_controllers_nodes)
+                ctl_name = f"{side}_{part}Lip{str(index).zfill(2)}" if index % 3 == 0 else f"{side}_{part}Lip{str(index).zfill(2)}Tan"
 
-                # Place the controllers in each cv of the curve
-                fbf_controller_pos = cmds.createNode("fourByFourMatrix", name=f"{ctl_name}Position_FBF", ss=True) 
-                cmds.connectAttr(f"{curve}.editPoints[{i}].xValueEp", f"{fbf_controller_pos}.in30")
-                cmds.connectAttr(f"{curve}.editPoints[{i}].yValueEp", f"{fbf_controller_pos}.in31")
-                cmds.connectAttr(f"{curve}.editPoints[{i}].zValueEp", f"{fbf_controller_pos}.in32")
+                # Create controller for each CV
+                secondary_nodes, secondary_ctl = curve_tool.create_controller(
+                    ctl_name, 
+                    offset=["GRP", "OFF"], 
+                    parent=lips_controllers_grp
+                )
+                self.lock_attributes(secondary_ctl, ["v"])
 
+                secondary_local_joint = cmds.createNode("joint", name=f"{ctl_name}_JNT", ss=True, parent=self.module_trn)
+                
+                surface_cv = f"{nurbs}.cv[0][{index}]"
+                cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
+
+                # 2. Calcular el parámetro U inicial usando tu función de API
+                real_param = self.getClosestParamToPosition(curve, cv_ws_pos)
+                mp = cmds.createNode("motionPath", name=f"{ctl_name}_MPT", ss=True)
+                cmds.setAttr(f"{mp}.fractionMode", False) 
+                cmds.setAttr(f"{mp}.uValue", real_param)
+                cmds.connectAttr(f"{curve}.worldSpace[0]", f"{mp}.geometryPath")
+                fbf = cmds.createNode("fourByFourMatrix", name=f"{ctl_name}_FBF", ss=True)
+                cmds.connectAttr(f"{mp}.xCoordinate", f"{fbf}.in30")
+                cmds.connectAttr(f"{mp}.yCoordinate", f"{fbf}.in31")
+                cmds.connectAttr(f"{mp}.zCoordinate", f"{fbf}.in32")
+                
                 if side == "R":
-                    cmds.setAttr(f"{fbf_controller_pos}.in00", -1)
+                    cmds.setAttr(f"{fbf}.in00", -1) 
+                cmds.connectAttr(f"{fbf}.output", f"{secondary_nodes[0]}.offsetParentMatrix")
 
-                cmds.connectAttr(f"{fbf_controller_pos}.output", f"{secondary_nodes[0]}.offsetParentMatrix") # Connect the fbf to the controller
+                # Create multMatrix to connect controller to local joint
+                mult_matrix_secondary_local = cmds.createNode("multMatrix", name=f"{ctl_name}Local_MMX", ss=True)
+                cmds.connectAttr(f"{secondary_ctl}.matrix", f"{mult_matrix_secondary_local}.matrixIn[0]")
+                cmds.connectAttr(f"{fbf}.output", f"{mult_matrix_secondary_local}.matrixIn[1]")
+                cmds.connectAttr(f"{mult_matrix_secondary_local}.matrixSum", f"{secondary_local_joint}.offsetParentMatrix")
 
-                # Create a joint to drive later the nurbs surface
-                secondary_joint = cmds.createNode("joint", name=f"{ctl_name}_JNT", ss=True)
-                mmx_secondary_joint = cmds.createNode("multMatrix", name=f"{ctl_name}LocalJoint_MMX", ss=True)
-                cmds.connectAttr(f"{secondary_ctl}.matrix", f"{mmx_secondary_joint}.matrixIn[0]")
-                cmds.connectAttr(f"{fbf_controller_pos}.output", f"{mmx_secondary_joint}.matrixIn[1]")
-                cmds.connectAttr(f"{mmx_secondary_joint}.matrixSum", f"{secondary_joint}.offsetParentMatrix")
+                if index % 3 == 0:
+                
+                    cmds.addAttr(secondary_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
+                    cmds.setAttr(f"{secondary_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+                    cmds.addAttr(secondary_ctl, ln="Tan_Controllers_Visibility", at="bool", k=True)
+                    cmds.setAttr(f"{secondary_ctl}.Tan_Controllers_Visibility", k=False, cb=True)
 
+                secondary_grps.append(secondary_nodes[0])
+                secondary_ctls.append(secondary_ctl)
+                secondary_local_joints_mmx.append(mult_matrix_secondary_local)
+                secondary_joints.append(secondary_local_joint)
+
+            for parent_idx, children in dict_parents.items():
+                for child_idx in children:
+                    cmds.connectAttr(f"{secondary_ctls[parent_idx]}.Tan_Controllers_Visibility", f"{secondary_grps[child_idx]}.visibility")
+
+                    # Add the parent to the tangent controllers
+                    tan_name = secondary_ctls[child_idx].split("_CTL")[0]
+                    parent_connection = cmds.listConnections(f"{secondary_grps[child_idx]}.offsetParentMatrix", source=True, destination=False)[0] # Get current GRP connection
+                    mmx_controller = cmds.createNode("multMatrix", name=f"{tan_name}Parent_MMX", ss=True)
+                    cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_controller}.matrixIn[0]")
+                    cmds.connectAttr(f"{parent_connection}.output", f"{mmx_controller}.matrixIn[1]")
+                    cmds.connectAttr(f"{mmx_controller}.matrixSum", f"{secondary_grps[child_idx]}.offsetParentMatrix", f=True)
+
+                    # Add the parent to the local joint as well
+                    mmx_local = cmds.createNode("multMatrix", name=f"{tan_name}ParentLocal_MMX", ss=True)
+                    joint_connection = cmds.listConnections(f"{secondary_joints[child_idx]}.offsetParentMatrix", source=True, destination=False)[0] # Get current local joint connection
+                    cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[0]")
+                    cmds.connectAttr(f"{joint_connection}.matrixSum", f"{mmx_local}.matrixIn[1]")
+                    cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
+
+            skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
 
         # ------ Conditions to control visibility of lip controllers ------
         condition_primary = cmds.createNode("condition", name="C_lipsPrimaryControllers_COND", ss=True)
