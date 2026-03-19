@@ -225,6 +225,12 @@ def create_basic_structure(character_name=None):
     if not cmds.listRelatives(freeze_jnt, parent=True):
         cmds.parent(freeze_jnt, skel_grp)
 
+    mgear = data_manager.DataExportBiped().get_data("rig_settings", "mgear_integration")
+    print(f"--- MGEAR INTEGRATION: {mgear} ---")
+    if mgear:
+        
+        cmds.delete(nodes["controls_GRP"])
+
     # --- 9. EXPORTACIÓN ---
     data_manager.DataExportBiped().append_data("basic_structure", {
         "skel_GRP" : skel_grp,

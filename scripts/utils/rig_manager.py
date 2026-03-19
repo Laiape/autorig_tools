@@ -396,8 +396,13 @@ def build_rig(character_name):
     tail_skinning_jnts  = rig_settings.get("tail_skinning_jnts", 5)
     tail_controllers    = rig_settings.get("tail_controllers", 5)
     mGear_integration   = rig_settings.get("mGear_integration", 0)
-    print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
+    
+    # print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
+    data_manager.DataExportBiped().append_data("rig_settings", 
+                                                
+                                                {"mgear_integration": mGear_integration,
+                                                })
 
     # --- Spine ---
     if check("C_spine00_JNT"):

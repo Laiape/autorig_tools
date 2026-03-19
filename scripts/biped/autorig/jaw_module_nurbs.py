@@ -236,52 +236,53 @@ class JawModule(object):
 
 
         # Create constraints to upper and lower jaws
-        jaw_nurbs_skin_cluster = cmds.skinCluster(
-                self.sphere,
-                self.jaw_jnt,
-                self.upper_jaw_jnt,
-                toSelectedBones=True,
-                bindMethod=0,
-                normalizeWeights=1,
-                weightDistribution=0,
-                maximumInfluences=2,
-                dropoffRate=4,
-                removeUnusedInfluence=False,
-                name="C_jawSlideNRB_SKIN"
-            )[0]
+        # jaw_nurbs_skin_cluster = cmds.skinCluster(
+        #         self.sphere,
+        #         self.jaw_jnt,
+        #         self.upper_jaw_jnt,
+        #         toSelectedBones=True,
+        #         bindMethod=0,
+        #         normalizeWeights=1,
+        #         weightDistribution=0,
+        #         maximumInfluences=2,
+        #         dropoffRate=4,
+        #         removeUnusedInfluence=False,
+        #         name="C_jawSlideNRB_SKIN"
+        #     )[0]
         
-        u_spans = cmds.getAttr(f"{self.sphere}.spansU")
-        v_spans = cmds.getAttr(f"{self.sphere}.spansV")
-        degU = cmds.getAttr(f"{self.sphere}.degreeU")
-        degV = cmds.getAttr(f"{self.sphere}.degreeV")
+        # u_spans = cmds.getAttr(f"{self.sphere}.spansU")
+        # v_spans = cmds.getAttr(f"{self.sphere}.spansV")
+        # degU = cmds.getAttr(f"{self.sphere}.degreeU")
+        # degV = cmds.getAttr(f"{self.sphere}.degreeV")
 
-        u_count = u_spans + degU
-        v_count = v_spans + degV
-        half = int(u_count) // 2
+        # u_count = u_spans + degU
+        # v_count = v_spans + degV
+        # half = int(u_count) // 2
 
-        for u in range(u_count):
-            for v in range(v_count):
+        # for u in range(u_count):
+        #     for v in range(v_count):
                 
-                if u > half:
-                    upper_w = 1.0
-                    jaw_w = 0.0
-                elif u == half:
-                    jaw_w = 0.5
-                    upper_w = 0.5
-                else:
-                    jaw_w = 1.0
-                    upper_w = 0.0
+        #         if u > half:
+        #             upper_w = 1.0
+        #             jaw_w = 0.0
+        #         elif u == half:
+        #             jaw_w = 0.5
+        #             upper_w = 0.5
+        #         else:
+        #             jaw_w = 1.0
+        #             upper_w = 0.0
 
-                cv = f"{self.sphere}.cv[{u}][{v}]"
+        #         cv = f"{self.sphere}.cv[{u}][{v}]"
                 
-                cmds.skinPercent(jaw_nurbs_skin_cluster, cv, transformValue=[
-                    (self.jaw_jnt, jaw_w),
-                    (self.upper_jaw_jnt, upper_w)
-                ])
+        #         cmds.skinPercent(jaw_nurbs_skin_cluster, cv, transformValue=[
+        #             (self.jaw_jnt, jaw_w),
+        #             (self.upper_jaw_jnt, upper_w)
+        #         ])
         
         # Create main lip controllers
         lips_controllers_grp = cmds.createNode("transform", name="C_lipsControllers_GRP", ss=True, p=self.controllers_grp)
         main_lips_controllers = cmds.createNode("transform", name="C_primaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
+
         # Create upper controller
         upper_lip_nodes, upper_lip_ctl = curve_tool.create_controller("C_upperLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
         self.lock_attributes(upper_lip_ctl, ["v"])
@@ -292,23 +293,29 @@ class JawModule(object):
         fbf_upper_lip = cmds.createNode("fourByFourMatrix", name="C_upperLip_FBF", ss=True)
         cmds.connectAttr(f"{mtp_upper_lip}.allCoordinates.xCoordinate", f"{fbf_upper_lip}.in30")
         cmds.connectAttr(f"{mtp_upper_lip}.allCoordinates.yCoordinate", f"{fbf_upper_lip}.in31")
-        cmds.connectAttr(f"{mtp_upper_lip}.allCoordinates.zCoordinate", f"{fbf_upper_lip}.in32")
-        cmds.connectAttr(f"{fbf_upper_lip}.output", f"{upper_lip_nodes[0]}.offsetParentMatrix")
-        upper_local_jnt = cmds.createNode("joint", name="C_upperLip_JNT", ss=True, p=self.module_trn)
-        mmx_upper_local = cmds.createNode("multMatrix", name="C_upperLipLocal_MMT")
-        cmds.connectAttr(f"{upper_lip_ctl}.worldMatrix[0]", f"{mmx_upper_local}.matrixIn[0]")
-        cmds.connectAttr(f"{upper_lip_nodes[0]}.worldInverseMatrix[0]", f"{mmx_upper_local}.matrixIn[1]")
-        grp_wm = cmds.getAttr(f"{upper_lip_nodes[0]}.worldMatrix[0]")
-        cmds.setAttr(f"{mmx_upper_local}.matrixIn[2]", grp_wm, type="matrix")  # Reset any previous transformations
-        cmds.connectAttr(f"{mmx_upper_local}.matrixSum", f"{upper_local_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{mtp_upper_lip}.allCoordinates.zCoordinate", f"{fbf_upper_lip}.in32") 
         upper_lip_parent_wm = cmds.createNode("parentMatrix", name="C_upperLip_PMX", ss=True)
         cmds.connectAttr(f"{fbf_upper_lip}.output", f"{upper_lip_parent_wm}.inputMatrix")
         cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{upper_lip_parent_wm}.target[0].targetMatrix")
-        cmds.setAttr(f"{upper_lip_parent_wm}.target[0].offsetMatrix", self.get_offset_matrix(upper_lip_nodes[0], self.upper_jaw_ctl), type="matrix")
-        mult_matrix_offset_upper = cmds.createNode("multMatrix", name="C_upperLipOffset_MMT", ss=True)
-        cmds.connectAttr(f"{upper_lip_parent_wm}.outputMatrix", f"{mult_matrix_offset_upper}.matrixIn[0]")
-        cmds.connectAttr(f"{upper_lip_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_offset_upper}.matrixIn[1]")
-        cmds.connectAttr(f"{mult_matrix_offset_upper}.matrixSum", f"{upper_lip_nodes[1]}.offsetParentMatrix")
+        cmds.connectAttr(f"{upper_lip_parent_wm}.outputMatrix", f"{upper_lip_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{upper_lip_parent_wm}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_upper_lip}.output", self.upper_jaw_ctl), type="matrix")
+
+        # Local joint for upper lip
+        upper_local_jnt = cmds.createNode("joint", name="C_upperLip_JNT", ss=True, p=self.module_trn)
+        mmx_upper_local = cmds.createNode("multMatrix", name="C_upperLipLocal_MMT", ss=True)
+        rfm_upper_local = cmds.createNode("rowFromMatrix", name="C_upperLipLocal_RMF", ss=True)
+        cps_upper_local = cmds.createNode("closestPointOnSurface", name="C_upperLipLocal_CPS", ss=True)
+        cmds.setAttr(f"{rfm_upper_local}.input", 3)  # Set rowFromMatrix to output translation
+
+        cmds.connectAttr(f"{upper_lip_ctl}.matrix", f"{mmx_upper_local}.matrixIn[0]")
+        cmds.connectAttr(f"{upper_lip_parent_wm}.outputMatrix", f"{mmx_upper_local}.matrixIn[1]")
+        cmds.connectAttr(f"{mmx_upper_local}.matrixSum", f"{rfm_upper_local}.matrix")
+        cmds.connectAttr(f"{rfm_upper_local}.outputX", f"{cps_upper_local}.inPositionX")
+        cmds.connectAttr(f"{rfm_upper_local}.outputY", f"{cps_upper_local}.inPositionY")
+        cmds.connectAttr(f"{rfm_upper_local}.outputZ", f"{cps_upper_local}.inPositionZ")
+        cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_upper_local}.inputSurface")
+        cmds.connectAttr(f"{cps_upper_local}.position", f"{upper_local_jnt}.translate")
+        
 
         # Create lower controller
         lower_lip_nodes, lower_lip_ctl = curve_tool.create_controller("C_lowerLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
@@ -321,25 +328,29 @@ class JawModule(object):
         cmds.connectAttr(f"{mtp_lower_lip}.allCoordinates.xCoordinate", f"{fbf_lower_lip}.in30")
         cmds.connectAttr(f"{mtp_lower_lip}.allCoordinates.yCoordinate", f"{fbf_lower_lip}.in31")
         cmds.connectAttr(f"{mtp_lower_lip}.allCoordinates.zCoordinate", f"{fbf_lower_lip}.in32")
-        cmds.connectAttr(f"{fbf_lower_lip}.output", f"{lower_lip_nodes[0]}.offsetParentMatrix")
-        lower_local_jnt = cmds.createNode("joint", name="C_lowerLip_JNT", ss=True, p=self.module_trn)
-        mmx_lower_local = cmds.createNode("multMatrix", name="C_lowerLipLocal_MMT")
-        cmds.connectAttr(f"{lower_lip_ctl}.worldMatrix[0]", f"{mmx_lower_local}.matrixIn[0]")
-        cmds.connectAttr(f"{lower_lip_nodes[0]}.worldInverseMatrix[0]", f"{mmx_lower_local}.matrixIn[1]")
-        grp_wm = cmds.getAttr(f"{lower_lip_nodes[0]}.worldMatrix[0]")
-        cmds.setAttr(f"{mmx_lower_local}.matrixIn[2]", grp_wm, type="matrix")  # Reset any previous transformations
-        cmds.connectAttr(f"{mmx_lower_local}.matrixSum", f"{lower_local_jnt}.offsetParentMatrix")
         lower_lip_parent_wm = cmds.createNode("parentMatrix", name="C_lowerLip_PMX", ss=True)
         cmds.connectAttr(f"{fbf_lower_lip}.output", f"{lower_lip_parent_wm}.inputMatrix")
         cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{lower_lip_parent_wm}.target[0].targetMatrix")
-        cmds.setAttr(f"{lower_lip_parent_wm}.target[0].offsetMatrix", self.get_offset_matrix(lower_lip_nodes[0], self.jaw_ctl), type="matrix")
-        mult_matrix_offset_lower = cmds.createNode("multMatrix", name="C_lowerLipOffset_MMT", ss=True)
-        cmds.connectAttr(f"{lower_lip_parent_wm}.outputMatrix", f"{mult_matrix_offset_lower}.matrixIn[0]")
-        cmds.connectAttr(f"{lower_lip_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_offset_lower}.matrixIn[1]")
-        cmds.connectAttr(f"{mult_matrix_offset_lower}.matrixSum", f"{lower_lip_nodes[1]}.offsetParentMatrix")
+        cmds.connectAttr(f"{lower_lip_parent_wm}.outputMatrix", f"{lower_lip_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{lower_lip_parent_wm}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_lower_lip}.output", self.jaw_ctl), type="matrix")
 
-        cmds.select(self.sphere)
-        temp_joint = cmds.joint(name="tempLip_JNT")
+        # Local joints for lower lips
+        lower_local_jnt = cmds.createNode("joint", name="C_lowerLip_JNT", ss=True, p=self.module_trn)
+        mmx_lower_local = cmds.createNode("multMatrix", name="C_lowerLipLocal_MMT", ss=True)
+        rfm_lower_local = cmds.createNode("rowFromMatrix", name="C_lowerLipLocal_RMF", ss=True)
+        cps_lower_local = cmds.createNode("closestPointOnSurface", name="C_lowerLipLocal_CPS", ss=True)
+        cmds.setAttr(f"{rfm_lower_local}.input", 3)  # Set rowFromMatrix to output translation
+
+        cmds.connectAttr(f"{lower_lip_ctl}.matrix", f"{mmx_lower_local}.matrixIn[0]")
+        cmds.connectAttr(f"{lower_lip_parent_wm}.outputMatrix", f"{mmx_lower_local}.matrixIn[1]")
+        cmds.connectAttr(f"{mmx_lower_local}.matrixSum", f"{rfm_lower_local}.matrix")
+        cmds.connectAttr(f"{rfm_lower_local}.outputX", f"{cps_lower_local}.inPositionX")
+        cmds.connectAttr(f"{rfm_lower_local}.outputY", f"{cps_lower_local}.inPositionY")
+        cmds.connectAttr(f"{rfm_lower_local}.outputZ", f"{cps_lower_local}.inPositionZ")
+        cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_lower_local}.inputSurface")
+        cmds.connectAttr(f"{cps_lower_local}.position", f"{lower_local_jnt}.translate")
+        
+        
 
         upper_local_jnts = []
         lower_local_jnts = []
@@ -369,7 +380,6 @@ class JawModule(object):
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.xCoordinate", f"{fbf_corner_lip}.in30")
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.yCoordinate", f"{fbf_corner_lip}.in31")
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.zCoordinate", f"{fbf_corner_lip}.in32")
-            cmds.connectAttr(f"{fbf_corner_lip}.output", f"{corner_nodes[0]}.offsetParentMatrix")
 
             if side == "R":
 
@@ -390,20 +400,18 @@ class JawModule(object):
             cmds.connectAttr(f"{corner_ctl}.Height", f"{reverse_blender}.inputX")
             cmds.connectAttr(f"{reverse_blender}.outputX", f"{parent_matrix_blender}.target[0].weight")
             cmds.connectAttr(f"{corner_ctl}.Height", f"{parent_matrix_blender}.target[1].weight")
-            mult_matrix_corner_offset = cmds.createNode("multMatrix", name=f"{side}_lipCornerOffset_MMT", ss=True)
-            cmds.connectAttr(f"{parent_matrix_blender}.outputMatrix", f"{mult_matrix_corner_offset}.matrixIn[0]")
-            cmds.connectAttr(f"{corner_nodes[0]}.parentInverseMatrix[0]", f"{mult_matrix_corner_offset}.matrixIn[1]")
-            cmds.connectAttr(f"{mult_matrix_corner_offset}.matrixSum", f"{corner_nodes[1]}.offsetParentMatrix")
-            cmds.setAttr(f"{parent_matrix_blender}.target[0].offsetMatrix", self.get_offset_matrix(corner_nodes[0], self.jaw_ctl), type="matrix")
-            cmds.setAttr(f"{parent_matrix_blender}.target[1].offsetMatrix", self.get_offset_matrix(corner_nodes[0], self.upper_jaw_ctl), type="matrix")
+
+            cmds.connectAttr(f"{parent_matrix_blender}.outputMatrix", f"{corner_nodes[0]}.offsetParentMatrix")
+            cmds.setAttr(f"{parent_matrix_blender}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_corner_lip}.output", self.jaw_ctl), type="matrix")
+            cmds.setAttr(f"{parent_matrix_blender}.target[1].offsetMatrix", self.get_offset_matrix(f"{fbf_corner_lip}.output", self.upper_jaw_ctl), type="matrix")
 
             # Corner local
             row_matrix_corner_local = cmds.createNode("rowFromMatrix", name=f"{side}_lipCornerLocal_RMF")
             cmds.setAttr(f"{row_matrix_corner_local}.input", 3)
             mult_matrix_corner_local = cmds.createNode("multMatrix", name=f"{side}_lipCornerLocal_MMT")
-            cmds.connectAttr(f"{corner_ctl}.worldMatrix[0]", f"{mult_matrix_corner_local}.matrixIn[0]")
-            cmds.connectAttr(f"{corner_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_corner_local}.matrixIn[1]")
-            cmds.connectAttr(f"{fbf_corner_lip}.output", f"{mult_matrix_corner_local}.matrixIn[2]")
+            cmds.connectAttr(f"{corner_ctl}.matrix", f"{mult_matrix_corner_local}.matrixIn[0]")
+            cmds.connectAttr(f"{parent_matrix_blender}.outputMatrix", f"{mult_matrix_corner_local}.matrixIn[1]")
+            # cmds.connectAttr(f"{fbf_corner_lip}.output", f"{mult_matrix_corner_local}.matrixIn[2]")
             cmds.connectAttr(f"{mult_matrix_corner_local}.matrixSum", f"{row_matrix_corner_local}.matrix")
             closest_point_corner = cmds.createNode("closestPointOnSurface", name=f"{side}_lipCorner_CPOS", ss=True)
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{closest_point_corner}.inputSurface")
@@ -570,8 +578,8 @@ class JawModule(object):
 
             for parent_idx, children in dict_parents.items():
                 for child_idx in children:
+                    
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.Tan_Controllers_Visibility", f"{secondary_grps[child_idx]}.visibility")
-
                     # Add the parent to the tangent controllers
                     tan_name = secondary_ctls[child_idx].split("_CTL")[0]
                     parent_connection = cmds.listConnections(f"{secondary_grps[child_idx]}.offsetParentMatrix", source=True, destination=False)[0] # Get current GRP connection
@@ -579,13 +587,46 @@ class JawModule(object):
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_controller}.matrixIn[0]")
                     cmds.connectAttr(f"{parent_connection}.output", f"{mmx_controller}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_controller}.matrixSum", f"{secondary_grps[child_idx]}.offsetParentMatrix", f=True)
-
-                    # Add the parent to the local joint as well
                     mmx_local = cmds.createNode("multMatrix", name=f"{tan_name}ParentLocal_MMX", ss=True)
                     joint_connection = cmds.listConnections(f"{secondary_joints[child_idx]}.offsetParentMatrix", source=True, destination=False)[0] # Get current local joint connection
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[0]")
                     cmds.connectAttr(f"{joint_connection}.matrixSum", f"{mmx_local}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
+
+                    # if secondary_grps[parent_idx].startswith("C_"): # Ensure we are connecting the correct controllers (avoid connecting to corners)
+                    #     pass
+                    # else:
+                    #     # Add the parent to the local joint as well
+                    
+            
+            # Project all the joints to the NURBS Surface
+            for joint in secondary_joints:
+                
+                joint_name = joint.split("_JNT")[0]
+                input_connection = cmds.listConnections(f"{joint}.offsetParentMatrix", source=True, destination=False)[0]
+                pick_matrix = cmds.createNode("pickMatrix", name=f"{joint_name}_PCM", ss=True)
+                decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{joint_name}_DCM", ss=True)
+                rfm_project = cmds.createNode("rowFromMatrix", name=f"{joint_name}Project_RMF", ss=True)
+                cps_project = cmds.createNode("closestPointOnSurface", name=f"{joint_name}Project_CPS", ss=True)
+                cmds.setAttr(f"{pick_matrix}.useTranslate", 0)
+                cmds.setAttr(f"{pick_matrix}.useScale", 0)
+                cmds.setAttr(f"{pick_matrix}.useShear", 0)
+                cmds.setAttr(f"{rfm_project}.input", 3)
+
+                cmds.connectAttr(f"{input_connection}.matrixSum", f"{pick_matrix}.inputMatrix")
+                cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{decompose_matrix}.inputMatrix")
+                cmds.connectAttr(f"{input_connection}.matrixSum", f"{rfm_project}.matrix")
+                cmds.connectAttr(f"{rfm_project}.outputX", f"{cps_project}.inPositionX")
+                cmds.connectAttr(f"{rfm_project}.outputY", f"{cps_project}.inPositionY")
+                cmds.connectAttr(f"{rfm_project}.outputZ", f"{cps_project}.inPositionZ")
+                cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_project}.inputSurface")
+                cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{joint}.rotate")
+                cmds.connectAttr(f"{cps_project}.position", f"{joint}.translate")
+                cmds.disconnectAttr( f"{input_connection}.matrixSum", f"{joint}.offsetParentMatrix")
+                temp_trn = cmds.createNode("transform", name=f"{joint_name}_TEMP_TRN", ss=True)
+                cmds.connectAttr(f"{temp_trn}.worldMatrix[0]", f"{joint}.offsetParentMatrix")
+                cmds.delete(temp_trn)
+
 
             skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
 
@@ -627,7 +668,7 @@ class JawModule(object):
                 cmds.connectAttr(f"{linear_curve}.editPoints[{index}].zValueEp", f"{fbf_linear}.in32")
                 cmds.connectAttr(f"{fbf_linear}.output", f"{parent_matrix_blender}.inputMatrix")
                 cmds.connectAttr(f"{fbf_nurbs}.output", f"{parent_matrix_blender}.target[0].targetMatrix")
-                cmds.setAttr(f"{parent_matrix_blender}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fbf_nurbs}.output", f"{fbf_linear}.output"), type="matrix")
+                cmds.setAttr(f"{parent_matrix_blender}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_nurbs}.output", f"{fbf_linear}.output"), type="matrix")
 
                 
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(index).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
@@ -675,30 +716,8 @@ class JawModule(object):
         cmds.connectAttr(f"{secondary_condition_jaw}.outColorR", f"{'L_jaw_GRP'}.visibility")
         cmds.connectAttr(f"{secondary_condition_jaw}.outColorR", f"{'R_jaw_GRP'}.visibility")
 
-
-        
-    def get_offset_matrix(self, child, parent):
-
-        """
-        Calculate the offset matrix between a child and parent transform in Maya.
-        Args:
-            child (str): The name of the child transform.
-            parent (str): The name of the parent transform. 
-        Returns:
-            om.MMatrix: The offset matrix that transforms the child into the parent's space.
-        """
-        child_dag = om.MSelectionList().add(child).getDagPath(0)
-        parent_dag = om.MSelectionList().add(parent).getDagPath(0)
-
-        child_world_matrix = child_dag.inclusiveMatrix()
-        parent_world_matrix = parent_dag.inclusiveMatrix()
-        
-        offset_matrix = child_world_matrix * parent_world_matrix.inverse()
-
-        
-        return offset_matrix
     
-    def matrix_get_offset_matrix(self, child, parent):
+    def get_offset_matrix(self, child, parent):
         """
         Calculate the offset matrix between a child and parent transform in Maya.
         Args:

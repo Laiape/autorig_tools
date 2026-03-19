@@ -28,10 +28,10 @@ class AutoRig(object):
         
         self.basic_structure()
         self.make_rig()
-        self.label_joints()
-        self.hide_connections()
-        self.inherit_transforms()
-        self.import_weights()
+        # self.label_joints()
+        # self.hide_connections()
+        # self.inherit_transforms()
+        # self.import_weights()
 
     def basic_structure(self):
 
