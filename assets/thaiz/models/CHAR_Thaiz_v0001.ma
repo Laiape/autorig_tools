@@ -1,14 +1,15 @@
 //Maya ASCII 2024 scene
-//Name: CHAR_Thaiz_v0001.ma
-//Last modified: Wed, Mar 11, 2026 12:05:10 PM
+//Name: Thaiz_Retopology_v0005.ma
+//Last modified: Thu, Mar 19, 2026 01:06:37 PM
 //Codeset: 1252
 requires maya "2024";
 requires "stereoCamera" "10.0";
 requires -nodeType "aiOptions" -nodeType "aiAOVDriver" -nodeType "aiAOVFilter" -nodeType "aiStandardSurface"
-		 -nodeType "aiImagerDenoiserOidn" "mtoa" "5.3.4.1";
+		 -nodeType "aiImagerDenoiserOidn" "mtoa" "5.4.3.1";
 requires -nodeType "mayaUsdLayerManager" -dataType "pxrUsdStageData" "mayaUsdPlugin" "0.25.0";
-requires "AT_MPView" "RC 1";
+requires "stereoCamera" "10.0";
 requires "RoadkillPro2012_amd64" "Version 1.044a";
+requires "AT_MPView" "RC 1";
 requires "SLFxShader" "1.0";
 requires "sampleData" "1.0";
 currentUnit -l centimeter -a degree -t film;
@@ -16,23 +17,24 @@ fileInfo "application" "maya";
 fileInfo "product" "Maya 2024";
 fileInfo "version" "2024";
 fileInfo "cutIdentifier" "202310181224-69282f2959";
-fileInfo "osv" "Windows 11 Home v2009 (Build: 26200)";
-fileInfo "UUID" "A2709140-488F-0E8A-733C-9FA68F02DA1C";
+fileInfo "osv" "Windows 11 Education v2009 (Build: 26100)";
+fileInfo "UUID" "1CF670FB-47CE-AC84-65D7-B290E24DA04D";
 fileInfo "license" "education";
 fileInfo "PrismStates" "{\n    \"states\": [\n        {\n            \"statename\": \"publish\",\n            \"comment\": \"\",\n            \"description\": \"\"\n        }\n    ]\n}";
 createNode transform -s -n "persp";
 	rename -uid "AE7A9525-48B3-D56E-0494-CAAE41C6D815";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 6.9912833577366307 94.642521423420078 114.57903652377406 ;
-	setAttr ".r" -type "double3" 1.4616472702906214 2.9999999999999098 6.22054590420272e-18 ;
+	setAttr ".t" -type "double3" -11.834650919549862 66.031042333486056 175.43797726889517 ;
+	setAttr ".r" -type "double3" -11.138352729709903 -7.3999999999994746 -1.0022710911234376e-16 ;
 createNode camera -s -n "perspShape" -p "persp";
 	rename -uid "46C77171-4257-74B6-BB2B-BF8863DCDB2A";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999993;
-	setAttr ".coi" 147.44366860173074;
+	setAttr ".coi" 174.88238227112203;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
+	setAttr ".tp" -type "double3" 0 62.08063343167305 -0.44047260284423828 ;
 	setAttr ".hc" -type "string" "viewSet -p %camera";
 createNode transform -s -n "top";
 	rename -uid "87DE026C-476E-E62D-62C9-0EBFE840998D";
@@ -84,15 +86,14 @@ createNode camera -s -n "sideShape" -p "side";
 	setAttr ".hc" -type "string" "viewSet -s %camera";
 	setAttr ".o" yes;
 	setAttr ".ai_translator" -type "string" "orthographic";
-createNode transform -n "THAIZ_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "1DC628B6-466A-DE47-2249-53B2BD4FDA92";
-	setAttr ".rp" -type "double3" 0 62.373763382434845 -1.1560235023498535 ;
-	setAttr ".sp" -type "double3" 0 62.373763382434845 -1.1560235023498535 ;
-createNode transform -n "THAIZ_BODY_PLY" -p "THAIZ_GRP";
+	setAttr ".s" -type "double3" 0.78193204632599422 0.78193204632599422 0.78193204632599422 ;
+createNode transform -n "Thaiz_Retopology_v0002:THAIZ_BODY_PLY" -p "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "D55421E5-47FE-3818-3EB7-198839C9AD23";
 	setAttr ".rp" -type "double3" 0 62.373763382434845 -1.1560235023498535 ;
 	setAttr ".sp" -type "double3" 0 62.373763382434845 -1.1560235023498535 ;
-createNode mesh -n "THAIZ_BODY_PLYShape" -p "THAIZ_BODY_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:THAIZ_BODY_PLYShape" -p "Thaiz_Retopology_v0002:THAIZ_BODY_PLY";
 	rename -uid "925D812D-4C20-AA7F-4C36-A68F8C567F21";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[1].gcl" -type "componentList" 36 "f[388:395]" "f[397]" "f[399]" "f[405]" "f[419]" "f[425]" "f[428]" "f[439:443]" "f[525]" "f[653]" "f[660]" "f[683]" "f[815]" "f[984:985]" "f[1058]" "f[1177]" "f[1204]" "f[1259]" "f[7723:7730]" "f[7732]" "f[7734]" "f[7740]" "f[7754]" "f[7760]" "f[7763]" "f[7774:7778]" "f[7860]" "f[7988]" "f[7995]" "f[8018]" "f[8150]" "f[8319:8320]" "f[8393]" "f[8512]" "f[8539]" "f[8594]";
@@ -43267,17 +43268,17 @@ createNode mesh -n "THAIZ_BODY_PLYShape" -p "THAIZ_BODY_PLY";
 		16028 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dr" 1;
-createNode transform -n "Mouth_GRP" -p "THAIZ_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:Mouth_GRP" -p "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "A210D29C-4539-0C92-087E-8DA1F5C1544C";
 	setAttr ".rp" -type "double3" -0.00586700439453125 102.2532958984375 6.5070359706878662 ;
 	setAttr ".sp" -type "double3" -0.00586700439453125 102.2532958984375 6.5070359706878662 ;
-createNode transform -n "Thaiz_Topology_v12:tongue" -p "Mouth_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:tongue" -p "Thaiz_Retopology_v0002:Mouth_GRP";
 	rename -uid "FC4581DE-4C53-1718-C849-7EB9B20DA094";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 0.00043863897035068553 101.45563820302318 6.0154978255435001 ;
 	setAttr ".sp" -type "double3" 0.00043863897035068553 101.45563820302318 6.0154978255435001 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:tongueShape" -p "Thaiz_Topology_v12:tongue";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:tongueShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:tongue";
 	rename -uid "5ADD28CF-4610-37C9-66D9-EB83EDE0E7B8";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -44305,17 +44306,17 @@ createNode mesh -n "Thaiz_Topology_v12:tongueShape" -p "Thaiz_Topology_v12:tongu
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "Thaiz_Topology_v12:gums" -p "Mouth_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:gums" -p "Thaiz_Retopology_v0002:Mouth_GRP";
 	rename -uid "608DC57B-4BB6-6CBD-ED36-BAA6B732B198";
 	setAttr ".rp" -type "double3" -0.00586700439453125 102.2532958984375 7.5052164812362925 ;
 	setAttr ".sp" -type "double3" -0.00586700439453125 102.2532958984375 7.5052164812362925 ;
-createNode transform -n "Thaiz_Topology_v12:top_gum" -p "Thaiz_Topology_v12:gums";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:top_gum" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:gums";
 	rename -uid "8100898F-4D31-3D30-46D0-BD9E093BC03D";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -0.00586700439453125 103.40029665382427 7.5052164859531878 ;
 	setAttr ".sp" -type "double3" -0.00586700439453125 103.40029665382427 7.5052164859531878 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:top_gumShape" -p "Thaiz_Topology_v12:top_gum";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:top_gumShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:top_gum";
 	rename -uid "D94A5035-4C27-89F1-8F29-76A7E2FDFF37";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -46988,13 +46989,13 @@ createNode mesh -n "Thaiz_Topology_v12:top_gumShape" -p "Thaiz_Topology_v12:top_
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dr" 3;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:low_gum" -p "Thaiz_Topology_v12:gums";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:low_gum" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:gums";
 	rename -uid "3F72FEBE-43B2-D8CF-FAE1-19923D3B669A";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 0.00043862704627127915 101.05398152645152 7.3711320214306486 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127915 101.05398152645152 7.3711320214306486 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:low_gumShape" -p "Thaiz_Topology_v12:low_gum";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:low_gumShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:low_gum";
 	rename -uid "0B017D95-4988-F78C-EECC-7192DD3CD9F4";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -49655,21 +49656,21 @@ createNode mesh -n "Thaiz_Topology_v12:low_gumShape" -p "Thaiz_Topology_v12:low_
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:Low_teeth" -p "Mouth_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth" -p "Thaiz_Retopology_v0002:Mouth_GRP";
 	rename -uid "41DB2FF7-4487-0A8D-D038-819FE7CD5236";
 	setAttr ".rp" -type "double3" 0.00043863897035068575 101.67142661349197 7.3823012818573535 ;
 	setAttr ".sp" -type "double3" 0.00043863897035068575 101.67142661349197 7.3823012818573535 ;
-createNode transform -n "Thaiz_Topology_v12:molars" -p "Thaiz_Topology_v12:Low_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth";
 	rename -uid "F8DB6D9B-45AE-43AF-AAE4-C1A06C02B686";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:R_molars" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:molars";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molars" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars";
 	rename -uid "CFE3E306-455C-2705-0CC0-D082CEACA8D5";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -2.6452833018746178 101.68895247947862 6.9178970837568752 ;
 	setAttr ".sp" -type "double3" -2.6452833018746178 101.68895247947862 6.9178970837568752 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:R_molars";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molarsShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molars";
 	rename -uid "AD5C0E63-4B3F-2432-10B6-C99F700CE5E6";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -50508,13 +50509,13 @@ createNode mesh -n "Thaiz_Topology_v12:R_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|T
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:L_molars" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:molars";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molars" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars";
 	rename -uid "16D7C2CC-4AE3-34E1-7153-6F8E181DB4F6";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 2.6461606840887342 101.68874353872408 6.9178970837568752 ;
 	setAttr ".sp" -type "double3" 2.6461606840887342 101.68874353872408 6.9178970837568752 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:L_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:L_molars";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molarsShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molars";
 	rename -uid "01C88539-4600-36BD-3888-BA92D7770508";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -51353,17 +51354,17 @@ createNode mesh -n "Thaiz_Topology_v12:L_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|T
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "Thaiz_Topology_v12:fangs" -p "Thaiz_Topology_v12:Low_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:fangs" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth";
 	rename -uid "E2E81A50-4E2F-0609-61A3-ACAF01F46832";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:L_fang" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:fangs";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_fang" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:fangs";
 	rename -uid "6EEC631D-4166-FB23-9F80-F093958FF7B0";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 1.8326857982698157 101.59382473880746 9.1042232905154652 ;
 	setAttr ".sp" -type "double3" 1.8326857982698157 101.59382473880746 9.1042232905154652 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:L_fangShape" -p "Thaiz_Topology_v12:L_fang";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_fangShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_fang";
 	rename -uid "7F8F539B-4872-61C7-CD66-F3BD0CF2D22F";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -51700,17 +51701,18 @@ createNode mesh -n "Thaiz_Topology_v12:L_fangShape" -p "Thaiz_Topology_v12:L_fan
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:middle_teeth" -p "Thaiz_Topology_v12:Low_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth" 
+		-p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth";
 	rename -uid "F3F1C546-4163-8919-E1E2-488437510D51";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:L_middle" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:middle_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_middle" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth";
 	rename -uid "019D77C1-472D-AFAD-1080-2AB48F8C3BB7";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 1.1954246824553676 101.61563666114678 9.3361074188848701 ;
 	setAttr ".sp" -type "double3" 1.1954246824553676 101.61563666114678 9.3361074188848701 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:L_middleShape" -p "Thaiz_Topology_v12:L_middle";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_middleShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_middle";
 	rename -uid "D9AC4C64-4194-4BF5-C1EE-9DB5CA3A87DA";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -52118,13 +52120,13 @@ createNode mesh -n "Thaiz_Topology_v12:L_middleShape" -p "Thaiz_Topology_v12:L_m
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:R_middle" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:middle_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middle" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth";
 	rename -uid "9BD8D7DA-4DBA-F461-FA3D-088885BCC750";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -1.194543168320453 101.58843705220843 9.3361064861136427 ;
 	setAttr ".sp" -type "double3" -1.194543168320453 101.58843705220843 9.3361064861136427 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_middleShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:middle_teeth|Thaiz_Topology_v12:R_middle";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middleShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middle";
 	rename -uid "777D2B8F-4E72-C141-567F-2996D499AC95";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -52534,17 +52536,18 @@ createNode mesh -n "Thaiz_Topology_v12:R_middleShape" -p "|THAIZ_GRP|Mouth_GRP|T
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:front_teeth" -p "Thaiz_Topology_v12:Low_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth" -p
+		 "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth";
 	rename -uid "BF91F8D5-437C-C482-23D0-C9A7BEE396B8";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:L_front" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:front_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_front" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth";
 	rename -uid "CF4196AA-4BBA-53F3-36FF-CFB8EF06208D";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 0.41705408324503873 101.58307921428862 9.4828286015861671 ;
 	setAttr ".sp" -type "double3" 0.41705408324503873 101.58307921428862 9.4828286015861671 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:L_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:L_front";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_frontShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_front";
 	rename -uid "1E1CADE7-45BC-1981-D7D4-3C9BDCBE1449";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -52953,13 +52956,13 @@ createNode mesh -n "Thaiz_Topology_v12:L_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Th
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:R_front" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:front_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_front" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth";
 	rename -uid "51D6E655-4744-5CF7-3E2B-B89C1A96DC49";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -0.41392222574962723 101.61348755624303 9.4828747737618304 ;
 	setAttr ".sp" -type "double3" -0.41392222574962723 101.61348755624303 9.4828747737618304 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:R_front";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_frontShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_front";
 	rename -uid "ECF0D6A1-4867-7DE0-640E-A9A5DB9B9DAC";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -53369,21 +53372,21 @@ createNode mesh -n "Thaiz_Topology_v12:R_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Th
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:Top_teeth" -p "Mouth_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth" -p "Thaiz_Retopology_v0002:Mouth_GRP";
 	rename -uid "EF7F1EEE-47F0-9E03-C577-B8996CFEFFD6";
 	setAttr ".rp" -type "double3" 0.00043863897035068575 102.56884060288006 7.4338697929674336 ;
 	setAttr ".sp" -type "double3" 0.00043863897035068575 102.56884060288006 7.4338697929674336 ;
-createNode transform -n "Thaiz_Topology_v12:molars" -p "Thaiz_Topology_v12:Top_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth";
 	rename -uid "5659158B-42C5-DBF8-CC04-878EDCE5FF68";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:R_molars" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:molars";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molars" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars";
 	rename -uid "84020B03-4C56-5AD1-0124-868E373BA9D8";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -2.9015042870697938 102.65893754589064 6.7750459688705762 ;
 	setAttr ".sp" -type "double3" -2.9015042870697938 102.65893754589064 6.7750459688705762 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:R_molars";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molarsShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molars";
 	rename -uid "7F56BBEE-4E26-1FD5-F149-799C68AC7CF2";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -54399,13 +54402,13 @@ createNode mesh -n "Thaiz_Topology_v12:R_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|T
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:L_molars" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:molars";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molars" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars";
 	rename -uid "EBD103EA-4894-E818-29B5-97B582B94266";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 2.9023815411623346 102.65854951306079 6.7750459688705762 ;
 	setAttr ".sp" -type "double3" 2.9023815411623346 102.65854951306079 6.7750459688705762 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:L_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:L_molars";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molarsShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molars";
 	rename -uid "D6892735-454A-C407-0B18-BAB1F200D17E";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -55423,17 +55426,17 @@ createNode mesh -n "Thaiz_Topology_v12:L_molarsShape" -p "|THAIZ_GRP|Mouth_GRP|T
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:fangs" -p "Thaiz_Topology_v12:Top_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:fangs" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth";
 	rename -uid "94B3F229-4A41-1929-DADE-F09BE93D6715";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:R_fang" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:fangs";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_fang" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:fangs";
 	rename -uid "36A99BFA-4862-614F-5221-33A26BDECF0A";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -2.3271988141357256 102.78077985446285 9.1522526136926068 ;
 	setAttr ".sp" -type "double3" -2.3271988141357256 102.78077985446285 9.1522526136926068 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_fangShape" -p "Thaiz_Topology_v12:R_fang";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_fangShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_fang";
 	rename -uid "6DC2075A-4AA4-12D1-E8F1-8497F0096684";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -55771,13 +55774,13 @@ createNode mesh -n "Thaiz_Topology_v12:R_fangShape" -p "Thaiz_Topology_v12:R_fan
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:CL_fang" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:fangs";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:CL_fang" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:fangs";
 	rename -uid "63CBFAB9-44BD-BEDE-A102-F58622BDD168";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 2.3443098405246414 102.90795761444548 9.1597889388098093 ;
 	setAttr ".sp" -type "double3" 2.3443098405246414 102.90795761444548 9.1597889388098093 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:CL_fangShape" -p "Thaiz_Topology_v12:CL_fang";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:CL_fangShape" -p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:CL_fang";
 	rename -uid "CBEF62E7-45D1-63DD-0C97-8A9F4F341812";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -56042,17 +56045,18 @@ createNode mesh -n "Thaiz_Topology_v12:CL_fangShape" -p "Thaiz_Topology_v12:CL_f
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:middle_teeth" -p "Thaiz_Topology_v12:Top_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth" 
+		-p "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth";
 	rename -uid "2A98AB65-4014-4062-EF60-3AB0DA50E14E";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:R_middle" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:middle_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middle" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth";
 	rename -uid "98F1BC60-47CA-A923-EB36-00915AA9A831";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -1.5868585740968295 102.64537132118558 9.4995102821847155 ;
 	setAttr ".sp" -type "double3" -1.5868585740968295 102.64537132118558 9.4995102821847155 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_middleShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:middle_teeth|Thaiz_Topology_v12:R_middle";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middleShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middle";
 	rename -uid "A6BC0CF9-4811-06E8-8184-B3871FA02184";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -56461,17 +56465,18 @@ createNode mesh -n "Thaiz_Topology_v12:R_middleShape" -p "|THAIZ_GRP|Mouth_GRP|T
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:front_teeth" -p "Thaiz_Topology_v12:Top_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth" -p
+		 "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth";
 	rename -uid "40BA54FE-4F8F-D36D-85A1-A89FBE9DD99A";
 	setAttr ".rp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
 	setAttr ".sp" -type "double3" 0.00043862704627127937 -45.802236599631584 3.3829119408304722 ;
-createNode transform -n "Thaiz_Topology_v12:R_front" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:front_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_front" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth";
 	rename -uid "4D2265CC-4FAF-20C0-9141-1C95F40169F0";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" -0.60014005464862363 102.57807001171641 9.6732249313835261 ;
 	setAttr ".sp" -type "double3" -0.60014005464862363 102.57807001171641 9.6732249313835261 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:R_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:R_front";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_frontShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_front";
 	rename -uid "1939DFEA-49D9-4A69-40F5-99BD129DD1A6";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -56881,13 +56886,13 @@ createNode mesh -n "Thaiz_Topology_v12:R_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Th
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "Thaiz_Topology_v12:L_front" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:front_teeth";
+createNode transform -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_front" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth";
 	rename -uid "96EAC717-4FF9-3A7D-84C6-5ABAB2531FEC";
 	addAttr -is true -ci true -k true -sn "currentUVSet" -ln "currentUVSet" -dt "string";
 	setAttr ".rp" -type "double3" 0.61448196741370897 102.53582666845163 9.6732249313835261 ;
 	setAttr ".sp" -type "double3" 0.61448196741370897 102.53582666845163 9.6732249313835261 ;
 	setAttr -k on ".currentUVSet" -type "string" "map1";
-createNode mesh -n "Thaiz_Topology_v12:L_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:L_front";
+createNode mesh -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_frontShape" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_front";
 	rename -uid "5728BD9A-4C19-1FA6-EB86-EEA82D432D0D";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -57297,15 +57302,15 @@ createNode mesh -n "Thaiz_Topology_v12:L_frontShape" -p "|THAIZ_GRP|Mouth_GRP|Th
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dsm" 2;
-createNode transform -n "eyebrows_GRP" -p "THAIZ_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:eyebrows_GRP" -p "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "44B1F703-4F09-0E23-CAC3-52A10E17AAAB";
 	setAttr ".rp" -type "double3" -4.76837158203125e-07 115.29146194458008 7.8185491561889648 ;
 	setAttr ".sp" -type "double3" -4.76837158203125e-07 115.29146194458008 7.8185491561889648 ;
-createNode transform -n "L_EYEBROWN_PLY" -p "eyebrows_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:L_EYEBROWN_PLY" -p "Thaiz_Retopology_v0002:eyebrows_GRP";
 	rename -uid "8E8118D9-42D5-F24D-518B-FB839C9863C0";
-	setAttr ".rp" -type "double3" 5.8697078227996826 115.29146194458008 7.8185491561889648 ;
-	setAttr ".sp" -type "double3" 5.8697078227996826 115.29146194458008 7.8185491561889648 ;
-createNode mesh -n "L_EYEBROWN_PLYShape" -p "L_EYEBROWN_PLY";
+	setAttr ".rp" -type "double3" 5.8697078227996826 114.32946194458007 7.939383896888673 ;
+	setAttr ".sp" -type "double3" 5.8697078227996826 114.32946194458007 7.939383896888673 ;
+createNode mesh -n "Thaiz_Retopology_v0002:L_EYEBROWN_PLYShape" -p "Thaiz_Retopology_v0002:L_EYEBROWN_PLY";
 	rename -uid "411267C1-4F06-E90F-838B-21A830981B4F";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:60]";
@@ -57337,6 +57342,29 @@ createNode mesh -n "L_EYEBROWN_PLYShape" -p "L_EYEBROWN_PLY";
 	setAttr ".dcc" -type "string" "Ambient+Diffuse";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
+	setAttr -s 76 ".pt[0:75]" -type "float3"  0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474;
 	setAttr -s 76 ".vt[0:75]"  2.39519429 114.61305237 9.64949799 9.34995842 114.54446411 6.38672972
 		 2.32354116 115.45877075 9.59749985 9.38908577 114.8908844 6.21101952 7.59161663 115.74549866 7.87758446
 		 7.48186302 115.088066101 8.041275024 6.25532341 115.94648743 8.51069641 6.07083559 115.18707275 8.68831539
@@ -57599,11 +57627,11 @@ createNode mesh -n "L_EYEBROWN_PLYShape" -p "L_EYEBROWN_PLY";
 		74 0 
 		75 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "R_EYEBROWN_PLY" -p "eyebrows_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:R_EYEBROWN_PLY" -p "Thaiz_Retopology_v0002:eyebrows_GRP";
 	rename -uid "62544972-46E2-12BB-5D6F-7DA80B91CFF1";
-	setAttr ".rp" -type "double3" -5.8697082996368408 115.29146194458008 7.818549633026123 ;
-	setAttr ".sp" -type "double3" -5.8697082996368408 115.29146194458008 7.818549633026123 ;
-createNode mesh -n "R_EYEBROWN_PLYShape" -p "R_EYEBROWN_PLY";
+	setAttr ".rp" -type "double3" -5.8697082996368408 114.32946194458007 7.9393843737258312 ;
+	setAttr ".sp" -type "double3" -5.8697082996368408 114.32946194458007 7.9393843737258312 ;
+createNode mesh -n "Thaiz_Retopology_v0002:R_EYEBROWN_PLYShape" -p "Thaiz_Retopology_v0002:R_EYEBROWN_PLY";
 	rename -uid "DE8CDE3A-4EA7-1F5D-A2E8-8FA14647A8E3";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:60]";
@@ -57635,6 +57663,29 @@ createNode mesh -n "R_EYEBROWN_PLYShape" -p "R_EYEBROWN_PLY";
 	setAttr ".dcc" -type "string" "Ambient+Diffuse";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
+	setAttr -s 76 ".pt[0:75]" -type "float3"  0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 
+		0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 0.12083474 0 -0.96200001 
+		0.12083474 0 -0.96200001 0.12083474;
 	setAttr -s 76 ".vt[0:75]"  -2.39519405 114.61305237 9.64949799 -9.34995842 114.54446411 6.38673115
 		 -2.32354164 115.45877075 9.59749985 -9.38908482 114.8908844 6.21102047 -7.59161663 115.74549866 7.8775835
 		 -7.48186159 115.088066101 8.041275024 -6.25532293 115.94648743 8.51069832 -6.070834637 115.18707275 8.68831635
@@ -57898,19 +57949,19 @@ createNode mesh -n "R_EYEBROWN_PLYShape" -p "R_EYEBROWN_PLY";
 		74 0 
 		75 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "eyes_GRP" -p "THAIZ_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:eyes_GRP" -p "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "CE22E91E-4862-2CC7-2B31-8398A2FD36A0";
 	setAttr ".rp" -type "double3" -4.76837158203125e-07 109.5091552734375 5.2857256531715393 ;
 	setAttr ".sp" -type "double3" -4.76837158203125e-07 109.5091552734375 5.2857256531715393 ;
-createNode transform -n "cornea_GRP" -p "|THAIZ_GRP|eyes_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:cornea_GRP" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:eyes_GRP";
 	rename -uid "088E0409-4455-62D0-E20E-B6A44B4822A0";
 	setAttr ".rp" -type "double3" -4.76837158203125e-07 109.5091552734375 5.2857256531715393 ;
 	setAttr ".sp" -type "double3" -4.76837158203125e-07 109.5091552734375 5.2857256531715393 ;
-createNode transform -n "L_cornea_PLY" -p "cornea_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:L_cornea_PLY" -p "Thaiz_Retopology_v0002:cornea_GRP";
 	rename -uid "4073E920-4E74-E7AB-5827-2EAA2F3AAB2D";
 	setAttr ".rp" -type "double3" 5.5324889421463013 109.5091552734375 5.2857256531715393 ;
 	setAttr ".sp" -type "double3" 5.5324889421463013 109.5091552734375 5.2857256531715393 ;
-createNode mesh -n "L_cornea_PLYShape" -p "L_cornea_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:L_cornea_PLYShape" -p "Thaiz_Retopology_v0002:L_cornea_PLY";
 	rename -uid "DE670D9C-4CD1-717F-594C-0D94C82413DD";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -64714,11 +64765,11 @@ createNode mesh -n "L_cornea_PLYShape" -p "L_cornea_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "R_cornea_PLY" -p "cornea_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:R_cornea_PLY" -p "Thaiz_Retopology_v0002:cornea_GRP";
 	rename -uid "A38BFB42-4907-716A-D9E2-81A93A6F87BE";
 	setAttr ".rp" -type "double3" -5.5324894189834595 109.5091552734375 5.2857256531715393 ;
 	setAttr ".sp" -type "double3" -5.5324894189834595 109.5091552734375 5.2857256531715393 ;
-createNode mesh -n "R_cornea_PLYShape" -p "R_cornea_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:R_cornea_PLYShape" -p "Thaiz_Retopology_v0002:R_cornea_PLY";
 	rename -uid "CA33BC89-43E5-063E-AB01-81BD7E14479A";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -71542,15 +71593,15 @@ createNode mesh -n "R_cornea_PLYShape" -p "R_cornea_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "eyes_GRP" -p "|THAIZ_GRP|eyes_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:eyes_GRP" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:eyes_GRP";
 	rename -uid "B97FE0D1-4BE9-25CC-7F41-0BB9519256FA";
 	setAttr ".rp" -type "double3" -4.76837158203125e-07 109.54452514648438 4.9273681640625 ;
 	setAttr ".sp" -type "double3" -4.76837158203125e-07 109.54452514648438 4.9273681640625 ;
-createNode transform -n "L_eye_PLY" -p "|THAIZ_GRP|eyes_GRP|eyes_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:L_eye_PLY" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:eyes_GRP|Thaiz_Retopology_v0002:eyes_GRP";
 	rename -uid "9C6D2524-4F25-1DAC-C02A-929E3EF31008";
 	setAttr ".rp" -type "double3" 5.5522265434265137 109.54452514648438 4.9273681640625 ;
 	setAttr ".sp" -type "double3" 5.5522265434265137 109.54452514648438 4.9273681640625 ;
-createNode mesh -n "L_eye_PLYShape" -p "L_eye_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:L_eye_PLYShape" -p "Thaiz_Retopology_v0002:L_eye_PLY";
 	rename -uid "C092AE91-4314-521D-DA95-688B5EB95C14";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:429]";
@@ -73165,11 +73216,11 @@ createNode mesh -n "L_eye_PLYShape" -p "L_eye_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "R_eye_PLY" -p "|THAIZ_GRP|eyes_GRP|eyes_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:R_eye_PLY" -p "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:eyes_GRP|Thaiz_Retopology_v0002:eyes_GRP";
 	rename -uid "7ABF1990-43C0-6257-E01E-3196741D6F4F";
 	setAttr ".rp" -type "double3" -5.552227258682251 109.54452514648438 4.9273681640625 ;
 	setAttr ".sp" -type "double3" -5.552227258682251 109.54452514648438 4.9273681640625 ;
-createNode mesh -n "R_eye_PLYShape" -p "R_eye_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:R_eye_PLYShape" -p "Thaiz_Retopology_v0002:R_eye_PLY";
 	rename -uid "8DB48F2C-4F79-7631-8088-39AF90E9E3B4";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:429]";
@@ -74775,15 +74826,15 @@ createNode mesh -n "R_eye_PLYShape" -p "R_eye_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "eyelashes_GRP" -p "THAIZ_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:eyelashes_GRP" -p "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "883A06BB-461F-162F-D4B9-EA9D45F3E22E";
 	setAttr ".rp" -type "double3" 0.016046047210693359 110.06603622436523 7.4752898216247559 ;
 	setAttr ".sp" -type "double3" 0.016046047210693359 110.06603622436523 7.4752898216247559 ;
-createNode transform -n "L_eyelash_PLY" -p "eyelashes_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:L_eyelash_PLY" -p "Thaiz_Retopology_v0002:eyelashes_GRP";
 	rename -uid "B1B1A4CB-43CE-FEBD-2C64-88979A7DE030";
 	setAttr ".rp" -type "double3" 6.0530159473419189 110.06603622436523 7.4752898216247559 ;
 	setAttr ".sp" -type "double3" 6.0530159473419189 110.06603622436523 7.4752898216247559 ;
-createNode mesh -n "L_eyelash_PLYShape" -p "L_eyelash_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:L_eyelash_PLYShape" -p "Thaiz_Retopology_v0002:L_eyelash_PLY";
 	rename -uid "6A862E7D-4BCB-A879-4E6A-54AAEB26AA5D";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -75157,11 +75208,11 @@ createNode mesh -n "L_eyelash_PLYShape" -p "L_eyelash_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "R_eyelash_PLY" -p "eyelashes_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:R_eyelash_PLY" -p "Thaiz_Retopology_v0002:eyelashes_GRP";
 	rename -uid "17FD271C-4AF6-F86B-1663-7E88C98ED54D";
 	setAttr ".rp" -type "double3" -6.0369699001312256 110.06603622436523 7.528191089630127 ;
 	setAttr ".sp" -type "double3" -6.0369699001312256 110.06603622436523 7.528191089630127 ;
-createNode mesh -n "R_eyelash_PLYShape" -p "R_eyelash_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:R_eyelash_PLYShape" -p "Thaiz_Retopology_v0002:R_eyelash_PLY";
 	rename -uid "FF53A554-4B77-8302-06EC-35A25FFDC978";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -75476,15 +75527,15 @@ createNode mesh -n "R_eyelash_PLYShape" -p "R_eyelash_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "FlipFlops_GRP" -p "THAIZ_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:FlipFlops_GRP" -p "Thaiz_Retopology_v0002:THAIZ_GRP";
 	rename -uid "C7AAA546-4106-D519-192D-F0B0EE56AA28";
 	setAttr ".rp" -type "double3" -0.65717460821149476 1.9080499663316415 2.309436437365779 ;
 	setAttr ".sp" -type "double3" -0.65717460821149476 1.9080499663316415 2.309436437365779 ;
-createNode transform -n "L_base_PLY" -p "FlipFlops_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:L_base_PLY" -p "Thaiz_Retopology_v0002:FlipFlops_GRP";
 	rename -uid "D8D0AB88-4596-0F57-DB10-FBB59D3A8DCF";
 	setAttr ".rp" -type "double3" -0.65717470729485072 -0.73746567307847133 0.42990426198855181 ;
 	setAttr ".sp" -type "double3" -0.65717470729485072 -0.73746567307847133 0.42990426198855181 ;
-createNode mesh -n "L_base_PLYShape" -p "L_base_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:L_base_PLYShape" -p "Thaiz_Retopology_v0002:L_base_PLY";
 	rename -uid "B7CF8C4C-4506-0D77-294D-5B9D030E3566";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:377]";
@@ -76882,11 +76933,11 @@ createNode mesh -n "L_base_PLYShape" -p "L_base_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "R_Base_PLY" -p "FlipFlops_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:R_Base_PLY" -p "Thaiz_Retopology_v0002:FlipFlops_GRP";
 	rename -uid "D9EFF7CB-4F47-8E65-9643-C898A5AE096C";
 	setAttr ".rp" -type "double3" -0.65717470729485072 -0.73746567307847133 0.42990426198855181 ;
 	setAttr ".sp" -type "double3" -0.65717470729485072 -0.73746567307847133 0.42990426198855181 ;
-createNode mesh -n "R_Base_PLYShape" -p "R_Base_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:R_Base_PLYShape" -p "Thaiz_Retopology_v0002:R_Base_PLY";
 	rename -uid "F3F44E9C-40F2-0928-8D12-D086E28BBF58";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:377]";
@@ -78284,11 +78335,11 @@ createNode mesh -n "R_Base_PLYShape" -p "R_Base_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "R_lace_PLY" -p "FlipFlops_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:R_lace_PLY" -p "Thaiz_Retopology_v0002:FlipFlops_GRP";
 	rename -uid "0DC6649C-4153-F4B6-C60D-33B007053326";
 	setAttr ".rp" -type "double3" -0.90082971072904938 -0.73746567307847133 0.42990426198855181 ;
 	setAttr ".sp" -type "double3" -0.90082971072904938 -0.73746567307847133 0.42990426198855181 ;
-createNode mesh -n "R_lace_PLYShape" -p "R_lace_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:R_lace_PLYShape" -p "Thaiz_Retopology_v0002:R_lace_PLY";
 	rename -uid "982BF1D5-464A-5622-AAD8-D995241250B6";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:503]";
@@ -80171,11 +80222,11 @@ createNode mesh -n "R_lace_PLYShape" -p "R_lace_PLY";
 	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-createNode transform -n "L_lace_PLY" -p "FlipFlops_GRP";
+createNode transform -n "Thaiz_Retopology_v0002:L_lace_PLY" -p "Thaiz_Retopology_v0002:FlipFlops_GRP";
 	rename -uid "5B1912B7-45BB-C33C-5B35-E9AA6B9051D6";
 	setAttr ".rp" -type "double3" -0.90082971072904938 -0.73746567307847133 0.42990426198855181 ;
 	setAttr ".sp" -type "double3" -0.90082971072904938 -0.73746567307847133 0.42990426198855181 ;
-createNode mesh -n "L_lace_PLYShape" -p "L_lace_PLY";
+createNode mesh -n "Thaiz_Retopology_v0002:L_lace_PLYShape" -p "Thaiz_Retopology_v0002:L_lace_PLY";
 	rename -uid "5BC7DCFC-410E-481A-16CE-5199876D9D75";
 	setAttr -k off ".v";
 	setAttr ".iog[0].og[0].gcl" -type "componentList" 1 "f[0:503]";
@@ -82068,20 +82119,20 @@ createNode mesh -n "L_lace_PLYShape" -p "L_lace_PLY";
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 createNode lightLinker -s -n "lightLinker1";
-	rename -uid "19D752D4-49C0-6203-4F7B-B8ADB241B6B4";
+	rename -uid "7F2106F3-4E52-0FF6-4F80-C599C3DCE12C";
 	setAttr -s 15 ".lnk";
 	setAttr -s 15 ".slnk";
 createNode shapeEditorManager -n "shapeEditorManager";
-	rename -uid "2BFBB3A5-4B7A-366A-1E97-EDB9BA05B8E5";
+	rename -uid "FC1DA04D-4444-C528-E37E-4787BEDB2CA2";
 createNode poseInterpolatorManager -n "poseInterpolatorManager";
-	rename -uid "C78816C1-4F37-8464-B8D7-6BA766951A82";
+	rename -uid "3CAEE50E-4519-09A5-CBD5-21B123CEE64D";
 createNode displayLayerManager -n "layerManager";
-	rename -uid "318B34E2-4A3D-D16C-7ABD-5AB20FA6E138";
+	rename -uid "380A971D-4D63-36D2-FB07-92AEA8517D52";
 createNode displayLayer -n "defaultLayer";
 	rename -uid "638C8C97-4E65-280D-4436-668F329B8FCE";
 	setAttr ".ufem" -type "stringArray" 0  ;
 createNode renderLayerManager -n "renderLayerManager";
-	rename -uid "BF34F16A-42CD-1C25-3FD4-50A618F4E541";
+	rename -uid "89250694-4D47-1751-12BC-0AA86575AD4F";
 createNode renderLayer -n "defaultRenderLayer";
 	rename -uid "6CC34D7F-46CE-5041-0EBA-CDA0B259C6CF";
 	setAttr ".g" yes;
@@ -82102,10 +82153,10 @@ createNode aiAOVDriver -s -n "defaultArnoldDisplayDriver";
 	setAttr ".output_mode" 0;
 createNode aiImagerDenoiserOidn -s -n "defaultArnoldDenoiser";
 	rename -uid "F0D54219-472A-06F2-5B39-328A64B76BE9";
-createNode groupId -n "Marcelo:groupId1";
+createNode groupId -n "Thaiz_Retopology_v0002:Marcelo:groupId1";
 	rename -uid "0337C377-4D1C-2B46-5324-38ACB9A22293";
 	setAttr ".ihi" 0;
-createNode nodeGraphEditorInfo -n "Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo";
+createNode nodeGraphEditorInfo -n "Thaiz_Retopology_v0002:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo";
 	rename -uid "D3FD3CCF-421E-B587-3D1A-AEB33D16056F";
 	setAttr ".def" no;
 	setAttr ".tgi[0].tn" -type "string" "Untitled_1";
@@ -82118,19 +82169,19 @@ createNode nodeGraphEditorInfo -n "Marcelo_Ze_Transfer:hyperShadePrimaryNodeEdit
 	setAttr ".tgi[0].ni[1].x" 85.714286804199219;
 	setAttr ".tgi[0].ni[1].y" 335.71429443359375;
 	setAttr ".tgi[0].ni[1].nvs" 1923;
-createNode groupId -n "Thaiz_Topology_v02:groupId2";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v02:groupId2";
 	rename -uid "8AC88482-476D-9423-F912-BA820FAA5AF3";
 	setAttr ".ihi" 0;
-createNode objectSet -n "Thaiz_Topology_v02:EYEBROWN_GEOShapeHiddenFacesSet";
+createNode objectSet -n "Thaiz_Retopology_v0002:Thaiz_Topology_v02:EYEBROWN_GEOShapeHiddenFacesSet";
 	rename -uid "E9BC7950-43EA-51AD-1DAC-6BB6A849CAC0";
 	setAttr ".ihi" 0;
-createNode objectSet -n "Thaiz_Topology_v11:EYEBROWN_GEOShapeHiddenFacesSet";
+createNode objectSet -n "Thaiz_Retopology_v0002:Thaiz_Topology_v11:EYEBROWN_GEOShapeHiddenFacesSet";
 	rename -uid "2F9985DE-4BF9-316B-8FBD-0E99CF0F7D85";
 	setAttr ".ihi" 0;
-createNode groupId -n "Thaiz_Topology_v11:groupId18";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v11:groupId18";
 	rename -uid "99D38114-4643-4232-710B-3E9D5970649A";
 	setAttr ".ihi" 0;
-createNode nodeGraphEditorInfo -n "Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo";
+createNode nodeGraphEditorInfo -n "Thaiz_Retopology_v0002:Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo";
 	rename -uid "0C904C8F-44BD-7E5C-EA1F-BCBCC0CF46DD";
 	setAttr ".def" no;
 	setAttr ".tgi[0].tn" -type "string" "Untitled_1";
@@ -82143,19 +82194,19 @@ createNode nodeGraphEditorInfo -n "Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperS
 	setAttr ".tgi[0].ni[1].x" 85.714286804199219;
 	setAttr ".tgi[0].ni[1].y" 335.71429443359375;
 	setAttr ".tgi[0].ni[1].nvs" 1923;
-createNode groupId -n "Thaiz_Topology_v11:CHAR_marcelo_0009:CHAR_marcelo_0008__1_:groupId2";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v11:CHAR_marcelo_0009:CHAR_marcelo_0008__1_:groupId2";
 	rename -uid "F1038CC1-4BF5-46BF-5968-DBACC35743E2";
 	setAttr ".ihi" 0;
-createNode groupId -n "Thaiz_Topology_v11:groupId27";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v11:groupId27";
 	rename -uid "4E394691-4C5A-7CB0-5F2E-DAA6CFAB1F90";
 	setAttr ".ihi" 0;
-createNode objectSet -n "Thaiz_Topology_v12:EYEBROWN_GEOShapeHiddenFacesSet";
+createNode objectSet -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:EYEBROWN_GEOShapeHiddenFacesSet";
 	rename -uid "24D6A3E4-4647-F0B2-85D6-46A2218E4723";
 	setAttr ".ihi" 0;
-createNode groupId -n "Thaiz_Topology_v12:groupId18";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:groupId18";
 	rename -uid "E7671863-46B4-FA4C-538D-1BB0FAD5A5AF";
 	setAttr ".ihi" 0;
-createNode nodeGraphEditorInfo -n "Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo";
+createNode nodeGraphEditorInfo -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo";
 	rename -uid "A3EF1D74-4DFF-5B35-9AE9-0D96A85EADB7";
 	setAttr ".def" no;
 	setAttr ".tgi[0].tn" -type "string" "Untitled_1";
@@ -82168,39 +82219,39 @@ createNode nodeGraphEditorInfo -n "Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperS
 	setAttr ".tgi[0].ni[1].x" 85.714286804199219;
 	setAttr ".tgi[0].ni[1].y" 335.71429443359375;
 	setAttr ".tgi[0].ni[1].nvs" 1923;
-createNode groupId -n "Thaiz_Topology_v12:CHAR_marcelo_0009:CHAR_marcelo_0008__1_:groupId2";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:CHAR_marcelo_0009:CHAR_marcelo_0008__1_:groupId2";
 	rename -uid "4C43A0EF-4834-E0B8-FE00-13AC9E2C94C1";
 	setAttr ".ihi" 0;
-createNode groupId -n "Thaiz_Topology_v12:groupId27";
+createNode groupId -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:groupId27";
 	rename -uid "9DB9E7A5-49A0-0E23-27EC-54BC4192A274";
 	setAttr ".ihi" 0;
-createNode aiStandardSurface -n "Thaiz_Topology_v12:TONGUE_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_MAT";
 	rename -uid "AF4B3A0E-4578-93D6-3D40-18AE0303BFD2";
-createNode shadingEngine -n "Thaiz_Topology_v12:TONGUE_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD";
 	rename -uid "09EC58D8-4405-A06E-1F1B-B7B2F47B803F";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "Thaiz_Topology_v12:materialInfo30";
+createNode materialInfo -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo30";
 	rename -uid "EBB68385-4436-C2B8-DEA6-129F15F04483";
-createNode aiStandardSurface -n "Thaiz_Topology_v12:GUMS_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_MAT";
 	rename -uid "1CFE69DE-4752-A676-A22E-669F75DF1038";
-createNode shadingEngine -n "Thaiz_Topology_v12:GUMS_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD";
 	rename -uid "97719B80-4AA7-E207-F50B-4EBF5DACD214";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
-createNode materialInfo -n "Thaiz_Topology_v12:materialInfo31";
+createNode materialInfo -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo31";
 	rename -uid "89EDAC07-4776-C964-7E07-ABB7205B10AE";
-createNode aiStandardSurface -n "Thaiz_Topology_v12:TEETH_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_MAT";
 	rename -uid "CED18FA2-4BFC-4870-B4D0-38A247214E39";
-createNode shadingEngine -n "Thaiz_Topology_v12:TEETH_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD";
 	rename -uid "1073EF99-4957-2399-6CC4-BAA37ACD3F33";
 	setAttr ".ihi" 0;
 	setAttr -s 14 ".dsm";
 	setAttr ".ro" yes;
-createNode materialInfo -n "Thaiz_Topology_v12:materialInfo32";
+createNode materialInfo -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo32";
 	rename -uid "3F6DF949-4783-A9E1-0DBF-9491534AB81F";
-createNode nodeGraphEditorInfo -n "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo";
+createNode nodeGraphEditorInfo -n "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo";
 	rename -uid "83389C52-45E3-AC2E-ECAE-C38DCE529DE3";
 	setAttr ".def" no;
 	setAttr -s 3 ".tgi";
@@ -82258,59 +82309,59 @@ createNode nodeGraphEditorInfo -n "Thaiz_Topology_v12:hyperShadePrimaryNodeEdito
 	setAttr ".tgi[2].ni[1].x" -353.33331298828125;
 	setAttr ".tgi[2].ni[1].y" 367.85711669921875;
 	setAttr ".tgi[2].ni[1].nvs" 2387;
-createNode standardSurface -n "EYELASHES";
+createNode standardSurface -n "Thaiz_Retopology_v0002:EYELASHES";
 	rename -uid "BCC4BCE1-4B67-84E3-762B-75AE0EFC5DCE";
 	setAttr ".bc" -type "float3" 0.40000001 0.40000001 0.40000001 ;
 	setAttr ".sr" 0.5;
-createNode shadingEngine -n "EYELASHES_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:EYELASHES_SHD";
 	rename -uid "D57FA8BA-47A1-EC91-765E-F3A27F587DC7";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo5";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo5";
 	rename -uid "3C3DCB2E-44FF-A089-677E-5EBD6F14A807";
-createNode aiStandardSurface -n "EYE_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:EYE_MAT";
 	rename -uid "3EB28D7A-41E8-8437-BF2A-4BBF76FD9B0A";
-createNode shadingEngine -n "EYE_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:EYE_SHD";
 	rename -uid "D5C2EF5B-4229-5643-6ED7-1F9EDDADBF7B";
 	setAttr ".ihi" 0;
 	setAttr -s 4 ".dsm";
 	setAttr ".ro" yes;
 	setAttr -s 2 ".gn";
-createNode materialInfo -n "materialInfo7";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo7";
 	rename -uid "BFA712B5-47D8-3CE7-2EB9-30A4F75F8F13";
-createNode aiStandardSurface -n "EYEBROWN_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:EYEBROWN_MAT";
 	rename -uid "CD62F6A0-4286-ECF7-BA79-C3AC17C9AAAA";
-createNode shadingEngine -n "EYEBROWN_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:EYEBROWN_SHD";
 	rename -uid "5D37AFB6-44A2-4595-FB8D-1F8BA6923523";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
 	setAttr -s 2 ".gn";
-createNode materialInfo -n "materialInfo8";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo8";
 	rename -uid "C0A3331D-4107-D4E7-8E92-108219A1CA70";
-createNode groupId -n "groupId17";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId17";
 	rename -uid "323E0CAB-4918-EC61-9348-7C9B7173B304";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId18";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId18";
 	rename -uid "07D22878-4FEA-76AF-7714-35945A095382";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId50";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId50";
 	rename -uid "DA8BB539-4BFA-9D29-3977-E0AC4B9A8F3E";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId51";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId51";
 	rename -uid "3D5DCAD7-4D0C-AC21-59F0-70941A5E96B2";
 	setAttr ".ihi" 0;
-createNode aiStandardSurface -n "BODY_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:BODY_MAT";
 	rename -uid "8AD657F0-4CD8-2CC8-DB9F-F2840EDD1C90";
 	setAttr ".base_color" -type "float3" 0.37 0.37 0.37 ;
-createNode shadingEngine -n "BODY_SHD";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:BODY_SHD";
 	rename -uid "B7C3D9C4-48A8-5E93-9433-F2A3966A6C7F";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo9";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo9";
 	rename -uid "92620440-46E9-0187-95F1-A6902581A8EA";
-createNode script -n "uiConfigurationScriptNode";
+createNode script -n "Thaiz_Retopology_v0002:uiConfigurationScriptNode";
 	rename -uid "5251C2D1-4509-4246-5312-0195752C3020";
 	setAttr ".b" -type "string" (
 		"// Maya Mel UI Configuration File.\n//\n//  This script is machine generated.  Edit at your own risk.\n//\n//\n\nglobal string $gMainPane;\nif (`paneLayout -exists $gMainPane`) {\n\n\tglobal int $gUseScenePanelConfig;\n\tint    $useSceneConfig = $gUseScenePanelConfig;\n\tint    $nodeEditorPanelVisible = stringArrayContains(\"nodeEditorPanel1\", `getPanel -vis`);\n\tint    $nodeEditorWorkspaceControlOpen = (`workspaceControl -exists nodeEditorPanel1Window` && `workspaceControl -q -visible nodeEditorPanel1Window`);\n\tint    $menusOkayInPanels = `optionVar -q allowMenusInPanels`;\n\tint    $nVisPanes = `paneLayout -q -nvp $gMainPane`;\n\tint    $nPanes = 0;\n\tstring $editorName;\n\tstring $panelName;\n\tstring $itemFilterName;\n\tstring $panelConfig;\n\n\t//\n\t//  get current state of the UI\n\t//\n\tsceneUIReplacement -update $gMainPane;\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"modelPanel\" (localizedPanelLabel(\"Top View\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tmodelPanel -edit -l (localizedPanelLabel(\"Top View\")) -mbv $menusOkayInPanels  $panelName;\n"
@@ -82326,8 +82377,8 @@ createNode script -n "uiConfigurationScriptNode";
 		+ "            -locators 1\n            -manipulators 1\n            -pluginShapes 1\n            -dimensions 1\n            -handles 1\n            -pivots 1\n            -textures 1\n            -strokes 1\n            -motionTrails 1\n            -clipGhosts 1\n            -bluePencil 1\n            -greasePencils 0\n            -excludeObjectPreset \"All\" \n            -shadows 0\n            -captureSequenceNumber -1\n            -width 1\n            -height 1\n            -sceneRenderFilter 0\n            $editorName;\n        modelEditor -e -viewSelected 0 $editorName;\n        modelEditor -e \n            -pluginObjects \"gpuCacheDisplayFilter\" 1 \n            $editorName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"modelPanel\" (localizedPanelLabel(\"Persp View\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\tmodelPanel -edit -l (localizedPanelLabel(\"Persp View\")) -mbv $menusOkayInPanels  $panelName;\n\t\t$editorName = $panelName;\n        modelEditor -e \n"
 		+ "            -camera \"|persp\" \n            -useInteractiveMode 0\n            -displayLights \"default\" \n            -displayAppearance \"smoothShaded\" \n            -activeOnly 0\n            -ignorePanZoom 0\n            -wireframeOnShaded 0\n            -headsUpDisplay 1\n            -holdOuts 1\n            -selectionHiliteDisplay 1\n            -useDefaultMaterial 0\n            -bufferMode \"double\" \n            -twoSidedLighting 0\n            -backfaceCulling 0\n            -xray 0\n            -jointXray 0\n            -activeComponentsXray 0\n            -displayTextures 0\n            -smoothWireframe 0\n            -lineWidth 1\n            -textureAnisotropic 0\n            -textureHilight 1\n            -textureSampling 2\n            -textureDisplay \"modulate\" \n            -textureMaxSize 32768\n            -fogging 0\n            -fogSource \"fragment\" \n            -fogMode \"linear\" \n            -fogStart 0\n            -fogEnd 100\n            -fogDensity 0.1\n            -fogColor 0.5 0.5 0.5 1 \n            -depthOfFieldPreview 1\n"
 		+ "            -maxConstantTransparency 1\n            -rendererName \"vp2Renderer\" \n            -objectFilterShowInHUD 1\n            -isFiltered 0\n            -colorResolution 256 256 \n            -bumpResolution 512 512 \n            -textureCompression 0\n            -transparencyAlgorithm \"frontAndBackCull\" \n            -transpInShadows 0\n            -cullingOverride \"none\" \n            -lowQualityLighting 0\n            -maximumNumHardwareLights 1\n            -occlusionCulling 0\n            -shadingModel 0\n            -useBaseRenderer 0\n            -useReducedRenderer 0\n            -smallObjectCulling 0\n            -smallObjectThreshold -1 \n            -interactiveDisableShadows 0\n            -interactiveBackFaceCull 0\n            -sortTransparent 1\n            -controllers 1\n            -nurbsCurves 1\n            -nurbsSurfaces 1\n            -polymeshes 1\n            -subdivSurfaces 1\n            -planes 1\n            -lights 1\n            -cameras 1\n            -controlVertices 1\n            -hulls 1\n            -grid 1\n"
-		+ "            -imagePlane 1\n            -joints 1\n            -ikHandles 1\n            -deformers 1\n            -dynamics 1\n            -particleInstancers 1\n            -fluids 1\n            -hairSystems 1\n            -follicles 1\n            -nCloths 1\n            -nParticles 1\n            -nRigids 1\n            -dynamicConstraints 1\n            -locators 1\n            -manipulators 1\n            -pluginShapes 1\n            -dimensions 1\n            -handles 1\n            -pivots 1\n            -textures 1\n            -strokes 1\n            -motionTrails 1\n            -clipGhosts 1\n            -bluePencil 1\n            -greasePencils 0\n            -excludeObjectPreset \"All\" \n            -shadows 0\n            -captureSequenceNumber -1\n            -width 661\n            -height 756\n            -sceneRenderFilter 0\n            $editorName;\n        modelEditor -e -viewSelected 0 $editorName;\n        modelEditor -e \n            -pluginObjects \"gpuCacheDisplayFilter\" 1 \n            $editorName;\n\t\tif (!$useSceneConfig) {\n"
-		+ "\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"outlinerPanel\" (localizedPanelLabel(\"ToggledOutliner\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\toutlinerPanel -edit -l (localizedPanelLabel(\"ToggledOutliner\")) -mbv $menusOkayInPanels  $panelName;\n\t\t$editorName = $panelName;\n        outlinerEditor -e \n            -docTag \"isolOutln_fromSeln\" \n            -showShapes 0\n            -showAssignedMaterials 0\n            -showTimeEditor 1\n            -showReferenceNodes 1\n            -showReferenceMembers 1\n            -showAttributes 0\n            -showConnected 0\n            -showAnimCurvesOnly 0\n            -showMuteInfo 0\n            -organizeByLayer 1\n            -organizeByClip 1\n            -showAnimLayerWeight 1\n            -autoExpandLayers 1\n            -autoExpand 0\n            -autoExpandAllAnimatedShapes 1\n            -showDagOnly 1\n            -showAssets 1\n            -showContainedOnly 1\n            -showPublishedAsConnected 0\n            -showParentContainers 0\n"
+		+ "            -imagePlane 1\n            -joints 1\n            -ikHandles 1\n            -deformers 1\n            -dynamics 1\n            -particleInstancers 1\n            -fluids 1\n            -hairSystems 1\n            -follicles 1\n            -nCloths 1\n            -nParticles 1\n            -nRigids 1\n            -dynamicConstraints 1\n            -locators 1\n            -manipulators 1\n            -pluginShapes 1\n            -dimensions 1\n            -handles 1\n            -pivots 1\n            -textures 1\n            -strokes 1\n            -motionTrails 1\n            -clipGhosts 1\n            -bluePencil 1\n            -greasePencils 0\n            -excludeObjectPreset \"All\" \n            -shadows 0\n            -captureSequenceNumber -1\n            -width 853\n            -height 689\n            -sceneRenderFilter 0\n            $editorName;\n        modelEditor -e -viewSelected 0 $editorName;\n        modelEditor -e \n            -pluginObjects \"gpuCacheDisplayFilter\" 1 \n            $editorName;\n\t\tif (!$useSceneConfig) {\n"
+		+ "\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"outlinerPanel\" (localizedPanelLabel(\"ToggledOutliner\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\toutlinerPanel -edit -l (localizedPanelLabel(\"ToggledOutliner\")) -mbv $menusOkayInPanels  $panelName;\n\t\t$editorName = $panelName;\n        outlinerEditor -e \n            -docTag \"isolOutln_fromSeln\" \n            -showShapes 0\n            -showAssignedMaterials 0\n            -showTimeEditor 1\n            -showReferenceNodes 0\n            -showReferenceMembers 1\n            -showAttributes 0\n            -showConnected 0\n            -showAnimCurvesOnly 0\n            -showMuteInfo 0\n            -organizeByLayer 1\n            -organizeByClip 1\n            -showAnimLayerWeight 1\n            -autoExpandLayers 1\n            -autoExpand 0\n            -autoExpandAllAnimatedShapes 1\n            -showDagOnly 1\n            -showAssets 1\n            -showContainedOnly 1\n            -showPublishedAsConnected 0\n            -showParentContainers 0\n"
 		+ "            -showContainerContents 1\n            -ignoreDagHierarchy 0\n            -expandConnections 0\n            -showUpstreamCurves 1\n            -showUnitlessCurves 1\n            -showCompounds 1\n            -showLeafs 1\n            -showNumericAttrsOnly 0\n            -highlightActive 1\n            -autoSelectNewObjects 0\n            -doNotSelectNewObjects 0\n            -dropIsParent 1\n            -transmitFilters 0\n            -setFilter \"defaultSetFilter\" \n            -showSetMembers 1\n            -allowMultiSelection 1\n            -alwaysToggleSelect 0\n            -directSelect 0\n            -isSet 0\n            -isSetMember 0\n            -showUfeItems 1\n            -displayMode \"DAG\" \n            -expandObjects 0\n            -setsIgnoreFilters 1\n            -containersIgnoreFilters 0\n            -editAttrName 0\n            -showAttrValues 0\n            -highlightSecondary 0\n            -showUVAttrsOnly 0\n            -showTextureNodesOnly 0\n            -attrAlphaOrder \"default\" \n            -animLayerFilterOptions \"allAffecting\" \n"
 		+ "            -sortOrder \"none\" \n            -longNames 0\n            -niceNames 1\n            -selectCommand \"print(\\\"\\\")\" \n            -showNamespace 1\n            -showPinIcons 0\n            -mapMotionTrails 0\n            -ignoreHiddenAttribute 0\n            -ignoreOutlinerColor 0\n            -renderFilterVisible 0\n            -renderFilterIndex 0\n            -selectionOrder \"chronological\" \n            -expandAttribute 0\n            $editorName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"outlinerPanel\" (localizedPanelLabel(\"Outliner\")) `;\n\tif (\"\" != $panelName) {\n\t\t$label = `panel -q -label $panelName`;\n\t\toutlinerPanel -edit -l (localizedPanelLabel(\"Outliner\")) -mbv $menusOkayInPanels  $panelName;\n\t\t$editorName = $panelName;\n        outlinerEditor -e \n            -showShapes 0\n            -showAssignedMaterials 0\n            -showTimeEditor 1\n            -showReferenceNodes 0\n            -showReferenceMembers 0\n            -showAttributes 0\n"
 		+ "            -showConnected 0\n            -showAnimCurvesOnly 0\n            -showMuteInfo 0\n            -organizeByLayer 1\n            -organizeByClip 1\n            -showAnimLayerWeight 1\n            -autoExpandLayers 1\n            -autoExpand 0\n            -autoExpandAllAnimatedShapes 1\n            -showDagOnly 1\n            -showAssets 1\n            -showContainedOnly 1\n            -showPublishedAsConnected 0\n            -showParentContainers 0\n            -showContainerContents 1\n            -ignoreDagHierarchy 0\n            -expandConnections 0\n            -showUpstreamCurves 1\n            -showUnitlessCurves 1\n            -showCompounds 1\n            -showLeafs 1\n            -showNumericAttrsOnly 0\n            -highlightActive 1\n            -autoSelectNewObjects 0\n            -doNotSelectNewObjects 0\n            -dropIsParent 1\n            -transmitFilters 0\n            -setFilter \"defaultSetFilter\" \n            -showSetMembers 1\n            -allowMultiSelection 1\n            -alwaysToggleSelect 0\n            -directSelect 0\n"
@@ -82353,49 +82404,49 @@ createNode script -n "uiConfigurationScriptNode";
 		+ "                -maxConstantTransparency 1\n                -objectFilterShowInHUD 1\n                -isFiltered 0\n                -colorResolution 4 4 \n                -bumpResolution 4 4 \n                -textureCompression 0\n                -transparencyAlgorithm \"frontAndBackCull\" \n                -transpInShadows 0\n                -cullingOverride \"none\" \n                -lowQualityLighting 0\n                -maximumNumHardwareLights 0\n                -occlusionCulling 0\n                -shadingModel 0\n                -useBaseRenderer 0\n                -useReducedRenderer 0\n                -smallObjectCulling 0\n                -smallObjectThreshold -1 \n                -interactiveDisableShadows 0\n                -interactiveBackFaceCull 0\n                -sortTransparent 1\n                -controllers 1\n                -nurbsCurves 1\n                -nurbsSurfaces 1\n                -polymeshes 1\n                -subdivSurfaces 1\n                -planes 1\n                -lights 1\n                -cameras 1\n"
 		+ "                -controlVertices 1\n                -hulls 1\n                -grid 1\n                -imagePlane 1\n                -joints 1\n                -ikHandles 1\n                -deformers 1\n                -dynamics 1\n                -particleInstancers 1\n                -fluids 1\n                -hairSystems 1\n                -follicles 1\n                -nCloths 1\n                -nParticles 1\n                -nRigids 1\n                -dynamicConstraints 1\n                -locators 1\n                -manipulators 1\n                -pluginShapes 1\n                -dimensions 1\n                -handles 1\n                -pivots 1\n                -textures 1\n                -strokes 1\n                -motionTrails 1\n                -clipGhosts 1\n                -bluePencil 1\n                -greasePencils 0\n                -shadows 0\n                -captureSequenceNumber -1\n                -width 0\n                -height 0\n                -sceneRenderFilter 0\n                -displayMode \"centerEye\" \n"
 		+ "                -viewColor 0 0 0 1 \n                -useCustomBackground 1\n                $editorName;\n            stereoCameraView -e -viewSelected 0 $editorName;\n            stereoCameraView -e \n                -pluginObjects \"gpuCacheDisplayFilter\" 1 \n                $editorName; };\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\tif ($useSceneConfig) {\n        string $configName = `getPanel -cwl (localizedPanelLabel(\"Current Layout\"))`;\n        if (\"\" != $configName) {\n\t\t\tpanelConfiguration -edit -label (localizedPanelLabel(\"Current Layout\")) \n\t\t\t\t-userCreated false\n\t\t\t\t-defaultImage \"vacantCell.xP:/\"\n\t\t\t\t-image \"\"\n\t\t\t\t-sc false\n\t\t\t\t-configString \"global string $gMainPane; paneLayout -e -cn \\\"single\\\" -ps 1 100 100 $gMainPane;\"\n\t\t\t\t-removeAllPanels\n\t\t\t\t-ap false\n\t\t\t\t\t(localizedPanelLabel(\"Persp View\")) \n\t\t\t\t\t\"modelPanel\"\n"
-		+ "\t\t\t\t\t\"$panelName = `modelPanel -unParent -l (localizedPanelLabel(\\\"Persp View\\\")) -mbv $menusOkayInPanels `;\\n$editorName = $panelName;\\nmodelEditor -e \\n    -cam `findStartUpCamera persp` \\n    -useInteractiveMode 0\\n    -displayLights \\\"default\\\" \\n    -displayAppearance \\\"smoothShaded\\\" \\n    -activeOnly 0\\n    -ignorePanZoom 0\\n    -wireframeOnShaded 0\\n    -headsUpDisplay 1\\n    -holdOuts 1\\n    -selectionHiliteDisplay 1\\n    -useDefaultMaterial 0\\n    -bufferMode \\\"double\\\" \\n    -twoSidedLighting 0\\n    -backfaceCulling 0\\n    -xray 0\\n    -jointXray 0\\n    -activeComponentsXray 0\\n    -displayTextures 0\\n    -smoothWireframe 0\\n    -lineWidth 1\\n    -textureAnisotropic 0\\n    -textureHilight 1\\n    -textureSampling 2\\n    -textureDisplay \\\"modulate\\\" \\n    -textureMaxSize 32768\\n    -fogging 0\\n    -fogSource \\\"fragment\\\" \\n    -fogMode \\\"linear\\\" \\n    -fogStart 0\\n    -fogEnd 100\\n    -fogDensity 0.1\\n    -fogColor 0.5 0.5 0.5 1 \\n    -depthOfFieldPreview 1\\n    -maxConstantTransparency 1\\n    -rendererName \\\"vp2Renderer\\\" \\n    -objectFilterShowInHUD 1\\n    -isFiltered 0\\n    -colorResolution 256 256 \\n    -bumpResolution 512 512 \\n    -textureCompression 0\\n    -transparencyAlgorithm \\\"frontAndBackCull\\\" \\n    -transpInShadows 0\\n    -cullingOverride \\\"none\\\" \\n    -lowQualityLighting 0\\n    -maximumNumHardwareLights 1\\n    -occlusionCulling 0\\n    -shadingModel 0\\n    -useBaseRenderer 0\\n    -useReducedRenderer 0\\n    -smallObjectCulling 0\\n    -smallObjectThreshold -1 \\n    -interactiveDisableShadows 0\\n    -interactiveBackFaceCull 0\\n    -sortTransparent 1\\n    -controllers 1\\n    -nurbsCurves 1\\n    -nurbsSurfaces 1\\n    -polymeshes 1\\n    -subdivSurfaces 1\\n    -planes 1\\n    -lights 1\\n    -cameras 1\\n    -controlVertices 1\\n    -hulls 1\\n    -grid 1\\n    -imagePlane 1\\n    -joints 1\\n    -ikHandles 1\\n    -deformers 1\\n    -dynamics 1\\n    -particleInstancers 1\\n    -fluids 1\\n    -hairSystems 1\\n    -follicles 1\\n    -nCloths 1\\n    -nParticles 1\\n    -nRigids 1\\n    -dynamicConstraints 1\\n    -locators 1\\n    -manipulators 1\\n    -pluginShapes 1\\n    -dimensions 1\\n    -handles 1\\n    -pivots 1\\n    -textures 1\\n    -strokes 1\\n    -motionTrails 1\\n    -clipGhosts 1\\n    -bluePencil 1\\n    -greasePencils 0\\n    -excludeObjectPreset \\\"All\\\" \\n    -shadows 0\\n    -captureSequenceNumber -1\\n    -width 661\\n    -height 756\\n    -sceneRenderFilter 0\\n    $editorName;\\nmodelEditor -e -viewSelected 0 $editorName;\\nmodelEditor -e \\n    -pluginObjects \\\"gpuCacheDisplayFilter\\\" 1 \\n    $editorName\"\n"
-		+ "\t\t\t\t\t\"modelPanel -edit -l (localizedPanelLabel(\\\"Persp View\\\")) -mbv $menusOkayInPanels  $panelName;\\n$editorName = $panelName;\\nmodelEditor -e \\n    -cam `findStartUpCamera persp` \\n    -useInteractiveMode 0\\n    -displayLights \\\"default\\\" \\n    -displayAppearance \\\"smoothShaded\\\" \\n    -activeOnly 0\\n    -ignorePanZoom 0\\n    -wireframeOnShaded 0\\n    -headsUpDisplay 1\\n    -holdOuts 1\\n    -selectionHiliteDisplay 1\\n    -useDefaultMaterial 0\\n    -bufferMode \\\"double\\\" \\n    -twoSidedLighting 0\\n    -backfaceCulling 0\\n    -xray 0\\n    -jointXray 0\\n    -activeComponentsXray 0\\n    -displayTextures 0\\n    -smoothWireframe 0\\n    -lineWidth 1\\n    -textureAnisotropic 0\\n    -textureHilight 1\\n    -textureSampling 2\\n    -textureDisplay \\\"modulate\\\" \\n    -textureMaxSize 32768\\n    -fogging 0\\n    -fogSource \\\"fragment\\\" \\n    -fogMode \\\"linear\\\" \\n    -fogStart 0\\n    -fogEnd 100\\n    -fogDensity 0.1\\n    -fogColor 0.5 0.5 0.5 1 \\n    -depthOfFieldPreview 1\\n    -maxConstantTransparency 1\\n    -rendererName \\\"vp2Renderer\\\" \\n    -objectFilterShowInHUD 1\\n    -isFiltered 0\\n    -colorResolution 256 256 \\n    -bumpResolution 512 512 \\n    -textureCompression 0\\n    -transparencyAlgorithm \\\"frontAndBackCull\\\" \\n    -transpInShadows 0\\n    -cullingOverride \\\"none\\\" \\n    -lowQualityLighting 0\\n    -maximumNumHardwareLights 1\\n    -occlusionCulling 0\\n    -shadingModel 0\\n    -useBaseRenderer 0\\n    -useReducedRenderer 0\\n    -smallObjectCulling 0\\n    -smallObjectThreshold -1 \\n    -interactiveDisableShadows 0\\n    -interactiveBackFaceCull 0\\n    -sortTransparent 1\\n    -controllers 1\\n    -nurbsCurves 1\\n    -nurbsSurfaces 1\\n    -polymeshes 1\\n    -subdivSurfaces 1\\n    -planes 1\\n    -lights 1\\n    -cameras 1\\n    -controlVertices 1\\n    -hulls 1\\n    -grid 1\\n    -imagePlane 1\\n    -joints 1\\n    -ikHandles 1\\n    -deformers 1\\n    -dynamics 1\\n    -particleInstancers 1\\n    -fluids 1\\n    -hairSystems 1\\n    -follicles 1\\n    -nCloths 1\\n    -nParticles 1\\n    -nRigids 1\\n    -dynamicConstraints 1\\n    -locators 1\\n    -manipulators 1\\n    -pluginShapes 1\\n    -dimensions 1\\n    -handles 1\\n    -pivots 1\\n    -textures 1\\n    -strokes 1\\n    -motionTrails 1\\n    -clipGhosts 1\\n    -bluePencil 1\\n    -greasePencils 0\\n    -excludeObjectPreset \\\"All\\\" \\n    -shadows 0\\n    -captureSequenceNumber -1\\n    -width 661\\n    -height 756\\n    -sceneRenderFilter 0\\n    $editorName;\\nmodelEditor -e -viewSelected 0 $editorName;\\nmodelEditor -e \\n    -pluginObjects \\\"gpuCacheDisplayFilter\\\" 1 \\n    $editorName\"\n"
+		+ "\t\t\t\t\t\"$panelName = `modelPanel -unParent -l (localizedPanelLabel(\\\"Persp View\\\")) -mbv $menusOkayInPanels `;\\n$editorName = $panelName;\\nmodelEditor -e \\n    -cam `findStartUpCamera persp` \\n    -useInteractiveMode 0\\n    -displayLights \\\"default\\\" \\n    -displayAppearance \\\"smoothShaded\\\" \\n    -activeOnly 0\\n    -ignorePanZoom 0\\n    -wireframeOnShaded 0\\n    -headsUpDisplay 1\\n    -holdOuts 1\\n    -selectionHiliteDisplay 1\\n    -useDefaultMaterial 0\\n    -bufferMode \\\"double\\\" \\n    -twoSidedLighting 0\\n    -backfaceCulling 0\\n    -xray 0\\n    -jointXray 0\\n    -activeComponentsXray 0\\n    -displayTextures 0\\n    -smoothWireframe 0\\n    -lineWidth 1\\n    -textureAnisotropic 0\\n    -textureHilight 1\\n    -textureSampling 2\\n    -textureDisplay \\\"modulate\\\" \\n    -textureMaxSize 32768\\n    -fogging 0\\n    -fogSource \\\"fragment\\\" \\n    -fogMode \\\"linear\\\" \\n    -fogStart 0\\n    -fogEnd 100\\n    -fogDensity 0.1\\n    -fogColor 0.5 0.5 0.5 1 \\n    -depthOfFieldPreview 1\\n    -maxConstantTransparency 1\\n    -rendererName \\\"vp2Renderer\\\" \\n    -objectFilterShowInHUD 1\\n    -isFiltered 0\\n    -colorResolution 256 256 \\n    -bumpResolution 512 512 \\n    -textureCompression 0\\n    -transparencyAlgorithm \\\"frontAndBackCull\\\" \\n    -transpInShadows 0\\n    -cullingOverride \\\"none\\\" \\n    -lowQualityLighting 0\\n    -maximumNumHardwareLights 1\\n    -occlusionCulling 0\\n    -shadingModel 0\\n    -useBaseRenderer 0\\n    -useReducedRenderer 0\\n    -smallObjectCulling 0\\n    -smallObjectThreshold -1 \\n    -interactiveDisableShadows 0\\n    -interactiveBackFaceCull 0\\n    -sortTransparent 1\\n    -controllers 1\\n    -nurbsCurves 1\\n    -nurbsSurfaces 1\\n    -polymeshes 1\\n    -subdivSurfaces 1\\n    -planes 1\\n    -lights 1\\n    -cameras 1\\n    -controlVertices 1\\n    -hulls 1\\n    -grid 1\\n    -imagePlane 1\\n    -joints 1\\n    -ikHandles 1\\n    -deformers 1\\n    -dynamics 1\\n    -particleInstancers 1\\n    -fluids 1\\n    -hairSystems 1\\n    -follicles 1\\n    -nCloths 1\\n    -nParticles 1\\n    -nRigids 1\\n    -dynamicConstraints 1\\n    -locators 1\\n    -manipulators 1\\n    -pluginShapes 1\\n    -dimensions 1\\n    -handles 1\\n    -pivots 1\\n    -textures 1\\n    -strokes 1\\n    -motionTrails 1\\n    -clipGhosts 1\\n    -bluePencil 1\\n    -greasePencils 0\\n    -excludeObjectPreset \\\"All\\\" \\n    -shadows 0\\n    -captureSequenceNumber -1\\n    -width 853\\n    -height 689\\n    -sceneRenderFilter 0\\n    $editorName;\\nmodelEditor -e -viewSelected 0 $editorName;\\nmodelEditor -e \\n    -pluginObjects \\\"gpuCacheDisplayFilter\\\" 1 \\n    $editorName\"\n"
+		+ "\t\t\t\t\t\"modelPanel -edit -l (localizedPanelLabel(\\\"Persp View\\\")) -mbv $menusOkayInPanels  $panelName;\\n$editorName = $panelName;\\nmodelEditor -e \\n    -cam `findStartUpCamera persp` \\n    -useInteractiveMode 0\\n    -displayLights \\\"default\\\" \\n    -displayAppearance \\\"smoothShaded\\\" \\n    -activeOnly 0\\n    -ignorePanZoom 0\\n    -wireframeOnShaded 0\\n    -headsUpDisplay 1\\n    -holdOuts 1\\n    -selectionHiliteDisplay 1\\n    -useDefaultMaterial 0\\n    -bufferMode \\\"double\\\" \\n    -twoSidedLighting 0\\n    -backfaceCulling 0\\n    -xray 0\\n    -jointXray 0\\n    -activeComponentsXray 0\\n    -displayTextures 0\\n    -smoothWireframe 0\\n    -lineWidth 1\\n    -textureAnisotropic 0\\n    -textureHilight 1\\n    -textureSampling 2\\n    -textureDisplay \\\"modulate\\\" \\n    -textureMaxSize 32768\\n    -fogging 0\\n    -fogSource \\\"fragment\\\" \\n    -fogMode \\\"linear\\\" \\n    -fogStart 0\\n    -fogEnd 100\\n    -fogDensity 0.1\\n    -fogColor 0.5 0.5 0.5 1 \\n    -depthOfFieldPreview 1\\n    -maxConstantTransparency 1\\n    -rendererName \\\"vp2Renderer\\\" \\n    -objectFilterShowInHUD 1\\n    -isFiltered 0\\n    -colorResolution 256 256 \\n    -bumpResolution 512 512 \\n    -textureCompression 0\\n    -transparencyAlgorithm \\\"frontAndBackCull\\\" \\n    -transpInShadows 0\\n    -cullingOverride \\\"none\\\" \\n    -lowQualityLighting 0\\n    -maximumNumHardwareLights 1\\n    -occlusionCulling 0\\n    -shadingModel 0\\n    -useBaseRenderer 0\\n    -useReducedRenderer 0\\n    -smallObjectCulling 0\\n    -smallObjectThreshold -1 \\n    -interactiveDisableShadows 0\\n    -interactiveBackFaceCull 0\\n    -sortTransparent 1\\n    -controllers 1\\n    -nurbsCurves 1\\n    -nurbsSurfaces 1\\n    -polymeshes 1\\n    -subdivSurfaces 1\\n    -planes 1\\n    -lights 1\\n    -cameras 1\\n    -controlVertices 1\\n    -hulls 1\\n    -grid 1\\n    -imagePlane 1\\n    -joints 1\\n    -ikHandles 1\\n    -deformers 1\\n    -dynamics 1\\n    -particleInstancers 1\\n    -fluids 1\\n    -hairSystems 1\\n    -follicles 1\\n    -nCloths 1\\n    -nParticles 1\\n    -nRigids 1\\n    -dynamicConstraints 1\\n    -locators 1\\n    -manipulators 1\\n    -pluginShapes 1\\n    -dimensions 1\\n    -handles 1\\n    -pivots 1\\n    -textures 1\\n    -strokes 1\\n    -motionTrails 1\\n    -clipGhosts 1\\n    -bluePencil 1\\n    -greasePencils 0\\n    -excludeObjectPreset \\\"All\\\" \\n    -shadows 0\\n    -captureSequenceNumber -1\\n    -width 853\\n    -height 689\\n    -sceneRenderFilter 0\\n    $editorName;\\nmodelEditor -e -viewSelected 0 $editorName;\\nmodelEditor -e \\n    -pluginObjects \\\"gpuCacheDisplayFilter\\\" 1 \\n    $editorName\"\n"
 		+ "\t\t\t\t$configName;\n\n            setNamedPanelLayout (localizedPanelLabel(\"Current Layout\"));\n        }\n\n        panelHistory -e -clear mainPanelHistory;\n        sceneUIReplacement -clear;\n\t}\n\n\ngrid -spacing 5 -size 12 -divisions 5 -displayAxes yes -displayGridLines yes -displayDivisionLines yes -displayPerspectiveLabels no -displayOrthographicLabels no -displayAxesBold yes -perspectiveLabelPosition axis -orthographicLabelPosition edge;\nviewManip -drawCompass 0 -compassAngle 0 -frontParameters \"\" -homeParameters \"\" -selectionLockParameters \"\";\n}\n");
 	setAttr ".st" 3;
-createNode script -n "sceneConfigurationScriptNode";
+createNode script -n "Thaiz_Retopology_v0002:sceneConfigurationScriptNode";
 	rename -uid "45AB3EF7-4717-5D39-F478-2396DB26B6FA";
-	setAttr ".b" -type "string" "playbackOptions -min 0 -max 341 -ast 0 -aet 347 ";
+	setAttr ".b" -type "string" "playbackOptions -min 0 -max 1 -ast 0 -aet 1 ";
 	setAttr ".st" 6;
-createNode shadingEngine -n "R_base_GEOSG";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:R_base_GEOSG";
 	rename -uid "C8929C21-4E37-9004-1481-8988FC504460";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo10";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo10";
 	rename -uid "DF1DA983-454E-D216-E013-569EB30561C3";
-createNode shadingEngine -n "L_base_GEOSG";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:L_base_GEOSG";
 	rename -uid "A900B0BC-4867-298A-C8DC-FFB29AE89594";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo11";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo11";
 	rename -uid "34B3F745-4D28-31B6-686E-B7A854BEB54E";
-createNode shadingEngine -n "L_lace_GEOSG";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:L_lace_GEOSG";
 	rename -uid "C773409C-4FB5-8954-5B6F-0CBF04A8F26F";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo12";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo12";
 	rename -uid "0B869C8A-4631-FD44-D90A-1884155183BB";
-createNode shadingEngine -n "R_lace_GEOSG";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:R_lace_GEOSG";
 	rename -uid "53DC562F-4DBF-A61E-1BE5-2BB55AE39055";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo13";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo13";
 	rename -uid "F3E84F0B-47C1-ED59-E2CC-7B973C6FADB9";
-createNode aiStandardSurface -n "Lace_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:Lace_MAT";
 	rename -uid "7C864003-4171-2D0D-94E5-26B2EDF5C6E7";
-createNode shadingEngine -n "aiStandardSurface1SG";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:aiStandardSurface1SG";
 	rename -uid "1DFD3BA6-41F5-C63D-7E45-4A9073558A7C";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
 	setAttr -s 3 ".gn";
-createNode materialInfo -n "materialInfo14";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo14";
 	rename -uid "FD41E9BC-4C88-3E20-B175-B4953C8B4994";
-createNode nodeGraphEditorInfo -n "hyperShadePrimaryNodeEditorSavedTabsInfo";
+createNode nodeGraphEditorInfo -n "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo";
 	rename -uid "E44DF554-44D9-FE46-DAB8-F9BC499BFDD2";
 	setAttr ".def" no;
 	setAttr -s 5 ".tgi";
@@ -82444,39 +82495,39 @@ createNode nodeGraphEditorInfo -n "hyperShadePrimaryNodeEditorSavedTabsInfo";
 	setAttr ".tgi[4].ni[3].x" 70.602882385253906;
 	setAttr ".tgi[4].ni[3].y" 451.66448974609375;
 	setAttr ".tgi[4].ni[3].nvs" 1923;
-createNode aiStandardSurface -n "Base_MAT";
+createNode aiStandardSurface -n "Thaiz_Retopology_v0002:Base_MAT";
 	rename -uid "2701089A-42E2-F792-AA94-439F69A39DA2";
-createNode shadingEngine -n "aiStandardSurface2SG";
+createNode shadingEngine -n "Thaiz_Retopology_v0002:aiStandardSurface2SG";
 	rename -uid "7B9BF5EC-481B-18BA-4ABA-EF8380B1DC3C";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
 	setAttr -s 3 ".gn";
-createNode materialInfo -n "materialInfo15";
+createNode materialInfo -n "Thaiz_Retopology_v0002:materialInfo15";
 	rename -uid "907A1DD2-46BC-F5CC-0B64-F681F199DD6F";
-createNode groupId -n "groupId53";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId53";
 	rename -uid "0085891F-44AD-6187-332C-A0A3B5A1C709";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId55";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId55";
 	rename -uid "762F8914-43FF-9D82-AAE2-F39916B39B97";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId56";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId56";
 	rename -uid "0CEB33ED-4E1B-EA00-009B-9088F0852464";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId57";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId57";
 	rename -uid "6D671493-4CB6-2EE8-6C81-EE9770EECA3E";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId59";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId59";
 	rename -uid "047EC57D-4A7F-10FF-D943-9BAF4D7D3DF7";
 	setAttr ".ihi" 0;
-createNode groupId -n "groupId60";
+createNode groupId -n "Thaiz_Retopology_v0002:groupId60";
 	rename -uid "F6874F11-4D74-402C-5CC1-C2A5207C61C4";
 	setAttr ".ihi" 0;
 createNode groupId -n "groupId1";
 	rename -uid "AFDE9B49-47CB-A691-7CD4-30ACEE2DC3F2";
 	setAttr ".ihi" 0;
 createNode mayaUsdLayerManager -n "mayaUsdLayerManager1";
-	rename -uid "08F1FE38-45DE-268F-CFE0-0CBA29D80545";
+	rename -uid "0C8E1BBD-403C-9AA8-4051-FEB555C3C91E";
 	setAttr ".sst" -type "string" "";
 select -ne :time1;
 	setAttr ".o" 0;
@@ -82522,53 +82573,72 @@ select -ne :hardwareRenderGlobals;
 	setAttr ".btrs" 512;
 select -ne :defaultHideFaceDataSet;
 	setAttr -s 3 ".dnsm";
-connectAttr "groupId1.id" "THAIZ_BODY_PLYShape.iog.og[1].gid";
-connectAttr "groupId50.id" "L_EYEBROWN_PLYShape.iog.og[0].gid";
-connectAttr "EYEBROWN_SHD.mwc" "L_EYEBROWN_PLYShape.iog.og[0].gco";
-connectAttr "groupId51.id" "R_EYEBROWN_PLYShape.iog.og[0].gid";
-connectAttr "EYEBROWN_SHD.mwc" "R_EYEBROWN_PLYShape.iog.og[0].gco";
-connectAttr "groupId17.id" "L_eye_PLYShape.iog.og[0].gid";
-connectAttr "EYE_SHD.mwc" "L_eye_PLYShape.iog.og[0].gco";
-connectAttr "groupId18.id" "R_eye_PLYShape.iog.og[0].gid";
-connectAttr "EYE_SHD.mwc" "R_eye_PLYShape.iog.og[0].gco";
-connectAttr "groupId55.id" "L_base_PLYShape.iog.og[0].gid";
-connectAttr "aiStandardSurface2SG.mwc" "L_base_PLYShape.iog.og[0].gco";
-connectAttr "groupId56.id" "R_Base_PLYShape.iog.og[0].gid";
-connectAttr "aiStandardSurface2SG.mwc" "R_Base_PLYShape.iog.og[0].gco";
-connectAttr "groupId59.id" "R_lace_PLYShape.iog.og[0].gid";
-connectAttr "aiStandardSurface1SG.mwc" "R_lace_PLYShape.iog.og[0].gco";
-connectAttr "groupId60.id" "L_lace_PLYShape.iog.og[0].gid";
-connectAttr "aiStandardSurface1SG.mwc" "L_lace_PLYShape.iog.og[0].gco";
+select -ne :ikSystem;
+	setAttr -s 4 ".sol";
+connectAttr "groupId1.id" "Thaiz_Retopology_v0002:THAIZ_BODY_PLYShape.iog.og[1].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId50.id" "Thaiz_Retopology_v0002:L_EYEBROWN_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_SHD.mwc" "Thaiz_Retopology_v0002:L_EYEBROWN_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId51.id" "Thaiz_Retopology_v0002:R_EYEBROWN_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_SHD.mwc" "Thaiz_Retopology_v0002:R_EYEBROWN_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId17.id" "Thaiz_Retopology_v0002:L_eye_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYE_SHD.mwc" "Thaiz_Retopology_v0002:L_eye_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId18.id" "Thaiz_Retopology_v0002:R_eye_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYE_SHD.mwc" "Thaiz_Retopology_v0002:R_eye_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId55.id" "Thaiz_Retopology_v0002:L_base_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface2SG.mwc" "Thaiz_Retopology_v0002:L_base_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId56.id" "Thaiz_Retopology_v0002:R_Base_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface2SG.mwc" "Thaiz_Retopology_v0002:R_Base_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId59.id" "Thaiz_Retopology_v0002:R_lace_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface1SG.mwc" "Thaiz_Retopology_v0002:R_lace_PLYShape.iog.og[0].gco"
+		;
+connectAttr "Thaiz_Retopology_v0002:groupId60.id" "Thaiz_Retopology_v0002:L_lace_PLYShape.iog.og[0].gid"
+		;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface1SG.mwc" "Thaiz_Retopology_v0002:L_lace_PLYShape.iog.og[0].gco"
+		;
 relationship "link" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "link" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "EYE_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "EYEBROWN_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "Thaiz_Topology_v12:TONGUE_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "Thaiz_Topology_v12:GUMS_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "Thaiz_Topology_v12:TEETH_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "EYELASHES_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "R_base_GEOSG.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "BODY_SHD.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "L_base_GEOSG.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "L_lace_GEOSG.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "R_lace_GEOSG.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "aiStandardSurface1SG.message" ":defaultLightSet.message";
-relationship "link" ":lightLinker1" "aiStandardSurface2SG.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:EYE_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:EYEBROWN_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:EYELASHES_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:R_base_GEOSG.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:BODY_SHD.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:L_base_GEOSG.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:L_lace_GEOSG.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:R_lace_GEOSG.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:aiStandardSurface1SG.message" ":defaultLightSet.message";
+relationship "link" ":lightLinker1" "Thaiz_Retopology_v0002:aiStandardSurface2SG.message" ":defaultLightSet.message";
 relationship "shadowLink" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "shadowLink" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "EYE_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "EYEBROWN_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "Thaiz_Topology_v12:TONGUE_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "Thaiz_Topology_v12:GUMS_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "Thaiz_Topology_v12:TEETH_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "EYELASHES_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "R_base_GEOSG.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "BODY_SHD.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "L_base_GEOSG.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "L_lace_GEOSG.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "R_lace_GEOSG.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "aiStandardSurface1SG.message" ":defaultLightSet.message";
-relationship "shadowLink" ":lightLinker1" "aiStandardSurface2SG.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:EYE_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:EYEBROWN_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:EYELASHES_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:R_base_GEOSG.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:BODY_SHD.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:L_base_GEOSG.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:L_lace_GEOSG.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:R_lace_GEOSG.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:aiStandardSurface1SG.message" ":defaultLightSet.message";
+relationship "shadowLink" ":lightLinker1" "Thaiz_Retopology_v0002:aiStandardSurface2SG.message" ":defaultLightSet.message";
 connectAttr "layerManager.dli[0]" "defaultLayer.id";
 connectAttr "renderLayerManager.rlmi[0]" "defaultRenderLayer.rlid";
 connectAttr ":defaultArnoldDenoiser.msg" ":defaultArnoldRenderOptions.imagers" -na
@@ -82577,335 +82647,397 @@ connectAttr ":defaultArnoldDisplayDriver.msg" ":defaultArnoldRenderOptions.drive
 		 -na;
 connectAttr ":defaultArnoldFilter.msg" ":defaultArnoldRenderOptions.filt";
 connectAttr ":defaultArnoldDriver.msg" ":defaultArnoldRenderOptions.drvr";
-connectAttr ":standardSurface1.msg" "Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
+connectAttr ":standardSurface1.msg" "Thaiz_Retopology_v0002:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
 		;
-connectAttr ":initialShadingGroup.msg" "Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
+connectAttr ":initialShadingGroup.msg" "Thaiz_Retopology_v0002:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
 		;
-connectAttr ":standardSurface1.msg" "Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
+connectAttr ":standardSurface1.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
 		;
-connectAttr ":initialShadingGroup.msg" "Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
+connectAttr ":initialShadingGroup.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v11:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
 		;
-connectAttr ":standardSurface1.msg" "Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
+connectAttr ":standardSurface1.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
 		;
-connectAttr ":initialShadingGroup.msg" "Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
+connectAttr ":initialShadingGroup.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:Marcelo_Ze_Transfer:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
 		;
-connectAttr "Thaiz_Topology_v12:TONGUE_MAT.out" "Thaiz_Topology_v12:TONGUE_SHD.ss"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_MAT.out" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.ss"
 		;
-connectAttr "Thaiz_Topology_v12:tongueShape.iog" "Thaiz_Topology_v12:TONGUE_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:tongueShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:TONGUE_SHD.msg" "Thaiz_Topology_v12:materialInfo30.sg"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo30.sg"
 		;
-connectAttr "Thaiz_Topology_v12:TONGUE_MAT.msg" "Thaiz_Topology_v12:materialInfo30.m"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo30.m"
 		;
-connectAttr "Thaiz_Topology_v12:TONGUE_MAT.msg" "Thaiz_Topology_v12:materialInfo30.t"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo30.t"
 		 -na;
-connectAttr "Thaiz_Topology_v12:GUMS_MAT.out" "Thaiz_Topology_v12:GUMS_SHD.ss";
-connectAttr "Thaiz_Topology_v12:low_gumShape.iog" "Thaiz_Topology_v12:GUMS_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_MAT.out" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.ss"
+		;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:low_gumShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:top_gumShape.iog" "Thaiz_Topology_v12:GUMS_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:top_gumShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:GUMS_SHD.msg" "Thaiz_Topology_v12:materialInfo31.sg"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo31.sg"
 		;
-connectAttr "Thaiz_Topology_v12:GUMS_MAT.msg" "Thaiz_Topology_v12:materialInfo31.m"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo31.m"
 		;
-connectAttr "Thaiz_Topology_v12:GUMS_MAT.msg" "Thaiz_Topology_v12:materialInfo31.t"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo31.t"
 		 -na;
-connectAttr "Thaiz_Topology_v12:TEETH_MAT.out" "Thaiz_Topology_v12:TEETH_SHD.ss"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_MAT.out" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.ss"
 		;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:L_front|Thaiz_Topology_v12:L_frontShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_front|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_frontShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:R_front|Thaiz_Topology_v12:R_frontShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_front|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_frontShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:middle_teeth|Thaiz_Topology_v12:R_middle|Thaiz_Topology_v12:R_middleShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middle|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middleShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:CL_fangShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:CL_fangShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:R_fangShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_fangShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:L_molars|Thaiz_Topology_v12:L_molarsShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molarsShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Top_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:R_molars|Thaiz_Topology_v12:R_molarsShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Top_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molarsShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:R_front|Thaiz_Topology_v12:R_frontShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_front|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_frontShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:front_teeth|Thaiz_Topology_v12:L_front|Thaiz_Topology_v12:L_frontShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:front_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_front|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_frontShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:middle_teeth|Thaiz_Topology_v12:R_middle|Thaiz_Topology_v12:R_middleShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:middle_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middle|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_middleShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:L_middleShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_middleShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:L_fangShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_fangShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:L_molars|Thaiz_Topology_v12:L_molarsShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:L_molarsShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "|THAIZ_GRP|Mouth_GRP|Thaiz_Topology_v12:Low_teeth|Thaiz_Topology_v12:molars|Thaiz_Topology_v12:R_molars|Thaiz_Topology_v12:R_molarsShape.iog" "Thaiz_Topology_v12:TEETH_SHD.dsm"
+connectAttr "|Thaiz_Retopology_v0002:THAIZ_GRP|Thaiz_Retopology_v0002:Mouth_GRP|Thaiz_Retopology_v0002:Thaiz_Topology_v12:Low_teeth|Thaiz_Retopology_v0002:Thaiz_Topology_v12:molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molars|Thaiz_Retopology_v0002:Thaiz_Topology_v12:R_molarsShape.iog" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.dsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:TEETH_SHD.msg" "Thaiz_Topology_v12:materialInfo32.sg"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo32.sg"
 		;
-connectAttr "Thaiz_Topology_v12:TEETH_MAT.msg" "Thaiz_Topology_v12:materialInfo32.m"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo32.m"
 		;
-connectAttr "Thaiz_Topology_v12:TEETH_MAT.msg" "Thaiz_Topology_v12:materialInfo32.t"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:materialInfo32.t"
 		 -na;
-connectAttr "Thaiz_Topology_v12:TONGUE_MAT.msg" "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[0].dn"
 		;
-connectAttr "Thaiz_Topology_v12:TONGUE_SHD.msg" "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[1].dn"
 		;
-connectAttr "Thaiz_Topology_v12:GUMS_SHD.msg" "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[2].dn"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[2].dn"
 		;
-connectAttr "Thaiz_Topology_v12:TEETH_SHD.msg" "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[3].dn"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[3].dn"
 		;
-connectAttr "Thaiz_Topology_v12:TEETH_MAT.msg" "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[4].dn"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[4].dn"
 		;
-connectAttr "Thaiz_Topology_v12:GUMS_MAT.msg" "Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[5].dn"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_MAT.msg" "Thaiz_Retopology_v0002:Thaiz_Topology_v12:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[0].ni[5].dn"
 		;
-connectAttr "EYELASHES.oc" "EYELASHES_SHD.ss";
-connectAttr "L_eyelash_PLYShape.iog" "EYELASHES_SHD.dsm" -na;
-connectAttr "R_eyelash_PLYShape.iog" "EYELASHES_SHD.dsm" -na;
-connectAttr "EYELASHES_SHD.msg" "materialInfo5.sg";
-connectAttr "EYELASHES.msg" "materialInfo5.m";
-connectAttr "EYE_MAT.out" "EYE_SHD.ss";
-connectAttr "L_eye_PLYShape.iog.og[0]" "EYE_SHD.dsm" -na;
-connectAttr "R_eye_PLYShape.iog.og[0]" "EYE_SHD.dsm" -na;
-connectAttr "R_cornea_PLYShape.iog" "EYE_SHD.dsm" -na;
-connectAttr "L_cornea_PLYShape.iog" "EYE_SHD.dsm" -na;
-connectAttr "groupId17.msg" "EYE_SHD.gn" -na;
-connectAttr "groupId18.msg" "EYE_SHD.gn" -na;
-connectAttr "EYE_SHD.msg" "materialInfo7.sg";
-connectAttr "EYE_MAT.msg" "materialInfo7.m";
-connectAttr "EYE_MAT.msg" "materialInfo7.t" -na;
-connectAttr "EYEBROWN_MAT.out" "EYEBROWN_SHD.ss";
-connectAttr "L_EYEBROWN_PLYShape.iog.og[0]" "EYEBROWN_SHD.dsm" -na;
-connectAttr "R_EYEBROWN_PLYShape.iog.og[0]" "EYEBROWN_SHD.dsm" -na;
-connectAttr "groupId50.msg" "EYEBROWN_SHD.gn" -na;
-connectAttr "groupId51.msg" "EYEBROWN_SHD.gn" -na;
-connectAttr "EYEBROWN_SHD.msg" "materialInfo8.sg";
-connectAttr "EYEBROWN_MAT.msg" "materialInfo8.m";
-connectAttr "EYEBROWN_MAT.msg" "materialInfo8.t" -na;
-connectAttr "BODY_MAT.out" "BODY_SHD.ss";
-connectAttr "THAIZ_BODY_PLYShape.iog" "BODY_SHD.dsm" -na;
-connectAttr "BODY_SHD.msg" "materialInfo9.sg";
-connectAttr "BODY_MAT.msg" "materialInfo9.m";
-connectAttr "BODY_MAT.msg" "materialInfo9.t" -na;
-connectAttr "R_base_GEOSG.msg" "materialInfo10.sg";
-connectAttr "L_base_GEOSG.msg" "materialInfo11.sg";
-connectAttr "L_lace_GEOSG.msg" "materialInfo12.sg";
-connectAttr "R_lace_GEOSG.msg" "materialInfo13.sg";
-connectAttr "Lace_MAT.out" "aiStandardSurface1SG.ss";
-connectAttr "R_lace_PLYShape.iog.og[0]" "aiStandardSurface1SG.dsm" -na;
-connectAttr "L_lace_PLYShape.iog.og[0]" "aiStandardSurface1SG.dsm" -na;
-connectAttr "groupId57.msg" "aiStandardSurface1SG.gn" -na;
-connectAttr "groupId59.msg" "aiStandardSurface1SG.gn" -na;
-connectAttr "groupId60.msg" "aiStandardSurface1SG.gn" -na;
-connectAttr "aiStandardSurface1SG.msg" "materialInfo14.sg";
-connectAttr "Lace_MAT.msg" "materialInfo14.m";
-connectAttr "Lace_MAT.msg" "materialInfo14.t" -na;
-connectAttr "EYE_SHD.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[1].ni[0].dn"
+connectAttr "Thaiz_Retopology_v0002:EYELASHES.oc" "Thaiz_Retopology_v0002:EYELASHES_SHD.ss"
 		;
-connectAttr "EYE_MAT.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[1].ni[1].dn"
+connectAttr "Thaiz_Retopology_v0002:L_eyelash_PLYShape.iog" "Thaiz_Retopology_v0002:EYELASHES_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:R_eyelash_PLYShape.iog" "Thaiz_Retopology_v0002:EYELASHES_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYELASHES_SHD.msg" "Thaiz_Retopology_v0002:materialInfo5.sg"
 		;
-connectAttr "EYELASHES.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[2].ni[0].dn"
+connectAttr "Thaiz_Retopology_v0002:EYELASHES.msg" "Thaiz_Retopology_v0002:materialInfo5.m"
 		;
-connectAttr "EYELASHES_SHD.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[2].ni[1].dn"
+connectAttr "Thaiz_Retopology_v0002:EYE_MAT.out" "Thaiz_Retopology_v0002:EYE_SHD.ss"
 		;
-connectAttr ":initialShadingGroup.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[3].ni[0].dn"
+connectAttr "Thaiz_Retopology_v0002:L_eye_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:EYE_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:R_eye_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:EYE_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:R_cornea_PLYShape.iog" "Thaiz_Retopology_v0002:EYE_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:L_cornea_PLYShape.iog" "Thaiz_Retopology_v0002:EYE_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId17.msg" "Thaiz_Retopology_v0002:EYE_SHD.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId18.msg" "Thaiz_Retopology_v0002:EYE_SHD.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYE_SHD.msg" "Thaiz_Retopology_v0002:materialInfo7.sg"
 		;
-connectAttr "BODY_MAT.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[0].dn"
+connectAttr "Thaiz_Retopology_v0002:EYE_MAT.msg" "Thaiz_Retopology_v0002:materialInfo7.m"
 		;
-connectAttr "BODY_SHD.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[1].dn"
+connectAttr "Thaiz_Retopology_v0002:EYE_MAT.msg" "Thaiz_Retopology_v0002:materialInfo7.t"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_MAT.out" "Thaiz_Retopology_v0002:EYEBROWN_SHD.ss"
 		;
-connectAttr "Lace_MAT.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[2].dn"
+connectAttr "Thaiz_Retopology_v0002:L_EYEBROWN_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:EYEBROWN_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:R_EYEBROWN_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:EYEBROWN_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId50.msg" "Thaiz_Retopology_v0002:EYEBROWN_SHD.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId51.msg" "Thaiz_Retopology_v0002:EYEBROWN_SHD.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_SHD.msg" "Thaiz_Retopology_v0002:materialInfo8.sg"
 		;
-connectAttr "aiStandardSurface1SG.msg" "hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[3].dn"
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_MAT.msg" "Thaiz_Retopology_v0002:materialInfo8.m"
 		;
-connectAttr "Base_MAT.out" "aiStandardSurface2SG.ss";
-connectAttr "L_base_PLYShape.iog.og[0]" "aiStandardSurface2SG.dsm" -na;
-connectAttr "R_Base_PLYShape.iog.og[0]" "aiStandardSurface2SG.dsm" -na;
-connectAttr "groupId53.msg" "aiStandardSurface2SG.gn" -na;
-connectAttr "groupId55.msg" "aiStandardSurface2SG.gn" -na;
-connectAttr "groupId56.msg" "aiStandardSurface2SG.gn" -na;
-connectAttr "aiStandardSurface2SG.msg" "materialInfo15.sg";
-connectAttr "Base_MAT.msg" "materialInfo15.m";
-connectAttr "Base_MAT.msg" "materialInfo15.t" -na;
-connectAttr "Thaiz_Topology_v12:TONGUE_SHD.pa" ":renderPartition.st" -na;
-connectAttr "Thaiz_Topology_v12:GUMS_SHD.pa" ":renderPartition.st" -na;
-connectAttr "Thaiz_Topology_v12:TEETH_SHD.pa" ":renderPartition.st" -na;
-connectAttr "EYELASHES_SHD.pa" ":renderPartition.st" -na;
-connectAttr "EYE_SHD.pa" ":renderPartition.st" -na;
-connectAttr "EYEBROWN_SHD.pa" ":renderPartition.st" -na;
-connectAttr "BODY_SHD.pa" ":renderPartition.st" -na;
-connectAttr "R_base_GEOSG.pa" ":renderPartition.st" -na;
-connectAttr "L_base_GEOSG.pa" ":renderPartition.st" -na;
-connectAttr "L_lace_GEOSG.pa" ":renderPartition.st" -na;
-connectAttr "R_lace_GEOSG.pa" ":renderPartition.st" -na;
-connectAttr "aiStandardSurface1SG.pa" ":renderPartition.st" -na;
-connectAttr "aiStandardSurface2SG.pa" ":renderPartition.st" -na;
-connectAttr "Thaiz_Topology_v12:TONGUE_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "Thaiz_Topology_v12:GUMS_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "Thaiz_Topology_v12:TEETH_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "EYELASHES.msg" ":defaultShaderList1.s" -na;
-connectAttr "EYE_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "EYEBROWN_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "BODY_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "Lace_MAT.msg" ":defaultShaderList1.s" -na;
-connectAttr "Base_MAT.msg" ":defaultShaderList1.s" -na;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_MAT.msg" "Thaiz_Retopology_v0002:materialInfo8.t"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:BODY_MAT.out" "Thaiz_Retopology_v0002:BODY_SHD.ss"
+		;
+connectAttr "Thaiz_Retopology_v0002:THAIZ_BODY_PLYShape.iog" "Thaiz_Retopology_v0002:BODY_SHD.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:BODY_SHD.msg" "Thaiz_Retopology_v0002:materialInfo9.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:BODY_MAT.msg" "Thaiz_Retopology_v0002:materialInfo9.m"
+		;
+connectAttr "Thaiz_Retopology_v0002:BODY_MAT.msg" "Thaiz_Retopology_v0002:materialInfo9.t"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:R_base_GEOSG.msg" "Thaiz_Retopology_v0002:materialInfo10.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:L_base_GEOSG.msg" "Thaiz_Retopology_v0002:materialInfo11.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:L_lace_GEOSG.msg" "Thaiz_Retopology_v0002:materialInfo12.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:R_lace_GEOSG.msg" "Thaiz_Retopology_v0002:materialInfo13.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:Lace_MAT.out" "Thaiz_Retopology_v0002:aiStandardSurface1SG.ss"
+		;
+connectAttr "Thaiz_Retopology_v0002:R_lace_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:aiStandardSurface1SG.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:L_lace_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:aiStandardSurface1SG.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId57.msg" "Thaiz_Retopology_v0002:aiStandardSurface1SG.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId59.msg" "Thaiz_Retopology_v0002:aiStandardSurface1SG.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId60.msg" "Thaiz_Retopology_v0002:aiStandardSurface1SG.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface1SG.msg" "Thaiz_Retopology_v0002:materialInfo14.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:Lace_MAT.msg" "Thaiz_Retopology_v0002:materialInfo14.m"
+		;
+connectAttr "Thaiz_Retopology_v0002:Lace_MAT.msg" "Thaiz_Retopology_v0002:materialInfo14.t"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYE_SHD.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[1].ni[0].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYE_MAT.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[1].ni[1].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYELASHES.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[2].ni[0].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:EYELASHES_SHD.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[2].ni[1].dn"
+		;
+connectAttr ":initialShadingGroup.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[3].ni[0].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:BODY_MAT.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[0].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:BODY_SHD.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[1].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:Lace_MAT.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[2].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface1SG.msg" "Thaiz_Retopology_v0002:hyperShadePrimaryNodeEditorSavedTabsInfo.tgi[4].ni[3].dn"
+		;
+connectAttr "Thaiz_Retopology_v0002:Base_MAT.out" "Thaiz_Retopology_v0002:aiStandardSurface2SG.ss"
+		;
+connectAttr "Thaiz_Retopology_v0002:L_base_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:aiStandardSurface2SG.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:R_Base_PLYShape.iog.og[0]" "Thaiz_Retopology_v0002:aiStandardSurface2SG.dsm"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId53.msg" "Thaiz_Retopology_v0002:aiStandardSurface2SG.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId55.msg" "Thaiz_Retopology_v0002:aiStandardSurface2SG.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:groupId56.msg" "Thaiz_Retopology_v0002:aiStandardSurface2SG.gn"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface2SG.msg" "Thaiz_Retopology_v0002:materialInfo15.sg"
+		;
+connectAttr "Thaiz_Retopology_v0002:Base_MAT.msg" "Thaiz_Retopology_v0002:materialInfo15.m"
+		;
+connectAttr "Thaiz_Retopology_v0002:Base_MAT.msg" "Thaiz_Retopology_v0002:materialInfo15.t"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_SHD.pa" ":renderPartition.st"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_SHD.pa" ":renderPartition.st"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_SHD.pa" ":renderPartition.st"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYELASHES_SHD.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:EYE_SHD.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_SHD.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:BODY_SHD.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:R_base_GEOSG.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:L_base_GEOSG.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:L_lace_GEOSG.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:R_lace_GEOSG.pa" ":renderPartition.st" -na;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface1SG.pa" ":renderPartition.st"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:aiStandardSurface2SG.pa" ":renderPartition.st"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TONGUE_MAT.msg" ":defaultShaderList1.s"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:GUMS_MAT.msg" ":defaultShaderList1.s"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:TEETH_MAT.msg" ":defaultShaderList1.s"
+		 -na;
+connectAttr "Thaiz_Retopology_v0002:EYELASHES.msg" ":defaultShaderList1.s" -na;
+connectAttr "Thaiz_Retopology_v0002:EYE_MAT.msg" ":defaultShaderList1.s" -na;
+connectAttr "Thaiz_Retopology_v0002:EYEBROWN_MAT.msg" ":defaultShaderList1.s" -na
+		;
+connectAttr "Thaiz_Retopology_v0002:BODY_MAT.msg" ":defaultShaderList1.s" -na;
+connectAttr "Thaiz_Retopology_v0002:Lace_MAT.msg" ":defaultShaderList1.s" -na;
+connectAttr "Thaiz_Retopology_v0002:Base_MAT.msg" ":defaultShaderList1.s" -na;
 connectAttr "defaultRenderLayer.msg" ":defaultRenderingList1.r" -na;
-connectAttr "Thaiz_Topology_v02:EYEBROWN_GEOShapeHiddenFacesSet.msg" ":defaultHideFaceDataSet.dnsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v02:EYEBROWN_GEOShapeHiddenFacesSet.msg" ":defaultHideFaceDataSet.dnsm"
 		 -na;
-connectAttr "Thaiz_Topology_v11:EYEBROWN_GEOShapeHiddenFacesSet.msg" ":defaultHideFaceDataSet.dnsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v11:EYEBROWN_GEOShapeHiddenFacesSet.msg" ":defaultHideFaceDataSet.dnsm"
 		 -na;
-connectAttr "Thaiz_Topology_v12:EYEBROWN_GEOShapeHiddenFacesSet.msg" ":defaultHideFaceDataSet.dnsm"
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v12:EYEBROWN_GEOShapeHiddenFacesSet.msg" ":defaultHideFaceDataSet.dnsm"
 		 -na;
-connectAttr "Thaiz_Topology_v02:groupId2.msg" ":defaultLastHiddenSet.gn" -na;
+connectAttr "Thaiz_Retopology_v0002:Thaiz_Topology_v02:groupId2.msg" ":defaultLastHiddenSet.gn"
+		 -na;
 connectAttr "groupId1.msg" ":defaultLastHiddenSet.gn" -na;
-connectAttr "THAIZ_BODY_PLYShape.iog.og[1]" ":defaultLastHiddenSet.dsm" -na;
-dataStructure -fmt "raw" -as "name=mapManager_suelo:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_base_left:string=value";
-dataStructure -fmt "raw" -as "name=notes_sueloA:string=value";
-dataStructure -fmt "raw" -as "name=OrgStruct:float[3]=Origin Point";
-dataStructure -fmt "raw" -as "name=notes_background_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_base_left:string=value";
-dataStructure -fmt "raw" -as "name=notes_mountains_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_pPlane5:string=value";
-dataStructure -fmt "raw" -as "name=notes_beautyFlowersBedA_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_widlPatchB_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_snapshot_CombinedGrass:string=value";
-dataStructure -fmt "raw" -as "name=notes_groundWoods_c_geo1:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesC_parShape:string=value";
+connectAttr "Thaiz_Retopology_v0002:THAIZ_BODY_PLYShape.iog.og[1]" ":defaultLastHiddenSet.dsm"
+		 -na;
+dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassD_Combined1:string=value";
+dataStructure -fmt "raw" -as "name=notes_pPlane1:string=value";
 dataStructure -fmt "raw" -as "name=notes_baseForest:string=value";
+dataStructure -fmt "raw" -as "name=notes_testMode_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_snapshot_floor:string=value";
+dataStructure -fmt "raw" -as "name=notes_widlPatchB_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_groundWoods_c_geo1:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_baseScatt:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_floorOrangeConcrete_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_sueloC:string=value";
+dataStructure -fmt "raw" -as "name=notes_base_left:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_snapshot_Combined1:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_sueloC:string=value";
+dataStructure -fmt "raw" -as "name=notes_bushes_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayGrassPatchD_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_snapshot_CombinedGrass:string=value";
+dataStructure -fmt "raw" -as "name=notes_pPlane6:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_sueloB:string=value";
+dataStructure -fmt "raw" -as "name=notes_groundWoods_c_geo1:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_suelo:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_snapshot_CombinedGrass:string=value";
+dataStructure -fmt "raw" -as "name=notes_grassBase:string=value";
+dataStructure -fmt "raw" -as "name=OrgStruct:float[3]=Origin Point";
+dataStructure -fmt "raw" -as "name=mapManager_base_left:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchC_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_beautyFlowersBedA_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_polySurface56:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassA_Combined:string=value";
+dataStructure -fmt "raw" -as "name=notes_trees_parShape:string=value";
 dataStructure -fmt "raw" -as "name=notes_base_parShape:string=value";
 dataStructure -fmt "raw" -as "name=notes_snapshot_Combined:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassD_Combined1:string=value";
-dataStructure -fmt "raw" -as "name=notes_pPlane6:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchA_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassD_Combined1:string=value";
-dataStructure -fmt "raw" -as "name=notes_snapshot_CombinedGrass:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_sueloA:string=value";
-dataStructure -fmt "raw" -as "name=notes_vegetation_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchC_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_snapshot_Combined1:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_pPlane2:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayGrassPatchD_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_bushes_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_grass_c_geo1:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_trees_left:string=value";
-dataStructure -fmt "raw" -as "name=notes_trees_left:string=value";
-dataStructure -fmt "raw" -as "name=notes_trees_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_ground_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_riverSideground:string=value";
+dataStructure -fmt "raw" -as "name=notes_polySurface56:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_riverSide:string=value";
 dataStructure -fmt "raw" -as "name=notes_riverSideground:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_riverSideground:string=value";
-dataStructure -fmt "raw" -as "name=notes_juneBackYard:string=value";
-dataStructure -fmt "raw" -as "name=notes_grassBase:string=value";
-dataStructure -fmt "raw" -as "name=notes_ferns_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_pPlane5:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_pPlane2:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchA_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_sueloA:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesC_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_background_parShape:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_floor:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_rockSignRollo:string=value";
-dataStructure -fmt "raw" -as "name=OffStruct:float=Offset";
-dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassC_Combined:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_sueloC:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassA_Combined:string=value";
-dataStructure -fmt "raw" -as "name=notes_polySurface56:string=value";
-dataStructure -fmt "raw" -as "name=notes_leaves:string=value";
-dataStructure -fmt "raw" -as "name=notes_ground_c_geo:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_polySurface56:string=value";
-dataStructure -fmt "raw" -as "name=notes_groundC_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesMountainsGrass_Combined:string=value";
-dataStructure -fmt "raw" -as "name=notes_pPlane1:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayLeaves_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_sueloB:string=value";
-dataStructure -fmt "raw" -as "name=notes_leavesDecay_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_pPlane5:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_grass_c_geo1:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayGrassPatchA_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_leaves:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopes_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_groundWoods_c_geo1:string=value";
-dataStructure -fmt "raw" -as "name=notes_baseScatt:string=value";
-dataStructure -fmt "raw" -as "name=notes_testMode_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_floorOrangeConcrete_c_geo:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_ground:string=value";
+dataStructure -fmt "raw" -as "name=notes_mountains_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_midgroundPlane:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_midgroundPlane:string=value";
-dataStructure -fmt "raw" -as "name=idStructure:int32=ID";
+dataStructure -fmt "raw" -as "name=notes_trees_left:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesMountainsGrass_Combined:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayGrassPatchA_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayGrassPatchC_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_pPlane5:string=value";
+dataStructure -fmt "raw" -as "name=notes_rockSignRollo:string=value";
+dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchA_parShape:string=value";
+dataStructure -fmt "raw" -as "name=RenderSettings:string=preset";
+dataStructure -fmt "raw" -as "name=mapManager_grass_c_geo1:string=value";
+dataStructure -fmt "raw" -as "name=notes_floor:string=value";
 dataStructure -fmt "raw" -as "name=notes_midground_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_backgroundPlane:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassC_Combined:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_floor_c_geo:string=value";
-dataStructure -fmt "raw" -as "name=notes_grass_c_geo:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_baseLeaves:string=value";
+dataStructure -fmt "raw" -as "name=notes_leavesDecay_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchG_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_juneBackYard:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_grass_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesB_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_pPlane3:string=value";
+dataStructure -fmt "raw" -as "name=notes_rockCheated_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayLeavesCarousel_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_sueloB:string=value";
+dataStructure -fmt "raw" -as "name=notes_left_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchB_parShape:string=value";
+dataStructure -fmt "raw" -as "name=idStructure:int32=ID";
+dataStructure -fmt "raw" -as "name=mapManager_rockSignRollo:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_pPlane1:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_baseScatter:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_snapshot_floor:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_ground_c_geo:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_snapshot_Combined:string=value";
-dataStructure -fmt "raw" -as "name=notes_leaves_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayGrassesCenter_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_sueloC:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassC_Combined:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassC_Combined:string=value";
+dataStructure -fmt "raw" -as "name=notes_base_hojas:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayLeaves_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_ground_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_vegetation_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_backgroundPlane:string=value";
+dataStructure -fmt "raw" -as "name=notes_ground:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchF_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_suelo:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchD_parShape:string=value";
+dataStructure -fmt "raw" -as "name=OffStruct:float=Offset";
+dataStructure -fmt "raw" -as "name=notes_base_right:string=value";
+dataStructure -fmt "raw" -as "name=notes_baseScatt:string=value";
 dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchC_parShape:string=value";
 dataStructure -fmt "raw" -as "name=notes_pPlane2:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesB_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_suelo:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_grass_c_geo:string=value";
-dataStructure -fmt "raw" -as "name=notes_ground:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayLeavesCarousel_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayGrassPatchC_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchDegraded_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_right_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_midgroundPlane:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchD_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_snapshot_floor:string=value";
 dataStructure -fmt "raw" -as "name=notes_riverSide:string=value";
-dataStructure -fmt "raw" -as "name=notes_left_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_grass_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_grass_c_geo1:string=value";
+dataStructure -fmt "raw" -as "name=notes_ferns_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayGrassesCenter_parShape:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_slopesMountainsGrass_Combined:string=value";
-dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchB_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_sueloB:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_baseScatt:string=value";
-dataStructure -fmt "raw" -as "name=notes_base_right:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchF_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_leaves:string=value";
+dataStructure -fmt "raw" -as "name=notes_groundC_parShape:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_backgroundPlane:string=value";
-dataStructure -fmt "raw" -as "name=notes_floor:string=value";
-dataStructure -fmt "raw" -as "name=notes_base_hojas:string=value";
-dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchA_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_floorOrangeConcrete_c_geo:string=value";
-dataStructure -fmt "raw" -as "name=RenderSettings:string=preset";
+dataStructure -fmt "raw" -as "name=notes_right_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_trees_left:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_ground:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassD_Combined1:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_floor_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_pPlane6:string=value";
+dataStructure -fmt "raw" -as "name=notes_rockSignRollo_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_pPlane3:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_baseScatter:string=value";
+dataStructure -fmt "raw" -as "name=notes_baseScatter:string=value";
 dataStructure -fmt "raw" -as "name=notes_groundB_parShape:string=value";
 dataStructure -fmt "raw" -as "name=notes_grassJuneBackYard_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassA_Combined:string=value";
+dataStructure -fmt "raw" -as "name=notes_floor_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_original:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_pPlane4:string=value";
-dataStructure -fmt "raw" -as "name=notes_holeRock_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_decayGrassPatchB_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_grassBase:string=value";
-dataStructure -fmt "raw" -as "name=notes_pPlane3:string=value";
-dataStructure -fmt "raw" -as "name=notes_rockSignRollo:string=value";
 dataStructure -fmt "raw" -as "name=notes_groundD_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_rockCheated_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_rockSignRollo_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassB_Combined:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassD_Combined:string=value";
-dataStructure -fmt "raw" -as "name=keyValueStructure:string=value";
+dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchD_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchDegraded_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_degraded:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_snapshot_floor:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchE_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_leaves_parShape:string=value";
+dataStructure -fmt "raw" -as "name=IdStruct:int32=ID";
 dataStructure -fmt "raw" -as "name=mapManager_juneBackYard:string=value";
 dataStructure -fmt "raw" -as "name=notes_baseLeaves:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_original:string=value";
-dataStructure -fmt "raw" -as "name=notes_degraded:string=value";
-dataStructure -fmt "raw" -as "name=notes_baseScatter:string=value";
+dataStructure -fmt "raw" -as "name=notes_groundA_parShape:string=value";
 dataStructure -fmt "raw" -as "name=notes_snapshot_Combined1:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchH_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassB_Combined:string=value";
+dataStructure -fmt "raw" -as "name=notes_riverside_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_baseForest:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_original:string=value";
+dataStructure -fmt "raw" -as "name=notes_vgFCarouselBed_parShape:string=value";
 dataStructure -fmt "raw" -as "name=notes_pPlane4:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_degraded:string=value";
-dataStructure -fmt "raw" -as "name=notes_floor_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassD_Combined:string=value";
+dataStructure -fmt "raw" -as "name=notes_degraded:string=value";
+dataStructure -fmt "raw" -as "name=notes_trees_left1:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_base_hojas:string=value";
+dataStructure -fmt "raw" -as "name=notes_decayGrassPatchB_parShape:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassB_Combined:string=value";
+dataStructure -fmt "raw" -as "name=keyValueStructure:string=value";
+dataStructure -fmt "raw" -as "name=notes_vgGroundB_parShape:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassD_Combined:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_trees_left1:string=value";
-dataStructure -fmt "raw" -as "name=notes_original:string=value";
-dataStructure -fmt "raw" -as "name=notes_riverside_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_slopesGroundGrassB_Combined:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_pPlane3:string=value";
-dataStructure -fmt "raw" -as "name=notes_beautyGrassPatchD_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchE_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_base_hojas:string=value";
-dataStructure -fmt "raw" -as "name=notes_groundA_parShape:string=value";
-dataStructure -fmt "raw" -as "name=IdStruct:int32=ID";
+dataStructure -fmt "raw" -as "name=notes_holeRock_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_baseLeaves:string=value";
+dataStructure -fmt "raw" -as "name=notes_floorOrangeConcrete_c_geo:string=value";
+dataStructure -fmt "raw" -as "name=notes_slopes_parShape:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_grassBase:string=value";
+dataStructure -fmt "raw" -as "name=mapManager_slopesGroundGrassA_Combined:string=value";
 dataStructure -fmt "raw" -as "name=mapManager_base_right:string=value";
-dataStructure -fmt "raw" -as "name=notes_vgFCarouselBed_parShape:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_pPlane6:string=value";
-dataStructure -fmt "raw" -as "name=notes_wildPatchG_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_vgGroundB_parShape:string=value";
-dataStructure -fmt "raw" -as "name=notes_trees_left1:string=value";
-dataStructure -fmt "raw" -as "name=mapManager_baseForest:string=value";
-// End of CHAR_Thaiz_v0001.ma
+dataStructure -fmt "raw" -as "name=mapManager_leaves:string=value";
+dataStructure -fmt "raw" -as "name=notes_wildPatchH_parShape:string=value";
+// End of Thaiz_Retopology_v0005.ma

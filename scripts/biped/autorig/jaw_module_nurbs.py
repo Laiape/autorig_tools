@@ -536,7 +536,6 @@ class JawModule(object):
                 surface_cv = f"{nurbs}.cv[0][{index}]"
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
 
-                # 2. Calcular el parámetro U inicial usando tu función de API
                 real_param = self.getClosestParamToPosition(curve, cv_ws_pos)
                 mp = cmds.createNode("motionPath", name=f"{ctl_name}_MPT", ss=True)
                 cmds.setAttr(f"{mp}.fractionMode", False) 
