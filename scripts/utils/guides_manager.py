@@ -755,6 +755,7 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
                 matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
                 cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
                 cmds.connectAttr(f"{trn_guides[i-1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+                cmds.connectAttr(f"{trn_guides[i-2]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
                 cmds.setAttr(f"{matrix_node}.primaryInputAxis", *[-x for x in primaryInputAxis])
                 cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
 
@@ -774,7 +775,7 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
                 try:
                     cmds.connectAttr(f"{trn_guides[i+2]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
                 except:
-                    pass
+                    cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
                 
         if cmds.nodeType(matrix_node) == "aimMatrix":
             cmds.setAttr(f"{matrix_node}.secondaryMode", 1)

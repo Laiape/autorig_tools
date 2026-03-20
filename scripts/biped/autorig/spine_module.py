@@ -455,7 +455,7 @@ class SpineModule(object):
         cmds.addAttr(self.body_ctl, longName="FK", niceName="ATTACHED FK ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.FK", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="bool", min=0, max=1, defaultValue=0, keyable=True)
-        cmds.setAttr(f"{self.body_ctl}.FK_Vis", lock=True, keyable=False, channelBox=True)
+        cmds.setAttr(f"{self.body_ctl}.FK_Vis", lock=False, keyable=False, channelBox=True)
 
         # ------ Attatched FK setup ------
         self.fk_nodes = []

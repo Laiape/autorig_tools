@@ -53,7 +53,7 @@ from biped.autorig import eyebrow_module
 from biped.autorig import eyelid_module
 from biped.autorig import ear_module
 from biped.autorig import nose_module
-from biped.autorig import jaw_module
+from biped.autorig import jaw_module_nurbs
 from biped.autorig import cheekbone_module
 from biped.autorig import tongue_module
 from biped.autorig import teeth_module
@@ -73,7 +73,7 @@ reload(eyebrow_module)
 reload(eyelid_module)
 reload(ear_module)
 reload(nose_module)
-reload(jaw_module)
+reload(jaw_module_nurbs)
 reload(cheekbone_module)
 reload(tongue_module)
 reload(teeth_module)
@@ -396,8 +396,13 @@ def build_rig(character_name):
     tail_skinning_jnts  = rig_settings.get("tail_skinning_jnts", 5)
     tail_controllers    = rig_settings.get("tail_controllers", 5)
     mGear_integration   = rig_settings.get("mGear_integration", 0)
-    print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
+    
+    # print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
+    data_manager.DataExportBiped().append_data("rig_settings", 
+                                                
+                                                {"mgear_integration": mGear_integration,
+                                                })
 
     # --- Spine ---
     if check("C_spine00_JNT"):
@@ -482,8 +487,8 @@ def build_rig(character_name):
     # =========================================================================
     
     if check("C_jaw_JNT"):
-        reload(jaw_module)
-        jaw_module.JawModule().make("C")
+        reload(jaw_module_nurbs)
+        jaw_module_nurbs.JawModule().make("C")
     
     if check("L_eyebrowMain_JNT") and check("R_eyebrowMain_JNT"):
         reload(eyebrow_module)

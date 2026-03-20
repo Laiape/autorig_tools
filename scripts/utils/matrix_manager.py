@@ -91,7 +91,7 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
     bmx_final = cmds.createNode("blendMatrix", name=target.replace("_CTL", "_Space_BMX"), ss=True)
 
     if not cmds.attributeQuery("SpaceSwitchSep", node=target, exists=True):
-        cmds.addAttr(target, longName="SpaceSwitchSep", niceName="Space Switches ———", attributeType="enum", enumName="———", keyable=True)
+        cmds.addAttr(target, longName="SpaceSwitchSep", niceName="Space Switches ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{target}.SpaceSwitchSep", channelBox=True, lock=True)
 
     if not sources_names:
@@ -346,3 +346,80 @@ def mirror_controllers(controllers_grp = [], input_matrix=None, secondary_axis=(
         cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{ctl}.offsetParentMatrix", force=True)
 
         cmds.delete(compose_matrix_mirror)
+
+
+def skeleton_hierarchy(joint_list, parent_to_root=False):
+
+    """
+    Create a skeleton hierarchy based on a list of joints. The first joint in the list will be the root joint.
+    args:
+        joint_list (list): A list of joint names in the order they should be parented.
+        parent_to_root (bool): If True, the first joint will be parented to the root of the rig. If False, it will be left unparented.
+    """
+    
+    # Get rig group from data manager to parent our new TRN
+    rig_grp = data_manager.DataExportBiped().get_data("basic_structure", "rig_GRP")
+    skeleton_hierarchy_grp = cmds.createNode("transform", name="skeletonHierarchy_GRP", parent=rig_grp)
+
+    for i, joint in enumerate(joint_list):
+        if i == 0 and parent_to_root:
+            cmds.parent(joint, skeleton_hierarchy_grp)
+        elif i > 0:
+            cmds.parent(joint, joint_list[i-1])
+
+
+def getClosestParamsToPositionSurface(surface, position):
+    """
+    Returns the closest parameters (u, v) on the given NURBS surface 
+    to a world-space position.
+
+    Args:
+        surface (str or MObject or MDagPath): The surface to evaluate.
+        position (list or tuple): A 3D world-space position [x, y, z].
+
+    Returns:
+        tuple: (u, v) parameters on the surface closest to the given position.
+    """
+    # Get MDagPath for surface
+    if isinstance(surface, str):
+        sel = om.MSelectionList()
+        sel.add(surface)
+        surface_dag_path = sel.getDagPath(0)
+    elif isinstance(surface, om.MObject):
+        surface_dag_path = om.MDagPath.getAPathTo(surface)
+    elif isinstance(surface, om.MDagPath):
+        surface_dag_path = surface
+    else:
+        raise TypeError("Surface must be a string name, MObject, or MDagPath.")
+
+    # Create function set for NURBS surface
+    surface_fn = om.MFnNurbsSurface(surface_dag_path)
+
+    # Convert position to MPoint
+    point = om.MPoint(*position)
+
+    # Get closest point and parameters
+    closest_point, u, v = surface_fn.closestPoint(point, space=om.MSpace.kWorld)
+
+    return u, v
+
+def getClosestParamToWorldMatrixCurve(curve, pos, point=False, both=False):
+    """
+    Returns the closest parameter (u) on the curve to the given worldMatrix.
+    """
+    selection_list = om.MSelectionList()
+    selection_list.add(curve)
+    curve_dag_path = selection_list.getDagPath(0)
+
+    curveFn = om.MFnNurbsCurve(curve_dag_path)
+
+    point_pos = om.MPoint(*pos)
+    closestPoint, paramU = curveFn.closestPoint(point_pos, space=om.MSpace.kWorld)
+
+    if point:
+        return closestPoint
+    
+    elif both:
+        return closestPoint, paramU
+
+    return paramU

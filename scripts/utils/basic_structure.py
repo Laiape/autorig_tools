@@ -83,7 +83,6 @@ def create_basic_structure(character_name=None):
         settings_node, settings_ctl = curve_tool.create_controller(name="C_settings", offset=["GRP"])
         try:
             cmds.parent(settings_node[0], character_ctl)
-            guide_head
         except:
             pass
     else:
@@ -226,6 +225,12 @@ def create_basic_structure(character_name=None):
     if not cmds.listRelatives(freeze_jnt, parent=True):
         cmds.parent(freeze_jnt, skel_grp)
 
+    mgear = data_manager.DataExportBiped().get_data("rig_settings", "mgear_integration")
+    print(f"--- MGEAR INTEGRATION: {mgear} ---")
+    if mgear:
+        
+        cmds.delete(nodes["controls_GRP"])
+
     # --- 9. EXPORTACIÓN ---
     data_manager.DataExportBiped().append_data("basic_structure", {
         "skel_GRP" : skel_grp,
@@ -233,6 +238,7 @@ def create_basic_structure(character_name=None):
         "masterwalk_ctl" : masterwalk_ctl,
         "character_ctl" : character_ctl,
         "preferences_ctl" : settings_ctl,
+        "rig_GRP" : nodes["rig_GRP"],
     })
 
     return character_name
