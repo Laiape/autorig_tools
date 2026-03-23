@@ -204,7 +204,7 @@ def create_basic_structure(character_name=None):
     safe_connect(f"{settings_ctl}.showModules", f"{modules_grp}.visibility")
 
     cmds.setAttr(f"{settings_ctl}.showSkeleton", 0)
-    cmds.setAttr(f"{settings_ctl}.showModules", 0)
+    cmds.setAttr(f"{settings_ctl}.showModules", 1)
 
     # --- 7. BLOQUEOS ---
     lock_attributes(character_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
@@ -228,7 +228,6 @@ def create_basic_structure(character_name=None):
     mgear = data_manager.DataExportBiped().get_data("rig_settings", "mgear_integration")
     print(f"--- MGEAR INTEGRATION: {mgear} ---")
     if mgear:
-        
         cmds.delete(nodes["controls_GRP"])
 
     # --- 9. EXPORTACIÓN ---

@@ -503,9 +503,60 @@ class JawModule(object):
         upper_curve_dup = cmds.duplicate(self.upper_rebuild_lip_curve, name="C_upperLipToNurbs_CRV")[0]
         lower_curve_dup = cmds.duplicate(self.lower_rebuild_lip_curve, name="C_lowerLipToNurbs_CRV")[0]
 
-        upper_nurbs_surface = cmds.loft([upper_curve_dup, lower_curve_dup], ch=0, u=1, c=0, name="C_upperLip_NURB")[0]
-        lower_nurbs_surface = cmds.loft([upper_curve_dup, lower_curve_dup], ch=0, u=1, c=0, name="C_lowerLip_NURB")[0]
-        cmds.delete(upper_curve_dup, lower_curve_dup)
+        # Do an offset curve to avoid having the nurbs surface right on top of the rebuild curve, which causes issues when lofting
+        upper_offset = cmds.offsetCurve(
+            upper_curve_dup,
+            distance=1,
+            constructionHistory=False,
+            reparameterize=False,
+            cutLoop=True,
+            cutRadius=0.1,
+            tolerance=0.001,
+            subdivisionDensity=0,
+            useGivenNormal=False
+    )
+    
+        upper_offset_curve = upper_offset[0]
+        lower_offset = cmds.offsetCurve(
+            lower_curve_dup,
+            distance=1,
+            constructionHistory=False,
+            reparameterize=False,
+            cutLoop=True,
+            cutRadius=0.1,
+            tolerance=0.001,
+            subdivisionDensity=0,
+            useGivenNormal=False
+        )
+        lower_offset_curve = lower_offset[0]
+
+        upper_nurbs_surface = cmds.loft(
+        [upper_offset_curve, self.upper_rebuild_lip_curve], 
+        constructionHistory=False,
+        uniform=True,
+        close=False,
+        autoReverse=True,
+        degree=3,
+        sectionSpans=2,
+        reverseSurfaceNormals=True,
+        polygon=0,
+        name="C_upperLip_NURB"
+        )[0]
+
+        lower_nurbs_surface = cmds.loft(
+            [lower_offset_curve, self.lower_rebuild_lip_curve],
+            constructionHistory=False,
+            uniform=True,
+            close=False,
+            autoReverse=True,
+            degree=3,
+            sectionSpans=2,
+            reverseSurfaceNormals=True,
+            polygon=0,
+            name="C_lowerLip_NURB"
+        )[0]
+
+        cmds.delete(upper_curve_dup, lower_curve_dup, upper_offset_curve, lower_offset_curve)
 
         # Rebuild nurbs surfaces for better deformation and make it bezier (rt=7)
         self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=7, end=1, kr=0, kcp=0, su=1, sv=3, du=3, dv=3, tol=0.01, name="C_upperLip_NURB")[0]
@@ -519,37 +570,28 @@ class JawModule(object):
         upper_nurbs_surface_cvs = cmds.ls(f"{self.upper_lip_nurbs}.cv[*]", flatten=True)
         lower_nurbs_surface_cvs = cmds.ls(f"{self.lower_lip_nurbs}.cv[*]", flatten=True)
 
-        # Get spans and degree to calculate CV indices
         spans_v = cmds.getAttr(f"{self.upper_lip_nurbs}.spansV")
         degree_v = cmds.getAttr(f"{self.upper_lip_nurbs}.degreeV")
-        max_index = (spans_v + degree_v - 1) # Calculate the maximum CV index in V direction
-        
-
-        dict_parents = {} # Dictionary to store parent-child relationships for tangent controllers
-
-        for i in range(0, max_index + 1, 3):
-            neighbors = [n for n in [i-1, i+1] if 0 <= n <= max_index]
-            dict_parents[i] = neighbors
+        spans_u = cmds.getAttr(f"{self.upper_lip_nurbs}.spansU")
+        degree_u = cmds.getAttr(f"{self.upper_lip_nurbs}.degreeU")
+        num_cvs_v = spans_v + degree_v
+        num_cvs_u = spans_u + degree_u
+        max_index_u = num_cvs_u - 1
+        max_index_v = num_cvs_v - 1
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
-    
+
             cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
             curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
-            linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
 
-            mid_point = max_index // 2
+            mid_point = max_index_u // 2
 
             secondary_grps = []
             secondary_ctls = []
             secondary_local_joints_mmx = []
             secondary_joints = []
 
-            for i in range(0, len(cvs) - 1, 3):
-
-                index = i // 3
-
-                if index > max_index:
-                    break
+            for index in range(0, max_index_u + 1):
 
                 if index < mid_point:
                     side = "R"
@@ -558,43 +600,60 @@ class JawModule(object):
                 else:
                     side = "L"
 
-                ctl_name = f"{side}_{part}Lip{str(index).zfill(2)}" if index % 3 == 0 else f"{side}_{part}Lip{str(index).zfill(2)}Tan"
+                ctl_name = (
+                    f"{side}_{part}Lip{str(index).zfill(2)}"
+                    if index % 3 == 0
+                    else f"{side}_{part}Lip{str(index).zfill(2)}Tan"
+                )
 
-                # Create controller for each CV
                 secondary_nodes, secondary_ctl = curve_tool.create_controller(
-                    ctl_name, 
-                    offset=["GRP", "OFF"], 
+                    ctl_name,
+                    offset=["GRP", "OFF"],
                     parent=secondary_controllers_nodes
                 )
                 self.lock_attributes(secondary_ctl, ["v"])
 
-                secondary_local_joint = cmds.createNode("joint", name=f"{ctl_name}_JNT", ss=True, parent=self.module_trn)
-                
-                surface_cv = f"{nurbs}.cv[0][{index}]"
-                cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
+                secondary_local_joint = cmds.createNode(
+                    "joint", name=f"{ctl_name}_JNT", ss=True, parent=self.module_trn
+                )
 
+                surface_cvs_row = cmds.ls(f"{nurbs}.cv[{index}][*]", flatten=True)
+
+                if not surface_cvs_row:
+                    cmds.warning(f"No CVs found for {nurbs}.cv[{index}][*], skipping.")
+                    continue
+
+                mid_cv_idx = len(surface_cvs_row) // 2
+                ref_cv = surface_cvs_row[mid_cv_idx]
+                cv_ws_pos = cmds.xform(ref_cv, query=True, worldSpace=True, translation=True)
                 real_param = self.getClosestParamToPosition(curve, cv_ws_pos)
+
                 mp = cmds.createNode("motionPath", name=f"{ctl_name}_MPT", ss=True)
-                cmds.setAttr(f"{mp}.fractionMode", False) 
+                cmds.setAttr(f"{mp}.fractionMode", False)
                 cmds.setAttr(f"{mp}.uValue", real_param)
                 cmds.connectAttr(f"{curve}.worldSpace[0]", f"{mp}.geometryPath")
+
                 fbf = cmds.createNode("fourByFourMatrix", name=f"{ctl_name}_FBF", ss=True)
                 cmds.connectAttr(f"{mp}.xCoordinate", f"{fbf}.in30")
                 cmds.connectAttr(f"{mp}.yCoordinate", f"{fbf}.in31")
                 cmds.connectAttr(f"{mp}.zCoordinate", f"{fbf}.in32")
-                
+
                 if side == "R":
-                    cmds.setAttr(f"{fbf}.in00", -1) 
+                    cmds.setAttr(f"{fbf}.in00", -1)
+
                 cmds.connectAttr(f"{fbf}.output", f"{secondary_nodes[0]}.offsetParentMatrix")
 
-                # Create multMatrix to connect controller to local joint
-                mult_matrix_secondary_local = cmds.createNode("multMatrix", name=f"{ctl_name}Local_MMX", ss=True)
+                mult_matrix_secondary_local = cmds.createNode(
+                    "multMatrix", name=f"{ctl_name}Local_MMX", ss=True
+                )
                 cmds.connectAttr(f"{secondary_ctl}.matrix", f"{mult_matrix_secondary_local}.matrixIn[0]")
                 cmds.connectAttr(f"{fbf}.output", f"{mult_matrix_secondary_local}.matrixIn[1]")
-                cmds.connectAttr(f"{mult_matrix_secondary_local}.matrixSum", f"{secondary_local_joint}.offsetParentMatrix")
+                cmds.connectAttr(
+                    f"{mult_matrix_secondary_local}.matrixSum",
+                    f"{secondary_local_joint}.offsetParentMatrix"
+                )
 
                 if index % 3 == 0:
-                
                     cmds.addAttr(secondary_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
                     cmds.setAttr(f"{secondary_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
                     cmds.addAttr(secondary_ctl, ln="Tan_Controllers_Visibility", at="bool", k=True)
@@ -605,28 +664,36 @@ class JawModule(object):
                 secondary_local_joints_mmx.append(mult_matrix_secondary_local)
                 secondary_joints.append(secondary_local_joint)
 
+            total_ctls = len(secondary_ctls)
+            dict_parents = {}
+            for i in range(0, total_ctls, 3):
+                neighbors = [n for n in [i - 1, i + 1] if 0 <= n < total_ctls]
+                dict_parents[i] = neighbors
+
             for parent_idx, children in dict_parents.items():
                 for child_idx in children:
-                    
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.Tan_Controllers_Visibility", f"{secondary_grps[child_idx]}.visibility")
-                    # Add the parent to the tangent controllers
+
                     tan_name = secondary_ctls[child_idx].split("_CTL")[0]
-                    parent_connection = cmds.listConnections(f"{secondary_grps[child_idx]}.offsetParentMatrix", source=True, destination=False)[0] # Get current GRP connection
+
+                    parent_connection = cmds.listConnections(f"{secondary_grps[child_idx]}.offsetParentMatrix", source=True, destination=False)[0]
+
                     mmx_controller = cmds.createNode("multMatrix", name=f"{tan_name}Parent_MMX", ss=True)
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_controller}.matrixIn[0]")
-                    cmds.connectAttr(f"{parent_connection}.output", f"{mmx_controller}.matrixIn[1]")
+                    parent_node_type = cmds.nodeType(parent_connection)
+                    parent_out_attr = "output" if parent_node_type == "fourByFourMatrix" else "matrixSum"
+                    cmds.connectAttr(f"{parent_connection}.{parent_out_attr}", f"{mmx_controller}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_controller}.matrixSum", f"{secondary_grps[child_idx]}.offsetParentMatrix", f=True)
-                    mmx_local = cmds.createNode("multMatrix", name=f"{tan_name}ParentLocal_MMX", ss=True)
-                    joint_connection = cmds.listConnections(f"{secondary_joints[child_idx]}.offsetParentMatrix", source=True, destination=False)[0] # Get current local joint connection
-                    cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[0]")
-                    cmds.connectAttr(f"{joint_connection}.matrixSum", f"{mmx_local}.matrixIn[1]")
-                    cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
 
-                    # if secondary_grps[parent_idx].startswith("C_"): # Ensure we are connecting the correct controllers (avoid connecting to corners)
-                    #     pass
-                    # else:
-                    #     # Add the parent to the local joint as well
-                    
+                    joint_connection = cmds.listConnections(f"{secondary_joints[child_idx]}.offsetParentMatrix", source=True, destination=False)[0]
+
+                    mmx_local = cmds.createNode("multMatrix", name=f"{tan_name}ParentLocal_MMX", ss=True)
+                    joint_node_type = cmds.nodeType(joint_connection)
+                    joint_out_attr = "output" if joint_node_type == "fourByFourMatrix" else "matrixSum"
+                    cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[0]")
+                    cmds.connectAttr(f"{joint_connection}.{joint_out_attr}", f"{mmx_local}.matrixIn[1]")
+                    cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
+                            
             
             # Project all the joints to the NURBS Surface
             for joint in secondary_joints:
@@ -664,11 +731,13 @@ class JawModule(object):
             cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
             curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
+            linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
+            mid_point = linear_curve_cvs // 2
 
-            for i in range(0, len(cvs) - 1, 3):
-                index = i // 3
-                surface_cv = f"{nurbs}.cv[{index}]"
-                
+            for i in range(0, linear_curve_cvs - 1):
+
+                surface_cv = f"{nurbs}.cv[{i}][0]"
+
                 if index < mid_point:
                     side = "R"
                 elif index == mid_point:
@@ -679,14 +748,13 @@ class JawModule(object):
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 real_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
 
-                uv_pin = cmds.createNode("uvPin", name=f"{side}_{part}0{index}Lip_UVP", ss=True)
+                uv_pin = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(index).zfill(2)}_UVP", ss=True)
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin}.deformedGeometry")
-                # cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin}.originalGeometry")  
-                cmds.setAttr(f"{uv_pin}.coordinate[{index}].coordinateU", real_param[0])
-                cmds.setAttr(f"{uv_pin}.coordinate[{index}].coordinateV", real_param[1])
+                cmds.setAttr(f"{uv_pin}.coordinate[0].coordinateU", real_param[0])
+                cmds.setAttr(f"{uv_pin}.coordinate[0].coordinateV", real_param[1])
 
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(index).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
-                cmds.connectAttr(f"{uv_pin}.outputMatrix[{index}]", f"{out_joint}.offsetParentMatrix")
+                cmds.connectAttr(f"{uv_pin}.outputMatrix[0]", f"{out_joint}.offsetParentMatrix")
                 
                 
 

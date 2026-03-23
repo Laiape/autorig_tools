@@ -668,26 +668,19 @@ class EyelidModule(object):
         Sockets for the eyelid module.
         """
 
-        cmds.select(cl=True)
-        upper_socket = guides_manager.get_guides(guide_export=f"{self.side}_upperSocket_JNT")[0]
-        cmds.select(cl=True)
-        lower_socket = guides_manager.get_guides(guide_export=f"{self.side}_lowerSocket_JNT")[0]
-        cmds.select(cl=True)
-        in_socket = guides_manager.get_guides(guide_export=f"{self.side}_inSocket_JNT")[0]
-        cmds.select(cl=True)
-        out_socket = guides_manager.get_guides(guide_export=f"{self.side}_outSocket_JNT")[0]
-        cmds.select(cl=True)
-        up_in_socket = guides_manager.get_guides(guide_export=f"{self.side}_upInSocket_JNT")[0]
-        cmds.select(cl=True)
-        up_out_socket = guides_manager.get_guides(guide_export=f"{self.side}_upOutSocket_JNT")[0]
-        cmds.select(cl=True)
-        down_in_socket = guides_manager.get_guides(guide_export=f"{self.side}_downInSocket_JNT")[0]
-        cmds.select(cl=True)
-        down_out_socket = guides_manager.get_guides(guide_export=f"{self.side}_downOutSocket_JNT")[0]
+        socket_names = [
+            "upperSocket", "lowerSocket", "inSocket", "outSocket",
+            "upInSocket", "upOutSocket", "downInSocket", "downOutSocket"
+        ]
+
+        sockets = []
+        for name in socket_names:
+            cmds.select(cl=True)
+            sockets.append(guides_manager.get_guides(guide_export=f"{self.side}_{name}_JNT")[0])
         cmds.select(cl=True)
 
-        sockets = [upper_socket, lower_socket, in_socket, out_socket, up_in_socket, up_out_socket, down_in_socket, down_out_socket]
         main_sockets = cmds.createNode("transform", name=f"{self.side}_mainEyelidSockets_GRP", ss=True, p=self.controllers_grp)
+        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{main_sockets}.offsetParentMatrix")
         main_condition = cmds.createNode("condition", name=f"{self.side}_mainEyelidSockets_COND", ss=True)
         cmds.setAttr(f"{main_condition}.operation", 3)  # Equal
         cmds.setAttr(f"{main_condition}.secondTerm", 1)
@@ -703,26 +696,95 @@ class EyelidModule(object):
         cmds.setAttr(f"{secondary_condition}.colorIfFalseR", 0)
         cmds.connectAttr(f"{self.face_ctl}.Sockets", f"{secondary_condition}.firstTerm")
         cmds.connectAttr(f"{secondary_condition}.outColorR", f"{secondary_sockets}.visibility", f=True)
-        for i, socket in enumerate(sockets):
-            if i < 4:
-                grp, ctl = curve_tool.create_controller(name=socket.replace("t_JNT", "t"), offset=["GRP", "OFF"],parent=main_sockets)
-                cmds.matchTransform(grp[0], socket)
-            else:
-                grp, ctl = curve_tool.create_controller(name=socket.replace("t_JNT", "t"), offset=["GRP", "OFF"],parent=secondary_sockets)
+        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{secondary_sockets}.offsetParentMatrix")
 
-            cmds.matchTransform(grp[0], socket)  
-            self.lock_attributes(ctl, ["v"])
-            cmds.delete(socket)
+        socket_logic = {
+            "upperSocket": ("upInSocket", "upOutSocket"),
+            "lowerSocket": ("downInSocket", "downOutSocket"),
+            "inSocket": ("upInSocket", "downInSocket"),
+            "outSocket": ("upOutSocket", "downOutSocket")
+        }
 
-            # Create skinning joint for each socket
-            socket_skinning_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
+        socket_main_controllers = []
+        driver_ctls_cache = {}
 
-            mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("CTL", "MMT"), ss=True)
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-            cmds.connectAttr(f"{grp[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-            grp_wm = cmds.getAttr(f"{grp[0]}.worldMatrix[0]")
-            cmds.setAttr(f"{mult_matrix}.matrixIn[2]", grp_wm, type="matrix")
-            cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{socket_skinning_jnt}.offsetParentMatrix")
+        for socket, (driver1, driver2) in socket_logic.items():
+
+            parent_name = f"{self.side}_{socket}"
+            parent_guide = cmds.createNode("transform", name=f"{parent_name}_GUIDE", ss=True, p=self.module_trn)
+            cmds.matchTransform(parent_guide, f"{self.side}_{socket}_JNT")
+
+            parent_nodes, parent_ctl = curve_tool.create_controller(
+                name=parent_name, offset=["GRP", "OFF"], parent=main_sockets
+            )
+            cmds.connectAttr(f"{parent_guide}.worldMatrix[0]", f"{parent_nodes[0]}.offsetParentMatrix")
+            socket_main_controllers.append(parent_ctl)
+
+            parent_skinning_jnt = cmds.createNode(
+                "joint", name=f"{parent_name}Skinning_JNT", ss=True, p=self.skeleton_grp
+            )
+            parent_mult_matrix = cmds.createNode(
+                "multMatrix", name=f"{parent_name}_MMX", ss=True
+            )
+            parent_wm = cmds.getAttr(f"{parent_ctl}.worldMatrix[0]")
+            cmds.connectAttr(f"{parent_ctl}.worldMatrix[0]", f"{parent_mult_matrix}.matrixIn[0]")
+            cmds.connectAttr(f"{parent_nodes[0]}.worldInverseMatrix[0]", f"{parent_mult_matrix}.matrixIn[1]")
+            cmds.setAttr(f"{parent_mult_matrix}.matrixIn[2]", parent_wm, type="matrix")
+            cmds.connectAttr(f"{parent_mult_matrix}.matrixSum", f"{parent_skinning_jnt}.offsetParentMatrix")
+
+            cmds.xform(parent_nodes[0], m=om.MMatrix.kIdentity)
+            cmds.xform(parent_skinning_jnt, m=om.MMatrix.kIdentity)
+
+            for driver in (driver1, driver2):
+
+                driver_name = f"{self.side}_{driver}"
+
+                if driver_name not in driver_ctls_cache:
+
+                    driver_guide = cmds.createNode(
+                        "transform", name=f"{driver_name}_GUIDE", ss=True, p=self.module_trn
+                    )
+                    cmds.matchTransform(driver_guide, f"{self.side}_{driver}_JNT")
+
+                    driver_nodes, driver_ctl = curve_tool.create_controller(
+                        name=driver_name, offset=["GRP", "OFF"], parent=secondary_sockets
+                    )
+
+                    pmt = cmds.createNode("parentMatrix", name=f"{driver_name}_PMT", ss=True)
+                    cmds.connectAttr(f"{driver_guide}.worldMatrix[0]", f"{pmt}.inputMatrix")
+                    cmds.connectAttr(f"{pmt}.outputMatrix", f"{driver_nodes[0]}.offsetParentMatrix")
+
+                    driver_skinning_jnt = cmds.createNode(
+                        "joint", name=f"{driver_name}Skinning_JNT", ss=True, p=self.skeleton_grp
+                    )
+                    driver_mult_matrix = cmds.createNode(
+                        "multMatrix", name=f"{driver_name}_MMX", ss=True
+                    )
+                    cmds.connectAttr(f"{driver_ctl}.worldMatrix[0]", f"{driver_mult_matrix}.matrixIn[0]")
+                    cmds.connectAttr(f"{driver_nodes[0]}.worldInverseMatrix[0]", f"{driver_mult_matrix}.matrixIn[1]")
+                    cmds.connectAttr(f"{driver_mult_matrix}.matrixSum", f"{driver_skinning_jnt}.offsetParentMatrix")
+                    
+
+                    driver_ctls_cache[driver_name] = (driver_ctl, driver_nodes, driver_mult_matrix, pmt)
+
+                driver_ctl, driver_nodes, driver_mult_matrix, pmt = driver_ctls_cache[driver_name]
+
+                offset_matrix = matrix_manager.get_offset_matrix(f"{driver_name}_GUIDE", f"{parent_mult_matrix}.matrixSum")
+
+                if not cmds.listConnections(f"{pmt}.target[0].targetMatrix", source=True, destination=False):
+                    cmds.connectAttr(f"{parent_mult_matrix}.matrixSum", f"{pmt}.target[0].targetMatrix")
+                    cmds.setAttr(f"{pmt}.target[0].offsetMatrix", offset_matrix, type="matrix")
+                else:
+                    cmds.connectAttr(f"{parent_mult_matrix}.matrixSum", f"{pmt}.target[1].targetMatrix")
+                    cmds.setAttr(f"{pmt}.target[1].offsetMatrix", offset_matrix, type="matrix")
+
+                cmds.xform(driver_nodes[0], m=om.MMatrix.kIdentity)
+                cmds.xform(driver_skinning_jnt, m=om.MMatrix.kIdentity)
+
+        for name in socket_names:
+            cmds.delete(f"{self.side}_{name}_JNT")
+
+            
     
 
     def getClosestParamToPosition(self, curve, position):
