@@ -1,5 +1,24 @@
 {
     "basic_structure": {
-        "character_name": "yin"
+        "character_name": "mechanic",
+        "skel_GRP": "skel_GRP",
+        "modules_GRP": "modules_GRP",
+        "masterwalk_ctl": "C_masterwalk_CTL",
+        "character_ctl": "C_character_CTL",
+        "preferences_ctl": "C_settings_CTL",
+        "rig_GRP": "rig_GRP"
+    },
+    "rig_settings": {
+        "mgear_integration": 1
+    },
+    "neck_module": {
+        "head_ctl": "C_head_CTL",
+        "face_ctl": "C_face_CTL",
+        "head_guide": "C_head_GUIDE",
+        "mGear": true
+    },
+    "jaw_module": {
+        "jaw_ctl": "C_jaw_CTL",
+        "upper_jaw_ctl": "C_upperJaw_CTL"
     }
 }

@@ -78,6 +78,7 @@ class TongueModule(object):
         """
         self.tongue_guides = guides_manager.get_guides(f"{self.side}_tongue00_JNT")
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.tongue_guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0))
+        cmds.delete(self.tongue_guides[0])
         cmds.parent(self.guides_trns[0], self.module_trn)
 
     def local_mmx(self, ctl, grp):

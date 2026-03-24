@@ -27,7 +27,7 @@ def create_basic_structure(character_name=None):
     nodes = {}
 
     for i, name in enumerate(structure_names):
-        if cmds.objExists(name):
+        if cmds.objExists(name) or cmds.objExists(name.upper()) or cmds.objExists(name.lower()) or cmds.objExists(name.capitalize()):
             nodes[name] = name
         else:
             res = cmds.createNode("transform", name=name, ss=True)
@@ -204,7 +204,7 @@ def create_basic_structure(character_name=None):
     safe_connect(f"{settings_ctl}.showModules", f"{modules_grp}.visibility")
 
     cmds.setAttr(f"{settings_ctl}.showSkeleton", 0)
-    cmds.setAttr(f"{settings_ctl}.showModules", 1)
+    cmds.setAttr(f"{settings_ctl}.showModules", 0)
 
     # --- 7. BLOQUEOS ---
     lock_attributes(character_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])

@@ -734,13 +734,13 @@ class JawModule(object):
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
             mid_point = linear_curve_cvs // 2
 
-            for i in range(0, linear_curve_cvs - 1):
+            for i in range(0, linear_curve_cvs):
 
                 surface_cv = f"{nurbs}.cv[{i}][0]"
 
-                if index < mid_point:
+                if i < mid_point:
                     side = "R"
-                elif index == mid_point:
+                elif i == mid_point:
                     side = "C"
                 else:
                     side = "L"
@@ -748,14 +748,27 @@ class JawModule(object):
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 real_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
 
-                uv_pin = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(index).zfill(2)}_UVP", ss=True)
+                uv_pin = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(i).zfill(2)}_UVP", ss=True)
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin}.deformedGeometry")
+                cmds.connectAttr(f"{nurbs}.local", f"{uv_pin}.originalGeometry")
                 cmds.setAttr(f"{uv_pin}.coordinate[0].coordinateU", real_param[0])
                 cmds.setAttr(f"{uv_pin}.coordinate[0].coordinateV", real_param[1])
+                cmds.setAttr(f"{uv_pin}.normalAxis", 1) # Set normal to -Y to aim Y axis upwards
+                cmds.setAttr(f"{uv_pin}.tangentAxis", 0) # Set tangent to X to aim X axis along the curve
 
-                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(index).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
-                cmds.connectAttr(f"{uv_pin}.outputMatrix[0]", f"{out_joint}.offsetParentMatrix")
-                
+                fbf = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}Position_FBF", ss=True)
+                cmds.connectAttr(f"{linear_curve}.editPoints[{i}].xValueEp", f"{fbf}.in30")
+                cmds.connectAttr(f"{linear_curve}.editPoints[{i}].yValueEp", f"{fbf}.in31")
+                cmds.connectAttr(f"{linear_curve}.editPoints[{i}].zValueEp", f"{fbf}.in32")
+
+                pmt = cmds.createNode("parentMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}_PMX", ss=True)
+                cmds.connectAttr(f"{fbf}.output", f"{pmt}.inputMatrix")
+                cmds.connectAttr(f"{uv_pin}.outputMatrix[0]", f"{pmt}.target[0].targetMatrix")
+
+                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
+                cmds.connectAttr(f"{pmt}.outputMatrix", f"{out_joint}.offsetParentMatrix")
+                offset_matrix = matrix_manager.get_offset_matrix(f"{fbf}.output", f"{uv_pin}.outputMatrix[0]")
+                cmds.setAttr(f"{pmt}.target[0].offsetMatrix", offset_matrix, type="matrix")
                 
 
 

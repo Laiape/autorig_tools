@@ -1,4 +1,3 @@
-<<<<<<< HEAD:scripts/biped/autorig/jaw_module.py
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
