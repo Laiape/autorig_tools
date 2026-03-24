@@ -237,7 +237,7 @@ class ArmModule(object):
         if self.side == "L":
             cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
         else:
-            cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 0, 20, relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
