@@ -1967,6 +1967,5 @@ class JawModule(object):
         point = om.MPoint(*position)
 
         closest_point, paramU = curve_fn.closestPoint(point, space=om.MSpace.kWorld)
-
->>>>>>> 51097b088fbc7cf0dfbcb19a4f49faedc7157f29:scripts/biped/autorig/jaw_module_bezier.py
+        
         return paramU

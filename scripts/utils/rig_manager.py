@@ -53,7 +53,7 @@ from biped.autorig import eyebrow_module
 from biped.autorig import eyelid_module
 from biped.autorig import ear_module
 from biped.autorig import nose_module
-from biped.autorig import jaw_module_nurbs
+from biped.autorig import jaw_module_bezier as jaw_module_nurbs
 from biped.autorig import cheekbone_module
 from biped.autorig import tongue_module
 from biped.autorig import teeth_module
