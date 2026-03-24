@@ -729,6 +729,11 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
     for i, guide in enumerate(trn_guides):
 
         guide_suffix = guide.split("_")[-1]
+        guide_name = guide.split("_")[1]
+
+        if "ankle" in guide_name:
+            print(f"--- Invirtiendo ejes para {guide} ---", i)
+            secondaryInputAxis = tuple(-v for v in secondaryInputAxis)
         
         if i == 0:
 
@@ -752,14 +757,13 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
                 cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 1)
                 cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 1)
             else:
-                matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
-                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{trn_guides[i-1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
-                cmds.connectAttr(f"{trn_guides[i-1]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
-                cmds.setAttr(f"{matrix_node}.primaryInputAxis", *[-x for x in primaryInputAxis])
-                cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
-                cmds.setAttr(f"{matrix_node}.secondaryTargetVector", *secondaryInputAxis)
-                cmds.setAttr(f"{matrix_node}.secondaryMode", 1)
+                matrix_node = cmds.createNode("blendMatrix", name=guide.replace(guide_suffix, "BLM"), ss=True)
+                cmds.connectAttr(guides_matrices[-1], f"{matrix_node}.inputMatrix")
+                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.target[0].targetMatrix")
+                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", 0)
+                cmds.setAttr(f"{matrix_node}.target[0].translateWeight", 1)
+                cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 0)
+                cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 0)
 
         else:
             if ribbon:

@@ -112,6 +112,7 @@ class LegModule(object):
         self.bank_in_loc = guides_manager.get_guides(f"{self.side}_bankIn_LOCShape")
         self.heel_loc = guides_manager.get_guides(f"{self.side}_heel_LOCShape")
 
+
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(guides=self.leg_chain, primaryInputAxis=self.primary_axis, secondaryInputAxis=self.secondary_axis)
         cmds.parent(self.guides_trns[0], self.module_trn)
 
@@ -311,14 +312,14 @@ class LegModule(object):
         cmds.select(self.pv_nodes[0])
         if self.secondary_axis == (0, 1, 0):
             if self.side == "L":
-                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
             else:
-                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
         elif self.secondary_axis == (0, -1, 0):
             if self.side == "L":
-                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
             else:
-                cmds.move(0, -20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
         pv_world_position = cmds.getAttr(f"{self.pv_ctl}.worldMatrix[0]")[12:15]
         cmds.setAttr(f"{fbf_pv}.in30", pv_world_position[0])
@@ -456,7 +457,7 @@ class LegModule(object):
                 cmds.connectAttr(self.guides_matrices[i+1], f"{dist_node}.inMatrix2")
                 
                 if self.side == "R":
-                    multiply_negate = cmds.createNode("multiply", name=f"{self.side}_leg{label}_Negate_MUL", ss=True)
+                    multiply_negate = cmds.createNode("multiply", name=f"{self.side}_leg{label}Negate_MUL", ss=True)
                     cmds.connectAttr(f"{dist_node}.distance", f"{multiply_negate}.input[0]")
                     cmds.setAttr(f"{multiply_negate}.input[1]", -1)
                     cmds.connectAttr(f"{multiply_negate}.output", f"{mult_node}.input[1]")
@@ -464,19 +465,24 @@ class LegModule(object):
                     cmds.connectAttr(f"{dist_node}.distance", f"{mult_node}.input[1]")
 
                 target_node = self.fk_nodes[i+1]
-                
-                row_from_matrix = cmds.createNode("rowFromMatrix", name=f"{self.side}_leg{label}RowFromMatrix_RFM", ss=True)
-                cmds.setAttr(f"{row_from_matrix}.input", 3)
-                
                 connection = cmds.listConnections(f"{target_node}.offsetParentMatrix", source=True, destination=False, plugs=True)[0]
-                cmds.connectAttr(connection, f"{row_from_matrix}.matrix")
-
+                
                 fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_leg{label}_FBF", ss=True)
-                
-                cmds.connectAttr(f"{mult_node}.output", f"{fbf}.in30")
-                cmds.connectAttr(f"{row_from_matrix}.outputY", f"{fbf}.in31")
-                cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{fbf}.in32")
-                
+
+                for row_index in range(4):
+                    rfm = cmds.createNode("rowFromMatrix", name=f"{self.side}_leg{label}0{row_index}_RFM", ss=True)
+                    cmds.connectAttr(connection, f"{rfm}.matrix")
+                    cmds.setAttr(f"{rfm}.input", row_index)
+
+                    for col_index in range(3):
+                        cmds.connectAttr(
+                            f"{rfm}.outputX" if col_index == 0 else
+                            f"{rfm}.outputY" if col_index == 1 else
+                            f"{rfm}.outputZ",
+                            f"{fbf}.in{row_index}{col_index}"
+                        )
+
+                cmds.connectAttr(f"{mult_node}.output", f"{fbf}.in30", force=True)
                 cmds.connectAttr(f"{fbf}.output", f"{target_node}.offsetParentMatrix", force=True)
 
     def soft_ik(self):
