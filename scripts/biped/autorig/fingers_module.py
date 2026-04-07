@@ -274,16 +274,16 @@ class FingersModule(object):
 
         cmds.addAttr(self.finger_attributes_ctl, longName="FINGER_ATTRIBUTES", niceName="FINGER ATTRIBUTES ------", attributeType="enum", enumName="____")
         cmds.setAttr(f"{self.finger_attributes_ctl}.FINGER_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.finger_attributes_ctl, longName="CURL", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
-        cmds.addAttr(self.finger_attributes_ctl, longName="SPREAD", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
-        cmds.addAttr(self.finger_attributes_ctl, longName="TWIST", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
-        cmds.addAttr(self.finger_attributes_ctl, longName="FAN", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="Curl", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="Spread", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="Twist", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, longName="Fan", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
         cmds.addAttr(self.finger_attributes_ctl, longName="THUMB_ATTRIBUTES", attributeType="enum", enumName="____")
         cmds.setAttr(f"{self.finger_attributes_ctl}.THUMB_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.finger_attributes_ctl, ln="THUMB_CURL", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
-        cmds.addAttr(self.finger_attributes_ctl, ln="THUMB_SPREAD", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
-        cmds.addAttr(self.finger_attributes_ctl, ln="THUMB_TWIST", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
-        cmds.addAttr(self.finger_attributes_ctl, ln="THUMB_FAN", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, ln="Thumb_Curl", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, ln="Thumb_Spread", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, ln="Thumb_Twist", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
+        cmds.addAttr(self.finger_attributes_ctl, ln="Thumb_Fan", attributeType="float", defaultValue=0, max=10, min=-10, keyable=True)
 
         self.fingers_attributes_callback(self.fk_thumb_sdk[0], values=[None], thumb_attributes=[0,0,0,0,0,0, 10, -10])
         self.fingers_attributes_callback(self.fk_thumb_sdk[1], values=[None], thumb_attributes=[-90, 20, -20, 20, 20, -20, 0, 0])
@@ -309,39 +309,39 @@ class FingersModule(object):
 
         cmds.select(ctl)
         if values != [None]:
-            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.CURL", v=0)
-            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.CURL", v=values[0])
-            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.CURL", v=values[1])
+            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.Curl", v=0)
+            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.Curl", v=values[0])
+            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.Curl", v=values[1])
 
-            cmds.setDrivenKeyframe(at="ry", dv=0, cd=f"{self.finger_attributes_ctl}.SPREAD", v=0)
-            cmds.setDrivenKeyframe(at="ry", dv=10, cd=f"{self.finger_attributes_ctl}.SPREAD", v=values[2])
-            cmds.setDrivenKeyframe(at="ry", dv=-10, cd=f"{self.finger_attributes_ctl}.SPREAD", v=values[3])
+            cmds.setDrivenKeyframe(at="ry", dv=0, cd=f"{self.finger_attributes_ctl}.Spread", v=0)
+            cmds.setDrivenKeyframe(at="ry", dv=10, cd=f"{self.finger_attributes_ctl}.Spread", v=values[2])
+            cmds.setDrivenKeyframe(at="ry", dv=-10, cd=f"{self.finger_attributes_ctl}.Spread", v=values[3])
 
-            cmds.setDrivenKeyframe(at="rx", dv=0, cd=f"{self.finger_attributes_ctl}.TWIST", v=0)
-            cmds.setDrivenKeyframe(at="rx", dv=10, cd=f"{self.finger_attributes_ctl}.TWIST", v=values[4])
-            cmds.setDrivenKeyframe(at="rx", dv=-10, cd=f"{self.finger_attributes_ctl}.TWIST", v=values[5])
+            cmds.setDrivenKeyframe(at="rx", dv=0, cd=f"{self.finger_attributes_ctl}.Twist", v=0)
+            cmds.setDrivenKeyframe(at="rx", dv=10, cd=f"{self.finger_attributes_ctl}.Twist", v=values[4])
+            cmds.setDrivenKeyframe(at="rx", dv=-10, cd=f"{self.finger_attributes_ctl}.Twist", v=values[5])
 
-            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.FAN", v=0)
-            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.FAN", v=values[6])
-            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.FAN", v=values[7])
+            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.Fan", v=0)
+            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.Fan", v=values[6])
+            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.Fan", v=values[7])
 
         if thumb_attributes != [None]:
 
-            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.THUMB_CURL", v=0)
-            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.THUMB_CURL", v=thumb_attributes[0])
-            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.THUMB_CURL", v=thumb_attributes[1])
+            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.Thumb_Curl", v=0)
+            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.Thumb_Curl", v=thumb_attributes[0])
+            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.Thumb_Curl", v=thumb_attributes[1])
 
-            cmds.setDrivenKeyframe(at="ry", dv=0, cd=f"{self.finger_attributes_ctl}.THUMB_SPREAD", v=0)
-            cmds.setDrivenKeyframe(at="ry", dv=10, cd=f"{self.finger_attributes_ctl}.THUMB_SPREAD", v=thumb_attributes[2])
-            cmds.setDrivenKeyframe(at="ry", dv=-10, cd=f"{self.finger_attributes_ctl}.THUMB_SPREAD", v=thumb_attributes[3])
+            cmds.setDrivenKeyframe(at="ry", dv=0, cd=f"{self.finger_attributes_ctl}.Thumb_Spread", v=0)
+            cmds.setDrivenKeyframe(at="ry", dv=10, cd=f"{self.finger_attributes_ctl}.Thumb_Spread", v=thumb_attributes[2])
+            cmds.setDrivenKeyframe(at="ry", dv=-10, cd=f"{self.finger_attributes_ctl}.Thumb_Spread", v=thumb_attributes[3])
 
-            cmds.setDrivenKeyframe(at="rx", dv=0, cd=f"{self.finger_attributes_ctl}.THUMB_TWIST", v=0)
-            cmds.setDrivenKeyframe(at="rx", dv=10, cd=f"{self.finger_attributes_ctl}.THUMB_TWIST", v=thumb_attributes[4])
-            cmds.setDrivenKeyframe(at="rx", dv=-10, cd=f"{self.finger_attributes_ctl}.THUMB_TWIST", v=thumb_attributes[5])
+            cmds.setDrivenKeyframe(at="rx", dv=0, cd=f"{self.finger_attributes_ctl}.Thumb_Twist", v=0)
+            cmds.setDrivenKeyframe(at="rx", dv=10, cd=f"{self.finger_attributes_ctl}.Thumb_Twist", v=thumb_attributes[4])
+            cmds.setDrivenKeyframe(at="rx", dv=-10, cd=f"{self.finger_attributes_ctl}.Thumb_Twist", v=thumb_attributes[5])
 
-            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.THUMB_FAN", v=0)
-            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.THUMB_FAN", v=thumb_attributes[6])
-            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.THUMB_FAN", v=thumb_attributes[7])
+            cmds.setDrivenKeyframe(at="rz", dv=0, cd=f"{self.finger_attributes_ctl}.Thumb_Fan", v=0)
+            cmds.setDrivenKeyframe(at="rz", dv=10, cd=f"{self.finger_attributes_ctl}.Thumb_Fan", v=thumb_attributes[6])
+            cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{self.finger_attributes_ctl}.Thumb_Fan", v=thumb_attributes[7])
 
 
 

@@ -103,6 +103,9 @@ def create_basic_structure(character_name=None):
     add_attr_safe(settings_ctl, longName="showSkeleton", niceName="Show Skeleton", attributeType="bool", defaultValue=True, keyable=True)
     add_attr_safe(settings_ctl, longName="showModules", niceName="Show Modules", attributeType="bool", defaultValue=True, keyable=True)
     add_attr_safe(settings_ctl, longName="hideControllersOnPlayblast", niceName="Hide Controllers on Playblast", attributeType="bool", defaultValue=True, keyable=True)
+    cmds.setAttr(f"{settings_ctl}.showSkeleton", lock=False, keyable=False, channelBox=True)
+    cmds.setAttr(f"{settings_ctl}.showModules", lock=False, keyable=False, channelBox=True)
+    cmds.setAttr(f"{settings_ctl}.hideControllersOnPlayblast", lock=False, keyable=False, channelBox=True)
 
     # (Nota: He omitido la repetición de addAttr por brevedad, aplica add_attr_safe a los demás)
 

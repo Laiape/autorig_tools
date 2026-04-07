@@ -642,69 +642,89 @@ def read_guides_info(character_name, guide_name=None):
         return character_data
 
 
-def mirror_specific_guide(guide_name, is_joint):
+
+def mirror_specific_guide(guide, is_joint):
     """
-    Espeja la guía. Si es un joint y ya existe el destino, lo borra primero.
+    Mirroriza un guide del lado L al lado R.
+    Para joints usa mirrorJoint; para el resto copia/crea el nodo en R con posición mirroreada.
     """
-    if guide_name.startswith("L_"):
-        new_name = guide_name.replace("L_", "R_", 1)
-    elif guide_name.startswith("R_"):
-        new_name = guide_name.replace("R_", "L_", 1)
-    else:
-        return 
+    r_guide = guide.replace("L_", "R_", 1)
 
     if is_joint:
-        if cmds.objExists(new_name):
-            cmds.delete(new_name)
-        
-        cmds.mirrorJoint(guide_name, 
-                         mirrorYZ=True, 
-                         mirrorBehavior=True, 
-                         searchReplace=("L_", "R_"))
-    
+        # Maya maneja joints de forma nativa con mirrorJoint
+        if cmds.objExists(r_guide):
+            cmds.delete(r_guide)
+
+        cmds.mirrorJoint(
+            guide,
+            mirrorYZ=True,          # mirror en el plano YZ (eje X)
+            mirrorBehavior=True,    # invierte orientación del joint
+            searchReplace=("L_", "R_")
+        )
+
     else:
-        if not cmds.objExists(new_name):
-            om.MGlobal.displayWarning(f"La guía destino '{new_name}' no existe para aplicar matriz.")
-            return
+        # Para nurbsCurves, locators, etc: obtener transform y mirrorear en X
+        obj_type = cmds.objectType(guide)
 
-        mirror_matrix = om.MMatrix([
-            -1.0, 0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        ])
+        # Obtener posición/rotación/escala en world space
+        ws_pos   = cmds.xform(guide, q=True, worldSpace=True, translation=True)
+        ws_rot   = cmds.xform(guide, q=True, worldSpace=True, rotation=True)
+        ws_scale = cmds.xform(guide, q=True, relative=True,   scale=True)
 
-        source_mat_list = cmds.getAttr(f"{guide_name}.worldMatrix[0]")
-        source_mat = om.MMatrix(source_mat_list)
-        result_mat = mirror_matrix * source_mat * mirror_matrix
+        # Mirror en X (negar X de posición y rotaciones Y/Z)
+        mirrored_pos = [-ws_pos[0], ws_pos[1], ws_pos[2]]
+        mirrored_rot = [ws_rot[0], -ws_rot[1], -ws_rot[2]]
 
-        cmds.setAttr(f"{new_name}.offsetParentMatrix", list(result_mat), type="matrix")
-        
-        for attr in [".t", ".r"]:
-            cmds.setAttr(new_name + attr, 0, 0, 0)
-        for attr in [".sx", ".sy", ".sz"]:
-            cmds.setAttr(new_name + attr, 1)
+        if cmds.objExists(r_guide):
+            # Si ya existe, solo actualizar transforms
+            cmds.xform(r_guide, worldSpace=True, translation=mirrored_pos)
+            cmds.xform(r_guide, worldSpace=True, rotation=mirrored_rot)
+            cmds.xform(r_guide, relative=True, scale=ws_scale)
+        else:
+            # Duplicar el nodo L y renombrarlo a R
+            duplicated = cmds.duplicate(guide, name=r_guide, returnRootsOnly=True)[0]
+
+            # Aplicar transforms mirroreados
+            cmds.xform(duplicated, worldSpace=True, translation=mirrored_pos)
+            cmds.xform(duplicated, worldSpace=True, rotation=mirrored_rot)
+            cmds.xform(duplicated, relative=True, scale=ws_scale)
+
+            # Reparentar al mismo contenedor si no es hijo directo ya
+            container = "C_guides_GRP"
+            parent = cmds.listRelatives(duplicated, parent=True, fullPath=False)
+            if not parent or parent[0] != container:
+                cmds.parent(duplicated, container)
+
 
 def mirror_guides():
     container = "C_guides_GRP"
+
     if not cmds.objExists(container):
-        om.MGlobal.displayError(f"No existe el grupo {container}")
+        om.MGlobal.displayError(f"No existe el grupo: {container}")
         return
+
+    # Hijos directos del contenedor
     children = cmds.listRelatives(container, children=True, fullPath=False) or []
-    
-    selected = cmds.ls(sl=True)
-    guides_to_process = [g for g in children if g in selected] if selected else children
+
+    # Si hay selección, filtrar solo los hijos seleccionados del contenedor
+    selected = set(cmds.ls(sl=True, long=False))
+    if selected:
+        guides_to_process = [g for g in children if g in selected and g.startswith("L_")]
+    else:
+        guides_to_process = [g for g in children if g.startswith("L_")]
+
+    if not guides_to_process:
+        om.MGlobal.displayWarning("No se encontraron guides con prefijo 'L_' para mirrorear.")
+        return
 
     count = 0
     for guide in guides_to_process:
-        if not selected and not guide.startswith("L_"):
-            continue
-            
         obj_type = cmds.objectType(guide)
-        mirror_specific_guide(guide, (obj_type == "joint"))
+        is_joint = (obj_type == "joint")
+        mirror_specific_guide(guide, is_joint)
         count += 1
 
-    om.MGlobal.displayInfo(f"Proceso finalizado: {count} elementos raíz procesados.")
+    om.MGlobal.displayInfo(f"Mirror finalizado: {count} guide(s) procesados de L → R.")
 
 
 def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0), ribbon=False):

@@ -61,8 +61,6 @@ class LegModule(object):
         self.aim_axis_signed = (f"{'-' if aim_sign < 0 else ''}{aim_axis}")
         self.up_axis_signed = f"{'' if up_sign < 0 else ''}{up_axis}"
 
-        print(f"Aim axis: {self.aim_axis_signed}, Up axis: {self.up_axis_signed}")
-
         # Create the main groups for the leg module
         self.module_name = f"{self.side}_leg"
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_legModule_GRP", ss=True, p=self.modules)
@@ -74,10 +72,10 @@ class LegModule(object):
         self.load_guides()
         self.create_chains()
         self.controllers_creation()
-        self.ik_setup()
-        self.foot_attributes()
         self.fk_stretch()
+        self.ik_setup()
         self.soft_ik()
+        self.foot_attributes()
         self.de_boor_ribbon(self.skinning_joint_numbers)
 
         data_manager.DataExportBiped().append_data("leg_module",
@@ -309,18 +307,6 @@ class LegModule(object):
         cmds.parent(crv_point_pv, self.pv_ctl)
         cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 
-        cmds.select(self.pv_nodes[0])
-        if self.secondary_axis == (0, 1, 0):
-            if self.side == "L":
-                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
-            else:
-                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
-        elif self.secondary_axis == (0, -1, 0):
-            if self.side == "L":
-                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
-            else:
-                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
-
         pv_world_position = cmds.getAttr(f"{self.pv_ctl}.worldMatrix[0]")[12:15]
         cmds.setAttr(f"{fbf_pv}.in30", pv_world_position[0])
         cmds.setAttr(f"{fbf_pv}.in31", pv_world_position[1])
@@ -328,7 +314,9 @@ class LegModule(object):
 
         pin_blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_legPv_Pin_BLM", ss=True)
         cmds.connectAttr(f"{pv_world_matrix}.outputMatrix", f"{pin_blend_matrix}.inputMatrix")
-
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{pin_blend_matrix}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.pv_ctl}.pin", f"{pin_blend_matrix}.target[0].translateWeight")
+        # cmds.connectAttr(f"{pin_blend_matrix}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
     
     def ik_setup(self):
 
@@ -355,8 +343,18 @@ class LegModule(object):
             cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{self.toe_handle}.{attr}")
 
         pv_c = cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)[0]
-        if self.secondary_axis == (0, 1, 0) and self.side == "R":
-            cmds.setAttr(f"{pv_c}.offsetY", -180)
+
+        cmds.select(self.pv_nodes[0])
+        if self.secondary_axis == (0, 1, 0):
+            if self.side == "L":
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            else:
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+        elif self.secondary_axis == (0, -1, 0):
+            if self.side == "L":
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+            else:
+                cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
 
     def foot_attributes(self):
 
@@ -533,7 +531,8 @@ class LegModule(object):
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_legSoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
         cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxis", *self.primary_axis, type="double3")
+        absolut_primary_axis = tuple(abs(x) for x in self.primary_axis)
+        cmds.setAttr(f"{aim_matrix}.primaryInputAxis", *absolut_primary_axis, type="double3")
         cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", *self.secondary_axis, type="double3")
         cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
         cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
@@ -638,16 +637,22 @@ class LegModule(object):
 
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix1")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.created_nodes[1]}.floatB")
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
-        
         if self.side == "R":
-            negate_soft_trn = cmds.createNode("multiply", name=f"{self.side}_legSoftTrnNegate_MUL", ss=True)
-            cmds.setAttr(f"{negate_soft_trn}.input[1]", -1)
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{negate_soft_trn}.input[0]")
-            cmds.connectAttr(f"{negate_soft_trn}.output", f"{self.soft_trn}.translateX")
+            
+            negate_upper_length = cmds.createNode("negate", name=f"{self.side}_legUpperLength_NEG", ss=True)
+            negate_lower_length = cmds.createNode("negate", name=f"{self.side}_legLowerLength_NEG", ss=True)
+            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{negate_upper_length}.input")
+            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{negate_lower_length}.input")
+            cmds.connectAttr(f"{negate_upper_length}.output", f"{self.ik_chain[1]}.translateX")
+            cmds.connectAttr(f"{negate_lower_length}.output", f"{self.ik_chain[2]}.translateX")
+
         else:
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
+
+            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
+            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
+        
+        
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
 
         cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
 

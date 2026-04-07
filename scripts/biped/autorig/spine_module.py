@@ -118,7 +118,7 @@ class SpineModule(object):
             
             if i == 0 or i == len(self.spine_chain) - 1:
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
+                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"])
                 self.lock_attributes(corner_ctl, [ "v"])
                 
                 if i == len(self.spine_chain) - 1:
@@ -129,6 +129,10 @@ class SpineModule(object):
                     cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix") # Parent the first spine ctl to body ctl
                     cmds.setAttr(f"{corner_nodes[0]}.inheritsTransform", 0) # Don't inherit the transform from body ctl
                     cmds.parent(corner_nodes[0], self.controllers_grp)
+                    cmds.addAttr(corner_ctl, longName="tanControllers", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+                    cmds.setAttr(f"{corner_ctl}.tanControllers", lock=True, keyable=False, channelBox=True)
+                    cmds.addAttr(corner_ctl, longName="tanVisibility", niceName="Tangent Controllers Visibility", attributeType="bool", defaultValue=True, keyable=True)
+                    cmds.setAttr(f"{corner_ctl}.tanVisibility", lock=False, keyable=False, channelBox=True)
 
                 else:
 
@@ -151,14 +155,16 @@ class SpineModule(object):
             
             if i == 1 or i == len(self.spine_chain) - 2:
 
-                tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP"])
+                tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP", "ANM"])
                 self.lock_attributes(tan_ctl, ["v"])
 
                 cmds.matchTransform(tan_nodes[0], jnt, pos=True, rot=True, scl=False)
+                cmds.connectAttr(f"{self.spine_ctls[0]}.tanVisibility", f"{tan_nodes[0]}.visibility")
 
                 if i == 1:
 
                     cmds.parent(tan_nodes[0], self.spine_ctls[-1])
+
 
                 self.spine_nodes.append(tan_nodes[0])
                 self.spine_ctls.append(tan_ctl)
@@ -452,10 +458,17 @@ class SpineModule(object):
         cmds.addAttr(self.body_ctl, longName="spineSquashMaxPos", niceName="Max Pos", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
 
         # ----- Attatched FK attributes ------
-        cmds.addAttr(self.body_ctl, longName="FK", niceName="ATTACHED FK ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.addAttr(self.body_ctl, longName="FK", niceName="SPINE VISIBILITY ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.FK", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="bool", min=0, max=1, defaultValue=0, keyable=True)
+        cmds.addAttr(self.body_ctl, longName="IK_Vis", niceName="IK Controllers Visibility", attributeType="bool", min=0, max=1, defaultValue=1, keyable=True)
+        cmds.addAttr(self.body_ctl, longName="Hip_Vis", niceName="Local Hip Visibility", attributeType="bool", min=0, max=1, defaultValue=1, keyable=True)
         cmds.setAttr(f"{self.body_ctl}.FK_Vis", lock=False, keyable=False, channelBox=True)
+        cmds.setAttr(f"{self.body_ctl}.IK_Vis", lock=False, keyable=False, channelBox=True)
+        cmds.setAttr(f"{self.body_ctl}.Hip_Vis", lock=False, keyable=False, channelBox=True)
+
+        cmds.connectAttr(f"{self.body_ctl}.IK_Vis", f"{self.spine_nodes[0]}.visibility")
+        cmds.connectAttr(f"{self.body_ctl}.Hip_Vis", f"{self.local_hip_nodes[0]}.visibility")
 
         # ------ Attatched FK setup ------
         self.fk_nodes = []
