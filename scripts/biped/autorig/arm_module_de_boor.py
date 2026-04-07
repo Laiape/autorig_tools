@@ -452,6 +452,30 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.ik_wrist_ctl}.rotate", f"{self.ik_chain[-1]}.rotate")
         cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
 
+        # Twist correction setup
+        twist_locator = cmds.spaceLocator(name=f"{self.side}_armTwist_LOC")[0]
+        self.wrist_final_jnt = cmds.createNode("joint", name=f"{self.side}_armWristFinal_JNT", p=self.arm_chain[1])
+
+        cmds.parent(twist_locator, self.arm_chain[-1])
+        aim_matrix_twist = cmds.createNode("aimMatrix", name=f"{self.side}_armTwist_AMX", ss=True)
+        blend_matrix_twist = cmds.createNode("blendMatrix", name=f"{self.side}_armTwist_BLM", ss=True)
+        mmx_negate_twist = cmds.createNode("multMatrix", name=f"{self.side}_armTwistNegate_MMX", ss=True)
+
+        cmds.setAttr(f"{aim_matrix_twist}.primaryInputAxis", *self.secondaryInputAxis, type="double3")
+        cmds.setAttr(f"{aim_matrix_twist}.secondaryInputAxis", *(0,0,-1), type="double3")
+        cmds.setAttr(f"{blend_matrix_twist}.target[0].rotateWeight", 0)
+        cmds.setAttr(f"{blend_matrix_twist}.target[0].translateWeight", 1)
+
+        cmds.connectAttr(f"{self.guides_trns[-1]}.worldMatrix[0]", f"{aim_matrix_twist}.inputMatrix")
+        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{aim_matrix_twist}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{twist_locator}.worldMatrix[0]", f"{aim_matrix_twist}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(f"{aim_matrix_twist}.outputMatrix", f"{blend_matrix_twist}.inputMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[-1][0]}.outputMatrix", f"{blend_matrix_twist}.target[0].targetMatrix")
+        cmds.connectAttr(f"{blend_matrix_twist}.outputMatrix", f"{self.wrist_final_jnt}.offsetParentMatrix")
+        
+
+
+
         for attr in ["translate", "rotate", "jointOrient"]:
             for axis in ["X", "Y", "Z"]:
                 cmds.setAttr(f"{self.ik_chain[0]}.{attr}{axis}", 0)
@@ -573,7 +597,7 @@ class ArmModule(object):
 
         cmds.select(clear=True)
         wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")
-        cmds.connectAttr(f"{self.arm_chain[-1]}.worldMatrix[0]", f"{wrist_skinning}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.wrist_final_jnt}.worldMatrix[0]", f"{wrist_skinning}.offsetParentMatrix")
         cmds.parent(wrist_skinning, self.skeleton_grp)
 
         # Contraint settings controller to first skinning joint
