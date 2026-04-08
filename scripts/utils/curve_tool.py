@@ -348,6 +348,8 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
 
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])
+
+        cmds.setAttr(f"{ctl[0]}.rotateOrder", keyable=False, channelBox=True)
         
         return created_grps, ctl[0]
     

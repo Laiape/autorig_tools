@@ -75,6 +75,7 @@ class LegModule(object):
         self.fk_stretch()
         self.ik_setup()
         self.soft_ik()
+        self.knee_pin_setup()
         self.foot_attributes()
         self.de_boor_ribbon(self.skinning_joint_numbers)
 
@@ -118,7 +119,7 @@ class LegModule(object):
     def create_chains(self):
 
         self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_legSettings", offset=["GRP"])
-        self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+        self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility", "rotateOrder"])
         cmds.matchTransform(self.settings_node[0], self.settings_loc, pos=True, rot=True)
         cmds.delete(self.settings_loc)
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
@@ -270,28 +271,10 @@ class LegModule(object):
         self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
 
-        # Create pv orientation and pin attributes on the PV controller
-        cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA ATTRIBUTES ------", enumName="------",attributeType="enum", keyable=True)
-        cmds.setAttr(self.pv_ctl+".extraAttr", channelBox=True, lock=True)
-        cmds.addAttr(self.pv_ctl, shortName="pvOrientation", niceName="Pv Orientation",defaultValue=1, minValue=0, maxValue=1, keyable=True)
-        cmds.addAttr(self.pv_ctl, shortName="pin", niceName="Pin",minValue=0,maxValue=1,defaultValue=0, keyable=True)
-
-        # Orient setup for the PV controller
-        pv_world_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_legPvOrient_BLM", ss=True)
-        
-        
-        fbf_pv = cmds.createNode("fourByFourMatrix", name=f"{self.side}_legPv_FBB", ss=True)
-        
-
-        cmds.connectAttr(f"{fbf_pv}.output", f"{pv_world_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.guides_matrices[1]}", f"{pv_world_matrix}.target[0].targetMatrix")
-        cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_world_matrix}.target[0].rotateWeight")
-        cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_world_matrix}.target[0].weight")
-
         if self.side == "R": # Mirror the PV controller
-                matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=f"{pv_world_matrix}.outputMatrix", secondary_axis=(1,0,0), rotate_180=True)
+                matrix_manager.mirror_controllers(controllers_grp=[self.pv_nodes[0]], input_matrix=self.guides_matrices[1], secondary_axis=(1,0,0), rotate_180=True)
         else:
-            cmds.connectAttr(f"{pv_world_matrix}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix")
+            cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
         
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_legPv_CRV") # Create a line that points always to the PV
@@ -307,16 +290,7 @@ class LegModule(object):
         cmds.parent(crv_point_pv, self.pv_ctl)
         cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 
-        pv_world_position = cmds.getAttr(f"{self.pv_ctl}.worldMatrix[0]")[12:15]
-        cmds.setAttr(f"{fbf_pv}.in30", pv_world_position[0])
-        cmds.setAttr(f"{fbf_pv}.in31", pv_world_position[1])
-        cmds.setAttr(f"{fbf_pv}.in32", pv_world_position[2])
 
-        pin_blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_legPv_Pin_BLM", ss=True)
-        cmds.connectAttr(f"{pv_world_matrix}.outputMatrix", f"{pin_blend_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{pin_blend_matrix}.target[0].targetMatrix")
-        cmds.connectAttr(f"{self.pv_ctl}.pin", f"{pin_blend_matrix}.target[0].translateWeight")
-        # cmds.connectAttr(f"{pin_blend_matrix}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
     
     def ik_setup(self):
 
@@ -355,6 +329,8 @@ class LegModule(object):
                 cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
             else:
                 cmds.move(0, 20, 0, relative=True, objectSpace=True, worldSpaceDistance=True)
+
+    
 
     def foot_attributes(self):
 
@@ -656,6 +632,44 @@ class LegModule(object):
 
         cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
 
+    def knee_pin_setup(self):
+        """
+        Setup knee pinning for the leg module.
+        """
+        # Add attributes to PV controller
+        cmds.addAttr(self.pv_ctl, longName="EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------")
+        cmds.setAttr(f"{self.pv_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(self.pv_ctl, longName="Pin", niceName="Knee Pin", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
+
+        # Pinning setup
+        upper_distance = cmds.createNode("distanceBetween", name=f"{self.side}_legKneePinUpper_DBT", ss=True)
+        lower_distance = cmds.createNode("distanceBetween", name=f"{self.side}_legKneePinLower_DBT", ss=True)
+        cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{upper_distance}.inMatrix1")
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{upper_distance}.inMatrix2")
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{lower_distance}.inMatrix1")
+        cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{lower_distance}.inMatrix2")
+
+        upper_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_legKneePinUpper_BTA", ss=True)
+        lower_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_legKneePinLower_BTA", ss=True)
+
+        cmds.connectAttr(f"{self.pv_ctl}.Pin", f"{upper_blend}.attributesBlender")
+        cmds.connectAttr(f"{self.pv_ctl}.Pin", f"{lower_blend}.attributesBlender")
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{upper_blend}.input[0]")
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{lower_blend}.input[0]")
+        cmds.connectAttr(f"{upper_distance}.distance", f"{upper_blend}.input[1]")
+        cmds.connectAttr(f"{lower_distance}.distance", f"{lower_blend}.input[1]")
+        if self.side == "L":
+            cmds.connectAttr(f"{upper_blend}.output", f"{self.ik_chain[1]}.translateX", force=True)
+            cmds.connectAttr(f"{lower_blend}.output", f"{self.ik_chain[-1]}.translateX", force=True)
+        else:
+            negate_upper = cmds.createNode("multiply", name=f"{self.side}_armElbowPinUpperNegate_MUL", ss=True)
+            negate_lower = cmds.createNode("multiply", name=f"{self.side}_armElbowPinLowerNegate_MUL", ss=True)
+            cmds.setAttr(f"{negate_upper}.input[1]", -1)
+            cmds.setAttr(f"{negate_lower}.input[1]", -1)
+            cmds.connectAttr(f"{upper_blend}.output", f"{negate_upper}.input[0]")
+            cmds.connectAttr(f"{lower_blend}.output", f"{negate_lower}.input[0]")
+            cmds.connectAttr(f"{negate_upper}.output", f"{self.ik_chain[1]}.translateX", force=True)
+            cmds.connectAttr(f"{negate_lower}.output", f"{self.ik_chain[-1]}.translateX", force=True)
 
     def de_boor_ribbon(self, skinning_joint_numbers):
 
