@@ -346,10 +346,17 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
             for attr in locked_attrs:
                 cmds.setAttr(f"{ctl[0]}.{attr}", lock=True, keyable=False)
 
+        rotate_attrs_long = {"rotateX", "rotateY", "rotateZ"}
+        rotate_attrs_short = {"rx", "ry", "rz"}
+        locked_set = set(locked_attrs or [])
+
+        if not (rotate_attrs_long.issubset(locked_set) or rotate_attrs_short.issubset(locked_set)):
+            cmds.setAttr(f"{ctl[0]}.rotateOrder", keyable=False, channelBox=True)
+
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])
 
-        cmds.setAttr(f"{ctl[0]}.rotateOrder", keyable=False, channelBox=True)
+        
         
         return created_grps, ctl[0]
     
