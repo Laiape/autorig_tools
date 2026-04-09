@@ -679,6 +679,10 @@ class JawModule(object):
                     cmds.connectAttr(f"{parent_connection}.{parent_out_attr}", f"{mmx_controller}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_controller}.matrixSum", f"{secondary_grps[child_idx]}.offsetParentMatrix", f=True)
 
+                    if secondary_ctls[parent_idx].startswith("C_") and secondary_ctls[child_idx].startswith("R_"): # This is the controller R tangent driven by C
+                        cmds.connectAttr(f"{parent_connection}.{parent_out_attr}", f"{mmx_controller}.matrixIn[0]", f=True)
+                        cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_controller}.matrixIn[1]", f=True)
+
                     joint_connection = cmds.listConnections(f"{secondary_joints[child_idx]}.offsetParentMatrix", source=True, destination=False)[0]
 
                     mmx_local = cmds.createNode("multMatrix", name=f"{tan_name}ParentLocal_MMX", ss=True)
@@ -687,6 +691,9 @@ class JawModule(object):
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[0]")
                     cmds.connectAttr(f"{joint_connection}.{joint_out_attr}", f"{mmx_local}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
+                    if secondary_ctls[parent_idx].startswith("C_") and secondary_ctls[child_idx].startswith("R_"): # This is the controller R tangent driven by C
+                        cmds.connectAttr(f"{joint_connection}.{joint_out_attr}", f"{mmx_local}.matrixIn[0]", f=True)
+                        cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[1]", f=True)
                             
             
             # Project all the joints to the NURBS Surface
