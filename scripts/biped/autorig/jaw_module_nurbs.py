@@ -742,6 +742,7 @@ class JawModule(object):
             for i in range(0, linear_curve_cvs):
 
                 surface_cv = f"{nurbs}.cv[{i}][0]"
+                curve_cv = f"{curve}.cv[{i}]"
 
                 if i < mid_point:
                     side = "R"
@@ -751,7 +752,9 @@ class JawModule(object):
                     side = "L"
 
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
-                real_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
+                u_param, v_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
+                vertex_cv = cmds.xform(curve_cv, query=True, worldSpace=True, translation=True)
+                param_vertex = matrix_manager.getClosestParamToWorldMatrixCurve(curve, vertex_cv)
 
                 point_on_surface_info = cmds.createNode("pointOnSurfaceInfo", name=f"{side}_{part}Lip{str(i).zfill(2)}_POS", ss=True)
                 point_on_surface_info_up = cmds.createNode("pointOnSurfaceInfo", name=f"{side}_{part}Lip{str(i).zfill(2)}Up_POS", ss=True)
@@ -760,10 +763,10 @@ class JawModule(object):
 
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info}.inputSurface")
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info_up}.inputSurface")
-                cmds.setAttr(f"{point_on_surface_info}.parameterU", real_param[0])
-                cmds.setAttr(f"{point_on_surface_info}.parameterV", real_param[1])
-                cmds.setAttr(f"{point_on_surface_info_up}.parameterU", real_param[0])
-                cmds.setAttr(f"{point_on_surface_info_up}.parameterV", real_param[1] + 0.01)  # Slightly above the original CV to get the up vector
+                cmds.setAttr(f"{point_on_surface_info}.parameterU", param_vertex)
+                cmds.setAttr(f"{point_on_surface_info}.parameterV", v_param)
+                cmds.setAttr(f"{point_on_surface_info_up}.parameterU", param_vertex)
+                cmds.setAttr(f"{point_on_surface_info_up}.parameterV", v_param + 0.05)  # Slightly above the original CV to get the up vector
 
                 cmds.connectAttr(f"{point_on_surface_info}.positionX", f"{fbf_aim}.in30")
                 cmds.connectAttr(f"{point_on_surface_info}.positionY", f"{fbf_aim}.in31")
@@ -780,7 +783,7 @@ class JawModule(object):
                 cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 0,0,1)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 2)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 1,0,0)
-                if self.side == "R":
+                if side == "R":
                     cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", -1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
 
