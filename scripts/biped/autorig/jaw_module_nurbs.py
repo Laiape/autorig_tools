@@ -753,24 +753,35 @@ class JawModule(object):
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 real_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
 
-                uv_pin = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(i).zfill(2)}_UVP", ss=True)
-                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin}.deformedGeometry")
-                cmds.setAttr(f"{uv_pin}.coordinate[0].coordinateU", real_param[0])
-                cmds.setAttr(f"{uv_pin}.coordinate[0].coordinateV", real_param[1])
+                point_on_surface_info = cmds.createNode("pointOnSurfaceInfo", name=f"{side}_{part}Lip{str(i).zfill(2)}_POS", ss=True)
+                point_on_surface_info_up = cmds.createNode("pointOnSurfaceInfo", name=f"{side}_{part}Lip{str(i).zfill(2)}Up_POS", ss=True)
+                fbf_aim = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}_Aim_FBF", ss=True)
+                fbf_up = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}_Up_FBF", ss=True)
 
-                uv_pin_up_axys = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(i).zfill(2)}UpAxys_UVP", ss=True)
-                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin_up_axys}.deformedGeometry")
-                cmds.setAttr(f"{uv_pin_up_axys}.coordinate[0].coordinateU", real_param[0])
-                cmds.setAttr(f"{uv_pin_up_axys}.coordinate[0].coordinateV", real_param[1])
+                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info}.inputSurface")
+                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info_up}.inputSurface")
+                cmds.setAttr(f"{point_on_surface_info}.parameterU", real_param[0])
+                cmds.setAttr(f"{point_on_surface_info}.parameterV", real_param[1])
+                cmds.setAttr(f"{point_on_surface_info_up}.parameterU", real_param[0])
+                cmds.setAttr(f"{point_on_surface_info_up}.parameterV", real_param[1] + 0.01)  # Slightly above the original CV to get the up vector
+
+                cmds.connectAttr(f"{point_on_surface_info}.positionX", f"{fbf_aim}.in30")
+                cmds.connectAttr(f"{point_on_surface_info}.positionY", f"{fbf_aim}.in31")
+                cmds.connectAttr(f"{point_on_surface_info}.positionZ", f"{fbf_aim}.in32")
+                cmds.connectAttr(f"{point_on_surface_info_up}.positionX", f"{fbf_up}.in30")
+                cmds.connectAttr(f"{point_on_surface_info_up}.positionY", f"{fbf_up}.in31")
+                cmds.connectAttr(f"{point_on_surface_info_up}.positionZ", f"{fbf_up}.in32")
 
                 aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}AimMatrixVector_AMX", ss=True)
-                cmds.connectAttr(f"{uv_pin}.outputMatrix[0]", f"{aim_matrix_vector}.inputMatrix")
-                cmds.connectAttr(f"{uv_pin}.outputMatrix[0]", f"{aim_matrix_vector}.primaryTargetMatrix")
-                cmds.connectAttr(f"{uv_pin_up_axys}.outputMatrix[0]", f"{aim_matrix_vector}.secondaryTargetMatrix")
+                cmds.connectAttr(f"{fbf_aim}.output", f"{aim_matrix_vector}.inputMatrix")
+                cmds.connectAttr(f"{fbf_aim}.output", f"{aim_matrix_vector}.primaryTargetMatrix")
+                cmds.connectAttr(f"{fbf_up}.output", f"{aim_matrix_vector}.secondaryTargetMatrix")
                 cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 0,0,1)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 0,0,1)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 2)
-                cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,1,0)
+                cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 1,0,0)
+                if self.side == "R":
+                    cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", -1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
 
                 fbf = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}Position_FBF", ss=True)
@@ -778,13 +789,9 @@ class JawModule(object):
                 cmds.connectAttr(f"{linear_curve}.editPoints[{i}].yValueEp", f"{fbf}.in31")
                 cmds.connectAttr(f"{linear_curve}.editPoints[{i}].zValueEp", f"{fbf}.in32")
 
-                parentMatrix = cmds.createNode("parentMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}_PMX", ss=True)
-                cmds.connectAttr(f"{fbf}.output", f"{parentMatrix}.inputMatrix")
-                cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{parentMatrix}.target[0].targetMatrix")
     
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
-                cmds.connectAttr(f"{parentMatrix}.outputMatrix", f"{out_joint}.offsetParentMatrix")
-                cmds.setAttr(f"{parentMatrix}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf}.output", f"{aim_matrix_vector}.outputMatrix"), type="matrix")
+                cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{out_joint}.offsetParentMatrix")
 
 
         # ------ Conditions to control visibility of lip controllers ------

@@ -662,8 +662,8 @@ class LegModule(object):
             cmds.connectAttr(f"{upper_blend}.output", f"{self.ik_chain[1]}.translateX", force=True)
             cmds.connectAttr(f"{lower_blend}.output", f"{self.ik_chain[-1]}.translateX", force=True)
         else:
-            negate_upper = cmds.createNode("multiply", name=f"{self.side}_armElbowPinUpperNegate_MUL", ss=True)
-            negate_lower = cmds.createNode("multiply", name=f"{self.side}_armElbowPinLowerNegate_MUL", ss=True)
+            negate_upper = cmds.createNode("multiply", name=f"{self.side}_legElbowPinUpperNegate_MUL", ss=True)
+            negate_lower = cmds.createNode("multiply", name=f"{self.side}_legElbowPinLowerNegate_MUL", ss=True)
             cmds.setAttr(f"{negate_upper}.input[1]", -1)
             cmds.setAttr(f"{negate_lower}.input[1]", -1)
             cmds.connectAttr(f"{upper_blend}.output", f"{negate_upper}.input[0]")
@@ -688,13 +688,14 @@ class LegModule(object):
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollAlign_BLM", ss=True)
         nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_legNonRollAim_AMX", ss=True)
-        nonRollMasterWalk_mmx = cmds.createNode("multMatrix", name=f"{self.side}_legNonRollMasterWalk_MMX", ss=True)
+        blend_matrix_nodes = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollControllers_BLM", ss=True)
 
-        cmds.connectAttr(f"{guides_aim}.outputMatrix", f"{nonRollMasterWalk_mmx}.matrixIn[0]")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{nonRollMasterWalk_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{self.root_ik_nodes[0]}.worldMatrix[0]", f"{blend_matrix_nodes}.inputMatrix")
+        cmds.connectAttr(f"{self.fk_nodes[0]}.worldMatrix[0]", f"{blend_matrix_nodes}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{blend_matrix_nodes}.target[0].weight")
 
         cmds.connectAttr(f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAlign}.inputMatrix")
-        cmds.connectAttr(f"{nonRollMasterWalk_mmx}.matrixSum", f"{nonRollAlign}.target[0].targetMatrix")
+        cmds.connectAttr(f"{blend_matrix_nodes}.outputMatrix", f"{nonRollAlign}.target[0].targetMatrix")
         cmds.setAttr(f"{nonRollAlign}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{nonRollAlign}.target[0].translateWeight", 0)
         cmds.setAttr(f"{nonRollAlign}.target[0].shearWeight", 0)
@@ -703,6 +704,7 @@ class LegModule(object):
         cmds.connectAttr(f"{nonRollAlign}.outputMatrix", f"{nonRollAim}.inputMatrix")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{nonRollAim}.primaryTargetMatrix")
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primary_axis, type="double3")
+       
 
         # Add roll setup
         upper_roll_jnt = cmds.createNode("joint", name=f"{self.side}_legUpperRoll_JNT", p=self.module_trn)
