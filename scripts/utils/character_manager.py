@@ -91,11 +91,36 @@ class VersionTab(QtWidgets.QWidget):
         # BOTONES INFERIORES (Save New / Import)
         btn_layout = QtWidgets.QHBoxLayout()
         
-        self.btn_save_ver = QtWidgets.QPushButton("Save New Version")
-        self.btn_save_ver.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogSaveButton))
+        self.btn_save_ver = QtWidgets.QPushButton("+ SAVE NEW VERSION")
+        self.btn_save_ver.setStyleSheet("""
+            QPushButton {
+                background-color: #1e3a52;
+                color: #7ecfff;
+                border: 1px solid #4a88b8;
+                border-radius: 4px;
+                padding: 6px 12px;
+                font-size: 9px;
+                letter-spacing: 2px;
+                font-weight: bold;
+            }
+            QPushButton:hover { background-color: #24425e; color: #a8e0ff; border-color: #6aaad0; }
+        """)
         self.btn_save_ver.clicked.connect(self.save_new_version)
         
-        self.btn_import = QtWidgets.QPushButton("Import Selected")
+        self.btn_import = QtWidgets.QPushButton("↓ IMPORT SELECTED")
+        self.btn_import.setStyleSheet("""
+            QPushButton {
+                background-color: #38384a;
+                color: #9898b8;
+                border: 1px solid #4a4a5e;
+                border-radius: 4px;
+                padding: 6px 12px;
+                font-size: 9px;
+                letter-spacing: 2px;
+                font-weight: bold;
+            }
+            QPushButton:hover { color: #e0e0f8; border-color: #6868a0; background-color: #42425a; }
+        """)
         self.btn_import.clicked.connect(self.import_selected)
         
         btn_layout.addWidget(self.btn_save_ver)
@@ -128,9 +153,19 @@ class VersionTab(QtWidgets.QWidget):
             self.table.setItem(row, 1, item_name)
             
             # --- COLUMNA 2: BOTÓN IMPORTAR (Open) ---
-            btn_load = QtWidgets.QPushButton("Open")
-            btn_load.setFixedSize(25, 20)
-            btn_load.setStyleSheet("background-color: #3d5a6c; border: none; font-weight: bold; color: white;")
+            btn_load = QtWidgets.QPushButton("▶")
+            btn_load.setFixedSize(28, 22)
+            btn_load.setStyleSheet("""
+                QPushButton {
+                    background-color: #1e3a52;
+                    border: 1px solid #4a88b8;
+                    color: #7ecfff;
+                    font-weight: bold;
+                    font-size: 10px;
+                    border-radius: 3px;
+                }
+                QPushButton:hover { background-color: #24425e; color: #a8e0ff; }
+            """)
             btn_load.setToolTip(f"Import version: {f}")
             btn_load.clicked.connect(partial(self.import_file, f))
             
@@ -142,9 +177,19 @@ class VersionTab(QtWidgets.QWidget):
             self.table.setCellWidget(row, 2, cell_widget_load)
 
             # --- COLUMNA 3: BOTÓN REPLACE (Replace) ---
-            btn_rep = QtWidgets.QPushButton("Replace")
-            btn_rep.setFixedSize(35, 20)
-            btn_rep.setStyleSheet("background-color: #7a3e3e; border: none; font-size: 10px; color: white; font-weight: bold;")
+            btn_rep = QtWidgets.QPushButton("⟳")
+            btn_rep.setFixedSize(28, 22)
+            btn_rep.setStyleSheet("""
+                QPushButton {
+                    background-color: #4a2020;
+                    border: 1px solid #a85050;
+                    color: #e08080;
+                    font-weight: bold;
+                    font-size: 12px;
+                    border-radius: 3px;
+                }
+                QPushButton:hover { background-color: #5a2828; color: #f0a0a0; }
+            """)
             btn_rep.setToolTip(f"OVERWRITE {f} with current selection/scene")
             btn_rep.clicked.connect(partial(self.replace_file, f))
             
@@ -357,10 +402,10 @@ class AssetManagerUI(QtWidgets.QWidget):
 
         # [IZQUIERDA] Path + Dropdown
         left_panel = QtWidgets.QVBoxLayout()
-        self.path_label = QtWidgets.QLabel("assets > ...")
+        self.path_label = QtWidgets.QLabel("// assets > ...")
         self.path_label.setObjectName("PathLabel")
         
-        lbl_lib = QtWidgets.QLabel("ASSET LIBRARY")
+        lbl_lib = QtWidgets.QLabel("▸ ASSET LIBRARY")
         lbl_lib.setObjectName("SectionHeader")
         
         self.asset_combo = QtWidgets.QComboBox()
@@ -442,41 +487,195 @@ class AssetManagerUI(QtWidgets.QWidget):
 
     def setup_stylesheet(self):
         self.setStyleSheet("""
-            QWidget { background-color: #2b2b2b; color: #d0d0d0; font-family: 'Segoe UI'; font-size: 11px; }
-            
-            /* Menu Bar */
-            QMenuBar { background-color: #222; }
-            QMenuBar::item:selected { background-color: #444; }
+            /* === BASE === */
+            QWidget {
+                background-color: #2e2e36;
+                color: #e8e8f0;
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 11px;
+            }
 
-            /* Textos */
-            QLabel#PathLabel { font-weight: bold; font-size: 12px; color: white; }
-            QLabel#SectionHeader { color: #5285a6; font-weight: bold; letter-spacing: 1px; }
+            /* === MENU BAR === */
+            QMenuBar {
+                background-color: #26262e;
+                color: #b0b0c0;
+                border-bottom: 1px solid #3a3a46;
+                padding: 2px 4px;
+                font-size: 11px;
+            }
+            QMenuBar::item { padding: 4px 10px; border-radius: 3px; }
+            QMenuBar::item:selected { background-color: #3a3a48; color: #7ecfff; }
+            QMenu {
+                background-color: #32323e;
+                border: 1px solid #4a4a58;
+                color: #e0e0f0;
+            }
+            QMenu::item:selected { background-color: #3e3e50; color: #7ecfff; }
+            QMenu::separator { background-color: #3a3a48; height: 1px; margin: 3px 8px; }
 
-            /* Dropdown */
-            QComboBox { background-color: #1e1e1e; border: 1px solid #3d3d3d; border-radius: 4px; padding-left: 5px; }
-            QComboBox::drop-down { border: none; width: 20px; }
-            
-            /* Tabs */
-            QTabWidget::pane { border: 1px solid #3d3d3d; background-color: #222; }
-            QTabBar::tab { background: #333; color: #888; padding: 8px 15px; border-top-left-radius: 4px; border-top-right-radius: 4px; margin-right: 2px;}
-            QTabBar::tab:selected { background: #2b2b2b; color: #5285a6; border-bottom: 2px solid #5285a6; font-weight: bold; }
-            QTabBar::tab:hover { background: #3a3a3a; }
+            /* === LABELS === */
+            QLabel#PathLabel {
+                font-size: 10px;
+                color: #7878a0;
+                letter-spacing: 1px;
+                padding: 2px 0;
+            }
+            QLabel#SectionHeader {
+                color: #7ecfff;
+                font-weight: bold;
+                font-size: 9px;
+                letter-spacing: 3px;
+                padding-bottom: 2px;
+            }
 
-            /* Table */
-            QTableWidget { background-color: #222; border: none; gridline-color: #333; }
-            QTableWidget::item { padding: 5px; }
-            QTableWidget::item:selected { background-color: #3d4f5c; }
-            QHeaderView::section { background-color: #333; border: none; padding: 4px; font-weight: bold; }
+            /* === COMBO BOX === */
+            QComboBox {
+                background-color: #38384a;
+                border: 1px solid #4a4a5e;
+                border-radius: 4px;
+                padding: 4px 8px;
+                color: #e8e8f8;
+                font-size: 12px;
+                selection-background-color: #3e3e58;
+            }
+            QComboBox:hover { border-color: #7ecfff; }
+            QComboBox::drop-down { border: none; width: 24px; }
+            QComboBox QAbstractItemView {
+                background-color: #32323e;
+                border: 1px solid #7ecfff;
+                selection-background-color: #2e3a4e;
+                color: #e0e0f0;
+                outline: none;
+            }
 
-            /* Action Buttons */
-            QPushButton#LoadBtn { background-color: #444; border-radius: 3px; }
-            QPushButton#BuildBtn { background-color: #2d5a73; font-weight: bold; border-radius: 3px; font-size: 12px; }
-            QPushButton#BuildBtn:hover { background-color: #3d6a83; }
-            
-            /* Thumbnail */
-            QLabel#Thumbnail { background-color: #1a1a1a; border: 1px solid #333; border-radius: 5px; }
-            QPushButton#CamBtn { background-color: transparent; border: none; }
-            QPushButton#CamBtn:hover { background-color: #555; border-radius: 10px; }
+            /* === TABS === */
+            QTabWidget::pane {
+                border: 1px solid #3a3a4a;
+                background-color: #2e2e36;
+                top: -1px;
+            }
+            QTabBar::tab {
+                background: #26262e;
+                color: #6868888;
+                padding: 7px 18px;
+                border: 1px solid transparent;
+                border-bottom: none;
+                margin-right: 2px;
+                font-size: 9px;
+                letter-spacing: 2px;
+                font-weight: bold;
+                color: #78789a;
+            }
+            QTabBar::tab:selected {
+                background: #2e2e36;
+                color: #7ecfff;
+                border: 1px solid #3a3a4a;
+                border-bottom: 2px solid #7ecfff;
+            }
+            QTabBar::tab:hover:!selected { color: #a0a0c0; }
+
+            /* === TABLE === */
+            QTableWidget {
+                background-color: #28282e;
+                border: 1px solid #3a3a46;
+                gridline-color: #32323e;
+                alternate-background-color: #2c2c34;
+                selection-background-color: #2e3a4e;
+                outline: none;
+            }
+            QTableWidget::item { padding: 5px 8px; border: none; color: #d0d0e8; }
+            QTableWidget::item:selected {
+                background-color: #2e3a4e;
+                color: #7ecfff;
+            }
+            QHeaderView::section {
+                background-color: #26262e;
+                border: none;
+                border-bottom: 1px solid #3a3a4a;
+                border-right: 1px solid #32323e;
+                padding: 5px 8px;
+                font-size: 9px;
+                letter-spacing: 2px;
+                color: #6a6a8a;
+                font-weight: bold;
+            }
+            QScrollBar:vertical {
+                background: #28282e;
+                width: 6px;
+                border: none;
+            }
+            QScrollBar::handle:vertical { background: #4a4a60; border-radius: 3px; min-height: 20px; }
+            QScrollBar::handle:vertical:hover { background: #7ecfff; }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+
+            /* === ACTION BUTTONS (bottom) === */
+            QPushButton#LoadBtn {
+                background-color: #38384a;
+                color: #9898b8;
+                border: 1px solid #4a4a5e;
+                border-radius: 4px;
+                font-size: 10px;
+                letter-spacing: 2px;
+                font-weight: bold;
+            }
+            QPushButton#LoadBtn:hover {
+                background-color: #42425a;
+                color: #e0e0f8;
+                border-color: #6060808;
+            }
+            QPushButton#LoadBtn:pressed { background-color: #2e2e3e; }
+
+            QPushButton#BuildBtn {
+                background-color: #1e3a52;
+                color: #7ecfff;
+                border: 1px solid #4a88b8;
+                border-radius: 4px;
+                font-size: 11px;
+                letter-spacing: 3px;
+                font-weight: bold;
+            }
+            QPushButton#BuildBtn:hover {
+                background-color: #24425e;
+                color: #a8e0ff;
+                border-color: #6aaad0;
+            }
+            QPushButton#BuildBtn:pressed { background-color: #162e42; }
+
+            /* === THUMBNAIL === */
+            QLabel#Thumbnail {
+                background-color: #22222a;
+                border: 1px solid #3a3a4a;
+                border-radius: 4px;
+                color: #505068;
+                font-size: 10px;
+            }
+            QPushButton#CamBtn {
+                background-color: transparent;
+                border: none;
+                color: #505068;
+            }
+            QPushButton#CamBtn:hover {
+                background-color: #3a3a4a;
+                color: #7ecfff;
+                border-radius: 10px;
+            }
+
+            /* === VERSION TAB BUTTONS (Save / Import) === */
+            QPushButton {
+                background-color: #38384a;
+                color: #9898b8;
+                border: 1px solid #4a4a5e;
+                border-radius: 4px;
+                padding: 5px 12px;
+                font-size: 10px;
+                letter-spacing: 1px;
+            }
+            QPushButton:hover {
+                background-color: #42425a;
+                color: #e0e0f8;
+                border-color: #6868888;
+            }
+            QPushButton:pressed { background-color: #2e2e3e; }
         """)
 
     # --- FUNCIONES CORE ---
@@ -492,7 +691,7 @@ class AssetManagerUI(QtWidgets.QWidget):
         self.current_asset = self.asset_combo.currentText()
         if not self.current_asset: return
         
-        self.path_label.setText(f"assets > {self.current_asset}")
+        self.path_label.setText(f"// assets > {self.current_asset}")
         
         # 1. Update Image
         full_path = os.path.join(self.assets_path, self.current_asset)
@@ -632,4 +831,3 @@ try:
         pro_asset_manager.close()
         pro_asset_manager.deleteLater()
 except: pass
-
