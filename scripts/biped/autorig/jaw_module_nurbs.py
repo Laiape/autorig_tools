@@ -633,7 +633,11 @@ class JawModule(object):
                 cmds.connectAttr(f"{mp}.zCoordinate", f"{fbf}.in32")
 
                 if side == "R":
-                    cmds.setAttr(f"{fbf}.in00", -1)
+                    if mid_point - 1 == index:  # If it's the rightmost controller before the center, invert it
+                        print(f"Not inverting {ctl_name} on X axis")
+                        pass
+                    else:
+                        cmds.setAttr(f"{fbf}.in00", -1)
 
                 cmds.connectAttr(f"{fbf}.output", f"{secondary_nodes[0]}.offsetParentMatrix")
 
@@ -679,10 +683,6 @@ class JawModule(object):
                     cmds.connectAttr(f"{parent_connection}.{parent_out_attr}", f"{mmx_controller}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_controller}.matrixSum", f"{secondary_grps[child_idx]}.offsetParentMatrix", f=True)
 
-                    if secondary_ctls[parent_idx].startswith("C_") and secondary_ctls[child_idx].startswith("R_"): # This is the controller R tangent driven by C
-                        cmds.connectAttr(f"{parent_connection}.{parent_out_attr}", f"{mmx_controller}.matrixIn[0]", f=True)
-                        cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_controller}.matrixIn[1]", f=True)
-
                     joint_connection = cmds.listConnections(f"{secondary_joints[child_idx]}.offsetParentMatrix", source=True, destination=False)[0]
 
                     mmx_local = cmds.createNode("multMatrix", name=f"{tan_name}ParentLocal_MMX", ss=True)
@@ -691,38 +691,42 @@ class JawModule(object):
                     cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[0]")
                     cmds.connectAttr(f"{joint_connection}.{joint_out_attr}", f"{mmx_local}.matrixIn[1]")
                     cmds.connectAttr(f"{mmx_local}.matrixSum", f"{secondary_joints[child_idx]}.offsetParentMatrix", f=True)
-                    if secondary_ctls[parent_idx].startswith("C_") and secondary_ctls[child_idx].startswith("R_"): # This is the controller R tangent driven by C
-                        cmds.connectAttr(f"{joint_connection}.{joint_out_attr}", f"{mmx_local}.matrixIn[0]", f=True)
-                        cmds.connectAttr(f"{secondary_ctls[parent_idx]}.matrix", f"{mmx_local}.matrixIn[1]", f=True)
-                            
+
             
-            # Project all the joints to the NURBS Surface
-            for joint in secondary_joints:
+            for i, joint in enumerate(secondary_joints):
                 
                 joint_name = joint.split("_JNT")[0]
-                input_connection = cmds.listConnections(f"{joint}.offsetParentMatrix", source=True, destination=False)[0]
+                ctl = secondary_ctls[i]
+
+                input_connections = cmds.listConnections(f"{joint}.offsetParentMatrix", source=True, destination=False)
+                if not input_connections:
+                    continue
+                input_connection = input_connections[0]
+                
                 pick_matrix = cmds.createNode("pickMatrix", name=f"{joint_name}_PCM", ss=True)
                 decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{joint_name}_DCM", ss=True)
                 rfm_project = cmds.createNode("rowFromMatrix", name=f"{joint_name}Project_RMF", ss=True)
                 cps_project = cmds.createNode("closestPointOnSurface", name=f"{joint_name}Project_CPS", ss=True)
+                
                 cmds.setAttr(f"{pick_matrix}.useTranslate", 0)
-                cmds.setAttr(f"{pick_matrix}.useScale", 0)
                 cmds.setAttr(f"{pick_matrix}.useShear", 0)
-                cmds.setAttr(f"{rfm_project}.input", 3)
-
+                cmds.setAttr(f"{rfm_project}.input", 3) # Fila 3 = Traslación
+                
                 cmds.connectAttr(f"{input_connection}.matrixSum", f"{pick_matrix}.inputMatrix")
                 cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{decompose_matrix}.inputMatrix")
+                cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{joint}.rotate")
+                cmds.connectAttr(f"{decompose_matrix}.outputScale", f"{joint}.scale")
+                
                 cmds.connectAttr(f"{input_connection}.matrixSum", f"{rfm_project}.matrix")
                 cmds.connectAttr(f"{rfm_project}.outputX", f"{cps_project}.inPositionX")
                 cmds.connectAttr(f"{rfm_project}.outputY", f"{cps_project}.inPositionY")
                 cmds.connectAttr(f"{rfm_project}.outputZ", f"{cps_project}.inPositionZ")
+
                 cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_project}.inputSurface")
-                cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{joint}.rotate")
                 cmds.connectAttr(f"{cps_project}.position", f"{joint}.translate")
-                cmds.disconnectAttr( f"{input_connection}.matrixSum", f"{joint}.offsetParentMatrix")
-                temp_trn = cmds.createNode("transform", name=f"{joint_name}_TEMP_TRN", ss=True)
-                cmds.connectAttr(f"{temp_trn}.worldMatrix[0]", f"{joint}.offsetParentMatrix")
-                cmds.delete(temp_trn)
+                cmds.disconnectAttr(f"{input_connection}.matrixSum", f"{joint}.offsetParentMatrix")
+                identity = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
+                cmds.setAttr(f"{joint}.offsetParentMatrix", identity, type="matrix")
 
 
             skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
