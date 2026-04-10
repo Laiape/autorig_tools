@@ -11,6 +11,14 @@ from utils import matrix_manager
 from tools import skin_manager_api
 
 
+reload(guides_manager)
+reload(basic_structure)
+reload(data_manager)
+reload(rig_manager)
+reload(matrix_manager)
+reload(skin_manager_api)
+
+
 
 class AutoRig(object):
 

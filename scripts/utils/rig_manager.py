@@ -401,7 +401,7 @@ def build_rig(character_name):
 
     data_manager.DataExportBiped().append_data("rig_settings", 
                                                 
-                                                {"mgear_integration": mGear_integration,
+                                                {"mGear_integration": mGear_integration,
                                                 })
 
     # --- Spine ---

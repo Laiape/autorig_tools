@@ -690,15 +690,15 @@ class ArmModule(object):
             self.lock_attributes(ctl, ["visibility"])
 
             if i == 0:
-                cmds.addAttr(ctl, longName = "EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
-                cmds.setAttr(f"{ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
-                cmds.addAttr(ctl, longName="Bendy_Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
-                cmds.addAttr(ctl, longName="Extra_Bendys", attributeType="bool", keyable=False)
-                cmds.setAttr(f"{ctl}.Extra_Bendys", channelBox=True)
+                cmds.addAttr(ctl, longName = "BENDY", niceName="BENDY ------", attributeType="enum", enumName="------", keyable=True)
+                cmds.setAttr(f"{ctl}.BENDY", keyable=False, channelBox=True, lock=True)
+                cmds.addAttr(ctl, longName="Height", attributeType="float", minValue=0, defaultValue=0.5, maxValue=1, keyable=True)
+                cmds.addAttr(ctl, longName="Extra_Controllers", attributeType="bool", keyable=False)
+                cmds.setAttr(f"{ctl}.Extra_Controllers", channelBox=True)
 
-        cmds.connectAttr(f"{main_bendy_ctl}.Bendy_Height", f"{blend_matrix}.target[0].translateWeight") # Connect Bendy_Height to blend_matrix_main
-        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{up_bendy_nodes[0]}.visibility")
-        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Bendys", f"{low_bendy_nodes[0]}.visibility")
+        cmds.connectAttr(f"{main_bendy_ctl}.Height", f"{blend_matrix}.target[0].translateWeight") # Connect Height to blend_matrix_main
+        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Controllers", f"{up_bendy_nodes[0]}.visibility")
+        cmds.connectAttr(f"{main_bendy_ctl}.Extra_Controllers", f"{low_bendy_nodes[0]}.visibility")
 
         for i, ctl in enumerate([up_bendy_nodes[0], low_bendy_nodes[0]]):
 

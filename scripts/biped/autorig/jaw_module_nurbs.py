@@ -634,7 +634,6 @@ class JawModule(object):
 
                 if side == "R":
                     if mid_point - 1 == index:  # If it's the rightmost controller before the center, invert it
-                        print(f"Not inverting {ctl_name} on X axis")
                         pass
                     else:
                         cmds.setAttr(f"{fbf}.in00", -1)
@@ -730,6 +729,8 @@ class JawModule(object):
 
 
             skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
+        
+        
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
 
@@ -738,6 +739,17 @@ class JawModule(object):
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
             mid_point = linear_curve_cvs // 2
+
+            uv_pin_nurbs = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(i).zfill(2)}Nurbs_UVP", ss=True)
+            uv_pin_linear = cmds.createNode("uvPin", name=f"{side}_{part}Lip{str(i).zfill(2)}Linear_UVP", ss=True)
+
+            cmds.setAttr(f"{uv_pin_nurbs}.normalAxis", 1)  # Y
+            cmds.setAttr(f"{uv_pin_nurbs}.tangentAxis", 0)  # X
+            cmds.setAttr(f"{uv_pin_linear}.normalAxis", 0)  # X
+            cmds.setAttr(f"{uv_pin_linear}.tangentAxis", 2)  # Z
+
+            cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin_nurbs}.deformedGeometry")
+            cmds.connectAttr(f"{curve}.worldSpace[0]", f"{uv_pin_linear}.deformedGeometry")
 
             for i in range(0, linear_curve_cvs):
 
@@ -756,29 +768,15 @@ class JawModule(object):
                 vertex_cv = cmds.xform(curve_cv, query=True, worldSpace=True, translation=True)
                 param_vertex = matrix_manager.getClosestParamToWorldMatrixCurve(curve, vertex_cv)
 
-                point_on_surface_info = cmds.createNode("pointOnSurfaceInfo", name=f"{side}_{part}Lip{str(i).zfill(2)}_POS", ss=True)
-                point_on_surface_info_up = cmds.createNode("pointOnSurfaceInfo", name=f"{side}_{part}Lip{str(i).zfill(2)}Up_POS", ss=True)
-                fbf_aim = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}_Aim_FBF", ss=True)
-                fbf_up = cmds.createNode("fourByFourMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}_Up_FBF", ss=True)
-
-                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info}.inputSurface")
-                cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info_up}.inputSurface")
-                cmds.setAttr(f"{point_on_surface_info}.parameterU", 0.5)
-                cmds.setAttr(f"{point_on_surface_info}.parameterV", param_vertex)
-                cmds.setAttr(f"{point_on_surface_info_up}.parameterU", 0.5)
-                cmds.setAttr(f"{point_on_surface_info_up}.parameterV", param_vertex)  # Slightly above the original CV to get the up vector
-
-                cmds.connectAttr(f"{point_on_surface_info}.positionX", f"{fbf_aim}.in30")
-                cmds.connectAttr(f"{point_on_surface_info}.positionY", f"{fbf_aim}.in31")
-                cmds.connectAttr(f"{point_on_surface_info}.positionZ", f"{fbf_aim}.in32")
-                cmds.connectAttr(f"{point_on_surface_info_up}.positionX", f"{fbf_up}.in30")
-                cmds.connectAttr(f"{point_on_surface_info_up}.positionY", f"{fbf_up}.in31")
-                cmds.connectAttr(f"{point_on_surface_info_up}.positionZ", f"{fbf_up}.in32")
+                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", u_param)
+                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", v_param)
+                cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateU", u_param)
+                cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateV", v_param)
 
                 aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}AimMatrixVector_AMX", ss=True)
-                cmds.connectAttr(f"{fbf_aim}.output", f"{aim_matrix_vector}.inputMatrix")
-                cmds.connectAttr(f"{fbf_aim}.output", f"{aim_matrix_vector}.primaryTargetMatrix")
-                cmds.connectAttr(f"{fbf_up}.output", f"{aim_matrix_vector}.secondaryTargetMatrix")
+                cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.inputMatrix")
+                cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.primaryTargetMatrix")
+                cmds.connectAttr(f"{uv_pin_linear}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
                 cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 0,0,1)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 0,0,1)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 2)
