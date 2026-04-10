@@ -763,10 +763,10 @@ class JawModule(object):
 
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info}.inputSurface")
                 cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{point_on_surface_info_up}.inputSurface")
-                cmds.setAttr(f"{point_on_surface_info}.parameterU", param_vertex)
-                cmds.setAttr(f"{point_on_surface_info}.parameterV", v_param)
-                cmds.setAttr(f"{point_on_surface_info_up}.parameterU", param_vertex)
-                cmds.setAttr(f"{point_on_surface_info_up}.parameterV", v_param + 0.05)  # Slightly above the original CV to get the up vector
+                cmds.setAttr(f"{point_on_surface_info}.parameterU", 0.5)
+                cmds.setAttr(f"{point_on_surface_info}.parameterV", param_vertex)
+                cmds.setAttr(f"{point_on_surface_info_up}.parameterU", 0.5)
+                cmds.setAttr(f"{point_on_surface_info_up}.parameterV", param_vertex)  # Slightly above the original CV to get the up vector
 
                 cmds.connectAttr(f"{point_on_surface_info}.positionX", f"{fbf_aim}.in30")
                 cmds.connectAttr(f"{point_on_surface_info}.positionY", f"{fbf_aim}.in31")

@@ -86,7 +86,8 @@ class SpineModule(object):
         self.body_guide = cmds.createNode("transform", name=f"{self.side}_body_GUIDE", ss=True, p=self.module_trn)
         cmds.matchTransform(self.body_guide, self.spine_chain[0], pos=True, rot=True, scl=False)
 
-       
+        self.chest_guide = cmds.createNode("transform", name=f"{self.side}_chest_GUIDE", ss=True, p=self.body_guide)
+        cmds.matchTransform(self.chest_guide, self.spine_chain[-1], pos=True, rot=True, scl=False)
 
     def controller_creation(self):
 
@@ -188,7 +189,13 @@ class SpineModule(object):
         cmds.parent(local_hip_skinning_jnt, self.skeleton_grp)
 
         # ----- Local chest setup ------
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+        self.blendMatrix_localChest = cmds.createNode("blendMatrix", name=f"{self.side}_localChest_BLM")
+        cmds.setAttr(f"{self.blendMatrix_localChest}.target[0].rotateWeight", 1)
+
+        cmds.connectAttr(f"{self.chest_guide}.worldMatrix[0]", f"{self.blendMatrix_localChest}.inputMatrix")
+        cmds.connectAttr(f"{self.spine_controllers[-1]}.worldMatrix[0]", f"{self.blendMatrix_localChest}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.blendMatrix_localChest}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+
         cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
         cmds.select(clear=True)
         local_chest_skinning_jnt = cmds.joint(name=f"{self.side}_localChestSkinning_JNT")
@@ -311,7 +318,7 @@ class SpineModule(object):
         cmds.connectAttr(f"{divide_node}.output", f"{blend_two_attr_node}.input[0]")   
         cmds.connectAttr(f"{distance_matrix_node}.distance", f"{blend_two_attr_node}.input[1]") # Blend between no stretch and full stretch
 
-        four_by_four_matrix_node = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spineStretch_44M", ss=True)
+        four_by_four_matrix_node = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spineStretch_FBF", ss=True)
         cmds.connectAttr(f"{blend_two_attr_node}.output", f"{four_by_four_matrix_node}.in31")
 
         blend_matrix_ctls = cmds.createNode("aimMatrix", name=f"{self.side}_spineStretch_AIM", ss=True)
@@ -389,7 +396,7 @@ class SpineModule(object):
         # ------ Create stretch attributes ------
         cmds.addAttr(self.body_ctl, longName="spineStretchSep", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.spineStretchSep", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.body_ctl, longName="spineStretch", niceName="Stretch", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+        cmds.addAttr(self.body_ctl, longName="spineStretch", niceName="Auto Stretch", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineStretchMin", niceName="Stretch Min", attributeType="float", min=0, max=1, defaultValue=0.8, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineStretchMax", niceName="Stretch Max", attributeType="float", min=0, defaultValue=1.2, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineOffset", niceName="Offset", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
@@ -436,7 +443,9 @@ class SpineModule(object):
         
         for jnt in reversed_spine_chain[1:]:
             cmds.connectAttr(f"{stretch_value_negate}.output", f"{jnt}.translateY")
-
+        
+        # Connect the stretch to the Local Chest blend matrix to stretch the local chest along with the spine
+        cmds.connectAttr(f"{self.body_ctl}.spineStretch", f"{self.blendMatrix_localChest}.target[0].translateWeight")
 
         # ------ Offset setup ------
         nearest_point_node = cmds.createNode("nearestPointOnCurve", name=f"{self.side}_spineOffset_NPC")
@@ -453,7 +462,7 @@ class SpineModule(object):
         # ------ Squash attributes ------
         cmds.addAttr(self.body_ctl, longName="spineSquashSep", niceName="SQUASH ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.spineSquashSep", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.body_ctl, longName="volumePreservation", niceName="Squash", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
+        cmds.addAttr(self.body_ctl, longName="volumePreservation", niceName="Auto Squash", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineFalloff", niceName="Falloff", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineSquashMaxPos", niceName="Max Pos", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
 
