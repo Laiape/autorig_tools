@@ -9,7 +9,7 @@
         "rig_GRP": "rig_GRP"
     },
     "rig_settings": {
-        "mgear_integration": 1
+        "mGear_integration": 1
     },
     "neck_module": {
         "head_ctl": "C_head_CTL",

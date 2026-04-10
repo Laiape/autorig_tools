@@ -17,6 +17,9 @@ def lock_attributes(ctl, attrs):
 
 def create_basic_structure(character_name=None):
 
+    # data_manager.DataExportBiped().new_build()
+    print("--- CREATING BASIC STRUCTURE ---")
+
     character_name, scene_assemblies = rig_manager.prepare_rig_scene()
     data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
     mgear = data_manager.DataExportBiped().get_data("rig_settings", "mGear_integration")
@@ -27,7 +30,7 @@ def create_basic_structure(character_name=None):
     if mgear:
 
         masterwalk_ctl  = "masterWalk"
-        character_ctl   = "global_C0_root"
+        character_ctl   = "C_global_CTL"
         settings_ctl    = "C_settings_CTL"  # lo creamos igualmente, lo metemos bajo global_C0_root
         rig_grp         = "setup"
         skel_grp        = "jnt_org"

@@ -399,10 +399,10 @@ def build_rig(character_name):
     
     # print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
-    data_manager.DataExportBiped().append_data("rig_settings", 
-                                                
-                                                {"mGear_integration": mGear_integration,
-                                                })
+    data_manager.DataExportBiped().append_data("rig_settings",
+                            {
+                                "mGear_integration" : mGear_integration,
+                            })
 
     # --- Spine ---
     if check("C_spine00_JNT"):

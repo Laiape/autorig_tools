@@ -1,3 +1,4 @@
+from utils import data_manager
 import maya.cmds as cmds
 from importlib import reload
 
@@ -12,6 +13,7 @@ reload(curve_tool)
 reload(rig_manager)
 reload(guides_manager)
 reload(create_rig)
+reload(data_manager)
 
 def create_custom_menu():
     menu_id = "autorig_menu"
@@ -137,6 +139,7 @@ def copy_skin_cluster():
 def rig():
     """Función para crear el rig bipedal"""
     cmds.file(new=True, force=True)
+    data_manager.DataExportBiped().new_build()
     reload(create_rig)
     rig = create_rig.AutoRig()
     rig.build()

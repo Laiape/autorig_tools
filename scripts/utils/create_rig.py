@@ -31,9 +31,7 @@ class AutoRig(object):
         """
         Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
         """
-
         data_manager.DataExportBiped().new_build()
-        
         self.basic_structure()
         self.make_rig()
         self.label_joints()
@@ -54,6 +52,7 @@ class AutoRig(object):
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
+
         char_name = rig_manager.get_character_name_from_build()
         rig_manager.build_rig(char_name)
 

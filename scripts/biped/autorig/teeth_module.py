@@ -91,7 +91,7 @@ class TeethModule(object):
         upper_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_upperTeeth_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{upper_teeth_ctl}.worldMatrix[0]", f"{upper_teeth_skinning_jnt}.offsetParentMatrix")
         upper_jaw = data_manager.DataExportBiped().get_data("jaw_module", "upper_jaw_ctl")
-        matrix_manager.space_switches(target=upper_teeth_ctl, sources=[upper_jaw, self.masterwalk_ctl], default_rotate=1, default_translate=1) # Upper teeth
+        matrix_manager.space_switches(target=upper_teeth_ctl, sources=[upper_jaw], default_rotate=1, default_translate=1) # Upper teeth
 
         # Lower Teeth Controller
         lower_teeth_nodes, lower_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_lowerTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
@@ -102,6 +102,6 @@ class TeethModule(object):
         lower_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_lowerTeeth_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{lower_teeth_ctl}.worldMatrix[0]", f"{lower_teeth_skinning_jnt}.offsetParentMatrix")
         jaw = data_manager.DataExportBiped().get_data("jaw_module", "jaw_ctl")
-        matrix_manager.space_switches(target=lower_teeth_ctl, sources=[jaw, self.masterwalk_ctl], default_rotate=1, default_translate=1) # Lower teeth
+        matrix_manager.space_switches(target=lower_teeth_ctl, sources=[jaw], default_rotate=1, default_translate=1) # Lower teeth
 
         
