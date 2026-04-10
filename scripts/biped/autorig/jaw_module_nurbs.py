@@ -293,7 +293,7 @@ class JawModule(object):
         cmds.connectAttr(f"{self.upper_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mmx_offset_jaw_pos_up}.matrixIn[1]")
         cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{mmx_offset_jaw_pos_up}.matrixIn[2]")
         cmds.connectAttr(f"{mmx_offset_jaw_pos_up}.matrixSum", f"{upper_local_jnt}.offsetParentMatrix")
-
+        cmds.connectAttr( f"{upper_lip_ctl}.rotate", f"{upper_local_jnt}.rotate")
         # Create lower controller
         lower_lip_nodes, lower_lip_ctl = curve_tool.create_controller("C_lowerLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
         self.lock_attributes(lower_lip_ctl, ["v"])
@@ -335,6 +335,7 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_nodes[0]}.worldInverseMatrix[0]", f"{mmx_offset_jaw_pos_low}.matrixIn[1]")
         cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{mmx_offset_jaw_pos_low}.matrixIn[2]")
         cmds.connectAttr(f"{mmx_offset_jaw_pos_low}.matrixSum", f"{lower_local_jnt}.offsetParentMatrix")
+        cmds.connectAttr( f"{lower_lip_ctl}.rotate", f"{lower_local_jnt}.rotate")
         
         
 
@@ -644,29 +645,39 @@ class JawModule(object):
         cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
         cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
 
-        
-        
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
-
+            
+            rebuilded_curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
             mid_point = linear_curve_cvs // 2
 
-            uv_pin_nurbs = cmds.createNode("uvPin", name=f"C_{part}LipNurbs_UVP", ss=True)
-            uv_pin_linear = cmds.createNode("uvPin", name=f"C_{part}LipLinear_UVP", ss=True)
+            cmds.select(clear=True)
+            offset_curve = cmds.offsetCurve(
+                rebuilded_curve,
+                distance=0.5,
+                useGivenNormal=1,
+                normal=(0, 0, 1),
+                constructionHistory=True,
+                name=f"C_{part}LipOffset_CRV"
+            )[0]
+
+            uv_pin_nurbs = cmds.createNode("uvPin", name=f"C_{part}LipAimVector_UVP", ss=True)
+            uv_pin_up = cmds.createNode("uvPin", name=f"C_{part}LipUpVector_UVP", ss=True)
 
             cmds.setAttr(f"{uv_pin_nurbs}.normalAxis", 1)  # Y
             cmds.setAttr(f"{uv_pin_nurbs}.tangentAxis", 0)  # X
-            cmds.setAttr(f"{uv_pin_linear}.normalAxis", 0)  # X
-            cmds.setAttr(f"{uv_pin_linear}.tangentAxis", 2)  # Z
+            cmds.setAttr(f"{uv_pin_up}.normalAxis", 0)  # X
+            cmds.setAttr(f"{uv_pin_up}.tangentAxis", 2)  # Z
 
             cmds.connectAttr(f"{nurbs}.worldSpace[0]", f"{uv_pin_nurbs}.deformedGeometry")
-            cmds.connectAttr(f"{linear_curve}.worldSpace[0]", f"{uv_pin_linear}.deformedGeometry")
+            cmds.connectAttr(f"{offset_curve}.worldSpace[0]", f"{uv_pin_up}.deformedGeometry")
 
             for i in range(0, linear_curve_cvs):
 
                 surface_cv = f"{nurbs}.cv[{i}][0]"
                 curve_cv = f"{linear_curve}.cv[{i}]"
+                offset_cv = f"{offset_curve}.cv[{i}]"
 
                 if i < mid_point:
                     side = "R"
@@ -678,22 +689,22 @@ class JawModule(object):
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 u_param, v_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
                 vertex_cv_pos = cmds.xform(curve_cv, query=True, worldSpace=True, translation=True)
-                param_linear = self.getClosestParamToPosition(linear_curve, vertex_cv_pos)
+                param_linear = self.getClosestParamToPosition(offset_curve, vertex_cv_pos)
 
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", param_linear)
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0)
                 # uv_pin_linear is on a curve (1D), use U param from linear curve and V=0.5
-                cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateU", param_linear)
-                cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateV", 0)
+                cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateU", param_linear)
+                cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateV", 0)
 
-                aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}AimMatrixVector_AMX", ss=True)
+                aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}Vector_AMX", ss=True)
                 cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.inputMatrix")
                 cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.primaryTargetMatrix")
-                cmds.connectAttr(f"{uv_pin_linear}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
+                cmds.connectAttr(f"{uv_pin_up}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
                 cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 2)
-                cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,-1,0)
+                cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,0,-1)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
     
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)

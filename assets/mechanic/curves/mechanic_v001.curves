@@ -318,98 +318,6 @@
             }
         ]
     },
-    "|mechanic|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL": {
-        "transform": {
-            "name": "C_character_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_character_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            -1.1081941875543881,
-                            5.74489823752483e-17,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            -0.7836116248912245,
-                            0.0
-                        ],
-                        [
-                            -1.1100856969603225e-16,
-                            -1.1081941875543884,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            -0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            1.1081941875543881,
-                            -1.511240500779959e-16,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL": {
         "transform": {
             "name": "C_chestLocal_CTL",
@@ -1362,15 +1270,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_lowerLip06_GRP|C_lowerLip06_OFF|C_lowerLip06_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_lowerLip03_GRP|C_lowerLip03_OFF|C_lowerLip03_CTL": {
         "transform": {
-            "name": "C_lowerLip06_CTL",
+            "name": "C_lowerLip03_CTL",
             "overrideEnabled": true,
-            "overrideColor": 14
+            "overrideColor": 17
         },
         "shapes": [
             {
-                "name": "C_lowerLip06_CTLShape",
+                "name": "C_lowerLip03_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -1378,59 +1286,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            0.3119324864798966,
-                            -0.08530438494445569,
-                            0.7820182623368042
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            2.7293447561219724e-16,
-                            0.043902281500280305,
-                            0.7820182623368044
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            -0.3119324864798969,
-                            -0.08530438494445591,
-                            0.7820182623368039
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            -0.4411391529246326,
-                            -0.3972368714243525,
-                            0.7820182623368039
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            -0.3119324864798969,
-                            -0.7091693579042497,
-                            0.7820182623368039
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            2.1176889430458767e-16,
-                            -0.8383760243489848,
-                            0.7820182623368044
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            0.3119324864798966,
-                            -0.7091693579042497,
-                            0.7820182623368042
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            0.441139152924632,
-                            -0.3972368714243525,
-                            0.7820182623368044
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            0.3119324864798966,
-                            -0.08530438494445569,
-                            0.7820182623368042
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            2.7293447561219724e-16,
-                            0.043902281500280305,
-                            0.7820182623368044
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            -0.3119324864798969,
-                            -0.08530438494445591,
-                            0.7820182623368039
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -1662,98 +1570,6 @@
                         15.0
                     ],
                     "degree": 1
-                }
-            }
-        ]
-    },
-    "|mechanic|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL": {
-        "transform": {
-            "name": "C_masterwalk_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_masterwalk_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            -1.1081941875543881,
-                            5.74489823752483e-17,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            -0.7836116248912245,
-                            0.0
-                        ],
-                        [
-                            -1.1100856969603225e-16,
-                            -1.1081941875543884,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            -0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            1.1081941875543881,
-                            -1.511240500779959e-16,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
                 }
             }
         ]
@@ -2359,98 +2175,6 @@
                             -0.38731406734609036,
                             0.44277274843556835,
                             -0.037191141713264826
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|mechanic|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_settings_GRP|C_settings_CTL": {
-        "transform": {
-            "name": "C_settings_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_settings_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            -1.1081941875543881,
-                            5.74489823752483e-17,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            -0.7836116248912245,
-                            0.0
-                        ],
-                        [
-                            -1.1100856969603225e-16,
-                            -1.1081941875543884,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            -0.7836116248912244,
-                            0.0
-                        ],
-                        [
-                            1.1081941875543881,
-                            -1.511240500779959e-16,
-                            0.0
-                        ],
-                        [
-                            0.7836116248912245,
-                            0.7836116248912246,
-                            0.0
-                        ],
-                        [
-                            6.785732323110912e-17,
-                            1.1081941875543877,
-                            0.0
-                        ],
-                        [
-                            -0.7836116248912245,
-                            0.7836116248912244,
-                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -4460,15 +4184,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_upperLip06_GRP|C_upperLip06_OFF|C_upperLip06_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_upperLip03_GRP|C_upperLip03_OFF|C_upperLip03_CTL": {
         "transform": {
-            "name": "C_upperLip06_CTL",
+            "name": "C_upperLip03_CTL",
             "overrideEnabled": true,
-            "overrideColor": 14
+            "overrideColor": 17
         },
         "shapes": [
             {
-                "name": "C_upperLip06_CTLShape",
+                "name": "C_upperLip03_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -4476,59 +4200,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            0.3119324864798966,
-                            0.915751327974144,
-                            0.7820182623368042
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            2.7293447561219724e-16,
-                            1.04495799441888,
-                            0.7820182623368044
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            -0.3119324864798969,
-                            0.9157513279741438,
-                            0.7820182623368039
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            -0.4411391529246326,
-                            0.6038188414942472,
-                            0.7820182623368039
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            -0.3119324864798969,
-                            0.29188635501435,
-                            0.7820182623368039
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            2.1176889430458767e-16,
-                            0.16267968856961493,
-                            0.7820182623368044
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            0.3119324864798966,
-                            0.29188635501435,
-                            0.7820182623368042
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            0.441139152924632,
-                            0.6038188414942472,
-                            0.7820182623368044
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            0.3119324864798966,
-                            0.915751327974144,
-                            0.7820182623368042
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            2.7293447561219724e-16,
-                            1.04495799441888,
-                            0.7820182623368044
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            -0.3119324864798969,
-                            0.9157513279741438,
-                            0.7820182623368039
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -14797,74 +14521,6 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL|L_jaw_GRP|L_jaw_CTL": {
-        "transform": {
-            "name": "L_jaw_CTL",
-            "overrideEnabled": true,
-            "overrideColor": 6
-        },
-        "shapes": [
-            {
-                "name": "L_jaw_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.039344795557622936,
-                            -0.3673647269308089,
-                            0.45670632161471714
-                        ],
-                        [
-                            0.057121579867664085,
-                            -0.32994924387952435,
-                            0.36002887107996756
-                        ],
-                        [
-                            0.09267514848773367,
-                            -0.25511827777720203,
-                            0.16667397001046405
-                        ],
-                        [
-                            0.07854074789416923,
-                            -0.2031248742509109,
-                            -0.018903314962787937
-                        ],
-                        [
-                            0.16831192389806143,
-                            -0.010249274128984819,
-                            -0.01027770434569582
-                        ],
-                        [
-                            0.20947822836162086,
-                            0.17613684693059858,
-                            -0.03377932844801259
-                        ],
-                        [
-                            0.23006138059339712,
-                            0.2693299074603193,
-                            -0.045530140499171756
-                        ]
-                    ],
-                    "form": "open",
-                    "knots": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        4.0,
-                        4.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|localHip_C0_root|localHip_C0_ik_cns|C_localHip_CTL|leg_L1_root|leg_L1_root_npo|L_legroot_CTL|leg_L1_div0_loc|legUI_L0_root|legUI_L0_ik_cns|L_legUI_CTL": {
         "transform": {
             "name": "L_legUI_CTL",
@@ -17088,15 +16744,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip08_GRP|L_lowerLip08_OFF|L_lowerLip08_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip04_GRP|L_lowerLip04_OFF|L_lowerLip04_CTL": {
         "transform": {
-            "name": "L_lowerLip08_CTL",
+            "name": "L_lowerLip04_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_lowerLip08_CTLShape",
+                "name": "L_lowerLip04_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -17104,59 +16760,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171512,
-                            -0.24771068245117972,
-                            0.608302298995184
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780857,
-                            -0.4425063298833701,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517185,
-                            -0.5231933289410302,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.4425063298833701,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680662,
-                            -0.24771068245117972,
-                            0.6083050538215793
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -17180,15 +16836,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip10_GRP|L_lowerLip10_OFF|L_lowerLip10_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip05_GRP|L_lowerLip05_OFF|L_lowerLip05_CTL": {
         "transform": {
-            "name": "L_lowerLip10_CTL",
+            "name": "L_lowerLip05_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_lowerLip10_CTLShape",
+                "name": "L_lowerLip05_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -17196,59 +16852,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171512,
-                            -0.24771068245117972,
-                            0.608302298995184
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780857,
-                            -0.4425063298833701,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517185,
-                            -0.5231933289410302,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.4425063298833701,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680662,
-                            -0.24771068245117972,
-                            0.6083050538215793
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -17272,15 +16928,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip12_GRP|L_lowerLip12_OFF|L_lowerLip12_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip06_GRP|L_lowerLip06_OFF|L_lowerLip06_CTL": {
         "transform": {
-            "name": "L_lowerLip12_CTL",
+            "name": "L_lowerLip06_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_lowerLip12_CTLShape",
+                "name": "L_lowerLip06_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -17288,59 +16944,151 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171512,
-                            -0.24771068245117972,
-                            0.608302298995184
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780857,
-                            -0.4425063298833701,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517185,
-                            -0.5231933289410302,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.4425063298833701,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680662,
-                            -0.24771068245117972,
-                            0.6083050538215793
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip07_GRP|L_lowerLip07_OFF|L_lowerLip07_CTL": {
+        "transform": {
+            "name": "L_lowerLip07_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 6
+        },
+        "shapes": [
+            {
+                "name": "L_lowerLip07_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
+                        ],
+                        [
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -23154,15 +22902,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip08_GRP|L_upperLip08_OFF|L_upperLip08_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip04_GRP|L_upperLip04_OFF|L_upperLip04_CTL": {
         "transform": {
-            "name": "L_upperLip08_CTL",
+            "name": "L_upperLip04_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_upperLip08_CTLShape",
+                "name": "L_upperLip04_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -23170,59 +22918,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171521,
-                            0.3174393013447642,
-                            0.6229814200353809
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780877,
-                            0.12264365391257462,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517363,
-                            0.04195665485491401,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.02708257636773909,
-                            0.12264365391257462,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680484,
-                            0.3174393013447642,
-                            0.6229841748617763
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -23246,15 +22994,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip10_GRP|L_upperLip10_OFF|L_upperLip10_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip05_GRP|L_upperLip05_OFF|L_upperLip05_CTL": {
         "transform": {
-            "name": "L_upperLip10_CTL",
+            "name": "L_upperLip05_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_upperLip10_CTLShape",
+                "name": "L_upperLip05_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -23262,59 +23010,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171521,
-                            0.3174393013447642,
-                            0.6229814200353809
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780877,
-                            0.12264365391257462,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517363,
-                            0.04195665485491401,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.02708257636773909,
-                            0.12264365391257462,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680484,
-                            0.3174393013447642,
-                            0.6229841748617763
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -23338,15 +23086,15 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip12_GRP|L_upperLip12_OFF|L_upperLip12_CTL": {
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip06_GRP|L_upperLip06_OFF|L_upperLip06_CTL": {
         "transform": {
-            "name": "L_upperLip12_CTL",
+            "name": "L_upperLip06_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_upperLip12_CTLShape",
+                "name": "L_upperLip06_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": true,
@@ -23354,59 +23102,151 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171521,
-                            0.3174393013447642,
-                            0.6229814200353809
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780877,
-                            0.12264365391257462,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517363,
-                            0.04195665485491401,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.02708257636773909,
-                            0.12264365391257462,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680484,
-                            0.3174393013447642,
-                            0.6229841748617763
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip07_GRP|L_upperLip07_OFF|L_upperLip07_CTL": {
+        "transform": {
+            "name": "L_upperLip07_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 6
+        },
+        "shapes": [
+            {
+                "name": "L_upperLip07_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
+                        ],
+                        [
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -33583,74 +33423,6 @@
             }
         ]
     },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL|R_jaw_GRP|R_jaw_CTL": {
-        "transform": {
-            "name": "R_jaw_CTL",
-            "overrideEnabled": true,
-            "overrideColor": 13
-        },
-        "shapes": [
-            {
-                "name": "R_jaw_CTLShape01",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            -0.03933844641449724,
-                            0.3545410108035938,
-                            0.46655488455095906
-                        ],
-                        [
-                            -0.05711571590747333,
-                            0.26975850340421914,
-                            0.4069029189276989
-                        ],
-                        [
-                            -0.09267025489342018,
-                            0.10019348860539878,
-                            0.2875989876815197
-                        ],
-                        [
-                            -0.07853668957771553,
-                            -0.06733847738331633,
-                            0.19233458356407596
-                        ],
-                        [
-                            -0.16830877286807322,
-                            -0.012396316767606663,
-                            0.007249213070849692
-                        ],
-                        [
-                            -0.2094760541769194,
-                            0.009802187061872303,
-                            -0.17929638044361695
-                        ],
-                        [
-                            -0.23005969483134336,
-                            0.020901438976594022,
-                            -0.2725691772007508
-                        ]
-                    ],
-                    "form": "open",
-                    "knots": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        4.0,
-                        4.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|localHip_C0_root|localHip_C0_ik_cns|C_localHip_CTL|leg_R1_root|leg_R1_root_npo|R_legroot_CTL|leg_R1_div0_loc|legUI_R0_root|legUI_R0_ik_cns|R_legUI_CTL": {
         "transform": {
             "name": "R_legUI_CTL",
@@ -35982,59 +35754,151 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171512,
-                            -0.24771068245117972,
-                            0.608302298995184
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780857,
-                            -0.4425063298833701,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517185,
-                            -0.5231933289410302,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.4425063298833701,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680662,
-                            -0.24771068245117972,
-                            0.6083050538215793
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip01_GRP|R_lowerLip01_OFF|R_lowerLip01_CTL": {
+        "transform": {
+            "name": "R_lowerLip01_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 13
+        },
+        "shapes": [
+            {
+                "name": "R_lowerLip01_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
+                        ],
+                        [
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -36074,151 +35938,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171512,
-                            -0.24771068245117972,
-                            0.608302298995184
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780857,
-                            -0.4425063298833701,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517185,
-                            -0.5231933289410302,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.4425063298833701,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680662,
-                            -0.24771068245117972,
-                            0.6083050538215793
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip04_GRP|R_lowerLip04_OFF|R_lowerLip04_CTL": {
-        "transform": {
-            "name": "R_lowerLip04_CTL",
-            "overrideEnabled": true,
-            "overrideColor": 13
-        },
-        "shapes": [
-            {
-                "name": "R_lowerLip04_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": true,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
-                        ],
-                        [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
-                        ],
-                        [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
-                        ],
-                        [
-                            0.3801903730171512,
-                            -0.24771068245117972,
-                            0.608302298995184
-                        ],
-                        [
-                            0.3103133820780857,
-                            -0.4425063298833701,
-                            0.6083027024301692
-                        ],
-                        [
-                            0.14161540285517185,
-                            -0.5231933289410302,
-                            0.6083036764083817
-                        ],
-                        [
-                            -0.027082576367741088,
-                            -0.4425063298833701,
-                            0.6083046503865942
-                        ],
-                        [
-                            -0.09695956730680662,
-                            -0.24771068245117972,
-                            0.6083050538215793
-                        ],
-                        [
-                            -0.027082576367741088,
-                            -0.052915035018990295,
-                            0.6083046503865942
-                        ],
-                        [
-                            0.14161540285517185,
-                            0.027771964038670688,
-                            0.6083036764083817
-                        ],
-                        [
-                            0.3103133820780857,
-                            -0.05291503501899052,
-                            0.6083027024301692
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -42048,59 +41820,151 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171521,
-                            0.3174393013447642,
-                            0.6229814200353809
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780877,
-                            0.12264365391257462,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517363,
-                            0.04195665485491401,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.02708257636773909,
-                            0.12264365391257462,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680484,
-                            0.3174393013447642,
-                            0.6229841748617763
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip01_GRP|R_upperLip01_OFF|R_upperLip01_CTL": {
+        "transform": {
+            "name": "R_upperLip01_CTL",
+            "overrideEnabled": true,
+            "overrideColor": 13
+        },
+        "shapes": [
+            {
+                "name": "R_upperLip01_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": true,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
+                        ],
+                        [
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
+                        ],
+                        [
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
+                        ],
+                        [
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
+                        ],
+                        [
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
+                        ],
+                        [
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
@@ -42140,151 +42004,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ],
                         [
-                            0.3801903730171521,
-                            0.3174393013447642,
-                            0.6229814200353809
+                            0.5066548104447192,
+                            0.317439301344765,
+                            0.6229806898926293
                         ],
                         [
-                            0.3103133820780877,
-                            0.12264365391257462,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.019385873144018496,
+                            0.6229813071814749
                         ],
                         [
-                            0.14161540285517363,
-                            0.04195665485491401,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            -0.10407189912852607,
+                            0.6229827974485783
                         ],
                         [
-                            -0.02708257636773909,
-                            0.12264365391257462,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.019385873144018496,
+                            0.6229842877156819
                         ],
                         [
-                            -0.09695956730680484,
-                            0.3174393013447642,
-                            0.6229841748617763
+                            -0.22342400473437213,
+                            0.317439301344765,
+                            0.6229849050045275
                         ],
                         [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
+                            -0.11650643765171348,
+                            0.6154927295455124,
+                            0.6229842877156819
                         ],
                         [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
+                            0.14161540285517357,
+                            0.7389505018180573,
+                            0.6229827974485783
                         ],
                         [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|mechanic|masterWalk|global_C0_root|global_C0_ik_cns|C_global_CTL|body_C0_root|body_C0_ik_cns|C_body_CTL|spine_C0_root|spine_C0_1_cnx|chestLocal_C0_root|chestLocal_C0_ik_cns|C_chestLocal_CTL|neck_C0_root_01|C_localNeck_C0_root|C_localNeck_CTL|C_head_CTL_SPC|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip04_GRP|R_upperLip04_OFF|R_upperLip04_CTL": {
-        "transform": {
-            "name": "R_upperLip04_CTL",
-            "overrideEnabled": true,
-            "overrideColor": 13
-        },
-        "shapes": [
-            {
-                "name": "R_upperLip04_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": true,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
-                        ],
-                        [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
-                        ],
-                        [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
-                        ],
-                        [
-                            0.3801903730171521,
-                            0.3174393013447642,
-                            0.6229814200353809
-                        ],
-                        [
-                            0.3103133820780877,
-                            0.12264365391257462,
-                            0.622981823470366
-                        ],
-                        [
-                            0.14161540285517363,
-                            0.04195665485491401,
-                            0.6229827974485785
-                        ],
-                        [
-                            -0.02708257636773909,
-                            0.12264365391257462,
-                            0.6229837714267912
-                        ],
-                        [
-                            -0.09695956730680484,
-                            0.3174393013447642,
-                            0.6229841748617763
-                        ],
-                        [
-                            -0.02708257636773909,
-                            0.5122349487769544,
-                            0.6229837714267912
-                        ],
-                        [
-                            0.14161540285517363,
-                            0.5929219478346153,
-                            0.6229827974485785
-                        ],
-                        [
-                            0.3103133820780877,
-                            0.5122349487769542,
-                            0.622981823470366
+                            0.3997372433620626,
+                            0.6154927295455119,
+                            0.6229813071814749
                         ]
                     ],
                     "form": "periodic",
