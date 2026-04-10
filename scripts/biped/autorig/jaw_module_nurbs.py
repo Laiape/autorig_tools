@@ -129,21 +129,7 @@ class JawModule(object):
         cmds.setAttr(f"{mult_matrix_upper_jaw}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
         cmds.connectAttr(f"{mult_matrix_upper_jaw}.matrixSum", f"{upper_jaw_skinning}.offsetParentMatrix")
 
-        
 
-        for side in ["L", "R"]:
-            self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP"], parent=self.jaw_ctl)
-            cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
-            self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
-
-            side_jaw_skinning = cmds.createNode("joint", name=f"{side}_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
-
-            mult_matrix_side_jaw = cmds.createNode("multMatrix", name=f"{side}_jawLocal_MMX")
-            cmds.connectAttr(f"{self.side_jaw_ctl}.worldMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[0]") 
-            cmds.connectAttr(f"{self.side_jaw_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_side_jaw}.matrixIn[1]")
-            cmds.setAttr(f"{mult_matrix_side_jaw}.matrixIn[2]", cmds.getAttr(f"{self.side_jaw_ctl}.worldMatrix[0]"), type="matrix")
-            cmds.connectAttr(f"{mult_matrix_side_jaw}.matrixSum", f"{side_jaw_skinning}.offsetParentMatrix")
-            
 
     def collision_setup(self):
 
@@ -177,26 +163,6 @@ class JawModule(object):
         cmds.connectAttr(f"{attribute_blender}.output", f"{self.compose_matrix_jaw}.inputRotateX")
         cmds.connectAttr(f"{self.compose_matrix_jaw}.outputMatrix", f"{self.upper_jaw_ctl}.offsetParentMatrix")  # Connect the output of the blendTwoAttr to the rotateX of the upper jaw controller
 
-        # Create set driven keyframes to improve jaw movement
-        # cmds.select(self.jaw_nodes[1])
-        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
-        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=15, v=0)
-        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=35, v=0)
-        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=0)
-        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=60, v=0)s
-        # cmds.setDrivenKeyframe(at="rotateX", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=0)
-
-        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
-        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=15, v=2)
-        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=30, v=1.75)
-        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=1.5)
-        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=60, v=1.25)
-        # cmds.setDrivenKeyframe(at="translateY", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=-3.5)
-
-        # cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=0, v=0)
-        # cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=45, v=2)
-        # cmds.setDrivenKeyframe(at="translateZ", cd=f"{self.jaw_ctl}.rotateX", dv=90, v=15)
-
 
     def create_lips_setup(self):
 
@@ -207,7 +173,11 @@ class JawModule(object):
         # Load guides
         self.upper_linear_lip_curve = guides_manager.get_guides("C_upperLipLinear_CRVShape", parent=self.module_trn)
         self.lower_linear_lip_curve = guides_manager.get_guides("C_lowerLipLinear_CRVShape", parent=self.module_trn)
-
+        upper_cvs = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True))
+        lower_cvs = len(cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True))
+        # Rebuild curves to param 0 to 1
+        self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve, rebuildType=0, spans=upper_cvs-1, degree=1, kep=1, kt=0, kr=0, end=1,name="C_upperLip_CRV")[0]
+        self.lower_rebuild_lip_curve = cmds.rebuildCurve(self.lower_linear_lip_curve, rebuildType=0, spans=lower_cvs-1, degree=1, kep=1, kt=0, kr=0, end=1, name="C_lowerLip_CRV")[0]
 
         # Create NURBS surface
         self.sphere = guides_manager.get_guides("C_jaw_NURBShape", parent=self.module_trn) # NURBS surface guide
@@ -550,40 +520,14 @@ class JawModule(object):
 
         cmds.delete(upper_curve_dup, lower_curve_dup, upper_offset_curve, lower_offset_curve)
 
-        # Rebuild nurbs surfaces
-        degree_num = 3
-        spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
-        self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
-        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
-        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
-        self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
-        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
-        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
-        cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
+        rebuilded_cvs = len(cmds.ls(f"{self.upper_rebuild_lip_curve}.cv[*]", flatten=True))
 
         # Create secondary nodes GRP to control visibility
         secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, parent=lips_controllers_grp)
 
-        # ----- Start nurbs setup -----
-        upper_nurbs_surface_cvs = cmds.ls(f"{self.upper_lip_nurbs}.cv[*]", flatten=True)
-        lower_nurbs_surface_cvs = cmds.ls(f"{self.lower_lip_nurbs}.cv[*]", flatten=True)
+        for part, nurbs in (["upper", upper_nurbs_surface], ["lower", lower_nurbs_surface]):
 
-        spans_v = cmds.getAttr(f"{self.upper_lip_nurbs}.spansV")
-        degree_v = cmds.getAttr(f"{self.upper_lip_nurbs}.degreeV")
-        spans_u = cmds.getAttr(f"{self.upper_lip_nurbs}.spansU")
-        degree_u = cmds.getAttr(f"{self.upper_lip_nurbs}.degreeU")
-        num_cvs_v = spans_v + degree_v
-        num_cvs_u = spans_u + degree_u
-        max_index_u = num_cvs_u - 1
-        max_index_v = num_cvs_v - 1
-
-        rebuilded_cvs = len(cmds.ls(f"{self.upper_rebuild_lip_curve}.cv[*]", flatten=True))
-
-        for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
-
-            cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
             curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
-
             mid_point = rebuilded_cvs // 2
 
             secondary_grps = []
@@ -592,10 +536,6 @@ class JawModule(object):
             secondary_joints = []
 
             for index in range(0, rebuilded_cvs + 1):
-
-                # Skip tangent CVs — only create controllers on main CVs (every 3rd index)
-                # if index % 3 != 0:
-                #     continue
 
                 if index < mid_point:
                     side = "R"
@@ -617,15 +557,7 @@ class JawModule(object):
                     "joint", name=f"{ctl_name}_JNT", ss=True, parent=self.module_trn
                 )
 
-                surface_cvs_row = cmds.ls(f"{nurbs}.cv[{index}][*]", flatten=True)
 
-                if not surface_cvs_row:
-                    cmds.warning(f"No CVs found for {nurbs}.cv[{index}][*], skipping.")
-                    continue
-
-                mid_cv_idx = len(surface_cvs_row) // 2
-                ref_cv = surface_cvs_row[mid_cv_idx]
-                cv_ws_pos = cmds.xform(ref_cv, query=True, worldSpace=True, translation=True)
                 rebuilded_cv = cmds.ls(f"{curve}.cv[{index}]", flatten=True)[0]
                 pos_rebuilded_cv = cmds.xform(rebuilded_cv, query=True, worldSpace=True, translation=True)
                 real_param = self.getClosestParamToPosition(curve, pos_rebuilded_cv)
@@ -700,13 +632,22 @@ class JawModule(object):
 
 
             skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
-        
-        
 
+        # Rebuild nurbs surfaces
+        degree_num = 3
+        spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
+        self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
+        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
+        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
+        self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
+        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
+        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
+        cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
+
+        
+        
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
 
-            cvs = upper_nurbs_surface_cvs if part == "upper" else lower_nurbs_surface_cvs
-            curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
             mid_point = linear_curve_cvs // 2
@@ -725,7 +666,7 @@ class JawModule(object):
             for i in range(0, linear_curve_cvs):
 
                 surface_cv = f"{nurbs}.cv[{i}][0]"
-                curve_cv = f"{curve}.cv[{i}]"
+                curve_cv = f"{linear_curve}.cv[{i}]"
 
                 if i < mid_point:
                     side = "R"
@@ -737,13 +678,13 @@ class JawModule(object):
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 u_param, v_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
                 vertex_cv_pos = cmds.xform(curve_cv, query=True, worldSpace=True, translation=True)
-                param_linear = matrix_manager.getClosestParamToWorldMatrixCurve(linear_curve, vertex_cv_pos)
+                param_linear = self.getClosestParamToPosition(linear_curve, vertex_cv_pos)
 
-                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", u_param)
-                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0.5)
+                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", param_linear)
+                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0)
                 # uv_pin_linear is on a curve (1D), use U param from linear curve and V=0.5
                 cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateU", param_linear)
-                cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateV", 0.5)
+                cmds.setAttr(f"{uv_pin_linear}.coordinate[{i}].coordinateV", 0)
 
                 aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}AimMatrixVector_AMX", ss=True)
                 cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.inputMatrix")
@@ -790,15 +731,6 @@ class JawModule(object):
         cmds.connectAttr(f"{self.face_ctl}.Jaw", f"{condition_jaw}.firstTerm")
         cmds.connectAttr(f"{condition_jaw}.outColorR", f"{self.jaw_nodes[0]}.visibility")
         cmds.connectAttr(f"{condition_jaw}.outColorR", f"{self.upper_jaw_nodes[0]}.visibility")
-
-        secondary_condition_jaw = cmds.createNode("condition", name="C_jawSecondaryControllers_COND", ss=True)
-        cmds.setAttr(f"{secondary_condition_jaw}.operation", 3)  # Greater Than or Equal
-        cmds.setAttr(f"{secondary_condition_jaw}.secondTerm", 2)
-        cmds.setAttr(f"{secondary_condition_jaw}.colorIfTrueR", 1)
-        cmds.setAttr(f"{secondary_condition_jaw}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.face_ctl}.Jaw", f"{secondary_condition_jaw}.firstTerm")
-        cmds.connectAttr(f"{secondary_condition_jaw}.outColorR", f"{'L_jaw_GRP'}.visibility")
-        cmds.connectAttr(f"{secondary_condition_jaw}.outColorR", f"{'R_jaw_GRP'}.visibility")
 
     
     def get_offset_matrix(self, child, parent):
