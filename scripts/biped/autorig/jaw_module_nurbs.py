@@ -294,6 +294,8 @@ class JawModule(object):
         cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{mmx_offset_jaw_pos_up}.matrixIn[2]")
         cmds.connectAttr(f"{mmx_offset_jaw_pos_up}.matrixSum", f"{upper_local_jnt}.offsetParentMatrix")
         cmds.connectAttr( f"{upper_lip_ctl}.rotate", f"{upper_local_jnt}.rotate")
+        cmds.connectAttr( f"{upper_lip_ctl}.scale", f"{upper_local_jnt}.scale")
+
         # Create lower controller
         lower_lip_nodes, lower_lip_ctl = curve_tool.create_controller("C_lowerLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
         self.lock_attributes(lower_lip_ctl, ["v"])
@@ -336,6 +338,7 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{mmx_offset_jaw_pos_low}.matrixIn[2]")
         cmds.connectAttr(f"{mmx_offset_jaw_pos_low}.matrixSum", f"{lower_local_jnt}.offsetParentMatrix")
         cmds.connectAttr( f"{lower_lip_ctl}.rotate", f"{lower_local_jnt}.rotate")
+        cmds.connectAttr( f"{lower_lip_ctl}.scale", f"{lower_local_jnt}.scale")
         
         
 
@@ -651,16 +654,18 @@ class JawModule(object):
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
             mid_point = linear_curve_cvs // 2
-
+            normal_vector = (0, 0, 1) if part == "upper" else (0, 0, -1)
             cmds.select(clear=True)
             offset_curve = cmds.offsetCurve(
                 rebuilded_curve,
                 distance=0.5,
                 useGivenNormal=1,
-                normal=(0, 0, 1),
+                normal=normal_vector,
                 constructionHistory=True,
                 name=f"C_{part}LipOffset_CRV"
             )[0]
+
+            cmds.parent(offset_curve, self.module_trn)
 
             uv_pin_nurbs = cmds.createNode("uvPin", name=f"C_{part}LipAimVector_UVP", ss=True)
             uv_pin_up = cmds.createNode("uvPin", name=f"C_{part}LipUpVector_UVP", ss=True)
@@ -704,7 +709,10 @@ class JawModule(object):
                 cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 2)
-                cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,0,-1)
+                if part == "upper":
+                    cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,1,0)
+                else:
+                    cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,-1,0)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
     
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
