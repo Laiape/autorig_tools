@@ -154,7 +154,7 @@ class CheekboneModule(object):
             if i > 0: # Avoid the first guide which is the parent
                 skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
                 cmds.connectAttr(f"{mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
-                cmds.connectAttr(f"{main_cheek_mmx}.matrixSum", f"{mmx}.matrixIn[2]")
+                cmds.connectAttr(f"{cheeckbones_ctls[0]}.matrix", f"{mmx}.matrixIn[3]")
                 skinning_jnts.append(skinning_jnt)
             
         cmds.delete(self.cheekbone_guides)

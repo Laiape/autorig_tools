@@ -686,10 +686,13 @@ class JawModule(object):
 
                 if i < mid_point:
                     side = "R"
+                    i = linear_curve_cvs - i - 1  # Reverse index for right side to have consistent naming (R01, R02... instead of R06, R05...)
                 elif i == mid_point:
                     side = "C"
+                    i = 0  # Center will be C00
                 else:
                     side = "L"
+                    i = i - mid_point  # Left side will start from L01, L02...
 
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 u_param, v_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
@@ -716,6 +719,11 @@ class JawModule(object):
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
     
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
+                non_rot_out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}NonRot_JNT", ss=True, parent=self.skeleton_grp)
+                pick_matrix_non_rot = cmds.createNode("pickMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}NonRot_PCM", ss=True)
+                cmds.setAttr(f"{pick_matrix_non_rot}.useRotate", 0)
+                cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{pick_matrix_non_rot}.inputMatrix")
+                cmds.connectAttr(f"{pick_matrix_non_rot}.outputMatrix", f"{non_rot_out_joint}.offsetParentMatrix")
                 cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{out_joint}.offsetParentMatrix")
 
 

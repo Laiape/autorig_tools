@@ -269,7 +269,7 @@ class EyebrowModule(object):
             cmds.setAttr(f"{row_from_matrix_projection}.input", 3) # Getting the translation row
             compose_matrix = cmds.createNode("composeMatrix", name=jnt.replace("_JNT", "Slide_CM"), ss=True)
             decompose_matrix = cmds.createNode("decomposeMatrix", name=jnt.replace("_JNT", "Slide_DCM"), ss=True)
-            blend_matrix = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Slide_BM"), ss=True)
+            parent_matrix = cmds.createNode("parentMatrix", name=jnt.replace("_JNT", "Slide_PM"), ss=True)
             jnt_input = cmds.listConnections(jnt, source=True, destination=True, plugs=True)[0] # Getting the input matrix of the joint
 
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{closest_point}.inputSurface") # Sphere world matrix to CPOS
@@ -281,10 +281,14 @@ class EyebrowModule(object):
             cmds.connectAttr(f"{closest_point}.position", f"{compose_matrix}.inputTranslate") # CPOS position to CM
             cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{compose_matrix}.inputRotate") # DM to CM
             cmds.connectAttr(f"{decompose_matrix}.outputScale", f"{compose_matrix}.inputScale") # DM to CM
-            cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix") # CM to BM
-            cmds.connectAttr(jnt_input, f"{blend_matrix}.inputMatrix") # Joint input matrix to BM
-            cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{blend_matrix}.target[0].weight") # Slide attribute to BM weight
-            cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{jnt}.offsetParentMatrix", force=True) # BM to joint offsetParentMatrix
+
+            cmds.connectAttr(jnt_input, f"{parent_matrix}.target[0].targetMatrix")
+            cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{parent_matrix}.inputMatrix")
+            reverse_slide = cmds.createNode("reverse", name=jnt.replace("_JNT", "Slide_Reverse"), ss=True)
+            cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{reverse_slide}.inputX")
+            cmds.connectAttr(f"{reverse_slide}.outputX", f"{parent_matrix}.target[0].weight")
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{jnt}.offsetParentMatrix", force=True)
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(f"{compose_matrix}.outputMatrix", jnt_input), type="matrix")
 
         for jnt in self.eyebrows:
             cmds.delete(jnt)
