@@ -401,6 +401,8 @@ class JawModule(object):
             cps_local = cmds.createNode("closestPointOnSurface", name=f"{side}_lowerLipLocal_CPS", ss=True)
             fbf_lip_projected = cmds.createNode("fourByFourMatrix", name=f"{side}_lowerLipProjected_FBF", ss=True)
             mmx_offset_jaw_pos = cmds.createNode("multMatrix", name=f"{side}_lowerLipOffsetJawPos_MMT", ss=True)
+            reverse_local = cmds.createNode("reverse", name=f"{side}_lowerLipLocal_REV", ss=True)
+            parent_matrix_blender_local = cmds.createNode("parentMatrix", name=f"{side}_lowerLipCorner_PMX", ss=True)
             cmds.setAttr(f"{rfm_local}.input", 3)  # Set rowFromMatrix to output translation
 
             cmds.connectAttr(f"{corner_ctl}.matrix", f"{mmx_local}.matrixIn[0]")
@@ -415,7 +417,13 @@ class JawModule(object):
             cmds.connectAttr(f"{cps_local}.positionZ", f"{fbf_lip_projected}.in32")
             cmds.connectAttr(f"{fbf_lip_projected}.output", f"{mmx_offset_jaw_pos}.matrixIn[0]")
             cmds.connectAttr(f"{self.jaw_nodes[0]}.worldInverseMatrix[0]", f"{mmx_offset_jaw_pos}.matrixIn[1]")
-            cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{mmx_offset_jaw_pos}.matrixIn[2]")
+            cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{parent_matrix_blender_local}.inputMatrix")
+            cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{parent_matrix_blender_local}.target[0].targetMatrix")
+            cmds.connectAttr(f"{self.upper_jaw_ctl}.worldMatrix[0]", f"{parent_matrix_blender_local}.target[1].targetMatrix")
+            cmds.connectAttr(f"{corner_ctl}.Height", f"{parent_matrix_blender_local}.target[1].weight")
+            cmds.connectAttr(f"{corner_ctl}.Height", f"{reverse_local}.inputX")
+            cmds.connectAttr(f"{reverse_local}.outputX", f"{parent_matrix_blender_local}.target[0].weight")
+            cmds.connectAttr(f"{parent_matrix_blender_local}.outputMatrix", f"{mmx_offset_jaw_pos}.matrixIn[2]")
             cmds.connectAttr(f"{mmx_offset_jaw_pos}.matrixSum", f"{local_jnt}.offsetParentMatrix")
 
             upper_local_jnts.append(local_jnt)
@@ -598,41 +606,41 @@ class JawModule(object):
                 secondary_local_joints_mmx.append(mult_matrix_secondary_local)
                 secondary_joints.append(secondary_local_joint)
 
-            
-            for i, joint in enumerate(secondary_joints):
+            # ----- PROJECT CURVE DRIVER TO NURBS SURFACE -----
+            # for i, joint in enumerate(secondary_joints):
                 
-                joint_name = joint.split("_JNT")[0]
-                ctl = secondary_ctls[i]
+            #     joint_name = joint.split("_JNT")[0]
+            #     ctl = secondary_ctls[i]
 
-                input_connections = cmds.listConnections(f"{joint}.offsetParentMatrix", source=True, destination=False)
-                if not input_connections:
-                    continue
-                input_connection = input_connections[0]
+            #     input_connections = cmds.listConnections(f"{joint}.offsetParentMatrix", source=True, destination=False)
+            #     if not input_connections:
+            #         continue
+            #     input_connection = input_connections[0]
                 
-                pick_matrix = cmds.createNode("pickMatrix", name=f"{joint_name}_PCM", ss=True)
-                decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{joint_name}_DCM", ss=True)
-                rfm_project = cmds.createNode("rowFromMatrix", name=f"{joint_name}Project_RMF", ss=True)
-                cps_project = cmds.createNode("closestPointOnSurface", name=f"{joint_name}Project_CPS", ss=True)
+            #     pick_matrix = cmds.createNode("pickMatrix", name=f"{joint_name}_PCM", ss=True)
+            #     decompose_matrix = cmds.createNode("decomposeMatrix", name=f"{joint_name}_DCM", ss=True)
+            #     rfm_project = cmds.createNode("rowFromMatrix", name=f"{joint_name}Project_RMF", ss=True)
+            #     cps_project = cmds.createNode("closestPointOnSurface", name=f"{joint_name}Project_CPS", ss=True)
                 
-                cmds.setAttr(f"{pick_matrix}.useTranslate", 0)
-                cmds.setAttr(f"{pick_matrix}.useShear", 0)
-                cmds.setAttr(f"{rfm_project}.input", 3) # Fila 3 = Traslación
+            #     cmds.setAttr(f"{pick_matrix}.useTranslate", 0)
+            #     cmds.setAttr(f"{pick_matrix}.useShear", 0)
+            #     cmds.setAttr(f"{rfm_project}.input", 3) # Fila 3 = Traslación
                 
-                cmds.connectAttr(f"{input_connection}.matrixSum", f"{pick_matrix}.inputMatrix")
-                cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{decompose_matrix}.inputMatrix")
-                cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{joint}.rotate")
-                cmds.connectAttr(f"{decompose_matrix}.outputScale", f"{joint}.scale")
+            #     cmds.connectAttr(f"{input_connection}.matrixSum", f"{pick_matrix}.inputMatrix")
+            #     cmds.connectAttr(f"{pick_matrix}.outputMatrix", f"{decompose_matrix}.inputMatrix")
+            #     cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{joint}.rotate")
+            #     cmds.connectAttr(f"{decompose_matrix}.outputScale", f"{joint}.scale")
                 
-                cmds.connectAttr(f"{input_connection}.matrixSum", f"{rfm_project}.matrix")
-                cmds.connectAttr(f"{rfm_project}.outputX", f"{cps_project}.inPositionX")
-                cmds.connectAttr(f"{rfm_project}.outputY", f"{cps_project}.inPositionY")
-                cmds.connectAttr(f"{rfm_project}.outputZ", f"{cps_project}.inPositionZ")
+            #     cmds.connectAttr(f"{input_connection}.matrixSum", f"{rfm_project}.matrix")
+            #     cmds.connectAttr(f"{rfm_project}.outputX", f"{cps_project}.inPositionX")
+            #     cmds.connectAttr(f"{rfm_project}.outputY", f"{cps_project}.inPositionY")
+            #     cmds.connectAttr(f"{rfm_project}.outputZ", f"{cps_project}.inPositionZ")
 
-                cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_project}.inputSurface")
-                cmds.connectAttr(f"{cps_project}.position", f"{joint}.translate")
-                cmds.disconnectAttr(f"{input_connection}.matrixSum", f"{joint}.offsetParentMatrix")
-                identity = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
-                cmds.setAttr(f"{joint}.offsetParentMatrix", identity, type="matrix")
+            #     cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_project}.inputSurface")
+            #     cmds.connectAttr(f"{cps_project}.position", f"{joint}.translate")
+            #     cmds.disconnectAttr(f"{input_connection}.matrixSum", f"{joint}.offsetParentMatrix")
+            #     identity = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
+            #     cmds.setAttr(f"{joint}.offsetParentMatrix", identity, type="matrix")
 
 
             skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
@@ -686,41 +694,43 @@ class JawModule(object):
 
                 if i < mid_point:
                     side = "R"
-                    i = linear_curve_cvs - i - 1  # Reverse index for right side to have consistent naming (R01, R02... instead of R06, R05...)
+                    name_index = i  # Empieza en 0 y suma (0, 1, 2...)
+                    
                 elif i == mid_point:
                     side = "C"
-                    i = 0  # Center will be C00
+                    name_index = 0  # El centro siempre será 0
+                    
                 else:
                     side = "L"
-                    i = i - mid_point  # Left side will start from L01, L02...
+                    name_index = (linear_curve_cvs - 1) - i
 
                 cv_ws_pos = cmds.xform(surface_cv, query=True, worldSpace=True, translation=True)
                 u_param, v_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
                 vertex_cv_pos = cmds.xform(curve_cv, query=True, worldSpace=True, translation=True)
                 param_linear = self.getClosestParamToPosition(offset_curve, vertex_cv_pos)
-
+    
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", param_linear)
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0)
                 # uv_pin_linear is on a curve (1D), use U param from linear curve and V=0.5
                 cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateU", param_linear)
                 cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateV", 0)
 
-                aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}Vector_AMX", ss=True)
+                aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{name_index:02d}Vector_AMX", ss=True)
                 cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.inputMatrix")
                 cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.primaryTargetMatrix")
-                cmds.connectAttr(f"{uv_pin_up}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
+                # cmds.connectAttr(f"{uv_pin_up}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
                 cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 1,0,0)
-                cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 2)
+                cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 0)
                 if part == "upper":
                     cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,1,0)
                 else:
                     cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,-1,0)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
     
-                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}Skinning_JNT", ss=True, parent=self.skeleton_grp)
-                non_rot_out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{str(i).zfill(2)}NonRot_JNT", ss=True, parent=self.skeleton_grp)
-                pick_matrix_non_rot = cmds.createNode("pickMatrix", name=f"{side}_{part}Lip{str(i).zfill(2)}NonRot_PCM", ss=True)
+                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}_JNT", ss=True, parent=self.skeleton_grp)
+                non_rot_out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}NonRot_JNT", ss=True, parent=self.skeleton_grp)
+                pick_matrix_non_rot = cmds.createNode("pickMatrix", name=f"{side}_{part}Lip{name_index:02d}NonRot_PCM", ss=True)
                 cmds.setAttr(f"{pick_matrix_non_rot}.useRotate", 0)
                 cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{pick_matrix_non_rot}.inputMatrix")
                 cmds.connectAttr(f"{pick_matrix_non_rot}.outputMatrix", f"{non_rot_out_joint}.offsetParentMatrix")
