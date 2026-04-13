@@ -173,12 +173,7 @@ class JawModule(object):
         # Load guides
         self.upper_linear_lip_curve = guides_manager.get_guides("C_upperLipLinear_CRVShape", parent=self.module_trn)
         self.lower_linear_lip_curve = guides_manager.get_guides("C_lowerLipLinear_CRVShape", parent=self.module_trn)
-        upper_cvs = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True))
-        lower_cvs = len(cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True))
-        # Rebuild curves to param 0 to 1
-        self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve, rebuildType=0, spans=upper_cvs-1, degree=1, kep=1, kt=0, kr=0, end=1,name="C_upperLip_CRV")[0]
-        self.lower_rebuild_lip_curve = cmds.rebuildCurve(self.lower_linear_lip_curve, rebuildType=0, spans=lower_cvs-1, degree=1, kep=1, kt=0, kr=0, end=1, name="C_lowerLip_CRV")[0]
-
+    
         # Create NURBS surface
         self.sphere = guides_manager.get_guides("C_jaw_NURBShape", parent=self.module_trn) # NURBS surface guide
         cmds.hide(self.sphere)
@@ -204,50 +199,6 @@ class JawModule(object):
         cmds.setAttr(f"{mult_matrix_upper_jaw_local}.matrixIn[2]", grp_pos, type="matrix")  # Reset any previous transformations
         cmds.connectAttr(f"{mult_matrix_upper_jaw_local}.matrixSum", f"{self.upper_jaw_jnt}.offsetParentMatrix")
 
-
-        # Create constraints to upper and lower jaws
-        # jaw_nurbs_skin_cluster = cmds.skinCluster(
-        #         self.sphere,
-        #         self.jaw_jnt,
-        #         self.upper_jaw_jnt,
-        #         toSelectedBones=True,
-        #         bindMethod=0,
-        #         normalizeWeights=1,
-        #         weightDistribution=0,
-        #         maximumInfluences=2,
-        #         dropoffRate=4,
-        #         removeUnusedInfluence=False,
-        #         name="C_jawSlideNRB_SKIN"
-        #     )[0]
-        
-        # u_spans = cmds.getAttr(f"{self.sphere}.spansU")
-        # v_spans = cmds.getAttr(f"{self.sphere}.spansV")
-        # degU = cmds.getAttr(f"{self.sphere}.degreeU")
-        # degV = cmds.getAttr(f"{self.sphere}.degreeV")
-
-        # u_count = u_spans + degU
-        # v_count = v_spans + degV
-        # half = int(u_count) // 2
-
-        # for u in range(u_count):
-        #     for v in range(v_count):
-                
-        #         if u > half:
-        #             upper_w = 1.0
-        #             jaw_w = 0.0
-        #         elif u == half:
-        #             jaw_w = 0.5
-        #             upper_w = 0.5
-        #         else:
-        #             jaw_w = 1.0
-        #             upper_w = 0.0
-
-        #         cv = f"{self.sphere}.cv[{u}][{v}]"
-                
-        #         cmds.skinPercent(jaw_nurbs_skin_cluster, cv, transformValue=[
-        #             (self.jaw_jnt, jaw_w),
-        #             (self.upper_jaw_jnt, upper_w)
-        #         ])
         
         # Create main lip controllers
         lips_controllers_grp = cmds.createNode("transform", name="C_lipsControllers_GRP", ss=True, p=self.controllers_grp)
@@ -445,11 +396,40 @@ class JawModule(object):
             )[0]
             cmds.delete(aim)
 
-        # cmds.delete(temp_joint)
+        # Get CV count once per curve
+        up_cvs = cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)
+        low_cvs = cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True)
 
-        # Rebuild curves for better deformation
-        self.upper_rebuild_lip_curve = cmds.rebuildCurve(self.upper_linear_lip_curve, ch=0, rpo=0, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=4, d=3, tol=0.01, name="C_upperLip_CRV")[0]
-        self.lower_rebuild_lip_curve = cmds.rebuildCurve(self.lower_linear_lip_curve, ch=0, rpo=0, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, s=4, d=3, tol=0.01, name="C_lowerLip_CRV")[0]
+        # Sample start, middle, end positions using pointPosition
+        up_positions = [
+            cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[0]", world=True),
+            cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{len(up_cvs) // 2}]", world=True),
+            cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{len(up_cvs) - 1}]", world=True),
+        ]
+        low_positions = [
+            cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[0]", world=True),
+            cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[{len(low_cvs) // 2}]", world=True),
+            cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[{len(low_cvs) - 1}]", world=True),
+        ]
+
+        # Create linear curves from 3 anchor points
+        self.upper_curve = cmds.curve(name="C_upperLip_CRV", degree=1, point=up_positions)
+        self.lower_curve = cmds.curve(name="C_lowerLip_CRV", degree=1, point=low_positions)
+        upper_shape = cmds.listRelatives(self.upper_curve, shapes=True)[0]
+        lower_shape = cmds.listRelatives(self.lower_curve, shapes=True)[0]
+        cmds.rename(upper_shape, f"{self.upper_curve}Shape_CRV")
+        cmds.rename(lower_shape, f"{self.lower_curve}Shape_CRV")
+
+        # Rebuild into smooth cubic curves
+        self.upper_rebuild_lip_curve = cmds.rebuildCurve(
+            self.upper_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,
+            s=4, d=3, tol=0.01, name="C_upperLip_CRV"
+        )[0]
+        self.lower_rebuild_lip_curve = cmds.rebuildCurve(
+            self.lower_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,
+            s=4, d=3, tol=0.01, name="C_lowerLip_CRV"
+        )[0]
+
         cmds.parent(self.upper_rebuild_lip_curve, self.lower_rebuild_lip_curve, self.module_trn)
 
         # Skin cluster to local joints
@@ -537,6 +517,8 @@ class JawModule(object):
         # Create secondary nodes GRP to control visibility
         secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, parent=lips_controllers_grp)
 
+        all_secondary_joints = {"upper": [], "lower": []}
+
         for part, nurbs in (["upper", upper_nurbs_surface], ["lower", lower_nurbs_surface]):
 
             curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
@@ -545,7 +527,6 @@ class JawModule(object):
             secondary_grps = []
             secondary_ctls = []
             secondary_local_joints_mmx = []
-            secondary_joints = []
 
             for index in range(0, rebuilded_cvs + 1):
 
@@ -563,10 +544,10 @@ class JawModule(object):
                     offset=["GRP", "OFF"],
                     parent=secondary_controllers_nodes
                 )
-                self.lock_attributes(secondary_ctl, ["v"])
+                self.lock_attributes(secondary_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
 
                 secondary_local_joint = cmds.createNode(
-                    "joint", name=f"{ctl_name}_JNT", ss=True, parent=self.module_trn
+                    "joint", name=f"{ctl_name}Driver_JNT", ss=True, parent=self.module_trn
                 )
 
 
@@ -604,7 +585,7 @@ class JawModule(object):
                 secondary_grps.append(secondary_nodes[0])
                 secondary_ctls.append(secondary_ctl)
                 secondary_local_joints_mmx.append(mult_matrix_secondary_local)
-                secondary_joints.append(secondary_local_joint)
+                all_secondary_joints[part].append(secondary_local_joint)
 
             # ----- PROJECT CURVE DRIVER TO NURBS SURFACE -----
             # for i, joint in enumerate(secondary_joints):
@@ -643,7 +624,7 @@ class JawModule(object):
             #     cmds.setAttr(f"{joint}.offsetParentMatrix", identity, type="matrix")
 
 
-            skin_cluster = cmds.skinCluster(secondary_joints, nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
+            skin_cluster = cmds.skinCluster(all_secondary_joints[part], nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
 
         # Rebuild nurbs surfaces
         degree_num = 3
@@ -661,20 +642,29 @@ class JawModule(object):
             rebuilded_curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
+            driver_joints = all_secondary_joints[part]
             mid_point = linear_curve_cvs // 2
-            normal_vector = (0, 0, 1) if part == "upper" else (0, 0, -1)
-            cmds.select(clear=True)
+            normal_vector = (0, 1, 0)
+
             offset_curve = cmds.offsetCurve(
                 rebuilded_curve,
-                distance=0.5,
+                distance=1,
                 useGivenNormal=1,
                 normal=normal_vector,
-                constructionHistory=True,
+                constructionHistory=False,
                 name=f"C_{part}LipOffset_CRV"
             )[0]
 
+            cmds.rebuildCurve(
+            offset_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,
+            s=4, d=3, tol=0.01, name=f"C_{part}LipOffset_CRV"
+            )[0]
+
+            cmds.skinCluster(driver_joints, offset_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}LipOffset_SKIN")
+
             cmds.parent(offset_curve, self.module_trn)
 
+            # Create uvPin
             uv_pin_nurbs = cmds.createNode("uvPin", name=f"C_{part}LipAimVector_UVP", ss=True)
             uv_pin_up = cmds.createNode("uvPin", name=f"C_{part}LipUpVector_UVP", ss=True)
 
@@ -708,25 +698,22 @@ class JawModule(object):
                 u_param, v_param = matrix_manager.getClosestParamsToPositionSurface(nurbs, cv_ws_pos)
                 vertex_cv_pos = cmds.xform(curve_cv, query=True, worldSpace=True, translation=True)
                 param_linear = self.getClosestParamToPosition(offset_curve, vertex_cv_pos)
-    
+ 
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", param_linear)
-                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0)
+                cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0.5)
                 # uv_pin_linear is on a curve (1D), use U param from linear curve and V=0.5
                 cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateU", param_linear)
-                cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateV", 0)
+                cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateV", 0.5)
 
                 aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{name_index:02d}Vector_AMX", ss=True)
                 cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.inputMatrix")
-                cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.primaryTargetMatrix")
-                # cmds.connectAttr(f"{uv_pin_up}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
-                cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 1,0,0)
-                cmds.setAttr(f"{aim_matrix_vector}.primaryTargetVector", 1,0,0)
-                cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 0)
-                if part == "upper":
-                    cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,1,0)
-                else:
-                    cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 0,-1,0)
-                cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 1)
+                cmds.connectAttr(f"{uv_pin_up}.outputMatrix[{i}]", f"{aim_matrix_vector}.primaryTargetMatrix")
+                cmds.connectAttr(f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{aim_matrix_vector}.secondaryTargetMatrix")
+                cmds.setAttr(f"{aim_matrix_vector}.primaryInputAxis", 0,1,0)
+                cmds.setAttr(f"{aim_matrix_vector}.primaryMode", 1) # Aim
+                cmds.setAttr(f"{aim_matrix_vector}.secondaryInputAxis", 1,0,0)
+                cmds.setAttr(f"{aim_matrix_vector}.secondaryTargetVector", 1,0,0)
+                cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 2) # Align to World
     
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}_JNT", ss=True, parent=self.skeleton_grp)
                 non_rot_out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}NonRot_JNT", ss=True, parent=self.skeleton_grp)
