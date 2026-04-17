@@ -147,7 +147,7 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.setAttr(aim_matrix+'.secondaryMode', 1) # Aim to secondary axis
         cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", aim_matrix+'.inputMatrix') # input
         if ik_handle_manager == True:
-                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', aim_matrix+'.inputMatrix', f=True) # connect ik handle manager output to aim matrix
+                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', aim_matrix+'.primaryTargetMatrix', f=True) # connect ik handle manager output to aim matrix target (effective ankle after ball rotation)
         cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", aim_matrix+'.primaryTargetMatrix') # target
         cmds.connectAttr(f"{controllers[1]}.worldMatrix[0]", aim_matrix+'.secondaryTargetMatrix') # secondary target
 

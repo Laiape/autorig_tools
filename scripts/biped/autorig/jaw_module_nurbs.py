@@ -58,7 +58,7 @@ class JawModule(object):
         cmds.parent(self.controllers_grp, self.face_ctl)
 
         # Clean up
-        cmds.delete("L_jaw_JNT", "R_jaw_JNT")
+        # cmds.delete("L_jaw_JNT", "R_jaw_JNT")
 
         data_manager.DataExportBiped().append_data("jaw_module", 
                                                 

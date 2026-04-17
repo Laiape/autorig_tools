@@ -3,6 +3,7 @@ import maya.cmds as cmds
 from importlib import reload
 
 from tools import skin_manager_api
+from ui import skin_transfer_UI
 from utils import curve_tool
 from utils import rig_manager
 from utils import guides_manager
@@ -60,6 +61,9 @@ def create_custom_menu():
     cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
     cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
     cmds.menuItem(label="Copy Skin Cluster", command=lambda x: copy_skin_cluster(), image="copySelected.png")
+    cmds.menuItem(divider=True)
+    cmds.menuItem(label="Auto Skin Transfer…", command=lambda x: open_skin_transfer_ui(), image="paintSkinWeights.png")
+    cmds.menuItem(label="Export Source Skin Data", command=lambda x: export_source_skin_data(), image="export.png")
     cmds.setParent('..', menu=True)
 
     cmds.menuItem(divider=True)
@@ -135,6 +139,21 @@ def copy_skin_cluster():
     reload(skin_manager_api)
     skinner.copy_skin_cluster()
     cmds.inViewMessage(amg='Skin Cluster Copiado.', pos='midCenter', fade=True)
+
+def open_skin_transfer_ui():
+    from ui import skin_transfer_UI
+    reload(skin_transfer_UI)
+    skin_transfer_UI.show()
+
+def export_source_skin_data():
+    from tools import mesh_data_exporter
+    reload(mesh_data_exporter)
+    exported = mesh_data_exporter.SourceSkinExporter().export_all()
+    n = len(exported)
+    cmds.inViewMessage(
+        amg=f"Source skin data exported: <hl>{n}</hl> mesh(es).",
+        pos="midCenter", fade=True
+    )
     
 def rig():
     """Función para crear el rig bipedal"""

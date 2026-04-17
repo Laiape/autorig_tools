@@ -519,13 +519,13 @@ class LegModule(object):
         cmds.addAttr(self.ik_controllers[0], shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
         cmds.addAttr(self.ik_controllers[0], shortName="Soft_Start", minValue=0, defaultValue=0.8, maxValue=1, keyable=True)
 
-        self.ik_matrices = custom_ik_solver.triangle_solver(name=f"{self.side}_legIk", guides=self.guides_matrices, controllers=[self.root_ik_ctl, self.pv_ctl, self.ik_controllers[0], self.ik_controllers[-1]], trn_guides=self.guides, use_stretch=True, use_soft=True, ik_handle_manager=False, secondary_mode=(0, -1, 0))
-        
+        self.ik_matrices = custom_ik_solver.triangle_solver(name=f"{self.side}_legIk", guides=self.guides_matrices, controllers=[self.root_ik_ctl, self.pv_ctl, self.ik_controllers[0], self.ik_controllers[-1]], trn_guides=self.guides, use_stretch=True, use_soft=True, ik_handle_manager=True, secondary_mode=(0, -1, 0))
+
         for ik_matrix, blend_matrix in zip(self.ik_matrices, self.blend_matrices):
             cmds.connectAttr(f"{ik_matrix}", f"{blend_matrix}.inputMatrix")
 
         ball_ik = custom_ik_solver.single_chain_solver(blend_matrix=self.guides_matrices[2], controller=self.ik_controllers[-1], guides=[self.guides[2], self.guides[-2]])
-        cmds.connectAttr(f"{ball_ik}", f"{self.blend_matrices[-2]}.inputMatrix") # Add ball matrix to the last blend matrix
+        cmds.connectAttr(f"{ball_ik}", f"{self.blend_matrices[-1]}.inputMatrix") # Add ball matrix to the last blend matrix
 
     def fk_stretch(self):
 
