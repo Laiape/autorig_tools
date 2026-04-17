@@ -3,6 +3,7 @@ import maya.cmds as cmds
 from importlib import reload
 
 from tools import skin_manager_api
+from tools import model_checker
 from ui import skin_transfer_UI
 from utils import curve_tool
 from utils import rig_manager
@@ -10,6 +11,7 @@ from utils import guides_manager
 from utils import create_rig
 
 reload(skin_manager_api)
+reload(model_checker)
 reload(curve_tool)
 reload(rig_manager)
 reload(guides_manager)
@@ -73,6 +75,11 @@ def create_custom_menu():
 
     # ---- BOTÓN DE CHARACTER MANAGER UI ---
     cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="characterMap.png")
+
+    cmds.menuItem(divider=True)
+
+    # --- MODEL CHECKER ---
+    cmds.menuItem(label="Model Checker", command=lambda x: open_model_checker(), image="polyCheckGeometry.png")
 
 
 def rebuild_ui():
@@ -162,6 +169,11 @@ def rig():
     reload(create_rig)
     rig = create_rig.AutoRig()
     rig.build()
+
+def open_model_checker():
+    from tools import model_checker
+    reload(model_checker)
+    model_checker.show()
 
 def show_character_manager_ui():
     from utils import character_manager
