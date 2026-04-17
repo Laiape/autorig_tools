@@ -3,6 +3,7 @@ import maya.api.OpenMaya as om
 from importlib import reload
 
 # Utils
+from tools import proxy_locator
 from utils import guides_manager
 from utils import basic_structure
 from utils import data_manager
@@ -21,6 +22,7 @@ reload(matrix_manager)
 reload(skin_manager_api)
 reload(mesh_data_exporter)
 reload(auto_skin_transfer)
+reload(proxy_locator)
 
 
 
@@ -42,6 +44,7 @@ class AutoRig(object):
         self.hide_connections()
         self.inherit_transforms()
         self.import_weights()
+        self.proxy_locator()
 
     def basic_structure(self):
 
@@ -276,6 +279,11 @@ class AutoRig(object):
             return next(iter(skinmaps.values()))
 
         return None
+    
+
+    def proxy_locator(self):
+        """Assign proxy locators to the rig controls based on the character's geometry."""
+        proxy_locator.assign_all_proxy_locators(mesh_transform="body_geo", ctl_suffix="_CTL", radius=10.0)
 
     
     

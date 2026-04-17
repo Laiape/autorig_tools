@@ -7,9 +7,13 @@ LOAD:
     import maya.cmds as cmds
     cmds.loadPlugin(r"C:/GIT/autorig_tools/scripts/tools/proxy_locator.py")
 
-ASSIGN after rig build:
+ASSIGN after rig build (Auto-detectando el body):
     from tools.proxy_locator import assign_all_proxy_locators
-    assign_all_proxy_locators(mesh_transform="body_geo", ctl_suffix="_CTL", radius=10.0)
+    assign_all_proxy_locators(radius=10.0)
+    
+ASSIGN after rig build (Especificando el mesh manualmente):
+    from tools.proxy_locator import assign_all_proxy_locators
+    assign_all_proxy_locators(mesh_transform="personaje_geo", radius=10.0)
 """
 
 import maya.api.OpenMaya as om
@@ -333,6 +337,23 @@ def _ctl_color(ctl):
         pass
     return (1.0, 1.0, 0.0)
 
+def find_body_node(parent_group="geo_GRP"):
+    """Find the body mesh transform under parent_group by looking for 'body' in the name."""
+    if not cmds.objExists(parent_group):
+        return None
+
+    descendants = cmds.listRelatives(parent_group, allDescendents=True, type='transform', fullPath=True)
+    
+    if not descendants:
+        return None
+
+    for node in descendants:
+        node_name = node.split('|')[-1]
+        if "body" in node_name.lower():
+            return node 
+            
+    return None
+
 
 def get_vertices_in_radius(mesh_transform, world_pos, radius):
     """Return vertex indices of mesh_transform within radius of world_pos."""
@@ -403,19 +424,33 @@ def create_proxy_locator(ctl_transform, mesh_transform, radius=10.0, draw_mode=0
     return shape
 
 
-def assign_all_proxy_locators(mesh_transform, ctl_suffix="_CTL", radius=10.0, draw_mode=0):
+def assign_all_proxy_locators(mesh_transform=None, ctl_suffix="_CTL", radius=10.0, draw_mode=0, parent_group="geo_GRP"):
     """
     Create proxy locators for every controller in the scene.
 
     Parameters
     ----------
-    mesh_transform : str   Name of the body mesh transform (e.g. "body_geo")
+    mesh_transform : str   Name of the body mesh transform. If None, it auto-detects it.
     ctl_suffix     : str   Suffix that identifies controllers (default "_CTL")
     radius         : float World-space capture radius in scene units
     draw_mode      : int   0=Solid  1=Wireframe  2=Points
+    parent_group   : str   Group to search under if mesh_transform is None
     """
     if not cmds.pluginInfo("proxy_locator", q=True, loaded=True):
-        cmds.loadPlugin(__file__)
+        try:
+            cmds.loadPlugin(__file__)
+        except Exception as e:
+            om.MGlobal.displayError(f"proxyLocator: Could not load plugin automatically. {e}")
+            return []
+
+    # ─── AUTO-DETECCIÓN DEL MESH ──────────────────────────────────────────────
+    if not mesh_transform:
+        mesh_transform = find_body_node(parent_group)
+        if not mesh_transform:
+            om.MGlobal.displayError(f"proxyLocator: Auto-detect failed. No body mesh found under '{parent_group}'.")
+            return []
+        om.MGlobal.displayInfo(f"proxyLocator: Auto-detected mesh -> '{mesh_transform}'")
+    # ──────────────────────────────────────────────────────────────────────────
 
     ctls = [n for n in (cmds.ls(type="transform") or []) if n.endswith(ctl_suffix)]
     if not ctls:

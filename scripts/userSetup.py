@@ -50,6 +50,15 @@ def install_numpy():
     except Exception as e:
         cmds.error(f"Fallo crítico en el proceso de instalación: {e}")
 
+def init_proxy_locator():
+    try:
+        from tools import proxy_locator
+        reload(proxy_locator) 
+        cmds.loadPlugin(r"C:/GIT/autorig_tools/scripts/tools/proxy_locator.py")
+        
+    except Exception as e:
+        cmds.warning(f"No se ha podido cargar proxy_locator: {e}")
+
 
 def init_auto_rig_UI():
     try:
