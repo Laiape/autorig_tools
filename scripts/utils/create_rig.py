@@ -158,7 +158,12 @@ class AutoRig(object):
         skinner = skin_manager_api.SkinManager()
         skinner.import_skins()
 
-        self._auto_transfer_from_source()
+        # self._auto_transfer_from_source()
+
+    
+    def proxy_locator(self):
+        """Assign proxy locators to the rig controls based on the character's geometry."""
+        proxy_locator.assign_all_proxy_locators(mesh_transform="body_geo", ctl_suffix="_CTL", radius=10.0)
 
     def _auto_transfer_from_source(self, source_char="source"):
         """
@@ -281,9 +286,6 @@ class AutoRig(object):
         return None
     
 
-    def proxy_locator(self):
-        """Assign proxy locators to the rig controls based on the character's geometry."""
-        proxy_locator.assign_all_proxy_locators(mesh_transform="body_geo", ctl_suffix="_CTL", radius=10.0)
 
     
     

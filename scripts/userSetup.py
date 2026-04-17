@@ -70,5 +70,6 @@ def init_auto_rig_UI():
         cmds.warning(f"No se ha podido cargar auto_rig_UI: {e}")
     vs_code_ports()
     install_numpy()
+    init_proxy_locator()
 
 mu.executeDeferred(init_auto_rig_UI)
