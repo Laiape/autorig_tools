@@ -41,7 +41,7 @@ class _ProxyData(om.MUserData):
         super().__init__(False)        # deleteAfterUse = False → reuse across frames
         self.positions  = om.MPointArray()
         self.normals    = om.MVectorArray()
-        self.indices    = om.MUIntArray()  # flat triangle index buffer
+        self.indices    = []               # flat triangle index buffer
         self.color      = om.MColor((1.0, 1.0, 0.0, 0.4))
         self.draw_mode  = 0            # 0=solid  1=wireframe  2=points
 
@@ -66,44 +66,51 @@ class ProxyLocatorNode(omui.MPxLocatorNode):
         nAttr = om.MFnNumericAttribute()
         eAttr = om.MFnEnumAttribute()
 
-        # inputMesh — connect to mesh.worldMesh[0]
-        cls.aInputMesh = tAttr.create("inputMesh", "im", om.MFnData.kMesh)
-        tAttr.storable = False
-        tAttr.keyable  = False
-        tAttr.hidden   = True
-        cls.addAttribute(cls.aInputMesh)
+        try:
+            cls.aInputMesh = tAttr.create("inputMesh", "im", om.MFnData.kMesh)
+            tAttr.storable = False
+            tAttr.keyable  = False
+            tAttr.hidden   = True
+            cls.addAttribute(cls.aInputMesh)
+        except Exception:
+            pass
 
-        # vertexIndices — int array set by proximity assignment
-        cls.aVertexIndices = tAttr.create("vertexIndices", "vi", om.MFnData.kIntArray)
-        tAttr.storable = True
-        tAttr.keyable  = False
-        cls.addAttribute(cls.aVertexIndices)
+        try:
+            cls.aVertexIndices = tAttr.create("vertexIndices", "vi", om.MFnData.kIntArray)
+            tAttr.storable = True
+            tAttr.keyable  = False
+            cls.addAttribute(cls.aVertexIndices)
+        except Exception:
+            pass
 
-        # locatorColor
-        cls.aLocatorColor = nAttr.createColor("locatorColor", "lc")
-        nAttr.storable = True
-        nAttr.keyable  = True
-        cls.addAttribute(cls.aLocatorColor)
+        try:
+            cls.aLocatorColor = nAttr.createColor("locatorColor", "lc")
+            nAttr.storable = True
+            nAttr.keyable  = True
+            cls.addAttribute(cls.aLocatorColor)
+        except Exception:
+            pass
 
-        # opacity
-        cls.aOpacity = nAttr.create("opacity", "op", om.MFnNumericData.kFloat, 0.4)
-        nAttr.setMin(0.0)
-        nAttr.setMax(1.0)
-        nAttr.storable = True
-        nAttr.keyable  = True
-        cls.addAttribute(cls.aOpacity)
+        try:
+            cls.aOpacity = nAttr.create("opacity", "op", om.MFnNumericData.kFloat, 0.4)
+            nAttr.setMin(0.0)
+            nAttr.setMax(1.0)
+            nAttr.storable = True
+            nAttr.keyable  = True
+            cls.addAttribute(cls.aOpacity)
+        except Exception:
+            pass
 
-        # drawMode
-        cls.aDrawMode = eAttr.create("drawMode", "dm", 0)
-        eAttr.addField("Solid",      0)
-        eAttr.addField("Wireframe",  1)
-        eAttr.addField("Points",     2)
-        eAttr.storable = True
-        eAttr.keyable  = True
-        cls.addAttribute(cls.aDrawMode)
-
-    def postConstructor(self):
-        om.MFnDependencyNode(self.thisMObject()).name = "proxyLocatorShape#"
+        try:
+            cls.aDrawMode = eAttr.create("drawMode", "dm", 0)
+            eAttr.addField("Solid",      0)
+            eAttr.addField("Wireframe",  1)
+            eAttr.addField("Points",     2)
+            eAttr.storable = True
+            eAttr.keyable  = True
+            cls.addAttribute(cls.aDrawMode)
+        except Exception:
+            pass
 
     def isBounded(self):
         return True
@@ -144,6 +151,8 @@ class ProxyLocatorDrawOverride(omr.MPxDrawOverride):
     def prepareForDraw(self, obj_path, camera_path, frame_context, old_data):
         data = old_data if isinstance(old_data, _ProxyData) else _ProxyData()
         node = obj_path.node()
+        if node.isNull():
+            return data
 
         # Draw mode
         data.draw_mode = om.MPlug(node, ProxyLocatorNode.aDrawMode).asInt()
@@ -219,10 +228,7 @@ class ProxyLocatorDrawOverride(omr.MPxDrawOverride):
 
             tri_v_offset += ntri * 3
 
-        idx_arr = om.MUIntArray(len(flat_indices), 0)
-        for i, v in enumerate(flat_indices):
-            idx_arr[i] = v
-        data.indices = idx_arr
+        data.indices = flat_indices
 
         return data
 
@@ -274,6 +280,7 @@ class ProxyLocatorDrawOverride(omr.MPxDrawOverride):
 
 def initializePlugin(obj):
     plugin = om.MFnPlugin(obj, "autorig_tools", "1.0")
+
     try:
         plugin.registerNode(
             NODE_NAME, NODE_ID,
@@ -282,26 +289,33 @@ def initializePlugin(obj):
             omui.MPxLocatorNode.kLocatorNode,
             DRAW_CLASSIFICATION
         )
+    except Exception as e:
+        if "already exists" not in str(e).lower() and "kInvalidParameter" not in str(e):
+            om.MGlobal.displayError(f"Failed to register {NODE_NAME}: {e}")
+            raise
+
+    try:
         omr.MDrawRegistry.registerDrawOverrideCreator(
             DRAW_CLASSIFICATION,
             DRAW_REGISTRANT_ID,
             ProxyLocatorDrawOverride.creator
         )
     except Exception as e:
-        om.MGlobal.displayError(f"Failed to register {NODE_NAME}: {e}")
-        raise
+        if "already exists" not in str(e).lower() and "kInvalidParameter" not in str(e):
+            om.MGlobal.displayError(f"Failed to register draw override: {e}")
+            raise
 
 
 def uninitializePlugin(obj):
     plugin = om.MFnPlugin(obj)
     try:
-        omr.MDrawRegistry.deregisterDrawOverrideCreator(
-            DRAW_CLASSIFICATION, DRAW_REGISTRANT_ID
-        )
+        omr.MDrawRegistry.deregisterDrawOverrideCreator(DRAW_CLASSIFICATION, DRAW_REGISTRANT_ID)
+    except Exception:
+        pass
+    try:
         plugin.deregisterNode(NODE_ID)
-    except Exception as e:
-        om.MGlobal.displayError(f"Failed to deregister {NODE_NAME}: {e}")
-        raise
+    except Exception:
+        pass
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -365,7 +379,7 @@ def get_vertices_in_radius(mesh_transform, world_pos, radius):
     pts     = fn_mesh.getPoints(om.MSpace.kWorld)
     cx, cy, cz = world_pos
     indices = []
-    for i in range(pts.length()):
+    for i in range(len(pts)):
         dx = pts[i].x - cx
         dy = pts[i].y - cy
         dz = pts[i].z - cz
@@ -403,11 +417,12 @@ def create_proxy_locator(ctl_transform, mesh_transform, radius=10.0, draw_mode=0
         )
         return None
 
-    shape = cmds.createNode(
-        "proxyLocator",
-        parent=ctl_transform,
-        name=f"{ctl_transform}_proxyShape"
-    )
+    short_name = ctl_transform.split("|")[-1]
+    cmds.createNode("proxyLocator", parent=ctl_transform, name=f"{short_name}_proxyShape")
+    shapes = cmds.listRelatives(ctl_transform, shapes=True, type="proxyLocator") or []
+    if not shapes:
+        return None
+    shape = shapes[-1]
 
     # Connect mesh deformation output → locator input
     mesh_shape = cmds.listRelatives(mesh_transform, shapes=True, type="mesh")[0]

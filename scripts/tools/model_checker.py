@@ -206,6 +206,57 @@ def check_vertex_tweaks():
     return issues
 
 
+def check_empty_groups():
+    issues = []
+    for t in (cmds.ls(type='transform', long=True) or []):
+        children = cmds.listRelatives(t, children=True, fullPath=True) or []
+        if not children:
+            name = t.split('|')[-1]
+            issues.append((name, [name]))
+    return issues
+
+
+def check_unused_shaders():
+    issues = []
+    default_ses = {'initialShadingGroup', 'initialParticleSE'}
+    for se in (cmds.ls(type='shadingEngine') or []):
+        if se in default_ses:
+            continue
+        members = cmds.sets(se, query=True) or []
+        if not members:
+            issues.append((f"Unused shader: {se}", [se]))
+    return issues
+
+
+def check_unused_textures():
+    issues = []
+    for node in (cmds.ls(type='file') or []):
+        if not (cmds.listConnections(node, destination=True, source=False) or []):
+            issues.append((f"Unused texture: {node}", [node]))
+    return issues
+
+
+def check_pasted_nodes():
+    issues = []
+    for node in (cmds.ls(long=True) or []):
+        short = node.split('|')[-1]
+        if 'pasted__' in short:
+            issues.append((short, [short]))
+    return issues
+
+
+def check_namespaces():
+    issues = []
+    default_ns = {':'}
+    for ns in (cmds.namespaceInfo(listOnlyNamespaces=True, recurse=True) or []):
+        if ns in ('UI', 'shared'):
+            continue
+        nodes = cmds.ls(f"{ns}:*") or []
+        if nodes:
+            issues.append((f"Namespace '{ns}': {len(nodes)} node(s)", nodes[:20]))
+    return issues
+
+
 # ── Fix Functions ────────────────────────────────────────────────────────────
 # Each takes (label, sel) and returns a human-readable log string. May raise.
 
@@ -270,15 +321,51 @@ def fix_duplicate_names(label, sel):
     return f"Renamed {count} duplicate(s) of  '{base}'"
 
 
+def fix_empty_groups(label, sel):
+    node = sel[0]
+    cmds.delete(node)
+    return f"Deleted empty group:  {node}"
+
+
+def fix_unused_shaders(label, sel):
+    node = sel[0]
+    cmds.delete(node)
+    return f"Deleted unused shader:  {node}"
+
+
+def fix_unused_textures(label, sel):
+    node = sel[0]
+    cmds.delete(node)
+    return f"Deleted unused texture node:  {node}"
+
+
+def fix_pasted_nodes(label, sel):
+    node = sel[0]
+    new_name = node.replace('pasted__', '')
+    cmds.rename(node, new_name)
+    return f"Renamed  '{node}'  →  '{new_name}'"
+
+
+def fix_namespaces(label, sel):
+    ns = label.split("'")[1]
+    cmds.namespace(removeNamespace=ns, mergeNamespaceWithRoot=True)
+    return f"Removed namespace:  '{ns}'"
+
+
 FIX_FUNCS = {
-    "history":     fix_history,
-    "frozen":      fix_frozen,
-    "pivots":      fix_pivots,
-    "meshparent":  fix_mesh_under_mesh,
-    "overlap":     fix_overlapping_verts,
-    "nonmanifold": fix_nonmanifold,
-    "tweaks":      fix_vertex_tweaks,
-    "dupenames":   fix_duplicate_names,
+    "history":        fix_history,
+    "frozen":         fix_frozen,
+    "pivots":         fix_pivots,
+    "meshparent":     fix_mesh_under_mesh,
+    "overlap":        fix_overlapping_verts,
+    "nonmanifold":    fix_nonmanifold,
+    "tweaks":         fix_vertex_tweaks,
+    "dupenames":      fix_duplicate_names,
+    "emptygroups":    fix_empty_groups,
+    "unusedshaders":  fix_unused_shaders,
+    "unusedtex":      fix_unused_textures,
+    "pastednodes":    fix_pasted_nodes,
+    "namespaces":     fix_namespaces,
 }
 
 # Checks that inspect geometry topology — after fixing any of these,
@@ -309,8 +396,18 @@ AUTO_CHECKS = [
          tip="Meshes can't be parented under other meshes."),
     dict(id="overlap",     label="No overlapping vertices",        severity="SHOULD", fn=check_overlapping_verts,
          tip="The same mesh should not have two or more vertices on the exact same position."),
-    dict(id="tweaks",      label="Vertex local transforms clean",  severity="MUST",   fn=check_vertex_tweaks,
+    dict(id="tweaks",       label="Vertex local transforms clean",  severity="MUST",   fn=check_vertex_tweaks,
          tip="All vertex local transformations must be cleaned, set to 0."),
+    dict(id="emptygroups",  label="No empty groups",                severity="SHOULD", fn=check_empty_groups,
+         tip="Empty transform groups should be deleted before delivery."),
+    dict(id="unusedshaders",label="No unused shaders",              severity="SHOULD", fn=check_unused_shaders,
+         tip="Unused shading engines add noise to the scene."),
+    dict(id="unusedtex",    label="No unused textures",             severity="SHOULD", fn=check_unused_textures,
+         tip="Unused file texture nodes should be removed."),
+    dict(id="pastednodes",  label="No 'pasted__' nodes",            severity="MUST",   fn=check_pasted_nodes,
+         tip="Nodes prefixed with 'pasted__' indicate pasted content that was not renamed."),
+    dict(id="namespaces",   label="No namespaces",                  severity="MUST",   fn=check_namespaces,
+         tip="All namespaces must be removed before delivery."),
 ]
 
 # ── Topology Auto-Check Functions ─────────────────────────────────────────────

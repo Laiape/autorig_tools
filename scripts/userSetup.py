@@ -11,7 +11,9 @@ def vs_code_ports():
         if not cmds.commandPort(":4434", query=True):
             cmds.commandPort(name=":4434")
         if not cmds.commandPort("localhost:7001", query=True):
-            cmds.commandPort(name="localhost:7001")
+            cmds.commandPort(name="localhost:7001", sourceType="mel", echoOutput=True)
+        if not cmds.commandPort(":7002", query=True):
+            cmds.commandPort(name=":7002", sourceType="python", echoOutput=True)
     except Exception as e:
         cmds.warning(f"Error al abrir puertos para VS Code: {e}")
 
@@ -52,10 +54,8 @@ def install_numpy():
 
 def init_proxy_locator():
     try:
-        from tools import proxy_locator
-        reload(proxy_locator) 
-        cmds.loadPlugin(r"C:/GIT/autorig_tools/scripts/tools/proxy_locator.py")
-        
+        if not cmds.pluginInfo("proxy_locator", q=True, loaded=True):
+            cmds.loadPlugin(r"C:/GIT/autorig_tools/scripts/tools/proxy_locator.py")
     except Exception as e:
         cmds.warning(f"No se ha podido cargar proxy_locator: {e}")
 

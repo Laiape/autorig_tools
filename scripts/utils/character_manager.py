@@ -1,833 +1,953 @@
 import os
-import shutil
-import glob
 import datetime
 import webbrowser
-from tools import skin_manager_api
-from utils import curve_tool, guides_manager
-from utils import create_rig
-import maya.cmds as cmds
-import maya.OpenMayaUI as omui
 from functools import partial
 from importlib import reload
 
-# --- COMPATIBILIDAD PYSIDE ---
+import maya.cmds as cmds
+import maya.mel as mel
+import maya.OpenMayaUI as omui
+
+from tools import skin_manager_api
+from utils import curve_tool, guides_manager, create_rig
+from utils import data_manager
+
 try:
     from PySide6 import QtWidgets, QtCore, QtGui
     from shiboken6 import wrapInstance
-    PYSIDE_VERSION = 6
 except ImportError:
     from PySide2 import QtWidgets, QtCore, QtGui
     from shiboken2 import wrapInstance
-    PYSIDE_VERSION = 2
 
-ALLOWED_ENDINGS = [".ma", ".mb", ".guides", ".curves", ".json"]
+ALLOWED_ENDINGS = [".ma", ".mb", ".guides", ".curves", ".json", ".skc"]
+
+# ── Palette ──────────────────────────────────────────────────────────────────
+C_BG0    = "#0d0d10"
+C_BG1    = "#13131a"
+C_BG2    = "#1a1a24"
+C_BG3    = "#22222e"
+C_BORDER = "#2a2a3a"
+C_TEXT   = "#ccc8e0"
+C_DIM    = "#4a4860"
+C_BLUE   = "#c8a040"   # amber accent
+C_BLUE2  = "#a07828"   # amber dark
+C_GREEN  = "#4ab878"
+C_RED    = "#c04858"
+C_YELLOW = "#c8a040"
+
+SS_BASE = f"""
+QWidget {{ background:{C_BG2}; color:{C_TEXT}; font-family:'Segoe UI'; font-size:11px; }}
+QLabel  {{ background:transparent; }}
+
+QMenuBar {{ background:{C_BG0}; color:{C_DIM}; border-bottom:1px solid {C_BORDER}; padding:2px 4px; }}
+QMenuBar::item {{ padding:4px 10px; }}
+QMenuBar::item:selected {{ background:{C_BG3}; color:{C_BLUE}; }}
+QMenu {{ background:{C_BG1}; border:1px solid {C_BORDER}; color:{C_TEXT}; padding:2px; }}
+QMenu::item {{ padding:5px 24px; }}
+QMenu::item:selected {{ background:{C_BG3}; color:{C_BLUE}; }}
+QMenu::separator {{ background:{C_BORDER}; height:1px; margin:3px 8px; }}
+
+QListWidget {{
+    background:{C_BG1}; border:none;
+    outline:none; padding:2px;
+}}
+QListWidget::item {{ padding:7px 12px; color:{C_TEXT}; border-left:2px solid transparent; }}
+QListWidget::item:selected {{ background:{C_BG3}; color:{C_BLUE}; border-left:2px solid {C_BLUE}; }}
+QListWidget::item:hover:!selected {{ background:{C_BG3}; border-left:2px solid {C_BORDER}; }}
+
+QLineEdit {{
+    background:{C_BG0}; border:none; border-bottom:1px solid {C_BORDER};
+    border-radius:0px; padding:5px 8px; color:{C_TEXT};
+}}
+QLineEdit:focus {{ border-bottom-color:{C_BLUE}; }}
+
+QTabWidget::pane {{ border:none; border-top:1px solid {C_BORDER}; background:{C_BG2}; }}
+QTabBar::tab {{
+    background:transparent; color:{C_DIM}; padding:8px 18px;
+    border:none; border-bottom:2px solid transparent;
+    margin-right:0px; font-size:9px; letter-spacing:3px; font-weight:bold;
+}}
+QTabBar::tab:selected {{ color:{C_BLUE}; border-bottom:2px solid {C_BLUE}; }}
+QTabBar::tab:hover:!selected {{ color:{C_TEXT}; }}
+
+QTableWidget {{
+    background:{C_BG1}; border:none; gridline-color:{C_BG2};
+    alternate-background-color:{C_BG0}; selection-background-color:{C_BG3}; outline:none;
+}}
+QTableWidget::item {{ padding:5px 10px; border:none; color:{C_TEXT}; }}
+QTableWidget::item:selected {{ background:{C_BG3}; color:{C_BLUE}; }}
+QHeaderView::section {{
+    background:{C_BG0}; border:none; border-bottom:1px solid {C_BORDER};
+    padding:5px 10px; font-size:9px; letter-spacing:3px; color:{C_DIM}; font-weight:bold;
+}}
+QScrollBar:vertical {{ background:transparent; width:4px; border:none; }}
+QScrollBar::handle:vertical {{ background:{C_BORDER}; border-radius:2px; min-height:20px; }}
+QScrollBar::handle:vertical:hover {{ background:{C_BLUE}; }}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height:0px; }}
+QScrollBar:horizontal {{ background:transparent; height:4px; border:none; }}
+QScrollBar::handle:horizontal {{ background:{C_BORDER}; border-radius:2px; }}
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{ width:0px; }}
+
+QSplitter::handle {{ background:{C_BORDER}; }}
+QSplitter::handle:horizontal {{ width:1px; }}
+
+QComboBox {{
+    background:{C_BG1}; border:none; border-bottom:1px solid {C_BORDER};
+    border-radius:0px; padding:4px 8px; color:{C_TEXT};
+}}
+QComboBox:hover {{ border-bottom-color:{C_BLUE}; }}
+QComboBox::drop-down {{ border:none; width:20px; }}
+QComboBox QAbstractItemView {{
+    background:{C_BG2}; border:1px solid {C_BLUE};
+    selection-background-color:{C_BG3}; color:{C_TEXT};
+}}
+
+QToolTip {{ background:{C_BG3}; color:{C_TEXT}; border:1px solid {C_BORDER}; padding:4px; }}
+"""
+
+
+def _btn(text, color=C_BG3, text_color=C_TEXT, border=C_BORDER,
+         hover_bg=None, hover_text=None, size=None, bold=False, letter_spacing=0,
+         accent=False):
+    hover_bg   = hover_bg   or C_BG3
+    hover_text = hover_text or C_BLUE
+    ls = f"letter-spacing:{letter_spacing}px;" if letter_spacing else ""
+    fw = "font-weight:bold;" if bold else ""
+    left_border = f"border-left:2px solid {C_BLUE};" if accent else "border-left:2px solid transparent;"
+    b = QtWidgets.QPushButton(text)
+    b.setStyleSheet(f"""
+        QPushButton {{
+            background:{color}; color:{text_color};
+            border:none; border-bottom:1px solid {C_BORDER};
+            {left_border}
+            border-radius:0px; padding:6px 14px; {ls} {fw}
+        }}
+        QPushButton:hover {{
+            background:{hover_bg}; color:{hover_text};
+            border-left:2px solid {C_BLUE};
+        }}
+        QPushButton:pressed {{ background:{C_BG0}; color:{C_BLUE}; }}
+    """)
+    if size:
+        b.setFixedSize(*size)
+    return b
+
+
+def _lighten(hex_color):
+    c = QtGui.QColor(hex_color)
+    return c.lighter(115).name()
+
 
 def get_maya_main_window():
-    """ Obtiene la ventana principal de Maya para hacer parenting """
     ptr = omui.MQtUtil.mainWindow()
     return wrapInstance(int(ptr), QtWidgets.QWidget)
 
+
 def get_assets_path():
-    """ Lógica para encontrar la carpeta assets dinámicamente """
     complete_path = os.path.realpath(__file__)
-    
-    # Caso: Ejecutando desde Script Editor (fallback)
     if "Script Editor" in complete_path or "<string>" in complete_path:
         workspace = cmds.workspace(q=True, rootDirectory=True)
         path = os.path.join(workspace, "assets")
-        if not os.path.exists(path): 
-            # Si no existe en workspace, intenta crear una dummy para que no falle el script
-            try: os.makedirs(path)
-            except: pass
-        return path
-
-    # Caso: Ejecutando desde archivo .py
-    sep_token = os.sep + "scripts"
-    if sep_token in complete_path:
-        relative_path = complete_path.split(sep_token)[0]
     else:
-        relative_path = os.path.dirname(os.path.dirname(complete_path))
-    
-    path = os.path.join(relative_path, "assets")
-    if not os.path.exists(path): os.makedirs(path)
+        sep_token = os.sep + "scripts"
+        if sep_token in complete_path:
+            relative_path = complete_path.split(sep_token)[0]
+        else:
+            relative_path = os.path.dirname(os.path.dirname(complete_path))
+        path = os.path.join(relative_path, "assets")
+    if not os.path.exists(path):
+        os.makedirs(path)
     return path
 
-# --- WIDGET PERSONALIZADO PARA CADA PESTAÑA (GUIDES, MODELS, ETC) ---
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  VERSION TAB
+# ─────────────────────────────────────────────────────────────────────────────
 class VersionTab(QtWidgets.QWidget):
+
+    EXT_MAP = {
+        "guides":       ".guides",
+        "curves":       ".curves",
+        "models":       ".ma",
+        "skin_clusters":".skc",
+    }
+
     def __init__(self, asset_path, sub_folder, parent=None):
-        super(VersionTab, self).__init__(parent)
+        super().__init__(parent)
         self.asset_path = asset_path
-        self.sub_folder = sub_folder # ej: "guides", "models"
-        self.full_path = os.path.join(self.asset_path, self.sub_folder)
-        
-        # Crear carpeta si no existe
-        if not os.path.exists(self.full_path):
-            try: os.makedirs(self.full_path)
-            except: pass
+        self.sub_folder = sub_folder
+        self.full_path  = os.path.join(asset_path, sub_folder)
+        os.makedirs(self.full_path, exist_ok=True)
+        self._build()
+        self.refresh()
 
-        self.setup_ui()
-        self.refresh_list()
+    def _build(self):
+        lay = QtWidgets.QVBoxLayout(self)
+        lay.setContentsMargins(6, 6, 6, 6)
+        lay.setSpacing(6)
 
-    def setup_ui(self):
-        layout = QtWidgets.QVBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)
-        layout.setSpacing(5)
-
-        # TABLA
         self.table = QtWidgets.QTableWidget()
         self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(["Version", "Name", "+", "Rep"])
-        self.table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents) # Version
-        self.table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)          # Name
-        self.table.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)            # +
-        self.table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)            # Rep
+        self.table.setHorizontalHeaderLabels(["VER", "FILE", "▶", "⟳"])
+        self.table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
+        self.table.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
+        self.table.setColumnWidth(2, 32)
+        self.table.setColumnWidth(3, 32)
         self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.table.verticalHeader().setVisible(False)
         self.table.setShowGrid(False)
         self.table.setAlternatingRowColors(True)
-        layout.addWidget(self.table)
+        self.table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        lay.addWidget(self.table)
 
-        # BOTONES INFERIORES (Save New / Import)
-        btn_layout = QtWidgets.QHBoxLayout()
-        
-        self.btn_save_ver = QtWidgets.QPushButton("+ SAVE NEW VERSION")
-        self.btn_save_ver.setStyleSheet("""
-            QPushButton {
-                background-color: #1e3a52;
-                color: #7ecfff;
-                border: 1px solid #4a88b8;
-                border-radius: 4px;
-                padding: 6px 12px;
-                font-size: 9px;
-                letter-spacing: 2px;
-                font-weight: bold;
-            }
-            QPushButton:hover { background-color: #24425e; color: #a8e0ff; border-color: #6aaad0; }
-        """)
-        self.btn_save_ver.clicked.connect(self.save_new_version)
-        
-        self.btn_import = QtWidgets.QPushButton("↓ IMPORT SELECTED")
-        self.btn_import.setStyleSheet("""
-            QPushButton {
-                background-color: #38384a;
-                color: #9898b8;
-                border: 1px solid #4a4a5e;
-                border-radius: 4px;
-                padding: 6px 12px;
-                font-size: 9px;
-                letter-spacing: 2px;
-                font-weight: bold;
-            }
-            QPushButton:hover { color: #e0e0f8; border-color: #6868a0; background-color: #42425a; }
-        """)
-        self.btn_import.clicked.connect(self.import_selected)
-        
-        btn_layout.addWidget(self.btn_save_ver)
-        btn_layout.addWidget(self.btn_import)
-        layout.addLayout(btn_layout)
+        row = QtWidgets.QHBoxLayout()
+        self.btn_save = _btn("＋  SAVE VERSION", C_BLUE2, "#0d0d10", bold=True, letter_spacing=1, accent=True)
+        self.btn_imp  = _btn("↓  IMPORT SELECTED", C_BG1, C_TEXT, bold=True, letter_spacing=1)
+        self.btn_save.clicked.connect(self.save_new_version)
+        self.btn_imp.clicked.connect(self.import_selected)
+        row.addWidget(self.btn_save)
+        row.addWidget(self.btn_imp)
+        lay.addLayout(row)
 
-    def refresh_list(self):
+    def refresh(self):
         self.table.setRowCount(0)
-        if not os.path.exists(self.full_path): return
-
-        # Buscar archivos .ma o .mb
-        files = sorted([f for f in os.listdir(self.full_path) if any(f.endswith(ext) for ext in ALLOWED_ENDINGS)], reverse=True)
-
+        if not os.path.exists(self.full_path):
+            return
+        ext = self.EXT_MAP.get(self.sub_folder, "")
+        files = sorted(
+            [f for f in os.listdir(self.full_path)
+             if any(f.endswith(e) for e in ALLOWED_ENDINGS)],
+            reverse=True
+        )
         for f in files:
             row = self.table.rowCount()
             self.table.insertRow(row)
 
-            # --- LÓGICA DE NOMBRES ---
-            version_part = f.split("_")[-1].split(".")[0]
-            name_part = f
-            
-            # Columna 0: VER (v001)
-            item_version = QtWidgets.QTableWidgetItem(version_part)
-            item_version.setToolTip(f) 
-            item_version.setTextAlignment(QtCore.Qt.AlignCenter)
-            self.table.setItem(row, 0, item_version)
+            ver = f.split("_v")[-1].split(".")[0] if "_v" in f else "—"
+            mtime = os.path.getmtime(os.path.join(self.full_path, f))
+            date  = datetime.datetime.fromtimestamp(mtime).strftime("%d/%m/%y")
 
-            # Columna 1: NAME (jamal_guides.ma)
-            item_name = QtWidgets.QTableWidgetItem(name_part)
-            self.table.setItem(row, 1, item_name)
-            
-            # --- COLUMNA 2: BOTÓN IMPORTAR (Open) ---
-            btn_load = QtWidgets.QPushButton("▶")
-            btn_load.setFixedSize(28, 22)
-            btn_load.setStyleSheet("""
-                QPushButton {
-                    background-color: #1e3a52;
-                    border: 1px solid #4a88b8;
-                    color: #7ecfff;
-                    font-weight: bold;
-                    font-size: 10px;
-                    border-radius: 3px;
-                }
-                QPushButton:hover { background-color: #24425e; color: #a8e0ff; }
-            """)
-            btn_load.setToolTip(f"Import version: {f}")
-            btn_load.clicked.connect(partial(self.import_file, f))
-            
-            cell_widget_load = QtWidgets.QWidget()
-            lay_load = QtWidgets.QHBoxLayout(cell_widget_load)
-            lay_load.setContentsMargins(0,0,0,0)
-            lay_load.setAlignment(QtCore.Qt.AlignCenter)
-            lay_load.addWidget(btn_load)
-            self.table.setCellWidget(row, 2, cell_widget_load)
+            vi = QtWidgets.QTableWidgetItem(ver)
+            vi.setTextAlignment(QtCore.Qt.AlignCenter)
+            vi.setForeground(QtGui.QBrush(QtGui.QColor(C_BLUE)))
+            self.table.setItem(row, 0, vi)
 
-            # --- COLUMNA 3: BOTÓN REPLACE (Replace) ---
-            btn_rep = QtWidgets.QPushButton("⟳")
-            btn_rep.setFixedSize(28, 22)
-            btn_rep.setStyleSheet("""
-                QPushButton {
-                    background-color: #4a2020;
-                    border: 1px solid #a85050;
-                    color: #e08080;
-                    font-weight: bold;
-                    font-size: 12px;
-                    border-radius: 3px;
-                }
-                QPushButton:hover { background-color: #5a2828; color: #f0a0a0; }
-            """)
-            btn_rep.setToolTip(f"OVERWRITE {f} with current selection/scene")
-            btn_rep.clicked.connect(partial(self.replace_file, f))
-            
-            cell_widget_rep = QtWidgets.QWidget()
-            lay_rep = QtWidgets.QHBoxLayout(cell_widget_rep)
-            lay_rep.setContentsMargins(0,0,0,0)
-            lay_rep.setAlignment(QtCore.Qt.AlignCenter)
-            lay_rep.addWidget(btn_rep)
-            self.table.setCellWidget(row, 3, cell_widget_rep)
+            ni = QtWidgets.QTableWidgetItem(f"  {f}   [{date}]")
+            ni.setToolTip(os.path.join(self.full_path, f))
+            self.table.setItem(row, 1, ni)
 
-    def save_new_version(self):
-        """
-        Calcula la siguiente versión y ejecuta el exportador correspondiente.
-        """
-        # 1. Mapeo de extensiones por pestaña
-        extension_map = {
-            "guides": ".guides",
-            "controllers": ".curves",
-            "models": ".ma",
-            "skin_clusters": ".skc"
-        }
-        ext = extension_map.get(self.sub_folder, ".ma")
+            for col, icon, color, border, tip, fn in (
+                (2, "▶", C_BLUE2, C_BLUE, f"Import {f}", partial(self.import_file, f)),
+                (3, "⟳", C_RED,   C_RED,  f"Overwrite {f}", partial(self.replace_file, f)),
+            ):
+                b = QtWidgets.QPushButton(icon)
+                b.setFixedSize(26, 22)
+                b.setToolTip(tip)
+                b.setStyleSheet(f"""
+                    QPushButton {{
+                        background:{C_BG3}; border:1px solid {border};
+                        color:{color}; font-weight:bold; border-radius:3px;
+                    }}
+                    QPushButton:hover {{ background:{color}; color:#fff; }}
+                """)
+                b.clicked.connect(fn)
+                w = QtWidgets.QWidget()
+                h = QtWidgets.QHBoxLayout(w)
+                h.setContentsMargins(0, 0, 0, 0)
+                h.setAlignment(QtCore.Qt.AlignCenter)
+                h.addWidget(b)
+                self.table.setCellWidget(row, col, w)
 
-        # 2. Lógica de incremento de versión (v001, v002...)
+    def _next_version_path(self):
+        ext   = self.EXT_MAP.get(self.sub_folder, ".ma")
         files = [f for f in os.listdir(self.full_path) if f.endswith(ext)]
-        version = 1
+        ver   = 1
         if files:
             files.sort()
             try:
-                last = files[-1]
-                if "_v" in last:
-                    ver_str = last.split("_v")[-1].split(".")[0]
-                    version = int(ver_str) + 1
-            except: pass
-        
-        # 3. Construir path final
-        asset_name = os.path.basename(self.asset_path)
-        new_name = f"{asset_name}_v{version:03d}{ext}"
-        full_path = os.path.join(self.full_path, new_name)
+                ver = int(files[-1].split("_v")[-1].split(".")[0]) + 1
+            except Exception:
+                pass
+        name = f"{os.path.basename(self.asset_path)}_v{ver:03d}{ext}"
+        return os.path.join(self.full_path, name)
 
-        # 4. EJECUTAR EXPORTACIÓN (Basado en tu run_exports)
-        try:
-            if self.sub_folder == "guides":
-                reload(guides_manager)
-                guides_manager.get_guides_info(path=full_path)
-
-            elif self.sub_folder == "controllers":
-                reload(curve_tool)
-                curve_tool.get_all_ctl_curves_data(path=full_path)
-
-            elif self.sub_folder == "models":
-                cmds.file(rename=full_path)
-                cmds.file(save=True, type="mayaAscii")
-
-            elif self.sub_folder == "skin":
-                reload(skin_manager_api)
-                skinner = skin_manager_api.SkinManager()
-                skinner.export_skins(path=full_path)
-
-            # Feedback de éxito
-            cmds.inViewMessage(amg=f'<hl>{self.sub_folder.capitalize()}</hl> v{version:03d} Exported.', 
-                               pos='midCenter', fade=True)
-            
-            # Actualizar la tabla para ver el nuevo archivo
-            self.refresh_list()
-
-        except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Export Error", 
-                                          f"Failed to export {self.sub_folder}:\n{str(e)}")
+    def save_new_version(self):
+        path = self._next_version_path()
+        self._export(path)
 
     def replace_file(self, filename):
         path = os.path.join(self.full_path, filename)
+        reply = QtWidgets.QMessageBox.question(
+            self, "Overwrite", f"Overwrite\n{filename}?",
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+        )
+        if reply == QtWidgets.QMessageBox.Yes:
+            self._export(path)
+
+    def _export(self, path):
         try:
             if self.sub_folder == "guides":
                 reload(guides_manager)
                 guides_manager.get_guides_info(path=path)
-
-            elif self.sub_folder == "controllers":
+            elif self.sub_folder == "curves":
                 reload(curve_tool)
                 curve_tool.get_all_ctl_curves_data(path=path)
-
             elif self.sub_folder == "models":
                 cmds.file(rename=path)
                 cmds.file(save=True, type="mayaAscii")
-
-            elif self.sub_folder == "skin":
+            elif self.sub_folder == "skin_clusters":
                 reload(skin_manager_api)
-                skinner = skin_manager_api.SkinManager()
-                skinner.export_skins(path=path)
-
-            # Feedback de éxito
-            cmds.inViewMessage(amg=f'<hl>{self.sub_folder.capitalize()}</hl> {path} Exported.', 
-                               pos='midCenter', fade=True)
-            
-            # Actualizar la tabla para ver el nuevo archivo
-            self.refresh_list()
-
+                skin_manager_api.SkinManager().export_skins(path=path)
+            ver = os.path.basename(path)
+            cmds.inViewMessage(amg=f"<hl>Saved</hl> {ver}", pos="midCenter", fade=True)
+            self.refresh()
         except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Export Error", 
-                                          f"Failed to export {self.sub_folder}:\n{str(e)}")
-            print(f"Replaced: {path}")
-            self.refresh_list()
+            QtWidgets.QMessageBox.warning(self, "Export Error", str(e))
 
     def import_selected(self):
         row = self.table.currentRow()
-        if row >= 0:
-            item = self.table.item(row, 0)
-            self.import_file(item.text())
+        if row < 0:
+            cmds.warning("No file selected.")
+            return
+        filename = self.table.item(row, 1).text().strip().split("   ")[0]
+        self.import_file(filename)
 
     def import_file(self, filename):
-
-        full_path = os.path.join(self.full_path, filename)
+        path = os.path.join(self.full_path, filename)
         try:
             if self.sub_folder == "guides":
                 reload(guides_manager)
-                guides_manager.load_guides_info(filePath=full_path)
-
-            elif self.sub_folder == "controllers":
+                guides_manager.load_guides_info(filePath=path)
+            elif self.sub_folder == "curves":
                 reload(curve_tool)
-                curve_tool.get_all_ctl_curves_data(path=full_path)
-
+                curve_tool.load_all_ctl_curves_data(path=path)
             elif self.sub_folder == "models":
-                cmds.file(open=full_path)
-
-            elif self.sub_folder == "skin":
+                cmds.file(path, open=True, force=True)
+            elif self.sub_folder == "skin_clusters":
                 reload(skin_manager_api)
-                skinner = skin_manager_api.SkinManager()
-                skinner.import_skins(path=full_path)
-
-            # Feedback de éxito
-            cmds.inViewMessage(amg=f'<hl>{self.sub_folder.capitalize()}</hl> Imported.', 
-                            pos='midCenter', fade=True)
-        
+                skin_manager_api.SkinManager().import_skins(path=path)
+            cmds.inViewMessage(amg=f"<hl>Imported</hl> {filename}", pos="midCenter", fade=True)
         except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Import Error", 
-                                          f"Failed to import {self.sub_folder}:\n{str(e)}")
+            QtWidgets.QMessageBox.warning(self, "Import Error", str(e))
 
 
-# --- UI PRINCIPAL ---
+# ─────────────────────────────────────────────────────────────────────────────
+#  QUICK TOOLS PANEL
+# ─────────────────────────────────────────────────────────────────────────────
+class QuickToolsWidget(QtWidgets.QWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._build()
+
+    def _build(self):
+        lay = QtWidgets.QVBoxLayout(self)
+        lay.setContentsMargins(8, 8, 8, 8)
+        lay.setSpacing(10)
+
+        def section(title):
+            lbl = QtWidgets.QLabel(title)
+            lbl.setStyleSheet(f"""
+                color:{C_DIM}; font-size:8px; letter-spacing:4px;
+                font-weight:bold; padding:10px 0 4px 0;
+                border-bottom:1px solid {C_BORDER};
+            """)
+            lay.addWidget(lbl)
+
+        def row(*btns):
+            r = QtWidgets.QHBoxLayout()
+            r.setSpacing(4)
+            for b in btns:
+                r.addWidget(b)
+            lay.addLayout(r)
+
+        # ── CONTROLS ──────────────────────────────────────────────────────────
+        section("CONTROLS")
+
+        b_reset = _btn("Reset All CTLs", C_BG3, C_TEXT)
+        b_reset.setToolTip("Set all *_CTL transforms to 0/0/0 T/R/S")
+        b_reset.clicked.connect(self.reset_all_controls)
+
+        b_mirror_l = _btn("Mirror  L → R", C_BG3, C_TEXT)
+        b_mirror_l.setToolTip("Mirror selected CTL values from Left to Right")
+        b_mirror_l.clicked.connect(lambda: self.mirror_controls("L", "R"))
+
+        b_mirror_r = _btn("Mirror  R → L", C_BG3, C_TEXT)
+        b_mirror_r.setToolTip("Mirror selected CTL values from Right to Left")
+        b_mirror_r.clicked.connect(lambda: self.mirror_controls("R", "L"))
+
+        row(b_reset)
+        row(b_mirror_l, b_mirror_r)
+
+        # ── VISIBILITY ────────────────────────────────────────────────────────
+        section("VISIBILITY")
+
+        b_jnts = _btn("Toggle Joints", C_BG3, C_TEXT)
+        b_jnts.clicked.connect(lambda: self.toggle_type_vis("joint"))
+
+        b_ctls = _btn("Toggle Controls", C_BG3, C_TEXT)
+        b_ctls.clicked.connect(lambda: self.toggle_vis_group("*CTL*"))
+
+        b_geo = _btn("Toggle Geo", C_BG3, C_TEXT)
+        b_geo.clicked.connect(lambda: self.toggle_vis_group("*geo_GRP*"))
+
+        row(b_jnts, b_ctls, b_geo)
+
+        # ── SCENE ─────────────────────────────────────────────────────────────
+        section("SCENE")
+
+        b_del_hist = _btn("Delete History", C_BG3, C_TEXT)
+        b_del_hist.setToolTip("Delete non-deformer history on selected meshes")
+        b_del_hist.clicked.connect(self.delete_history)
+
+        b_freeze = _btn("Freeze Transforms", C_BG3, C_TEXT)
+        b_freeze.clicked.connect(self.freeze_transforms)
+
+        b_center = _btn("Center Pivot", C_BG3, C_TEXT)
+        b_center.clicked.connect(lambda: cmds.xform(cmds.ls(sl=True), cp=True))
+
+        row(b_del_hist, b_freeze)
+        row(b_center)
+
+        b_clean = _btn("Delete Unused Nodes", C_BG3, C_TEXT)
+        b_clean.clicked.connect(self.delete_unused_nodes)
+
+        b_zero_jnts = _btn("Zero Joint Orients", C_BG3, C_TEXT)
+        b_zero_jnts.setToolTip("Zero out joint orient on selected joints")
+        b_zero_jnts.clicked.connect(self.zero_joint_orients)
+
+        row(b_clean, b_zero_jnts)
+
+        # ── SKINNING ──────────────────────────────────────────────────────────
+        section("SKINNING")
+
+        b_quick_bind = _btn("Quick Bind (sel jnts + mesh)", C_BG3, C_TEXT)
+        b_quick_bind.setToolTip("Select joints then mesh → smooth bind")
+        b_quick_bind.clicked.connect(self.quick_bind)
+
+        b_copy_skin = _btn("Copy Skin Weights", C_BG3, C_TEXT)
+        b_copy_skin.setToolTip("Copy skin weights from first mesh to selected meshes")
+        b_copy_skin.clicked.connect(self.copy_skin_weights)
+
+        b_unbind = _btn("Unbind Skin", C_RED, C_TEXT, C_RED)
+        b_unbind.clicked.connect(self.unbind_skin)
+
+        row(b_quick_bind)
+        row(b_copy_skin, b_unbind)
+
+        # ── PROXY LOCATOR ─────────────────────────────────────────────────────
+        section("PROXY LOCATOR")
+
+        b_proxy = _btn("Assign Proxy Locators", C_BG3, C_TEXT)
+        b_proxy.setToolTip("Auto-detect body mesh and assign proxy locators to all *_CTL")
+        b_proxy.clicked.connect(self.run_proxy_locator)
+
+        b_del_proxy = _btn("Remove Proxy Locators", C_RED, C_TEXT, C_RED)
+        b_del_proxy.clicked.connect(self.remove_proxy_locators)
+
+        row(b_proxy, b_del_proxy)
+
+        lay.addStretch()
+
+    # ── CONTROLS ──────────────────────────────────────────────────────────────
+    def reset_all_controls(self):
+        ctls = cmds.ls("*_CTL", type="transform") or []
+        if not ctls:
+            cmds.warning("No *_CTL controls found.")
+            return
+        for ctl in ctls:
+            for attr, val in (("tx",0),("ty",0),("tz",0),
+                               ("rx",0),("ry",0),("rz",0),
+                               ("sx",1),("sy",1),("sz",1)):
+                try:
+                    if not cmds.getAttr(f"{ctl}.{attr}", lock=True):
+                        cmds.setAttr(f"{ctl}.{attr}", val)
+                except Exception:
+                    pass
+        cmds.inViewMessage(amg=f"Reset <hl>{len(ctls)}</hl> controls", pos="midCenter", fade=True)
+
+    def mirror_controls(self, src, dst):
+        sel = cmds.ls(sl=True, type="transform") or []
+        mirrored = 0
+        for node in sel:
+            if f"_{src}_" in node or node.startswith(f"{src}_"):
+                partner = node.replace(f"_{src}_", f"_{dst}_").replace(f"{src}_", f"{dst}_", 1)
+                if cmds.objExists(partner):
+                    for attr in ("tx","ty","tz","rx","ry","rz"):
+                        try:
+                            val = cmds.getAttr(f"{node}.{attr}")
+                            mirror_val = -val if attr in ("tx","ry","rz") else val
+                            cmds.setAttr(f"{partner}.{attr}", mirror_val)
+                        except Exception:
+                            pass
+                    mirrored += 1
+        cmds.inViewMessage(amg=f"Mirrored <hl>{mirrored}</hl> controls", pos="midCenter", fade=True)
+
+    # ── VISIBILITY ────────────────────────────────────────────────────────────
+    def toggle_type_vis(self, node_type):
+        nodes = cmds.ls(type=node_type) or []
+        if not nodes:
+            return
+        cur = cmds.getAttr(f"{nodes[0]}.visibility")
+        for n in nodes:
+            try:
+                cmds.setAttr(f"{n}.visibility", not cur)
+            except Exception:
+                pass
+
+    def toggle_vis_group(self, pattern):
+        nodes = cmds.ls(pattern, type="transform") or []
+        if not nodes:
+            cmds.warning(f"No nodes matching {pattern}")
+            return
+        cur = cmds.getAttr(f"{nodes[0]}.visibility")
+        for n in nodes:
+            try:
+                cmds.setAttr(f"{n}.visibility", not cur)
+            except Exception:
+                pass
+
+    # ── SCENE ─────────────────────────────────────────────────────────────────
+    def delete_history(self):
+        sel = cmds.ls(sl=True) or []
+        if not sel:
+            cmds.warning("Select meshes first.")
+            return
+        cmds.bakePartialHistory(sel, prePostDeformers=True)
+        cmds.inViewMessage(amg="History deleted", pos="midCenter", fade=True)
+
+    def freeze_transforms(self):
+        sel = cmds.ls(sl=True) or []
+        if not sel:
+            cmds.warning("Select objects first.")
+            return
+        cmds.makeIdentity(sel, apply=True, t=True, r=True, s=True)
+        cmds.inViewMessage(amg="Transforms frozen", pos="midCenter", fade=True)
+
+    def delete_unused_nodes(self):
+        mel.eval("MLdeleteUnused;")
+        cmds.inViewMessage(amg="Unused nodes deleted", pos="midCenter", fade=True)
+
+    def zero_joint_orients(self):
+        jnts = cmds.ls(sl=True, type="joint") or []
+        if not jnts:
+            cmds.warning("Select joints first.")
+            return
+        for j in jnts:
+            for attr in ("jointOrientX","jointOrientY","jointOrientZ"):
+                try:
+                    cmds.setAttr(f"{j}.{attr}", 0)
+                except Exception:
+                    pass
+        cmds.inViewMessage(amg=f"Zeroed <hl>{len(jnts)}</hl> joint orients", pos="midCenter", fade=True)
+
+    # ── SKINNING ──────────────────────────────────────────────────────────────
+    def quick_bind(self):
+        sel = cmds.ls(sl=True) or []
+        if len(sel) < 2:
+            cmds.warning("Select joints then mesh.")
+            return
+        mesh   = sel[-1]
+        joints = sel[:-1]
+        cmds.skinCluster(joints + [mesh], toSelectedBones=True,
+                         bindMethod=0, skinMethod=0, normalizeWeights=1)
+        cmds.inViewMessage(amg=f"Bound <hl>{mesh}</hl>", pos="midCenter", fade=True)
+
+    def copy_skin_weights(self):
+        sel = cmds.ls(sl=True) or []
+        if len(sel) < 2:
+            cmds.warning("Select source mesh then target mesh(es).")
+            return
+        src = sel[0]
+        for dst in sel[1:]:
+            try:
+                cmds.copySkinWeights(sourceSkin=src, destinationSkin=dst,
+                                     noMirror=True, surfaceAssociation="closestPoint",
+                                     influenceAssociation="closestJoint")
+            except Exception as e:
+                cmds.warning(f"Could not copy to {dst}: {e}")
+        cmds.inViewMessage(amg="Skin weights copied", pos="midCenter", fade=True)
+
+    def unbind_skin(self):
+        sel = cmds.ls(sl=True) or []
+        if not sel:
+            cmds.warning("Select skinned mesh(es).")
+            return
+        for obj in sel:
+            hist = cmds.listHistory(obj) or []
+            scs  = [n for n in hist if cmds.nodeType(n) == "skinCluster"]
+            for sc in scs:
+                cmds.skinCluster(sc, edit=True, unbind=True)
+        cmds.inViewMessage(amg="Skin unbound", pos="midCenter", fade=True)
+
+    # ── PROXY LOCATOR ─────────────────────────────────────────────────────────
+    def run_proxy_locator(self):
+        try:
+            from tools import proxy_locator
+            proxy_locator.assign_all_proxy_locators(mesh_transform=None, ctl_suffix="_CTL", radius=10.0)
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "Error", str(e))
+
+    def remove_proxy_locators(self):
+        nodes = cmds.ls(type="proxyLocator") or []
+        if nodes:
+            cmds.delete(nodes)
+            cmds.inViewMessage(amg=f"Removed <hl>{len(nodes)}</hl> proxy locators",
+                               pos="midCenter", fade=True)
+        else:
+            cmds.warning("No proxy locators found in scene.")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  MAIN WINDOW
+# ─────────────────────────────────────────────────────────────────────────────
 class AssetManagerUI(QtWidgets.QWidget):
+
     def __init__(self, parent=get_maya_main_window()):
-        super(AssetManagerUI, self).__init__(parent)
-        self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint)
-        self.setWindowTitle("Pipeline")
-        self.setMinimumWidth(500)
-        self.setMinimumHeight(500) # Más alto para acomodar tablas
-        
-        self.assets_path = get_assets_path()
+        super().__init__(parent)
+        self.setWindowFlags(QtCore.Qt.Window)
+        self.setWindowTitle("Character Manager  —  AutoRig Tools")
+        self.resize(820, 620)
+        self.setMinimumSize(640, 480)
+
+        self.assets_path   = get_assets_path()
         self.current_asset = None
-        self.settings = QtCore.QSettings("MyCompany", "AutoRigTools")
+        self.settings      = QtCore.QSettings("AutoRigTools", "CharacterManager")
 
-        self.setup_ui()
-        self.setup_stylesheet()
+        self.setStyleSheet(SS_BASE)
+        self._build_ui()
         self.refresh_assets()
-        self.restore_last_session()
+        self._restore_session()
 
-    def setup_ui(self):
-        # LAYOUT PRINCIPAL
-        main_layout = QtWidgets.QVBoxLayout(self)
-        main_layout.setContentsMargins(0, 0, 0, 0) # Sin márgenes externos por el menú
-        main_layout.setSpacing(0)
+    # ── BUILD ─────────────────────────────────────────────────────────────────
+    def _build_ui(self):
+        root = QtWidgets.QVBoxLayout(self)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
 
-        # 1. MENU BAR (Tools | Help)
-        self.menu_bar = QtWidgets.QMenuBar()
-        self.menu_bar.setStyleSheet("background-color: #333; color: #ddd;")
-        
-        tools_menu = self.menu_bar.addMenu("Tools")
-        # 1. MENU BAR (Tools | Help)
-        self.menu_bar = QtWidgets.QMenuBar()
-        self.menu_bar.setStyleSheet("background-color: #333; color: #ddd;")
-        
-        # --- Menú Tools ---
-        tools_menu = self.menu_bar.addMenu("Tools")
-        tools_menu.addAction("New Scene", lambda: cmds.file(new=True, force=True))
+        root.addWidget(self._make_menubar())
+        root.addWidget(self._make_header())
 
-        tools_menu.addSeparator()
-        # Añade las herramientas externas
-        tools_menu.addAction("ngSkinTools", lambda: self.run_external_tool("ngSkinTools"))
-        tools_menu.addAction("Rabbit Skinning Tools", lambda: self.run_external_tool("Rabbit"))
-        tools_menu.addAction("Kangaroo", lambda: self.run_external_tool("Kangaroo"))
-        tools_menu.addAction("mGear", lambda: self.run_external_tool("mGear"))
-        tools_menu.addAction("AdonisFx", lambda: self.run_external_tool("AdonisFx"))
-        
-        # --- Menú Help ---
-        help_menu = self.menu_bar.addMenu("Help")
-        # Acciones con enlaces externos
-        help_menu.addAction("GitHub", lambda: webbrowser.open("https://github.com/Laiape/autorig_tools"))
-        help_menu.addAction("LinkedIn", lambda: webbrowser.open("https://www.linkedin.com/in/laia-peris-arantzamendi-6b9809277/"))
-        help_menu.addAction("Web", lambda: webbrowser.open("https://laiape.github.io/"))
-        
-        # Puedes añadir un separador antes del About si quieres
-        help_menu.addSeparator()
-        help_menu.addAction("About", lambda: QtWidgets.QMessageBox.information(self, "About", "AutoRig Tools v1.0\nCreated by Laia Peris"))
-        
-        main_layout.addWidget(self.menu_bar)
-        
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        splitter.setHandleWidth(1)
+        splitter.addWidget(self._make_sidebar())
+        splitter.addWidget(self._make_center())
+        splitter.setSizes([200, 620])
+        root.addWidget(splitter, 1)
 
-        # CONTAINER CENTRAL (Con padding)
-        content_widget = QtWidgets.QWidget()
-        content_layout = QtWidgets.QVBoxLayout(content_widget)
-        content_layout.setContentsMargins(15, 15, 15, 15)
-        content_layout.setSpacing(10)
-        main_layout.addWidget(content_widget)
+        root.addWidget(self._make_footer())
 
-        # 2. SECCIÓN SUPERIOR (HEADER)
-        # Usamos un GridLayout para posicionar Dropdown izq y Foto derecha
-        top_grid = QtWidgets.QGridLayout()
-        top_grid.setColumnStretch(0, 1) # Izquierda se estira
-        top_grid.setColumnStretch(1, 0) # Derecha fijo
+    def _make_menubar(self):
+        bar = QtWidgets.QMenuBar()
 
-        # [IZQUIERDA] Path + Dropdown
-        left_panel = QtWidgets.QVBoxLayout()
-        self.path_label = QtWidgets.QLabel("// assets > ...")
-        self.path_label.setObjectName("PathLabel")
-        
-        lbl_lib = QtWidgets.QLabel("▸ ASSET LIBRARY")
-        lbl_lib.setObjectName("SectionHeader")
-        
-        self.asset_combo = QtWidgets.QComboBox()
-        self.asset_combo.setMinimumHeight(28)
-        self.asset_combo.currentIndexChanged.connect(self.on_asset_changed)
-        
-        left_panel.addWidget(self.path_label)
-        left_panel.addSpacing(5)
-        left_panel.addWidget(lbl_lib)
-        left_panel.addWidget(self.asset_combo)
-        left_panel.addStretch()
+        m_file = bar.addMenu("File")
+        m_file.addAction("New Scene",        lambda: cmds.file(new=True, force=True))
+        m_file.addAction("Open Scene…",      lambda: cmds.file(open=True, force=True, prompt=True))
+        m_file.addAction("Save Scene",       lambda: cmds.file(save=True))
+        m_file.addSeparator()
+        m_file.addAction("Open Assets Folder", self._open_assets_folder)
 
-        top_grid.addLayout(left_panel, 0, 0)
+        m_tools = bar.addMenu("Tools")
+        for name in ("ngSkinTools", "Rabbit Skinning Tools", "Kangaroo", "mGear", "AdonisFx"):
+            m_tools.addAction(name, partial(self._open_external, name))
 
-        # [DERECHA] Foto + Cámara
-        right_panel = QtWidgets.QVBoxLayout()
-        
-        # Botón cámara alineado a la derecha de la foto
-        cam_layout = QtWidgets.QHBoxLayout()
-        cam_layout.addStretch()
-        self.cam_btn = QtWidgets.QPushButton()
-        self.cam_btn.setFixedSize(20, 20)
-        self.cam_btn.setObjectName("CamBtn")
-        if QtGui.QImageReader.imageFormat(":/camera.png"):
-             self.cam_btn.setIcon(QtGui.QIcon(":/camera.png"))
-        else: self.cam_btn.setText("O")
+        m_help = bar.addMenu("Help")
+        m_help.addAction("GitHub",   lambda: webbrowser.open("https://github.com/Laiape/autorig_tools"))
+        m_help.addAction("LinkedIn", lambda: webbrowser.open("https://www.linkedin.com/in/laia-peris-arantzamendi-6b9809277/"))
+        m_help.addAction("Web",      lambda: webbrowser.open("https://laiape.github.io/"))
+        m_help.addSeparator()
+        m_help.addAction("About", lambda: QtWidgets.QMessageBox.information(
+            self, "About", "AutoRig Tools v1.0\nCreated by Laia Peris"))
+        return bar
+
+    def _make_header(self):
+        w = QtWidgets.QWidget()
+        w.setFixedHeight(40)
+        w.setStyleSheet(f"background:{C_BG0}; border-bottom:1px solid {C_BORDER};")
+        lay = QtWidgets.QHBoxLayout(w)
+        lay.setContentsMargins(16, 0, 16, 0)
+
+        bar = QtWidgets.QFrame()
+        bar.setFixedSize(3, 18)
+        bar.setStyleSheet(f"background:{C_BLUE}; border:none;")
+        lay.addWidget(bar)
+        lay.addSpacing(10)
+
+        title = QtWidgets.QLabel("CHARACTER MANAGER")
+        title.setStyleSheet(f"color:{C_TEXT}; font-size:11px; font-weight:bold; letter-spacing:5px;")
+        lay.addWidget(title)
+        lay.addStretch()
+
+        self.lbl_asset = QtWidgets.QLabel("—")
+        self.lbl_asset.setStyleSheet(f"color:{C_BLUE}; font-size:11px; letter-spacing:2px; font-weight:bold;")
+        lay.addWidget(self.lbl_asset)
+        return w
+
+    def _make_sidebar(self):
+        w = QtWidgets.QWidget()
+        w.setStyleSheet(f"background:{C_BG1}; border-right:1px solid {C_BORDER};")
+        lay = QtWidgets.QVBoxLayout(w)
+        lay.setContentsMargins(8, 10, 8, 10)
+        lay.setSpacing(6)
+
+        # Search
+        self.search = QtWidgets.QLineEdit()
+        self.search.setPlaceholderText("  search asset…")
+        self.search.textChanged.connect(self._filter_assets)
+        lay.addWidget(self.search)
+
+        # Asset list
+        self.asset_list = QtWidgets.QListWidget()
+        self.asset_list.currentItemChanged.connect(self._on_asset_selected)
+        lay.addWidget(self.asset_list, 1)
+
+        # Thumbnail
+        thumb_wrap = QtWidgets.QWidget()
+        thumb_wrap.setStyleSheet(f"background:transparent;")
+        tw = QtWidgets.QVBoxLayout(thumb_wrap)
+        tw.setContentsMargins(0, 4, 0, 0)
+        tw.setSpacing(2)
+
+        cam_row = QtWidgets.QHBoxLayout()
+        cam_row.addStretch()
+        self.cam_btn = QtWidgets.QPushButton("⊙")
+        self.cam_btn.setFixedSize(22, 22)
+        self.cam_btn.setToolTip("Take viewport screenshot")
+        self.cam_btn.setStyleSheet(f"""
+            QPushButton {{ background:transparent; border:none; color:{C_DIM}; font-size:14px; }}
+            QPushButton:hover {{ color:{C_BLUE}; }}
+        """)
         self.cam_btn.clicked.connect(self.take_screenshot)
-        cam_layout.addWidget(self.cam_btn)
+        cam_row.addWidget(self.cam_btn)
+        tw.addLayout(cam_row)
 
-        self.image_label = QtWidgets.QLabel()
-        self.image_label.setFixedSize(120, 120)
-        self.image_label.setObjectName("Thumbnail")
-        self.image_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.thumbnail = QtWidgets.QLabel("NO IMAGE")
+        self.thumbnail.setFixedSize(184, 130)
+        self.thumbnail.setAlignment(QtCore.Qt.AlignCenter)
+        self.thumbnail.setStyleSheet(f"""
+            background:{C_BG0}; border:none; border-top:2px solid {C_BORDER};
+            color:{C_DIM}; font-size:9px; letter-spacing:3px;
+        """)
+        tw.addWidget(self.thumbnail)
+        lay.addWidget(thumb_wrap)
 
-        right_panel.addLayout(cam_layout)
-        right_panel.addWidget(self.image_label)
+        # New / Delete asset
+        btn_row = QtWidgets.QHBoxLayout()
+        b_new = _btn("＋", C_BG3, C_GREEN, C_GREEN, size=(36, 28))
+        b_new.setToolTip("New asset")
+        b_new.clicked.connect(self.new_asset)
+        b_del = _btn("✕", C_BG3, C_RED, C_RED, size=(36, 28))
+        b_del.setToolTip("Delete asset folder")
+        b_del.clicked.connect(self.delete_asset)
+        btn_row.addWidget(b_new)
+        btn_row.addStretch()
+        btn_row.addWidget(b_del)
+        lay.addLayout(btn_row)
 
-        top_grid.addLayout(right_panel, 0, 1)
-        
-        content_layout.addLayout(top_grid)
+        return w
 
-        # 3. TABS CENTRALES (Guides, Controllers, Models, Skc)
+    def _make_center(self):
+        w = QtWidgets.QWidget()
+        lay = QtWidgets.QVBoxLayout(w)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(0)
+
         self.tabs = QtWidgets.QTabWidget()
-        self.tabs.setObjectName("MainTabs")
-        content_layout.addWidget(self.tabs)
+        lay.addWidget(self.tabs, 1)
+        return w
 
-        # 4. BOTONES INFERIORES GLOBALES (Load Settings / Build)
-        action_layout = QtWidgets.QHBoxLayout()
-        self.btn_load_settings = QtWidgets.QPushButton("LOAD SETTINGS")
-        self.btn_load_settings.setObjectName("LoadBtn")
-        self.btn_load_settings.setMinimumHeight(40)
-        self.btn_load_settings.clicked.connect(self.run_load_settings)
+    def _make_footer(self):
+        w = QtWidgets.QWidget()
+        w.setFixedHeight(56)
+        w.setStyleSheet(f"background:{C_BG1}; border-top:1px solid {C_BORDER};")
+        lay = QtWidgets.QHBoxLayout(w)
+        lay.setContentsMargins(12, 8, 12, 8)
+        lay.setSpacing(8)
+
+        self.btn_load = _btn("LOAD SETTINGS", C_BG1, C_DIM, bold=True, letter_spacing=2)
+        self.btn_load.setMinimumHeight(36)
+        self.btn_load.setToolTip("Set active asset without building")
+        self.btn_load.clicked.connect(self.run_load_settings)
 
         self.btn_build = QtWidgets.QPushButton("BUILD RIG")
-        self.btn_build.setObjectName("BuildBtn")
-        self.btn_build.setMinimumHeight(40)
+        self.btn_build.setMinimumHeight(36)
+        self.btn_build.setStyleSheet(f"""
+            QPushButton {{
+                background:{C_BLUE2}; color:#0d0d10;
+                border:none; border-left:3px solid {C_BLUE};
+                border-radius:0px; padding:6px 20px;
+                font-weight:bold; font-size:11px; letter-spacing:4px;
+            }}
+            QPushButton:hover {{ background:{C_BLUE}; color:#0d0d10; }}
+            QPushButton:pressed {{ background:{C_BLUE2}; }}
+        """)
         self.btn_build.clicked.connect(self.run_build)
 
-        action_layout.addWidget(self.btn_load_settings, stretch=1)
-        action_layout.addWidget(self.btn_build, stretch=2)
-        content_layout.addLayout(action_layout)
+        lay.addWidget(self.btn_load, 1)
+        lay.addWidget(self.btn_build, 2)
+        return w
 
-
-    def refresh_tabs(self):
-        """ Reconstruye las pestañas cuando cambia el asset """
-        self.tabs.clear()
-        if not self.current_asset: return
-
-        asset_dir = os.path.join(self.assets_path, self.current_asset)
-        
-        # Definir las categorías que quieres
-        categories = ["guides", "curves", "models", "skin_clusters"]
-        
-        for cat in categories:
-
-            tab = VersionTab(asset_dir, cat)
-            self.tabs.addTab(tab, cat.upper())
-
-
-    def setup_stylesheet(self):
-        self.setStyleSheet("""
-            /* === BASE === */
-            QWidget {
-                background-color: #2e2e36;
-                color: #e8e8f0;
-                font-family: 'Segoe UI', sans-serif;
-                font-size: 11px;
-            }
-
-            /* === MENU BAR === */
-            QMenuBar {
-                background-color: #26262e;
-                color: #b0b0c0;
-                border-bottom: 1px solid #3a3a46;
-                padding: 2px 4px;
-                font-size: 11px;
-            }
-            QMenuBar::item { padding: 4px 10px; border-radius: 3px; }
-            QMenuBar::item:selected { background-color: #3a3a48; color: #7ecfff; }
-            QMenu {
-                background-color: #32323e;
-                border: 1px solid #4a4a58;
-                color: #e0e0f0;
-            }
-            QMenu::item:selected { background-color: #3e3e50; color: #7ecfff; }
-            QMenu::separator { background-color: #3a3a48; height: 1px; margin: 3px 8px; }
-
-            /* === LABELS === */
-            QLabel#PathLabel {
-                font-size: 10px;
-                color: #7878a0;
-                letter-spacing: 1px;
-                padding: 2px 0;
-            }
-            QLabel#SectionHeader {
-                color: #7ecfff;
-                font-weight: bold;
-                font-size: 9px;
-                letter-spacing: 3px;
-                padding-bottom: 2px;
-            }
-
-            /* === COMBO BOX === */
-            QComboBox {
-                background-color: #38384a;
-                border: 1px solid #4a4a5e;
-                border-radius: 4px;
-                padding: 4px 8px;
-                color: #e8e8f8;
-                font-size: 12px;
-                selection-background-color: #3e3e58;
-            }
-            QComboBox:hover { border-color: #7ecfff; }
-            QComboBox::drop-down { border: none; width: 24px; }
-            QComboBox QAbstractItemView {
-                background-color: #32323e;
-                border: 1px solid #7ecfff;
-                selection-background-color: #2e3a4e;
-                color: #e0e0f0;
-                outline: none;
-            }
-
-            /* === TABS === */
-            QTabWidget::pane {
-                border: 1px solid #3a3a4a;
-                background-color: #2e2e36;
-                top: -1px;
-            }
-            QTabBar::tab {
-                background: #26262e;
-                color: #6868888;
-                padding: 7px 18px;
-                border: 1px solid transparent;
-                border-bottom: none;
-                margin-right: 2px;
-                font-size: 9px;
-                letter-spacing: 2px;
-                font-weight: bold;
-                color: #78789a;
-            }
-            QTabBar::tab:selected {
-                background: #2e2e36;
-                color: #7ecfff;
-                border: 1px solid #3a3a4a;
-                border-bottom: 2px solid #7ecfff;
-            }
-            QTabBar::tab:hover:!selected { color: #a0a0c0; }
-
-            /* === TABLE === */
-            QTableWidget {
-                background-color: #28282e;
-                border: 1px solid #3a3a46;
-                gridline-color: #32323e;
-                alternate-background-color: #2c2c34;
-                selection-background-color: #2e3a4e;
-                outline: none;
-            }
-            QTableWidget::item { padding: 5px 8px; border: none; color: #d0d0e8; }
-            QTableWidget::item:selected {
-                background-color: #2e3a4e;
-                color: #7ecfff;
-            }
-            QHeaderView::section {
-                background-color: #26262e;
-                border: none;
-                border-bottom: 1px solid #3a3a4a;
-                border-right: 1px solid #32323e;
-                padding: 5px 8px;
-                font-size: 9px;
-                letter-spacing: 2px;
-                color: #6a6a8a;
-                font-weight: bold;
-            }
-            QScrollBar:vertical {
-                background: #28282e;
-                width: 6px;
-                border: none;
-            }
-            QScrollBar::handle:vertical { background: #4a4a60; border-radius: 3px; min-height: 20px; }
-            QScrollBar::handle:vertical:hover { background: #7ecfff; }
-            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
-
-            /* === ACTION BUTTONS (bottom) === */
-            QPushButton#LoadBtn {
-                background-color: #38384a;
-                color: #9898b8;
-                border: 1px solid #4a4a5e;
-                border-radius: 4px;
-                font-size: 10px;
-                letter-spacing: 2px;
-                font-weight: bold;
-            }
-            QPushButton#LoadBtn:hover {
-                background-color: #42425a;
-                color: #e0e0f8;
-                border-color: #6060808;
-            }
-            QPushButton#LoadBtn:pressed { background-color: #2e2e3e; }
-
-            QPushButton#BuildBtn {
-                background-color: #1e3a52;
-                color: #7ecfff;
-                border: 1px solid #4a88b8;
-                border-radius: 4px;
-                font-size: 11px;
-                letter-spacing: 3px;
-                font-weight: bold;
-            }
-            QPushButton#BuildBtn:hover {
-                background-color: #24425e;
-                color: #a8e0ff;
-                border-color: #6aaad0;
-            }
-            QPushButton#BuildBtn:pressed { background-color: #162e42; }
-
-            /* === THUMBNAIL === */
-            QLabel#Thumbnail {
-                background-color: #22222a;
-                border: 1px solid #3a3a4a;
-                border-radius: 4px;
-                color: #505068;
-                font-size: 10px;
-            }
-            QPushButton#CamBtn {
-                background-color: transparent;
-                border: none;
-                color: #505068;
-            }
-            QPushButton#CamBtn:hover {
-                background-color: #3a3a4a;
-                color: #7ecfff;
-                border-radius: 10px;
-            }
-
-            /* === VERSION TAB BUTTONS (Save / Import) === */
-            QPushButton {
-                background-color: #38384a;
-                color: #9898b8;
-                border: 1px solid #4a4a5e;
-                border-radius: 4px;
-                padding: 5px 12px;
-                font-size: 10px;
-                letter-spacing: 1px;
-            }
-            QPushButton:hover {
-                background-color: #42425a;
-                color: #e0e0f8;
-                border-color: #6868888;
-            }
-            QPushButton:pressed { background-color: #2e2e3e; }
-        """)
-
-    # --- FUNCIONES CORE ---
+    # ── ASSET MANAGEMENT ──────────────────────────────────────────────────────
     def refresh_assets(self):
-        self.asset_combo.blockSignals(True)
-        self.asset_combo.clear()
+        self.asset_list.blockSignals(True)
+        self.asset_list.clear()
         if os.path.exists(self.assets_path):
-            dirs = sorted([d for d in os.listdir(self.assets_path) if os.path.isdir(os.path.join(self.assets_path, d))])
-            self.asset_combo.addItems(dirs)
-        self.asset_combo.blockSignals(False)
+            for d in sorted(os.listdir(self.assets_path)):
+                if os.path.isdir(os.path.join(self.assets_path, d)):
+                    self.asset_list.addItem(d)
+        self.asset_list.blockSignals(False)
 
-    def on_asset_changed(self):
-        self.current_asset = self.asset_combo.currentText()
-        if not self.current_asset: return
-        
-        self.path_label.setText(f"// assets > {self.current_asset}")
-        
-        # 1. Update Image
-        full_path = os.path.join(self.assets_path, self.current_asset)
-        self.load_thumbnail(full_path)
-        
-        # 2. Update Tabs
-        self.refresh_tabs()
-        
-        # 3. Save Settings
-        self.settings.setValue("last_selected_asset", self.current_asset)
+    def _filter_assets(self, text):
+        for i in range(self.asset_list.count()):
+            item = self.asset_list.item(i)
+            item.setHidden(text.lower() not in item.text().lower())
 
-    def load_thumbnail(self, asset_dir):
-        thumb_path = None
-        if os.path.exists(os.path.join(asset_dir, "thumbnail.jpg")):
-            thumb_path = os.path.join(asset_dir, "thumbnail.jpg")
+    def _on_asset_selected(self, item):
+        if not item:
+            return
+        self.current_asset = item.text()
+        self.lbl_asset.setText(self.current_asset.upper())
+        self.settings.setValue("last_asset", self.current_asset)
+        self._refresh_tabs()
+        self._load_thumbnail()
+
+    def _refresh_tabs(self):
+        self.tabs.clear()
+        if not self.current_asset:
+            return
+        asset_dir = os.path.join(self.assets_path, self.current_asset)
+        for cat in ("guides", "curves", "models", "skin_clusters"):
+            self.tabs.addTab(VersionTab(asset_dir, cat), cat.upper().replace("_", " "))
+        self.tabs.addTab(QuickToolsWidget(), "QUICK TOOLS")
+
+    def _load_thumbnail(self):
+        if not self.current_asset:
+            return
+        d = os.path.join(self.assets_path, self.current_asset)
+        path = None
+        for candidate in (
+            os.path.join(d, "thumbnail.jpg"),
+            os.path.join(d, "thumbnail.png"),
+            os.path.join(d, f"{self.current_asset}.jpg"),
+            os.path.join(d, f"{self.current_asset}.png"),
+        ):
+            if os.path.exists(candidate):
+                path = candidate
+                break
+        if path:
+            pix = QtGui.QPixmap(path).scaled(
+                184, 140, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+            self.thumbnail.setPixmap(pix)
+            self.thumbnail.setText("")
         else:
-            for ext in ['png', 'jpg']:
-                p = os.path.join(asset_dir, f"{self.current_asset}.{ext}")
-                if os.path.exists(p):
-                    thumb_path = p
-                    break
-        
-        if thumb_path:
-            pix = QtGui.QPixmap(thumb_path).scaled(120, 120, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-            self.image_label.setPixmap(pix)
-        else:
-            self.image_label.setPixmap(QtGui.QPixmap())
-            self.image_label.setText("No Img")
+            self.thumbnail.setPixmap(QtGui.QPixmap())
+            self.thumbnail.setText("No Image")
+
+    def _restore_session(self):
+        last = self.settings.value("last_asset")
+        if last:
+            items = self.asset_list.findItems(last, QtCore.Qt.MatchExactly)
+            if items:
+                self.asset_list.setCurrentItem(items[0])
+        elif self.asset_list.count():
+            self.asset_list.setCurrentRow(0)
+
+    def new_asset(self):
+        name, ok = QtWidgets.QInputDialog.getText(self, "New Asset", "Asset name:")
+        if not ok or not name.strip():
+            return
+        path = os.path.join(self.assets_path, name.strip())
+        os.makedirs(path, exist_ok=True)
+        self.refresh_assets()
+        items = self.asset_list.findItems(name.strip(), QtCore.Qt.MatchExactly)
+        if items:
+            self.asset_list.setCurrentItem(items[0])
+
+    def delete_asset(self):
+        if not self.current_asset:
+            return
+        reply = QtWidgets.QMessageBox.question(
+            self, "Delete Asset",
+            f"Delete '{self.current_asset}' and all its files?",
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+        )
+        if reply == QtWidgets.QMessageBox.Yes:
+            import shutil
+            shutil.rmtree(os.path.join(self.assets_path, self.current_asset), ignore_errors=True)
+            self.current_asset = None
+            self.refresh_assets()
+            self.tabs.clear()
 
     def take_screenshot(self):
-        if not self.current_asset: return
+        if not self.current_asset:
+            return
         target = os.path.join(self.assets_path, self.current_asset, "thumbnail.jpg")
         try:
-            cmds.viewHeadExtents(cmds.getPanel(wf=True), hud=False)
-            cmds.playblast(frame=cmds.currentTime(q=True), format="image", compression="jpg",
-                           completeFilename=target, widthHeight=(300, 300), percent=100, 
-                           forceOverwrite=True, showOrnaments=False, viewer=False)
-            self.load_thumbnail(os.path.join(self.assets_path, self.current_asset))
-        except: pass
+            cmds.playblast(
+                frame=cmds.currentTime(q=True), format="image",
+                compression="jpg", completeFilename=target,
+                widthHeight=(400, 400), percent=100,
+                forceOverwrite=True, showOrnaments=False, viewer=False
+            )
+            self._load_thumbnail()
+            cmds.inViewMessage(amg="Screenshot saved", pos="midCenter", fade=True)
+        except Exception as e:
+            cmds.warning(str(e))
 
-    def restore_last_session(self):
-        last = self.settings.value("last_selected_asset")
-        if last:
-            idx = self.asset_combo.findText(last)
-            if idx != -1: self.asset_combo.setCurrentIndex(idx)
-        # Forzar refresh inicial
-        if self.asset_combo.count() > 0: self.on_asset_changed()
+    def _open_assets_folder(self):
+        import subprocess
+        subprocess.Popen(f'explorer "{self.assets_path}"')
 
-
+    # ── CORE ACTIONS ──────────────────────────────────────────────────────────
     def run_load_settings(self):
-        """
-        Setea paths, importa guías, modelos y todo lo necesario sin construir el rig final.
-        """
-        if not self.current_asset: return
-        
-        asset_root = os.path.join(self.assets_path, self.current_asset)
-        print(f"\n--- CARGANDO SETTINGS PARA: {self.current_asset} ---")
-        print(f"Path Root: {asset_root}")
-        cmds.inViewMessage(amg=f"<hl>{self.current_asset}</hl> Settings Loaded Successfully", pos='midCenter', fade=True)
+        if not self.current_asset:
+            cmds.warning("No asset selected.")
+            return
         cmds.optionVar(sv=("currentAssetRigName", self.current_asset))
-
-        return self.current_asset
+        cmds.inViewMessage(
+            amg=f"<hl>{self.current_asset}</hl> set as active asset",
+            pos="midCenter", fade=True)
 
     def run_build(self):
-        
-        """
-        Construye el rig completo a partir de las guías y modelos importados.
-        """
-        if not self.current_asset: return
-        
-        asset_root = os.path.join(self.assets_path, self.current_asset)
-        print(f"\n--- BUILDING RIG FOR: {self.current_asset} ---")
-        print(f"Path Root: {asset_root}")
+        if not self.current_asset:
+            cmds.warning("No asset selected.")
+            return
+        reply = QtWidgets.QMessageBox.question(
+            self, "Build Rig",
+            f"This will open a new scene and build '{self.current_asset}'.\nContinue?",
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+        )
+        if reply != QtWidgets.QMessageBox.Yes:
+            return
         cmds.optionVar(sv=("currentAssetRigName", self.current_asset))
-        
         cmds.file(new=True, force=True)
         reload(create_rig)
-        rig = create_rig.AutoRig()
-        rig.build()
+        create_rig.AutoRig().build()
 
-        char_name = self.current_asset
-
-        cmds.inViewMessage(
-        amg=f'Completed <hl>{char_name.upper()} RIG</hl> build.',
-        pos='midCenter',
-        fade=True,
-        alpha=0.8)
-
-    def run_external_tool(self, tool_name):
+    def _open_external(self, name):
         try:
-            if tool_name == "ngSkinTools":
-                import ngSkinTools2
-                ngSkinTools2.open_ui()
-            if tool_name == "Rabbit":
-                import rabbitSkinningTools as rst
-                rst.showUI()
-            elif tool_name == "Kangaroo":
-                import maya.utils
-                import createShelfKangarooBuilder
-                def main():
-                    createShelfKangarooBuilder.createShelf()
-
-                maya.utils.executeDeferred(main)
-            elif tool_name == "mGear":
-                import mgear.maya
-                mgear.maya.showMainWindow()
-            elif tool_name == "AdonisFx":
-                import adonisfx
-                adonisfx.openAdonisUI()
+            if name == "ngSkinTools":
+                import ngSkinTools2; ngSkinTools2.open_ui()
+            elif name == "Rabbit Skinning Tools":
+                import rabbitSkinningTools as rst; rst.showUI()
+            elif name == "Kangaroo":
+                import maya.utils, createShelfKangarooBuilder
+                maya.utils.executeDeferred(createShelfKangarooBuilder.createShelf)
+            elif name == "mGear":
+                import mgear.maya; mgear.maya.showMainWindow()
+            elif name == "AdonisFx":
+                import adonisfx; adonisfx.openAdonisUI()
         except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Error", f"Could not open {tool_name}:\n{str(e)}")
-
-    def run_exports(self, file_type):
-        
-        try:
-            if file_type == "guides":
-                reload(guides_manager)
-                guides_manager.get_guides_info()
-            elif file_type == "controllers":
-                reload(curve_tool)
-                curve_tool.get_all_ctl_curves_data()
-            elif file_type == "models":
-                cmds.file(rename=os.path.join(self.assets_path, self.current_asset, "models", f"{self.current_asset}_models.ma"))
-                cmds.file(save=True, type="mayaAscii")
-            elif file_type == "skin":
-                reload(skin_manager_api)
-                skinner = skin_manager_api.SkinManager()
-                skinner.export_skins()
-            cmds.inViewMessage(amg=f'{file_type.capitalize()} Exported.', pos='midCenter', fade=True)
-        except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Error", f"Could not export {file_type}:\n{str(e)}")
+            QtWidgets.QMessageBox.warning(self, "Error", f"Could not open {name}:\n{e}")
 
 
+# ── Launch ────────────────────────────────────────────────────────────────────
 global pro_asset_manager
 try:
     if pro_asset_manager.isVisible():
         pro_asset_manager.close()
         pro_asset_manager.deleteLater()
-except: pass
+except Exception:
+    pass

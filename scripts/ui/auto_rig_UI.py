@@ -20,66 +20,63 @@ reload(data_manager)
 
 def create_custom_menu():
     menu_id = "autorig_menu"
-    menu_label = "AutoRig Tools Laia"
 
     if cmds.menu(menu_id, exists=True):
         cmds.deleteUI(menu_id)
 
-    # Creamos el menú principal
-    cmds.menu(menu_id, label=menu_label, parent='MayaWindow', tearOff=True)
+    cmds.menu(menu_id, label="AutoRig Tools", parent='MayaWindow', tearOff=True)
 
-    # --- BOTÓN RELOAD ---
-    # Icono de refrescar/flechas circulares
     cmds.menuItem(label="Reload UI", command=lambda x: rebuild_ui(), image="refresh.png")
-    cmds.menuItem(divider=True)
 
-    # --- ASSET MANAGER ---
-    # Icono de carpeta o proyecto
+    # ── PIPELINE ──────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="PIPELINE")
+
+    cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="characterMap.png")
+
     cmds.menuItem(label="Asset Manager", subMenu=True, tearOff=True, image="fileOpen.png")
     cmds.menuItem(label="Create New Asset", command=lambda x: create_new_asset(), image="newLayerEmpty.png")
     cmds.setParent('..', menu=True)
 
-    # --- GUIDES MANAGER ---
-    # Icono de ejes o locators
+    # ── MODELING ──────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="MODELING")
+
+    cmds.menuItem(label="Model Checker", command=lambda x: open_model_checker(), image="polyCheckGeometry.png")
+
+    # ── RIGGING ───────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="RIGGING")
+
+    cmds.menuItem(label="BUILD RIG", command=lambda x: rig(), boldFont=True, image="kinJoint.png")
+
     cmds.menuItem(label="Guides Manager", subMenu=True, tearOff=True, image="locator.png")
-    cmds.menuItem(label="Create New Guides", command=lambda x: create_new_guides(), image="confirm.png")
-    cmds.menuItem(label="Import Guides", command=lambda x: import_guides(), image="move_M.png")
-    cmds.menuItem(label="Export Guides", command=lambda x: export_guides(), image="copySelected.png")
-    cmds.menuItem(label="Mirror Guides", command=lambda x: mirror_guides(), image="copySelected.png")
+    cmds.menuItem(label="Create New Guides",  command=lambda x: create_new_guides(), image="confirm.png")
+    cmds.menuItem(label="Import Guides",      command=lambda x: import_guides(),     image="move_M.png")
+    cmds.menuItem(label="Export Guides",      command=lambda x: export_guides(),     image="copySelected.png")
+    cmds.menuItem(label="Mirror Guides",      command=lambda x: mirror_guides(),     image="polyMirror.png")
     cmds.setParent('..', menu=True)
 
-    # --- CONTROLLERS MANAGER ---
-    # Icono de círculo/curva para el gestor de controles
     cmds.menuItem(label="Controllers Manager", subMenu=True, tearOff=True, image="circle.png")
     cmds.menuItem(label="Export All Controllers", command=lambda x: export_all_controllers(), image="save.png")
-    cmds.menuItem(label="Mirror Controllers", command=lambda x: mirror_controllers(), image="polyMirror.png")
-    cmds.menuItem(label="Library", command=lambda x: open_library(), image="tab_library.png")
-    cmds.menuItem(label="Replace Shapes", command=lambda x: replace_shapes(), image="swap.png")
+    cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
+    cmds.menuItem(label="Curve Library",          command=lambda x: show_curve_library(),      image="nurbsCurve.png")
+    cmds.menuItem(label="Replace Shapes",         command=lambda x: replace_shapes(),          image="swap.png")
     cmds.setParent('..', menu=True)
 
-    # --- SKIN CLUSTER MANAGER ---
-    # Icono de pesos/skinning
+    # ── SKINNING ──────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="SKINNING")
+
     cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
-    cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
-    cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
-    cmds.menuItem(label="Copy Skin Cluster", command=lambda x: copy_skin_cluster(), image="copySelected.png")
+    cmds.menuItem(label="Export Skin Cluster",    command=lambda x: export_skin_cluster(),    image="export.png")
+    cmds.menuItem(label="Import Skin Cluster",    command=lambda x: import_skin_cluster(),    image="import.png")
+    cmds.menuItem(label="Copy Skin Cluster",      command=lambda x: copy_skin_cluster(),      image="copySelected.png")
     cmds.menuItem(divider=True)
-    cmds.menuItem(label="Auto Skin Transfer…", command=lambda x: open_skin_transfer_ui(), image="paintSkinWeights.png")
-    cmds.menuItem(label="Export Source Skin Data", command=lambda x: export_source_skin_data(), image="export.png")
+    cmds.menuItem(label="Auto Skin Transfer…",    command=lambda x: open_skin_transfer_ui(),  image="paintSkinWeights.png")
+    cmds.menuItem(label="Export Source Skin Data",command=lambda x: export_source_skin_data(),image="export.png")
     cmds.setParent('..', menu=True)
 
-    cmds.menuItem(divider=True)
+    # ── TOOLS ─────────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="TOOLS")
 
-    # --- BOTÓN RESALTADO: CREAR RIG ---
-    cmds.menuItem(label="CREAR RIG", command=lambda x: rig(), boldFont=True, image="kinJoint.png")
-
-    # ---- BOTÓN DE CHARACTER MANAGER UI ---
-    cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="characterMap.png")
-
-    cmds.menuItem(divider=True)
-
-    # --- MODEL CHECKER ---
-    cmds.menuItem(label="Model Checker", command=lambda x: open_model_checker(), image="polyCheckGeometry.png")
+    cmds.menuItem(label="Rig Tools",  command=lambda x: show_rig_tools(),  image="kinHandle.png")
 
 
 def rebuild_ui():
@@ -180,3 +177,13 @@ def show_character_manager_ui():
     reload(character_manager)
     pro_asset_manager = character_manager.AssetManagerUI()
     pro_asset_manager.show()
+
+def show_curve_library():
+    from tools import curve_library
+    reload(curve_library)
+    curve_library.show()
+
+def show_rig_tools():
+    from tools import rig_tools
+    reload(rig_tools)
+    rig_tools.show()
