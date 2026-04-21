@@ -73,7 +73,7 @@ class AutoRig(object):
     def label_joints(self):
 
         """
-        Label the joints in the rig with appropriate names.
+        Label all the joints in the rig with appropriate names.
         """
         
         for jnt in cmds.ls(type="joint"):
@@ -85,6 +85,7 @@ class AutoRig(object):
                 cmds.setAttr(jnt + ".side", 0)
             cmds.setAttr(jnt + ".type", 18)
             cmds.setAttr(jnt + ".otherType", jnt.split("_")[1], type= "string")
+
 
     def delete_unused_nodes(self):
 
