@@ -33,7 +33,7 @@ class LegModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.local_hip_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
 
-    def make(self, side):
+    def make(self, side, skinning_jnts, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, -1, 0)):
 
         """ 
         Create the leg module structure and controllers. Call this method with the side ('L' or 'R') to create the respective leg module.
@@ -41,7 +41,31 @@ class LegModule(object):
             side (str): The side of the leg ('L' or 'R').
 
         """
+        self.skinning_joint_numbers = skinning_jnts
         self.side = side
+
+        self.primary_axis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
+        self.secondary_axis = secondaryInputAxis if self.side == "L" else tuple(-x for x in secondaryInputAxis)
+
+        print(f"Creating leg module for side: {self.side}, with primary input axis: {self.primary_axis} and secondary input axis: {self.secondary_axis}")
+
+        # Set the axis information based on the primary and secondary input axes
+        def get_axis_info(axis_tuple):
+            for i, val in enumerate(axis_tuple):
+                if val != 0:
+                    return i, val
+            return 0, 1
+
+        aim_idx, aim_sign = get_axis_info(self.primary_axis)
+        up_idx, up_sign = get_axis_info(self.secondary_axis)
+
+        axis_map = ['x', 'y', 'z']
+        aim_axis = axis_map[aim_idx]
+        up_axis = axis_map[up_idx]
+        self.aim_axis_signed = (f"{'-' if aim_sign < 0 else ''}{aim_axis}")
+        self.up_axis_signed = f"{'' if up_sign < 0 else ''}{up_axis}"
+
+        # Create the main groups for the leg module
         self.module_name = f"{self.side}_leg"
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_legModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_legSkinning_GRP", ss=True, p=self.skel_grp)

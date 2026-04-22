@@ -28,22 +28,28 @@ class ArmModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-    def make(self, side, primary_axis=(1,0,0), secondary_axis=(0,1,0)):
+    def make(self, side, skinning_jnts, primaryInputAxis = (1, 0, 0), secondaryInputAxis = (0, 0, 1)):
 
         """ 
         Create the arm module structure and controllers. Call this method with the side ('L' or 'R') to create the respective arm module.
         Args:
             side (str): The side of the arm ('L' or 'R').
+            primaryInputAxis (tuple): The primary axis for orientation.
+            secondaryInputAxis (tuple): The secondary axis for orientation.
 
         """
+        self.skinning_joint_numbers = skinning_jnts
         self.side = side
+
+        self.primaryInputAxis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
+        self.secondaryInputAxis = secondaryInputAxis if self.side == "L" else tuple(-x for x in secondaryInputAxis)
+
+        print(f"Creating arm module for side: {self.side}, with primary input axis: {self.primaryInputAxis} and secondary input axis: {self.secondaryInputAxis}")
+
         self.module_name = f"{self.side}_arm"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
-
-        self.primary_axis = primary_axis if self.side == "L" else (-primary_axis[0], primary_axis[1], primary_axis[2])
-        self.secondary_axis = secondary_axis
 
         self.load_guides()
         self.create_chains()
