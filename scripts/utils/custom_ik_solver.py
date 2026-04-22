@@ -147,8 +147,9 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.setAttr(aim_matrix+'.secondaryMode', 1) # Aim to secondary axis
         cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", aim_matrix+'.inputMatrix') # input
         if ik_handle_manager == True:
-                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', aim_matrix+'.primaryTargetMatrix', f=True) # connect ik handle manager output to aim matrix target (effective ankle after ball rotation)
-        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", aim_matrix+'.primaryTargetMatrix') # target
+                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', aim_matrix+'.primaryTargetMatrix') # connect ik handle manager output to aim matrix target (effective ankle after ball rotation)
+        else:
+                cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", aim_matrix+'.primaryTargetMatrix') # target
         cmds.connectAttr(f"{controllers[1]}.worldMatrix[0]", aim_matrix+'.secondaryTargetMatrix') # secondary target
 
 
@@ -166,7 +167,8 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.connectAttr(aim_matrix+'.outputMatrix', mult_matrix_upper_wm+'.matrixIn[1]') # connect aim matrix to world matrix
         cmds.connectAttr(four_by_four_up_local_rotation+'.output', mult_matrix_upper_wm+'.matrixIn[0]') # connect local rotation to world matrix
         upper_wm = mult_matrix_upper_wm+'.matrixSum' # upper world matrix
-        locator_upper = cmds.spaceLocator(name=f"{side}_armUpper_LOC")[0]
+        limb = name.split('_')[1]
+        locator_upper = cmds.spaceLocator(name=f"{side}_{limb}Upper_LOC")[0]
         cmds.connectAttr(upper_wm, locator_upper+'.offsetParentMatrix') # connect upper
         #  ----- This will be used to connect it to the blend matrix later -----
 
@@ -224,7 +226,7 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.connectAttr(four_by_four_low_local_rotation+'.output', mult_matrix_lower_rwm+'.matrixIn[0]') # connect local rotation to world matrix
         lower_wm = mult_matrix_lower_rwm+'.matrixSum' # lower world matrix
         lower_lm = four_by_four_low_local_rotation+'.output' # lower local matrix
-        locator_lower = cmds.spaceLocator(name=f"{side}_armLower_LOC")[0]
+        locator_lower = cmds.spaceLocator(name=f"{side}_{limb}Lower_LOC")[0]
         cmds.connectAttr(lower_wm, locator_lower+'.offsetParentMatrix') # connect lower
         # ----- This will be used to connect it to the blend matrix later -----
 
@@ -267,7 +269,7 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         cmds.connectAttr(lower_wm, effector_mult_matrix_wm+'.matrixIn[1]') # connect lower world matrix to effector world matrix
         cmds.connectAttr(mult_matrix_add_effector_pos+'.matrixSum', effector_mult_matrix_wm+'.matrixIn[0]')
         effector_wm = effector_mult_matrix_wm+'.matrixSum' # effector world matrix
-        locator_effector = cmds.spaceLocator(name=f"{side}_armEffector_LOC")[0]
+        locator_effector = cmds.spaceLocator(name=f"{side}_{limb}Effector_LOC")[0]
         cmds.connectAttr(effector_wm, locator_effector+'.offsetParentMatrix') # connect effector
         # ----- This will be used to connect it to the blend matrix
 
