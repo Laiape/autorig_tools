@@ -750,33 +750,33 @@ class EyelidModule(object):
                         name=driver_name, offset=["GRP", "OFF"], parent=secondary_sockets
                     )
 
-                    pmt = cmds.createNode("parentMatrix", name=f"{driver_name}_PMT", ss=True)
-                    cmds.connectAttr(f"{driver_guide}.worldMatrix[0]", f"{pmt}.inputMatrix")
-                    cmds.connectAttr(f"{pmt}.outputMatrix", f"{driver_nodes[0]}.offsetParentMatrix")
+                    wam = cmds.createNode("wtAddMatrix", name=f"{driver_name}_WAM", ss=True)
+                    cmds.connectAttr(f"{wam}.matrixSum", f"{driver_nodes[0]}.offsetParentMatrix")
 
                     driver_skinning_jnt = cmds.createNode(
                         "joint", name=f"{driver_name}Skinning_JNT", ss=True, p=self.skeleton_grp
                     )
-                    driver_mult_matrix = cmds.createNode(
-                        "multMatrix", name=f"{driver_name}_MMX", ss=True
-                    )
-                    cmds.connectAttr(f"{driver_ctl}.worldMatrix[0]", f"{driver_mult_matrix}.matrixIn[0]")
-                    cmds.connectAttr(f"{driver_nodes[0]}.worldInverseMatrix[0]", f"{driver_mult_matrix}.matrixIn[1]")
-                    cmds.connectAttr(f"{driver_mult_matrix}.matrixSum", f"{driver_skinning_jnt}.offsetParentMatrix")
-                    
+                    wam_jnt = cmds.createNode("wtAddMatrix", name=f"{driver_name}_jnt_WAM", ss=True)
+                    cmds.connectAttr(f"{wam_jnt}.matrixSum", f"{driver_skinning_jnt}.offsetParentMatrix")
 
-                    driver_ctls_cache[driver_name] = (driver_ctl, driver_nodes, driver_mult_matrix, pmt)
+                    driver_ctls_cache[driver_name] = (driver_ctl, driver_nodes, wam, wam_jnt, driver_skinning_jnt)
 
-                driver_ctl, driver_nodes, driver_mult_matrix, pmt = driver_ctls_cache[driver_name]
+                driver_ctl, driver_nodes, wam, wam_jnt, driver_skinning_jnt = driver_ctls_cache[driver_name]
 
                 offset_matrix = matrix_manager.get_offset_matrix(f"{driver_name}_GUIDE", f"{parent_mult_matrix}.matrixSum")
 
-                if not cmds.listConnections(f"{pmt}.target[0].targetMatrix", source=True, destination=False):
-                    cmds.connectAttr(f"{parent_mult_matrix}.matrixSum", f"{pmt}.target[0].targetMatrix")
-                    cmds.setAttr(f"{pmt}.target[0].offsetMatrix", offset_matrix, type="matrix")
+                if not cmds.listConnections(f"{wam}.wtMatrix[0].matrixIn", source=True, destination=False):
+                    idx = 0
                 else:
-                    cmds.connectAttr(f"{parent_mult_matrix}.matrixSum", f"{pmt}.target[1].targetMatrix")
-                    cmds.setAttr(f"{pmt}.target[1].offsetMatrix", offset_matrix, type="matrix")
+                    idx = 1
+
+                parent_offset_mmx = cmds.createNode("multMatrix", name=f"{driver_name}_p{idx}_OFX", ss=True)
+                cmds.setAttr(f"{parent_offset_mmx}.matrixIn[0]", offset_matrix, type="matrix")
+                cmds.connectAttr(f"{parent_mult_matrix}.matrixSum", f"{parent_offset_mmx}.matrixIn[1]")
+                cmds.connectAttr(f"{parent_offset_mmx}.matrixSum", f"{wam}.wtMatrix[{idx}].matrixIn")
+                cmds.setAttr(f"{wam}.wtMatrix[{idx}].weightIn", 0.5)
+                cmds.connectAttr(f"{parent_offset_mmx}.matrixSum", f"{wam_jnt}.wtMatrix[{idx}].matrixIn")
+                cmds.setAttr(f"{wam_jnt}.wtMatrix[{idx}].weightIn", 0.5)
 
                 cmds.xform(driver_nodes[0], m=om.MMatrix.kIdentity)
                 cmds.xform(driver_skinning_jnt, m=om.MMatrix.kIdentity)

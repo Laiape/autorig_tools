@@ -98,10 +98,16 @@ class TongueModule(object):
             mmx = cmds.createNode("multMatrix", name=f"{ctl_name}_MMX", ss=True)
 
             if i == 0:
-                
+
+                jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_jaw_mmx")
+                jaw_ctl_wm = cmds.listConnections(f"{jaw}.matrixIn[0]", plugs=True, source=True)[0]
+                jaw_grp_inv_wm = cmds.listConnections(f"{jaw}.matrixIn[1]", plugs=True, source=True)[0]
+
                 cmds.connectAttr(matrix, f"{mmx}.matrixIn[0]")
                 cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
-            
+                cmds.connectAttr(jaw_ctl_wm, f"{mmx}.matrixIn[2]")
+                cmds.connectAttr(jaw_grp_inv_wm, f"{mmx}.matrixIn[3]")
+
             else:
                 cmds.parent(nodes[0], tongue_controllers[-1])
                 cmds.connectAttr(matrix, f"{mmx}.matrixIn[0]")
@@ -118,8 +124,14 @@ class TongueModule(object):
             if i != 0:
                 cmds.parent(skinning_jnt, skinning_jnts[-1])
                 cmds.connectAttr(f"{inverse_matrix}.outputMatrix", f"{local_mmx}.matrixIn[3]")
-            
+            else:
+                grp_wm_baked = om.MMatrix(cmds.getAttr(f"{local_mmx}.matrixIn[2]"))
+                jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{jaw}.matrixIn[2]"))
+                cmds.setAttr(f"{local_mmx}.matrixIn[2]", list(grp_wm_baked * jaw_grp_wm_baked.inverse()), type="matrix")
+                cmds.connectAttr(f"{jaw}.matrixSum", f"{local_mmx}.matrixIn[3]")
+
             cmds.connectAttr(f"{local_mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
+
             cmds.xform(skinning_jnt, m=om.MMatrix.kIdentity)
             
             tongue_controllers.append(ctl)

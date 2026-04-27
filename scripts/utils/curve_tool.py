@@ -83,11 +83,14 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
         transforms = cmds.ls("*_CTL", type="transform", long=True)
 
     for transform_name in transforms:
-        
+
+        if cmds.attributeQuery('isCtl', node=transform_name, exists=True):
+            continue
+
         transform_dag = get_dag_path_safe(transform_name)
         if not transform_dag:
             continue
-        
+
         transform_obj = transform_dag.node()
 
         trans_ov_enabled, trans_ov_color = get_override_info_safe(transform_obj)

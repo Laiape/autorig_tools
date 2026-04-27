@@ -93,27 +93,47 @@ class TeethModule(object):
         :param self: Description
         """
         # Upper Teeth Controller
+        upper_jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_upper_jaw_mmx")
+        upper_jaw_ctl_wm = cmds.listConnections(f"{upper_jaw}.matrixIn[0]", plugs=True, source=True)[0]
+        upper_jaw_grp_inv_wm = cmds.listConnections(f"{upper_jaw}.matrixIn[1]", plugs=True, source=True)[0]
+
         upper_teeth_nodes, upper_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_upperTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
-        cmds.connectAttr(f"{self.upper_teeth_guide}.worldMatrix[0]", f"{upper_teeth_nodes[0]}.offsetParentMatrix")
+        upper_teeth_mmx = cmds.createNode("multMatrix", name=f"{self.side}_upperTeeth_MMX", ss=True)
+        cmds.connectAttr(f"{self.upper_teeth_guide}.worldMatrix[0]", f"{upper_teeth_mmx}.matrixIn[0]")
+        cmds.connectAttr(upper_jaw_ctl_wm, f"{upper_teeth_mmx}.matrixIn[1]")
+        cmds.connectAttr(upper_jaw_grp_inv_wm, f"{upper_teeth_mmx}.matrixIn[2]")
+        cmds.connectAttr(f"{upper_teeth_mmx}.matrixSum", f"{upper_teeth_nodes[0]}.offsetParentMatrix")
         upper_local_mmx = matrix_manager.local_mmx(upper_teeth_ctl, upper_teeth_nodes[0])
         self._lock_attributes(upper_teeth_ctl, ["v"])
-        
+
+        upper_bind_wm = om.MMatrix(cmds.getAttr(f"{self.upper_teeth_guide}.matrix"))
+        upper_jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{upper_jaw}.matrixIn[2]"))
+        cmds.setAttr(f"{upper_local_mmx}.matrixIn[2]", list(upper_bind_wm * upper_jaw_grp_wm_baked.inverse()), type="matrix")
 
         upper_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_upperTeeth_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{upper_local_mmx}.matrixSum", f"{upper_teeth_skinning_jnt}.offsetParentMatrix")
-        upper_jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_upper_jaw_mmx")
         cmds.connectAttr(f"{upper_jaw}.matrixSum", f"{upper_local_mmx}.matrixIn[3]")
 
         # Lower Teeth Controller
+        jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_jaw_mmx")
+        jaw_ctl_wm = cmds.listConnections(f"{jaw}.matrixIn[0]", plugs=True, source=True)[0]
+        jaw_grp_inv_wm = cmds.listConnections(f"{jaw}.matrixIn[1]", plugs=True, source=True)[0]
+
         lower_teeth_nodes, lower_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_lowerTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
-        cmds.connectAttr(f"{self.lower_teeth_guide}.worldMatrix[0]", f"{lower_teeth_nodes[0]}.offsetParentMatrix")
+        lower_teeth_mmx = cmds.createNode("multMatrix", name=f"{self.side}_lowerTeeth_MMX", ss=True)
+        cmds.connectAttr(f"{self.lower_teeth_guide}.worldMatrix[0]", f"{lower_teeth_mmx}.matrixIn[0]")
+        cmds.connectAttr(jaw_ctl_wm, f"{lower_teeth_mmx}.matrixIn[1]")
+        cmds.connectAttr(jaw_grp_inv_wm, f"{lower_teeth_mmx}.matrixIn[2]")
+        cmds.connectAttr(f"{lower_teeth_mmx}.matrixSum", f"{lower_teeth_nodes[0]}.offsetParentMatrix")
         lower_local_mmx = matrix_manager.local_mmx(lower_teeth_ctl, lower_teeth_nodes[0])
         self._lock_attributes(lower_teeth_ctl, ["v"])
-        
+
+        lower_bind_wm = om.MMatrix(cmds.getAttr(f"{self.lower_teeth_guide}.matrix"))
+        jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{jaw}.matrixIn[2]"))
+        cmds.setAttr(f"{lower_local_mmx}.matrixIn[2]", list(lower_bind_wm * jaw_grp_wm_baked.inverse()), type="matrix")
 
         lower_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_lowerTeeth_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{lower_local_mmx}.matrixSum", f"{lower_teeth_skinning_jnt}.offsetParentMatrix")
-        jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_jaw_mmx")
         cmds.connectAttr(f"{jaw}.matrixSum", f"{lower_local_mmx}.matrixIn[3]")
 
         cmds.xform(upper_teeth_nodes[0], m=om.MMatrix.kIdentity)
