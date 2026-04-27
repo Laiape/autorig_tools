@@ -80,24 +80,6 @@ class TongueModule(object):
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.tongue_guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0))
         cmds.delete(self.tongue_guides[0])
         cmds.parent(self.guides_trns[0], self.module_trn)
-
-    def local_mmx(self, ctl, grp):
-
-        """
-        Create a local matrix manager for a controller.
-        Args:
-            ctl (str): The name of the controller.
-        Returns:
-            matrix_manager.MatrixManager: The local matrix manager.
-        """
-
-        mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
-        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
-        cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
-        grp_wm = cmds.getAttr(f"{grp}.worldMatrix[0]")
-        cmds.setAttr(f"{mmx}.matrixIn[2]", grp_wm, type="matrix")
-
-        return mmx
     
     def create_controllers(self):
 
@@ -130,7 +112,7 @@ class TongueModule(object):
             cmds.connectAttr(f"{mmx}.matrixSum", f"{nodes[0]}.offsetParentMatrix")
 
             cmds.xform(nodes[0], m=om.MMatrix.kIdentity)
-            local_mmx = self.local_mmx(ctl, nodes[0])
+            local_mmx = matrix_manager.local_mmx(ctl, nodes[0])
             skinning_jnt = cmds.createNode("joint", name=f"{ctl_name}Skinning_JNT", ss=True, p=self.skeleton_grp)
 
             if i != 0:

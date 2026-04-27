@@ -64,6 +64,8 @@ class JawModule(object):
                                                 
                                                 {"jaw_ctl": self.jaw_ctl,
                                                  "upper_jaw_ctl": self.upper_jaw_ctl,
+                                                 "local_jaw_mmx" : self.mult_matrix_jaw_local,
+                                                 "local_upper_jaw_mmx" : self.mult_matrix_upper_jaw_local
                                                 })
 
     def lock_attributes(self, ctl, attrs):
@@ -799,7 +801,7 @@ class JawModule(object):
 
         # ----- STICKY LIPS SETUP -----
         mid_nurbs = cmds.duplicate(self.upper_lip_nurbs, name="C_midLip_NURB")[0]
-        cmds.parent(mid_nurbs, self.module_trn)
+        # cmds.parent(mid_nurbs, self.module_trn)
         blend_shape_mid_nurbs = cmds.blendShape(self.upper_lip_nurbs, self.lower_lip_nurbs, mid_nurbs, name="C_midLip_BLS")[0]
         cmds.setAttr(f"{blend_shape_mid_nurbs}.{self.upper_lip_nurbs}", 0.5)
         cmds.setAttr(f"{blend_shape_mid_nurbs}.{self.lower_lip_nurbs}", 0.5)

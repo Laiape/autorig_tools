@@ -44,7 +44,7 @@ class AutoRig(object):
         self.hide_connections()
         self.inherit_transforms()
         self.import_weights()
-        self.proxy_locator()
+        # self.proxy_locator()
 
     def basic_structure(self):
 

@@ -27,6 +27,7 @@ class TeethModule(object):
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
 
     def make(self, side):
 
@@ -71,9 +72,18 @@ class TeethModule(object):
         """ 
         Load the guides for the teeth module.
         """
-        self.upper_teeth_guide = guides_manager.get_guides(f"{self.side}_upperTeeth_JNT")[0]
+        upper_teeth_guide = guides_manager.get_guides(f"{self.side}_upperTeeth_JNT")[0]
         cmds.select(cl=True)
-        self.lower_teeth_guide = guides_manager.get_guides(f"{self.side}_lowerTeeth_JNT")[0]
+        lower_teeth_guide = guides_manager.get_guides(f"{self.side}_lowerTeeth_JNT")[0]
+
+        self.upper_teeth_guide = cmds.createNode("transform", name=upper_teeth_guide.replace("JNT", "GUIDE"), ss=True, p=self.module_trn)
+        self.lower_teeth_guide = cmds.createNode("transform", name=lower_teeth_guide.replace("JNT", "GUIDE"), ss=True, p=self.module_trn)
+        cmds.matchTransform(self.upper_teeth_guide, upper_teeth_guide)
+        cmds.matchTransform(self.lower_teeth_guide, lower_teeth_guide)
+        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{self.upper_teeth_guide}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{self.lower_teeth_guide}.offsetParentMatrix")
+
+        cmds.delete(upper_teeth_guide, lower_teeth_guide)
 
     def create_controllers(self):
 
@@ -84,24 +94,29 @@ class TeethModule(object):
         """
         # Upper Teeth Controller
         upper_teeth_nodes, upper_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_upperTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
+        cmds.connectAttr(f"{self.upper_teeth_guide}.worldMatrix[0]", f"{upper_teeth_nodes[0]}.offsetParentMatrix")
+        upper_local_mmx = matrix_manager.local_mmx(upper_teeth_ctl, upper_teeth_nodes[0])
         self._lock_attributes(upper_teeth_ctl, ["v"])
-        cmds.matchTransform(upper_teeth_nodes[0], self.upper_teeth_guide)
-        cmds.delete(self.upper_teeth_guide)
+        
 
         upper_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_upperTeeth_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{upper_teeth_ctl}.worldMatrix[0]", f"{upper_teeth_skinning_jnt}.offsetParentMatrix")
-        upper_jaw = data_manager.DataExportBiped().get_data("jaw_module", "upper_jaw_ctl")
-        matrix_manager.space_switches(target=upper_teeth_ctl, sources=[upper_jaw], default_rotate=1, default_translate=1) # Upper teeth
+        cmds.connectAttr(f"{upper_local_mmx}.matrixSum", f"{upper_teeth_skinning_jnt}.offsetParentMatrix")
+        upper_jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_upper_jaw_mmx")
+        cmds.connectAttr(f"{upper_jaw}.matrixSum", f"{upper_local_mmx}.matrixIn[3]")
 
         # Lower Teeth Controller
         lower_teeth_nodes, lower_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_lowerTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
+        cmds.connectAttr(f"{self.lower_teeth_guide}.worldMatrix[0]", f"{lower_teeth_nodes[0]}.offsetParentMatrix")
+        lower_local_mmx = matrix_manager.local_mmx(lower_teeth_ctl, lower_teeth_nodes[0])
         self._lock_attributes(lower_teeth_ctl, ["v"])
-        cmds.matchTransform(lower_teeth_nodes[0], self.lower_teeth_guide)
-        cmds.delete(self.lower_teeth_guide)
+        
 
         lower_teeth_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_lowerTeeth_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{lower_teeth_ctl}.worldMatrix[0]", f"{lower_teeth_skinning_jnt}.offsetParentMatrix")
-        jaw = data_manager.DataExportBiped().get_data("jaw_module", "jaw_ctl")
-        matrix_manager.space_switches(target=lower_teeth_ctl, sources=[jaw], default_rotate=1, default_translate=1) # Lower teeth
+        cmds.connectAttr(f"{lower_local_mmx}.matrixSum", f"{lower_teeth_skinning_jnt}.offsetParentMatrix")
+        jaw = data_manager.DataExportBiped().get_data("jaw_module", "local_jaw_mmx")
+        cmds.connectAttr(f"{jaw}.matrixSum", f"{lower_local_mmx}.matrixIn[3]")
+
+        cmds.xform(upper_teeth_nodes[0], m=om.MMatrix.kIdentity)
+        cmds.xform(lower_teeth_nodes[0], m=om.MMatrix.kIdentity)
 
         

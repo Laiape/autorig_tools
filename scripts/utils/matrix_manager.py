@@ -423,3 +423,22 @@ def getClosestParamToWorldMatrixCurve(curve, pos, point=False, both=False):
         return closestPoint, paramU
 
     return paramU
+
+
+def local_mmx(ctl, grp):
+
+        """
+        Create a local matrix manager for a controller.
+        Args:
+            ctl (str): The name of the controller.
+        Returns:
+            matrix_manager.MatrixManager: The local matrix manager.
+        """
+
+        mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
+        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
+        grp_wm = cmds.getAttr(f"{grp}.worldMatrix[0]")
+        cmds.setAttr(f"{mmx}.matrixIn[2]", grp_wm, type="matrix")
+
+        return mmx

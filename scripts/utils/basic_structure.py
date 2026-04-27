@@ -155,7 +155,6 @@ def create_basic_structure(character_name=None):
     cmds.setAttr(f"{settings_ctl}.GEO_SEP", keyable=False, channelBox=True, lock=True)
     add_attr_safe(settings_ctl, longName="geometryType", niceName="Type", attributeType="enum", enumName="Final:Proxy", keyable=True)
     add_attr_safe(settings_ctl, longName="geoDisplay", niceName="Display", attributeType="enum", enumName="Locked:Selectable:Off", keyable=True)
-    add_attr_safe(settings_ctl, longName="geoSmooth", niceName="Smooth", attributeType="float", defaultValue=0, minValue=0, maxValue=2, keyable=True)
     add_attr_safe(settings_ctl, longName="RIG_SEP", niceName="RIG ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.RIG_SEP", keyable=False, channelBox=True, lock=True)
     add_attr_safe(settings_ctl, longName="showModules", niceName="Show Modules", attributeType="bool", defaultValue=True, keyable=True)
@@ -207,21 +206,6 @@ def create_basic_structure(character_name=None):
     safe_connect(f"{settings_ctl}.geoDisplay", f"{ref_off}.firstTerm")
     safe_connect(f"{ref_off}.outColorR", f"{geo_grp}.visibility")
 
-    # --- GEO SMOOTH ---
-    all_meshes = cmds.ls(type="mesh", long=True, noIntermediate=True)
-    mesh_transforms = list(set(cmds.listRelatives(all_meshes, parent=True, fullPath=True) or []))
-    for mesh in mesh_transforms:
-        m_name = mesh.split('|')[-1]
-        cond_node = get_or_create("condition", f"{m_name}_smooth_COND")
-        cmds.setAttr(f"{cond_node}.operation", 2)
-        cmds.setAttr(f"{cond_node}.secondTerm", 0)
-        safe_connect(f"{settings_ctl}.geoSmooth", f"{cond_node}.firstTerm")
-        safe_connect(f"{settings_ctl}.geoSmooth", f"{cond_node}.colorIfTrueR")
-        cmds.setAttr(f"{cond_node}.colorIfFalseR", 0)
-        shapes = cmds.listRelatives(mesh, shapes=True, fullPath=True) or []
-        for shape in shapes:
-            safe_connect(f"{cond_node}.outColorR", f"{shape}.displaySmoothMesh")
-            safe_connect(f"{settings_ctl}.geoSmooth", f"{shape}.smoothLevel")
 
     # --- PLAYBLAST HIDE ---
     pb_rev = get_or_create("reverse", "C_playblast_REV")
