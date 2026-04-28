@@ -59,6 +59,8 @@ def create_custom_menu():
     cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
     cmds.menuItem(label="Curve Library",          command=lambda x: show_curve_library(),      image="nurbsCurve.png")
     cmds.menuItem(label="Replace Shapes",         command=lambda x: replace_shapes(),          image="swap.png")
+    cmds.menuItem(divider=True)
+    cmds.menuItem(label="Tag Scene Curves",       command=lambda x: tag_scene_curves(),        image="tag.png")
     cmds.setParent('..', menu=True)
 
     # ── SKINNING ──────────────────────────────────────────────────────────────
@@ -125,6 +127,11 @@ def open_library():
 
 def replace_shapes():
     print("Funcionalidad para reemplazar formas de controladores.")
+
+def tag_scene_curves():
+    reload(curve_tool)
+    curve_tool.tag_scene_curves()
+    cmds.inViewMessage(amg='Curves Taggeadas.', pos='midCenter', fade=True)
 
 def export_skin_cluster():
     reload(skin_manager_api)

@@ -99,6 +99,16 @@ class SkinManager(object):
         except:
             return None
 
+    def _get_scene_skin_clusters(self):
+        """Returns a set with the names of all skinClusters currently in the scene."""
+        it_dep = om.MItDependencyNodes(om.MFn.kSkinClusterFilter)
+        scene_skins = set()
+        while not it_dep.isDone():
+            fn = om.MFnDependencyNode(it_dep.thisNode())
+            scene_skins.add(fn.name())
+            it_dep.next()
+        return scene_skins
+
     def _get_skin_clusters(self, dag_path):
         """
         Retorna los skinClusters en orden de deformación (Stack Order).
@@ -330,6 +340,12 @@ class SkinManager(object):
 
         om.MGlobal.displayInfo(f"--- Importando Skins de: {self.json_path} ---")
 
+        # Registrar skin clusters ya existentes en escena ANTES de importar.
+        # Estos no se importarán y siempre quedarán los últimos en el stack.
+        existing_scene_skins = self._get_scene_skin_clusters()
+        if existing_scene_skins:
+            om.MGlobal.displayInfo(f"Skin clusters pre-existentes (se saltarán): {sorted(existing_scene_skins)}")
+
         with open(self.json_path, 'r') as f:
             data = json.load(f)
 
@@ -351,7 +367,12 @@ class SkinManager(object):
             for skin_data in skins_list:
                 skin_name = skin_data["name"]
                 target_vtx_count = skin_data["vertex_count"]
-                
+
+                # Saltar skin clusters que ya existían en escena antes del import
+                if skin_name in existing_scene_skins:
+                    om.MGlobal.displayInfo(f"Saltando skin pre-existente: {skin_name}")
+                    continue
+
                 # Validación topología
                 if mf_mesh.numVertices != target_vtx_count:
                     om.MGlobal.displayError(f"Topología incorrecta para {skin_name}. Mesh: {mf_mesh.numVertices} vs Data: {target_vtx_count}")
@@ -439,18 +460,17 @@ class SkinManager(object):
                 processed_skins.append(skin_name)
 
             # --- Reordenamiento de Deformers (Stack Order) ---
-            # Asegura que el orden visual en Maya coincida con el orden del JSON
+            # Orden deseado (inner → outer):
+            #   1. imported skins (del archivo)
+            #   2. pre-existing skins (los que ya estaban en escena, siempre los últimos)
             if processed_skins:
                 current_hist = cmds.listHistory(mesh_path.fullPathName(), pruneDagObjects=True, interestLevel=1)
                 current_skins = [x for x in current_hist if cmds.nodeType(x) == "skinCluster"]
-                # listHistory es [Outer, Inner], lo invertimos a [Inner, Outer] para comparar
-                current_skins = list(reversed(current_skins))
-                
-                # Si hay skins en la escena que no estaban en el JSON (raro, pero posible), los ponemos primero
-                unknown = [s for s in current_skins if s not in processed_skins]
-                desired_order = unknown + processed_skins
-                
-                # ReorderDeformers espera el orden de aplicación
+                current_skins = list(reversed(current_skins))  # [Inner, ..., Outer]
+
+                pre_existing_here = [s for s in current_skins if s in existing_scene_skins]
+                desired_order = processed_skins + pre_existing_here
+
                 for skin in reversed(desired_order):
                     try: cmds.reorderDeformers(skin, mesh_path.fullPathName(), back=True)
                     except: pass

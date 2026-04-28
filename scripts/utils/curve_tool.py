@@ -87,6 +87,8 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
         try:
             if cmds.attributeQuery('isCtl', node=transform_name, exists=True):
                 continue
+            if cmds.attributeQuery('isCurvesTag', node=transform_name, exists=True):
+                continue
         except Exception:
             continue
 
@@ -228,6 +230,9 @@ def load_all_ctl_curves_data(path):
 
         try:
             if cmds.attributeQuery('isCtl', node=transform_name, exists=True):
+                skipped += 1
+                continue
+            if cmds.attributeQuery('isCurvesTag', node=transform_name, exists=True):
                 skipped += 1
                 continue
         except Exception:
@@ -615,13 +620,31 @@ def scale_all_controllers(value):
             cmds.scale(value, value, value, cv, relative=True, ocp=True)
 
 
-def replace_shapes():   
-    
+def replace_shapes():
+
     """
     Replaces the shapes of selected controllers with those from the template file.
     """
     pass
-    
 
 
+def tag_scene_curves():
+    """
+    Adds a isCurvesTag boolean attribute to every *_CTL transform currently
+    in the scene. Call this before saving the model so those curves are
+    ignored by get_all_ctl_curves_data and load_all_ctl_curves_data.
+    """
+    transforms = cmds.ls("*_CTL", type="transform", long=True) or []
+    tagged = 0
+
+    for t in transforms:
+        try:
+            if not cmds.attributeQuery('isCurvesTag', node=t, exists=True):
+                cmds.addAttr(t, longName='isCurvesTag', attributeType='bool', defaultValue=True)
+                cmds.setAttr(f"{t}.isCurvesTag", True, lock=True)
+            tagged += 1
+        except Exception:
+            continue
+
+    om.MGlobal.displayInfo(f"tag_scene_curves: {tagged} controllers tagged.")
 

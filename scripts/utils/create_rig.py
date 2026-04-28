@@ -110,23 +110,29 @@ class AutoRig(object):
     def hide_connections(self):
 
         """
-        Hide the connections in the rig to clean up the scene.
+        Hides utility/math nodes from the Node Editor by setting
+        isHistoricallyInteresting=0. Only targets computational nodes —
+        joints, transforms, shapes and deformers are left untouched.
         """
 
-        float_math = cmds.createNode("floatConstant", name="hide_connections")
-        cmds.setAttr(float_math + ".inFloat", 0)
+        UTILITY_TYPES = {
+            "multMatrix", "decomposeMatrix", "composeMatrix", "blendMatrix",
+            "wtAddMatrix", "pickMatrix", "fourByFourMatrix", "rowFromMatrix",
+            "condition", "reverse", "clamp", "remapValue", "blendTwoAttr",
+            "addDoubleLinear", "multDoubleLinear", "multiplyDivide",
+            "plusMinusAverage", "blendColors", "pairBlend",
+            "floatMath", "floatConstant", "floatLogic", "floatCorrect",
+            "pointMatrixMult", "vectorProduct", "angleBetween",
+            "distanceBetween", "curveInfo", "motionPath",
+            "parentMatrix", "animBlendNodeBase",
+        }
 
-        skin_clusters = cmds.ls(type="skinCluster")
-        all_nodes = cmds.ls(ap=True)
-
-        for node in all_nodes:
-            if node not in skin_clusters:
-                if cmds.objectType(node) == "fourByFourMatrix" or cmds.objectType(node) == "rowFromMatrix":
-                    continue
-                else:
-                    cmds.connectAttr(float_math + ".outFloat", node + ".isHistoricallyInteresting", force=True)
-
-        cmds.delete(float_math)
+        for node_type in UTILITY_TYPES:
+            for node in cmds.ls(type=node_type) or []:
+                try:
+                    cmds.setAttr(f"{node}.isHistoricallyInteresting", 0)
+                except Exception:
+                    pass
 
     def inherit_transforms(self):
 
