@@ -84,7 +84,10 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
 
     for transform_name in transforms:
 
-        if cmds.attributeQuery('isCtl', node=transform_name, exists=True):
+        try:
+            if cmds.attributeQuery('isCtl', node=transform_name, exists=True):
+                continue
+        except Exception:
             continue
 
         transform_dag = get_dag_path_safe(transform_name)
@@ -193,6 +196,107 @@ def get_all_ctl_curves_data(path=None, root_filter=None):
     except Exception as e:
         om.MGlobal.displayError(f"Error saving file: {e}")
 
+
+
+def load_all_ctl_curves_data(path):
+    """
+    Applies saved curve shapes to existing controllers in the scene.
+    Unlike build_curves_from_template, this does NOT create new transforms —
+    it replaces the shapes on controllers that already exist.
+    Skips mGear controllers (nodes with the isCtl attribute).
+    """
+    if not os.path.exists(path):
+        om.MGlobal.displayError(f"Curves file not found: {path}")
+        return
+
+    with open(path, "r") as f:
+        ctl_data = json.load(f)
+
+    updated = 0
+    skipped = 0
+
+    for _transform_path, data in ctl_data.items():
+        transform_info = data["transform"]
+        short_name = transform_info["name"]
+
+        existing = cmds.ls(short_name, type="transform")
+        if not existing:
+            skipped += 1
+            continue
+
+        transform_name = existing[0]
+
+        try:
+            if cmds.attributeQuery('isCtl', node=transform_name, exists=True):
+                skipped += 1
+                continue
+        except Exception:
+            skipped += 1
+            continue
+
+        # Remove existing non-intermediate nurbsCurve shapes
+        old_shapes = cmds.listRelatives(transform_name, shapes=True, fullPath=True) or []
+        for shp in old_shapes:
+            try:
+                if cmds.nodeType(shp) == "nurbsCurve" and not cmds.getAttr(f"{shp}.intermediateObject"):
+                    cmds.delete(shp)
+            except Exception:
+                pass
+
+        transform_dag = get_dag_path_safe(transform_name)
+        if not transform_dag:
+            skipped += 1
+            continue
+        transform_obj = transform_dag.node()
+
+        if transform_info.get("overrideEnabled"):
+            fn_dep = om.MFnDependencyNode(transform_obj)
+            fn_dep.findPlug('overrideEnabled', False).setBool(True)
+            fn_dep.findPlug('overrideColor', False).setInt(transform_info["overrideColor"])
+
+        for shape_data in data["shapes"]:
+            curve_info = shape_data["curve"]
+            form_flags = {
+                "open": om.MFnNurbsCurve.kOpen,
+                "closed": om.MFnNurbsCurve.kClosed,
+                "periodic": om.MFnNurbsCurve.kPeriodic
+            }
+            form_flag = form_flags.get(curve_info["form"], om.MFnNurbsCurve.kOpen)
+
+            points = om.MPointArray()
+            for pt in curve_info["cvs"]:
+                points.append(om.MPoint(pt[0], pt[1], pt[2]))
+
+            curve_fn = om.MFnNurbsCurve()
+            shape_obj = curve_fn.create(
+                points, curve_info["knots"], curve_info["degree"],
+                form_flag, False, True, transform_obj
+            )
+
+            shape_fn = om.MFnDagNode(shape_obj)
+            shape_fn.setName(shape_data["name"])
+
+            if shape_data.get("overrideEnabled"):
+                fn_dep = om.MFnDependencyNode(shape_obj)
+                fn_dep.findPlug('overrideEnabled', False).setBool(True)
+                fn_dep.findPlug('overrideColor', False).setInt(shape_data["overrideColor"])
+
+            if shape_data.get("alwaysDrawOnTop", False):
+                fn_dep = om.MFnDependencyNode(shape_obj)
+                fn_dep.findPlug('alwaysDrawOnTop', False).setBool(True)
+
+            line_width = shape_data.get("lineWidth")
+            if line_width is not None:
+                shape_name = shape_fn.name()
+                if cmds.attributeQuery("lineWidth", node=shape_name, exists=True):
+                    try:
+                        cmds.setAttr(f"{shape_name}.lineWidth", line_width)
+                    except Exception:
+                        pass
+
+        updated += 1
+
+    om.MGlobal.displayInfo(f"Curves applied: {updated} updated, {skipped} skipped.")
 
 
 def build_curves_from_template(target_transform_name=None):
