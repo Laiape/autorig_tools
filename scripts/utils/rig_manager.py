@@ -220,7 +220,7 @@ def create_assets_folders(asset_name):
     main_folder = asset_path(asset_name, "")
     os.makedirs(main_folder, exist_ok=True)
 
-    subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters"]
+    subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters", "corrective_blendshapes"]
 
     for subfolder in subfolders:
         folder_path = os.path.join(main_folder, subfolder)
@@ -260,8 +260,8 @@ def execute_folder_creation(asset_name, window_id):
     main_folder = asset_path(asset_name, "")
     
     # Crear carpeta principal y subcarpetas
-    subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters"]
-    
+    subfolders = ["models", "build", "cache", "curves", "guides", "skin_clusters", "corrective_blendshapes"]
+
     try:
         os.makedirs(main_folder, exist_ok=True)
         for subfolder in subfolders:

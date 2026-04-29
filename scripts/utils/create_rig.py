@@ -12,6 +12,7 @@ from utils import matrix_manager
 from tools import skin_manager_api
 from tools import mesh_data_exporter
 from tools import auto_skin_transfer
+from tools import corrective_blendshape_manager
 
 
 reload(guides_manager)
@@ -23,6 +24,7 @@ reload(skin_manager_api)
 reload(mesh_data_exporter)
 reload(auto_skin_transfer)
 reload(proxy_locator)
+reload(corrective_blendshape_manager)
 
 
 
@@ -44,6 +46,7 @@ class AutoRig(object):
         self.hide_connections()
         self.inherit_transforms()
         self.import_weights()
+        self.import_corrective_blendshapes()
         # self.proxy_locator()
 
     def basic_structure(self):
@@ -151,6 +154,11 @@ class AutoRig(object):
                except Exception as e:
                    om.MGlobal.displayError(f"Error setting inherit transforms for {crv}: {e}")
 
+
+    def import_corrective_blendshapes(self):
+        """Import pre-deformation corrective blendShapes after the rig is built."""
+        reload(corrective_blendshape_manager)
+        corrective_blendshape_manager.CorrectiveBlendshapeManager().import_from()
 
     def import_weights(self):
         """

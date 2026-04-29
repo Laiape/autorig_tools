@@ -63,6 +63,16 @@ def create_custom_menu():
     cmds.menuItem(label="Tag Scene Curves",       command=lambda x: tag_scene_curves(),        image="tag.png")
     cmds.setParent('..', menu=True)
 
+    # ── CORRECTIVES ───────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
+
+    cmds.menuItem(label="Corrective Blendshapes", subMenu=True, tearOff=True, image="blendShape.png")
+    cmds.menuItem(label="Export Corrective Blendshapes", command=lambda x: export_corrective_blendshapes(), image="export.png")
+    cmds.menuItem(label="Import Corrective Blendshapes", command=lambda x: import_corrective_blendshapes(), image="import.png")
+    cmds.menuItem(divider=True)
+    cmds.menuItem(label="Mirror Corrective Blendshapes", command=lambda x: mirror_corrective_blendshapes(), image="polyMirror.png")
+    cmds.setParent('..', menu=True)
+
     # ── SKINNING ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="SKINNING")
 
@@ -132,6 +142,25 @@ def tag_scene_curves():
     reload(curve_tool)
     curve_tool.tag_scene_curves()
     cmds.inViewMessage(amg='Curves Taggeadas.', pos='midCenter', fade=True)
+
+def export_corrective_blendshapes():
+    from tools import corrective_blendshape_manager
+    reload(corrective_blendshape_manager)
+    path = corrective_blendshape_manager.CorrectiveBlendshapeManager().export()
+    if path:
+        cmds.inViewMessage(amg='Corrective Blendshapes Exportados.', pos='midCenter', fade=True)
+
+def import_corrective_blendshapes():
+    from tools import corrective_blendshape_manager
+    reload(corrective_blendshape_manager)
+    corrective_blendshape_manager.CorrectiveBlendshapeManager().import_from()
+    cmds.inViewMessage(amg='Corrective Blendshapes Importados.', pos='midCenter', fade=True)
+
+def mirror_corrective_blendshapes():
+    from tools import corrective_blendshape_manager
+    reload(corrective_blendshape_manager)
+    corrective_blendshape_manager.CorrectiveBlendshapeManager().mirror_in_scene()
+    cmds.inViewMessage(amg='Corrective Blendshapes Espejados.', pos='midCenter', fade=True)
 
 def export_skin_cluster():
     reload(skin_manager_api)
