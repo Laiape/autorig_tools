@@ -71,6 +71,7 @@ def create_custom_menu():
     cmds.menuItem(label="Import Corrective Blendshapes", command=lambda x: import_corrective_blendshapes(), image="import.png")
     cmds.menuItem(divider=True)
     cmds.menuItem(label="Mirror Corrective Blendshapes", command=lambda x: mirror_corrective_blendshapes(), image="polyMirror.png")
+    cmds.menuItem(label="Mirror Blendshape Targets", command=lambda x: mirror_corrective_blendshape_targets(), image="polyMirror.png")
     cmds.setParent('..', menu=True)
 
     # ── SKINNING ──────────────────────────────────────────────────────────────
@@ -161,6 +162,12 @@ def mirror_corrective_blendshapes():
     reload(corrective_blendshape_manager)
     corrective_blendshape_manager.CorrectiveBlendshapeManager().mirror_in_scene()
     cmds.inViewMessage(amg='Corrective Blendshapes Espejados.', pos='midCenter', fade=True)
+
+def mirror_corrective_blendshape_targets():
+    from tools import corrective_blendshape_manager
+    reload(corrective_blendshape_manager)
+    corrective_blendshape_manager.CorrectiveBlendshapeManager().mirror_targets()
+    cmds.inViewMessage(amg='Targets Espejados.', pos='midCenter', fade=True)
 
 def export_skin_cluster():
     reload(skin_manager_api)
