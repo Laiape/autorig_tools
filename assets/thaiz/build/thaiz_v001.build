@@ -8,5 +8,17 @@
     "leg_skinning_jnts": 5,
     "tail_skinning_jnts": 5,
     "tail_controllers": 5,
-    "mGear_integration": 0
+    "mGear_integration": 0,
+    "character_extras": {
+        "add_attrs": [
+            {
+                "node": "jaw_module/jaw_ctl",
+                "name": "closeJaw",
+                "type": "float",
+                "min": 0.0,
+                "max": 1.0,
+                "default": 0.0
+            }
+        ]
+    }
 }

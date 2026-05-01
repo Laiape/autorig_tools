@@ -525,7 +525,66 @@ def build_rig(character_name):
 
     if rig_type == 0 and mGear_integration == 0:
             biped_space_switches()
-    
+
+    apply_character_extras(rig_settings)
+
+def apply_character_extras(rig_settings):
+    """
+    Applies character-specific extras defined in the 'character_extras' block
+    of the .build JSON.
+
+    Supported operations
+    --------------------
+    add_attrs: list of dicts with keys:
+        node    — "module/key" (resolved via data_manager) or a literal Maya name
+        name    — attribute long name
+        type    — "float" | "int" | "bool"  (default: "float")
+        min     — optional minimum value
+        max     — optional maximum value
+        default — optional default value (default: 0.0)
+    """
+    extras = rig_settings.get("character_extras", {})
+    if not extras:
+        return
+
+    for attr_def in extras.get("add_attrs", []):
+        node_path = attr_def.get("node", "")
+
+        if "/" in node_path:
+            module, key = node_path.split("/", 1)
+            node = data_manager.DataExportBiped().get_data(module, key)
+        else:
+            node = node_path
+
+        if not node or not cmds.objExists(node):
+            om.MGlobal.displayWarning(f"character_extras: node not found → '{node_path}'")
+            continue
+
+        attr_name = attr_def.get("name")
+        attr_type = attr_def.get("type", "float")
+        default   = attr_def.get("default", 0.0)
+        min_val   = attr_def.get("min")
+        max_val   = attr_def.get("max")
+
+        if cmds.attributeQuery(attr_name, node=node, exists=True):
+            continue
+
+        kwargs = {"longName": attr_name, "keyable": True, "defaultValue": default}
+        if attr_type == "int":
+            kwargs["attributeType"] = "long"
+        elif attr_type == "bool":
+            kwargs["attributeType"] = "bool"
+        else:
+            kwargs["attributeType"] = "float"
+
+        if min_val is not None:
+            kwargs["minValue"] = min_val
+        if max_val is not None:
+            kwargs["maxValue"] = max_val
+
+        cmds.addAttr(node, **kwargs)
+        om.MGlobal.displayInfo(f"character_extras: added '{attr_name}' → '{node}'")
+
 def biped_space_switches():
 
         """

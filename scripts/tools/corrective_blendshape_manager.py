@@ -1,6 +1,6 @@
 import copy
-import csv
 import io
+import json
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import os
@@ -18,15 +18,15 @@ class CorrectiveBlendshapeManager:
     """
     Export / import / mirror pre-deformation corrective blendShapes with driven key connections.
     Targets are always placed before the skinCluster in the deformer stack.
+    Data is stored in a single versioned .json file.
     """
 
-    # CSV suffix tokens — each export version produces 3 files sharing the same prefix
-    _SFX_TARGETS = "_targets.csv"
-    _SFX_DELTAS  = "_deltas.csv"
-    _SFX_KEYS    = "_keys.csv"
+    _SFX_JSON = ".json"
 
     # Attributes whose driver value is negated when mirroring L→R or R→L.
-    # Matches Maya's standard mirror convention for biped FK rigs.
+    # Correct for rigs with true mirror-orientation joints (explicitly mirrored local axes).
+    # If your rig uses negative scaleX on the right side parent instead, clear this set —
+    # the local rotations work identically on both sides and need no negation.
     MIRROR_NEGATE_ATTRS = {"translateX", "tx", "rotateY", "ry", "rotateZ", "rz"}
 
     # ------------------------------------------------------------------
@@ -63,37 +63,31 @@ class CorrectiveBlendshapeManager:
             os.path.join(root, "assets", self.asset_name, "corrective_blendshapes")
         )
 
-    def _versioned_prefix(self, version):
-        """Return the base path prefix shared by the 3 CSV files for a given version."""
-        return os.path.join(self.folder_path, f"{self.asset_name}_v{version:03d}")
+    def _versioned_path(self, version):
+        return os.path.join(self.folder_path, f"{self.asset_name}_v{version:03d}{self._SFX_JSON}")
 
-    def _csv_paths(self, prefix):
-        return (prefix + self._SFX_TARGETS,
-                prefix + self._SFX_DELTAS,
-                prefix + self._SFX_KEYS)
-
-    def _get_next_export_prefix(self):
+    def _get_next_export_path(self):
         os.makedirs(self.folder_path, exist_ok=True)
-        pattern = os.path.join(self.folder_path, f"{self.asset_name}_v*{self._SFX_TARGETS}")
+        pattern = os.path.join(self.folder_path, f"{self.asset_name}_v*{self._SFX_JSON}")
         highest = 0
         for f in glob.glob(pattern):
             try:
-                ver = int(os.path.basename(f).split("_v")[-1].split(self._SFX_TARGETS)[0])
+                ver = int(os.path.basename(f).split("_v")[-1].split(self._SFX_JSON)[0])
                 highest = max(highest, ver)
             except ValueError:
                 pass
-        return self._versioned_prefix(highest + 1)
+        return self._versioned_path(highest + 1)
 
-    def _get_latest_import_prefix(self):
+    def _get_latest_import_path(self):
         if not os.path.isdir(self.folder_path):
             return None
-        pattern = os.path.join(self.folder_path, f"{self.asset_name}_v*{self._SFX_TARGETS}")
+        pattern = os.path.join(self.folder_path, f"{self.asset_name}_v*{self._SFX_JSON}")
         highest, latest = -1, None
         for f in glob.glob(pattern):
             try:
-                ver = int(os.path.basename(f).split("_v")[-1].split(self._SFX_TARGETS)[0])
+                ver = int(os.path.basename(f).split("_v")[-1].split(self._SFX_JSON)[0])
                 if ver > highest:
-                    highest, latest = ver, self._versioned_prefix(ver)
+                    highest, latest = ver, f
             except ValueError:
                 pass
         return latest
@@ -107,9 +101,8 @@ class CorrectiveBlendshapeManager:
 
     def _is_pre_deformation(self, bs_node, mesh_shape):
         """
-        True when bs_node is deeper in the deformer chain than any skinCluster,
-        meaning it evaluates BEFORE the skinCluster (pre-deformation).
-        listHistory returns output→input, so pre-deform nodes have higher indices.
+        True when bs_node evaluates BEFORE the skinCluster (pre-deformation).
+        listHistory returns output→input order, so pre-deform nodes have higher indices.
         """
         hist = self._history(mesh_shape)
         try:
@@ -141,14 +134,14 @@ class CorrectiveBlendshapeManager:
         return result
 
     # ------------------------------------------------------------------
-    # Delta extraction  (inputPointsTarget stores per-vertex deltas)
+    # Delta extraction
     # ------------------------------------------------------------------
 
     def _parse_components(self, comp_list):
         """Expand ['vtx[0]', 'vtx[3:5]', ...] → flat list of int indices."""
         indices = []
         for c in comp_list:
-            inner = c.strip()[4:-1]  # strip 'vtx[' and ']'
+            inner = c.strip()[4:-1]
             if ":" in inner:
                 a, b = inner.split(":")
                 indices.extend(range(int(a), int(b) + 1))
@@ -157,10 +150,7 @@ class CorrectiveBlendshapeManager:
         return indices
 
     def _get_target_deltas(self, bs_node, target_index):
-        """
-        Return sparse vertex deltas [[vtx_idx, dx, dy, dz], ...] for a blendShape target.
-        inputPointsTarget stores (dx, dy, dz, w) offsets from the base mesh.
-        """
+        """Return sparse vertex deltas [[vtx_idx, dx, dy, dz], ...] for a blendShape target."""
         base = (f"{bs_node}.inputTarget[0]"
                 f".inputTargetGroup[{target_index}]"
                 f".inputTargetItem[6000]")
@@ -243,21 +233,21 @@ class CorrectiveBlendshapeManager:
 
     def export(self, path=None):
         """
-        Export all pre-deformation blendShapes + driven keys to three CSV files:
-          <prefix>_targets.csv  — one row per target (metadata + driver info)
-          <prefix>_deltas.csv   — one row per non-zero vertex delta
-          <prefix>_keys.csv     — one row per driven-key keyframe
+        Export all pre-deformation blendShapes + driven keys to a single .json file.
+        Returns the path written, or None if nothing was found.
         """
-        prefix  = path or self._get_next_export_prefix()
-        bs_map  = self._collect_pre_deform_blendshapes()
+        out_path = path or self._get_next_export_path()
+        bs_map   = self._collect_pre_deform_blendshapes()
 
         if not bs_map:
             om.MGlobal.displayWarning("[CBS] No pre-deformation blendShapes found.")
             return None
 
-        target_rows, delta_rows, key_rows = [], [], []
+        data = {"version": 1, "blendshapes": {}}
 
         for mesh_name, bs_nodes in bs_map.items():
+            mesh_entry = data["blendshapes"].setdefault(mesh_name, {})
+
             for bs_node in bs_nodes:
                 aliases_flat = cmds.aliasAttr(bs_node, query=True) or []
                 idx_to_name = {
@@ -265,74 +255,26 @@ class CorrectiveBlendshapeManager:
                     for i in range(0, len(aliases_flat), 2)
                 }
 
+                bs_entry = {}
                 for w_idx, t_name in idx_to_name.items():
                     deltas = self._get_target_deltas(bs_node, w_idx)
                     dk     = self._get_driven_key(bs_node, w_idx)
 
-                    target_rows.append({
-                        "mesh":       mesh_name,
-                        "bs_node":    bs_node,
-                        "target":     t_name,
+                    bs_entry[t_name] = {
                         "w_idx":      w_idx,
-                        "driver":     dk["driver"]     if dk else "",
-                        "curve_name": dk["curve_name"] if dk else "",
-                        "curve_type": dk["curve_type"] if dk else "",
-                        "pre_inf":    dk["pre_inf"]    if dk else "",
-                        "post_inf":   dk["post_inf"]   if dk else "",
-                    })
+                        "deltas":     deltas,
+                        "driven_key": dk,
+                    }
 
-                    for vtx_idx, dx, dy, dz in deltas:
-                        delta_rows.append({
-                            "mesh":    mesh_name,
-                            "bs_node": bs_node,
-                            "target":  t_name,
-                            "vtx_idx": vtx_idx,
-                            "dx":      dx,
-                            "dy":      dy,
-                            "dz":      dz,
-                        })
-
-                    if dk:
-                        for ki, kd in enumerate(dk["keys"]):
-                            key_rows.append({
-                                "mesh":    mesh_name,
-                                "bs_node": bs_node,
-                                "target":  t_name,
-                                "key_idx": ki,
-                                "t":       kd["t"],
-                                "v":       kd["v"],
-                                "it":      kd["it"],
-                                "ot":      kd["ot"],
-                                "ia":      kd["ia"],
-                                "oa":      kd["oa"],
-                                "iw":      kd["iw"],
-                                "ow":      kd["ow"],
-                            })
+                mesh_entry[bs_node] = bs_entry
 
         os.makedirs(self.folder_path, exist_ok=True)
-        p_targets, p_deltas, p_keys = self._csv_paths(prefix)
-
-        self._write_csv(p_targets, ["mesh","bs_node","target","w_idx",
-                                    "driver","curve_name","curve_type","pre_inf","post_inf"],
-                        target_rows)
-        self._write_csv(p_deltas,  ["mesh","bs_node","target","vtx_idx","dx","dy","dz"],
-                        delta_rows)
-        self._write_csv(p_keys,    ["mesh","bs_node","target","key_idx",
-                                    "t","v","it","ot","ia","oa","iw","ow"],
-                        key_rows)
+        with io.open(out_path, "w", encoding="utf-8") as fh:
+            json.dump(data, fh, indent=2)
 
         total_bs = sum(len(v) for v in bs_map.values())
-        om.MGlobal.displayInfo(
-            f"[CBS] Exported {total_bs} blendShape(s) → {prefix}_*.csv"
-        )
-        return prefix
-
-    @staticmethod
-    def _write_csv(filepath, fieldnames, rows):
-        with io.open(filepath, "w", newline="", encoding="utf-8") as fh:
-            writer = csv.DictWriter(fh, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(rows)
+        om.MGlobal.displayInfo(f"[CBS] Exported {total_bs} blendShape(s) → {out_path}")
+        return out_path
 
     # ------------------------------------------------------------------
     # Import
@@ -340,90 +282,39 @@ class CorrectiveBlendshapeManager:
 
     def import_from(self, path=None):
         """
-        Import corrective blendShapes from the three CSV files produced by export().
-        Pass the shared version prefix (same value returned by export()), or leave
-        None to auto-pick the latest version in the configured folder.
+        Import corrective blendShapes from a .json file produced by export().
+        Pass the exact file path, or leave None to auto-pick the latest version.
         """
-        prefix = path or self._get_latest_import_prefix()
-        if not prefix:
-            om.MGlobal.displayWarning("[CBS] No CSV export found, skipping.")
+        in_path = path or self._get_latest_import_path()
+        if not in_path:
+            om.MGlobal.displayWarning("[CBS] No JSON export found, skipping.")
+            return
+        if not os.path.exists(in_path):
+            om.MGlobal.displayWarning(f"[CBS] File not found: {in_path}")
             return
 
-        p_targets, p_deltas, p_keys = self._csv_paths(prefix)
-        for p in (p_targets, p_deltas, p_keys):
-            if not os.path.exists(p):
-                om.MGlobal.displayWarning(f"[CBS] Missing file: {p}")
-                return
+        om.MGlobal.displayInfo(f"[CBS] Importing from {in_path}")
 
-        om.MGlobal.displayInfo(f"[CBS] Importing from {prefix}_*.csv")
+        with io.open(in_path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
 
-        # ── build delta lookup: (mesh, bs_node, target) → [[vtx,dx,dy,dz],...]
-        delta_map = {}
-        for row in self._read_csv(p_deltas):
-            key = (row["mesh"], row["bs_node"], row["target"])
-            delta_map.setdefault(key, []).append(
-                [int(row["vtx_idx"]),
-                 float(row["dx"]), float(row["dy"]), float(row["dz"])]
-            )
-
-        # ── build key lookup: (mesh, bs_node, target) → [key_dict,...]
-        key_map = {}
-        for row in self._read_csv(p_keys):
-            key = (row["mesh"], row["bs_node"], row["target"])
-            key_map.setdefault(key, []).append({
-                "t":  float(row["t"]),
-                "v":  float(row["v"]),
-                "it": row["it"],
-                "ot": row["ot"],
-                "ia": float(row["ia"]),
-                "oa": float(row["oa"]),
-                "iw": float(row["iw"]),
-                "ow": float(row["ow"]),
-            })
-
-        # ── reconstruct the nested data structure expected by _recreate_blendshape
-        # Group target rows by mesh → bs_node, preserving w_idx order
-        mesh_data = {}
-        for row in self._read_csv(p_targets):
-            mesh    = row["mesh"]
-            bs_node = row["bs_node"]
-            target  = row["target"]
-            w_idx   = int(row["w_idx"])
-            key     = (mesh, bs_node, target)
-
-            bs_entry = mesh_data.setdefault(mesh, {}).setdefault(bs_node, {
-                "targets": {}, "driven_keys": {}
-            })
-            bs_entry["targets"][target] = {
-                "w_idx":  w_idx,
-                "deltas": delta_map.get(key, []),
-            }
-            if row["driver"]:
-                bs_entry["driven_keys"][target] = {
-                    "driver":     row["driver"],
-                    "curve_name": row["curve_name"],
-                    "curve_type": row["curve_type"],
-                    "pre_inf":    row["pre_inf"],
-                    "post_inf":   row["post_inf"],
-                    "keys":       key_map.get(key, []),
-                }
-
-        for mesh_name, bs_map in mesh_data.items():
+        for mesh_name, bs_map in data.get("blendshapes", {}).items():
             if not cmds.objExists(mesh_name):
                 om.MGlobal.displayWarning(f"[CBS] Mesh not found: {mesh_name}")
                 continue
             shapes = cmds.listRelatives(mesh_name, shapes=True, noIntermediate=True) or []
             if not shapes:
                 continue
-            for bs_name, bs_data in bs_map.items():
+            for bs_name, targets in bs_map.items():
+                bs_data = {
+                    "targets":     {n: {"w_idx": t["w_idx"], "deltas": t["deltas"]}
+                                    for n, t in targets.items()},
+                    "driven_keys": {n: t["driven_key"]
+                                    for n, t in targets.items() if t.get("driven_key")},
+                }
                 self._recreate_blendshape(mesh_name, shapes[0], bs_name, bs_data)
 
         om.MGlobal.displayInfo("[CBS] Import complete.")
-
-    @staticmethod
-    def _read_csv(filepath):
-        with io.open(filepath, "r", newline="", encoding="utf-8") as fh:
-            return list(csv.DictReader(fh))
 
     def _duplicate_base_mesh(self, mesh_name, mesh_shape, temp_name):
         """Duplicate the mesh at its base (pre-deformation) pose."""
@@ -469,15 +360,12 @@ class CorrectiveBlendshapeManager:
         if not temp_meshes:
             return
 
-        # Disable all deformers so Maya cannot compute automatic initial weights
-        # by comparing targets against the currently deformed mesh shape.
         saved_env = {}
         for d in self._history(mesh_shape):
             if cmds.attributeQuery("envelope", node=d, exists=True):
                 saved_env[d] = cmds.getAttr(f"{d}.envelope")
                 cmds.setAttr(f"{d}.envelope", 0)
 
-        # frontOfChain=True places the blendShape before the skinCluster (pre-deformation)
         new_bs = cmds.blendShape(
             temp_meshes + [mesh_name],
             name=bs_name,
@@ -485,27 +373,23 @@ class CorrectiveBlendshapeManager:
             origin="local"
         )[0]
 
-        # Restore deformers
         for d, env in saved_env.items():
             cmds.setAttr(f"{d}.envelope", env)
 
         cmds.delete(temp_meshes)
 
-        # Force all weights to 0 — safety in case Maya set any non-zero during creation
         for i in range(len(target_names)):
             try:
                 cmds.setAttr(f"{new_bs}.weight[{i}]", 0)
             except Exception:
                 pass
 
-        # Rename weight aliases to the stored target names (Maya auto-names from mesh names)
         for i, t_name in enumerate(target_names):
             try:
                 cmds.aliasAttr(t_name, f"{new_bs}.weight[{i}]")
             except Exception:
                 pass
 
-        # Safety: verify and enforce pre-deformation position
         if not self._is_pre_deformation(new_bs, mesh_shape):
             self._push_before_skin(new_bs, mesh_shape, mesh_name)
 
@@ -520,7 +404,6 @@ class CorrectiveBlendshapeManager:
         skin_nodes = [n for n in hist if cmds.nodeType(n) == "skinCluster"]
         if not skin_nodes:
             return
-        # skin_nodes[-1] = deepest in evaluation order (first to evaluate)
         try:
             cmds.reorderDeformers(bs_node, skin_nodes[-1], mesh_name)
             om.MGlobal.displayInfo(f"[CBS] Moved {bs_node} to pre-deform position.")
@@ -546,7 +429,6 @@ class CorrectiveBlendshapeManager:
             )
             return
 
-        # Resolve weight plug from alias
         aliases_flat = cmds.aliasAttr(bs_node, query=True) or []
         weight_plug  = None
         for i in range(0, len(aliases_flat), 2):
@@ -558,7 +440,6 @@ class CorrectiveBlendshapeManager:
             om.MGlobal.displayWarning(f"[CBS] Weight plug not found for {target_name}")
             return
 
-        # Preserve driver value to avoid permanently moving the rig
         try:
             orig_val = cmds.getAttr(driver_attr)
         except Exception:
@@ -581,7 +462,6 @@ class CorrectiveBlendshapeManager:
             except Exception:
                 pass
 
-        # Apply tangent and infinity settings to the created animCurve
         curve_conns = (cmds.listConnections(weight_plug, source=True, plugs=False,
                                             type="animCurve") or [])
         if not curve_conns:
@@ -623,14 +503,16 @@ class CorrectiveBlendshapeManager:
 
     def _mirror_name(self, name):
         """
-        Swap L_ ↔ R_ (and l_ ↔ r_) in a node name or 'node.attr' string.
-        Works on full driver strings like 'L_arm_CTL.rotateZ' or 'l_arm_CTL.rotateZ'.
+        Swap the side token in a node name or 'node.attr' string.
+        Handles: prefix (l_/r_/L_/R_), middle (_l_/_r_/_L_/_R_),
+        and suffix (_l/_r/_L/_R).
         """
         if not name:
             return name
         node, _, attr = name.partition(".")
         suffix = f".{attr}" if attr else ""
 
+        # prefix
         if node.startswith("L_"):
             return "R_" + node[2:] + suffix
         if node.startswith("R_"):
@@ -639,6 +521,18 @@ class CorrectiveBlendshapeManager:
             return "r_" + node[2:] + suffix
         if node.startswith("r_"):
             return "l_" + node[2:] + suffix
+
+        # suffix  (checked before middle to avoid false matches like _left)
+        if node.endswith("_L"):
+            return node[:-2] + "_R" + suffix
+        if node.endswith("_R"):
+            return node[:-2] + "_L" + suffix
+        if node.endswith("_l"):
+            return node[:-2] + "_r" + suffix
+        if node.endswith("_r"):
+            return node[:-2] + "_l" + suffix
+
+        # middle token
         if "_L_" in node:
             return node.replace("_L_", "_R_", 1) + suffix
         if "_R_" in node:
@@ -647,20 +541,21 @@ class CorrectiveBlendshapeManager:
             return node.replace("_l_", "_r_", 1) + suffix
         if "_r_" in node:
             return node.replace("_r_", "_l_", 1) + suffix
+
         return name
 
     def _mirror_driver_value(self, driver_attr, value):
         """
-        Negate the driver key value for attributes that represent lateral motion
-        (translateX, rotateY, rotateZ). Keeps all other axes unchanged.
+        Negate the driver key value for attributes listed in MIRROR_NEGATE_ATTRS.
+        See class docstring for when to adjust that set.
         """
         short_attr = driver_attr.split(".")[-1] if "." in driver_attr else driver_attr
         return -value if short_attr in self.MIRROR_NEGATE_ATTRS else value
 
     def _mirror_deltas(self, deltas, mirror_table):
         """
-        Return mirrored deltas for the opposite side vertices.
-        YZ-plane mirror: negate X component of the delta, find the vertex at (-x, y, z).
+        Return mirrored deltas for the opposite-side vertices.
+        YZ-plane mirror: negate X component of delta, look up mirror vertex index.
         """
         mirrored = []
         for vtx_idx, dx, dy, dz in deltas:
@@ -670,7 +565,7 @@ class CorrectiveBlendshapeManager:
         return mirrored
 
     def _mirror_dk_data(self, dk_data):
-        """Return a deep copy of dk_data with driver name and key values mirrored."""
+        """Return a deep copy of dk_data with driver name and key driver values mirrored."""
         m = copy.deepcopy(dk_data)
         m["driver"]     = self._mirror_name(dk_data["driver"])
         m["curve_name"] = self._mirror_name(dk_data.get("curve_name", ""))
@@ -688,7 +583,6 @@ class CorrectiveBlendshapeManager:
         """
         vtx_count = cmds.polyEvaluate(mesh_name, vertex=True)
 
-        # Round to 3 dp (≈ 1 mm tolerance) for reliable dict lookup
         pos_to_idx = {}
         for i in range(vtx_count):
             px, py, pz = cmds.xform(f"{mesh_name}.vtx[{i}]", q=True, os=True, t=True)
@@ -706,12 +600,8 @@ class CorrectiveBlendshapeManager:
 
     def mirror_in_scene(self):
         """
-        For every pre-deformation blendShape whose name starts with L_ or R_,
+        For every pre-deformation blendShape whose name contains a detectable side token,
         create a mirrored blendShape on the opposite side if it doesn't exist yet.
-
-        - Geometry: vertex deltas are reflected across the YZ plane.
-        - Driven keys: driver node name is mirrored (L_→R_), key driver values are
-          negated for translateX / rotateY / rotateZ (standard biped convention).
         """
         bs_map = self._collect_pre_deform_blendshapes()
         if not bs_map:
@@ -726,13 +616,13 @@ class CorrectiveBlendshapeManager:
                 continue
             mesh_shape = shapes[0]
 
-            mirror_table = None  # built lazily once per mesh
+            mirror_table = None
 
             for bs_node in bs_nodes:
                 mirror_bs_name = self._mirror_name(bs_node)
                 if mirror_bs_name == bs_node:
                     om.MGlobal.displayWarning(
-                        f"[CBS] {bs_node} has no L_/R_ side — skipping mirror."
+                        f"[CBS] {bs_node} has no side token — skipping mirror."
                     )
                     continue
 
@@ -797,18 +687,15 @@ class CorrectiveBlendshapeManager:
 
         cmds.delete(temp_meshes)
 
-        # Rename aliases to the correct mirrored target names
         for i, mirror_t_name in enumerate(ordered_names):
             try:
                 cmds.aliasAttr(mirror_t_name, f"{new_bs}.weight[{i}]")
             except Exception:
                 pass
 
-        # Enforce pre-deformation
         if not self._is_pre_deformation(new_bs, mesh_shape):
             self._push_before_skin(new_bs, mesh_shape, mesh_name)
 
-        # Restore driven keys with mirrored driver + values
         for w_idx, mirror_t_name in zip(sorted_indices, ordered_names):
             dk = self._get_driven_key(src_bs, w_idx)
             if dk:
@@ -823,12 +710,8 @@ class CorrectiveBlendshapeManager:
 
     def mirror_targets(self):
         """
-        For every pre-deformation blendShape target whose name contains L_/R_,
+        For every pre-deformation blendShape target whose name contains a side token,
         create the mirrored target INSIDE THE SAME blendShape node if it doesn't exist.
-
-        - Geometry: vertex deltas reflected across the YZ plane.
-        - Driver: the mirrored controller (L_→R_) is connected via setDrivenKeyframe
-          with negated driver values for translateX / rotateY / rotateZ.
         """
         bs_map = self._collect_pre_deform_blendshapes()
         if not bs_map:
@@ -841,8 +724,8 @@ class CorrectiveBlendshapeManager:
             shapes = cmds.listRelatives(mesh_name, shapes=True, noIntermediate=True) or []
             if not shapes:
                 continue
-            mesh_shape  = shapes[0]
-            mirror_table = None  # built lazily once per mesh
+            mesh_shape   = shapes[0]
+            mirror_table = None
 
             for bs_node in bs_nodes:
                 aliases_flat = cmds.aliasAttr(bs_node, query=True) or []
@@ -858,9 +741,9 @@ class CorrectiveBlendshapeManager:
                     mirror_name = self._mirror_name(t_name)
 
                     if mirror_name == t_name:
-                        continue  # no L_/R_ in name — nothing to mirror
+                        continue
                     if mirror_name in existing_names:
-                        continue  # target already exists
+                        continue
 
                     if mirror_table is None:
                         om.MGlobal.displayInfo(
@@ -871,7 +754,6 @@ class CorrectiveBlendshapeManager:
                     deltas        = self._get_target_deltas(bs_node, w_idx)
                     mirror_deltas = self._mirror_deltas(deltas, mirror_table)
 
-                    # Build target mesh with mirrored shape
                     dup = self._duplicate_base_mesh(
                         mesh_name, mesh_shape, f"cbsTmp_{mirror_name}"
                     )
@@ -882,14 +764,12 @@ class CorrectiveBlendshapeManager:
                         cmds.xform(vtx, os=True,
                                    t=[pos[0] + dx, pos[1] + dy, pos[2] + dz])
 
-                    # Disable deformers so Maya cannot bias the initial weight
                     saved_env = {}
                     for d in self._history(mesh_shape):
                         if cmds.attributeQuery("envelope", node=d, exists=True):
                             saved_env[d] = cmds.getAttr(f"{d}.envelope")
                             cmds.setAttr(f"{d}.envelope", 0)
 
-                    # Add target to the existing blendShape node at next_idx
                     cmds.blendShape(bs_node, edit=True,
                                     target=[mesh_name, next_idx, dup, 1.0])
 
@@ -898,7 +778,6 @@ class CorrectiveBlendshapeManager:
 
                     cmds.delete(dup)
 
-                    # Name the new alias and ensure weight starts at 0
                     try:
                         cmds.aliasAttr(mirror_name, f"{bs_node}.weight[{next_idx}]")
                     except Exception:
@@ -908,7 +787,6 @@ class CorrectiveBlendshapeManager:
                     except Exception:
                         pass
 
-                    # Connect to mirrored driver via driven key
                     dk = self._get_driven_key(bs_node, w_idx)
                     if dk:
                         mirror_dk = self._mirror_dk_data(dk)

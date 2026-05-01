@@ -143,6 +143,7 @@ class JawModule(object):
         cmds.addAttr(self.jaw_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
         cmds.setAttr(f"{self.jaw_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(self.jaw_ctl, longName="Auto_Collision", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
+        cmds.addAttr(self.jaw_ctl, longName="Auto_Lip_Roll", attributeType="float", min=-1, max=1, defaultValue=0, keyable=True)
 
         # Create nodes for collision detection
         sum_matrix_jaw = cmds.createNode("sum", name=f"{self.module_name}_collisionJaw_SMM")
@@ -829,6 +830,23 @@ class JawModule(object):
         cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{center_zip_cond}.colorIfTrueR")
         cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.colorIfFalseR")
         
+        # --- AUTO LIP ROLL ---
+        # jaw_ctl.rotateX * Auto_Lip_Roll drives an additive roll on each lip joint.
+        # Lower: direct signal. Upper: negated and halved (lips roll toward each other).
+        auto_roll_lower_mdv = cmds.createNode("multiplyDivide", name="C_autoRollLower_MDV", ss=True)
+        cmds.setAttr(f"{auto_roll_lower_mdv}.operation", 1)
+        cmds.connectAttr(f"{self.jaw_ctl}.rotateX", f"{auto_roll_lower_mdv}.input1X")
+        cmds.connectAttr(f"{self.jaw_ctl}.Auto_Lip_Roll", f"{auto_roll_lower_mdv}.input2X")
+
+        auto_roll_upper_raw_mdv = cmds.createNode("multiplyDivide", name="C_autoRollUpperRaw_MDV", ss=True)
+        cmds.setAttr(f"{auto_roll_upper_raw_mdv}.operation", 1)
+        cmds.connectAttr(f"{self.jaw_ctl}.rotateX", f"{auto_roll_upper_raw_mdv}.input1X")
+        cmds.connectAttr(f"{self.jaw_ctl}.Auto_Lip_Roll", f"{auto_roll_upper_raw_mdv}.input2X")
+        auto_roll_upper_mdv = cmds.createNode("multiplyDivide", name="C_autoRollUpper_MDV", ss=True)
+        cmds.setAttr(f"{auto_roll_upper_mdv}.operation", 1)
+        cmds.connectAttr(f"{auto_roll_upper_raw_mdv}.outputX", f"{auto_roll_upper_mdv}.input1X")
+        cmds.setAttr(f"{auto_roll_upper_mdv}.input2X", -0.5)
+
         for part in ["upper", "lower"]:
 
             for i, (non_rot_joint, out_joint) in enumerate(zip(non_rotate_output_joints[part], output_joints[part])):
@@ -891,8 +909,12 @@ class JawModule(object):
                 # ---MULTIPLY DIVIDE ---
                 roll_mdv = cmds.createNode("multiplyDivide", name=f"{out_joint}_Roll_MDV", ss=True)
                 cmds.setAttr(f"{roll_mdv}.operation", 1)  # Multiply for both L and R
-            
-                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_mdv}.input1X")
+
+                auto_roll_src = f"{auto_roll_lower_mdv}.outputX" if part == "lower" else f"{auto_roll_upper_mdv}.outputX"
+                roll_pma = cmds.createNode("plusMinusAverage", name=f"{out_joint}_RollSum_PMA", ss=True)
+                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_pma}.input1D[0]")
+                cmds.connectAttr(auto_roll_src, f"{roll_pma}.input1D[1]")
+                cmds.connectAttr(f"{roll_pma}.output1D", f"{roll_mdv}.input1X")
                 cmds.setAttr(f"{roll_mdv}.input2X", roll_factor)
                 cmds.connectAttr(f"{roll_mdv}.outputX", f"{out_joint}.rotateX", f=True)
         

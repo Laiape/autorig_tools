@@ -1,9 +1,0 @@
-mesh,bs_node,target,key_idx,t,v,it,ot,ia,oa,iw,ow
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,l_up_mouth_bls,0,0.0,0.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,l_up_mouth_bls,1,2.0,1.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,l_down_mouth_bls,0,-2.0,1.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,l_down_mouth_bls,1,0.0,0.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,l_in_mouth_bls,0,-2.5,1.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,l_in_mouth_bls,1,0.0,0.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,C_closed_jaw_bls,0,0.0,0.0,auto,auto,0.0,0.0,1.0,1.0
-THAIZ_BODY_PLY_localMouth,L_facial_local_BLS,C_closed_jaw_bls,1,1.0,0.297,auto,auto,0.0,0.0,1.0,1.0
