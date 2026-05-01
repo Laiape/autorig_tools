@@ -544,6 +544,22 @@ class CorrectiveBlendshapeManager:
 
         return name
 
+    def _mirror_target_name(self, name):
+        """
+        Like _mirror_name but also swaps _in_ <-> _out_ tokens.
+        What is 'in' on the L side is 'out' on the R side and vice versa.
+        Only used for blendshape target names, not for node/driver names.
+        """
+        result = self._mirror_name(name)
+        for tok_a, tok_b in (("_in_", "_out_"), ("_In_", "_Out_"), ("_IN_", "_OUT_")):
+            if tok_a in result:
+                result = result.replace(tok_a, tok_b)
+                break
+            if tok_b in result:
+                result = result.replace(tok_b, tok_a)
+                break
+        return result
+
     def _mirror_driver_value(self, driver_attr, value):
         """
         Negate the driver key value for attributes listed in MIRROR_NEGATE_ATTRS.
@@ -660,7 +676,7 @@ class CorrectiveBlendshapeManager:
 
         for w_idx in sorted_indices:
             t_name        = idx_to_name[w_idx]
-            mirror_t_name = self._mirror_name(t_name)
+            mirror_t_name = self._mirror_target_name(t_name)
             deltas        = self._get_target_deltas(src_bs, w_idx)
             mirror_deltas = self._mirror_deltas(deltas, mirror_table)
 
@@ -738,7 +754,7 @@ class CorrectiveBlendshapeManager:
 
                 for w_idx in sorted(idx_to_name):
                     t_name      = idx_to_name[w_idx]
-                    mirror_name = self._mirror_name(t_name)
+                    mirror_name = self._mirror_target_name(t_name)
 
                     if mirror_name == t_name:
                         continue
