@@ -209,8 +209,8 @@ class EyebrowModule(object):
 
         for name, value in names.items():
 
-            eyebrow_nodes, eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrow{name}", offset=["GRP"])
-            cmds.matchTransform(eyebrow_nodes[0], self.eyebrows[value])
+            eyebrow_nodes, eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrow{name}", offset=["GRP", "OFF"])
+            cmds.matchTransform(eyebrow_nodes[0], self.eyebrows[value], pos=True, rot=True)
             cmds.parent(eyebrow_nodes[0], self.main_eyebrow_ctl)
             self.lock_attributes(eyebrow_ctl, ["visibility"])
 

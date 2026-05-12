@@ -568,18 +568,6 @@ class CorrectiveBlendshapeManager:
         short_attr = driver_attr.split(".")[-1] if "." in driver_attr else driver_attr
         return -value if short_attr in self.MIRROR_NEGATE_ATTRS else value
 
-    def _mirror_deltas(self, deltas, mirror_table):
-        """
-        Return mirrored deltas for the opposite-side vertices.
-        YZ-plane mirror: negate X component of delta, look up mirror vertex index.
-        """
-        mirrored = []
-        for vtx_idx, dx, dy, dz in deltas:
-            mirror_vtx = mirror_table.get(vtx_idx)
-            if mirror_vtx is not None:
-                mirrored.append([mirror_vtx, round(-dx, 6), round(dy, 6), round(dz, 6)])
-        return mirrored
-
     def _mirror_dk_data(self, dk_data):
         """Return a deep copy of dk_data with driver name and key driver values mirrored."""
         m = copy.deepcopy(dk_data)
@@ -591,28 +579,37 @@ class CorrectiveBlendshapeManager:
         ]
         return m
 
-    def _build_mirror_vertex_table(self, mesh_name):
-        """
-        Build {vtx_idx: mirror_vtx_idx} for a YZ-plane symmetric mesh.
-        Matches each vertex at (x, y, z) to the vertex nearest (-x, y, z).
-        Vertices on the centre seam (x ≈ 0) map to themselves.
-        """
-        vtx_count = cmds.polyEvaluate(mesh_name, vertex=True)
+    def _get_target_as_mesh(self, bs_node, w_idx, mesh_name, mesh_shape, temp_name):
+        """Duplicate the mesh with only this target active at weight=1."""
+        aliases_flat = cmds.aliasAttr(bs_node, query=True) or []
+        idx_to_name = {
+            int(aliases_flat[i + 1].split("[")[1].rstrip("]")): aliases_flat[i]
+            for i in range(0, len(aliases_flat), 2)
+        }
 
-        pos_to_idx = {}
-        for i in range(vtx_count):
-            px, py, pz = cmds.xform(f"{mesh_name}.vtx[{i}]", q=True, os=True, t=True)
-            key = (round(px, 3), round(py, 3), round(pz, 3))
-            pos_to_idx[key] = i
+        saved_weights = {}
+        for idx in idx_to_name:
+            saved_weights[idx] = cmds.getAttr(f"{bs_node}.weight[{idx}]")
+            cmds.setAttr(f"{bs_node}.weight[{idx}]", 0)
 
-        mirror_table = {}
-        for i in range(vtx_count):
-            px, py, pz = cmds.xform(f"{mesh_name}.vtx[{i}]", q=True, os=True, t=True)
-            mirror_key = (round(-px, 3), round(py, 3), round(pz, 3))
-            if mirror_key in pos_to_idx:
-                mirror_table[i] = pos_to_idx[mirror_key]
+        saved_env = {}
+        for d in self._history(mesh_shape):
+            if d == bs_node:
+                continue
+            if cmds.attributeQuery("envelope", node=d, exists=True):
+                saved_env[d] = cmds.getAttr(f"{d}.envelope")
+                cmds.setAttr(f"{d}.envelope", 0)
 
-        return mirror_table
+        cmds.setAttr(f"{bs_node}.weight[{w_idx}]", 1)
+        dup = cmds.duplicate(mesh_name, name=temp_name)[0]
+        cmds.setAttr(f"{dup}.visibility", 0)
+
+        for idx, w in saved_weights.items():
+            cmds.setAttr(f"{bs_node}.weight[{idx}]", w)
+        for d, env in saved_env.items():
+            cmds.setAttr(f"{d}.envelope", env)
+
+        return dup
 
     def mirror_in_scene(self):
         """
@@ -632,8 +629,6 @@ class CorrectiveBlendshapeManager:
                 continue
             mesh_shape = shapes[0]
 
-            mirror_table = None
-
             for bs_node in bs_nodes:
                 mirror_bs_name = self._mirror_name(bs_node)
                 if mirror_bs_name == bs_node:
@@ -648,12 +643,8 @@ class CorrectiveBlendshapeManager:
                     )
                     continue
 
-                if mirror_table is None:
-                    om.MGlobal.displayInfo(f"[CBS] Building mirror vertex table for {mesh_name}…")
-                    mirror_table = self._build_mirror_vertex_table(mesh_name)
-
                 self._create_mirror_blendshape(
-                    bs_node, mirror_bs_name, mesh_name, mesh_shape, mirror_table
+                    bs_node, mirror_bs_name, mesh_name, mesh_shape
                 )
                 created += 1
 
@@ -662,8 +653,8 @@ class CorrectiveBlendshapeManager:
         else:
             om.MGlobal.displayInfo("[CBS] No new mirrors needed.")
 
-    def _create_mirror_blendshape(self, src_bs, mirror_bs_name, mesh_name, mesh_shape, mirror_table):
-        """Create one mirrored blendShape node from src_bs."""
+    def _create_mirror_blendshape(self, src_bs, mirror_bs_name, mesh_name, mesh_shape):
+        """Create one mirrored blendShape node from src_bs using flipTarget."""
         aliases_flat = cmds.aliasAttr(src_bs, query=True) or []
         idx_to_name = {
             int(aliases_flat[i + 1].split("[")[1].rstrip("]")): aliases_flat[i]
@@ -677,17 +668,9 @@ class CorrectiveBlendshapeManager:
         for w_idx in sorted_indices:
             t_name        = idx_to_name[w_idx]
             mirror_t_name = self._mirror_target_name(t_name)
-            deltas        = self._get_target_deltas(src_bs, w_idx)
-            mirror_deltas = self._mirror_deltas(deltas, mirror_table)
-
-            dup = self._duplicate_base_mesh(mesh_name, mesh_shape, f"cbsTmp_{mirror_t_name}")
-            cmds.setAttr(f"{dup}.visibility", 0)
-
-            for vtx_idx, dx, dy, dz in mirror_deltas:
-                vtx = f"{dup}.vtx[{vtx_idx}]"
-                pos = cmds.xform(vtx, q=True, os=True, t=True)
-                cmds.xform(vtx, os=True, t=[pos[0] + dx, pos[1] + dy, pos[2] + dz])
-
+            dup = self._get_target_as_mesh(
+                src_bs, w_idx, mesh_name, mesh_shape, f"cbsTmp_{mirror_t_name}"
+            )
             temp_meshes.append(dup)
             ordered_names.append(mirror_t_name)
 
@@ -700,6 +683,9 @@ class CorrectiveBlendshapeManager:
             frontOfChain=True,
             origin="local"
         )[0]
+
+        for i in range(len(temp_meshes)):
+            cmds.blendShape(new_bs, edit=True, flipTarget=[mesh_name, i])
 
         cmds.delete(temp_meshes)
 
@@ -728,6 +714,7 @@ class CorrectiveBlendshapeManager:
         """
         For every pre-deformation blendShape target whose name contains a side token,
         create the mirrored target INSIDE THE SAME blendShape node if it doesn't exist.
+        Duplicates the original target shape, renames L↔R, then applies flipTarget.
         """
         bs_map = self._collect_pre_deform_blendshapes()
         if not bs_map:
@@ -740,8 +727,7 @@ class CorrectiveBlendshapeManager:
             shapes = cmds.listRelatives(mesh_name, shapes=True, noIntermediate=True) or []
             if not shapes:
                 continue
-            mesh_shape   = shapes[0]
-            mirror_table = None
+            mesh_shape = shapes[0]
 
             for bs_node in bs_nodes:
                 aliases_flat = cmds.aliasAttr(bs_node, query=True) or []
@@ -756,29 +742,12 @@ class CorrectiveBlendshapeManager:
                     t_name      = idx_to_name[w_idx]
                     mirror_name = self._mirror_target_name(t_name)
 
-                    if mirror_name == t_name:
-                        continue
-                    if mirror_name in existing_names:
+                    if mirror_name == t_name or mirror_name in existing_names:
                         continue
 
-                    if mirror_table is None:
-                        om.MGlobal.displayInfo(
-                            f"[CBS] Building mirror vertex table for {mesh_name}…"
-                        )
-                        mirror_table = self._build_mirror_vertex_table(mesh_name)
-
-                    deltas        = self._get_target_deltas(bs_node, w_idx)
-                    mirror_deltas = self._mirror_deltas(deltas, mirror_table)
-
-                    dup = self._duplicate_base_mesh(
-                        mesh_name, mesh_shape, f"cbsTmp_{mirror_name}"
+                    dup = self._get_target_as_mesh(
+                        bs_node, w_idx, mesh_name, mesh_shape, f"cbsTmp_{mirror_name}"
                     )
-                    cmds.setAttr(f"{dup}.visibility", 0)
-                    for vtx_idx, dx, dy, dz in mirror_deltas:
-                        vtx = f"{dup}.vtx[{vtx_idx}]"
-                        pos = cmds.xform(vtx, q=True, os=True, t=True)
-                        cmds.xform(vtx, os=True,
-                                   t=[pos[0] + dx, pos[1] + dy, pos[2] + dz])
 
                     saved_env = {}
                     for d in self._history(mesh_shape):
@@ -788,6 +757,8 @@ class CorrectiveBlendshapeManager:
 
                     cmds.blendShape(bs_node, edit=True,
                                     target=[mesh_name, next_idx, dup, 1.0])
+                    cmds.blendShape(bs_node, edit=True,
+                                    flipTarget=[mesh_name, next_idx])
 
                     for d, env in saved_env.items():
                         cmds.setAttr(f"{d}.envelope", env)

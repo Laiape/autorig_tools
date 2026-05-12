@@ -1,11 +1,12 @@
 import maya.cmds as cmds
 
-def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=False, use_soft=False, ik_handle_manager=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
+def triangle_solver(name, guides=[], controllers=[], use_stretch=False, use_soft=False, ik_handle_manager=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
         
         """Custom IK solver for biped characters. Cosinus theorem based.
         Args:
             guides (list): List of guide objects.
             controllers (list): List of controller objects.
+            trn_guides (list): List of transform guide objects.
         Returns:
                 None
                 """
@@ -13,24 +14,20 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         side = guides[0].split('_')[0]
         if side == 'R':
                 primary_mode = (-1,0,0)
-                secondary_mode = (0,1,0)
-        grp_upper = controllers[0].replace('CTL', 'GRP')
-        grp_lower = controllers[1].replace('CTL', 'GRP')
-        grp_eff = controllers[2].replace('CTL', 'GRP')
 
         guides_00_name = side + "_" + guides[0].split('_')[1] + '_GUIDE'
         guides_01_name = side + "_" + guides[1].split('_')[1] + '_GUIDE'
         guides_02_name = side + "_" + guides[2].split('_')[1] + '_GUIDE'
 
         if ik_handle_manager == True:
-
+                ankle_trn = controllers[2].replace('Ik_CTL', '_GUIDE')
                 ik_handle_manager_mmx = cmds.createNode('multMatrix', name=f"{name}IkHandleManager_MMX", ss=True)
-                cmds.connectAttr(f"{guides[2]}", ik_handle_manager_mmx+'.matrixIn[0]') # connect ankle guide world matrix to ik handle manager
-                cmds.connectAttr(f"{trn_guides[-2]}.worldInverseMatrix[0]", ik_handle_manager_mmx+'.matrixIn[1]') # connect ball guide inverse world matrix to ik handle manager
-                cmds.connectAttr(f"{controllers[-1]}.worldMatrix[0]", ik_handle_manager_mmx+'.matrixIn[2]') # connect ball controller world matrix to ik handle manager
+                cmds.connectAttr(f"{guides[3]}", ik_handle_manager_mmx+'.matrixIn[0]') # connect ankle guide world matrix to ik handle manager
+                cmds.connectAttr(f"{ankle_trn}.worldInverseMatrix[0]", ik_handle_manager_mmx+'.matrixIn[1]') # connect ball guide inverse world matrix to ik handle manager
+                cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", ik_handle_manager_mmx+'.matrixIn[2]') # connect ball controller world matrix to ik handle manager
 
         if use_stretch == True:
-                distance_between_eff, distance_between_up, distance_between_low, current_length = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers, trn_guides=trn_guides)
+                distance_between_eff, distance_between_up, distance_between_low, current_length = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers)
                 if ik_handle_manager == True:
                         cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', current_length+'.inMatrix2', f=True) # connect ik handle manager output to current length
                 if use_soft == True:
@@ -231,46 +228,48 @@ def triangle_solver(name, guides=[], controllers=[], trn_guides=[], use_stretch=
         # ----- This will be used to connect it to the blend matrix later -----
 
         # Effector WM
-        mult_matrix_eff = cmds.createNode('multMatrix', name=f"{name}EffectorLocalMatrix_MMT", ss=True) # world matrix mult for end effector
         inverse_matrix_lower = cmds.createNode('inverseMatrix', name=guides_02_name.replace('_GUIDE', 'Lower_INV'), ss=True)
-        cmds.connectAttr(lower_lm, inverse_matrix_lower+'.inputMatrix') # connect lower local matrix to inverse
-        cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", mult_matrix_eff+'.matrixIn[0]')
+        cmds.connectAttr(lower_wm, inverse_matrix_lower+'.inputMatrix')
+        hand_base_mmx = cmds.createNode('multMatrix', name=f"{name}EffectorLocalMatrix_MMT", ss=True)
         if ik_handle_manager == True:
-                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', mult_matrix_eff+'.matrixIn[0]', f=True) # connect ik handle manager output to effector world matrix
-        cmds.connectAttr(inverse_matrix_lower+'.outputMatrix', mult_matrix_eff+'.matrixIn[1]')
+                cmds.connectAttr(ik_handle_manager_mmx+'.matrixSum', hand_base_mmx+'.matrixIn[0]')
+        else:
+                cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", hand_base_mmx+'.matrixIn[0]')
+        cmds.connectAttr(inverse_matrix_lower+'.outputMatrix', hand_base_mmx+'.matrixIn[1]')
 
-        four_by_four_effector_position = cmds.createNode('fourByFourMatrix', name=f"{name}EffectorPosition_F4FX", ss=True) # local position matrix for end effector
+        hand_local_f4 = cmds.createNode('fourByFourMatrix', name=f"{name}EffectorLocal_F4FX", ss=True)
+        for i in range(3):
+                row_node = cmds.createNode('rowFromMatrix', name=f"{name}EffectorRow{i}_RFM", ss=True)
+                cmds.connectAttr(hand_base_mmx+'.matrixSum', row_node+'.matrix')
+                cmds.setAttr(row_node+'.input', i)
+                for z, attr in enumerate(['X', 'Y', 'Z', 'W']):
+                        cmds.connectAttr(f"{row_node}.output{attr}", f"{hand_local_f4}.in{i}{z}")
+
         if side == 'L':
                 if use_stretch == False:
-                        cmds.connectAttr(distance_between_low+'.distance', four_by_four_effector_position+'.in30') # position x
+                        cmds.connectAttr(distance_between_low+'.distance', hand_local_f4+'.in30')
                 else:
                         if use_soft == True:
-                                cmds.connectAttr(lower_length_scaled+'.output', four_by_four_effector_position+'.in30') # position x
+                                cmds.connectAttr(lower_length_scaled+'.output', hand_local_f4+'.in30')
                         else:
-                                cmds.connectAttr(distance_between_low+'.output', four_by_four_effector_position+'.in30') # position x
+                                cmds.connectAttr(distance_between_low+'.output', hand_local_f4+'.in30')
         else:
                 negate_eff_pos_x = cmds.createNode('negate', name=guides_02_name.replace('_GUIDE', 'EffPosX_NEG'), ss=True)
                 if use_stretch == False:
-                        cmds.connectAttr(distance_between_low+'.distance', negate_eff_pos_x+'.input') # negate position
+                        cmds.connectAttr(distance_between_low+'.distance', negate_eff_pos_x+'.input')
                 else:
                         if use_soft == True:
-                                cmds.connectAttr(lower_length_scaled+'.output', negate_eff_pos_x+'.input') # negate position
+                                cmds.connectAttr(lower_length_scaled+'.output', negate_eff_pos_x+'.input')
                         else:
-                                cmds.connectAttr(distance_between_low+'.output', negate_eff_pos_x+'.input') # negate position
+                                cmds.connectAttr(distance_between_low+'.output', negate_eff_pos_x+'.input')
+                cmds.connectAttr(negate_eff_pos_x+'.output', hand_local_f4+'.in30')
 
-                cmds.connectAttr(negate_eff_pos_x+'.output', four_by_four_effector_position+'.in30') # position x
-        pick_matrix_effector = cmds.createNode('pickMatrix', name=f"{name}EffectorPick_MMT", ss=True) # pick matrix for end effector
-        cmds.setAttr(f"{pick_matrix_effector}.useTranslate", 0)
-        cmds.connectAttr(mult_matrix_eff+'.matrixSum', pick_matrix_effector+'.inputMatrix') # connect world matrix mult to pick matrix
-        mult_matrix_add_effector_pos = cmds.createNode('multMatrix', name=f"{name}EffectorPos_MMT", ss=True) # final mult matrix for end effector
-        cmds.connectAttr(pick_matrix_effector+'.outputMatrix', mult_matrix_add_effector_pos+'.matrixIn[0]')
-        cmds.connectAttr(four_by_four_effector_position+'.output', mult_matrix_add_effector_pos+'.matrixIn[1]')
-        effector_mult_matrix_wm = cmds.createNode('multMatrix', name=f"{name}EffectorWM_MMT", ss=True) # world matrix mult for end effector
-        cmds.connectAttr(lower_wm, effector_mult_matrix_wm+'.matrixIn[1]') # connect lower world matrix to effector world matrix
-        cmds.connectAttr(mult_matrix_add_effector_pos+'.matrixSum', effector_mult_matrix_wm+'.matrixIn[0]')
-        effector_wm = effector_mult_matrix_wm+'.matrixSum' # effector world matrix
+        effector_mult_matrix_wm = cmds.createNode('multMatrix', name=f"{name}EffectorWM_MMT", ss=True)
+        cmds.connectAttr(hand_local_f4+'.output', effector_mult_matrix_wm+'.matrixIn[0]')
+        cmds.connectAttr(lower_wm, effector_mult_matrix_wm+'.matrixIn[1]')
+        effector_wm = effector_mult_matrix_wm+'.matrixSum'
         locator_effector = cmds.spaceLocator(name=f"{side}_{limb}Effector_LOC")[0]
-        cmds.connectAttr(effector_wm, locator_effector+'.offsetParentMatrix') # connect effector
+        cmds.connectAttr(effector_wm, locator_effector+'.offsetParentMatrix')
         # ----- This will be used to connect it to the blend matrix
 
         ik_matrices = [upper_wm, lower_wm, effector_wm]
@@ -288,7 +287,7 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
         Returns:
                 matrix
                 """
-        side = blend_matrix[0].split('_')[0]
+        side = blend_matrix.split('_')[0]
         if side == 'R':
                 primary_mode = (-1,0,0)
                 secondary_mode = (0,1,0)
@@ -306,7 +305,7 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
                 if side == 'R':
                         negate_pos_x = cmds.createNode('negate', name=controller.replace('_CTL', 'PosX_NEG'), ss=True)
                         cmds.connectAttr(distance+'.distance', negate_pos_x+'.input') # negate position
-                        cmds.connectAttr(negate_pos_x+'.output', controller_position+'.in30') # position x
+                        cmds.connectAttr(negate_pos_x+'.output', controller_position+'.in30', f=True) # position x
         elif primary_mode == (0,1,0) or primary_mode == (0,-1,0):
                 cmds.connectAttr(distance+'.distance', controller_position+'.in31') # position y
         elif primary_mode == (0,0,1) or primary_mode == (0,0,-1):
@@ -321,15 +320,15 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
         cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.primaryTargetMatrix') # target
         cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.secondaryTargetMatrix') # secondary target
 
-        parent_matrix = cmds.createNode('parentMatrix', name=guides[0].replace('_GUIDE', 'SC_MMT'), ss=True) # final mult matrix for controller
-        cmds.connectAttr(aim_matrix_rotation+'.outputMatrix', parent_matrix+'.inputMatrix') # connect aim matrix to parent matrix
-        cmds.connectAttr(controller_position+'.output', parent_matrix+'.target[0].targetMatrix') # connect position matrix to parent matrix
+        mult_matrix = cmds.createNode('multMatrix', name=guides[0].replace('_GUIDE', 'SC_MMT'), ss=True)
+        cmds.connectAttr(controller_position+'.output', mult_matrix+'.matrixIn[0]')
+        cmds.connectAttr(aim_matrix_rotation+'.outputMatrix', mult_matrix+'.matrixIn[1]')
 
-        effector_wm = parent_matrix+'.outputMatrix' # effector world matrix
+        effector_wm = mult_matrix+'.matrixSum'
 
         return effector_wm
 
-def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
+def stretch(name, master_walk_ctl, guides=[], controllers=[]):
 
         """
         Stretch system for limbs.
@@ -338,7 +337,6 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
                 master_walk_ctl (str): Name of the master walk controller for global scale reference.
                 guides (list): List of guide objects.
                 controllers (list): List of controller objects.
-                trn_guides (list): List of transform guide objects.
         Returns:
                 distance_between_eff (str): Node representing the distance between start and effector.
                 distance_between_up (str): Node representing the distance between start and mid.
@@ -348,8 +346,8 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         side = name.split('_')[0]
         limb = name.split('_')[1]
         limb_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}Length_DBT", ss=True) # arm length distance between start and effector
-        cmds.connectAttr(f"{trn_guides[0]}.worldMatrix[0]", f"{limb_length}.inMatrix1") # start
-        cmds.connectAttr(f"{trn_guides[2]}.worldMatrix[0]", f"{limb_length}.inMatrix2") # effector
+        cmds.connectAttr(guides[0], f"{limb_length}.inMatrix1") # start
+        cmds.connectAttr(guides[2], f"{limb_length}.inMatrix2") # effector
 
         current_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}CurrentLength_DBT", ss=True) # arm length distance between start and effector
         cmds.connectAttr(f"{controllers[0]}.worldMatrix[0]", f"{current_length}.inMatrix1") # start
@@ -360,12 +358,12 @@ def stretch(name, master_walk_ctl, guides=[], controllers=[], trn_guides=[]):
         cmds.connectAttr(f"{master_walk_ctl}.globalScale", f"{global_scale_factor}.input2")
 
         limb_upper_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}UpperInitialLength_DBT", ss=True)
-        cmds.connectAttr(f"{trn_guides[0]}.worldMatrix[0]", f"{limb_upper_length}.inMatrix1") # start
-        cmds.connectAttr(f"{trn_guides[1]}.worldMatrix[0]", f"{limb_upper_length}.inMatrix2") # mid
+        cmds.connectAttr(f"{guides[0]}", f"{limb_upper_length}.inMatrix1") # start
+        cmds.connectAttr(f"{guides[1]}", f"{limb_upper_length}.inMatrix2") # mid
 
         limb_lower_length = cmds.createNode('distanceBetween', name=f"{side}_{limb}LowerInitialLength_DBT", ss=True)
-        cmds.connectAttr(f"{trn_guides[1]}.worldMatrix[0]", f"{limb_lower_length}.inMatrix1") # mid
-        cmds.connectAttr(f"{trn_guides[2]}.worldMatrix[0]", f"{limb_lower_length}.inMatrix2") # effector
+        cmds.connectAttr(f"{guides[1]}", f"{limb_lower_length}.inMatrix1") # mid
+        cmds.connectAttr(f"{guides[2]}", f"{limb_lower_length}.inMatrix2") # effector
 
         sum_upper_lower = cmds.createNode('sum', name=f"{side}_{limb}InitialLength_SUM", ss=True)
         cmds.connectAttr(f"{limb_upper_length}.distance", f"{sum_upper_lower}.input[0]") # upper length
