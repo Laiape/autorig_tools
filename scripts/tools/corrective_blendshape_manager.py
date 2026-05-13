@@ -240,7 +240,7 @@ class CorrectiveBlendshapeManager:
         bs_map   = self._collect_pre_deform_blendshapes()
 
         if not bs_map:
-            om.MGlobal.displayWarning("[CBS] No pre-deformation blendShapes found.")
+            # om.MGlobal.displayWarning("[CBS] No pre-deformation blendShapes found.")
             return None
 
         data = {"version": 1, "blendshapes": {}}
