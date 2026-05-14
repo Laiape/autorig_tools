@@ -155,9 +155,16 @@ class RigProgressDialog(QtWidgets.QDialog):
         b.setContentsMargins(16, 14, 16, 14)
         b.setSpacing(8)
 
+        step_row = QtWidgets.QHBoxLayout()
+        step_row.setSpacing(8)
         self._step_lbl = QtWidgets.QLabel("INITIALIZING…")
         self._step_lbl.setStyleSheet(f"color:{C_TEXT}; font-size:10px; font-weight:bold; letter-spacing:1px;")
-        b.addWidget(self._step_lbl)
+        self._pct_lbl = QtWidgets.QLabel("0%")
+        self._pct_lbl.setStyleSheet(f"color:{C_ACCENT}; font-size:10px; font-weight:bold; letter-spacing:1px;")
+        self._pct_lbl.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        step_row.addWidget(self._step_lbl, 1)
+        step_row.addWidget(self._pct_lbl)
+        b.addLayout(step_row)
 
         self._bar = QtWidgets.QProgressBar()
         self._bar.setRange(0, 100)
@@ -187,8 +194,9 @@ class RigProgressDialog(QtWidgets.QDialog):
     # ── public API ────────────────────────────────────────────────────────────
 
     def _set_pct(self, label, pct):
-        """Update label and bar (0-100), then flush Qt events."""
+        """Update label, percentage, and bar (0-100), then flush Qt events."""
         self._step_lbl.setText(label.upper())
+        self._pct_lbl.setText(f"{int(pct)}%")
         self._bar.setValue(int(pct))
         QtWidgets.QApplication.processEvents()
 
@@ -199,6 +207,7 @@ class RigProgressDialog(QtWidgets.QDialog):
     def finish(self, elapsed_seconds):
         """Mark complete, show elapsed time, reveal close button, schedule auto-close."""
         self._step_lbl.setText("BUILD COMPLETE.")
+        self._pct_lbl.setText("100%")
         self._bar.setValue(100)
         m = int(elapsed_seconds // 60)
         s = elapsed_seconds % 60

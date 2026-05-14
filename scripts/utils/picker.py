@@ -117,7 +117,8 @@ def _btn(name, x, y, w, h, label=None, color=None, size=9, panel=0):
     }
 
 
-def _label_bg(text, x, y, w, h, color="#1A1A1A", text_color="#777777", panel=0):
+def _label_bg(text, x, y, w, h, color="#1A1A1A", text_color="#777777", panel=0,
+              shape_type="square", corners=0):
     """Return a non-interactive background/section-label shape dict."""
     return {
         "id": str(uuid.uuid4()),
@@ -126,7 +127,7 @@ def _label_bg(text, x, y, w, h, color="#1A1A1A", text_color="#777777", panel=0):
         "visibility_layer": None,
         "children": [],
         "shape.ignored_by_focus": True,
-        "shape": "square",
+        "shape": shape_type,
         "shape.space": "world",
         "shape.anchor": "top_left",
         "shape.path": [],
@@ -134,8 +135,8 @@ def _label_bg(text, x, y, w, h, color="#1A1A1A", text_color="#777777", panel=0):
         "shape.top": float(y),
         "shape.width": float(w),
         "shape.height": float(h),
-        "shape.cornersx": 0,
-        "shape.cornersy": 0,
+        "shape.cornersx": corners,
+        "shape.cornersy": corners,
         "border": False,
         "borderwidth.normal": 0,
         "borderwidth.hovered": 0,
@@ -309,23 +310,31 @@ def _build_body_shapes():
 # ─────────────────────────────────────────────────────────────────
 #
 #  Layout mirrors the face viewed front-on:
-#    R_ controls (char's right) → viewer's LEFT  (x ~ 5-200)
-#    Center (C_)                → x ~ 160-300
-#    L_ controls (char's left)  → viewer's RIGHT (x ~ 260-455)
+#    R_ controls (char's right) → viewer's LEFT  (x ~ 5)
+#    Center (C_)                → centered
+#    L_ controls (char's left)  → viewer's RIGHT (x ~ 270+)
 #
-#  Eyebrow secondary (In / InTan / Mid / OutTan / Out):
-#    L side: In → Out  left-to-right  (inner near nose, outer far)
-#    R side: Out → In  left-to-right  (mirrored)
+#  Eyelid controller names (from eyelid_module curve_cvs_into_guides):
+#    {S}_eyelidIn, eyelidInUp, eyelidUp, eyelidOutUp  (upper corners+upper)
+#    {S}_eyelidInDown, eyelidDown, eyelidOutDown       (lower)
+#    {S}_eyelidOut                                     (outer corner, shared)
+#
+#  Secondary lips naming (jaw_module_nurbs, 8 CVs, mid_point=3):
+#    R_upperLip00-02, C_upperLip03, L_upperLip04-07  (same for lower)
 
-_BROW_SEC_NAMES = ["Out", "OutTan", "Mid", "InTan", "In"]   # R order (left→right)
-_BROW_SEC_L     = ["In", "InTan", "Mid", "OutTan", "Out"]   # L order
+_BROW_SEC_R = ["Out", "OutTan", "Mid", "InTan", "In"]   # R: outer→inner (left→right)
+_BROW_SEC_L = ["In", "InTan", "Mid", "OutTan", "Out"]   # L: inner→outer (left→right)
 
-_BTN_BROW_W = 36   # secondary eyebrow button width
-_BTN_BROW_G = 2    # gap between them
+_ELD_BTN_W  = 35   # eyelid button width
+_ELD_BTN_G  = 2    # eyelid button gap
+
+# Secondary lips: R=indices 00-02, C=03, L=04-07
+_LIP_LABELS  = ["00","01","02","03","04","05","06","07"]
+_LIP_SIDES   = ["R","R","R","C","L","L","L","L"]
 
 
 def _build_face_shapes():
-    P = 1  # panel index
+    P = 1
     shapes = []
 
     def btn(name, x, y, w, h, **kw):
@@ -336,67 +345,175 @@ def _build_face_shapes():
         kw["panel"] = P
         shapes.append(_label_bg(text, x, y, w, h, **kw))
 
-    # column positions
-    XFL  = 260   # L_ column start (viewer's right)
-    XFR  = 5     # R_ column start (viewer's left)
-    XFCL = 205   # narrow center left edge
-    WFMAIN = 195 # main (eyebrow/eye) side width
-    WFCTR  = 50  # center narrow button width
+    def sep(label, y, color="#111111", text_color="#555555"):
+        bg(f"  {label}", 0, y, CW_FACE, 13, color=color, text_color=text_color)
 
-    # ── HEADER ──────────────────────────────── y=5
-    bg("", 0, 0, 460, 30, color="#111111")
-    btn("C_face_CTL", 120, 5, 220, 22, color=COL_CTR_SOFT, label="face")
+    CW_FACE = 460
+    XR   = 5      # viewer's left  (char's right)
+    XL   = 273    # viewer's right (char's left)
+    W_SIDE = 183
+    W_EAR  = 28
+    W_BROW = 35
+    W_ELD  = _ELD_BTN_W
+    W_CB   = 44
 
-    # ── EYEBROW MAIN ────────────────────────── y=40
-    y = 40
-    btn("R_eyebrowMain_CTL", XFR,  y, WFMAIN, CH, color=COL_R_FK,   label="eyebrowMain")
-    btn("C_eyebrowMid_CTL",  XFCL, y, WFCTR,  CH, color=COL_CENTER, label="~")
-    btn("L_eyebrowMain_CTL", XFL,  y, WFMAIN, CH, color=COL_L_FK,   label="eyebrowMain")
+    # ── LAYER 0: full canvas bg ─────────────────────────────────
+    bg("", 0, 0, CW_FACE, 500, color="#0E0E0E")
 
-    # ── EYEBROW SECONDARY ───────────────────── y=68
-    y = 68
-    for i, name in enumerate(_BROW_SEC_NAMES):
-        x = XFR + i * (_BTN_BROW_W + _BTN_BROW_G)
-        btn(f"R_eyebrow{name}_CTL", x, y, _BTN_BROW_W, 18,
+    # ── LAYER 1: face oval ──────────────────────────────────────
+    bg("", 55, 28, 350, 458, color="#131110",
+       shape_type="rounded_rect", corners=80)
+
+    # ── HEADER: ears + face CTL ─────────────────────────────────
+    bg("", 0, 0, CW_FACE, 28, color="#111111")
+    for i in range(3):
+        btn(f"R_ear0{i}_CTL", XR + i*(W_EAR+3), 4, W_EAR, 20,
+            color=COL_R_FK, label=f"ear{i}", size=7)
+        btn(f"L_ear0{i}_CTL", 423 - i*(W_EAR+3), 4, W_EAR, 20,
+            color=COL_L_FK, label=f"ear{i}", size=7)
+    btn("C_face_CTL", 128, 4, 204, 20, color=COL_CTR_SOFT, label="face", size=9)
+
+    # ═══════════════════════════════════════════════════════════
+    #  BROWS
+    # ═══════════════════════════════════════════════════════════
+    y = 32
+    sep("BROWS", y, color="#1E1900", text_color="#887733")
+    y += 17
+
+    XCBMID = (CW_FACE - 70) // 2
+    btn("R_eyebrowMain_CTL", XR,     y, W_SIDE, CH, color=COL_R_FK,   label="eyebrowMain")
+    btn("C_eyebrowMid_CTL",  XCBMID, y, 70,     CH, color=COL_CENTER, label="browMid")
+    btn("L_eyebrowMain_CTL", XL,     y, W_SIDE, CH, color=COL_L_FK,   label="eyebrowMain")
+    y += CH + 4
+
+    for i, name in enumerate(_BROW_SEC_R):
+        btn(f"R_eyebrow{name}_CTL", XR + i*(W_BROW+2), y, W_BROW, 18,
             color=COL_R_FK, label=name[:3], size=7)
     for i, name in enumerate(_BROW_SEC_L):
-        x = XFL + i * (_BTN_BROW_W + _BTN_BROW_G)
-        btn(f"L_eyebrow{name}_CTL", x, y, _BTN_BROW_W, 18,
+        btn(f"L_eyebrow{name}_CTL", XL + i*(W_BROW+2), y, W_BROW, 18,
             color=COL_L_FK, label=name[:3], size=7)
+    y += 18 + 6
 
-    # ── EYES ────────────────────────────────── y=96
-    y = 96
-    EW = 95  # eye button width
-    btn("R_eye_CTL",      XFR,       y, EW, CH, color=COL_R_IK, label="eye")
-    btn("R_eyeDirect_CTL",XFR+EW+4,  y, EW, CH, color=COL_R_FK, label="eyeDirect", size=8)
-    btn("C_eyeMain_CTL",  XFCL,      y, WFCTR+10, CH, color=COL_CENTER, label="eyeMain", size=8)
-    btn("L_eye_CTL",      XFL,       y, EW, CH, color=COL_L_IK, label="eye")
-    btn("L_eyeDirect_CTL",XFL+EW+4,  y, EW, CH, color=COL_L_FK, label="eyeDirect", size=8)
+    # ═══════════════════════════════════════════════════════════
+    #  EYES
+    # ═══════════════════════════════════════════════════════════
+    sep("EYES", y, color="#0D1525", text_color="#4466AA")
+    # Eye socket bgs — drawn before buttons so they appear below
+    _eye_h = CH + 4 + 18 + 3 + 18 + 2  # covers eye row + both eyelid rows
+    bg("", XR-2, y+13, 189, _eye_h, color="#0B1018",
+       shape_type="rounded_rect", corners=6)
+    bg("", XL-2, y+13, 189, _eye_h, color="#0B1018",
+       shape_type="rounded_rect", corners=6)
+    y += 17
 
-    # ── CHEEKS ──────────────────────────────── y=128
-    y = 128
-    btn("R_cheek_CTL", XFR, y, WFMAIN, CH, color=COL_R_FK, label="cheek")
-    btn("L_cheek_CTL", XFL, y, WFMAIN, CH, color=COL_L_FK, label="cheek")
+    EW1, EW2 = 88, 82
+    XCE = (CW_FACE - 74) // 2
+    btn("R_eye_CTL",       XR,       y, EW1, CH, color=COL_R_IK, label="eye")
+    btn("R_eyeDirect_CTL", XR+EW1+3, y, EW2, CH, color=COL_R_FK, label="eyeDirect", size=8)
+    btn("C_eyeMain_CTL",   XCE,      y, 74,  CH, color=COL_CENTER, label="eyeMain", size=8)
+    btn("L_eye_CTL",       XL,       y, EW1, CH, color=COL_L_IK, label="eye")
+    btn("L_eyeDirect_CTL", XL+EW1+3, y, EW2, CH, color=COL_L_FK, label="eyeDirect", size=8)
+    y += CH + 4
 
-    # ── LIPS / JAW ──────────────────────────── y=162
-    y = 162
-    WLC = 145   # lip corner width
-    WUL = 120   # upper lip width
-    XUL = (460 - WUL) // 2
-    btn("R_lipCorner_CTL", XFR,  y, WLC, CH, color=COL_R_FK, label="lipCorner")
-    btn("C_upperLip_CTL",  XUL,  y, WUL, CH, color=COL_CENTER, label="upperLip")
-    btn("L_lipCorner_CTL", 460 - XFR - WLC, y, WLC, CH, color=COL_L_FK, label="lipCorner")
+    ELD_R    = ["Out", "OutUp",   "Up",   "InUp",   "In"]
+    ELD_L    = ["In",  "InUp",    "Up",   "OutUp",  "Out"]
+    ELD_R_LO = ["Out", "OutDown", "Down", "InDown", "In"]
+    ELD_L_LO = ["In",  "InDown",  "Down", "OutDown","Out"]
 
-    y += CH + GAP
-    WJ = 140
-    XJ = (460 - WJ) // 2
+    for i, name in enumerate(ELD_R):
+        btn(f"R_eyelid{name}_CTL", XR + i*(W_ELD+2), y, W_ELD, 18,
+            color=COL_R_FK, label=name[:4], size=7)
+    for i, name in enumerate(ELD_L):
+        btn(f"L_eyelid{name}_CTL", XL + i*(W_ELD+2), y, W_ELD, 18,
+            color=COL_L_FK, label=name[:4], size=7)
+    y += 18 + 3
+
+    for i, name in enumerate(ELD_R_LO):
+        btn(f"R_eyelid{name}_CTL", XR + i*(W_ELD+2), y, W_ELD, 18,
+            color=COL_R_FK, label=name[:4], size=7)
+    for i, name in enumerate(ELD_L_LO):
+        btn(f"L_eyelid{name}_CTL", XL + i*(W_ELD+2), y, W_ELD, 18,
+            color=COL_L_FK, label=name[:4], size=7)
+    y += 18 + 6
+
+    # ═══════════════════════════════════════════════════════════
+    #  CHEEKS
+    # ═══════════════════════════════════════════════════════════
+    sep("CHEEKS", y, color="#111111", text_color="#666666")
+    y += 17
+
+    for i, (sfx, lbl) in enumerate(zip(["", "00", "01", "02"],
+                                        ["root", "00", "01", "02"])):
+        btn(f"R_cheekbone{sfx}_CTL", XR + i*(W_CB+2), y, W_CB, CH,
+            color=COL_R_FK, label=lbl, size=7)
+        btn(f"L_cheekbone{sfx}_CTL", XL + i*(W_CB+2), y, W_CB, CH,
+            color=COL_L_FK, label=lbl, size=7)
+    y += CH + 4
+
+    btn("R_cheek_CTL", XR, y, W_SIDE, CH, color=COL_R_FK, label="cheek")
+    btn("L_cheek_CTL", XL, y, W_SIDE, CH, color=COL_L_FK, label="cheek")
+    y += CH + 6
+
+    # ═══════════════════════════════════════════════════════════
+    #  NOSE
+    # ═══════════════════════════════════════════════════════════
+    sep("NOSE", y, color="#111111", text_color="#666666")
+    y += 17
+
+    nose_btns = [
+        ("R_nosetril_CTL", 46, COL_R_FK,   "nosetril"),
+        ("R_nose_CTL",     88, COL_R_FK,   "nose"),
+        ("C_baseNose_CTL", 50, COL_CENTER, "base"),
+        ("C_noseMain_CTL", 54, COL_CENTER, "noseMain"),
+        ("C_noseTip_CTL",  50, COL_CENTER, "noseTip"),
+        ("L_nose_CTL",     88, COL_L_FK,   "nose"),
+        ("L_nosetril_CTL", 46, COL_L_FK,   "nosetril"),
+    ]
+    total_w = sum(w for _, w, _, _ in nose_btns)
+    gap_n   = (CW_FACE - total_w) // (len(nose_btns) - 1)
+    nx = 0
+    for name, w, col, lbl in nose_btns:
+        btn(name, nx, y, w, CH, color=col, label=lbl, size=8)
+        nx += w + gap_n
+    y += CH + 6
+
+    # ═══════════════════════════════════════════════════════════
+    #  MOUTH
+    # ═══════════════════════════════════════════════════════════
+    sep("MOUTH", y, color="#1E1000", text_color="#996633")
+    y += 17
+
+    WLC, WUL = 130, 160
+    XUL = (CW_FACE - WUL) // 2
+    btn("R_lipCorner_CTL", XR,          y, WLC, CH, color=COL_R_FK,   label="lipCorner")
+    btn("C_upperLip_CTL",  XUL,         y, WUL, CH, color=COL_CENTER, label="upperLip")
+    btn("L_lipCorner_CTL", CW_FACE-WLC, y, WLC, CH, color=COL_L_FK,   label="lipCorner")
+    y += CH + 4
+
+    WJ = 150
+    XJ = (CW_FACE - WJ) // 2
     btn("C_upperJaw_CTL", XJ, y, WJ, CH, color=COL_CENTER, label="upperJaw")
+    y += CH + 4
+    btn("C_jaw_CTL",      XJ, y, WJ, CH, color=COL_CENTER, label="jaw")
+    y += CH + 4
+    btn("C_lowerLip_CTL", XJ, y, WJ, CH, color=COL_CENTER, label="lowerLip")
+    y += CH + 8
 
-    y += CH + GAP
-    btn("C_jaw_CTL",       XJ, y, WJ, CH, color=COL_CENTER, label="jaw")
+    # ═══════════════════════════════════════════════════════════
+    #  SECONDARY LIPS
+    # ═══════════════════════════════════════════════════════════
+    sep("secondary lips", y, color="#111111", text_color="#555555")
+    y += 16
 
-    y += CH + GAP
-    btn("C_lowerLip_CTL",  XJ, y, WJ, CH, color=COL_CENTER, label="lowerLip")
+    LIP_W = 50
+    LIP_G = (CW_FACE - 8 * LIP_W) // 7
+    LIP_COL = {"R": COL_R_FK, "C": COL_CENTER, "L": COL_L_FK}
+    for part in ("upper", "lower"):
+        for idx, (lbl, side) in enumerate(zip(_LIP_LABELS, _LIP_SIDES)):
+            nx = idx * (LIP_W + LIP_G)
+            btn(f"{side}_{part}Lip{lbl}_CTL", nx, y, LIP_W, 18,
+                color=LIP_COL[side], label=lbl, size=8)
+        y += 18 + 3
 
     return shapes
 
