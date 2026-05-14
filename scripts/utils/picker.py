@@ -246,8 +246,13 @@ def _build_body_shapes():
     btn("C_localHip_CTL",   XC, y,      CWC,CH, color=COL_CTR_SOFT, label="localHip")
     btn("R_armPv_CTL",      XR, y,      CW, CH, color=COL_R_IK, label="armPv")
 
-    # ── LEGS SEPARATOR ──────────────────────── y ~370
-    y += CH + SGAP
+    # ── FINGER ATTRIBUTES (inline, small) ───
+    y += CH + GAP
+    btn("L_fingersAttributes_CTL", XL, y, CW, 18, color=COL_SETTINGS, label="fingers attr", size=8)
+    btn("R_fingersAttributes_CTL", XR, y, CW, 18, color=COL_SETTINGS, label="fingers attr", size=8)
+
+    # ── LEGS SEPARATOR ──────────────────────────
+    y += 18 + SGAP
     bg("  LEGS", 0, y, CANVAS_W, 16, color="#111111", text_color="#555555")
     y += 16 + GAP
 
@@ -300,66 +305,98 @@ def _build_body_shapes():
 
 
 # ─────────────────────────────────────────────────────────────────
-#  Hand picker layout (single hand, panel-agnostic)
+#  Face picker layout  (panel 1)
 # ─────────────────────────────────────────────────────────────────
+#
+#  Layout mirrors the face viewed front-on:
+#    R_ controls (char's right) → viewer's LEFT  (x ~ 5-200)
+#    Center (C_)                → x ~ 160-300
+#    L_ controls (char's left)  → viewer's RIGHT (x ~ 260-455)
+#
+#  Eyebrow secondary (In / InTan / Mid / OutTan / Out):
+#    L side: In → Out  left-to-right  (inner near nose, outer far)
+#    R side: Out → In  left-to-right  (mirrored)
 
-_FINGERS = ["thumb", "index", "middle", "ring", "pinky"]
-_FINGER_JOINTS = {
-    "thumb":  3,  # thumb00–02
-    "index":  4,  # index00–03
-    "middle": 4,
-    "ring":   4,
-    "pinky":  4,
-}
+_BROW_SEC_NAMES = ["Out", "OutTan", "Mid", "InTan", "In"]   # R order (left→right)
+_BROW_SEC_L     = ["In", "InTan", "Mid", "OutTan", "Out"]   # L order
+
+_BTN_BROW_W = 36   # secondary eyebrow button width
+_BTN_BROW_G = 2    # gap between them
 
 
-def _build_hand_shapes(side, panel):
-    """
-    Returns shapes for one hand panel.
-    side: 'L' or 'R'
-    panel: int panel index
-    """
+def _build_face_shapes():
+    P = 1  # panel index
     shapes = []
 
-    def btn(name, x, y, w=80, h=CH, **kw):
-        kw["panel"] = panel
+    def btn(name, x, y, w, h, **kw):
+        kw["panel"] = P
         shapes.append(_btn(name, x, y, w, h, **kw))
 
     def bg(text, x, y, w, h, **kw):
-        kw["panel"] = panel
+        kw["panel"] = P
         shapes.append(_label_bg(text, x, y, w, h, **kw))
 
-    col_ik  = COL_L_IK  if side == "L" else COL_R_IK
-    col_fk  = COL_L_FK  if side == "L" else COL_R_FK
+    # column positions
+    XFL  = 260   # L_ column start (viewer's right)
+    XFR  = 5     # R_ column start (viewer's left)
+    XFCL = 205   # narrow center left edge
+    WFMAIN = 195 # main (eyebrow/eye) side width
+    WFCTR  = 50  # center narrow button width
 
-    # Attributes controller
-    bg("", 0, 0, 460, 32, color="#111111")
-    btn(f"{side}_fingersAttributes_CTL", 120, 5, 220, 22,
-        color=COL_SETTINGS, label="fingers attributes")
+    # ── HEADER ──────────────────────────────── y=5
+    bg("", 0, 0, 460, 30, color="#111111")
+    btn("C_face_CTL", 120, 5, 220, 22, color=COL_CTR_SOFT, label="face")
 
-    # Finger columns: one column per finger
-    col_w   = 80
-    col_gap = 12
-    total_w = len(_FINGERS) * col_w + (len(_FINGERS) - 1) * col_gap
-    x_start = (460 - total_w) // 2
+    # ── EYEBROW MAIN ────────────────────────── y=40
+    y = 40
+    btn("R_eyebrowMain_CTL", XFR,  y, WFMAIN, CH, color=COL_R_FK,   label="eyebrowMain")
+    btn("C_eyebrowMid_CTL",  XFCL, y, WFCTR,  CH, color=COL_CENTER, label="~")
+    btn("L_eyebrowMain_CTL", XFL,  y, WFMAIN, CH, color=COL_L_FK,   label="eyebrowMain")
 
-    row_h   = 26
-    row_gap = 4
-    y_start = 42
+    # ── EYEBROW SECONDARY ───────────────────── y=68
+    y = 68
+    for i, name in enumerate(_BROW_SEC_NAMES):
+        x = XFR + i * (_BTN_BROW_W + _BTN_BROW_G)
+        btn(f"R_eyebrow{name}_CTL", x, y, _BTN_BROW_W, 18,
+            color=COL_R_FK, label=name[:3], size=7)
+    for i, name in enumerate(_BROW_SEC_L):
+        x = XFL + i * (_BTN_BROW_W + _BTN_BROW_G)
+        btn(f"L_eyebrow{name}_CTL", x, y, _BTN_BROW_W, 18,
+            color=COL_L_FK, label=name[:3], size=7)
 
-    for fi, finger in enumerate(_FINGERS):
-        x = x_start + fi * (col_w + col_gap)
-        n_joints = _FINGER_JOINTS[finger]
+    # ── EYES ────────────────────────────────── y=96
+    y = 96
+    EW = 95  # eye button width
+    btn("R_eye_CTL",      XFR,       y, EW, CH, color=COL_R_IK, label="eye")
+    btn("R_eyeDirect_CTL",XFR+EW+4,  y, EW, CH, color=COL_R_FK, label="eyeDirect", size=8)
+    btn("C_eyeMain_CTL",  XFCL,      y, WFCTR+10, CH, color=COL_CENTER, label="eyeMain", size=8)
+    btn("L_eye_CTL",      XFL,       y, EW, CH, color=COL_L_IK, label="eye")
+    btn("L_eyeDirect_CTL",XFL+EW+4,  y, EW, CH, color=COL_L_FK, label="eyeDirect", size=8)
 
-        # Finger label
-        bg(finger, x, y_start, col_w, 16,
-           color="#1A1A1A", text_color="#777777")
+    # ── CHEEKS ──────────────────────────────── y=128
+    y = 128
+    btn("R_cheek_CTL", XFR, y, WFMAIN, CH, color=COL_R_FK, label="cheek")
+    btn("L_cheek_CTL", XFL, y, WFMAIN, CH, color=COL_L_FK, label="cheek")
 
-        for j in range(n_joints):
-            y = y_start + 20 + j * (row_h + row_gap)
-            ctl_name = f"{side}_{finger}{j:02d}_CTL"
-            btn(ctl_name, x, y, col_w, row_h,
-                color=col_fk, label=f"{j:02d}", size=10)
+    # ── LIPS / JAW ──────────────────────────── y=162
+    y = 162
+    WLC = 145   # lip corner width
+    WUL = 120   # upper lip width
+    XUL = (460 - WUL) // 2
+    btn("R_lipCorner_CTL", XFR,  y, WLC, CH, color=COL_R_FK, label="lipCorner")
+    btn("C_upperLip_CTL",  XUL,  y, WUL, CH, color=COL_CENTER, label="upperLip")
+    btn("L_lipCorner_CTL", 460 - XFR - WLC, y, WLC, CH, color=COL_L_FK, label="lipCorner")
+
+    y += CH + GAP
+    WJ = 140
+    XJ = (460 - WJ) // 2
+    btn("C_upperJaw_CTL", XJ, y, WJ, CH, color=COL_CENTER, label="upperJaw")
+
+    y += CH + GAP
+    btn("C_jaw_CTL",       XJ, y, WJ, CH, color=COL_CENTER, label="jaw")
+
+    y += CH + GAP
+    btn("C_lowerLip_CTL",  XJ, y, WJ, CH, color=COL_CENTER, label="lowerLip")
 
     return shapes
 
@@ -373,23 +410,22 @@ def build_picker_data(char_name="character"):
     Assemble and return a DWPicker document dict (general + shapes).
     char_name is used only for the picker display name.
     """
-    body_shapes  = _build_body_shapes()
-    lhand_shapes = _build_hand_shapes("L", panel=1)
-    rhand_shapes = _build_hand_shapes("R", panel=2)
+    body_shapes = _build_body_shapes()
+    face_shapes = _build_face_shapes()
 
-    all_shapes = body_shapes + lhand_shapes + rhand_shapes
+    all_shapes = body_shapes + face_shapes
 
     general = {
-        "name": f"{char_name}",
-        "version": "1.0.4",
+        "name": char_name,
+        "version": [1, 0, 4],
         "panels.as_sub_tab": False,
         "panels.orientation": "vertical",
-        "panels.zoom_locked": [False, False, False],
-        "panels.colors": [None, None, None],
-        "panels.names": ["Body", "L Hand", "R Hand"],
+        "panels.zoom_locked": [False, False],
+        "panels.colors": [None, None],
+        "panels.names": ["Body", "Face"],
         "menu_commands": [],
         "hidden_layers": [],
-        "panels": [[1.0, [1.0]], [1.0, [1.0]], [1.0, [1.0]]],
+        "panels": [[1.0, [1.0]], [1.0, [1.0]]],
     }
 
     return {"general": general, "shapes": all_shapes}
@@ -475,7 +511,7 @@ def generate_and_load(load=True):
     output_path = _picker_output_path(char_name)
 
     with open(output_path, "w", encoding="utf-8") as fh:
-        json.dump([picker_data], fh, indent=2)
+        json.dump(picker_data, fh, indent=2)
 
     om.MGlobal.displayInfo(f"Picker JSON saved → {output_path}")
 
