@@ -31,11 +31,7 @@ def create_custom_menu():
     # ── PIPELINE ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="PIPELINE")
 
-    cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="characterMap.png")
-
-    cmds.menuItem(label="Asset Manager", subMenu=True, tearOff=True, image="fileOpen.png")
-    cmds.menuItem(label="Create New Asset", command=lambda x: create_new_asset(), image="newLayerEmpty.png")
-    cmds.setParent('..', menu=True)
+    cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="fileOpen.png")
 
     # ── MODELING ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="MODELING")
@@ -57,10 +53,6 @@ def create_custom_menu():
     cmds.menuItem(label="Controllers Manager", subMenu=True, tearOff=True, image="circle.png")
     cmds.menuItem(label="Export All Controllers", command=lambda x: export_all_controllers(), image="save.png")
     cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
-    cmds.menuItem(label="Curve Library",          command=lambda x: show_curve_library(),      image="nurbsCurve.png")
-    cmds.menuItem(label="Replace Shapes",         command=lambda x: replace_shapes(),          image="swap.png")
-    cmds.menuItem(divider=True)
-    cmds.menuItem(label="Tag Scene Curves",       command=lambda x: tag_scene_curves(),        image="tag.png")
     cmds.setParent('..', menu=True)
 
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
@@ -69,27 +61,15 @@ def create_custom_menu():
     cmds.menuItem(label="Corrective Blendshapes", subMenu=True, tearOff=True, image="blendShape.png")
     cmds.menuItem(label="Export Corrective Blendshapes", command=lambda x: export_corrective_blendshapes(), image="export.png")
     cmds.menuItem(label="Import Corrective Blendshapes", command=lambda x: import_corrective_blendshapes(), image="import.png")
-    cmds.menuItem(divider=True)
-    cmds.menuItem(label="Mirror Corrective Blendshapes", command=lambda x: mirror_corrective_blendshapes(), image="polyMirror.png")
-    cmds.menuItem(label="Mirror Blendshape Targets", command=lambda x: mirror_corrective_blendshape_targets(), image="polyMirror.png")
     cmds.setParent('..', menu=True)
 
     # ── SKINNING ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="SKINNING")
 
     cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
-    cmds.menuItem(label="Export Skin Cluster",    command=lambda x: export_skin_cluster(),    image="export.png")
-    cmds.menuItem(label="Import Skin Cluster",    command=lambda x: import_skin_cluster(),    image="import.png")
-    cmds.menuItem(label="Copy Skin Cluster",      command=lambda x: copy_skin_cluster(),      image="copySelected.png")
-    cmds.menuItem(divider=True)
-    cmds.menuItem(label="Auto Skin Transfer…",    command=lambda x: open_skin_transfer_ui(),  image="paintSkinWeights.png")
-    cmds.menuItem(label="Export Source Skin Data",command=lambda x: export_source_skin_data(),image="export.png")
+    cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
+    cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
     cmds.setParent('..', menu=True)
-
-    # ── TOOLS ─────────────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="TOOLS")
-
-    cmds.menuItem(label="Rig Tools",  command=lambda x: show_rig_tools(),  image="kinHandle.png")
 
 
 def rebuild_ui():

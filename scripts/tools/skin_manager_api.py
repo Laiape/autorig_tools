@@ -338,13 +338,11 @@ class SkinManager(object):
             om.MGlobal.displayError(f"Error al leer el JSON: {e}")
             return
 
-        om.MGlobal.displayInfo(f"--- Importando Skins de: {self.json_path} ---")
+        om.MGlobal.displayInfo("Importing skin weights…")
 
         # Registrar skin clusters ya existentes en escena ANTES de importar.
         # Estos no se importarán y siempre quedarán los últimos en el stack.
         existing_scene_skins = self._get_scene_skin_clusters()
-        if existing_scene_skins:
-            om.MGlobal.displayInfo(f"Skin clusters pre-existentes (se saltarán): {sorted(existing_scene_skins)}")
 
         with open(self.json_path, 'r') as f:
             data = json.load(f)
@@ -368,9 +366,7 @@ class SkinManager(object):
                 skin_name = skin_data["name"]
                 target_vtx_count = skin_data["vertex_count"]
 
-                # Saltar skin clusters que ya existían en escena antes del import
                 if skin_name in existing_scene_skins:
-                    om.MGlobal.displayInfo(f"Saltando skin pre-existente: {skin_name}")
                     continue
 
                 # Validación topología
@@ -475,7 +471,7 @@ class SkinManager(object):
                     try: cmds.reorderDeformers(skin, mesh_path.fullPathName(), back=True)
                     except: pass
         
-        om.MGlobal.displayInfo("Importación completada con éxito.")
+        om.MGlobal.displayInfo("Skin weights imported.")
 
     def find_mesh_in_scene(self, name):
         """Helper para fallback de búsqueda."""

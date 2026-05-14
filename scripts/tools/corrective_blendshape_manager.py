@@ -293,7 +293,7 @@ class CorrectiveBlendshapeManager:
             om.MGlobal.displayWarning(f"[CBS] File not found: {in_path}")
             return
 
-        om.MGlobal.displayInfo(f"[CBS] Importing from {in_path}")
+        om.MGlobal.displayInfo("Importing corrective blendshapes…")
 
         with io.open(in_path, "r", encoding="utf-8") as fh:
             data = json.load(fh)
@@ -314,7 +314,7 @@ class CorrectiveBlendshapeManager:
                 }
                 self._recreate_blendshape(mesh_name, shapes[0], bs_name, bs_data)
 
-        om.MGlobal.displayInfo("[CBS] Import complete.")
+        om.MGlobal.displayInfo("Corrective blendshapes imported.")
 
     def _duplicate_base_mesh(self, mesh_name, mesh_shape, temp_name):
         """Duplicate the mesh at its base (pre-deformation) pose."""
@@ -396,7 +396,6 @@ class CorrectiveBlendshapeManager:
         for t_name, dk_data in driven_keys.items():
             self._restore_driven_key(new_bs, t_name, dk_data)
 
-        om.MGlobal.displayInfo(f"[CBS] Recreated {bs_name} on {mesh_name}")
 
     def _push_before_skin(self, bs_node, mesh_shape, mesh_name):
         """Move bs_node before the deepest skinCluster using reorderDeformers."""
@@ -406,7 +405,6 @@ class CorrectiveBlendshapeManager:
             return
         try:
             cmds.reorderDeformers(bs_node, skin_nodes[-1], mesh_name)
-            om.MGlobal.displayInfo(f"[CBS] Moved {bs_node} to pre-deform position.")
         except Exception as e:
             om.MGlobal.displayWarning(f"[CBS] reorderDeformers failed for {bs_node}: {e}")
 

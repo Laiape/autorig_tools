@@ -360,30 +360,40 @@ def get_character_data(character_name):
     return full_data if full_data else {}
 
 
-def build_rig(character_name):
+def build_rig(character_name, on_step=None):
 
     """
     Función principal de construcción del Rig.
-
+    on_step(label, current, total) — optional callback for progress reporting.
     """
+    _step = [0]
+    _TOTAL = 20
+
+    def step(label):
+        _step[0] += 1
+        if on_step:
+            on_step(label, _step[0], _TOTAL)
+
     reload(guides_manager)
     all_guides_data = guides_manager.read_guides_info(character_name)
-    
+
     if not all_guides_data:
         print(f"[ERROR] No se pudieron cargar las guías para: {character_name}")
-        return 
+        return
 
     def check(guide_name):
         return guide_name in all_guides_data
-    
+
     # =========================================================================
     # LOAD RIG SETTINGS
     # =========================================================================
     rig_settings = build_rig_from_data(character_name)
-    
+
     if not rig_settings:
         om.MGlobal.displayError(f"No se encontró configuración de atributos para: {character_name}")
         return
+
+    step("Loading rig settings…")
 
     # --- Acceso a los datos del diccionario ---
     rig_type            = rig_settings.get("Rig_Type", 0)
@@ -396,8 +406,6 @@ def build_rig(character_name):
     tail_skinning_jnts  = rig_settings.get("tail_skinning_jnts", 5)
     tail_controllers    = rig_settings.get("tail_controllers", 5)
     mGear_integration   = rig_settings.get("mGear_integration", 0)
-    
-    # print(f"--- Iniciando Build: {character_name} (Tipo: {'Biped' if rig_type == 0 else 'Quadruped'}) ---")
 
     data_manager.DataExportBiped().append_data("rig_settings",
                             {
@@ -406,6 +414,7 @@ def build_rig(character_name):
 
     # --- Spine ---
     if check("C_spine00_JNT"):
+        step("Building spine…")
         if rig_type == 0:
             reload(biped_spine_module)
             biped_spine_module.SpineModule().make("C", spine_skinning_jnts, spine_controllers)
@@ -415,6 +424,7 @@ def build_rig(character_name):
 
     # --- Neck ---
     if check("C_neck00_JNT"):
+        step("Building neck…")
         if rig_type == 0:
             if mGear_integration:
                 reload(neck_module)
@@ -429,6 +439,7 @@ def build_rig(character_name):
     # --- Legs (Solo Biped) ---
     if rig_type == 0:
         if check("L_hip_JNT") and check("R_hip_JNT"):
+            step("Building legs…")
             reload(leg_module)
             leg_module.LegModule().make("L", leg_skinning_jnts)
             leg_module.LegModule().make("R", leg_skinning_jnts)
@@ -437,6 +448,7 @@ def build_rig(character_name):
     if rig_type == 1:
         # Patas Delanteras
         if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
+            step("Building front limbs…")
             reload(limb_module)
 
             data_manager.DataExportBiped().append_data("limb_module",
@@ -447,86 +459,99 @@ def build_rig(character_name):
             limb_module.LimbModule().make("L", leg_skinning_jnts)
             limb_module.LimbModule().make("R", leg_skinning_jnts)
 
-            
-        
         # Patas Traseras
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
+            step("Building back limbs…")
             reload(limb_module)
 
             data_manager.DataExportBiped().append_data("limb_module",
                             {
                                 "guides_data" : ["L_backLegHip_JNT", "R_backLegHip_JNT"],
                             })
-            
+
             limb_module.LimbModule().make("L", leg_skinning_jnts)
             limb_module.LimbModule().make("R", leg_skinning_jnts)
 
     # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
+        step("Building clavicles…")
         reload(clavicle_module)
         clavicle_module.ClavicleModule().make("L")
-        clavicle_module.ClavicleModule().make("R") 
+        clavicle_module.ClavicleModule().make("R")
 
     if check("L_shoulder_JNT") and check("R_shoulder_JNT"):
+        step("Building arms…")
         reload(arm_module)
         arm_module.ArmModule().make("L", arm_skinning_jnts)
         arm_module.ArmModule().make("R", arm_skinning_jnts)
-    
+
     if check("L_thumb00_JNT") and check("R_thumb00_JNT"):
+        step("Building fingers…")
         reload(fingers_module)
         fingers_module.FingersModule().make("L")
         fingers_module.FingersModule().make("R")
 
     # --- Tail ---
     if check("C_tail00_JNT"):
+        step("Building tail…")
         reload(tail_module)
         tail_module.TailModule().make("C", tail_skinning_jnts, tail_controllers)
 
     # =========================================================================
     # BUILD: FACIAL
     # =========================================================================
-    
+
     if check("C_jaw_JNT"):
+        step("Building jaw…")
         reload(jaw_module_nurbs)
         jaw_module_nurbs.JawModule().make("C")
-    
+
     if check("L_eyebrowMain_JNT") and check("R_eyebrowMain_JNT"):
+        step("Building eyebrows…")
         reload(eyebrow_module)
         eyebrow_module.EyebrowModule().make("L")
         eyebrow_module.EyebrowModule().make("R")
-    
+
     if check("L_eye_JNT") and check("R_eye_JNT"):
+        step("Building eyelids…")
         reload(eyelid_module)
         eyelid_module.EyelidModule().make("L")
         eyelid_module.EyelidModule().make("R")
 
     if check("C_tongue00_JNT"):
+        step("Building tongue…")
         reload(tongue_module)
         tongue_module.TongueModule().make("C")
 
     if check("C_upperTeeth_JNT"):
+        step("Building teeth…")
         reload(teeth_module)
         teeth_module.TeethModule().make("C")
 
     if check("L_ear00_JNT") and check("R_ear00_JNT"):
+        step("Building ears…")
         reload(ear_module)
         ear_module.EarModule().make("L")
         ear_module.EarModule().make("R")
 
     if check("C_nose_JNT"):
+        step("Building nose…")
         reload(nose_module)
         nose_module.NoseModule().make("L")
         nose_module.NoseModule().make("R")
 
     if check("L_cheekbone_JNT") and check("R_cheekbone_JNT"):
+        step("Building cheekbones…")
         reload(cheekbone_module)
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
 
     if rig_type == 0 and mGear_integration == 0:
-            biped_space_switches()
+        step("Creating space switches…")
+        biped_space_switches()
 
-    apply_character_extras(rig_settings)
+    # step("Applying character extras…")
+    # apply_character_extras(rig_settings)
 
 def apply_character_extras(rig_settings):
     """

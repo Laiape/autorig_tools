@@ -22,22 +22,22 @@ except ImportError:
 ALLOWED_ENDINGS = [".ma", ".mb", ".guides", ".curves", ".json", ".skc"]
 
 # ── Palette ──────────────────────────────────────────────────────────────────
-C_BG0    = "#0d0d10"
-C_BG1    = "#13131a"
-C_BG2    = "#1a1a24"
-C_BG3    = "#22222e"
-C_BORDER = "#2a2a3a"
-C_TEXT   = "#ccc8e0"
-C_DIM    = "#4a4860"
-C_BLUE   = "#c8a040"   # amber accent
-C_BLUE2  = "#a07828"   # amber dark
-C_GREEN  = "#4ab878"
-C_RED    = "#c04858"
-C_YELLOW = "#c8a040"
+C_BG0    = "#b0b0b0"   # medium-dark grey — main bg, header
+C_BG1    = "#a4a4a4"   # slightly darker panel — sidebar, footer
+C_BG2    = "#989898"   # inputs, table bg
+C_BG3    = "#8c8c8c"   # hover / selected bg
+C_BORDER = "#787878"   # borders
+C_TEXT   = "#1a1a1a"   # main text
+C_DIM    = "#555555"   # secondary / dim text
+C_BLUE   = "#2667a6"   # dark blue — accent text, borders, selected states
+C_BLUE2  = "#5b9bd5"   # medium blue — button fills, bar
+C_GREEN  = "#3a8000"   # positive actions
+C_RED    = "#cc2222"   # destructive actions
+C_YELLOW = "#5b9bd5"   # blue alias
 
 SS_BASE = f"""
-QWidget {{ background:{C_BG2}; color:{C_TEXT}; font-family:'Segoe UI'; font-size:11px; }}
-QLabel  {{ background:transparent; }}
+QWidget {{ background:{C_BG2}; color:{C_TEXT}; font-family:'Sabandija'; font-size:11px; font-weight:bold; }}
+QLabel  {{ background:transparent; font-weight:bold; }}
 
 QMenuBar {{ background:{C_BG0}; color:{C_DIM}; border-bottom:1px solid {C_BORDER}; padding:2px 4px; }}
 QMenuBar::item {{ padding:4px 10px; }}
@@ -114,7 +114,7 @@ def _btn(text, color=C_BG3, text_color=C_TEXT, border=C_BORDER,
     ls = f"letter-spacing:{letter_spacing}px;" if letter_spacing else ""
     fw = "font-weight:bold;" if bold else ""
     left_border = f"border-left:2px solid {C_BLUE};" if accent else "border-left:2px solid transparent;"
-    b = QtWidgets.QPushButton(text)
+    b = QtWidgets.QPushButton(text.upper())
     b.setStyleSheet(f"""
         QPushButton {{
             background:{color}; color:{text_color};
@@ -239,8 +239,8 @@ class VersionTab(QtWidgets.QWidget):
             self.table.setItem(row, 1, ni)
 
             for col, icon, color, border, tip, fn in (
-                (2, "▶", C_BLUE2, C_BLUE, f"Import {f}", partial(self.import_file, f)),
-                (3, "⟳", C_RED,   C_RED,  f"Overwrite {f}", partial(self.replace_file, f)),
+                (2, "▶", C_BLUE, C_BLUE, f"Import {f}", partial(self.import_file, f)),
+                (3, "⟳", C_RED,  C_RED,  f"Overwrite {f}", partial(self.replace_file, f)),
             ):
                 b = QtWidgets.QPushButton(icon)
                 b.setFixedSize(26, 22)
@@ -348,7 +348,7 @@ class QuickToolsWidget(QtWidgets.QWidget):
         lay.setSpacing(10)
 
         def section(title):
-            lbl = QtWidgets.QLabel(title)
+            lbl = QtWidgets.QLabel(title.upper())
             lbl.setStyleSheet(f"""
                 color:{C_DIM}; font-size:8px; letter-spacing:4px;
                 font-weight:bold; padding:10px 0 4px 0;
@@ -775,13 +775,13 @@ class AssetManagerUI(QtWidgets.QWidget):
         self.btn_build.setMinimumHeight(36)
         self.btn_build.setStyleSheet(f"""
             QPushButton {{
-                background:{C_BLUE2}; color:#0d0d10;
+                background:{C_BLUE2}; color:{C_TEXT};
                 border:none; border-left:3px solid {C_BLUE};
                 border-radius:0px; padding:6px 20px;
                 font-weight:bold; font-size:11px; letter-spacing:4px;
             }}
-            QPushButton:hover {{ background:{C_BLUE}; color:#0d0d10; }}
-            QPushButton:pressed {{ background:{C_BLUE2}; }}
+            QPushButton:hover {{ background:{C_BLUE}; color:{C_BG0}; }}
+            QPushButton:pressed {{ background:{C_BLUE2}; color:{C_TEXT}; }}
         """)
         self.btn_build.clicked.connect(self.run_build)
 
@@ -820,7 +820,6 @@ class AssetManagerUI(QtWidgets.QWidget):
         asset_dir = os.path.join(self.assets_path, self.current_asset)
         for cat in ("guides", "curves", "models", "skin_clusters"):
             self.tabs.addTab(VersionTab(asset_dir, cat), cat.upper().replace("_", " "))
-        self.tabs.addTab(QuickToolsWidget(), "QUICK TOOLS")
 
     def _load_thumbnail(self):
         if not self.current_asset:
@@ -843,7 +842,7 @@ class AssetManagerUI(QtWidgets.QWidget):
             self.thumbnail.setText("")
         else:
             self.thumbnail.setPixmap(QtGui.QPixmap())
-            self.thumbnail.setText("No Image")
+            self.thumbnail.setText("NO IMAGE")
 
     def _restore_session(self):
         last = self.settings.value("last_asset")

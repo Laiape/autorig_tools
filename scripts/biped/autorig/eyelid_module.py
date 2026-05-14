@@ -126,7 +126,9 @@ class EyelidModule(object):
         self.eyelid_up_curve_rebuild = cmds.rebuildCurve(self.eyelid_up_curve, n=f"{self.side}_eyelidUpRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
         self.eyelid_down_curve_rebuild = cmds.rebuildCurve(self.eyelid_down_curve, n=f"{self.side}_eyelidDownRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
 
-        cmds.parent(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, self.up_blink_curve, self.down_blink_curve, self.eyelid_up_curve_rebuild,  self.eyelid_down_curve_rebuild, self.curves_grp)
+        _up_blink_trn = cmds.listRelatives(self.up_blink_curve, parent=True)[0]
+        _down_blink_trn = cmds.listRelatives(self.down_blink_curve, parent=True)[0]
+        cmds.parent(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, _up_blink_trn, _down_blink_trn, self.eyelid_up_curve_rebuild, self.eyelid_down_curve_rebuild, self.curves_grp)
 
     def load_guides(self):
 

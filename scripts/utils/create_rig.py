@@ -1,3 +1,4 @@
+import time
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
@@ -13,6 +14,7 @@ from tools import skin_manager_api
 from tools import mesh_data_exporter
 from tools import auto_skin_transfer
 from tools import corrective_blendshape_manager
+from utils import picker as picker_generator
 
 
 reload(guides_manager)
@@ -25,6 +27,7 @@ reload(mesh_data_exporter)
 reload(auto_skin_transfer)
 reload(proxy_locator)
 reload(corrective_blendshape_manager)
+reload(picker_generator)
 
 
 
@@ -39,14 +42,63 @@ class AutoRig(object):
         """
         Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
         """
-        data_manager.DataExportBiped().new_build()
-        self.basic_structure()
-        self.make_rig()
-        self.label_joints()
-        self.hide_connections()
-        self.inherit_transforms()
-        self.import_weights()
-        self.import_corrective_blendshapes()
+        from ui import rig_progress
+        reload(rig_progress)
+
+        start = time.time()
+        char_name = rig_manager.get_character_name_from_build() or "Asset"
+
+        # Read mGear setting early so the icon shows from the start
+        mgear = False
+        try:
+            settings = rig_manager.build_rig_from_data(char_name)
+            if settings:
+                mgear = bool(settings.get("mGear_integration", 0))
+        except Exception:
+            pass
+
+        progress = rig_progress.RigProgressDialog(char_name, mgear=mgear)
+        progress.show()
+
+        try:
+            progress._set_pct("Creating basic structure…", 2)
+            data_manager.DataExportBiped().new_build()
+            self.basic_structure()
+
+            def on_module_step(label, current, total):
+                pct = 5 + int(current / max(total, 1) * 75)
+                progress._set_pct(label, pct)
+
+            progress._set_pct("Building rig modules…", 5)
+            self.make_rig(on_step=on_module_step)
+
+            progress._set_pct("Labeling joints…", 82)
+            self.label_joints()
+
+            progress._set_pct("Hiding utility nodes…", 85)
+            self.hide_connections()
+
+            progress._set_pct("Setting inherit transforms…", 88)
+            self.inherit_transforms()
+
+            progress._set_pct("Importing skin weights…", 91)
+            self.import_weights()
+
+            progress._set_pct("Importing corrective blendshapes…", 96)
+            self.import_corrective_blendshapes()
+
+            progress._set_pct("Cleaning up node graph…", 98)
+            self.hide_all_utility_nodes()
+
+            progress._set_pct("Generating picker…", 99)
+            try:
+                picker_generator.generate_and_load()
+            except Exception as e:
+                om.MGlobal.displayWarning(f"[Picker] Could not generate picker: {e}")
+
+        finally:
+            elapsed = time.time() - start
+            progress.finish(elapsed)
         # self.proxy_locator()
 
     def basic_structure(self):
@@ -57,14 +109,14 @@ class AutoRig(object):
 
         basic_structure.create_basic_structure()
 
-    def make_rig(self):
+    def make_rig(self, on_step=None):
 
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
 
         char_name = rig_manager.get_character_name_from_build()
-        rig_manager.build_rig(char_name)
+        rig_manager.build_rig(char_name, on_step=on_step)
 
         cmds.inViewMessage(
         amg=f'Completed <hl>{char_name.upper()} RIG</hl> build.',
@@ -130,12 +182,66 @@ class AutoRig(object):
             "parentMatrix", "animBlendNodeBase",
         }
 
+        registered = set(cmds.allNodeTypes() or [])
         for node_type in UTILITY_TYPES:
+            if node_type not in registered:
+                continue
             for node in cmds.ls(type=node_type) or []:
                 try:
                     cmds.setAttr(f"{node}.isHistoricallyInteresting", 0)
                 except Exception:
                     pass
+
+    def hide_all_utility_nodes(self):
+        """
+        Set isHistoricallyInteresting=0 on every non-essential DG node so they
+        don't appear in the Channel Box history or Node Editor clutter.
+        Essential nodes — transforms, joints, shapes, deformers, constraints,
+        ik, animation curves, sets, layers — are untouched.
+        Nothing is deleted.
+        """
+        KEEP_TYPES = frozenset({
+            # DAG / hierarchy
+            "transform", "joint",
+            "mesh", "nurbsCurve", "nurbsSurface", "subdiv",
+            "locator", "camera", "imagePlane",
+            "directionalLight", "pointLight", "spotLight", "areaLight", "volumeLight",
+            "lattice", "baseLattice", "clusterHandle",
+            # Deformers
+            "blendShape", "cluster", "wire", "jiggle",
+            "deltaMush", "tension", "proximityWrap", "shrinkWrap",
+            "nonLinear", "softMod",
+            # Rigging
+            "ikHandle", "ikEffector",
+            "follicle", "hairSystem", "nRigid", "nCloth",
+            # Constraints
+            "parentConstraint", "pointConstraint", "orientConstraint",
+            "aimConstraint", "scaleConstraint", "geometryConstraint",
+            "normalConstraint", "tangentConstraint", "poleVectorConstraint",
+            # Sets / layers / scene management
+            "objectSet", "displayLayer", "renderLayer",
+            "shadingEngine", "partition", "character",
+            "layerManager", "displayLayerManager", "renderLayerManager",
+            "lightLinker", "renderPartition",
+            "defaultShaderList", "defaultRenderingList", "defaultRenderGlobals",
+            "defaultTextureList", "renderSetup",
+            # Animation
+            "animCurveTL", "animCurveTA", "animCurveTT", "animCurveTU",
+            "animCurveUL", "animCurveUA", "animCurveUT", "animCurveUU",
+            # Scene internals
+            "time", "hyperGraphInfo", "hyperView",
+            "selectionListOperator", "unknown", "unknownDag",
+        })
+
+        for node in cmds.ls(dependencyNodes=True, long=False) or []:
+            try:
+                if cmds.nodeType(node) in KEEP_TYPES:
+                    continue
+                if not cmds.attributeQuery("isHistoricallyInteresting", node=node, exists=True):
+                    continue
+                cmds.setAttr(f"{node}.isHistoricallyInteresting", 0)
+            except Exception:
+                pass
 
     def inherit_transforms(self):
 

@@ -531,7 +531,7 @@ class JawModule(object):
         lower_offset_curve = lower_offset[0]
 
         upper_nurbs_surface = cmds.loft(
-        [upper_offset_curve, self.upper_rebuild_lip_curve], 
+        [upper_offset_curve, upper_curve_dup],
         constructionHistory=False,
         uniform=True,
         close=False,
@@ -544,7 +544,7 @@ class JawModule(object):
         )[0]
 
         lower_nurbs_surface = cmds.loft(
-            [lower_offset_curve, self.lower_rebuild_lip_curve],
+            [lower_offset_curve, lower_curve_dup],
             constructionHistory=False,
             uniform=True,
             close=False,
@@ -672,15 +672,19 @@ class JawModule(object):
 
             skin_cluster = cmds.skinCluster(all_secondary_joints[part], nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
 
-        # Rebuild nurbs surfaces
-        degree_num = 3
-        spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
-        self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
-        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
-        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
-        self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
-        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
-        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
+        # Rebuild nurbs surfaces (suppress history warnings — surfaces carry skinClusters at this point)
+        cmds.scriptEditorInfo(edit=True, suppressWarnings=True)
+        try:
+            degree_num = 3
+            spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
+            self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
+            cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
+            cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
+            self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
+            cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
+            cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
+        finally:
+            cmds.scriptEditorInfo(edit=True, suppressWarnings=False)
         cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
 
         output_joints = { "upper": [], "lower": [] }
@@ -690,22 +694,26 @@ class JawModule(object):
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
             
-            rebuilded_curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
+            _skin_curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
             linear_curve = self.upper_linear_lip_curve if part == "upper" else self.lower_linear_lip_curve
             linear_curve_cvs = len(cmds.ls(f"{linear_curve}.cv[*]", flatten=True))
             driver_joints = all_secondary_joints[part]
             mid_point = linear_curve_cvs // 2
             normal_vector = (0, 1, 0)
-            
+
+            # Duplicate the skinned curve so offsetCurve has no history to warn about
+            _dup_for_offset = cmds.duplicate(_skin_curve, name=f"C_{part}LipOffsetInput_TMP")[0]
+
             # Create offset curve for the up-vector
             offset_curve = cmds.offsetCurve(
-                rebuilded_curve,
+                _dup_for_offset,
                 distance=1,
                 useGivenNormal=1,
                 normal=normal_vector,
                 constructionHistory=False,
                 name=f"C_{part}LipOffset_CRV"
             )[0]
+            cmds.delete(_dup_for_offset)
 
             cmds.rebuildCurve(
             offset_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,

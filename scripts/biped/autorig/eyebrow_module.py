@@ -115,13 +115,13 @@ class EyebrowModule(object):
             self.mid_eyebrow = guides_manager.get_guides("C_eyebrowMid_JNT")[0]
             cmds.parent(self.mid_eyebrow, self.module_trn)
 
-        try:
-            eyebrow_crv = guides_manager.get_guides(f"{self.side}_eyebrow_CRV")
-            cvs = cmds.ls(f"{eyebrow_crv[0]}Shape.cv[*]", long=True)
-            for i, cv in enumerate(cvs):
-                pos = cmds.pointPosition(cv, world=True)
-        except:
-            pass
+        # try:
+        #     eyebrow_crv = guides_manager.get_guides(f"{self.side}_eyebrow_CRV")
+        #     cvs = cmds.ls(f"{eyebrow_crv[0]}Shape.cv[*]", long=True)
+        #     for i, cv in enumerate(cvs):
+        #         pos = cmds.pointPosition(cv, world=True)
+        # except:
+        #     pass
 
             
 

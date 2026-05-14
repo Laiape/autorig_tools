@@ -443,10 +443,7 @@ def get_guides(guide_export, parent=None):
                         chain.append(child_joint)
 
                 if parent:
-                    if len(chain[0]) > 1:
-                        cmds.parent(chain[0], parent)
-                    else:
-                        cmds.parent(chain, parent)
+                    cmds.parent(chain[0], parent)
 
                 return chain
             
@@ -555,7 +552,7 @@ def get_guides(guide_export, parent=None):
 
                 shape_fn = om.MFnDagNode(shape_obj)
                 shape_fn.setName(surface_name)
-            
+
             return transform_fn.name()
     
         except KeyError:
@@ -752,7 +749,6 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
         guide_name = guide.split("_")[1]
 
         if "ankle" in guide_name:
-            print(f"--- Invirtiendo ejes para {guide} ---", i)
             secondaryInputAxis = tuple(-v for v in secondaryInputAxis)
         
         if i == 0:
