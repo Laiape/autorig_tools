@@ -208,6 +208,7 @@ class AutoRig(object):
             "directionalLight", "pointLight", "spotLight", "areaLight", "volumeLight",
             "lattice", "baseLattice", "clusterHandle",
             # Deformers
+            "skinCluster", "tweak", "groupParts", "groupId",
             "blendShape", "cluster", "wire", "jiggle",
             "deltaMush", "tension", "proximityWrap", "shrinkWrap",
             "nonLinear", "softMod",

@@ -55,6 +55,13 @@ def create_custom_menu():
     cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
     cmds.setParent('..', menu=True)
 
+    cmds.menuItem(label="De Boor Tools", subMenu=True, tearOff=True, image="nurbsCurve.png")
+    cmds.menuItem(label="De Boor Ribbon",          command=lambda x: open_deboor_tools(tab=0), image="kinJoint.png")
+    cmds.menuItem(label="Split Blendshape",        command=lambda x: open_deboor_tools(tab=1), image="blendShape.png")
+    cmds.menuItem(label="Skin Split — Curve",      command=lambda x: open_deboor_tools(tab=2), image="paintSkinWeights.png")
+    cmds.menuItem(label="Skin Split — Surface",    command=lambda x: open_deboor_tools(tab=3), image="paintSkinWeights.png")
+    cmds.setParent('..', menu=True)
+
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
 
@@ -70,6 +77,11 @@ def create_custom_menu():
     cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
     cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
     cmds.setParent('..', menu=True)
+
+    # ── SIMULATION / ADONIS ───────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="SIMULATION")
+
+    cmds.menuItem(label="AdonisFX Copy Weights", command=lambda x: open_adonis_copy_weights(), image="paintSkinWeights.png")
 
 
 def rebuild_ui():
@@ -210,3 +222,14 @@ def show_rig_tools():
     from tools import rig_tools
     reload(rig_tools)
     rig_tools.show()
+
+def open_adonis_copy_weights():
+    from adonis import copyWeightsAdonis
+    reload(copyWeightsAdonis)
+    copyWeightsAdonis.show()
+
+
+def open_deboor_tools(tab=0):
+    from ui import deboor_tools_UI
+    reload(deboor_tools_UI)
+    deboor_tools_UI.show(tab=tab)

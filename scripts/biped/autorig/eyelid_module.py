@@ -114,21 +114,16 @@ class EyelidModule(object):
         # Get the guide curves
         self.linear_upper_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidUpperLinear_CRVShape", parent=self.curves_grp)
         self.linear_lower_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidLowerLinear_CRVShape", parent=self.curves_grp)
-        self.up_blink_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidUpBlink_CRVShape")
-        self.down_blink_curve = guides_manager.get_guides(guide_export=f"{self.side}_eyelidDownBlink_CRVShape")
-
         # Rebuild the curves to have proper CV count and degree
         self.eyelid_up_curve = cmds.rebuildCurve(self.linear_upper_curve, n=f"{self.side}_eyelidUp_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=4)[0]
         self.eyelid_down_curve = cmds.rebuildCurve(self.linear_lower_curve, n=f"{self.side}_eyelidDown_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0, tol=0.01, d=3, s=4)[0]
-        
+
         self.blink_ref_curve = cmds.duplicate(self.eyelid_up_curve, n=f"{self.side}_eyelidBlinkRef_CRV")[0]
-        
+
         self.eyelid_up_curve_rebuild = cmds.rebuildCurve(self.eyelid_up_curve, n=f"{self.side}_eyelidUpRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
         self.eyelid_down_curve_rebuild = cmds.rebuildCurve(self.eyelid_down_curve, n=f"{self.side}_eyelidDownRebuilded_CRV", ch=False, rpo=False, rt=0, end=1, kr=0, kcp=1, kep=1, kt=0, tol=0.01)[0]
 
-        _up_blink_trn = cmds.listRelatives(self.up_blink_curve, parent=True)[0]
-        _down_blink_trn = cmds.listRelatives(self.down_blink_curve, parent=True)[0]
-        cmds.parent(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, _up_blink_trn, _down_blink_trn, self.eyelid_up_curve_rebuild, self.eyelid_down_curve_rebuild, self.curves_grp)
+        cmds.parent(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, self.eyelid_up_curve_rebuild, self.eyelid_down_curve_rebuild, self.curves_grp)
 
     def load_guides(self):
 
@@ -395,38 +390,37 @@ class EyelidModule(object):
         """
 
         # Upper Blink
-        upper_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_up_curve , self.up_blink_curve, self.eyelid_up_curve_rebuild, name=f"{self.side}_upperEyelidBlink_BLS")[0] # Blend between blink curve and upper eyelid curve
-        clamp_node = cmds.createNode("clamp", name=f"{self.side}_upperBlink_CLMP", ss=True)
-        cmds.setAttr(f"{clamp_node}.minR", 0)
-        cmds.setAttr(f"{clamp_node}.minG", -1)
-        cmds.setAttr(f"{clamp_node}.maxR", 1)
-        cmds.setAttr(f"{clamp_node}.maxG", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{clamp_node}.inputR") # Connect upper blink attribute to clamp
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{clamp_node}.inputG") # Connect upper blink attribute to clamp
-        cmds.connectAttr(f"{clamp_node}.outputR", f"{upper_blink}.{self.blink_ref_curve}") # Connect clamp output to blend shape weight [0]
-        reverse_node = cmds.createNode("reverse", name=f"{self.side}_upperBlink_REV", ss=True)
-        cmds.connectAttr(f"{clamp_node}.outputR", f"{reverse_node}.inputX") # Connect clamp output to reverse
-        cmds.connectAttr(f"{reverse_node}.outputX", f"{upper_blink}.{self.eyelid_up_curve}") # Connect reverse output to blend shape weight [1]
-        negate_node = cmds.createNode("negate", name=f"{self.side}_upperBlink_NEG", ss=True)
-        cmds.connectAttr(f"{clamp_node}.outputG", f"{negate_node}.input") # Connect clamp output to negate
-        cmds.connectAttr(f"{negate_node}.output", f"{upper_blink}.{self.up_blink_curve}") # Connect negate output to blend shape weight [2]
+        # blink_ref_curve weight = Upper_Blink directly (-1..1):
+        #   positive → eyelid closes toward blink height
+        #   negative → extrapolates away (opens wider), no guide curve needed
+        upper_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_up_curve, self.eyelid_up_curve_rebuild, name=f"{self.side}_upperEyelidBlink_BLS")[0]
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink}.{self.blink_ref_curve}")
+        upper_blink_abs = cmds.createNode("condition", name=f"{self.side}_upperBlinkAbs_COND", ss=True)
+        cmds.setAttr(f"{upper_blink_abs}.operation", 4)  # Greater or Equal
+        cmds.setAttr(f"{upper_blink_abs}.secondTerm", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_abs}.firstTerm")
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_abs}.colorIfTrueR")
+        upper_blink_neg = cmds.createNode("negate", name=f"{self.side}_upperBlinkAbs_NEG", ss=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_neg}.input")
+        cmds.connectAttr(f"{upper_blink_neg}.output", f"{upper_blink_abs}.colorIfFalseR")
+        upper_blink_rev = cmds.createNode("reverse", name=f"{self.side}_upperBlink_REV", ss=True)
+        cmds.connectAttr(f"{upper_blink_abs}.outColorR", f"{upper_blink_rev}.inputX")
+        cmds.connectAttr(f"{upper_blink_rev}.outputX", f"{upper_blink}.{self.eyelid_up_curve}")
 
         # Lower Blink
-        lower_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_down_curve , self.down_blink_curve, self.eyelid_down_curve_rebuild, name=f"{self.side}_lowerEyelidBlink_BLS")[0] # Blend between blink curve and lower eyelid curve
-        clamp_node = cmds.createNode("clamp", name=f"{self.side}_lowerBlink_CLMP", ss=True)
-        cmds.setAttr(f"{clamp_node}.minR", 0)
-        cmds.setAttr(f"{clamp_node}.minG", -1)
-        cmds.setAttr(f"{clamp_node}.maxR", 1)
-        cmds.setAttr(f"{clamp_node}.maxG", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{clamp_node}.inputR") # Connect lower blink attribute to clamp
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{clamp_node}.inputG") # Connect lower blink attribute to clamp
-        cmds.connectAttr(f"{clamp_node}.outputR", f"{lower_blink}.{self.blink_ref_curve}") # Connect clamp output to blend shape weight [0]
-        reverse_node = cmds.createNode("reverse", name=f"{self.side}_lowerBlink_REV", ss=True)
-        cmds.connectAttr(f"{clamp_node}.outputR", f"{reverse_node}.inputX") # Connect clamp output to reverse
-        cmds.connectAttr(f"{reverse_node}.outputX", f"{lower_blink}.{self.eyelid_down_curve}") # Connect reverse output to blend shape weight [1]
-        negate_node = cmds.createNode("negate", name=f"{self.side}_lowerBlink_NEG", ss=True)
-        cmds.connectAttr(f"{clamp_node}.outputG", f"{negate_node}.input") # Connect clamp output to negate
-        cmds.connectAttr(f"{negate_node}.output", f"{lower_blink}.{self.down_blink_curve}") # Connect negate output to blend shape weight [2]
+        lower_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_down_curve, self.eyelid_down_curve_rebuild, name=f"{self.side}_lowerEyelidBlink_BLS")[0]
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink}.{self.blink_ref_curve}")
+        lower_blink_abs = cmds.createNode("condition", name=f"{self.side}_lowerBlinkAbs_COND", ss=True)
+        cmds.setAttr(f"{lower_blink_abs}.operation", 4)  # Greater or Equal
+        cmds.setAttr(f"{lower_blink_abs}.secondTerm", 0)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_abs}.firstTerm")
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_abs}.colorIfTrueR")
+        lower_blink_neg = cmds.createNode("negate", name=f"{self.side}_lowerBlinkAbs_NEG", ss=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_neg}.input")
+        cmds.connectAttr(f"{lower_blink_neg}.output", f"{lower_blink_abs}.colorIfFalseR")
+        lower_blink_rev = cmds.createNode("reverse", name=f"{self.side}_lowerBlink_REV", ss=True)
+        cmds.connectAttr(f"{lower_blink_abs}.outColorR", f"{lower_blink_rev}.inputX")
+        cmds.connectAttr(f"{lower_blink_rev}.outputX", f"{lower_blink}.{self.eyelid_down_curve}")
 
         # Blink Height
         blink_blend = cmds.blendShape(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, name=f"{self.side}_eyelidBlink_BLS")[0] # Blend between blink curve and upper eyelid curve

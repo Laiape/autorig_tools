@@ -574,7 +574,7 @@ class JawModule(object):
             secondary_ctls = []
             secondary_local_joints_mmx = []
 
-            for index in range(0, rebuilded_cvs + 1):
+            for index in range(0, rebuilded_cvs):
 
                 if index < mid_point:
                     side = "R"

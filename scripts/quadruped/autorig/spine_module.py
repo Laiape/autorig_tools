@@ -28,7 +28,7 @@ class SpineModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-        self.primary_input_axis = (0, 0, 1)
+        self.primary_input_axis = (1, 0, 0)
         self.secondary_input_axis = (0, 1, 0)
 
     def make(self, side, spine_joints, spine_controllers):
@@ -139,11 +139,14 @@ class SpineModule(object):
         self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        
+        
+
 
         cmds.connectAttr(f"{self.spine_guides_matrices[0]}", f"{self.body_nodes[0]}.offsetParentMatrix")
         cmds.connectAttr(f"{self.spine_guides_matrices[0]}", f"{self.local_hip_nodes[0]}.offsetParentMatrix")
 
-         # Create the spine controllers
+        # Create the spine controllers
 
         self.spine_nodes = []
         self.spine_ctls = []
@@ -154,6 +157,54 @@ class SpineModule(object):
             cmds.connectAttr(matrix, f"{spine_node[0]}.offsetParentMatrix")
             self.spine_nodes.append(spine_node)
             self.spine_ctls.append(spine_ctl)
+
+        # ----- Stretch setup -----
+
+        # Create the attribute for stretch in the body controller
+        cmds.addAttr(self.body_ctl, longName="Stretch", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.body_ctl}.Stretch", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.body_ctl, longName="Stretch_Activate", niceName="Stretch Activate", attributeType="bool", defaultValue=0, keyable=True)
+        cmds.setAttr(f"{self.body_ctl}.Stretch_Activate", lock=False, keyable=False, channelBox=True)
+
+
+        self.stretch_blms = []
+        for i, ctl in enumerate(self.spine_ctls[:-1]):
+
+            real_dbt = cmds.createNode("distanceBetween", name=f"{self.side}_spine0{i}_DBT")
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{real_dbt}.inMatrix1")
+            cmds.connectAttr(f"{self.spine_ctls[i+1]}.worldMatrix[0]", f"{real_dbt}.inMatrix2")
+
+            initial_dbt = cmds.createNode("distanceBetween", name=f"{self.side}_spine0{i}_InitialDistance_DBT")
+            cmds.connectAttr(f"{self.spine_guides_matrices[i]}", f"{initial_dbt}.inMatrix1")
+            cmds.connectAttr(f"{self.spine_guides_matrices[i+1]}", f"{initial_dbt}.inMatrix2")
+
+            initial_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spine0{i}_InitialDist_FBF")
+            cmds.setAttr(f"{initial_fbf}.in00", 1)
+            cmds.setAttr(f"{initial_fbf}.in11", 1)
+            cmds.setAttr(f"{initial_fbf}.in22", 1)
+            cmds.setAttr(f"{initial_fbf}.in33", 1)
+
+            real_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spine0{i}_RealDist_FBF")
+            cmds.setAttr(f"{real_fbf}.in00", 1)
+            cmds.setAttr(f"{real_fbf}.in11", 1)
+            cmds.setAttr(f"{real_fbf}.in22", 1)
+            cmds.setAttr(f"{real_fbf}.in33", 1)
+
+            if self.primary_input_axis == (1, 0, 0):
+                cmds.connectAttr(f"{initial_dbt}.distance", f"{initial_fbf}.in30")
+                cmds.connectAttr(f"{real_dbt}.distance", f"{real_fbf}.in30")
+            elif self.primary_input_axis == (0, 0, 1):
+                cmds.connectAttr(f"{initial_dbt}.distance", f"{initial_fbf}.in32")
+                cmds.connectAttr(f"{real_dbt}.distance", f"{real_fbf}.in32")
+
+            stretch_blm = cmds.createNode("blendMatrix", name=f"{self.side}_spine0{i}_Stretch_BLM")
+            cmds.connectAttr(f"{initial_fbf}.output", f"{stretch_blm}.inputMatrix")
+            cmds.connectAttr(f"{real_fbf}.output", f"{stretch_blm}.target[0].targetMatrix")
+            cmds.connectAttr(f"{self.body_ctl}.Stretch_Activate", f"{stretch_blm}.target[0].weight")
+            self.stretch_blms.append(stretch_blm)
+
+
+
 
     def local_hip_chest_setup(self):
 
@@ -195,7 +246,6 @@ class SpineModule(object):
         cmds.addAttr(self.body_ctl, longName="FK_Vis", niceName="FK Controllers Visibility", attributeType="bool", defaultValue=0, keyable=True)
         cmds.setAttr(f"{self.body_ctl}.FK_Vis", lock=False, keyable=False, channelBox=True)
 
-
         # Create the FK controllers
         self.fk_nodes = []
         self.fk_controllers = []
@@ -214,8 +264,18 @@ class SpineModule(object):
             self.fk_nodes.append(fk_node)
             self.fk_controllers.append(fk_ctl)
 
-        sel = (self.spine_ctls[0], self.spine_ctls[1], self.spine_ctls[2], self.spine_ctls[3], self.spine_ctls[4])
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spineSkinning", aim_axis="z", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp) # Do the ribbon setup, with the created controllers
+        stretch_transforms = [self.spine_ctls[0]]
+        for i, blm in enumerate(self.stretch_blms):
+            t = cmds.createNode("transform", name=f"{self.side}_spine0{i+1}_StretchPos_TRN", ss=True, p=self.module_trn)
+            cmds.setAttr(f"{t}.inheritsTransform", 0)
+            mmt = cmds.createNode("multMatrix", name=f"{self.side}_spine0{i+1}_StretchPos_MMX")
+            cmds.connectAttr(f"{blm}.outputMatrix", f"{mmt}.matrixIn[0]")
+            cmds.connectAttr(f"{self.spine_ctls[i]}.worldMatrix[0]", f"{mmt}.matrixIn[1]")
+            cmds.connectAttr(f"{mmt}.matrixSum", f"{t}.offsetParentMatrix")
+            stretch_transforms.append(t)
+
+        sel = tuple(stretch_transforms)
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="z", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp)
         for t in temp:
             cmds.delete(t)
     
@@ -238,6 +298,3 @@ class SpineModule(object):
                 
                 cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
                 jnt_connections.append(jnt_connection)
-
-
-    

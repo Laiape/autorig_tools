@@ -56,6 +56,7 @@ class EyebrowModule(object):
 
         self.load_guides()
         self.create_controllers()
+        self.auto_tangent_setup()
         self.ribbon_setup()
         self.slide_setup()
 
@@ -63,7 +64,6 @@ class EyebrowModule(object):
         cmds.delete(self.main_eyebrow)
         if self.side == "L":
             cmds.delete(self.mid_eyebrow)
-
 
     def lock_attributes(self, ctl, attrs):
 
@@ -236,7 +236,109 @@ class EyebrowModule(object):
         cmds.connectAttr(f"{condition_secondary}.outColorR", f"{self.eyebrow_nodes[-2][0]}.visibility") # OutTan visibility
 
 
-    def ribbon_setup(self): 
+    def auto_tangent_setup(self):
+        """
+        Keeps InTan and OutTan on the straight line between In and Out when displaced in Y.
+        Adds autoTangent attr (0=manual, 1=auto) to main_eyebrow_ctl.
+        """
+        cmds.addAttr(self.main_eyebrow_ctl,
+                     longName="EXTRA_ATTRIBUTES",
+                     niceName="AUTO TAN ------",
+                     attributeType="enum",
+                     enumName="------")
+        cmds.setAttr(f"{self.main_eyebrow_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(self.main_eyebrow_ctl,
+                     longName="autoTangent",
+                     attributeType="float",
+                     min=0, max=1,
+                     defaultValue=1,
+                     keyable=True)
+
+        in_local_trn  = self.local_trns[0]
+        out_local_trn = self.local_trns[-1]
+
+        # Shared decompose nodes for In and Out world Y
+        dcm_in = cmds.createNode("decomposeMatrix",
+                                  name=f"{self.side}_eyebrowAutoTanIn_DCM", ss=True)
+        dcm_out = cmds.createNode("decomposeMatrix",
+                                   name=f"{self.side}_eyebrowAutoTanOut_DCM", ss=True)
+        cmds.connectAttr(f"{in_local_trn}.worldMatrix[0]",  f"{dcm_in}.inputMatrix")
+        cmds.connectAttr(f"{out_local_trn}.worldMatrix[0]", f"{dcm_out}.inputMatrix")
+
+        # Project each tangent onto the In-Out line to get its t parameter
+        in_pos  = om.MVector(cmds.xform(self.eyebrow_controllers[0],  q=True, ws=True, t=True))
+        out_pos = om.MVector(cmds.xform(self.eyebrow_controllers[-1], q=True, ws=True, t=True))
+        line        = out_pos - in_pos
+        line_len_sq = line * line
+
+        for idx, name in [(1, "InTan"), (-2, "OutTan")]:
+            local_trn = self.local_trns[idx]
+            local_grp = self.local_grps[idx]
+
+            tan_pos = om.MVector(cmds.xform(self.eyebrow_controllers[idx], q=True, ws=True, t=True))
+            if line_len_sq > 0.0001:
+                t_val = float(((tan_pos - in_pos) * line) / line_len_sq)
+            else:
+                t_val = 0.333 if idx == 1 else 0.667
+
+            # Target world Y = In.Y*(1-t) + Out.Y*t
+            md_in_t = cmds.createNode("multiplyDivide",
+                                       name=f"{self.side}_eyebrow{name}AutoTanInT_MD", ss=True)
+            md_out_t = cmds.createNode("multiplyDivide",
+                                        name=f"{self.side}_eyebrow{name}AutoTanOutT_MD", ss=True)
+            cmds.setAttr(f"{md_in_t}.operation",  1)
+            cmds.setAttr(f"{md_out_t}.operation", 1)
+            cmds.connectAttr(f"{dcm_in}.outputTranslateY",  f"{md_in_t}.input1X")
+            cmds.setAttr(f"{md_in_t}.input2X",  1.0 - t_val)
+            cmds.connectAttr(f"{dcm_out}.outputTranslateY", f"{md_out_t}.input1X")
+            cmds.setAttr(f"{md_out_t}.input2X", t_val)
+
+            pma_world_y = cmds.createNode("plusMinusAverage",
+                                           name=f"{self.side}_eyebrow{name}AutoTanWorldY_PMA", ss=True)
+            cmds.setAttr(f"{pma_world_y}.operation", 1)  # Add
+            cmds.connectAttr(f"{md_in_t}.outputX",  f"{pma_world_y}.input1D[0]")
+            cmds.connectAttr(f"{md_out_t}.outputX", f"{pma_world_y}.input1D[1]")
+
+            # Auto local Y (in GRP space) = target_world_Y - GRP_world_Y
+            dcm_grp = cmds.createNode("decomposeMatrix",
+                                       name=f"{self.side}_eyebrow{name}AutoTanGRP_DCM", ss=True)
+            cmds.connectAttr(f"{local_grp}.worldMatrix[0]", f"{dcm_grp}.inputMatrix")
+
+            pma_local_y = cmds.createNode("plusMinusAverage",
+                                           name=f"{self.side}_eyebrow{name}AutoTanLocalY_PMA", ss=True)
+            cmds.setAttr(f"{pma_local_y}.operation", 2)  # Subtract
+            cmds.connectAttr(f"{pma_world_y}.output1D",       f"{pma_local_y}.input1D[0]")
+            cmds.connectAttr(f"{dcm_grp}.outputTranslateY",   f"{pma_local_y}.input1D[1]")
+
+            # Manual Y: CTL offset from its GRP (already driving local_trn.offsetParentMatrix)
+            mmt_name = self.eyebrow_controllers[idx].replace("_CTL", "Local_MMT")
+            dcm_curr = cmds.createNode("decomposeMatrix",
+                                        name=f"{self.side}_eyebrow{name}AutoTanManual_DCM", ss=True)
+            cmds.connectAttr(f"{mmt_name}.matrixSum", f"{dcm_curr}.inputMatrix")
+
+            # Blend: attributesBlender=0 -> manual, =1 -> auto
+            bta = cmds.createNode("blendTwoAttr",
+                                   name=f"{self.side}_eyebrow{name}AutoTan_BTA", ss=True)
+            cmds.connectAttr(f"{self.main_eyebrow_ctl}.autoTangent", f"{bta}.attributesBlender")
+            cmds.connectAttr(f"{dcm_curr}.outputTranslateY",          f"{bta}.input[0]")
+            cmds.connectAttr(f"{pma_local_y}.output1D",               f"{bta}.input[1]")
+
+            # Recompose: replace Y with blended value, keep X/Z/rotation/scale from CTL
+            cm = cmds.createNode("composeMatrix",
+                                  name=f"{self.side}_eyebrow{name}AutoTan_CM", ss=True)
+            cmds.connectAttr(f"{dcm_curr}.outputTranslateX", f"{cm}.inputTranslateX")
+            cmds.connectAttr(f"{bta}.output",                f"{cm}.inputTranslateY")
+            cmds.connectAttr(f"{dcm_curr}.outputTranslateZ", f"{cm}.inputTranslateZ")
+            cmds.connectAttr(f"{dcm_curr}.outputRotateX",    f"{cm}.inputRotateX")
+            cmds.connectAttr(f"{dcm_curr}.outputRotateY",    f"{cm}.inputRotateY")
+            cmds.connectAttr(f"{dcm_curr}.outputRotateZ",    f"{cm}.inputRotateZ")
+            cmds.connectAttr(f"{dcm_curr}.outputScaleX",     f"{cm}.inputScaleX")
+            cmds.connectAttr(f"{dcm_curr}.outputScaleY",     f"{cm}.inputScaleY")
+            cmds.connectAttr(f"{dcm_curr}.outputScaleZ",     f"{cm}.inputScaleZ")
+
+            cmds.connectAttr(f"{cm}.outputMatrix", f"{local_trn}.offsetParentMatrix", force=True)
+
+    def ribbon_setup(self):
 
         """
         Set up ribbon system for the eyebrow module.
@@ -256,9 +358,6 @@ class EyebrowModule(object):
         Set up the slide functionality for the eyebrow module.
 
         """
-
-        cmds.addAttr(self.main_eyebrow_ctl, longName="SLIDE", niceName="SLIDE ------", attributeType="enum", enumName="------")
-        cmds.setAttr(f"{self.main_eyebrow_ctl}.SLIDE", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(self.main_eyebrow_ctl, longName="slide", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
 

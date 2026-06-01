@@ -114,7 +114,7 @@ class SkinManager(object):
         Retorna los skinClusters en orden de deformación (Stack Order).
         Inner (primero en aplicarse) -> Outer (ultimo en aplicarse).
         """
-        history = cmds.listHistory(dag_path.fullPathName(), pruneDagObjects=True, interestLevel=1) or []
+        history = cmds.listHistory(dag_path.fullPathName(), pruneDagObjects=True, interestLevel=2) or []
         skins = [x for x in history if cmds.nodeType(x) == "skinCluster"]
         return list(reversed(skins))
 
