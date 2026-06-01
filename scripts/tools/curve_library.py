@@ -18,6 +18,8 @@ except ImportError:
     from PySide2 import QtWidgets, QtCore, QtGui
     from shiboken2 import wrapInstance
 
+from utils import ui_utils
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 _HERE        = os.path.dirname(os.path.realpath(__file__))
 LIBRARY_PATH = os.path.join(_HERE, "curve_shapes")
@@ -362,8 +364,9 @@ class ShapeCard(QtWidgets.QWidget):
         p = QtGui.QPainter(self)
         p.setRenderHint(QtGui.QPainter.Antialiasing)
 
-        bg = QtGui.QColor(C_BG3 if self.selected else C_BG1)
-        border = QtGui.QColor(C_AMBER if self.selected else C_BORDER)
+        pal = self.palette()
+        bg = pal.color(QtGui.QPalette.Button if self.selected else QtGui.QPalette.Base)
+        border = pal.color(QtGui.QPalette.Highlight if self.selected else QtGui.QPalette.Mid)
 
         p.fillRect(self.rect(), bg)
         p.setPen(QtGui.QPen(border, 1))
@@ -376,7 +379,7 @@ class ShapeCard(QtWidgets.QWidget):
 
         pts = self.preview or []
         if pts:
-            pen = QtGui.QPen(QtGui.QColor(C_AMBER if self.selected else "#8888b0"), 1.5)
+            pen = QtGui.QPen(pal.color(QtGui.QPalette.Highlight if self.selected else QtGui.QPalette.Text), 1.5)
             p.setPen(pen)
             def to_screen(px, py):
                 return QtCore.QPointF(cx + px * radius, cy - py * radius)
@@ -387,7 +390,7 @@ class ShapeCard(QtWidgets.QWidget):
                 p.drawLine(a, b)
 
         # name label
-        p.setPen(QtGui.QColor(C_AMBER if self.selected else C_TEXT))
+        p.setPen(pal.color(QtGui.QPalette.Highlight if self.selected else QtGui.QPalette.Text))
         font = QtGui.QFont("Segoe UI", 8)
         p.setFont(font)
         text_rect = QtCore.QRectF(2, self.ICON_SIZE + 8, self.width() - 4, 24)
@@ -414,7 +417,6 @@ class CurveLibraryUI(QtWidgets.QWidget):
         self.setWindowTitle("Curve Library  —  AutoRig Tools")
         self.resize(520, 600)
         self.setMinimumSize(400, 480)
-        self.setStyleSheet(SS)
 
         self._selected_name    = None
         self._selected_builtin = True
@@ -422,6 +424,7 @@ class CurveLibraryUI(QtWidgets.QWidget):
 
         self._build()
         self._populate()
+        ui_utils.apply_maya_style(self)
 
     # ── layout ────────────────────────────────────────────────────────────────
     def _build(self):

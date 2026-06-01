@@ -13,6 +13,8 @@ except ImportError:
     from PySide2 import QtWidgets, QtCore, QtGui
     from shiboken2 import wrapInstance
 
+from utils import ui_utils
+
 # ── Maya-grey palette ─────────────────────────────────────────────────────────
 C_WHITE  = "#b0b0b0"   # medium-dark grey — main bg
 C_PANEL  = "#a2a2a2"   # body panel bg
@@ -71,22 +73,9 @@ class RigProgressDialog(QtWidgets.QDialog):
         )
         self.setFixedWidth(440)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, False)
-        self.setStyleSheet(f"""
-            QDialog  {{ background:{C_WHITE}; color:{C_TEXT}; font-family:'Sabandija'; font-weight:bold; }}
-            QLabel   {{ background:transparent; font-weight:bold; }}
-            QProgressBar {{
-                background:{C_BORDER}; border:none; height:6px; border-radius:3px;
-            }}
-            QProgressBar::chunk {{ background:{C_LIME}; border-radius:3px; }}
-            QPushButton#close_btn {{
-                background:{C_PANEL}; border:1px solid {C_BORDER};
-                color:{C_TEXT}; font-size:10px; font-weight:bold;
-                border-radius:3px; padding:5px 18px; letter-spacing:2px;
-            }}
-            QPushButton#close_btn:hover {{ background:{C_HOVER}; border-color:{C_ACCENT}; }}
-        """)
         self._build_ui(asset_name, mgear)
         self.adjustSize()
+        ui_utils.apply_maya_style(self)
 
     # ── layout ────────────────────────────────────────────────────────────────
 

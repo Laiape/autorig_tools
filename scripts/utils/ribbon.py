@@ -131,7 +131,11 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
     num_cvs = len(cvs)
     original_cvs = cvs[:]
 
-    d = num_cvs - 1 if d is None else d
+    # Degree is selectable now.  Clamp it to a valid range so a too-high (or
+    # too-low) value can never produce an invalid knot vector and break the
+    # ribbon on the limbs.  An open curve needs 1 <= d <= num_cvs - 1.
+    d = num_cvs - 1 if d is None else int(d)
+    d = max(1, min(d, num_cvs - 1))
 
     if kv_type == OPEN:
 

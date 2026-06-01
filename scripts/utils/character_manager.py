@@ -11,6 +11,7 @@ import maya.OpenMayaUI as omui
 from tools import skin_manager_api
 from utils import curve_tool, guides_manager, create_rig
 from utils import data_manager
+from utils import ui_utils
 
 try:
     from PySide6 import QtWidgets, QtCore, QtGui
@@ -616,10 +617,10 @@ class AssetManagerUI(QtWidgets.QWidget):
         self.current_asset = None
         self.settings      = QtCore.QSettings("AutoRigTools", "CharacterManager")
 
-        self.setStyleSheet(SS_BASE)
         self._build_ui()
         self.refresh_assets()
         self._restore_session()
+        ui_utils.apply_maya_style(self)
 
     # ── BUILD ─────────────────────────────────────────────────────────────────
     def _build_ui(self):
@@ -820,6 +821,8 @@ class AssetManagerUI(QtWidgets.QWidget):
         asset_dir = os.path.join(self.assets_path, self.current_asset)
         for cat in ("guides", "curves", "models", "skin_clusters"):
             self.tabs.addTab(VersionTab(asset_dir, cat), cat.upper().replace("_", " "))
+        # tabs are created dynamically, so re-apply the native style to the new widgets
+        ui_utils.apply_maya_style(self)
 
     def _load_thumbnail(self):
         if not self.current_asset:

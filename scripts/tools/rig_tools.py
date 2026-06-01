@@ -23,6 +23,8 @@ except ImportError:
     from PySide2 import QtWidgets, QtCore, QtGui
     from shiboken2 import wrapInstance
 
+from utils import ui_utils
+
 # ── Palette ───────────────────────────────────────────────────────────────────
 C_BG0    = "#0d0d10"
 C_BG1    = "#13131a"
@@ -415,11 +417,11 @@ class RigToolsUI(QtWidgets.QWidget):
         self.setWindowTitle("Rig Tools  —  AutoRig Tools")
         self.resize(380, 640)
         self.setMinimumWidth(320)
-        self.setStyleSheet(SS)
         self._color_a = (0.2, 0.6, 1.0)
         self._color_b = (1.0, 0.3, 0.3)
         self._solid_color = (1.0, 0.65, 0.0)
         self._build()
+        ui_utils.apply_maya_style(self)
 
     def _build(self):
         root = QtWidgets.QVBoxLayout(self)

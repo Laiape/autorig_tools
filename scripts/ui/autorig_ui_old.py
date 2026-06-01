@@ -17,6 +17,7 @@ from tools import skin_manager_ng # Asegúrate que el archivo anterior se llame 
 from scripts.utils import create_rig
 import utils as data_manager
 from utils import guides_manager
+from utils import ui_utils
 
 reload(skin_manager_ng)
 reload(create_rig)
@@ -37,7 +38,7 @@ class UI(QtWidgets.QMainWindow):
 
         self.main_window_setup()
         self.populate()
-        self.stylesheet()
+        ui_utils.apply_maya_style(self)
 
     def main_window_setup(self):
         self.main_tab = QtWidgets.QTabWidget()

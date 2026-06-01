@@ -537,6 +537,7 @@ class ArmModule(object):
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_armNonRollAlign_BLM", ss=True)
         nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_armNonRollAim_AMX", ss=True)
+        self.nonRollAim = nonRollAim
         blend_matrix_nodes = cmds.createNode("blendMatrix", name=f"{self.side}_armNonRollControllers_BLM", ss=True)
 
         cmds.connectAttr(f"{self.ik_root_nodes[0]}.worldMatrix[0]", f"{blend_matrix_nodes}.inputMatrix")
@@ -555,83 +556,61 @@ class ArmModule(object):
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
        
 
-        # Add roll setup
-        upper_roll_jnt = cmds.createNode("joint", name=f"{self.side}_armUpperRoll_JNT", p=self.module_trn)
-        upper_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_armUpperRollEnd_JNT", p=upper_roll_jnt)
+        # ----- Roll setup via swing-twist (quaternion), composed entirely with
+        # MATRIX nodes so the roll is no longer a DAG joint chain that slows the
+        # rig (no joints, no ikSC handles, no flips).
+        aim_letter = ['x', 'y', 'z'][[abs(v) for v in self.primaryInputAxis].index(1)]
+        aim_comp = aim_letter.upper()
 
-        upper_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armUpperRoll_DBT", ss=True)
-        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{upper_distance}.inMatrix1")
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_distance}.inMatrix2")
-        normalize_upper_distance = cmds.createNode("divide", name=f"{self.side}_armUpperRollNormalize_DIV", ss=True)
-        cmds.connectAttr(f"{upper_distance}.distance", f"{normalize_upper_distance}.input1")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{normalize_upper_distance}.input2")
+        el = om.MVector(cmds.xform(self.arm_chain[1], q=True, ws=True, t=True))
+        wr = om.MVector(cmds.xform(self.arm_chain[2], q=True, ws=True, t=True))
+        forearm_len = (wr - el).length()
+        forearm_len = forearm_len if self.side == "L" else -forearm_len
 
-        #Connect roll joints
-        pick_matrix_upper = cmds.createNode("pickMatrix", name=f"{self.side}_armUpperRollPickMatrix_PM", ss=True)
-        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_upper}.inputMatrix")
-        cmds.setAttr(f"{pick_matrix_upper}.useRotate", 0)
-        cmds.connectAttr(f"{pick_matrix_upper}.outputMatrix", f"{upper_roll_jnt}.offsetParentMatrix")
-        if self.side == "R":
-            negate_upper_distance = cmds.createNode("negate", name=f"{self.side}_armUpperRoll_NEG", ss=True)
-            cmds.connectAttr(f"{normalize_upper_distance}.output", f"{negate_upper_distance}.input")
-            cmds.connectAttr(f"{negate_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
-        else:
-            cmds.connectAttr(f"{normalize_upper_distance}.output", f"{upper_roll_end_jnt}.translateX")
+        # UPPER — twisted shoulder frame (rotation only) feeding the up-roll blend
+        upper_twist = matrix_manager.extract_twist(
+            f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAim}.outputMatrix",
+            axis=aim_letter, name=f"{self.side}_armUpper")
+        upper_twist_cmp = cmds.createNode("composeMatrix", name=f"{self.side}_armUpperRollTwist_CMP", ss=True)
+        cmds.connectAttr(f"{upper_twist}.outputRotate", f"{upper_twist_cmp}.inputRotate")
+        upper_twist_mm = cmds.createNode("multMatrix", name=f"{self.side}_armUpperRollTwist_MMX", ss=True)
+        cmds.connectAttr(f"{upper_twist_cmp}.outputMatrix", f"{upper_twist_mm}.matrixIn[0]")
+        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{upper_twist_mm}.matrixIn[1]")
 
-        
-        lower_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armLowerRoll_DBT", ss=True)
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_distance}.inMatrix1")
-        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_distance}.inMatrix2")
-        normalize_lower_distance = cmds.createNode("divide", name=f"{self.side}_armLowerRollNormalize_DIV", ss=True)
-        cmds.connectAttr(f"{lower_distance}.distance", f"{normalize_lower_distance}.input1")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{normalize_lower_distance}.input2")
-        lower_roll_jnt = cmds.createNode("joint", name=f"{self.side}_armLowerRoll_JNT", p=self.module_trn)
-        lower_roll_end_jnt = cmds.createNode("joint", name=f"{self.side}_armLowerRollEnd_JNT", p=lower_roll_jnt)
+        # LOWER — twisted forearm frame offset to the wrist (aim target for the ribbon)
+        lower_twist = matrix_manager.extract_twist(
+            f"{self.blend_matrices[2][0]}.outputMatrix", f"{self.blend_matrices[1][0]}.outputMatrix",
+            axis=aim_letter, name=f"{self.side}_armLower")
+        lower_twist_cmp = cmds.createNode("composeMatrix", name=f"{self.side}_armLowerRollTwist_CMP", ss=True)
+        cmds.connectAttr(f"{lower_twist}.outputRotate", f"{lower_twist_cmp}.inputRotate")
+        cmds.setAttr(f"{lower_twist_cmp}.inputTranslate{aim_comp}", forearm_len)
+        lower_twist_mm = cmds.createNode("multMatrix", name=f"{self.side}_armLowerRollTwist_MMX", ss=True)
+        cmds.connectAttr(f"{lower_twist_cmp}.outputMatrix", f"{lower_twist_mm}.matrixIn[0]")
+        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_twist_mm}.matrixIn[1]")
+        lower_roll_pm = cmds.createNode("pickMatrix", name=f"{self.side}_armLowerRoll_PM", ss=True)
+        cmds.connectAttr(f"{lower_twist_mm}.matrixSum", f"{lower_roll_pm}.inputMatrix")
 
-        pick_matrix_lower = cmds.createNode("pickMatrix", name=f"{self.side}_armLowerRollPickMatrix_PM", ss=True)
-        cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{pick_matrix_lower}.inputMatrix")
-        cmds.setAttr(f"{pick_matrix_lower}.useRotate", 0)
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_roll_jnt}.offsetParentMatrix")
-        if self.side == "R":
-            negate_lower_distance = cmds.createNode("negate", name=f"{self.side}_armLowerRoll_NEG", ss=True)
-            cmds.connectAttr(f"{normalize_lower_distance}.output", f"{negate_lower_distance}.input")
-            cmds.connectAttr(f"{negate_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
-        else:
-            cmds.connectAttr(f"{normalize_lower_distance}.output", f"{lower_roll_end_jnt}.translateX")
-        
-        upper_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_armUpperRoll_IKH", startJoint=upper_roll_jnt, endEffector=upper_roll_end_jnt, solver="ikSCsolver")[0]
-        lower_roll_ik_handle = cmds.ikHandle(name=f"{self.side}_armLowerRoll_IKH", startJoint=lower_roll_jnt, endEffector=lower_roll_end_jnt, solver="ikSCsolver")[0]
-
-        cmds.parent(upper_roll_ik_handle, self.module_trn)
-        cmds.parent(lower_roll_ik_handle, self.module_trn)
-
-        float_constant_freeze = cmds.createNode("floatConstant", name=f"{self.side}_armRollFreeze_FC", ss=True)
-        cmds.setAttr(f"{float_constant_freeze}.inFloat", 0)
-        for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
-            cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{upper_roll_ik_handle}.{attr}")
-            cmds.connectAttr(f"{float_constant_freeze}.outFloat", f"{lower_roll_ik_handle}.{attr}")
-
-        cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{upper_roll_ik_handle}.offsetParentMatrix") # Connect to upper arm blend matrix
-        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_roll_ik_handle}.offsetParentMatrix") # Connect to lower arm blend matrix
-
-        #Up Roll Blend Matrix
+        # Up Roll Blend Matrix — replaces the shoulder rotation with the twisted frame
         up_roll_blm = cmds.createNode("blendMatrix", name=f"{self.side}_armUpperRoll_BLM", ss=True)
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{up_roll_blm}.inputMatrix")
-        cmds.connectAttr(f"{upper_roll_end_jnt}.worldMatrix[0]", f"{up_roll_blm}.target[0].targetMatrix")
+        cmds.connectAttr(f"{upper_twist_mm}.matrixSum", f"{up_roll_blm}.target[0].targetMatrix")
         cmds.setAttr(f"{up_roll_blm}.target[0].translateWeight", 0)
         cmds.setAttr(f"{up_roll_blm}.target[0].rotateWeight", 1)
         cmds.setAttr(f"{up_roll_blm}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{up_roll_blm}.target[0].shearWeight", 0)
-                                        
-        
-        # Placeholder for de Boor ribbon setup
+
         self.upper_skinning_jnt_trn = self.de_boor_ribbon_callout([nonRollAim], [up_roll_blm], "Upper", skinning_joint_numbers)
-        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], [lower_roll_end_jnt], "Lower", skinning_joint_numbers)
+        self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], [lower_roll_pm], "Lower", skinning_joint_numbers)
 
         cmds.select(clear=True)
         wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")
         cmds.connectAttr(f"{self.blend_matrices[-1][0]}.outputMatrix", f"{wrist_skinning}.offsetParentMatrix")
         cmds.parent(wrist_skinning, self.skeleton_grp)
+
+        # Blend the skinning joints toward a single smooth cubic (shoulder -> wrist)
+        self.curvature_setup()
+        # Volume preservation squash on the skinning joints
+        self.volume_preservation()
 
         # Contraint settings controller to first skinning joint
         first_skinning_jnt = self.upper_skinning_jnt_trn[0]
@@ -662,6 +641,10 @@ class ArmModule(object):
         main_bendy_nodes, main_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}MainBendy", offset=["GRP"])
         up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}UpBendy", offset=["GRP"])
         low_bendy_nodes, low_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}LowBendy", offset=["GRP"])
+
+        # Store the main bendy controller (curvature CV) and the bendy groups (volume scale)
+        setattr(self, f"{part.lower()}_main_bendy_ctl", main_bendy_ctl)
+        setattr(self, f"{part.lower()}_bendy_grps", [up_bendy_nodes[0], main_bendy_nodes[0], low_bendy_nodes[0]])
 
         for node in [main_bendy_nodes[0], up_bendy_nodes[0], low_bendy_nodes[0]]:
 
@@ -740,16 +723,150 @@ class ArmModule(object):
         return output_joints
   
 
-    def curvature(self):
+    def curvature_setup(self):
 
         """
-        Calculate the curvature of the arm module.
-        This method is a placeholder for future implementation.
-        Calculate the curvature of the arm module.
-        This method is a placeholder for future implementation.
+        Build a single smooth cubic (degree 3) de Boor curve spanning the whole
+        arm (shoulder -> elbow -> wrist, using the main bendy controllers as the
+        intermediate CVs) and blend the existing skinning joints toward it with a
+        'Curvature' attribute on the settings controller.
+
+        At Curvature = 0 the joints keep the current two-ribbon solution; at
+        Curvature = 1 they follow the smooth cubic, rounding out the elbow into a
+        continuous arc from shoulder to wrist.  The same output joints are reused
+        (only a blendMatrix is inserted before each joint's offsetParentMatrix).
+        """
+
+        # ----- axis info (matches the per-segment ribbon axes)
+        def axis_info(axis_tuple):
+            for i, val in enumerate(axis_tuple):
+                if val != 0:
+                    return i, val
+            return 0, 1
+
+        aim_idx, aim_sign = axis_info(self.primaryInputAxis)
+        up_idx, _ = axis_info(self.secondaryInputAxis)
+        axis_map = ['x', 'y', 'z']
+        aim_axis = f"{'-' if aim_sign < 0 else ''}{axis_map[aim_idx]}"
+        up_axis = axis_map[up_idx]
+
+        # ----- whole-arm control vertices (5 CVs -> degree 3 cubic B-spline)
+        cvs = [
+            self.nonRollAim,                  # shoulder
+            self.upper_main_bendy_ctl,        # mid upper arm
+            self.blend_matrices[1][0],        # elbow
+            self.lower_main_bendy_ctl,        # mid forearm
+            self.blend_matrices[2][0],        # wrist
+        ]
+
+        # ----- global parameter for every existing joint (upper then lower),
+        # split proportionally to the rest length of each segment so the smooth
+        # targets stay aligned with the current joints
+        sh = om.MVector(cmds.xform(self.arm_chain[0], q=True, ws=True, t=True))
+        el = om.MVector(cmds.xform(self.arm_chain[1], q=True, ws=True, t=True))
+        wr = om.MVector(cmds.xform(self.arm_chain[2], q=True, ws=True, t=True))
+        upper_len = (el - sh).length()
+        lower_len = (wr - el).length()
+        total = upper_len + lower_len
+        split = upper_len / total if total else 0.5
+
+        seg = [i / 4.0 for i in range(5)]
+        seg[-1] = 0.95
+        global_params = [p * split for p in seg] + [split + p * (1 - split) for p in seg]
+
+        # ----- build the smooth cubic ribbon as temporary driver joints
+        driver_jnts, temp = ribbon.de_boor_ribbon(
+            cvs, name=f"{self.module_name}Curvature", d=3, custom_parameter=global_params,
+            aim_axis=aim_axis, up_axis=up_axis, skeleton_grp=self.skeleton_grp,
+            num_joints=len(global_params))
+
+        for t in temp:
+            cmds.delete(t)
+
+        # capture the matrix plug feeding each driver joint, then disconnect and
+        # delete the joints.  Disconnecting first leaves the feeder nodes alive
+        # (a plain joint delete would otherwise drag its input history with it).
+        driver_plugs = []
+        for dj in driver_jnts:
+            src = cmds.listConnections(f"{dj}.offsetParentMatrix", source=True, destination=False, plugs=True)
+            plug = src[0] if src else None
+            driver_plugs.append(plug)
+            if plug:
+                cmds.disconnectAttr(plug, f"{dj}.offsetParentMatrix")
+        cmds.delete(driver_jnts)
+
+        # ----- Curvature attributes on the settings controller
+        if not cmds.attributeQuery("Curvature", node=self.settings_ctl, exists=True):
+            cmds.addAttr(self.settings_ctl, longName="Curvature", attributeType="float",
+                         minValue=0, maxValue=1, defaultValue=0, keyable=True)
+            cmds.addAttr(self.settings_ctl, longName="AutoBend", niceName="Auto Curvature",
+                         attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
+
+        # auto curvature from the elbow bend (dot-based, no flip), added to the manual value
+        bend_plug = matrix_manager.bend_factor(
+            self.blend_matrices[0][0], self.blend_matrices[1][0], self.blend_matrices[2][0],
+            name=f"{self.module_name}Curvature")
+        auto_mult = cmds.createNode("multiply", name=f"{self.module_name}AutoCurvature_MUL", ss=True)
+        cmds.connectAttr(bend_plug, f"{auto_mult}.input[0]")
+        cmds.connectAttr(f"{self.settings_ctl}.AutoBend", f"{auto_mult}.input[1]")
+        curv_sum = cmds.createNode("sum", name=f"{self.module_name}Curvature_SUM", ss=True)
+        cmds.connectAttr(f"{self.settings_ctl}.Curvature", f"{curv_sum}.input[0]")
+        cmds.connectAttr(f"{auto_mult}.output", f"{curv_sum}.input[1]")
+        curv_clamp = cmds.createNode("clamp", name=f"{self.module_name}Curvature_CLP", ss=True)
+        cmds.setAttr(f"{curv_clamp}.maxR", 1)
+        cmds.connectAttr(f"{curv_sum}.output", f"{curv_clamp}.inputR")
+        curvature_weight = f"{curv_clamp}.outputR"
+
+        # ----- blend every existing skinning joint toward its smooth target
+        existing = list(self.upper_skinning_jnt_trn) + list(self.lower_skinning_jnt_trn)
+        for jnt, dplug in zip(existing, driver_plugs):
+
+            if dplug is None:
+                continue
+
+            current = cmds.listConnections(f"{jnt}.offsetParentMatrix", source=True, destination=False, plugs=True)
+            if not current:
+                continue
+
+            blend = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Curvature_BLM"), ss=True)
+            cmds.connectAttr(current[0], f"{blend}.inputMatrix")
+            cmds.connectAttr(dplug, f"{blend}.target[0].targetMatrix")
+            cmds.connectAttr(curvature_weight, f"{blend}.target[0].weight")
+            cmds.connectAttr(f"{blend}.outputMatrix", f"{jnt}.offsetParentMatrix", force=True)
+
+    def volume_preservation(self):
 
         """
-        
-        # Placeholder for curvature calculation
-        pass
+        Volume preservation: squash/stretch the cross-section by 1/sqrt(stretch)
+        per segment, driven by a 'Volume' attribute (0 = off).
+
+        The scale is applied to the BENDY CONTROL groups (the ribbon CVs) instead
+        of to the skinning joints directly: the ribbon then interpolates the scale
+        smoothly along the output joints, tapering to 1 at the segment ends, so it
+        never tears the mesh (which raw per-joint scaling did with hard weights).
+        """
+
+        if not cmds.attributeQuery("Volume", node=self.settings_ctl, exists=True):
+            cmds.addAttr(self.settings_ctl, longName="Volume", attributeType="float",
+                         minValue=0, maxValue=1, defaultValue=0, keyable=True)
+
+        sh = om.MVector(cmds.xform(self.arm_chain[0], q=True, ws=True, t=True))
+        el = om.MVector(cmds.xform(self.arm_chain[1], q=True, ws=True, t=True))
+        wr = om.MVector(cmds.xform(self.arm_chain[2], q=True, ws=True, t=True))
+
+        upper_scale = matrix_manager.segment_volume(
+            self.blend_matrices[0][0], self.blend_matrices[1][0], (el - sh).length(),
+            f"{self.settings_ctl}.Volume", f"{self.masterwalk_ctl}.globalScale",
+            name=f"{self.module_name}Upper")
+        lower_scale = matrix_manager.segment_volume(
+            self.blend_matrices[1][0], self.blend_matrices[2][0], (wr - el).length(),
+            f"{self.settings_ctl}.Volume", f"{self.masterwalk_ctl}.globalScale",
+            name=f"{self.module_name}Lower")
+
+        for grp in self.upper_bendy_grps:
+            cmds.connectAttr(upper_scale, f"{grp}.scaleY")
+            cmds.connectAttr(upper_scale, f"{grp}.scaleZ")
+        for grp in self.lower_bendy_grps:
+            cmds.connectAttr(lower_scale, f"{grp}.scaleY")
+            cmds.connectAttr(lower_scale, f"{grp}.scaleZ")
 

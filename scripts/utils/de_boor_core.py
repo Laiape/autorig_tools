@@ -9,9 +9,17 @@ def get_open_uniform_knot_vector(n, d):
 
 
     Generate an open uniform knot vector for the given CVs and degree.
+
+    Note: the interior knots must be spaced as (i - d) / (n - d). The previous
+    implementation (i / (n - d - 1)) only produced a valid vector when d == n - 1
+    and generated a degenerate/duplicated knot for any lower degree, which broke
+    de_boor whenever a non-default degree was requested (e.g. the limb ribbons).
     """
 
-    return [0] * (d + 1) + [i / (n - d - 1) for i in range(n - d - 1)] + [1] * (d + 1)
+    if d >= n:
+        d = n - 1
+
+    return [0] * (d + 1) + [(i - d) / (n - d) for i in range(d + 1, n)] + [1] * (d + 1)
     
 
 def get_periodic_uniform_knot_vector(n, d):

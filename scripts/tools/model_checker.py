@@ -21,6 +21,8 @@ except ImportError:
     from shiboken6 import wrapInstance
     import maya.OpenMayaUI as omui
 
+from utils import ui_utils
+
 
 def _maya_main_window():
     ptr = omui.MQtUtil.mainWindow()
@@ -664,6 +666,7 @@ class AutoCheckRow(QtWidgets.QWidget):
         lay.addWidget(badge)
         lay.addWidget(self.dot)
         lay.addWidget(lbl)
+        ui_utils.apply_maya_style(self)
 
     def _set_dot(self, color, tooltip):
         self.dot.setStyleSheet(f"color:{color}; font-size:15px;")
@@ -698,6 +701,7 @@ class ManualCheckRow(QtWidgets.QWidget):
         self.cb = QtWidgets.QCheckBox(label)
         lay.addWidget(badge)
         lay.addWidget(self.cb, 1)
+        ui_utils.apply_maya_style(self)
 
     def mousePressEvent(self, event):
         # Toggle row highlight on click outside the checkbox indicator area
@@ -767,6 +771,8 @@ class FixIssueRow(QtWidgets.QWidget):
             tag = QtWidgets.QLabel("manual")
             tag.setStyleSheet(f"color:{C['SUBTEXT']}; font-size:9px; font-style:italic;")
             lay.addWidget(tag)
+
+        ui_utils.apply_maya_style(self)
 
     def mark_fixed(self):
         self._dot.setStyleSheet(f"color:{C['PASS']}; font-size:12px;")
@@ -850,12 +856,12 @@ class ModelCheckerWindow(QtWidgets.QDialog):
         self.setWindowTitle("Model Checker")
         self.setMinimumSize(500, 720)
         self.setWindowFlags(self.windowFlags() | Qt.Window)
-        self.setStyleSheet(STYLESHEET)
         self._auto_rows    = {}
         self._topo_rows    = {}
         self._manual_rows  = []
         self._fix_rows     = []
         self._build()
+        ui_utils.apply_maya_style(self)
 
     # ── Build ─────────────────────────────────────────────────────────────────
 

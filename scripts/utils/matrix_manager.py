@@ -442,3 +442,161 @@ def local_mmx(ctl, grp):
         cmds.setAttr(f"{mmx}.matrixIn[2]", grp_wm, type="matrix")
 
         return mmx
+
+
+def extract_twist(source_plug, ref_plug, axis="x", name="twist"):
+    """
+    Swing-twist decomposition (quaternion) as a node network: extract ONLY the
+    axial twist of `source_plug` relative to `ref_plug` around `axis`, discarding
+    the swing.  The rest pose is neutralized so the twist is 0 at build time.
+
+    Use the returned quatToEuler node's `.outputRotate` (only the chosen axis
+    component is non-zero) to drive a roll joint's rotation — no ikSC handle and
+    no flipping like the classic roll-bone setup.
+
+    Args:
+        source_plug (str): matrix plug with the twist (e.g. the real joint).
+        ref_plug (str): no-twist reference matrix plug.
+        axis (str): 'x', 'y' or 'z' — the bone aim axis.
+        name (str): prefix for the created nodes.
+
+    Returns:
+        str: the quatToEuler node name.
+    """
+    axis = axis.lower()
+    comp = {"x": "X", "y": "Y", "z": "Z"}[axis]
+
+    inv = cmds.createNode("inverseMatrix", name=f"{name}TwistRef_INV", ss=True)
+    cmds.connectAttr(ref_plug, f"{inv}.inputMatrix")
+
+    rel = cmds.createNode("multMatrix", name=f"{name}TwistRel_MMX", ss=True)
+    cmds.connectAttr(source_plug, f"{rel}.matrixIn[0]")
+    cmds.connectAttr(f"{inv}.outputMatrix", f"{rel}.matrixIn[1]")
+
+    # neutralize the rest pose so the extracted twist is zero by default
+    rest_inv = om.MMatrix(cmds.getAttr(f"{rel}.matrixSum")).inverse()
+    neutral = cmds.createNode("multMatrix", name=f"{name}TwistNeutral_MMX", ss=True)
+    cmds.setAttr(f"{neutral}.matrixIn[0]", list(rest_inv), type="matrix")
+    cmds.connectAttr(f"{rel}.matrixSum", f"{neutral}.matrixIn[1]")
+
+    dcm = cmds.createNode("decomposeMatrix", name=f"{name}Twist_DCM", ss=True)
+    cmds.connectAttr(f"{neutral}.matrixSum", f"{dcm}.inputMatrix")
+
+    # keep only the axis imaginary component + W, then renormalize -> pure twist
+    qn = cmds.createNode("quatNormalize", name=f"{name}Twist_QTN", ss=True)
+    cmds.connectAttr(f"{dcm}.outputQuat{comp}", f"{qn}.inputQuat{comp}")
+    cmds.connectAttr(f"{dcm}.outputQuatW", f"{qn}.inputQuatW")
+
+    q2e = cmds.createNode("quatToEuler", name=f"{name}Twist_QTE", ss=True)
+    cmds.connectAttr(f"{qn}.outputQuat", f"{q2e}.inputQuat")
+
+    return q2e
+
+
+def bend_factor(m0, m1, m2, name="bend"):
+    """
+    0-1 factor from the bend of a 3-joint chain (m0->m1->m2), computed from the
+    NORMALIZED DOT of the two bone vectors: `(1 - cos) / 2`.  Straight chain
+    (colinear) -> 0, right angle -> 0.5, fully folded (180) -> 1.
+
+    Uses the dot product instead of an `angleBetween` node so it stays smooth and
+    monotonic and never flips (angleBetween's rotation axis is undefined near 180).
+
+    Args:
+        m0, m1, m2 (str): the three nodes with a `.outputMatrix` (start/mid/end).
+        name (str): prefix for the created nodes.
+
+    Returns:
+        str: a `.outFloat` plug (0-1).
+    """
+    def pos(m, tag):
+        r = cmds.createNode("rowFromMatrix", name=f"{name}{tag}Pos_RFM", ss=True)
+        cmds.setAttr(f"{r}.input", 3)
+        cmds.connectAttr(f"{m}.outputMatrix", f"{r}.matrix")
+        return r
+
+    def sub(a, b, tag):
+        n = cmds.createNode("plusMinusAverage", name=f"{name}{tag}_PMA", ss=True)
+        cmds.setAttr(f"{n}.operation", 2)  # subtract
+        for ax in "XYZ":
+            cmds.connectAttr(f"{a}.output{ax}", f"{n}.input3D[0].input3D{ax.lower()}")
+            cmds.connectAttr(f"{b}.output{ax}", f"{n}.input3D[1].input3D{ax.lower()}")
+        return n
+
+    def norm(src, tag):
+        n = cmds.createNode("normalize", name=f"{name}{tag}_NRM", ss=True)
+        cmds.connectAttr(f"{src}.output3D", f"{n}.input")
+        return n
+
+    p0, p1, p2 = pos(m0, "Sh"), pos(m1, "Md"), pos(m2, "En")
+    upper = norm(sub(p1, p0, "Upper"), "UpperN")   # mid - start (normalized)
+    lower = norm(sub(p2, p1, "Lower"), "LowerN")   # end - mid (normalized)
+
+    dot = cmds.createNode("vectorProduct", name=f"{name}_DOT", ss=True)
+    cmds.setAttr(f"{dot}.operation", 1)  # dot product
+    cmds.connectAttr(f"{upper}.output", f"{dot}.input1")
+    cmds.connectAttr(f"{lower}.output", f"{dot}.input2")
+
+    one_minus = cmds.createNode("floatMath", name=f"{name}OneMinus_FLM", ss=True)
+    cmds.setAttr(f"{one_minus}.operation", 1)  # subtract -> 1 - cos
+    cmds.setAttr(f"{one_minus}.floatA", 1.0)
+    cmds.connectAttr(f"{dot}.outputX", f"{one_minus}.floatB")
+
+    half = cmds.createNode("floatMath", name=f"{name}Half_FLM", ss=True)
+    cmds.setAttr(f"{half}.operation", 2)  # multiply -> * 0.5
+    cmds.connectAttr(f"{one_minus}.outFloat", f"{half}.floatA")
+    cmds.setAttr(f"{half}.floatB", 0.5)
+
+    return f"{half}.outFloat"
+
+
+def segment_volume(m_start, m_end, rest_len, volume_attr, global_scale_attr, name="vol"):
+    """
+    Volume-preservation scale factor for a bone: `1 + Volume*(1/sqrt(stretch) - 1)`,
+    where `stretch = currentLength / restLength`.  Drive a skinning joint's
+    scaleY/scaleZ with the returned plug so it squashes/stretches by volume.
+
+    Args:
+        m_start, m_end (str): bone end nodes with `.outputMatrix`.
+        rest_len (float): rest length of the bone.
+        volume_attr (str): 0-1 attribute plug (amount of volume preservation).
+        global_scale_attr (str): masterwalk globalScale plug (rig scale safety).
+        name (str): prefix for the created nodes.
+
+    Returns:
+        str: the `.outFloat` plug with the secondary scale factor.
+    """
+    dist = cmds.createNode("distanceBetween", name=f"{name}Vol_DBT", ss=True)
+    cmds.connectAttr(f"{m_start}.outputMatrix", f"{dist}.inMatrix1")
+    cmds.connectAttr(f"{m_end}.outputMatrix", f"{dist}.inMatrix2")
+
+    norm = cmds.createNode("divide", name=f"{name}VolNorm_DIV", ss=True)
+    cmds.connectAttr(f"{dist}.distance", f"{norm}.input1")
+    cmds.connectAttr(global_scale_attr, f"{norm}.input2")
+
+    stretch = cmds.createNode("floatMath", name=f"{name}VolStretch_FLM", ss=True)
+    cmds.setAttr(f"{stretch}.operation", 3)  # divide
+    cmds.connectAttr(f"{norm}.output", f"{stretch}.floatA")
+    cmds.setAttr(f"{stretch}.floatB", rest_len if rest_len else 1.0)
+
+    inv_sqrt = cmds.createNode("floatMath", name=f"{name}VolInvSqrt_FLM", ss=True)
+    cmds.setAttr(f"{inv_sqrt}.operation", 6)  # power
+    cmds.connectAttr(f"{stretch}.outFloat", f"{inv_sqrt}.floatA")
+    cmds.setAttr(f"{inv_sqrt}.floatB", -0.5)  # 1/sqrt(stretch)
+
+    minus = cmds.createNode("floatMath", name=f"{name}VolMinus_FLM", ss=True)
+    cmds.setAttr(f"{minus}.operation", 1)  # subtract
+    cmds.connectAttr(f"{inv_sqrt}.outFloat", f"{minus}.floatA")
+    cmds.setAttr(f"{minus}.floatB", 1.0)
+
+    mult = cmds.createNode("floatMath", name=f"{name}VolMult_FLM", ss=True)
+    cmds.setAttr(f"{mult}.operation", 2)  # multiply
+    cmds.connectAttr(f"{minus}.outFloat", f"{mult}.floatA")
+    cmds.connectAttr(volume_attr, f"{mult}.floatB")
+
+    add = cmds.createNode("floatMath", name=f"{name}VolAdd_FLM", ss=True)
+    cmds.setAttr(f"{add}.operation", 0)  # add
+    cmds.connectAttr(f"{mult}.outFloat", f"{add}.floatA")
+    cmds.setAttr(f"{add}.floatB", 1.0)
+
+    return f"{add}.outFloat"

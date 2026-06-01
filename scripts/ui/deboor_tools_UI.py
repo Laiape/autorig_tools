@@ -28,6 +28,8 @@ except ImportError:
     from PySide2.QtCore import Qt
     from shiboken2 import wrapInstance
 
+from utils import ui_utils
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  HELPERS
@@ -721,8 +723,8 @@ class DeBoorToolsUI(QtWidgets.QDialog):
         self.setMinimumWidth(440)
         self.setMinimumHeight(520)
         self.setWindowFlags(self.windowFlags() | Qt.Tool)
-        self.setStyleSheet(_STYLE)
         self._build_ui()
+        ui_utils.apply_maya_style(self)
 
     def _build_ui(self):
         root = QtWidgets.QVBoxLayout(self)

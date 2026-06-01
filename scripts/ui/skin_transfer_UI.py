@@ -27,6 +27,8 @@ except ImportError:
     from PySide2.QtCore import Qt, Signal
     from shiboken2 import wrapInstance
 
+from utils import ui_utils
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  HELPERS
@@ -173,7 +175,6 @@ class JointMapDialog(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowTitle("Joint Mapping")
         self.setMinimumSize(500, 400)
-        self.setStyleSheet(_STYLE)
 
         table = QtWidgets.QTableWidget(len(joint_map), 2)
         table.setHorizontalHeaderLabels(["Source Joint", "Target Joint"])
@@ -199,6 +200,7 @@ class JointMapDialog(QtWidgets.QDialog):
         lay = QtWidgets.QVBoxLayout(self)
         lay.addWidget(table)
         lay.addWidget(btn)
+        ui_utils.apply_maya_style(self)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -212,13 +214,13 @@ class SkinTransferUI(QtWidgets.QDialog):
         self.setWindowTitle("Auto Skin Transfer")
         self.setMinimumWidth(420)
         self.setWindowFlags(self.windowFlags() | Qt.Tool)
-        self.setStyleSheet(_STYLE)
 
         self._joint_map  = {}   # filled after preview
         self._system     = None # lazy import
 
         self._build_ui()
         self._connect_signals()
+        ui_utils.apply_maya_style(self)
 
     # ── UI construction ──────────────────────────────────────────────────────
 
