@@ -11,12 +11,14 @@ from utils import guides_manager
 from utils import curve_tool
 from utils import matrix_manager
 from utils import ribbon
+from utils import custom_ik_solver
 
 reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
+reload(custom_ik_solver)
 
 class ArmModule(object):
 
@@ -56,14 +58,15 @@ class ArmModule(object):
         self.controllers_creation()
         self.ik_setup()
         self.fk_stretch()
-        self.soft_ik()
         self.elbow_pin_setup()
         skel_env = self.de_boor_ribbon(self.skinning_joint_numbers)
+
+        cmds.delete(self.arm_chain[0])
         
         data_manager.DataExportBiped().append_data("arm_module",
                             {
                                 f"{self.side}_shoulder_JNT": self.arm_chain[0],
-                                f"{self.side}_wrist_JNT": self.arm_chain[-1],
+                                f"{self.side}_wrist_JNT": self.wrist_skinning,
                                 f"{self.side}_armSettings": self.settings_ctl,
                                 f"{self.side}_armIk": self.ik_wrist_ctl,
                                 f"{self.side}_armPv": self.pv_ctl,
@@ -99,32 +102,8 @@ class ArmModule(object):
         cmds.delete(self.settings_loc)
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=1, minValue=0, maxValue=1, keyable=True)
 
-        self.fk_chain = []
-        self.ik_chain = []
-
-        for joint in self.arm_chain:
-
-            cmds.select(clear=True)
-            fk_joint = cmds.joint(name=joint.replace("_JNT", "Fk_JNT"))
-            cmds.makeIdentity(fk_joint, apply=True, translate=True, rotate=True, scale=True, normal=False)
-
-            cmds.select(clear=True)
-            ik_joint = cmds.joint(name=joint.replace("_JNT", "Ik_JNT"))
-            cmds.matchTransform(ik_joint, joint, pos=True, rot=True)
-            cmds.makeIdentity(ik_joint, apply=True, translate=True, rotate=True, scale=True, normal=False)
-
-            if self.ik_chain:
-                cmds.parent(ik_joint, self.ik_chain[-1])
-
-            if self.fk_chain:
-                cmds.parent(fk_joint, self.fk_chain[-1])
-
-            self.fk_chain.append(fk_joint)
-            self.ik_chain.append(ik_joint)
-
-
-        cmds.parent(self.ik_chain[0], self.module_trn)
-        cmds.parent(self.fk_chain[0], self.module_trn)
+        # IK is solved analytically (cosine law) as a pure matrix network in
+        # ik_setup() -> no IK joint chain, no ikHandle, no evaluation cycle.
 
     def controllers_creation(self):
 
@@ -137,13 +116,10 @@ class ArmModule(object):
 
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_armFkControllers_GRP", ss=True, p=self.controllers_grp)
 
-        for i, joint in enumerate(self.fk_chain):
+        for i, joint in enumerate(self.arm_chain):
 
-            fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP", "ANM"]) # create FK controllers
+            fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", "Fk"), offset=["GRP", "ANM"]) # create FK controllers
             self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-            
-            # cmds.matchTransform(fk_node[0], self.arm_chain[i], pos=True, rot=True)
-            cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix")
 
             if self.fk_controllers:
                 cmds.parent(fk_node[0], self.fk_controllers[-1])
@@ -152,11 +128,10 @@ class ArmModule(object):
             self.fk_controllers.append(fk_ctl)
 
             if i == 0:
-                blend_matrix = matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
+                cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix") # First FK controller follows the guide
+                blend_matrix = matrix_manager.fk_blend(joint, None, fk_ctl, None, self.settings_ctl)
 
             else:
-                blend_matrix = matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
-
                 mmx_negate = cmds.createNode("multMatrix", name=joint.replace("JNT", "MMX"), ss=True)
                 inverse_matrix = cmds.createNode("inverseMatrix", name=joint.replace("JNT", "INV"), ss=True)
                 cmds.connectAttr(self.guides_matrices[i-1], f"{inverse_matrix}.inputMatrix")
@@ -164,9 +139,10 @@ class ArmModule(object):
                 cmds.connectAttr(self.guides_matrices[i], f"{mmx_negate}.matrixIn[0]")
                 cmds.connectAttr(f"{inverse_matrix}.outputMatrix", f"{mmx_negate}.matrixIn[1]")
 
-                cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{fk_node[0]}.offsetParentMatrix", force=True)
-            
-            cmds.xform(fk_node[0], m=om.MMatrix.kIdentity)  
+                cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{fk_node[0]}.offsetParentMatrix", force=True) # Other FK controllers follow the relative guide position
+                blend_matrix = matrix_manager.fk_blend(joint, None, fk_ctl, self.arm_chain[i-1], self.settings_ctl)
+
+            cmds.xform(fk_node[0], m=om.MMatrix.kIdentity)
 
             self.blend_matrices.append(blend_matrix)
 
@@ -187,14 +163,24 @@ class ArmModule(object):
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
         self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
-        cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
+
+        cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA_ATTRIBUTES", enumName="———", attributeType="enum", keyable=True)
+        cmds.setAttr(self.pv_ctl + ".extraAttr", channelBox=True, lock=True)
+        cmds.addAttr(self.pv_ctl, shortName="pvOrientation", niceName="Pv Orientation", defaultValue=1, minValue=0, maxValue=1, keyable=True)
+
+        # Place the pole vector in the guide plane (matrix math) so the IK aim
+        # frame keeps the guide secondary axis on the shoulder and the elbow.
+        pv_pos = self.create_matrix_pole_vector(
+            f"{self.guides_matrices[0]}", f"{self.guides_matrices[1]}", f"{self.guides_matrices[2]}",
+            name=f"{self.side}_{self.module_name}PV")
+        cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{pv_pos}.target[0].weight")
+        cmds.connectAttr(f"{pv_pos}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_armPv_CRV") # Create a line that points always to the PV
         decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPv_DCM", ss=True)
         decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPvCtl_DCM", ss=True)
         cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
-        cmds.connectAttr(f"{self.arm_chain[1]}.worldMatrix[0]", f"{decompose_knee}.inputMatrix")
+        cmds.connectAttr(self.guides_matrices[1], f"{decompose_knee}.inputMatrix")
         cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
         cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
@@ -215,30 +201,158 @@ class ArmModule(object):
         cmds.connectAttr(f"{reverse_node}.outputX", f"{ik_controllers_trn}.visibility")
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{fk_controllers_trn}.visibility")
 
+    def create_matrix_pole_vector(self, m1_attr, m2_attr, m3_attr, pole_distance=1.0, name="poleVector_LOC"):
+        """
+        Given three matrix attributes (e.g. joint.worldMatrix[0]), compute a proper pole vector
+        position using Maya matrix and math nodes (no Python vector math).
+        """
+        def matrix_to_translation(matrix_attr, prefix):
+            dm = cmds.createNode('rowFromMatrix', name=f"{self.side}_{self.module_name}Pv{prefix.capitalize()}Offset_RFM", ss=True)
+            cmds.connectAttr(matrix_attr, f'{dm}.matrix')
+            cmds.setAttr(f'{dm}.input', 3)
+            return f'{dm}.output'
+
+        def create_vector_subtract(name, inputA, inputB):
+            node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
+            cmds.setAttr(f'{node}.operation', 2)
+            for i, input in enumerate([inputA, inputB]):
+                try:
+                    cmds.connectAttr(input, f'{node}.input3D[{i}]')
+                except:
+                    for attr in ["X", "Y", "Z"]:
+                        cmds.connectAttr(f'{input}.output{attr}', f'{node}.input3D[{i}].input3D{attr.lower()}')
+            return node, f'{node}.output3D'
+
+        def normalize_vector(input_vec, name):
+            vp = cmds.createNode('normalize', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_NRM", ss=True)
+            cmds.connectAttr(input_vec, f'{vp}.input')
+            return f'{vp}.output'
+
+        def scale_vector(input_vec, scalar_attr, name):
+            md = cmds.createNode('multiplyDivide', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_MDV", ss=True)
+            cmds.setAttr(f'{md}.operation', 1)
+            cmds.connectAttr(input_vec, f'{md}.input1')
+            for axis in 'XYZ':
+                cmds.connectAttr(scalar_attr, f'{md}.input2{axis}')
+            return md, f'{md}.output'
+
+        def add_vectors(vecA, vecB, name):
+            node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
+            for i, vector in enumerate([vecA, vecB]):
+                try:
+                    cmds.connectAttr(vector, f'{node}.input3D[{i}]')
+                except:
+                    for attr in ["X", "Y", "Z"]:
+                        cmds.connectAttr(f'{vector}.output{attr}', f'{node}.input3D[{i}].input3D{attr.lower()}')
+            return node, f'{node}.output3D'
+
+        vec1_attr = matrix_to_translation(m1_attr, 'vec1')
+        vec2_attr = matrix_to_translation(m2_attr, 'vec2')
+        vec3_attr = matrix_to_translation(m3_attr, 'vec3')
+
+        dist1 = cmds.createNode('distanceBetween', name=f"{self.side}_{self.module_name}PvVec1Vec2_DBT", ss=True)
+        for attr in ["X", "Y", "Z"]:
+            cmds.connectAttr(f'{vec1_attr}{attr}', f'{dist1}.point1{attr}')
+            cmds.connectAttr(f'{vec2_attr}{attr}', f'{dist1}.point2{attr}')
+
+        dist2 = cmds.createNode('distanceBetween', name=f"{self.side}_{self.module_name}PvVec2Vec3_DBT", ss=True)
+        for attr in ["X", "Y", "Z"]:
+            cmds.connectAttr(f'{vec2_attr}{attr}', f'{dist2}.point1{attr}')
+            cmds.connectAttr(f'{vec3_attr}{attr}', f'{dist2}.point2{attr}')
+
+        avg = cmds.createNode('sum', name=f"{self.side}_{self.module_name}PvAvgDist_SUM", ss=True)
+        cmds.connectAttr(f'{dist1}.distance', f'{avg}.input[0]')
+        cmds.connectAttr(f'{dist2}.distance', f'{avg}.input[1]')
+
+        half = cmds.createNode('divide', name=f"{self.side}_{self.module_name}PvHalfDist_DIV", ss=True)
+        cmds.setAttr(f'{half}.input2', 2.0 / pole_distance)
+        cmds.connectAttr(f'{avg}.output', f'{half}.input1')
+
+        vec1_sub_node, vec1_sub = create_vector_subtract('vec1MinusVec2', vec1_attr, vec2_attr)
+        vec1_norm = normalize_vector(vec1_sub, 'vec1Norm')
+
+        vec3_sub_node, vec3_sub = create_vector_subtract('vec3MinusVec2', vec3_attr, vec2_attr)
+        vec3_norm = normalize_vector(vec3_sub, 'vec3Norm')
+
+        vec1_scaled_node, vec1_scaled = scale_vector(vec1_norm, f'{half}.output', 'vec1Scaled')
+        vec3_scaled_node, vec3_scaled = scale_vector(vec3_norm, f'{half}.output', 'vec3Scaled')
+
+        vec1_final_node, vec1_final = add_vectors(vec2_attr, vec1_scaled, 'vec1Final')
+        vec3_final_node, vec3_final = add_vectors(vec2_attr, vec3_scaled, 'vec3Final')
+
+        proj_dir_node, proj_dir = create_vector_subtract('projDir', vec3_final, vec1_final)
+
+        proj_dir_norm = normalize_vector(proj_dir, 'projDirNorm')
+
+        vec_to_project_node, vec_to_project = create_vector_subtract('vecToProject', vec2_attr, vec1_final)
+
+        dot_node = cmds.createNode('vectorProduct', name=f"{self.side}_{self.module_name}PvDot_VCP", ss=True)
+        cmds.setAttr(f'{dot_node}.operation', 1)
+        cmds.connectAttr(vec_to_project, f'{dot_node}.input1')
+        cmds.connectAttr(proj_dir_norm, f'{dot_node}.input2')
+
+        proj_vec_node, proj_vec = scale_vector(proj_dir_norm, f'{dot_node}.outputX', 'projVector')
+
+        mid_node, mid = add_vectors(vec1_final, proj_vec, 'midPoint')
+
+        pointer_node, pointer_vec = create_vector_subtract('pointerVec', vec2_attr, mid)
+
+        pointer_norm = normalize_vector(pointer_vec, 'pointerNorm')
+        pointer_scaled_node, pointer_scaled = scale_vector(pointer_norm, f'{half}.output', 'pointerScaled')
+
+        pole_pos_node, pole_pos = add_vectors(vec2_attr, pointer_scaled, 'poleVectorPos')
+
+        fourByFour = cmds.createNode('fourByFourMatrix', name=f"{self.side}_{self.module_name}PvFourByFour_FBM", ss=True)
+        cmds.connectAttr(f"{pole_pos}.output3Dx", f'{fourByFour}.in30')
+        cmds.connectAttr(f"{pole_pos}.output3Dy", f'{fourByFour}.in31')
+        cmds.connectAttr(f"{pole_pos}.output3Dz", f'{fourByFour}.in32')
+
+        aim_matrix = cmds.createNode('aimMatrix', name=f"{self.side}_{self.module_name}PvAim_AMX", ss=True)
+        cmds.setAttr(f'{aim_matrix}.primaryInputAxis', 0, 0, 1, type='double3')
+        cmds.setAttr(f'{aim_matrix}.secondaryInputAxis', 1, 0, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.secondaryTargetVector', 1, 0, 0, type='double3')
+        cmds.setAttr(f'{aim_matrix}.primaryMode', 1)
+        cmds.setAttr(f'{aim_matrix}.secondaryMode', 2)
+        cmds.connectAttr(f'{fourByFour}.output', f'{aim_matrix}.inputMatrix')
+        cmds.connectAttr(f'{m2_attr}', f"{aim_matrix}.primaryTargetMatrix")
+        cmds.connectAttr(f'{m2_attr}', f'{aim_matrix}.secondaryTargetMatrix')
+
+        blend_matrix = cmds.createNode('blendMatrix', name=f"{self.side}_{self.module_name}PvBlend_BLM", ss=True)
+        cmds.connectAttr(f'{fourByFour}.output', f'{blend_matrix}.inputMatrix')
+        cmds.connectAttr(f'{aim_matrix}.outputMatrix', f'{blend_matrix}.target[0].targetMatrix')
+
+        return blend_matrix
+
     def ik_setup(self):
 
         """
-        Setup the IK for the arm module.
+        Analytic IK (cosine law) built as a pure matrix network via
+        custom_ik_solver.triangle_solver — no ikHandle, no IK joint chain and no
+        evaluation cycle.  Stretch and soft IK are solved inside the solver.
+        The arm has NO ikHandle manager (that is a foot-only feature), so it is
+        not passed here.
         """
-        
-        self.ik_handle = cmds.ikHandle(name=f"{self.side}_armIkHandle_HDL", startJoint=self.ik_chain[0], endEffector=self.ik_chain[-1], solver="ikRPsolver")[0]
-        cmds.parent(self.ik_handle, self.module_trn)
-        cmds.setAttr(f"{self.ik_handle}.visibility", 0)
 
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix")
-        self.float_constant_freeze = cmds.createNode("floatConstant", name=f"{self.side}_armFreeze_FC", ss=True)
-        cmds.setAttr(f"{self.float_constant_freeze}.inFloat", 0)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="STRETCHY____", attributeType="enum", enumName="____", keyable=True)
+        cmds.setAttr(f"{self.ik_wrist_ctl}.STRETCHY____", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="upperLengthMult", minValue=0.001, defaultValue=1, keyable=True)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="lowerLengthMult", minValue=0.001, defaultValue=1, keyable=True)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="Stretch", minValue=0, defaultValue=0, maxValue=1, keyable=True)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="SOFT____", attributeType="enum", enumName="____", keyable=True)
+        cmds.setAttr(f"{self.ik_wrist_ctl}.SOFT____", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
+        cmds.addAttr(self.ik_wrist_ctl, shortName="Soft_Start", minValue=0, defaultValue=0.8, maxValue=1, keyable=True)
 
-        for attr in ["tx", "ty", "tz", "rx", "ry", "rz"]:
-            cmds.connectAttr(f"{self.float_constant_freeze}.outFloat", f"{self.ik_handle}.{attr}")
-
-        cmds.select(self.pv_nodes[0])
-        if self.side == "L":
-            cmds.move(0, 0, -20, relative=True, objectSpace=True, worldSpaceDistance=True)
-        else:
-            cmds.move(0, 0, 20, relative=True, objectSpace=True, worldSpaceDistance=True)
-        cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
+
+        self.ik_matrices = custom_ik_solver.triangle_solver(
+            name=f"{self.side}_armIk", guides=self.guides_matrices,
+            controllers=[self.ik_root_ctl, self.pv_ctl, self.ik_wrist_ctl],
+            use_stretch=True, use_soft=True,
+            primary_mode=self.primaryInputAxis, secondary_mode=self.secondaryInputAxis)
+
+        for ik_matrix, blend_matrix in zip(self.ik_matrices, self.blend_matrices):
+            cmds.connectAttr(f"{ik_matrix}", f"{blend_matrix[0]}.inputMatrix")
 
     def fk_stretch(self):
 
@@ -308,215 +422,25 @@ class ArmModule(object):
                 cmds.connectAttr(f"{fbf}.output", f"{target_node}.offsetParentMatrix", force=True)
 
 
-    def soft_ik(self):
-
-        """
-        Setup soft IK for the arm module.
-        """
-
-        # --- Stretchy IK Controllers ---
-        cmds.addAttr(self.ik_wrist_ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------", keyable=True)
-        cmds.setAttr(f"{self.ik_wrist_ctl}.STRETCHY", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.ik_wrist_ctl, shortName="upperLengthMult", minValue=0.001, defaultValue=1, keyable=True)
-        cmds.addAttr(self.ik_wrist_ctl, shortName="lowerLengthMult", minValue=0.001, defaultValue=1, keyable=True)
-        cmds.addAttr(self.ik_wrist_ctl, shortName="Stretch", minValue=0, defaultValue=0, maxValue=1, keyable=True)
-        cmds.addAttr(self.ik_wrist_ctl, longName="SOFT", niceName="SOFT ------", attributeType="enum", enumName="------", keyable=True)
-        cmds.setAttr(f"{self.ik_wrist_ctl}.SOFT", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.ik_wrist_ctl, shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
-
-        # Calculate full_length and initial_distance using vector positions
-        start_pos = om.MVector(cmds.xform(self.ik_chain[0], q=True, ws=True, t=True))
-        mid_pos = om.MVector(cmds.xform(self.ik_chain[1], q=True, ws=True, t=True))
-        end_pos = om.MVector(cmds.xform(self.ik_chain[2], q=True, ws=True, t=True))
-
-        upper_length = (mid_pos - start_pos).length()
-        lower_length = (end_pos - mid_pos).length()
-        full_length = upper_length + lower_length
-        initial_distance = (end_pos - start_pos).length()
-        soft_distance = full_length - initial_distance
-        if soft_distance < 0.01:
-            soft_distance = 0.1
-
-        self.soft_off = cmds.createNode("transform", name=f"{self.side}_armSoft_OFF", p=self.module_trn)
-        
-        aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_armSoftOff_AMT", ss=True)
-        cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxisX", 1)
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxisY", 0)
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxisZ", 0)
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxisX", 0)
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 1)
-        cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", 0)
-        cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
-        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
-
-        self.soft_trn = cmds.createNode("transform", name=f"{self.side}_armSoft_TRN", p=self.soft_off)
-        # cmds.matchTransform(self.soft_trn, self.arm_chain[-1], pos=True)
-
-        nodes_to_create = {
-        f"{self.side}_armDistanceToControl_DBT": ("distanceBetween", None),  # 0
-        f"{self.side}_armDistanceToControlNormalized_FLM": ("floatMath", 3),  # 1
-        f"{self.side}_armSoftValue_RMV": ("remapValue", None),  # 2
-        f"{self.side}_armDistanceToControlMinusSoftDistance_FLM": ("floatMath", 1),  # 3
-        f"{self.side}_armUpperLength_FLM": ("floatMath", 2),  # 4
-        f"{self.side}_armDistanceToControlMinusSoftDistanceDividedBySoftValue_FLM": ("floatMath", 3),  # 5
-        f"{self.side}_armFullLength_FLM": ("floatMath", 0),  # 6
-        f"{self.side}_armDistanceToControlMinusSoftDistanceDividedBySoftValueNegate_FLM": ("floatMath", 2),  # 7
-        f"{self.side}_armSoftDistance_FLM": ("floatMath", 1),  # 8
-        f"{self.side}_armSoftEPower_FLM": ("floatMath", 6),  # 9
-        f"{self.side}_armLowerLength_FLM": ("floatMath", 2),  # 10
-        f"{self.side}_armSoftOneMinusEPower_FLM": ("floatMath", 1),  # 11
-        f"{self.side}_armSoftOneMinusEPowerSoftValueEnable_FLM": ("floatMath", 2),  # 12
-        f"{self.side}_armSoftConstant_FLM": ("floatMath", 0),  # 13
-        f"{self.side}_armLengthRatio_FLM": ("floatMath", 3),  # 14
-        f"{self.side}_armSoftRatio_FLM": ("floatMath", 3),  # 15
-        f"{self.side}_armDistanceToControlDividedByTheLengthRatio_FLM": ("floatMath", 3),  # 16
-        f"{self.side}_armSoftEffectorDistance_FLM": ("floatMath", 2),  # 17
-        f"{self.side}_armSoftCondition_CON": ("condition", None),  # 18
-        f"{self.side}_armUpperLengthStretch_FLM": ("floatMath", 2),  # 19
-        f"{self.side}_armDistanceToControlDividedByTheSoftEffector_FLM": ("floatMath", 3),  # 20
-        f"{self.side}_armDistanceToControlDividedByTheSoftEffectorMinusOne_FLM": ("floatMath", 1),  # 21
-        f"{self.side}_armDistanceToControlDividedByTheSoftEffectorMinusOneMultipliedByTheStretch_FLM": ("floatMath", 2),  # 22
-        f"{self.side}_armStretchFactor_FLM": ("floatMath", 0),  # 23
-        f"{self.side}_armSoftEffectStretchDistance_FLM": ("floatMath", 2),  # 24
-        f"{self.side}_armLowerLengthStretch_FLM": ("floatMath", 2),  # 25
-        }
-
-        self.created_nodes = []
-        for node_name, (node_type, operation) in nodes_to_create.items():
-            node = cmds.createNode(node_type, name=node_name)
-            self.created_nodes.append(node)
-            if operation is not None:
-                cmds.setAttr(f'{node}.operation', operation)
-
-        # Connections between selected nodes
-        cmds.connectAttr(self.created_nodes[0] + ".distance", self.created_nodes[1]+".floatA")
-        cmds.connectAttr(self.created_nodes[1] + ".outFloat", self.created_nodes[14]+".floatA")
-        cmds.connectAttr(self.created_nodes[1] + ".outFloat", self.created_nodes[3]+".floatA")
-        cmds.connectAttr(self.created_nodes[1] + ".outFloat", self.created_nodes[16]+".floatA")
-        cmds.connectAttr(self.created_nodes[1] + ".outFloat", self.created_nodes[18]+".firstTerm")
-        cmds.connectAttr(self.created_nodes[1] + ".outFloat", self.created_nodes[18]+".colorIfFalseR")
-        cmds.connectAttr(self.created_nodes[1] + ".outFloat", self.created_nodes[20]+".floatA")
-        cmds.connectAttr(self.created_nodes[2] + ".outValue", self.created_nodes[5]+".floatB")
-        cmds.connectAttr(self.created_nodes[2] + ".outValue", self.created_nodes[8]+".floatB")
-        cmds.connectAttr(self.created_nodes[2] + ".outValue", self.created_nodes[12]+".floatA")
-        cmds.connectAttr(self.created_nodes[3] + ".outFloat", self.created_nodes[5]+".floatA")
-        cmds.connectAttr(self.created_nodes[8] + ".outFloat", self.created_nodes[3]+".floatB")
-        cmds.connectAttr(self.created_nodes[4] + ".outFloat", self.created_nodes[18]+".colorIfFalseG")
-        cmds.connectAttr(self.created_nodes[4] + ".outFloat", self.created_nodes[6]+".floatA")
-        cmds.connectAttr(self.created_nodes[4] + ".outFloat", self.created_nodes[19]+".floatB")
-        cmds.connectAttr(self.created_nodes[5] + ".outFloat", self.created_nodes[7]+".floatA")
-        cmds.connectAttr(self.created_nodes[6] + ".outFloat", self.created_nodes[15]+".floatB")
-        cmds.connectAttr(self.created_nodes[6] + ".outFloat", self.created_nodes[8]+".floatA")
-        cmds.connectAttr(self.created_nodes[6] + ".outFloat", self.created_nodes[14]+".floatB")
-        cmds.connectAttr(self.created_nodes[10] + ".outFloat", self.created_nodes[6]+".floatB")
-        cmds.connectAttr(self.created_nodes[7] + ".outFloat", self.created_nodes[9]+".floatB")
-        cmds.connectAttr(self.created_nodes[8] + ".outFloat", self.created_nodes[13]+".floatB")
-        cmds.connectAttr(self.created_nodes[8] + ".outFloat", self.created_nodes[18]+".secondTerm")
-        cmds.connectAttr(self.created_nodes[9] + ".outFloat", self.created_nodes[11]+".floatB")
-        cmds.connectAttr(self.created_nodes[10] + ".outFloat", self.created_nodes[18]+".colorIfFalseB")
-        cmds.connectAttr(self.created_nodes[10] + ".outFloat", self.created_nodes[25]+".floatB")
-        cmds.connectAttr(self.created_nodes[11] + ".outFloat", self.created_nodes[12]+".floatB")
-        cmds.connectAttr(self.created_nodes[12] + ".outFloat", self.created_nodes[13]+".floatA")
-        cmds.connectAttr(self.created_nodes[13] + ".outFloat", self.created_nodes[15]+".floatA")
-        cmds.connectAttr(self.created_nodes[14] + ".outFloat", self.created_nodes[16]+".floatB")
-        cmds.connectAttr(self.created_nodes[15] + ".outFloat", self.created_nodes[17]+".floatA")
-        cmds.connectAttr(self.created_nodes[16] + ".outFloat", self.created_nodes[17]+".floatB")
-        cmds.connectAttr(self.created_nodes[17] + ".outFloat", self.created_nodes[24]+".floatA")
-        cmds.connectAttr(self.created_nodes[17] + ".outFloat", self.created_nodes[20]+".floatB")
-        cmds.connectAttr(self.created_nodes[24] + ".outFloat", self.created_nodes[18]+".colorIfTrueR")
-        cmds.connectAttr(self.created_nodes[19] + ".outFloat", self.created_nodes[18]+".colorIfTrueG")
-        cmds.connectAttr(self.created_nodes[25] + ".outFloat", self.created_nodes[18]+".colorIfTrueB")
-        cmds.connectAttr(self.created_nodes[23] + ".outFloat", self.created_nodes[19]+".floatA")
-        cmds.connectAttr(self.created_nodes[20] + ".outFloat", self.created_nodes[21]+".floatA")
-        cmds.connectAttr(self.created_nodes[21] + ".outFloat", self.created_nodes[22]+".floatA")
-        cmds.connectAttr(self.created_nodes[22] + ".outFloat", self.created_nodes[23]+".floatA")
-        cmds.connectAttr(self.created_nodes[23] + ".outFloat", self.created_nodes[24]+".floatB")
-        cmds.connectAttr(self.created_nodes[23] + ".outFloat", self.created_nodes[25]+".floatA")
-
-        cmds.setAttr(f"{self.created_nodes[9]}.floatA", math.e)
-        cmds.setAttr(f"{self.created_nodes[4]}.floatB", abs(cmds.getAttr(f"{self.ik_chain[1]}.translateX")))
-        cmds.setAttr(f"{self.created_nodes[10]}.floatB", abs(cmds.getAttr(f"{self.ik_chain[-1]}.translateX")))
-        cmds.setAttr(f"{self.created_nodes[2]}.outputMin", 0.001)
-        cmds.setAttr(f"{self.created_nodes[2]}.outputMax", soft_distance)
-        cmds.setAttr(f"{self.created_nodes[7]}.floatB", -1.0)
-        cmds.setAttr(f"{self.created_nodes[18]}.operation", 2)
-
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.upperLengthMult", f"{self.created_nodes[4]}.floatA")
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.lowerLengthMult", f"{self.created_nodes[10]}.floatA")
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.Stretch", f"{self.created_nodes[22]}.floatB")
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix2")
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.Soft", f"{self.created_nodes[2]}.inputValue")
-
-        cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix1")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.created_nodes[1]}.floatB")
-
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
-        if self.side == "L":
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[-1]}.translateX")
-        else:
-            abs_up = cmds.createNode("floatMath", n=f"{self.side}_armAbsUpper_FLM")
-            abs_low = cmds.createNode("floatMath", n=f"{self.side}_armAbsLower_FLM")
-            cmds.setAttr(f"{abs_up}.operation", 2)
-            cmds.setAttr(f"{abs_low}.operation", 2)
-            cmds.setAttr(f"{abs_up}.floatB", -1)
-            cmds.setAttr(f"{abs_low}.floatB", -1)
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{abs_up}.floatA")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{abs_low}.floatA")
-            cmds.connectAttr(f"{abs_up}.outFloat", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{abs_low}.outFloat", f"{self.ik_chain[-1]}.translateX")
-
-        cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
-        cmds.orientConstraint(self.ik_wrist_ctl, self.ik_chain[-1], maintainOffset=False)
-        cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
-
-        for attr in ["translate", "rotate", "jointOrient"]:
-            for axis in ["X", "Y", "Z"]:
-                cmds.setAttr(f"{self.ik_chain[0]}.{attr}{axis}", 0)
-                cmds.setAttr(f"{self.arm_chain[0]}.{attr}{axis}", 0)
-    
     def elbow_pin_setup(self):
 
         """
-        Setup elbow pinning for the arm module.
+        Elbow pin: snap the IK elbow matrix (ik_matrices[1]) to the pole vector
+        controller position, weighted by the pv_ctl 'Pin' attribute.  Pure matrix
+        network (blendMatrix) feeding the elbow blend's IK input.
         """
-        # Add attributes to PV controller
         cmds.addAttr(self.pv_ctl, longName="EXTRA_ATTRIBUTES", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.pv_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(self.pv_ctl, longName="Pin", niceName="Elbow Pin", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
 
-        # Pinning setup
-        upper_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armElbowPinUpper_DBT", ss=True)
-        lower_distance = cmds.createNode("distanceBetween", name=f"{self.side}_armElbowPinLower_DBT", ss=True)
-
-        cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{upper_distance}.inMatrix1")
-        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{upper_distance}.inMatrix2")
-        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{lower_distance}.inMatrix1")
-        cmds.connectAttr(f"{self.ik_wrist_ctl}.worldMatrix[0]", f"{lower_distance}.inMatrix2")
-
-        upper_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_armElbowPinUpper_BTA", ss=True)
-        lower_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_armElbowPinLower_BTA", ss=True)
-
-        cmds.connectAttr(f"{self.pv_ctl}.Pin", f"{upper_blend}.attributesBlender")
-        cmds.connectAttr(f"{self.pv_ctl}.Pin", f"{lower_blend}.attributesBlender")
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{upper_blend}.input[0]")
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{lower_blend}.input[0]")
-        cmds.connectAttr(f"{upper_distance}.distance", f"{upper_blend}.input[1]")
-        cmds.connectAttr(f"{lower_distance}.distance", f"{lower_blend}.input[1]")
-        if self.side == "L":
-            cmds.connectAttr(f"{upper_blend}.output", f"{self.ik_chain[1]}.translateX", force=True)
-            cmds.connectAttr(f"{lower_blend}.output", f"{self.ik_chain[-1]}.translateX", force=True)
-        else:
-            negate_upper = cmds.createNode("multiply", name=f"{self.side}_armElbowPinUpperNegate_MUL", ss=True)
-            negate_lower = cmds.createNode("multiply", name=f"{self.side}_armElbowPinLowerNegate_MUL", ss=True)
-            cmds.setAttr(f"{negate_upper}.input[1]", -1)
-            cmds.setAttr(f"{negate_lower}.input[1]", -1)
-            cmds.connectAttr(f"{upper_blend}.output", f"{negate_upper}.input[0]")
-            cmds.connectAttr(f"{lower_blend}.output", f"{negate_lower}.input[0]")
-            cmds.connectAttr(f"{negate_upper}.output", f"{self.ik_chain[1]}.translateX", force=True)
-            cmds.connectAttr(f"{negate_lower}.output", f"{self.ik_chain[-1]}.translateX", force=True)
+        pin_blm = cmds.createNode("blendMatrix", name=f"{self.side}_armElbowPin_BLM", ss=True)
+        cmds.connectAttr(self.ik_matrices[1], f"{pin_blm}.inputMatrix")
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{pin_blm}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.pv_ctl}.Pin", f"{pin_blm}.target[0].weight")
+        cmds.setAttr(f"{pin_blm}.target[0].rotateWeight", 0)
+        cmds.setAttr(f"{pin_blm}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{pin_blm}.target[0].shearWeight", 0)
+        cmds.connectAttr(f"{pin_blm}.outputMatrix", f"{self.blend_matrices[1][0]}.inputMatrix", force=True)
 
 
     def de_boor_ribbon(self, skinning_joint_numbers):
@@ -556,9 +480,7 @@ class ArmModule(object):
         cmds.setAttr(f"{nonRollAim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
        
 
-        # ----- Roll setup via swing-twist (quaternion), composed entirely with
-        # MATRIX nodes so the roll is no longer a DAG joint chain that slows the
-        # rig (no joints, no ikSC handles, no flips).
+        # ----- Roll setup via swing-twist (quaternion), composed entirely with utility nodes -----
         aim_letter = ['x', 'y', 'z'][[abs(v) for v in self.primaryInputAxis].index(1)]
         aim_comp = aim_letter.upper()
 
@@ -567,12 +489,15 @@ class ArmModule(object):
         forearm_len = (wr - el).length()
         forearm_len = forearm_len if self.side == "L" else -forearm_len
 
-        # UPPER — twisted shoulder frame (rotation only) feeding the up-roll blend
+        # UPPER — twisted shoulder frame (rotation only) feeding the up-roll blend.
+        # Quaternion fed straight into composeMatrix.inputQuat (useEulerRotation=0):
+        # avoids the matrix->rotate->matrix round-trip (no quatToEuler).
         upper_twist = matrix_manager.extract_twist(
             f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAim}.outputMatrix",
-            axis=aim_letter, name=f"{self.side}_armUpper")
+            axis=aim_letter, name=f"{self.side}_armUpper", return_quat=True)
         upper_twist_cmp = cmds.createNode("composeMatrix", name=f"{self.side}_armUpperRollTwist_CMP", ss=True)
-        cmds.connectAttr(f"{upper_twist}.outputRotate", f"{upper_twist_cmp}.inputRotate")
+        cmds.setAttr(f"{upper_twist_cmp}.useEulerRotation", 0)
+        cmds.connectAttr(f"{upper_twist}.outputQuat", f"{upper_twist_cmp}.inputQuat")
         upper_twist_mm = cmds.createNode("multMatrix", name=f"{self.side}_armUpperRollTwist_MMX", ss=True)
         cmds.connectAttr(f"{upper_twist_cmp}.outputMatrix", f"{upper_twist_mm}.matrixIn[0]")
         cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{upper_twist_mm}.matrixIn[1]")
@@ -580,15 +505,22 @@ class ArmModule(object):
         # LOWER — twisted forearm frame offset to the wrist (aim target for the ribbon)
         lower_twist = matrix_manager.extract_twist(
             f"{self.blend_matrices[2][0]}.outputMatrix", f"{self.blend_matrices[1][0]}.outputMatrix",
-            axis=aim_letter, name=f"{self.side}_armLower")
+            axis=aim_letter, name=f"{self.side}_armLower", return_quat=True)
         lower_twist_cmp = cmds.createNode("composeMatrix", name=f"{self.side}_armLowerRollTwist_CMP", ss=True)
-        cmds.connectAttr(f"{lower_twist}.outputRotate", f"{lower_twist_cmp}.inputRotate")
+        cmds.setAttr(f"{lower_twist_cmp}.useEulerRotation", 0)
+        cmds.connectAttr(f"{lower_twist}.outputQuat", f"{lower_twist_cmp}.inputQuat")
         cmds.setAttr(f"{lower_twist_cmp}.inputTranslate{aim_comp}", forearm_len)
         lower_twist_mm = cmds.createNode("multMatrix", name=f"{self.side}_armLowerRollTwist_MMX", ss=True)
         cmds.connectAttr(f"{lower_twist_cmp}.outputMatrix", f"{lower_twist_mm}.matrixIn[0]")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_twist_mm}.matrixIn[1]")
-        lower_roll_pm = cmds.createNode("pickMatrix", name=f"{self.side}_armLowerRoll_PM", ss=True)
-        cmds.connectAttr(f"{lower_twist_mm}.matrixSum", f"{lower_roll_pm}.inputMatrix")
+        # Far anchor must track the REAL wrist position (so it follows stretch),
+        # taking only the twisted forearm rotation — mirrors the upper's up_roll_blm.
+        lower_roll_pm = cmds.createNode("blendMatrix", name=f"{self.side}_armLowerRoll_BLM", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_roll_pm}.inputMatrix")
+        cmds.connectAttr(f"{lower_twist_mm}.matrixSum", f"{lower_roll_pm}.target[0].targetMatrix")
+        cmds.setAttr(f"{lower_roll_pm}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{lower_roll_pm}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{lower_roll_pm}.target[0].shearWeight", 0)
 
         # Up Roll Blend Matrix — replaces the shoulder rotation with the twisted frame
         up_roll_blm = cmds.createNode("blendMatrix", name=f"{self.side}_armUpperRoll_BLM", ss=True)
@@ -603,13 +535,11 @@ class ArmModule(object):
         self.lower_skinning_jnt_trn = self.de_boor_ribbon_callout(self.blend_matrices[1], [lower_roll_pm], "Lower", skinning_joint_numbers)
 
         cmds.select(clear=True)
-        wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")
-        cmds.connectAttr(f"{self.blend_matrices[-1][0]}.outputMatrix", f"{wrist_skinning}.offsetParentMatrix")
-        cmds.parent(wrist_skinning, self.skeleton_grp)
+        self.wrist_skinning = cmds.joint(name=f"{self.side}_wristSkinning_JNT")
+        cmds.connectAttr(f"{self.blend_matrices[-1][0]}.outputMatrix", f"{self.wrist_skinning}.offsetParentMatrix")
+        cmds.parent(self.wrist_skinning, self.skeleton_grp)
 
-        # Blend the skinning joints toward a single smooth cubic (shoulder -> wrist)
         self.curvature_setup()
-        # Volume preservation squash on the skinning joints
         self.volume_preservation()
 
         # Contraint settings controller to first skinning joint

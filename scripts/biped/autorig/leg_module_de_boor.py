@@ -77,6 +77,8 @@ class LegModule(object):
         self.foot_attributes()
         self.de_boor_ribbon(self.skinning_joint_numbers)
 
+        cmds.delete(self.leg_chain[0]) 
+
         data_manager.DataExportBiped().append_data("leg_module",
                             {
                                 f"{self.side}_hip_JNT": self.leg_chain[0],
@@ -123,18 +125,9 @@ class LegModule(object):
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
         cmds.parent(self.settings_node[0], self.controllers_grp)
 
-        self.fk_chain = []
         self.ik_chain = []
 
         for joint in self.leg_chain:
-
-            pair_blend = cmds.createNode("pairBlend", name=joint.replace("JNT", "PBL"), ss=True)
-            cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{pair_blend}.weight")
-
-            cmds.select(clear=True)
-            fk_joint = cmds.joint(name=joint.replace("_JNT", "Fk_JNT"))
-            cmds.makeIdentity(fk_joint, apply=True, translate=True, rotate=True, scale=True, normal=False)
-            cmds.parent(fk_joint, self.module_trn)
 
             cmds.select(clear=True)
             ik_joint = cmds.joint(name=joint.replace("_JNT", "Ik_JNT"))
@@ -144,10 +137,6 @@ class LegModule(object):
             if self.ik_chain:
                 cmds.parent(ik_joint, self.ik_chain[-1])
 
-            if self.fk_chain:
-                cmds.parent(fk_joint, self.fk_chain[-1])    
-
-            self.fk_chain.append(fk_joint)
             self.ik_chain.append(ik_joint)
 
         cmds.parent(self.ik_chain[0], self.module_trn)
@@ -165,14 +154,11 @@ class LegModule(object):
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_legFkControllers_GRP", ss=True, p=self.controllers_grp)
         
 
-        for i, joint in enumerate(self.fk_chain):
-            
-            if i < len(self.fk_chain) - 1:
-                fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", ""), offset=["GRP", "ANM"]) # create FK controllers
-                self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
-                
-                cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix")
+        for i, joint in enumerate(self.leg_chain):
 
+            if i < len(self.leg_chain) - 1:
+                fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", "Fk"), offset=["GRP", "ANM"]) # create FK controllers
+                self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
 
                 if self.fk_controllers:
                     cmds.parent(fk_node[0], self.fk_controllers[-1])
@@ -181,11 +167,10 @@ class LegModule(object):
                 self.fk_controllers.append(fk_ctl)
 
                 if i == 0:
-                    blend_matrix = matrix_manager.fk_constraint(joint, None, True, self.settings_ctl)
+                    cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix") # First FK controller follows the guide
+                    blend_matrix = matrix_manager.fk_blend(joint, self.ik_chain[i], fk_ctl, None, self.settings_ctl)
 
                 else:
-                    blend_matrix = matrix_manager.fk_constraint(joint, self.fk_chain[i-1], True, self.settings_ctl)
-
                     mmx_negate = cmds.createNode("multMatrix", name=joint.replace("JNT", "MMX"), ss=True)
                     inverse_matrix = cmds.createNode("inverseMatrix", name=joint.replace("JNT", "INV"), ss=True)
                     cmds.connectAttr(self.guides_matrices[i-1], f"{inverse_matrix}.inputMatrix")
@@ -193,9 +178,10 @@ class LegModule(object):
                     cmds.connectAttr(self.guides_matrices[i], f"{mmx_negate}.matrixIn[0]")
                     cmds.connectAttr(f"{inverse_matrix}.outputMatrix", f"{mmx_negate}.matrixIn[1]")
 
-                    cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{fk_node[0]}.offsetParentMatrix", force=True)
-                
-                cmds.xform(fk_node[0], m=om.MMatrix.kIdentity) 
+                    cmds.connectAttr(f"{mmx_negate}.matrixSum", f"{fk_node[0]}.offsetParentMatrix", force=True) # Other FK controllers follow the relative guide position
+                    blend_matrix = matrix_manager.fk_blend(joint, self.ik_chain[i], fk_ctl, self.leg_chain[i-1], self.settings_ctl)
+
+                cmds.xform(fk_node[0], m=om.MMatrix.kIdentity)
 
                 self.blend_matrices.append(blend_matrix)
 
@@ -716,12 +702,15 @@ class LegModule(object):
         shin_len = (ankle - knee).length()
         shin_len = shin_len if self.side == "L" else -shin_len
 
-        # UPPER — twisted hip frame (rotation only) feeding the up-roll blend
+        # UPPER — twisted hip frame (rotation only) feeding the up-roll blend.
+        # Quaternion fed straight into composeMatrix.inputQuat (useEulerRotation=0):
+        # avoids the matrix->rotate->matrix round-trip (no quatToEuler).
         upper_twist = matrix_manager.extract_twist(
             f"{self.blend_matrices[0][0]}.outputMatrix", f"{nonRollAim}.outputMatrix",
-            axis=aim_letter, name=f"{self.side}_legUpper")
+            axis=aim_letter, name=f"{self.side}_legUpper", return_quat=True)
         upper_twist_cmp = cmds.createNode("composeMatrix", name=f"{self.side}_legUpperRollTwist_CMP", ss=True)
-        cmds.connectAttr(f"{upper_twist}.outputRotate", f"{upper_twist_cmp}.inputRotate")
+        cmds.setAttr(f"{upper_twist_cmp}.useEulerRotation", 0)
+        cmds.connectAttr(f"{upper_twist}.outputQuat", f"{upper_twist_cmp}.inputQuat")
         upper_twist_mm = cmds.createNode("multMatrix", name=f"{self.side}_legUpperRollTwist_MMX", ss=True)
         cmds.connectAttr(f"{upper_twist_cmp}.outputMatrix", f"{upper_twist_mm}.matrixIn[0]")
         cmds.connectAttr(f"{nonRollAim}.outputMatrix", f"{upper_twist_mm}.matrixIn[1]")
@@ -729,15 +718,22 @@ class LegModule(object):
         # LOWER — twisted shin frame offset to the ankle (aim target for the ribbon)
         lower_twist = matrix_manager.extract_twist(
             f"{self.blend_matrices[2][0]}.outputMatrix", f"{self.blend_matrices[1][0]}.outputMatrix",
-            axis=aim_letter, name=f"{self.side}_legLower")
+            axis=aim_letter, name=f"{self.side}_legLower", return_quat=True)
         lower_twist_cmp = cmds.createNode("composeMatrix", name=f"{self.side}_legLowerRollTwist_CMP", ss=True)
-        cmds.connectAttr(f"{lower_twist}.outputRotate", f"{lower_twist_cmp}.inputRotate")
+        cmds.setAttr(f"{lower_twist_cmp}.useEulerRotation", 0)
+        cmds.connectAttr(f"{lower_twist}.outputQuat", f"{lower_twist_cmp}.inputQuat")
         cmds.setAttr(f"{lower_twist_cmp}.inputTranslate{aim_comp}", shin_len)
         lower_twist_mm = cmds.createNode("multMatrix", name=f"{self.side}_legLowerRollTwist_MMX", ss=True)
         cmds.connectAttr(f"{lower_twist_cmp}.outputMatrix", f"{lower_twist_mm}.matrixIn[0]")
         cmds.connectAttr(f"{self.blend_matrices[1][0]}.outputMatrix", f"{lower_twist_mm}.matrixIn[1]")
-        lower_roll_pm = cmds.createNode("pickMatrix", name=f"{self.side}_legLowerRoll_PM", ss=True)
-        cmds.connectAttr(f"{lower_twist_mm}.matrixSum", f"{lower_roll_pm}.inputMatrix")
+        # Far anchor must track the REAL ankle position (so it follows stretch),
+        # taking only the twisted shin rotation — mirrors the upper's up_roll_blm.
+        lower_roll_pm = cmds.createNode("blendMatrix", name=f"{self.side}_legLowerRoll_BLM", ss=True)
+        cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{lower_roll_pm}.inputMatrix")
+        cmds.connectAttr(f"{lower_twist_mm}.matrixSum", f"{lower_roll_pm}.target[0].targetMatrix")
+        cmds.setAttr(f"{lower_roll_pm}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{lower_roll_pm}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{lower_roll_pm}.target[0].shearWeight", 0)
 
         # Up Roll Blend Matrix — replaces the hip rotation with the twisted frame
         up_roll_blm = cmds.createNode("blendMatrix", name=f"{self.side}_legUpperRoll_BLM", ss=True)

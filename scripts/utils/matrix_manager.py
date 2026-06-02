@@ -57,6 +57,43 @@ def fk_constraint(joint, before_jnt, pair_blend, settings_ctl):
     return blend_matrices if pair_blend else None
 
 
+def fk_blend(blend_joint, ik_joint, fk_ctl, before_blend_jnt, settings_ctl):
+
+    """
+    Blend a bind joint between its IK joint and its FK controller, without an
+    intermediate FK joint: the FK side reads the controller worldMatrix directly.
+    args:
+        blend_joint (str): the bind joint (_JNT) driven by the blend output.
+        ik_joint (str|None): the IK joint feeding the IK side of the blend, or
+            None when an analytic matrix solver connects `inputMatrix` afterwards.
+        fk_ctl (str): the FK controller feeding the FK side of the blend.
+        before_blend_jnt (str|None): previous bind joint for the relative offset
+            (None for the root joint).
+        settings_ctl (str|None): settings control holding the Ik_Fk attribute.
+    returns:
+        list: [blend_matrix] node, mirroring fk_constraint's return shape.
+    """
+    blend_matrix = cmds.createNode("blendMatrix", name=blend_joint.replace("JNT", "BM"), ss=True)
+    if ik_joint is not None:
+        cmds.connectAttr(f"{ik_joint}.worldMatrix[0]", f"{blend_matrix}.inputMatrix", force=True)
+    # else: the IK side (inputMatrix) is connected later by the analytic solver
+    cmds.connectAttr(f"{fk_ctl}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix", force=True)
+    cmds.xform(blend_joint, m=om.MMatrix.kIdentity)
+
+    if before_blend_jnt is not None:
+        mult_matrix_off = cmds.createNode("multMatrix", name=blend_joint.replace("_JNT", "Off_MMT"), ss=True)
+        cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{mult_matrix_off}.matrixIn[0]", force=True)
+        cmds.connectAttr(f"{before_blend_jnt}.worldInverseMatrix[0]", f"{mult_matrix_off}.matrixIn[1]", force=True)
+        cmds.connectAttr(f"{mult_matrix_off}.matrixSum", f"{blend_joint}.offsetParentMatrix", force=True)
+    else:
+        cmds.connectAttr(f"{blend_matrix}.outputMatrix", f"{blend_joint}.offsetParentMatrix", force=True)
+
+    if settings_ctl is not None:
+        cmds.connectAttr(f"{settings_ctl}.Ik_Fk", f"{blend_matrix}.target[0].weight", force=True)
+
+    return [blend_matrix]
+
+
 def ik_constraint(source, target):
 
     """
@@ -444,24 +481,28 @@ def local_mmx(ctl, grp):
         return mmx
 
 
-def extract_twist(source_plug, ref_plug, axis="x", name="twist"):
+def extract_twist(source_plug, ref_plug, axis="x", name="twist", return_quat=False):
     """
     Swing-twist decomposition (quaternion) as a node network: extract ONLY the
     axial twist of `source_plug` relative to `ref_plug` around `axis`, discarding
     the swing.  The rest pose is neutralized so the twist is 0 at build time.
 
-    Use the returned quatToEuler node's `.outputRotate` (only the chosen axis
-    component is non-zero) to drive a roll joint's rotation — no ikSC handle and
-    no flipping like the classic roll-bone setup.
+    By default returns a quatToEuler node (use `.outputRotate`). With
+    `return_quat=True` it skips the euler conversion and returns the
+    quatNormalize node (use `.outputQuat`); feed it into a `composeMatrix.inputQuat`
+    with `useEulerRotation=0` to rebuild the twist matrix WITHOUT the
+    matrix->rotate->matrix round-trip (cheaper, see [[reference-matrix-roundtrip]]).
 
     Args:
         source_plug (str): matrix plug with the twist (e.g. the real joint).
         ref_plug (str): no-twist reference matrix plug.
         axis (str): 'x', 'y' or 'z' — the bone aim axis.
         name (str): prefix for the created nodes.
+        return_quat (bool): return the quatNormalize node (`.outputQuat`) instead
+            of a quatToEuler node (`.outputRotate`).
 
     Returns:
-        str: the quatToEuler node name.
+        str: the quatNormalize node if `return_quat`, else the quatToEuler node.
     """
     axis = axis.lower()
     comp = {"x": "X", "y": "Y", "z": "Z"}[axis]
@@ -486,6 +527,9 @@ def extract_twist(source_plug, ref_plug, axis="x", name="twist"):
     qn = cmds.createNode("quatNormalize", name=f"{name}Twist_QTN", ss=True)
     cmds.connectAttr(f"{dcm}.outputQuat{comp}", f"{qn}.inputQuat{comp}")
     cmds.connectAttr(f"{dcm}.outputQuatW", f"{qn}.inputQuatW")
+
+    if return_quat:
+        return qn
 
     q2e = cmds.createNode("quatToEuler", name=f"{name}Twist_QTE", ss=True)
     cmds.connectAttr(f"{qn}.outputQuat", f"{q2e}.inputQuat")
