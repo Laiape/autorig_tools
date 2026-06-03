@@ -10809,7 +10809,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_CTL|L_eyebrowInTan_GRP|L_eyebrowInTan_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL|L_eyebrowInTan_OFF|L_eyebrowInTan_CTL": {
         "transform": {
             "name": "L_eyebrowInTan_CTL",
             "overrideEnabled": true,
@@ -10901,7 +10901,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL": {
         "transform": {
             "name": "L_eyebrowIn_CTL",
             "overrideEnabled": true,
@@ -11085,7 +11085,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_OFF|L_eyebrowMid_CTL": {
         "transform": {
             "name": "L_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -11177,7 +11177,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_CTL|L_eyebrowOutTan_GRP|L_eyebrowOutTan_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL|L_eyebrowOutTan_OFF|L_eyebrowOutTan_CTL": {
         "transform": {
             "name": "L_eyebrowOutTan_CTL",
             "overrideEnabled": true,
@@ -11269,7 +11269,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL": {
         "transform": {
             "name": "L_eyebrowOut_CTL",
             "overrideEnabled": true,
@@ -13521,84 +13521,84 @@
                 "curve": {
                     "cvs": [
                         [
-                            7.747156560427733e-13,
-                            7.780648014901536e-13,
-                            7.765268295705406e-13
+                            9.895328338413617e-13,
+                            -9.99156909685417e-13,
+                            9.935230491170933e-13
                         ],
                         [
-                            0.7122034829486299,
-                            -2.0543337306357117,
-                            -0.712203482948587
+                            0.9105967586373623,
+                            0.9105967586372994,
+                            -2.626594338645223
                         ],
                         [
-                            -0.7122034829486045,
-                            -2.0543337306357112,
-                            -0.712203482948587
+                            -0.9105967586373295,
+                            0.9105967586372997,
+                            -2.626594338645222
                         ],
                         [
-                            -7.821231347161173e-13,
-                            7.780648014901536e-13,
-                            7.765268295705406e-13
+                            -1.0009830657954413e-12,
+                            -9.99156909685417e-13,
+                            9.935230491170933e-13
                         ],
                         [
-                            7.747156560427733e-13,
-                            7.780648014901536e-13,
-                            7.765268295705406e-13
+                            9.895328338413617e-13,
+                            -9.99156909685417e-13,
+                            9.935230491170933e-13
                         ],
                         [
-                            7.747156560427733e-13,
-                            -7.787739892687369e-13,
-                            7.765268295705406e-13
+                            9.895328338413617e-13,
+                            -9.991569096854176e-13,
+                            -9.969928505197097e-13
                         ],
                         [
-                            0.7122034829486299,
-                            -2.0543337306357117,
-                            0.7122034829486457
+                            0.9105967586373623,
+                            -0.9105967586373896,
+                            -2.626594338645222
                         ],
                         [
-                            0.7122034829486299,
-                            -2.0543337306357117,
-                            -0.712203482948587
+                            0.9105967586373623,
+                            0.9105967586372994,
+                            -2.626594338645223
                         ],
                         [
-                            0.7122034829486299,
-                            -2.0543337306357117,
-                            0.7122034829486457
+                            0.9105967586373623,
+                            -0.9105967586373896,
+                            -2.626594338645222
                         ],
                         [
-                            -0.7122034829486041,
-                            -2.0543337306357126,
-                            0.7122034829486457
+                            -0.9105967586373291,
+                            -0.9105967586373899,
+                            -2.6265943386452237
                         ],
                         [
-                            -0.7122034829486045,
-                            -2.0543337306357112,
-                            -0.712203482948587
+                            -0.9105967586373295,
+                            0.9105967586372997,
+                            -2.626594338645222
                         ],
                         [
-                            -0.7122034829486041,
-                            -2.0543337306357126,
-                            0.7122034829486457
+                            -0.9105967586373291,
+                            -0.9105967586373899,
+                            -2.6265943386452237
                         ],
                         [
-                            -7.821231347161173e-13,
-                            -7.787739892687369e-13,
-                            7.765268295705406e-13
+                            -1.0009830657954413e-12,
+                            -9.991569096854176e-13,
+                            -9.969928505197097e-13
                         ],
                         [
-                            -7.821231347161173e-13,
-                            7.780648014901536e-13,
-                            7.765268295705406e-13
+                            -1.0009830657954413e-12,
+                            -9.99156909685417e-13,
+                            9.935230491170933e-13
                         ],
                         [
-                            -7.821231347161173e-13,
-                            -7.787739892687369e-13,
-                            7.765268295705406e-13
+                            -1.0009830657954413e-12,
+                            -9.991569096854176e-13,
+                            -9.969928505197097e-13
                         ],
                         [
-                            7.747156560427733e-13,
-                            -7.787739892687369e-13,
-                            7.765268295705406e-13
+                            9.895328338413617e-13,
+                            -9.991569096854176e-13,
+                            -9.969928505197097e-13
                         ]
                     ],
                     "form": "open",
@@ -14440,98 +14440,6 @@
                             0.26013431609642534,
                             0.27290870680068025,
                             0.7456230041034897
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip07_GRP|L_lowerLip07_OFF|L_lowerLip07_CTL": {
-        "transform": {
-            "name": "L_lowerLip07_CTL",
-            "overrideEnabled": true,
-            "overrideColor": 6
-        },
-        "shapes": [
-            {
-                "name": "L_lowerLip07_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.5141136894988477,
-                            0.6045288606305232,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.3518292047651485,
-                            0.6717492951699511,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.18954472003144884,
-                            0.6045288606305232,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.1223242854920209,
-                            0.4422443758968237,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.18954472003144884,
-                            0.27995989116312414,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.3518292047651485,
-                            0.2127394566236962,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.5141136894988477,
-                            0.27995989116312425,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.581334124038276,
-                            0.4422443758968237,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.5141136894988477,
-                            0.6045288606305232,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.3518292047651485,
-                            0.6717492951699511,
-                            0.8934049754422513
-                        ],
-                        [
-                            0.18954472003144884,
-                            0.6045288606305232,
-                            0.8934049754422513
                         ]
                     ],
                     "form": "periodic",
@@ -20722,98 +20630,6 @@
                             0.26013431609642534,
                             0.41742287827200664,
                             0.7456230041034879
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip07_GRP|L_upperLip07_OFF|L_upperLip07_CTL": {
-        "transform": {
-            "name": "L_upperLip07_CTL",
-            "overrideEnabled": true,
-            "overrideColor": 6
-        },
-        "shapes": [
-            {
-                "name": "L_upperLip07_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            0.5141136894988471,
-                            0.8966744422149526,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.35182920476514795,
-                            0.9638948767543799,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.18954472003144823,
-                            0.8966744422149524,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.12232428549202029,
-                            0.734389957481253,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.18954472003144823,
-                            0.5721054727475532,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.35182920476514795,
-                            0.5048850382081251,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.5141136894988471,
-                            0.5721054727475532,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.5813341240382753,
-                            0.7343899574812529,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.5141136894988471,
-                            0.8966744422149526,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.35182920476514795,
-                            0.9638948767543799,
-                            0.8934049754422522
-                        ],
-                        [
-                            0.18954472003144823,
-                            0.8966744422149524,
-                            0.8934049754422522
                         ]
                     ],
                     "form": "periodic",
@@ -27783,7 +27599,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_CTL|R_eyebrowInTan_GRP|R_eyebrowInTan_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL|R_eyebrowInTan_OFF|R_eyebrowInTan_CTL": {
         "transform": {
             "name": "R_eyebrowInTan_CTL",
             "overrideEnabled": true,
@@ -27875,7 +27691,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL": {
         "transform": {
             "name": "R_eyebrowIn_CTL",
             "overrideEnabled": true,
@@ -28059,7 +27875,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_OFF|R_eyebrowMid_CTL": {
         "transform": {
             "name": "R_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -28151,7 +27967,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_CTL|R_eyebrowOutTan_GRP|R_eyebrowOutTan_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL|R_eyebrowOutTan_OFF|R_eyebrowOutTan_CTL": {
         "transform": {
             "name": "R_eyebrowOutTan_CTL",
             "overrideEnabled": true,
@@ -28243,7 +28059,7 @@
             }
         ]
     },
-    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_CTL": {
+    "|thaiz|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL": {
         "transform": {
             "name": "R_eyebrowOut_CTL",
             "overrideEnabled": true,
@@ -30495,84 +30311,84 @@
                 "curve": {
                     "cvs": [
                         [
-                            2.3759231115860757e-05,
-                            1.4653386557483827e-06,
-                            -1.6157152842311007e-06
+                            3.0377665035063105e-05,
+                            2.0657931876616934e-06,
+                            1.8735272510114608e-06
                         ],
                         [
-                            0.7122272691994027,
-                            -2.054332255930305,
-                            -0.7122050986646213
+                            0.9106271708487207,
+                            0.9105988244314536,
+                            -2.6265924531419906
                         ],
                         [
-                            -0.7121796966978344,
-                            -2.054332274665377,
-                            -0.7122050986646213
+                            -0.9105663464259739,
+                            0.9105988244314539,
+                            -2.6265924770959552
                         ],
                         [
-                            2.3759229559772166e-05,
-                            1.4653386557483827e-06,
-                            -1.6157152842311007e-06
+                            3.0377663045506402e-05,
+                            2.0657931876616934e-06,
+                            1.8735272510114608e-06
                         ],
                         [
-                            2.3759231115860757e-05,
-                            1.4653386557483827e-06,
-                            -1.6157152842311007e-06
+                            3.0377665035063105e-05,
+                            2.0657931876616934e-06,
+                            1.8735272510114608e-06
                         ],
                         [
-                            2.3759231112308044e-05,
-                            1.4653370996597914e-06,
-                            -1.6157152842311007e-06
+                            3.0377665030520755e-05,
+                            2.065793187661692e-06,
+                            1.8735252614547379e-06
                         ],
                         [
-                            0.7122272691994027,
-                            -2.054332255930291,
-                            0.7122018672326118
+                            0.9106271708487207,
+                            -0.9105946928432371,
+                            -2.6265924531419715
                         ],
                         [
-                            0.7122272691994027,
-                            -2.054332255930305,
-                            -0.7122050986646213
+                            0.9106271708487207,
+                            0.9105988244314536,
+                            -2.6265924531419906
                         ],
                         [
-                            0.7122272691994027,
-                            -2.054332255930291,
-                            0.7122018672326118
+                            0.9106271708487207,
+                            -0.9105946928432371,
+                            -2.6265924531419715
                         ],
                         [
-                            -0.7121796966978344,
-                            -2.0543322746653594,
-                            0.7122018672326114
+                            -0.9105663464259739,
+                            -0.910594692843237,
+                            -2.6265924770959317
                         ],
                         [
-                            -0.7121796966978344,
-                            -2.054332274665377,
-                            -0.7122050986646213
+                            -0.9105663464259739,
+                            0.9105988244314539,
+                            -2.6265924770959552
                         ],
                         [
-                            -0.7121796966978344,
-                            -2.0543322746653594,
-                            0.7122018672326114
+                            -0.9105663464259739,
+                            -0.910594692843237,
+                            -2.6265924770959317
                         ],
                         [
-                            2.3759229559772166e-05,
-                            1.4653370961070777e-06,
-                            -1.6157152842311007e-06
+                            3.0377663045506402e-05,
+                            2.065793187661693e-06,
+                            1.8735252569123723e-06
                         ],
                         [
-                            2.3759229559772166e-05,
-                            1.4653386557483827e-06,
-                            -1.6157152842311007e-06
+                            3.0377663045506402e-05,
+                            2.0657931876616934e-06,
+                            1.8735272510114608e-06
                         ],
                         [
-                            2.3759229559772166e-05,
-                            1.4653370961070777e-06,
-                            -1.6157152842311007e-06
+                            3.0377663045506402e-05,
+                            2.065793187661693e-06,
+                            1.8735252569123723e-06
                         ],
                         [
-                            2.3759231112308044e-05,
-                            1.4653370996597914e-06,
-                            -1.6157152842311007e-06
+                            3.0377665030520755e-05,
+                            2.065793187661692e-06,
+                            1.8735252614547379e-06
                         ]
                     ],
                     "form": "open",

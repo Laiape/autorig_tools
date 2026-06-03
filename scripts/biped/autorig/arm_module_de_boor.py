@@ -345,11 +345,33 @@ class ArmModule(object):
 
         self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
-        self.ik_matrices = custom_ik_solver.triangle_solver(
+        # secondary_mode = Y (aimed at the pole) sets the bend plane; the sign is
+        # flipped per side to keep the handedness.
+        secondary_mode = (0, 1, 0) if self.side == "L" else (0, -1, 0)
+
+        raw_ik_matrices = custom_ik_solver.triangle_solver(
             name=f"{self.side}_armIk", guides=self.guides_matrices,
             controllers=[self.ik_root_ctl, self.pv_ctl, self.ik_wrist_ctl],
             use_stretch=True, use_soft=True,
-            primary_mode=self.primaryInputAxis, secondary_mode=self.secondaryInputAxis)
+            primary_mode=self.primaryInputAxis, secondary_mode=secondary_mode)
+
+        # The solver leaves the upper/lower frames with Z up; roll them to the
+        # GUIDE convention (Y up, Z like the wrist) with a constant local offset
+        # (guide_rest * raw_rest^-1 == pure roll about the shared X aim).  The
+        # effector (i == 2) already keeps the wrist control orientation, so it is
+        # passed through untouched.
+        self.ik_matrices = []
+        for i, raw in enumerate(raw_ik_matrices):
+            if i == 2:
+                self.ik_matrices.append(raw)
+                continue
+            raw_rest = om.MMatrix(cmds.getAttr(raw))
+            guide_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[i]))
+            offset = guide_rest * raw_rest.inverse()
+            offset_mmx = cmds.createNode("multMatrix", name=f"{self.side}_armIkAxisRoll{i}_MMX", ss=True)
+            cmds.setAttr(f"{offset_mmx}.matrixIn[0]", list(offset), type="matrix")
+            cmds.connectAttr(raw, f"{offset_mmx}.matrixIn[1]")
+            self.ik_matrices.append(f"{offset_mmx}.matrixSum")
 
         for ik_matrix, blend_matrix in zip(self.ik_matrices, self.blend_matrices):
             cmds.connectAttr(f"{ik_matrix}", f"{blend_matrix[0]}.inputMatrix")

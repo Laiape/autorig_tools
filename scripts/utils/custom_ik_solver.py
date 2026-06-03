@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import maya.api.OpenMaya as om
 
 def triangle_solver(name, guides=[], controllers=[], use_stretch=False, use_soft=False, ik_handle_manager=False, primary_mode=(1,0,0), secondary_mode=(0,1,0)):
         
@@ -20,11 +21,18 @@ def triangle_solver(name, guides=[], controllers=[], use_stretch=False, use_soft
         guides_02_name = side + "_" + guides[2].split('_')[1] + '_GUIDE'
 
         if ik_handle_manager == True:
-                ankle_trn = controllers[2].replace('Ik_CTL', '_GUIDE')
+                # Handle manager driven by BOTH the ankle control (base) and the
+                # ball control (target): offset = ankleCtl_rest * ballCtl_rest^-1
+                # (constant), then offset * ballCtl_live.  Since the ball is a child
+                # of the ankle in the reverse-foot chain, moving the ankle OR the
+                # ball moves the target.  controllers[2] = ankle (world-oriented)
+                # foot control, controllers[3] = ball control (reverse-foot end).
+                ankle_rest = om.MMatrix(cmds.getAttr(f"{controllers[2]}.worldMatrix[0]"))
+                end_rest = om.MMatrix(cmds.getAttr(f"{controllers[3]}.worldMatrix[0]"))
+                offset = ankle_rest * end_rest.inverse()
                 ik_handle_manager_mmx = cmds.createNode('multMatrix', name=f"{name}IkHandleManager_MMX", ss=True)
-                cmds.connectAttr(f"{guides[3]}", ik_handle_manager_mmx+'.matrixIn[0]') # connect ankle guide world matrix to ik handle manager
-                cmds.connectAttr(f"{ankle_trn}.worldInverseMatrix[0]", ik_handle_manager_mmx+'.matrixIn[1]') # connect ball guide inverse world matrix to ik handle manager
-                cmds.connectAttr(f"{controllers[2]}.worldMatrix[0]", ik_handle_manager_mmx+'.matrixIn[2]') # connect ball controller world matrix to ik handle manager
+                cmds.setAttr(f"{ik_handle_manager_mmx}.matrixIn[0]", list(offset), type="matrix")
+                cmds.connectAttr(f"{controllers[3]}.worldMatrix[0]", ik_handle_manager_mmx+'.matrixIn[1]')
 
         if use_stretch == True:
                 distance_between_eff, distance_between_up, distance_between_low, current_length = stretch(name=name, master_walk_ctl=master_walk_ctl, guides=guides, controllers=controllers)
