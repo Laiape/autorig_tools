@@ -36,10 +36,10 @@ reload(pathlib)
 
 
 # Body mechanics
-from biped.autorig import arm_module_de_boor as arm_module
+from biped.autorig import arm_module as arm_module
 from biped.autorig import spine_module as biped_spine_module
 from biped.autorig import clavicle_module
-from biped.autorig import leg_module_de_boor as leg_module
+from biped.autorig import leg_module as leg_module
 from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
