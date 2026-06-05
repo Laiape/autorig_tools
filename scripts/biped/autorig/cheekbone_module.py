@@ -32,6 +32,7 @@ class CheekboneModule(object):
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
         self.mGear = data_manager.DataExportBiped().get_data("neck_module", "mGear")
+        
 
     def make(self, side):
 
@@ -43,7 +44,7 @@ class CheekboneModule(object):
         """
         self.side = side
         self.module_name = f"C_cheekbone"
-
+        self.lower_socket_ctl = data_manager.DataExportBiped().get_data("eyelid_module", f"{self.side}_lower_socket_ctl")
         if self.side == "L":
         
             self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
@@ -122,6 +123,13 @@ class CheekboneModule(object):
         cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
         cmds.connectAttr(f"{self.face_ctl}.Cheekbones", f"{condition_secondary}.firstTerm")
 
+        print(self.lower_socket_ctl)
+        socket_off_grp = self.lower_socket_ctl.replace("CTL", "OFF")
+        condition_socket = cmds.createNode("condition", name=f"C_{self.side}_socketMovement_CON", ss=True)
+        cmds.setAttr(f"{condition_socket}.operation", 3)  # Greater Than or Equal
+        cmds.setAttr(f"{condition_socket}.secondTerm", 0)
+        cmds.setAttr(f"{condition_socket}.colorIfFalseR", 0)
+        cmds.connectAttr(f"{condition_socket}.outColorR", f"{socket_off_grp}.translateY")
         
         cheeckbones_ctls = []
         cheeckbones_grps = []
@@ -134,6 +142,9 @@ class CheekboneModule(object):
 
             if i == 0:
                 grp, ctl = curve_tool.create_controller(name=name, parent=self.controllers_grp, offset=["GRP", "OFF"])
+                cmds.connectAttr(f"{ctl}.translateY", f"{condition_socket}.firstTerm")
+                cmds.connectAttr(f"{ctl}.translateY", f"{condition_socket}.colorIfTrueR")
+
                 cmds.connectAttr(f"{condition_cheekbones}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)

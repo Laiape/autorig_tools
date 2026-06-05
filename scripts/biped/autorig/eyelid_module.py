@@ -69,7 +69,12 @@ class EyelidModule(object):
         self.create_blink_setup()
         self.fleshy_setup()
         self.skinning_joints()
-        self.sockets()
+        socket_main_controllers = self.sockets()
+        print(socket_main_controllers)
+        data_manager.DataExportBiped().append_data("eyelid_module",
+                            {
+                                f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
+                            })
 
     def lock_attributes(self, ctl, attrs):
 
@@ -708,13 +713,18 @@ class EyelidModule(object):
 
             parent_name = f"{self.side}_{socket}"
             parent_guide = cmds.createNode("transform", name=f"{parent_name}_GUIDE", ss=True, p=self.module_trn)
-            cmds.matchTransform(parent_guide, f"{self.side}_{socket}_JNT")
+            cmds.matchTransform(parent_guide, f"{self.side}_{socket}_JNT", pos=True)
+
+            if self.side == "R":
+                cmds.setAttr(f"{parent_guide}.scaleX", -1)
 
             parent_nodes, parent_ctl = curve_tool.create_controller(
                 name=parent_name, offset=["GRP", "OFF"], parent=main_sockets
             )
             cmds.connectAttr(f"{parent_guide}.worldMatrix[0]", f"{parent_nodes[0]}.offsetParentMatrix")
             socket_main_controllers.append(parent_ctl)
+
+            
 
             parent_skinning_jnt = cmds.createNode(
                 "joint", name=f"{parent_name}Skinning_JNT", ss=True, p=self.skeleton_grp
@@ -779,9 +789,8 @@ class EyelidModule(object):
 
         for name in socket_names:
             cmds.delete(f"{self.side}_{name}_JNT")
-
-            
-    
+        
+        return socket_main_controllers
 
     def getClosestParamToPosition(self, curve, position):
         """
