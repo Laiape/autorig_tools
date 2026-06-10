@@ -70,7 +70,7 @@ class EyelidModule(object):
         self.fleshy_setup()
         self.skinning_joints()
         socket_main_controllers = self.sockets()
-        print(socket_main_controllers)
+
         data_manager.DataExportBiped().append_data("eyelid_module",
                             {
                                 f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
@@ -668,6 +668,11 @@ class EyelidModule(object):
         """
         Sockets for the eyelid module.
         """
+        eyebrow_controller = data_manager.DataExportBiped().get_data("eyebrow_module", f"{self.side}_main_eyebrow_ctl")
+        cmds.addAttr(eyebrow_controller, ln="Auto_Socket", at="float", min=0, max=1, dv=0, k=True)
+        pair_blend = cmds.createNode("pairBlend", name=f"{self.side}_autoSocket_PBA", ss=True)
+        cmds.connectAttr(f"{eyebrow_controller}.Auto_Socket", f"{pair_blend}.weight")
+        cmds.connectAttr(f"{eyebrow_controller}.translate", f"{pair_blend}.inTranslate2")
 
         socket_names = [
             "upperSocket", "lowerSocket", "inSocket", "outSocket",
@@ -724,6 +729,8 @@ class EyelidModule(object):
             cmds.connectAttr(f"{parent_guide}.worldMatrix[0]", f"{parent_nodes[0]}.offsetParentMatrix")
             socket_main_controllers.append(parent_ctl)
 
+            if "upperSocket" in socket:
+                cmds.connectAttr(f"{pair_blend}.outTranslate", f"{parent_nodes[1]}.translate")
             
 
             parent_skinning_jnt = cmds.createNode(

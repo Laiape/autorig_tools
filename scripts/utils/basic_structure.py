@@ -165,6 +165,8 @@ def create_basic_structure(character_name=None):
     cmds.setAttr(f"{settings_ctl}.showSkeleton", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.showModules", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.hideControllersOnPlayblast", lock=False, keyable=False, channelBox=True)
+    cmds.setAttr(f"{settings_ctl}.geometryType", lock=False, keyable=False, channelBox=True)
+    cmds.setAttr(f"{settings_ctl}.geoDisplay", lock=False, keyable=False, channelBox=True)
 
     # ─────────────────────────────────────────
     # SHARED: Conexiones geo visibility

@@ -955,6 +955,7 @@
               -3e-06
             ]
           ],
+          "value": 1.0,
           "driven_key": null
         }
       }

@@ -67,6 +67,10 @@
         "local_jaw_mmx": "C_jawLocal_MMT",
         "local_upper_jaw_mmx": "C_upperJawLocal_MMT"
     },
+    "eyebrow_module": {
+        "L_main_eyebrow_ctl": "L_eyebrowMain_CTL",
+        "R_main_eyebrow_ctl": "R_eyebrowMain_CTL"
+    },
     "eyelid_module": {
         "L_lower_socket_ctl": "L_lowerSocket_CTL",
         "R_lower_socket_ctl": "R_lowerSocket_CTL"

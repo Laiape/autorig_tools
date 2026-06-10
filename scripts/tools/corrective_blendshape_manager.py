@@ -259,10 +259,15 @@ class CorrectiveBlendshapeManager:
                 for w_idx, t_name in idx_to_name.items():
                     deltas = self._get_target_deltas(bs_node, w_idx)
                     dk     = self._get_driven_key(bs_node, w_idx)
+                    try:
+                        value = round(cmds.getAttr(f"{bs_node}.weight[{w_idx}]"), 6)
+                    except Exception:
+                        value = 0.0
 
                     bs_entry[t_name] = {
                         "w_idx":      w_idx,
                         "deltas":     deltas,
+                        "value":      value,
                         "driven_key": dk,
                     }
 
@@ -307,7 +312,8 @@ class CorrectiveBlendshapeManager:
                 continue
             for bs_name, targets in bs_map.items():
                 bs_data = {
-                    "targets":     {n: {"w_idx": t["w_idx"], "deltas": t["deltas"]}
+                    "targets":     {n: {"w_idx": t["w_idx"], "deltas": t["deltas"],
+                                        "value": t.get("value", 0.0)}
                                     for n, t in targets.items()},
                     "driven_keys": {n: t["driven_key"]
                                     for n, t in targets.items() if t.get("driven_key")},
@@ -378,9 +384,10 @@ class CorrectiveBlendshapeManager:
 
         cmds.delete(temp_meshes)
 
-        for i in range(len(target_names)):
+        for i, t_name in enumerate(target_names):
             try:
-                cmds.setAttr(f"{new_bs}.weight[{i}]", 0)
+                cmds.setAttr(f"{new_bs}.weight[{i}]",
+                             targets_data[t_name].get("value", 0.0))
             except Exception:
                 pass
 

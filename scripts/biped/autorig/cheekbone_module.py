@@ -123,7 +123,6 @@ class CheekboneModule(object):
         cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
         cmds.connectAttr(f"{self.face_ctl}.Cheekbones", f"{condition_secondary}.firstTerm")
 
-        print(self.lower_socket_ctl)
         socket_off_grp = self.lower_socket_ctl.replace("CTL", "OFF")
         condition_socket = cmds.createNode("condition", name=f"C_{self.side}_socketMovement_CON", ss=True)
         cmds.setAttr(f"{condition_socket}.operation", 3)  # Greater Than or Equal

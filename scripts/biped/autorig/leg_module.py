@@ -43,8 +43,6 @@ class LegModule(object):
         self.primary_axis = primaryInputAxis if self.side == "L" else tuple(-x for x in primaryInputAxis)
         self.secondary_axis = secondaryInputAxis if self.side == "L" else tuple(-x for x in secondaryInputAxis)
 
-        print(f"Creating leg module for side: {self.side}, with primary input axis: {self.primary_axis} and secondary input axis: {self.secondary_axis}")
-
         # Set the axis information based on the primary and secondary input axes
         def get_axis_info(axis_tuple):
             for i, val in enumerate(axis_tuple):

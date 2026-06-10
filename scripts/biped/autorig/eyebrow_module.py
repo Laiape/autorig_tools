@@ -56,9 +56,14 @@ class EyebrowModule(object):
 
         self.load_guides()
         self.create_controllers()
-        self.auto_tangent_setup()
         self.ribbon_setup()
         self.slide_setup()
+        self.auto_tangent_setup()
+
+        data_manager.DataExportBiped().append_data("eyebrow_module",
+                            {
+                                f"{self.side}_main_eyebrow_ctl": self.main_eyebrow_ctl
+                            })
 
         # Clean up
         cmds.delete(self.main_eyebrow)
@@ -241,12 +246,7 @@ class EyebrowModule(object):
         Keeps InTan and OutTan on the straight line between In and Out when displaced in Y.
         Adds autoTangent attr (0=manual, 1=auto) to main_eyebrow_ctl.
         """
-        cmds.addAttr(self.main_eyebrow_ctl,
-                     longName="EXTRA_ATTRIBUTES",
-                     niceName="AUTO TAN ------",
-                     attributeType="enum",
-                     enumName="------")
-        cmds.setAttr(f"{self.main_eyebrow_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        
         cmds.addAttr(self.main_eyebrow_ctl,
                      longName="autoTangent",
                      attributeType="float",
@@ -358,6 +358,12 @@ class EyebrowModule(object):
         Set up the slide functionality for the eyebrow module.
 
         """
+        cmds.addAttr(self.main_eyebrow_ctl,
+                     longName="EXTRA_ATTRIBUTES",
+                     niceName="EXTRA_ATTRIBUTES ------",
+                     attributeType="enum",
+                     enumName="------")
+        cmds.setAttr(f"{self.main_eyebrow_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(self.main_eyebrow_ctl, longName="slide", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
 
