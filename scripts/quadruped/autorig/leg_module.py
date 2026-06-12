@@ -116,11 +116,20 @@ class LegModule(object):
 
         self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}Hip_JNT")
         cmds.parent(self.leg_chain[0], self.module_trn)
+        self._setup_chain()
 
-        self.leg_joints = self.leg_chain[:-1]  # Hip..Ankle[..Ball], sin el Tip
+    def _setup_chain(self):
+
+        """
+        Indices y matrices de la cadena. Cadena esperada (genérica en número de
+        huesos de pierna): Hip [-> FrontKnee -> BackKnee | -> Knee] -> Ankle ->
+        Ball -> Tip. El IK principal va de Hip a Ankle; Ball es la pisada y Tip
+        el pivote de la punta.
+        """
+        self.leg_joints = self.leg_chain[:-1]  # todo menos el Tip
         self.tip_joint = self.leg_chain[-1]
-        self.plant_index = len(self.leg_joints) - 1  # Ball (4j) o Ankle (3j)
-        self.is_three_bone = len(self.leg_joints) == 4
+        self.plant_index = len(self.leg_chain) - 2          # Ball
+        self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Ankle (fin del IK principal)
 
         # Matrices horneadas (X a la siguiente guía, secondary hacia la previa)
         self.guides_matrices, self.guides_points = guides_manager.orient_guides(
@@ -254,7 +263,7 @@ class LegModule(object):
         # Pole vector: posición analítica desde el plano real de la cadena
         root_p = self.guide_positions[0]
         knee_p = self.guide_positions[1]
-        end_p = self.guide_positions[self.plant_index]
+        end_p = self.guide_positions[self.leg_end_index]
         line = (end_p - root_p).normalize()
         projection = root_p + line * ((knee_p - root_p) * line)
         bend_dir = knee_p - projection
@@ -290,62 +299,51 @@ class LegModule(object):
     def ik_setup(self):
 
         """
-        Crea los ikHandles según el solver elegido. Con cadena de 2 huesos el
-        spring no aporta nada y se cae a RP.
+        ikHandles nativos: el IK principal (spring o RP según el argumento) va
+        de la cadera al Ankle — genérico en número de huesos — y el pie se
+        resuelve con SC: Ankle -> Ball y Ball -> Tip. Con 2 huesos el spring no
+        aporta nada y se cae a RP.
         """
         foot_ctl, toe_ctl, ball_ctl = self.ik_controllers
         handles = []
 
-        use_spring = self.solver == "spring" and self.is_three_bone
+        ankle_index = self.leg_end_index
+        self.main_end_index = ankle_index
 
+        use_spring = self.solver == "spring" and ankle_index >= 3
+        solver_name = "ikRPsolver"
         if use_spring:
             cmds.loadPlugin("ikSpringSolver", quiet=True)
             if not cmds.objExists("ikSpringSolver"):
                 mel.eval("ikSpringSolver;")
+            solver_name = "ikSpringSolver"
 
-            # Spring de la cadera al ball (3 huesos) + SC ball -> tip
-            self.ik_handle = cmds.ikHandle(name=f"{self.module_name}Ik_HDL", startJoint=self.ik_chain[0],
-                                           endEffector=self.ik_chain[self.plant_index], solver="ikSpringSolver")[0]
+        self.ik_handle = cmds.ikHandle(name=f"{self.module_name}Ik_HDL", startJoint=self.ik_chain[0],
+                                       endEffector=self.ik_chain[ankle_index], solver=solver_name)[0]
+        handles.append(self.ik_handle)
+
+        if ankle_index < self.plant_index:
+            # El ankle viaja con el ballIk manteniendo su offset de reposo
+            ankle_offset = om.MMatrix(self.guides_matrices[ankle_index]) * om.MMatrix(self.guides_matrices[self.plant_index]).inverse()
+            ankle_follow_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}AnkleFollow_MMX", ss=True)
+            cmds.setAttr(f"{ankle_follow_mmx}.matrixIn[0]", list(ankle_offset), type="matrix")
+            cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ankle_follow_mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{ankle_follow_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix")
+            self.ik_handle_target = f"{ankle_follow_mmx}.matrixSum"
+
+            ball_handle = cmds.ikHandle(name=f"{self.module_name}BallIk_HDL", startJoint=self.ik_chain[ankle_index],
+                                        endEffector=self.ik_chain[self.plant_index], solver="ikSCsolver")[0]
+            cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ball_handle}.offsetParentMatrix")
+            handles.append(ball_handle)
+        else:
+            # Sin Ball separado: el IK principal acaba en la pisada
             cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix")
             self.ik_handle_target = f"{ball_ctl}.worldMatrix[0]"
-            self.main_end_index = self.plant_index
-            handles.append(self.ik_handle)
 
-            toe_handle = cmds.ikHandle(name=f"{self.module_name}ToeIk_HDL", startJoint=self.ik_chain[self.plant_index],
-                                       endEffector=self.ik_chain[-1], solver="ikSCsolver")[0]
-            cmds.connectAttr(f"{toe_ctl}.worldMatrix[0]", f"{toe_handle}.offsetParentMatrix")
-            handles.append(toe_handle)
-
-        else:
-            # RP de la cadera al ankle; el resto con SC (estilo bípedo)
-            ankle_index = 2
-            self.ik_handle = cmds.ikHandle(name=f"{self.module_name}Ik_HDL", startJoint=self.ik_chain[0],
-                                           endEffector=self.ik_chain[ankle_index], solver="ikRPsolver")[0]
-            handles.append(self.ik_handle)
-
-            if self.is_three_bone:
-                # El ankle viaja con el ballIk manteniendo su offset de reposo
-                ankle_offset = om.MMatrix(self.guides_matrices[ankle_index]) * om.MMatrix(self.guides_matrices[self.plant_index]).inverse()
-                ankle_follow_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}AnkleFollow_MMX", ss=True)
-                cmds.setAttr(f"{ankle_follow_mmx}.matrixIn[0]", list(ankle_offset), type="matrix")
-                cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ankle_follow_mmx}.matrixIn[1]")
-                cmds.connectAttr(f"{ankle_follow_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix")
-                self.ik_handle_target = f"{ankle_follow_mmx}.matrixSum"
-                self.main_end_index = ankle_index
-
-                ball_handle = cmds.ikHandle(name=f"{self.module_name}BallIk_HDL", startJoint=self.ik_chain[ankle_index],
-                                            endEffector=self.ik_chain[self.plant_index], solver="ikSCsolver")[0]
-                cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ball_handle}.offsetParentMatrix")
-                handles.append(ball_handle)
-            else:
-                cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix")
-                self.ik_handle_target = f"{ball_ctl}.worldMatrix[0]"
-                self.main_end_index = self.plant_index
-
-            toe_handle = cmds.ikHandle(name=f"{self.module_name}ToeIk_HDL", startJoint=self.ik_chain[self.plant_index],
-                                       endEffector=self.ik_chain[-1], solver="ikSCsolver")[0]
-            cmds.connectAttr(f"{toe_ctl}.worldMatrix[0]", f"{toe_handle}.offsetParentMatrix")
-            handles.append(toe_handle)
+        toe_handle = cmds.ikHandle(name=f"{self.module_name}ToeIk_HDL", startJoint=self.ik_chain[self.plant_index],
+                                   endEffector=self.ik_chain[-1], solver="ikSCsolver")[0]
+        cmds.connectAttr(f"{toe_ctl}.worldMatrix[0]", f"{toe_handle}.offsetParentMatrix")
+        handles.append(toe_handle)
 
         freeze_float_constant = cmds.createNode("floatConstant", name=f"{self.module_name}Freeze_FCN", ss=True)
         cmds.setAttr(f"{freeze_float_constant}.inFloat", 0)
@@ -373,7 +371,12 @@ class LegModule(object):
             for i in range(segment_count)
         ]
 
-        mult_names = ["upperLengthMult", "lowerLengthMult"] if segment_count == 2 else ["upperLengthMult", "middleLengthMult", "lowerLengthMult"]
+        if segment_count == 2:
+            mult_names = ["upperLengthMult", "lowerLengthMult"]
+        elif segment_count == 3:
+            mult_names = ["upperLengthMult", "middleLengthMult", "lowerLengthMult"]
+        else:
+            mult_names = [f"segment0{i}LengthMult" for i in range(segment_count)]
 
         cmds.addAttr(foot_ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{foot_ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
@@ -625,6 +628,28 @@ class FrontLegModule(LegModule):
         super().make(side, solver=solver, primaryInputAxis=primaryInputAxis, secondaryInputAxis=secondaryInputAxis)
         self.scapula_setup()
 
+    def load_guides(self):
+
+        """
+        La cadena delantera cuelga de la escápula: {side}_scapula_JNT ->
+        frontLegHip -> ... -> Tip. Se importa todo desde la escápula, se separa
+        la pierna y la guía de escápula se hornea (posición) y se borra.
+        """
+        chain = guides_manager.get_guides(f"{self.side}_scapula_JNT")
+        if not chain:
+            # Asset sin escápula: cadena directa desde el hip
+            super().load_guides()
+            return
+        cmds.parent(chain[0], self.module_trn)
+
+        self.scapula_guide_pos = om.MVector(cmds.xform(chain[0], q=True, ws=True, t=True))
+
+        cmds.parent(chain[1], self.module_trn)  # separa la pierna de la escápula
+        cmds.delete(chain[0])
+
+        self.leg_chain = chain[1:]
+        self._setup_chain()
+
     def scapula_setup(self):
 
         """
@@ -633,13 +658,11 @@ class FrontLegModule(LegModule):
         master, y end en el root con space switch translate/rotate entre la
         escápula y el masterwalk. Dos joints de skinning.
         """
-        scapula_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}Scapula_JNT")
-        if not scapula_chain:
-            cmds.warning(f"{self.side}_{self.LEG_PREFIX}Scapula_JNT no existe: se omite la escápula.")
+        if not hasattr(self, "scapula_guide_pos"):
+            cmds.warning(f"{self.side}_scapula_JNT no existe: se omite la escápula.")
             return
 
-        scapula_pos = om.MVector(cmds.xform(scapula_chain[0], q=True, ws=True, t=True))
-        cmds.delete(scapula_chain[0])
+        scapula_pos = self.scapula_guide_pos
 
         root_pos = self.guide_positions[0]
         masterwalk_rest = om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]"))

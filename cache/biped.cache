@@ -34,6 +34,24 @@
         ],
         "face_ctl": "C_face_CTL"
     },
+    "frontLeg_module": {
+        "L_hip_JNT": "L_frontLegHipSkinning_JNT",
+        "L_legIk": "L_frontLegFootIk_CTL",
+        "L_hipFk": "L_frontLegHipFk_CTL",
+        "L_legPv": "L_frontLegPv_CTL",
+        "L_rootIk": "L_frontLegRootIk_CTL",
+        "L_scapula_ctl": "L_frontLegScapula_CTL",
+        "L_scapula_master_ctl": "L_frontLegScapulaMaster_CTL",
+        "L_scapula_end_ctl": "L_frontLegScapulaEnd_CTL",
+        "R_hip_JNT": "R_frontLegHipSkinning_JNT",
+        "R_legIk": "R_frontLegFootIk_CTL",
+        "R_hipFk": "R_frontLegHipFk_CTL",
+        "R_legPv": "R_frontLegPv_CTL",
+        "R_rootIk": "R_frontLegRootIk_CTL",
+        "R_scapula_ctl": "R_frontLegScapula_CTL",
+        "R_scapula_master_ctl": "R_frontLegScapulaMaster_CTL",
+        "R_scapula_end_ctl": "R_frontLegScapulaEnd_CTL"
+    },
     "backLeg_module": {
         "L_hip_JNT": "L_backLegHipSkinning_JNT",
         "L_legIk": "L_backLegFootIk_CTL",
