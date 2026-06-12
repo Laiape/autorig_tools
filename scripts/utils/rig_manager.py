@@ -454,8 +454,8 @@ def build_rig(character_name, on_step=None):
         if check("L_frontLegHip_JNT") and check("R_frontLegHip_JNT"):
             step("Building front legs…")
             reload(quad_leg_module)
-            quad_leg_module.FrontLegModule().make("L", solver=leg_solver)
-            quad_leg_module.FrontLegModule().make("R", solver=leg_solver)
+            quad_leg_module.FrontLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+            quad_leg_module.FrontLegModule().make("R", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
 
         # Fallback: limb genérico con el naming antiguo
         elif check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
@@ -474,8 +474,8 @@ def build_rig(character_name, on_step=None):
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
             step("Building back legs…")
             reload(quad_leg_module)
-            quad_leg_module.BackLegModule().make("L", solver=leg_solver)
-            quad_leg_module.BackLegModule().make("R", solver=leg_solver)
+            quad_leg_module.BackLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+            quad_leg_module.BackLegModule().make("R", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
 
     # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):

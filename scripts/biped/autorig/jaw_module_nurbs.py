@@ -43,7 +43,7 @@ class JawModule(object):
         self.side = side
         self.module_name = f"C_jaw"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
+        
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
@@ -67,6 +67,8 @@ class JawModule(object):
                                                  "local_jaw_mmx" : self.mult_matrix_jaw_local,
                                                  "local_upper_jaw_mmx" : self.mult_matrix_upper_jaw_local
                                                 })
+        
+        cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
 
     def lock_attributes(self, ctl, attrs):
 
@@ -503,6 +505,10 @@ class JawModule(object):
         # Make rebuilded bezier
         upper_curve_dup = cmds.duplicate(self.upper_rebuild_lip_curve, name="C_upperLipToNurbs_CRV")[0]
         lower_curve_dup = cmds.duplicate(self.lower_rebuild_lip_curve, name="C_lowerLipToNurbs_CRV")[0]
+        # Las curvas originales están skinneadas: sin limpiar la historia de los
+        # duplicados, offsetCurve/loft con ch=False fuerzan historia y avisan
+        cmds.delete(upper_curve_dup, lower_curve_dup, constructionHistory=True)
+        cmds.select(clear=True)
 
         # Do an offset curve to avoid having the nurbs surface right on top of the rebuild curve, which causes issues when lofting
         upper_offset = cmds.offsetCurve(
@@ -561,12 +567,25 @@ class JawModule(object):
 
         rebuilded_cvs = len(cmds.ls(f"{self.upper_rebuild_lip_curve}.cv[*]", flatten=True))
 
+        # Rebuild + reverse ANTES del skinCluster: las superficies del loft aún
+        # no tienen historia de deformación, así que el ch=0 es limpio y no
+        # aparecen los warnings de "History will be on for the command"
+        degree_num = 3
+        spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
+        self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
+        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
+        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
+        self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
+        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
+        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
+        cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
+
         # Create secondary nodes GRP to control visibility
         secondary_controllers_nodes = cmds.createNode("transform", name="C_secondaryLipsControllers_GRP", ss=True, parent=lips_controllers_grp)
 
         all_secondary_joints = {"upper": [], "lower": []}
 
-        for part, nurbs in (["upper", upper_nurbs_surface], ["lower", lower_nurbs_surface]):
+        for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
 
             curve = self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve
             mid_point = rebuilded_cvs // 2
@@ -673,19 +692,6 @@ class JawModule(object):
 
             skin_cluster = cmds.skinCluster(all_secondary_joints[part], nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
 
-        try:
-            degree_num = 3
-            spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
-            self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
-            cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
-            cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
-            self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
-            cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
-            cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
-        finally:
-            cmds.scriptEditorInfo(edit=True, suppressWarnings=False)
-        cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
-
         output_joints = { "upper": [], "lower": [] }
         non_rotate_output_joints = { "upper": [], "lower": [] }
         aim_matrices = { "upper": [], "lower": [] }
@@ -702,6 +708,8 @@ class JawModule(object):
 
             # Duplicate the skinned curve so offsetCurve has no history to warn about
             _dup_for_offset = cmds.duplicate(_skin_curve, name=f"C_{part}LipOffsetInput_TMP")[0]
+            cmds.delete(_dup_for_offset, constructionHistory=True)
+            cmds.select(clear=True)
 
             # Create offset curve for the up-vector
             offset_curve = cmds.offsetCurve(
