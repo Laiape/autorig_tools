@@ -53,8 +53,9 @@ def create_basic_structure(character_name=None):
         nodes = {}
 
         for i, name in enumerate(structure_names):
-            if any(cmds.objExists(n) for n in [name, name.upper(), name.lower(), name.capitalize()]):
-                nodes[name] = name
+            existing = next((n for n in [name, name.upper(), name.lower(), name.capitalize()] if cmds.objExists(n)), None)
+            if existing:
+                nodes[name] = existing  # guarda la variante REAL (p.ej. "Jamal")
             else:
                 res = cmds.createNode("transform", name=name, ss=True)
                 nodes[name] = res

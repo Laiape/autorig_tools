@@ -133,7 +133,6 @@ class CheekboneModule(object):
         cheeckbones_ctls = []
         cheeckbones_grps = []
         skinning_jnts = []
-        main_cheek_mmx = None
 
         for i, guide in enumerate(self.cheekbone_guides):
 
@@ -153,20 +152,24 @@ class CheekboneModule(object):
                 cmds.connectAttr(f"{condition_secondary}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
-            self.lock_attributes(ctl, ["v"])    
+            self.lock_attributes(ctl, ["v"])
 
             cmds.matchTransform(grp[0], guide, pos=True)
-            mmx = self.local_mmx(ctl)
-
-            if i == 0:
-                main_cheek_mmx = mmx
 
             if i > 0: # Avoid the first guide which is the parent
+                # Delta local contra el GRP del cheekbone PRINCIPAL: cancela
+                # solo lo de arriba (head/face) y conserva el movimiento del
+                # ctl propio y del principal con sus pivotes reales. Una única
+                # worldInverse (la del GRP principal) compartida por todos los
+                # secundarios, sin re-añadir matrices locales al final.
                 skinning_jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp)
+                mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
+                cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mmx}.matrixIn[0]")
+                cmds.connectAttr(f"{cheeckbones_grps[0][0]}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
+                cmds.setAttr(f"{mmx}.matrixIn[2]", cmds.getAttr(f"{cheeckbones_grps[0][0]}.worldMatrix[0]"), type="matrix")
                 cmds.connectAttr(f"{mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
-                cmds.connectAttr(f"{cheeckbones_ctls[0]}.matrix", f"{mmx}.matrixIn[3]")
                 skinning_jnts.append(skinning_jnt)
-            
+
         cmds.delete(self.cheekbone_guides)
             
         # Cheek 
