@@ -100,12 +100,13 @@ class JawModule(object):
         """
 
         # ---- Jaw controller ----
-        self.jaw_guide = cmds.createNode("transform", name="C_jaw_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.jaw_guide, self.jaw_guides[0], pos=True) # Only position
+        # Matriz horneada (solo posición) de la guía del jaw, sin transform _GUIDE vivo
+        jaw_pos = cmds.xform(self.jaw_guides[0], q=True, ws=True, t=True)
+        self.jaw_guide_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, jaw_pos[0], jaw_pos[1], jaw_pos[2], 1]
 
         self.jaw_nodes, self.jaw_ctl = curve_tool.create_controller("C_jaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         jaw_skinning = cmds.createNode("joint", name="C_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.jaw_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
         self.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
 
         mult_matrix_jaw = cmds.createNode("multMatrix", name="C_jawSkinning_MMX")
@@ -117,7 +118,7 @@ class JawModule(object):
 
         # ---- Upper jaw controller ----
         self.upper_jaw_nodes, self.upper_jaw_ctl = curve_tool.create_controller("C_upperJaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
-        cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.upper_jaw_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.upper_jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
         upper_jaw_skinning = cmds.createNode("joint", name="C_upperJawSkinning_JNT", ss=True, p=self.skeleton_grp)
@@ -1086,12 +1087,13 @@ class JawModule(object):
         """
 
         # ---- Jaw controller ----
-        self.jaw_guide = cmds.createNode("transform", name="C_jaw_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.jaw_guide, self.jaw_guides[0], pos=True) # Only position
+        # Matriz horneada (solo posición) de la guía del jaw, sin transform _GUIDE vivo
+        jaw_pos = cmds.xform(self.jaw_guides[0], q=True, ws=True, t=True)
+        self.jaw_guide_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, jaw_pos[0], jaw_pos[1], jaw_pos[2], 1]
 
         self.jaw_nodes, self.jaw_ctl = curve_tool.create_controller("C_jaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         jaw_skinning = cmds.createNode("joint", name="C_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.jaw_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
         self.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
 
         mult_matrix_jaw = cmds.createNode("multMatrix", name="C_jawSkinning_MMX")
@@ -1103,7 +1105,7 @@ class JawModule(object):
 
         # ---- Upper jaw controller ----
         self.upper_jaw_nodes, self.upper_jaw_ctl = curve_tool.create_controller("C_upperJaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
-        cmds.connectAttr(f"{self.jaw_guide}.worldMatrix[0]", f"{self.upper_jaw_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.upper_jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
         self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
         upper_jaw_skinning = cmds.createNode("joint", name="C_upperJawSkinning_JNT", ss=True, p=self.skeleton_grp)

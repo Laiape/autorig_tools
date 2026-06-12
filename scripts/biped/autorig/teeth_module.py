@@ -27,7 +27,7 @@ class TeethModule(object):
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
-        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
+        self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
     def make(self, side):
 
@@ -76,12 +76,10 @@ class TeethModule(object):
         cmds.select(cl=True)
         lower_teeth_guide = guides_manager.get_guides(f"{self.side}_lowerTeeth_JNT")[0]
 
-        self.upper_teeth_guide = cmds.createNode("transform", name=upper_teeth_guide.replace("JNT", "GUIDE"), ss=True, p=self.module_trn)
-        self.lower_teeth_guide = cmds.createNode("transform", name=lower_teeth_guide.replace("JNT", "GUIDE"), ss=True, p=self.module_trn)
-        cmds.matchTransform(self.upper_teeth_guide, upper_teeth_guide)
-        cmds.matchTransform(self.lower_teeth_guide, lower_teeth_guide)
-        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{self.upper_teeth_guide}.offsetParentMatrix")
-        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{self.lower_teeth_guide}.offsetParentMatrix")
+        # Matrices horneadas (guía * inversa de la cabeza), sin transforms _GUIDE vivos
+        head_inverse = om.MMatrix(self.head_guide_matrix).inverse()
+        self.upper_teeth_matrix = om.MMatrix(cmds.getAttr(f"{upper_teeth_guide}.worldMatrix[0]")) * head_inverse
+        self.lower_teeth_matrix = om.MMatrix(cmds.getAttr(f"{lower_teeth_guide}.worldMatrix[0]")) * head_inverse
 
         cmds.delete(upper_teeth_guide, lower_teeth_guide)
 
@@ -99,14 +97,14 @@ class TeethModule(object):
 
         upper_teeth_nodes, upper_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_upperTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
         upper_teeth_mmx = cmds.createNode("multMatrix", name=f"{self.side}_upperTeeth_MMX", ss=True)
-        cmds.connectAttr(f"{self.upper_teeth_guide}.worldMatrix[0]", f"{upper_teeth_mmx}.matrixIn[0]")
+        cmds.setAttr(f"{upper_teeth_mmx}.matrixIn[0]", list(self.upper_teeth_matrix), type="matrix")
         cmds.connectAttr(upper_jaw_ctl_wm, f"{upper_teeth_mmx}.matrixIn[1]")
         cmds.connectAttr(upper_jaw_grp_inv_wm, f"{upper_teeth_mmx}.matrixIn[2]")
         cmds.connectAttr(f"{upper_teeth_mmx}.matrixSum", f"{upper_teeth_nodes[0]}.offsetParentMatrix")
         upper_local_mmx = matrix_manager.local_mmx(upper_teeth_ctl, upper_teeth_nodes[0])
         self._lock_attributes(upper_teeth_ctl, ["v"])
 
-        upper_bind_wm = om.MMatrix(cmds.getAttr(f"{self.upper_teeth_guide}.matrix"))
+        upper_bind_wm = om.MMatrix(self.upper_teeth_matrix)
         upper_jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{upper_jaw}.matrixIn[2]"))
         cmds.setAttr(f"{upper_local_mmx}.matrixIn[2]", list(upper_bind_wm * upper_jaw_grp_wm_baked.inverse()), type="matrix")
 
@@ -121,14 +119,14 @@ class TeethModule(object):
 
         lower_teeth_nodes, lower_teeth_ctl = curve_tool.create_controller(name=f"{self.side}_lowerTeeth", offset=["GRP", "ANM"], parent=self.controllers_grp)
         lower_teeth_mmx = cmds.createNode("multMatrix", name=f"{self.side}_lowerTeeth_MMX", ss=True)
-        cmds.connectAttr(f"{self.lower_teeth_guide}.worldMatrix[0]", f"{lower_teeth_mmx}.matrixIn[0]")
+        cmds.setAttr(f"{lower_teeth_mmx}.matrixIn[0]", list(self.lower_teeth_matrix), type="matrix")
         cmds.connectAttr(jaw_ctl_wm, f"{lower_teeth_mmx}.matrixIn[1]")
         cmds.connectAttr(jaw_grp_inv_wm, f"{lower_teeth_mmx}.matrixIn[2]")
         cmds.connectAttr(f"{lower_teeth_mmx}.matrixSum", f"{lower_teeth_nodes[0]}.offsetParentMatrix")
         lower_local_mmx = matrix_manager.local_mmx(lower_teeth_ctl, lower_teeth_nodes[0])
         self._lock_attributes(lower_teeth_ctl, ["v"])
 
-        lower_bind_wm = om.MMatrix(cmds.getAttr(f"{self.lower_teeth_guide}.matrix"))
+        lower_bind_wm = om.MMatrix(self.lower_teeth_matrix)
         jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{jaw}.matrixIn[2]"))
         cmds.setAttr(f"{lower_local_mmx}.matrixIn[2]", list(lower_bind_wm * jaw_grp_wm_baked.inverse()), type="matrix")
 

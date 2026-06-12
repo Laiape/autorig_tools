@@ -291,7 +291,7 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
         Args:
                 blend_matrix (list): Blend matrix of the controller. (ik-fk blend matrix)
                 controller (str): Name of the controller object that will constraint the single chain solver.
-                guides (list): List of the affected guide objects (start-end).
+                guides (list): List of the affected guide matrix attributes (start-end).
         Returns:
                 matrix
                 """
@@ -301,11 +301,10 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
                 secondary_mode = (0,1,0)
 
         name_ctl = controller.split('_')[1]
-        name_guide = guides[1].split('_')[1]
 
-        distance = cmds.createNode('distanceBetween', name=f"{side}_{name_ctl}To{name_guide}_DBT", ss=True) # distance between controller and guide
-        cmds.connectAttr(f"{guides[0]}.worldMatrix[0]", f"{distance}.inMatrix1") # start
-        cmds.connectAttr(f"{guides[1]}.worldMatrix[0]", f"{distance}.inMatrix2") # end
+        distance = cmds.createNode('distanceBetween', name=f"{side}_{name_ctl}SingleChain_DBT", ss=True) # distance between start and end guides
+        cmds.connectAttr(guides[0], f"{distance}.inMatrix1") # start
+        cmds.connectAttr(guides[1], f"{distance}.inMatrix2") # end
 
         controller_position = cmds.createNode('fourByFourMatrix', name=controller.replace('_CTL', 'CtlPosition_F4FX'), ss=True) # local position matrix for controller
         if primary_mode == (1,0,0) or primary_mode == (-1,0,0):
@@ -328,7 +327,7 @@ def single_chain_solver(blend_matrix, controller, guides=[], primary_mode=(1,0,0
         cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.primaryTargetMatrix') # target
         cmds.connectAttr(f"{controller}.worldMatrix[0]", aim_matrix_rotation+'.secondaryTargetMatrix') # secondary target
 
-        mult_matrix = cmds.createNode('multMatrix', name=guides[0].replace('_GUIDE', 'SC_MMT'), ss=True)
+        mult_matrix = cmds.createNode('multMatrix', name=controller.replace('_CTL', 'SC_MMT'), ss=True)
         cmds.connectAttr(controller_position+'.output', mult_matrix+'.matrixIn[0]')
         cmds.connectAttr(aim_matrix_rotation+'.outputMatrix', mult_matrix+'.matrixIn[1]')
 

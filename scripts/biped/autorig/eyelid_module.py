@@ -30,7 +30,7 @@ class EyelidModule(object):
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
+        self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
     def make(self, side):
 
@@ -139,15 +139,14 @@ class EyelidModule(object):
         """
         cmds.select(clear=True)
         self.eye_joint = guides_manager.get_guides(f"{self.side}_eye_JNT", parent=self.module_trn)
-        self.eye_guide = cmds.createNode("transform", name=f"{self.side}_eye_GUIDE", ss=True, p=self.module_trn)
-        self.eye_end_guide = cmds.createNode("transform", name=f"{self.side}_eyeEnd_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.eye_guide, self.eye_joint[0])
-        cmds.matchTransform(self.eye_end_guide, self.eye_joint[1])
+        # Matrices horneadas de las guías del ojo (estáticas), sin transforms _GUIDE vivos
+        self.eye_guide_matrix = cmds.getAttr(f"{self.eye_joint[0]}.worldMatrix[0]")
+        self.eye_end_guide_matrix = cmds.getAttr(f"{self.eye_joint[1]}.worldMatrix[0]")
         cmds.delete(self.eye_joint[0])
 
         self.eye_aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eye_AIM", ss=True)
-        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{self.eye_aim_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.eye_end_guide}.worldMatrix[0]", f"{self.eye_aim_matrix}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{self.eye_aim_matrix}.inputMatrix", self.eye_guide_matrix, type="matrix")
+        cmds.setAttr(f"{self.eye_aim_matrix}.primary.primaryTargetMatrix", self.eye_end_guide_matrix, type="matrix")
         cmds.setAttr(f"{self.eye_aim_matrix}.primaryInputAxis", 0, 0, 1)
 
     def curve_cvs_into_guides(self):
@@ -227,16 +226,15 @@ class EyelidModule(object):
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
             cmds.parent(self.main_aim_nodes[0], self.head_ctl)
             self.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
-            before_translate = cmds.xform(self.eye_guide, q=True, t=True, ws=True)
-            cmds.setAttr(f"{self.eye_guide}.tx", 0)
-            cmds.matchTransform(self.main_aim_nodes[0], self.eye_guide)
+            centered_eye_matrix = list(self.eye_guide_matrix)
+            centered_eye_matrix[12] = 0.0  # ojo centrado en X (antes se ponía tx=0 en la guía)
+            cmds.xform(self.main_aim_nodes[0], ws=True, m=centered_eye_matrix)
             cmds.select(self.main_aim_nodes[0])
             cmds.move(0, 0, 30, relative=True, objectSpace=True, worldSpaceDistance=True)
-            cmds.xform(self.eye_guide, t=before_translate, ws=True)
 
         side_aim_nodes, self.side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
         cmds.parent(side_aim_nodes[0], self.controllers_grp)
-        cmds.matchTransform(side_aim_nodes[0], self.eye_guide)
+        cmds.xform(side_aim_nodes[0], ws=True, m=self.eye_guide_matrix)
         cmds.select(side_aim_nodes[0])
         cmds.move(0, 0,30, relative=True, objectSpace=True, worldSpaceDistance=True)
         self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
@@ -325,12 +323,12 @@ class EyelidModule(object):
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eyeDirect_AIM", ss=True)
-        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.eye_end_guide}.worldMatrix[0]", f"{aim_matrix}.primaryTargetMatrix")
+        cmds.setAttr(f"{aim_matrix}.inputMatrix", self.eye_guide_matrix, type="matrix")
+        cmds.setAttr(f"{aim_matrix}.primaryTargetMatrix", self.eye_end_guide_matrix, type="matrix")
         cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 0, 0, 1)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
-        cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[0]")
-        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[1]")
+        cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", self.eye_guide_matrix, type="matrix")
+        cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[1]", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
         cmds.connectAttr(f"{mult_matrix_negate_head}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
         self.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
@@ -594,7 +592,7 @@ class EyelidModule(object):
             cmds.connectAttr(f"{four_by_four_matrix}.output", f"{parent_matrix}.target[0].targetMatrix") # Connect the origin four by four matrix to the parent matrix target
 
             aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_{name}Eyelid0{i}_AIM", ss=True)
-            cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
+            cmds.setAttr(f"{aim_matrix}.inputMatrix", self.eye_guide_matrix, type="matrix")
             cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 0, 0, 1)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{aim_matrix}.primaryTargetMatrix")
             temp_trn = cmds.createNode("transform", name=f"{self.side}_{name}Eyelid0{i}_TEMP", ss=True)
@@ -624,7 +622,7 @@ class EyelidModule(object):
 
             aim_matrix_final = cmds.createNode("aimMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_AIM", ss=True)
             cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{aim_matrix_final}.inputMatrix")
-            cmds.connectAttr(f"{self.eye_guide}.worldMatrix[0]", f"{aim_matrix_final}.primaryTargetMatrix")
+            cmds.setAttr(f"{aim_matrix_final}.primaryTargetMatrix", self.eye_guide_matrix, type="matrix")
             
             cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, 0, -1)
 
@@ -685,7 +683,7 @@ class EyelidModule(object):
         cmds.select(cl=True)
 
         main_sockets = cmds.createNode("transform", name=f"{self.side}_mainEyelidSockets_GRP", ss=True, p=self.controllers_grp)
-        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{main_sockets}.offsetParentMatrix")
+        cmds.setAttr(f"{main_sockets}.offsetParentMatrix", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
         main_condition = cmds.createNode("condition", name=f"{self.side}_mainEyelidSockets_COND", ss=True)
         cmds.setAttr(f"{main_condition}.operation", 3)  # Equal
         cmds.setAttr(f"{main_condition}.secondTerm", 1)
@@ -701,7 +699,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{secondary_condition}.colorIfFalseR", 0)
         cmds.connectAttr(f"{self.face_ctl}.Sockets", f"{secondary_condition}.firstTerm")
         cmds.connectAttr(f"{secondary_condition}.outColorR", f"{secondary_sockets}.visibility", f=True)
-        cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{secondary_sockets}.offsetParentMatrix")
+        cmds.setAttr(f"{secondary_sockets}.offsetParentMatrix", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
 
         socket_logic = {
             "upperSocket": ("upInSocket", "upOutSocket"),
@@ -712,20 +710,20 @@ class EyelidModule(object):
 
         socket_main_controllers = []
         driver_ctls_cache = {}
+        driver_guide_matrices = {}
 
         for socket, (driver1, driver2) in socket_logic.items():
 
             parent_name = f"{self.side}_{socket}"
-            parent_guide = cmds.createNode("transform", name=f"{parent_name}_GUIDE", ss=True, p=self.module_trn)
-            cmds.matchTransform(parent_guide, f"{self.side}_{socket}_JNT", pos=True)
-
-            if self.side == "R":
-                cmds.setAttr(f"{parent_guide}.scaleX", -1)
+            # Matriz horneada de la guía del socket (posición + escala X en R), sin transform _GUIDE vivo
+            socket_pos = cmds.xform(f"{self.side}_{socket}_JNT", q=True, ws=True, t=True)
+            scale_x = -1.0 if self.side == "R" else 1.0
+            parent_guide_matrix = [scale_x, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, socket_pos[0], socket_pos[1], socket_pos[2], 1]
 
             parent_nodes, parent_ctl = curve_tool.create_controller(
                 name=parent_name, offset=["GRP", "OFF"], parent=main_sockets
             )
-            cmds.connectAttr(f"{parent_guide}.worldMatrix[0]", f"{parent_nodes[0]}.offsetParentMatrix")
+            cmds.setAttr(f"{parent_nodes[0]}.offsetParentMatrix", parent_guide_matrix, type="matrix")
             socket_main_controllers.append(parent_ctl)
 
             if "upperSocket" in socket:
@@ -753,10 +751,10 @@ class EyelidModule(object):
 
                 if driver_name not in driver_ctls_cache:
 
-                    driver_guide = cmds.createNode(
-                        "transform", name=f"{driver_name}_GUIDE", ss=True, p=self.module_trn
+                    # Matriz horneada de la guía del driver, sin transform _GUIDE vivo
+                    driver_guide_matrices[driver_name] = om.MMatrix(
+                        cmds.getAttr(f"{self.side}_{driver}_JNT.worldMatrix[0]")
                     )
-                    cmds.matchTransform(driver_guide, f"{self.side}_{driver}_JNT")
 
                     driver_nodes, driver_ctl = curve_tool.create_controller(
                         name=driver_name, offset=["GRP", "OFF"], parent=secondary_sockets
@@ -775,7 +773,10 @@ class EyelidModule(object):
 
                 driver_ctl, driver_nodes, wam, wam_jnt, driver_skinning_jnt = driver_ctls_cache[driver_name]
 
-                offset_matrix = matrix_manager.get_offset_matrix(f"{driver_name}_GUIDE", f"{parent_mult_matrix}.matrixSum")
+                offset_matrix = list(
+                    driver_guide_matrices[driver_name]
+                    * om.MMatrix(cmds.getAttr(f"{parent_mult_matrix}.matrixSum")).inverse()
+                )
 
                 if not cmds.listConnections(f"{wam}.wtMatrix[0].matrixIn", source=True, destination=False):
                     idx = 0

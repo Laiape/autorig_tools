@@ -93,11 +93,11 @@ class ClavicleModule(object):
         """
 
         self.clavicle_joint = guides_manager.get_guides(f"{self.side}_clavicle_JNT")
-       
+
         cmds.parent(self.clavicle_joint, self.module_trn)
 
-        self.clavicle_guide = cmds.createNode("transform", name=f"{self.side}_clavicle_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.clavicle_guide, self.clavicle_joint)
+        # Matriz horneada de la guía (estática) en lugar de un transform _GUIDE vivo
+        self.clavicle_guide_matrix = cmds.getAttr(f"{self.clavicle_joint[0]}.worldMatrix[0]")
 
     def clavicle_setup(self):
 
@@ -105,7 +105,7 @@ class ClavicleModule(object):
         
         created_grps, self.ctl_ik = curve_tool.create_controller(f"{self.side}_clavicle", ["GRP", "OFF"])
         cmds.parent(created_grps[0], self.controllers_grp)
-        cmds.connectAttr(f"{self.clavicle_guide}.worldMatrix[0]", f"{created_grps[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{created_grps[0]}.offsetParentMatrix", self.clavicle_guide_matrix, type="matrix")
         cmds.connectAttr(f"{self.ctl_ik}.worldMatrix[0]", f"{self.clavicle_joint[0]}.offsetParentMatrix")
 
         self.lock_attributes(self.ctl_ik, [ "sx", "sy", "sz", "v"])

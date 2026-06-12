@@ -54,7 +54,7 @@ class NeckModule(object):
                             {
                                 "head_ctl": self.head_ctl,
                                 "face_ctl": self.face_ctl,
-                                "head_guide": self.head_guide,
+                                "head_guide_matrix": self.head_guide_matrix,
                                 "mGear": self.mGear,
                             })
             
@@ -68,7 +68,7 @@ class NeckModule(object):
                             {
                                 "head_ctl": self.neck_ctls[-1],
                                 "neck_ctl": self.neck_ctls[0],
-                                "head_guide": self.head_guide,
+                                "head_guide_matrix": self.head_guide_matrix,
                                 "face_ctl": self.face_ctl,
                             })
             # Clean up and store data
@@ -100,10 +100,9 @@ class NeckModule(object):
             self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
 
         cmds.select(clear=True)
-        self.neck_guide = cmds.createNode("transform", name=f"{self.side}_neck_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.neck_guide, self.neck_chain[0], pos=True, rot=True, scl=False)
-        self.head_guide = cmds.createNode("transform", name=f"{self.side}_head_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.head_guide, self.neck_chain[-1], pos=True, rot=True, scl=False)
+        # Matrices horneadas de las guías (estáticas) en lugar de transforms _GUIDE vivos
+        self.neck_guide_matrix = cmds.getAttr(f"{self.neck_chain[0]}.worldMatrix[0]")
+        self.head_guide_matrix = cmds.getAttr(f"{self.neck_chain[-1]}.worldMatrix[0]")
        
 
     def controller_creation(self):
@@ -137,10 +136,10 @@ class NeckModule(object):
 
                 
                 if i == len(self.neck_chain) - 1:
-                    cmds.connectAttr(f"{self.head_guide}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix")
+                    cmds.setAttr(f"{corner_nodes[0]}.offsetParentMatrix", self.head_guide_matrix, type="matrix")
                     cmds.xform(corner_nodes[0], m=om.MMatrix.kIdentity)
                 else:
-                    cmds.connectAttr(f"{self.neck_guide}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix")
+                    cmds.setAttr(f"{corner_nodes[0]}.offsetParentMatrix", self.neck_guide_matrix, type="matrix")
                     cmds.xform(corner_nodes[0], m=om.MMatrix.kIdentity)
                 cmds.parent(corner_nodes[0], self.controllers_grp)
                 
@@ -236,5 +235,5 @@ class NeckModule(object):
         self.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
-        cmds.matchTransform(self.head_guide, self.head_ctl, pos=True, rot=True, scl=False)
+        self.head_guide_matrix = cmds.getAttr(f"{self.head_ctl}.worldMatrix[0]")
         cmds.matchTransform(face_nodes[0], self.head_ctl, pos=True, rot=True)

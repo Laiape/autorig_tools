@@ -93,7 +93,6 @@ class ArmModule(object):
         self.settings_loc = guides_manager.get_guides(f"{self.side}_armSettings_LOCShape")
 
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.arm_chain, self.primaryInputAxis, self.secondaryInputAxis)
-        cmds.parent(self.guides_trns[0], self.module_trn)
 
     def create_chains(self):
 
@@ -334,8 +333,6 @@ class ArmModule(object):
         if soft_distance < 0.01:
             soft_distance = 0.1
 
-        self.soft_off = cmds.createNode("transform", name=f"{self.side}_armSoft_OFF", p=self.module_trn)
-        
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_armSoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
         cmds.connectAttr(f"{self.ik_wrist_ctl}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
@@ -346,10 +343,13 @@ class ArmModule(object):
         cmds.setAttr(f"{aim_matrix}.secondaryInputAxisY", 1)
         cmds.setAttr(f"{aim_matrix}.secondaryInputAxisZ", 0)
         cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
-        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
 
-        self.soft_trn = cmds.createNode("transform", name=f"{self.side}_armSoft_TRN", p=self.soft_off)
-        # cmds.matchTransform(self.soft_trn, self.arm_chain[-1], pos=True)
+        # Soft sin nodos DAG: composeMatrix(tx soft) * aimMatrix replica el
+        # worldMatrix del antiguo {side}_armSoft_TRN (hijo de {side}_armSoft_OFF)
+        self.soft_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_armSoft_CMX", ss=True)
+        self.soft_mmx = cmds.createNode("multMatrix", name=f"{self.side}_armSoft_MMX", ss=True)
+        cmds.connectAttr(f"{self.soft_cmx}.outputMatrix", f"{self.soft_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_mmx}.matrixIn[1]")
 
         nodes_to_create = {
         f"{self.side}_armDistanceToControl_DBT": ("distanceBetween", None),  # 0
@@ -452,7 +452,7 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix1")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.created_nodes[1]}.input2")
 
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_cmx}.inputTranslateX")
         if self.side == "L":
             cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
             cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[-1]}.translateX")
@@ -466,7 +466,7 @@ class ArmModule(object):
             cmds.connectAttr(f"{abs_up}.output", f"{self.ik_chain[1]}.translateX")
             cmds.connectAttr(f"{abs_low}.output", f"{self.ik_chain[-1]}.translateX")
 
-        cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{self.soft_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix", force=True)
         cmds.orientConstraint(self.ik_wrist_ctl, self.ik_chain[-1], maintainOffset=False)
         cmds.connectAttr(f"{self.ik_root_ctl}.worldMatrix[0]", f"{self.ik_chain[0]}.offsetParentMatrix")
 
@@ -525,9 +525,9 @@ class ArmModule(object):
 
 
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
-        cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
         cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondaryInputAxis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim

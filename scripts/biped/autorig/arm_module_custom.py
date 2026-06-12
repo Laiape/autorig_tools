@@ -94,7 +94,6 @@ class ArmModule(object):
         self.settings_loc = guides_manager.get_guides(f"{self.side}_armSettings_LOCShape")
 
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.arm_chain, self.primaryInputAxis, self.secondaryInputAxis)
-        cmds.parent(self.guides_trns[0], self.module_trn)
 
     def create_chains(self):
 
@@ -476,9 +475,9 @@ class ArmModule(object):
 
 
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
-        cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
         cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondaryInputAxis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim

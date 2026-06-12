@@ -30,7 +30,7 @@ class CheekboneModule(object):
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
+        self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
         self.mGear = data_manager.DataExportBiped().get_data("neck_module", "mGear")
         
 
@@ -173,8 +173,10 @@ class CheekboneModule(object):
         grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", "ANM"])
         self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
         
-        cheek_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "_GUIDE"), ss=True, p=self.module_trn)
-        cmds.matchTransform(cheek_trn, self.cheek_guide[0], pos=True)
+        # Matriz horneada (solo posición) de la guía del cheek, sin transform _GUIDE vivo
+        cheek_pos = cmds.xform(self.cheek_guide[0], q=True, ws=True, t=True)
+        cheek_guide_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, cheek_pos[0], cheek_pos[1], cheek_pos[2], 1]
+        head_inverse_matrix = list(om.MMatrix(self.head_guide_matrix).inverse())
 
         condition_cheek = cmds.createNode("condition", name="C_cheekControllers_COND", ss=True)
         cmds.setAttr(f"{condition_cheek}.operation", 0)  # Equal
@@ -186,16 +188,16 @@ class CheekboneModule(object):
 
         if self.side == "L":
             mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "_MMX"), ss=True)
-            cmds.connectAttr(f"{cheek_trn}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-            cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[0]", cheek_guide_matrix, type="matrix")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[1]", head_inverse_matrix, type="matrix")
 
         if self.side == "R":
             mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Flip_MMX"), ss=True)
             four_by_four = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "Flip_FFM"), ss=True)
             cmds.setAttr(f"{four_by_four}.in00", -1)
             cmds.connectAttr(f"{four_by_four}.output", f"{mult_matrix}.matrixIn[0]")
-            cmds.connectAttr(f"{cheek_trn}.worldMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-            cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[2]")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[1]", cheek_guide_matrix, type="matrix")
+            cmds.setAttr(f"{mult_matrix}.matrixIn[2]", head_inverse_matrix, type="matrix")
 
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{grp[0]}.offsetParentMatrix")
         cmds.xform(grp[0], m=om.MMatrix.kIdentity)

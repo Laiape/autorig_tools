@@ -113,7 +113,6 @@ class LegModule(object):
 
 
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(guides=self.leg_chain, primaryInputAxis=self.primary_axis, secondaryInputAxis=self.secondary_axis)
-        cmds.parent(self.guides_trns[0], self.module_trn)
 
 
     def create_chains(self):
@@ -486,26 +485,30 @@ class LegModule(object):
 
         offset_matrix = child_world_matrix * parent_world_matrix.inverse()
 
-        soft_ik_handle = cmds.createNode("transform", name=f"{self.side}_legIkHandleManager_TRN", ss=True, p=self.module_trn)
+        # IkHandle manager sin nodo DAG: el parentMatrix ya da el worldMatrix
+        # del antiguo {side}_legIkHandleManager_TRN (su local era identidad)
         parent_matrix = cmds.createNode("parentMatrix", name=f"{self.side}_legSoftIkHDL_PM", ss=True)
         ankle_wM = cmds.getAttr(f"{self.ik_chain[2]}.worldMatrix[0]")
         cmds.setAttr(f"{parent_matrix}.inputMatrix", ankle_wM, type="matrix")
         cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", offset_matrix, type="matrix")
         cmds.connectAttr(f"{self.ik_controllers[-1]}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
-        cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{soft_ik_handle}.offsetParentMatrix")
+        soft_ik_handle_matrix = f"{parent_matrix}.outputMatrix"
 
-        self.soft_off = cmds.createNode("transform", name=f"{self.side}_legSoft_OFF", p=self.module_trn)
         aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_legSoftOff_AMT", ss=True)
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{aim_matrix}.inputMatrix")
-        cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{aim_matrix}.primary.primaryTargetMatrix")
+        cmds.connectAttr(soft_ik_handle_matrix, f"{aim_matrix}.primary.primaryTargetMatrix")
         absolut_primary_axis = tuple(abs(x) for x in self.primary_axis)
         cmds.setAttr(f"{aim_matrix}.primaryInputAxis", *absolut_primary_axis, type="double3")
         cmds.setAttr(f"{aim_matrix}.secondaryInputAxis", *self.secondary_axis, type="double3")
         cmds.setAttr(f"{aim_matrix}.primaryMode", 1)
-        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_off}.offsetParentMatrix")
 
-        self.soft_trn = cmds.createNode("transform", name=f"{self.side}_legSoft_TRN", p=self.soft_off)
-        cmds.matchTransform(self.soft_trn, self.leg_chain[2], pos=True)
+        # Soft sin nodos DAG: composeMatrix(tx soft) * aimMatrix replica el
+        # worldMatrix del antiguo {side}_legSoft_TRN (hijo de {side}_legSoft_OFF;
+        # el tobillo cae sobre el eje primario del aim, así que ty/tz eran 0)
+        self.soft_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_legSoft_CMX", ss=True)
+        self.soft_mmx = cmds.createNode("multMatrix", name=f"{self.side}_legSoft_MMX", ss=True)
+        cmds.connectAttr(f"{self.soft_cmx}.outputMatrix", f"{self.soft_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{aim_matrix}.outputMatrix", f"{self.soft_mmx}.matrixIn[1]")
 
         nodes_to_create = {
         f"{self.side}_legDistanceToControl_DBT": ("distanceBetween", None),  # 0
@@ -602,7 +605,7 @@ class LegModule(object):
         cmds.connectAttr(f"{self.ik_controllers[0]}.upperLengthMult", f"{self.created_nodes[4]}.input[0]")
         cmds.connectAttr(f"{self.ik_controllers[0]}.lowerLengthMult", f"{self.created_nodes[10]}.input[0]")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Stretch", f"{self.created_nodes[22]}.input[1]")
-        cmds.connectAttr(f"{soft_ik_handle}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix2")
+        cmds.connectAttr(soft_ik_handle_matrix, f"{self.created_nodes[0]}.inMatrix2")
         cmds.connectAttr(f"{self.ik_controllers[0]}.Soft", f"{self.created_nodes[2]}.inputValue")
 
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix1")
@@ -622,9 +625,9 @@ class LegModule(object):
             cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
         
         
-        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_trn}.translateX")
+        cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_cmx}.inputTranslateX")
 
-        cmds.connectAttr(f"{self.soft_trn}.worldMatrix[0]", f"{self.ik_handle}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{self.soft_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix", force=True)
 
     def knee_pin_setup(self):
         """
@@ -672,9 +675,9 @@ class LegModule(object):
         """
 
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_legGuides_AIM", ss=True)
-        cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
         cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primary_axis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim

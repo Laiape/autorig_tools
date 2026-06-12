@@ -31,7 +31,7 @@ class TongueModule(object):
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
-        self.head_guide = data_manager.DataExportBiped().get_data("neck_module", "head_guide")
+        self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
     def make(self, side):
 
@@ -79,7 +79,6 @@ class TongueModule(object):
         self.tongue_guides = guides_manager.get_guides(f"{self.side}_tongue00_JNT")
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(self.tongue_guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0))
         cmds.delete(self.tongue_guides[0])
-        cmds.parent(self.guides_trns[0], self.module_trn)
     
     def create_controllers(self):
 
@@ -104,7 +103,7 @@ class TongueModule(object):
                 jaw_grp_inv_wm = cmds.listConnections(f"{jaw}.matrixIn[1]", plugs=True, source=True)[0]
 
                 cmds.connectAttr(matrix, f"{mmx}.matrixIn[0]")
-                cmds.connectAttr(f"{self.head_guide}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
+                cmds.setAttr(f"{mmx}.matrixIn[1]", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
                 cmds.connectAttr(jaw_ctl_wm, f"{mmx}.matrixIn[2]")
                 cmds.connectAttr(jaw_grp_inv_wm, f"{mmx}.matrixIn[3]")
 

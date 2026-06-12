@@ -2,6 +2,7 @@ from importlib import reload
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import json
+import math
 import os
 import pathlib
 
@@ -724,82 +725,127 @@ def mirror_guides():
     om.MGlobal.displayInfo(f"Mirror finalizado: {count} guide(s) procesados de L → R.")
 
 
+def _axis_index_sign(axis):
+    """Devuelve el índice del eje cardinal dominante y su signo (+1/-1)."""
+    idx = max(range(3), key=lambda i: abs(axis[i]))
+    return idx, (1.0 if axis[idx] >= 0 else -1.0)
+
+
+def _aim_matrix(pos, aim_pos, up_pos, primary_axis, secondary_axis):
+    """
+    Matriz mundo equivalente a un aimMatrix con secondaryMode=Aim: el eje
+    primario apunta a aim_pos, el secundario hacia up_pos (ortogonalizado)
+    y la traslación queda en pos. Calculada en Python, sin crear nodos.
+    """
+    aim = om.MVector(aim_pos) - om.MVector(pos)
+    if aim.length() < 1e-6:
+        aim = om.MVector(1.0, 0.0, 0.0)
+    aim.normalize()
+
+    up = om.MVector(up_pos) - om.MVector(pos)
+    up -= aim * (up * aim)  # proyección ortogonal al eje primario
+    if up.length() < 1e-6:
+        world_up = om.MVector(0.0, 1.0, 0.0)
+        if abs(aim * world_up) > 0.999:
+            world_up = om.MVector(0.0, 0.0, 1.0)
+        up = world_up - aim * (world_up * aim)
+    up.normalize()
+
+    primary_idx, primary_sign = _axis_index_sign(primary_axis)
+    secondary_idx, secondary_sign = _axis_index_sign(secondary_axis)
+    third_idx = 3 - primary_idx - secondary_idx
+    # signo de Levi-Civita para que la base resultante sea una rotación pura
+    parity = 1.0 if (primary_idx, secondary_idx) in ((0, 1), (1, 2), (2, 0)) else -1.0
+    third = (aim ^ up) * (primary_sign * secondary_sign * parity)
+
+    rows = [None] * 3
+    rows[primary_idx] = aim * primary_sign
+    rows[secondary_idx] = up * secondary_sign
+    rows[third_idx] = third
+    return om.MMatrix([
+        rows[0].x, rows[0].y, rows[0].z, 0.0,
+        rows[1].x, rows[1].y, rows[1].z, 0.0,
+        rows[2].x, rows[2].y, rows[2].z, 0.0,
+        pos.x, pos.y, pos.z, 1.0,
+    ])
+
+
+def _with_translation(matrix, pos):
+    """Copia una matriz sustituyendo su traslación."""
+    values = list(matrix)
+    values[12:15] = [pos.x, pos.y, pos.z]
+    return om.MMatrix(values)
+
+
+def _scale_rotation(matrix, weight):
+    """Rotación de la matriz escalada por weight (slerp desde identidad)."""
+    quat = om.MTransformationMatrix(matrix).rotation(asQuaternion=True)
+    w = max(-1.0, min(1.0, quat.w))
+    sin_half = math.sqrt(max(0.0, 1.0 - w * w))
+    if sin_half < 1e-9:
+        return om.MMatrix.kIdentity
+    axis = om.MVector(quat.x, quat.y, quat.z) / sin_half
+    half = math.acos(w) * weight
+    s = math.sin(half)
+    return om.MQuaternion(axis.x * s, axis.y * s, axis.z * s, math.cos(half)).asMatrix()
+
+
 def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0), ribbon=False):
 
     """
-    Orienta las guías. Para cada guía, si tiene hijos, se orienta hacia el primer hijo. Si no tiene hijos, se orienta hacia el padre.
+    Orienta las guías. Cada guía se orienta hacia la siguiente (la última hereda
+    la orientación de la anterior). Las matrices se calculan en Python y se
+    hornean como valores estáticos en un único nodo network, en vez de dejar
+    transforms + aimMatrix/blendMatrix vivos en el rig: las guías no se mueven
+    después del build, así que el resultado es el mismo sin coste de evaluación.
+
+    Returns:
+        guides_matrices (list): atributos de matriz orientada por guía (conectables).
+        point_matrices (list): atributos de matriz de posición (rotación identidad)
+            por guía; sustituyen al worldMatrix de los antiguos trn_guides.
     """
-    guide_suffix = guides[0].split("_")[-1] if guides else "GUIDE"
+    positions = [om.MVector(cmds.xform(g, q=True, ws=True, t=True)) for g in guides]
+    count = len(positions)
 
-    trn_guides = [] # Lista para almacenar los nuevos transform orientadores de las guías
+    side, base_name = guides[0].split("_")[0:2]
+    net = cmds.createNode("network", name=f"{side}_{base_name}Guides_NET", ss=True)
+    cmds.addAttr(net, longName="orientMatrix", dataType="matrix", multi=True)
+    cmds.addAttr(net, longName="pointMatrix", dataType="matrix", multi=True)
 
-    for guide in guides:
-        
-        trn_guide = cmds.createNode("transform", name=guide.replace(guide_suffix, "GUIDE"), ss=True)
-        cmds.matchTransform(trn_guide, guide, pos=True)
-        if trn_guides:
-            cmds.parent(trn_guide, trn_guides[-1])
-        trn_guides.append(trn_guide)
+    sec_axis = tuple(secondaryInputAxis)
+    matrices = []
 
-    guides_matrices = [] # Lista para almacenar las matrices de las guías
+    for i, guide in enumerate(guides):
 
-    for i, guide in enumerate(trn_guides):
+        # A partir del ankle (incluido) el eje secundario se invierte
+        if "ankle" in guide.split("_")[1]:
+            sec_axis = tuple(-v for v in sec_axis)
 
-        guide_suffix = guide.split("_")[-1]
-        guide_name = guide.split("_")[1]
+        pos = positions[i]
 
-        if "ankle" in guide_name:
-            secondaryInputAxis = tuple(-v for v in secondaryInputAxis)
-        
         if i == 0:
+            up_pos = positions[2] if count > 2 else om.MVector(0.0, 0.0, 0.0)
+            matrix = _aim_matrix(pos, positions[1], up_pos, primaryInputAxis, sec_axis)
 
-            matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
-            cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-            cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
-            cmds.setAttr(f"{matrix_node}.primaryInputAxis", *primaryInputAxis)
-            cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
-            try:
-                    cmds.connectAttr(f"{trn_guides[i+2]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
-            except:
-                pass
-
-        elif i == len(trn_guides) - 1:
+        elif i == count - 1:
             if ribbon:
-                matrix_node = cmds.createNode("blendMatrix", name=guide.replace(guide_suffix, "BLM"), ss=True)
-                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(guides_matrices[0], f"{matrix_node}.target[0].targetMatrix")
-                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", 0)
-                cmds.setAttr(f"{matrix_node}.target[0].translateWeight", 1)
-                cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 1)
-                cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 1)
+                matrix = _with_translation(om.MMatrix.kIdentity, pos)
             else:
-                matrix_node = cmds.createNode("blendMatrix", name=guide.replace(guide_suffix, "BLM"), ss=True)
-                cmds.connectAttr(guides_matrices[-1], f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.target[0].targetMatrix")
-                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", 0)
-                cmds.setAttr(f"{matrix_node}.target[0].translateWeight", 1)
-                cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 0)
-                cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 0)
+                # rotación de la guía anterior con la posición propia
+                matrix = _with_translation(matrices[-1], pos)
 
         else:
             if ribbon:
-                matrix_node = cmds.createNode("blendMatrix", name=guide.replace(guide_suffix, "BLM"), ss=True)
-                weight = 1.0 - (i / (len(trn_guides) - 1))
-                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(guides_matrices[0], f"{matrix_node}.target[0].targetMatrix")
-                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", weight)
+                weight = 1.0 - (i / (count - 1))
+                matrix = _with_translation(_scale_rotation(matrices[0], weight), pos)
             else:
-                matrix_node = cmds.createNode("aimMatrix", name=guide.replace(guide_suffix, "AIM"), ss=True)
-                cmds.connectAttr(f"{guide}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
-                cmds.connectAttr(f"{trn_guides[i-1]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
-                cmds.setAttr(f"{matrix_node}.primaryInputAxis", *primaryInputAxis)
-                cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *secondaryInputAxis)
-                cmds.setAttr(f"{matrix_node}.secondaryMode", 1)
-                
-                
-        if cmds.nodeType(matrix_node) == "aimMatrix":
-            cmds.setAttr(f"{matrix_node}.secondaryMode", 1)
-        guides_matrices.append(f"{matrix_node}.outputMatrix")
+                matrix = _aim_matrix(pos, positions[i + 1], positions[i - 1], primaryInputAxis, sec_axis)
 
-    return guides_matrices, trn_guides
+        cmds.setAttr(f"{net}.orientMatrix[{i}]", list(matrix), type="matrix")
+        cmds.setAttr(f"{net}.pointMatrix[{i}]", list(_with_translation(om.MMatrix.kIdentity, pos)), type="matrix")
+        matrices.append(matrix)
+
+    guides_matrices = [f"{net}.orientMatrix[{i}]" for i in range(count)]
+    point_matrices = [f"{net}.pointMatrix[{i}]" for i in range(count)]
+
+    return guides_matrices, point_matrices

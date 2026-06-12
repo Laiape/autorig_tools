@@ -114,7 +114,6 @@ class LegModule(object):
 
 
         self.guides_matrices, self.guides_trns = guides_manager.orient_guides(guides=self.leg_chain, primaryInputAxis=self.primary_axis, secondaryInputAxis=self.secondary_axis)
-        cmds.parent(self.guides_trns[0], self.module_trn)
 
 
     def create_chains(self):
@@ -633,9 +632,9 @@ class LegModule(object):
         """
 
         guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_legGuides_AIM", ss=True)
-        cmds.connectAttr(f"{self.guides_trns[0]}.worldMatrix[0]", f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(f"{self.guides_trns[1]}.worldMatrix[0]", f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(f"{self.guides_trns[2]}.worldMatrix[0]", f"{guides_aim}.secondary.secondaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
+        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
+        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
         cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primary_axis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
         cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim

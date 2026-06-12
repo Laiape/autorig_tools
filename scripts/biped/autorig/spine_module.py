@@ -78,11 +78,9 @@ class SpineModule(object):
         self.spine_chain = guides_manager.get_guides(f"{self.side}_spine00_JNT")
         cmds.parent(self.spine_chain[0], self.module_trn)
 
-        self.body_guide = cmds.createNode("transform", name=f"{self.side}_body_GUIDE", ss=True, p=self.module_trn)
-        cmds.matchTransform(self.body_guide, self.spine_chain[0], pos=True, rot=True, scl=False)
-
-        self.chest_guide = cmds.createNode("transform", name=f"{self.side}_chest_GUIDE", ss=True, p=self.body_guide)
-        cmds.matchTransform(self.chest_guide, self.spine_chain[-1], pos=True, rot=True, scl=False)
+        # Matrices horneadas de las guías (estáticas) en lugar de transforms _GUIDE vivos
+        self.body_guide_matrix = cmds.getAttr(f"{self.spine_chain[0]}.worldMatrix[0]")
+        self.chest_guide_matrix = cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")
 
     def controller_creation(self):
 
@@ -91,12 +89,12 @@ class SpineModule(object):
         """
 
         self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC"])
-        cmds.connectAttr(f"{self.body_guide}.worldMatrix[0]", f"{self.body_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.body_nodes[0]}.offsetParentMatrix", self.body_guide_matrix, type="matrix")
         cmds.xform(self.body_nodes[0], m=om.MMatrix.kIdentity)
         cmds.parent(self.body_nodes[0], self.controllers_grp)
 
         self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC"])
-        cmds.connectAttr(f"{self.body_guide}.worldMatrix[0]", f"{self.local_hip_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.local_hip_nodes[0]}.offsetParentMatrix", self.body_guide_matrix, type="matrix")
         cmds.xform(self.local_hip_nodes[0], m=om.MMatrix.kIdentity)
         cmds.parent(self.local_hip_nodes[0], self.controllers_grp)
 
@@ -223,12 +221,22 @@ class SpineModule(object):
         cmds.addAttr(self.spine_ctls[-1], longName="follow", niceName="Follow", attributeType="enum", enumName="Local:World", keyable=True, dv=0)
         last_spine_space_switch_parentMatrix = cmds.createNode("parentMatrix", name=f"{self.side}_lastSpineSpaceSwitch_PMX")
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_lastSpineSpaceSwitch_REV")
-        cmds.connectAttr(f"{self.chest_guide}.worldMatrix[0]", f"{last_spine_space_switch_parentMatrix}.inputMatrix")
+        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.inputMatrix", self.chest_guide_matrix, type="matrix")
         cmds.connectAttr(f"{self.spine_ctls[len(self.spine_ctls) // 2]}.worldMatrix[0]", f"{last_spine_space_switch_parentMatrix}.target[0].targetMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.follow", f"{reverse_node}.inputX")
         cmds.connectAttr(f"{reverse_node}.outputX", f"{last_spine_space_switch_parentMatrix}.target[0].weight")
         cmds.connectAttr(f"{last_spine_space_switch_parentMatrix}.outputMatrix", f"{self.spine_nodes[-1]}.offsetParentMatrix")
-        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(self.chest_guide, self.spine_nodes[len(self.spine_ctls) // 2]), type="matrix")
+        chest_offset = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.spine_nodes[len(self.spine_ctls) // 2]}.worldMatrix[0]")).inverse()
+        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[0].offsetMatrix", list(chest_offset), type="matrix")
+
+        # En modo World (peso del target[0] = 0) el parentMatrix devolvía la matriz
+        # de reposo estática y, con inheritsTransform=0, el chest ignoraba el
+        # masterwalk (posición y escala global). El modo World ahora sigue al
+        # masterwalk como segundo target.
+        chest_masterwalk_offset = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]")).inverse()
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{last_spine_space_switch_parentMatrix}.target[1].targetMatrix")
+        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[1].offsetMatrix", list(chest_masterwalk_offset), type="matrix")
+        cmds.connectAttr(f"{self.spine_ctls[-1]}.follow", f"{last_spine_space_switch_parentMatrix}.target[1].weight")
         cmds.setAttr(f"{self.spine_nodes[-1]}.inheritsTransform", 0)
         cmds.xform(self.spine_nodes[-1], m=om.MMatrix.kIdentity)
 
@@ -325,8 +333,17 @@ class SpineModule(object):
 
         cmds.connectAttr(f"{strecth_value_mult}.output", f"{stretch_value_negate}.input[0]")
 
+        # El translateY de la cadena va en unidades locales pero la curva IK vive
+        # en espacio world (con la escala del masterwalk): sin multiplicar por
+        # globalScale la cadena solo cubre 1/escala de la curva y el volume
+        # preservation se dispara. La cadena reversed usa la curva estática del
+        # módulo (sin escala), así que conserva el valor sin escalar.
+        stretch_value_scaled = cmds.createNode("multiply", name=f"{self.side}_spineStretchValueScaled_MUL")
+        cmds.connectAttr(f"{strecth_value_mult}.output", f"{stretch_value_scaled}.input[0]")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{stretch_value_scaled}.input[1]")
+
         for jnt in self.spine_chain[1:]:
-            cmds.connectAttr(f"{strecth_value_mult}.output", f"{jnt}.translateY")
+            cmds.connectAttr(f"{stretch_value_scaled}.output", f"{jnt}.translateY")
         
         for jnt in reversed_spine_chain[1:]:
             cmds.connectAttr(f"{stretch_value_negate}.output", f"{jnt}.translateY")
@@ -339,7 +356,13 @@ class SpineModule(object):
         cmds.connectAttr(f"{self.body_ctl}.spineStretch", f"{last_jnt_stretch_blend}.attributesBlender")
         cmds.connectAttr(f"{last_jnt_default_const}.outFloat", f"{last_jnt_stretch_blend}.input[0]")
         cmds.connectAttr(f"{strecth_value_mult}.output", f"{last_jnt_stretch_blend}.input[1]")
-        cmds.connectAttr(f"{last_jnt_stretch_blend}.output", f"{self.spine_chain[-1]}.translateY", force=True) # Override the connection
+
+        # Mismo ajuste de globalScale para la última joint (su blend trabaja en
+        # unidades locales de reposo)
+        last_jnt_stretch_scaled = cmds.createNode("multiply", name=f"{self.side}_spineLastJntStretchScaled_MUL")
+        cmds.connectAttr(f"{last_jnt_stretch_blend}.output", f"{last_jnt_stretch_scaled}.input[0]")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{last_jnt_stretch_scaled}.input[1]")
+        cmds.connectAttr(f"{last_jnt_stretch_scaled}.output", f"{self.spine_chain[-1]}.translateY", force=True) # Override the connection
 
         # ------ Offset setup ------
         nearest_point_node = cmds.createNode("nearestPointOnCurve", name=f"{self.side}_spineOffset_NPC")
@@ -436,12 +459,23 @@ class SpineModule(object):
             cmds.setAttr(f"{spine_settings_trn}.{attr}", k=False, l=True, cb=False)
 
         # ----- Output joints ------
+        # Los AttachedFk derivan de deltas del joint chain del IK (escala 1):
+        # hay que inyectar el globalScale en la matriz de skinning para que el
+        # spine escale igual que el resto del cuerpo (cuyas joints toman el
+        # worldMatrix de controles bajo el masterwalk, con la escala incluida).
+        global_scale_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_spineSkinningGlobalScale_CMX", ss=True)
+        for axis in "XYZ":
+            cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{global_scale_cmx}.inputScale{axis}")
+
         output_joints = []
 
         for i, ctl in enumerate(self.fk_controllers):
-            
+
             jnt = cmds.createNode("joint", name=f"{ctl.replace('AttatchedFk_CTL', 'Skinning_JNT')}", ss=True, p=self.skeleton_grp)
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
+            scale_mmx = cmds.createNode("multMatrix", name=f"{ctl.replace('AttatchedFk_CTL', 'SkinningScale_MMX')}", ss=True)
+            cmds.connectAttr(f"{global_scale_cmx}.outputMatrix", f"{scale_mmx}.matrixIn[0]")
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{scale_mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{scale_mmx}.matrixSum", f"{jnt}.offsetParentMatrix")
             output_joints.append(jnt)
         
         translations = []

@@ -69,6 +69,7 @@ class FingersModule(object):
         self._ctl   = {n: [] for n in self.FINGER_NAMES}
         self._nodes = {n: [] for n in self.FINGER_NAMES}
         self._sdk   = {n: [] for n in self.FINGER_NAMES}
+        self.skinning_joints = {n: [] for n in self.FINGER_NAMES}
 
         skin_trns = {
             name: cmds.createNode("transform", name=f"{self.side}_{name}Skinning_GRP", ss=True, p=self.skeleton_grp)
@@ -81,14 +82,16 @@ class FingersModule(object):
             nodes_list = self._nodes[fname]
             sdk_list   = self._sdk[fname]
 
-            for i, joint in enumerate(finger):
-                if "End" in joint:
-                    continue
+            # The imported guides become the skinning chain: drop the End
+            # guides and move the chain under the skeleton group.
+            chain      = [jnt for jnt in finger if "End" not in jnt]
+            end_joints = [jnt for jnt in finger if "End" in jnt]
+            if end_joints:
+                cmds.delete(end_joints)
+            cmds.parent(chain[0], skin_trns[fname])
 
+            for i, joint in enumerate(chain):
                 cmds.select(clear=True)
-                skinning_jnt = cmds.joint(name=joint.replace("_JNT", "Skinning_JNT"))
-                cmds.connectAttr(f"{joint}.worldMatrix[0]", f"{skinning_jnt}.offsetParentMatrix")
-                cmds.parent(skinning_jnt, skin_trns[fname])
 
                 fk_node, fk_ctl = curve_tool.create_controller(
                     name=joint.replace("_JNT", ""), offset=["GRP", "SDK"]
@@ -102,11 +105,18 @@ class FingersModule(object):
                 nodes_list.append(fk_node[0])
                 sdk_list.append(fk_node[1])
 
-                prev = finger[i - 1] if i > 0 else None
+                prev = chain[i - 1] if i > 0 else None
                 matrix_manager.fk_constraint(joint, prev, False, None)
 
                 self._lock(fk_ctl, ["sx", "sy", "sz", "v"])
                 cmds.xform(joint, m=om.MMatrix.kIdentity)
+
+            # Tag the guides with the "Skinning" suffix once the constraints
+            # are wired so the weight import finds the expected influences.
+            self.skinning_joints[fname] = [
+                cmds.rename(jnt, jnt.replace("_JNT", "Skinning_JNT")) for jnt in chain
+            ]
+
 
         # Named attributes for external access
         for name in self.FINGER_NAMES:

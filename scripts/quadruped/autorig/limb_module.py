@@ -71,41 +71,36 @@ class LimbModule(object):
         Orient the guides for the limb module to ensure they are properly aligned for rigging.
         """
         
-        self.trn_guides = []
+        # Red de orientación temporal: se construye igual que antes, se hornean
+        # los valores (las guías son estáticas) y se borra, así el rig no
+        # arrastra transforms _GUIDE ni nodos aimMatrix vivos.
+        trn_guides = []
 
         for guide in self.guides:
-            
-            trn = cmds.createNode("transform", name=guide.replace("JNT", "GUIDE"), ss=True, p=self.module_trn)
-            
-            if self.trn_guides:
-                cmds.parent(trn, self.trn_guides[-1])
+
+            trn = cmds.createNode("transform", name=guide.replace("JNT", "GUIDETemp"), ss=True)
             cmds.matchTransform(trn, guide, pos=True) # Match the position of the guide
-            self.trn_guides.append(trn)
+            trn_guides.append(trn)
 
         self.guides_matrices = []
-        
-        for i, trn in enumerate(self.trn_guides):
-            
-            if i == len(self.trn_guides) - 1:
-                matrix_node = cmds.createNode("blendMatrix", name=trn.replace("GUIDE", "BLM"), ss=True)
-                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(self.guides_matrices[-1], f"{matrix_node}.target[0].targetMatrix")
-                cmds.setAttr(f"{matrix_node}.target[0].rotateWeight", 1)
-                cmds.setAttr(f"{matrix_node}.target[0].translateWeight", 0)
-                cmds.setAttr(f"{matrix_node}.target[0].scaleWeight", 0)
-                cmds.setAttr(f"{matrix_node}.target[0].shearWeight", 0)
-            else:
-                matrix_node = cmds.createNode("aimMatrix", name=trn.replace("GUIDE", "AIM"), ss=True)
-                cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
-                cmds.connectAttr(f"{self.trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
-                cmds.connectAttr(f"{self.trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
-                cmds.setAttr(f"{matrix_node}.primaryInputAxis", *self.primaryInputAxis)
-                cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *self.secondaryInputAxis)
-                cmds.setAttr(f"{matrix_node}.secondaryMode", 2)
-                self.guides_matrices.append(f"{matrix_node}.outputMatrix")
+        temp_nodes = []
 
-            
+        for i, trn in enumerate(trn_guides):
 
+            if i == len(trn_guides) - 1:
+                continue # la última guía no genera control FK
+
+            matrix_node = cmds.createNode("aimMatrix", name=trn.replace("GUIDETemp", "TempAIM"), ss=True)
+            cmds.connectAttr(f"{trn}.worldMatrix[0]", f"{matrix_node}.inputMatrix")
+            cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.primary.primaryTargetMatrix")
+            cmds.connectAttr(f"{trn_guides[i+1]}.worldMatrix[0]", f"{matrix_node}.secondary.secondaryTargetMatrix")
+            cmds.setAttr(f"{matrix_node}.primaryInputAxis", *self.primaryInputAxis)
+            cmds.setAttr(f"{matrix_node}.secondaryInputAxis", *self.secondaryInputAxis)
+            cmds.setAttr(f"{matrix_node}.secondaryMode", 2)
+            self.guides_matrices.append(cmds.getAttr(f"{matrix_node}.outputMatrix"))
+            temp_nodes.append(matrix_node)
+
+        cmds.delete(temp_nodes + trn_guides)
         cmds.delete(self.guides[0])
     
     def fk_setup(self):
@@ -119,19 +114,19 @@ class LimbModule(object):
         
         for i, matrix in enumerate(self.guides_matrices):
 
-            node_name = self.trn_guides[i].replace("_GUIDE", "Fk")
+            node_name = self.guides[i].replace("_JNT", "Fk")
 
             fk_nodes, fk_ctl = curve_tool.create_controller(name=node_name, offset=["GRP", "ANM"], parent=self.controllers_grp)
-            
+
             if self.fk_controls:
                 cmds.parent(fk_nodes[0], self.fk_controls[-1])
                 mmx = cmds.createNode("multMatrix", name=f"{node_name}_MMX", ss=True)
-                cmds.connectAttr(matrix, f"{mmx}.matrixIn[0]")
+                cmds.setAttr(f"{mmx}.matrixIn[0]", matrix, type="matrix")
                 cmds.connectAttr(f"{self.fk_nodes[i-1]}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
                 cmds.connectAttr(f"{mmx}.matrixSum", f"{fk_nodes[0]}.offsetParentMatrix")
-            
+
             else:
-                cmds.connectAttr(matrix, f"{fk_nodes[0]}.offsetParentMatrix")
+                cmds.setAttr(f"{fk_nodes[0]}.offsetParentMatrix", matrix, type="matrix")
 
             cmds.xform(fk_nodes[0], m=om.MMatrix.kIdentity)
 
