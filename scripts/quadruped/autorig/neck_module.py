@@ -256,26 +256,16 @@ class NeckModule(object):
         cmds.setAttr(f"{self.head_ctl}.NECK_FOLLOW", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.head_ctl, longName="HEAD_FOLLOW", niceName="Head Follow", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
 
-        # Réplica del neck_space del horse_rig v2.6 (orientConstraint dual con
-        # pesos complementarios via reverse), hecho con matrices: la cabeza
-        # SIEMPRE viaja con el cuello en traslación, y HEAD_FOLLOW blendea solo
-        # la ROTACIÓN entre el espacio mundo (masterwalk) y el cuello.
-
-        # "neckspace": offset de reposo de la cabeza montado sobre el último
-        # control del cuello (traslación + rotación siguiendo al cuello)
         head_neck_offset = om.MMatrix(self.head_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]")).inverse()
         neck_space_mmx = cmds.createNode("multMatrix", name=f"{self.side}_headNeckSpace_MMX", ss=True)
         cmds.setAttr(f"{neck_space_mmx}.matrixIn[0]", list(head_neck_offset), type="matrix")
         cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{neck_space_mmx}.matrixIn[1]")
 
-        # "worldspace": offset de reposo montado sobre el masterwalk (la
-        # orientación se queda en mundo pero sigue la colocación global del rig)
         head_world_offset = om.MMatrix(self.head_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]")).inverse()
         world_space_mmx = cmds.createNode("multMatrix", name=f"{self.side}_headWorldSpace_MMX", ss=True)
         cmds.setAttr(f"{world_space_mmx}.matrixIn[0]", list(head_world_offset), type="matrix")
         cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{world_space_mmx}.matrixIn[1]")
 
-        # peso complementario (reverse), como el worldspaceW0 del v2.6
         reverse_follow = cmds.createNode("reverse", name=f"{self.side}_headFollow_REV", ss=True)
         cmds.connectAttr(f"{self.head_ctl}.HEAD_FOLLOW", f"{reverse_follow}.inputX")
 

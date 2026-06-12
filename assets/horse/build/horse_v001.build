@@ -1,7 +1,7 @@
 {
     "Rig_Type": 1,
     "spine_skinning_jnts": 8,
-    "spine_controllers": 3,
+    "spine_controllers": 4,
     "neck_skinning_jnts": 5,
     "neck_controllers": 3,
     "arm_skinning_jnts": 5,

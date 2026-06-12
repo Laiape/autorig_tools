@@ -117,7 +117,7 @@ class SpineModule(object):
         """
 
         self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
-        self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_localHip", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_pelvis", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         
         
@@ -211,10 +211,6 @@ class SpineModule(object):
         # ------ Local hip setup ------
         cmds.select(clear=True)
         local_hip_skinning_jnt = cmds.joint(name=f"{self.side}_localHipSkinning_JNT")
-        # rowFromMatrix + fourByFourMatrix, behaviour-preserving: rows 0-2 are the
-        # hip ctl rotation rows NORMALIZED (drop the hip scale, like the rotation
-        # decompose did) and rescaled with the spine ctl row lengths (= its
-        # outputScale); row 3 is the spine ctl translation.
         four_by_four = cmds.createNode("fourByFourMatrix", name=f"{self.side}_localHip_FBF")
         row_translation = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipTranslation_RFM")
         cmds.setAttr(f"{row_translation}.input", 3)
@@ -288,15 +284,11 @@ class SpineModule(object):
             self.fk_nodes.append(fk_node)
             self.fk_controllers.append(fk_ctl)
 
-        # Los drivers del ribbon son la cadena de stretch (nodos DG, sin
-        # transforms): el de_boor_ribbon acepta nodos de matriz directamente.
-        # tangent_cvs: sin tangentes la curva solo lee traslaciones y rotar un
-        # driver únicamente twistea; con ellas el bend llega a los joints.
         guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.spine_guides_matrices]
         segment_length = (guide_positions[-1] - guide_positions[0]).length() / (len(guide_positions) - 1)
 
         sel = tuple(self.stretch_drivers)
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="z", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp, d=3, tangent_cvs=segment_length * 0.3, tangent_axis="x", param_from_length=True)
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="x", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp, d=3, tangent_cvs=segment_length * 0.3, tangent_axis="x", param_from_length=True)
         for t in temp:
             cmds.delete(t)
     
