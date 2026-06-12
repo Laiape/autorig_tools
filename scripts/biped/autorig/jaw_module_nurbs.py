@@ -673,8 +673,6 @@ class JawModule(object):
 
             skin_cluster = cmds.skinCluster(all_secondary_joints[part], nurbs, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name=f"C_{part}Nurbs_SKIN")[0]
 
-        # Rebuild nurbs surfaces (suppress history warnings — surfaces carry skinClusters at this point)
-        cmds.scriptEditorInfo(edit=True, suppressWarnings=True)
         try:
             degree_num = 3
             spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1

@@ -459,13 +459,10 @@ class SpineModule(object):
             cmds.setAttr(f"{spine_settings_trn}.{attr}", k=False, l=True, cb=False)
 
         # ----- Output joints ------
-        # Los AttachedFk derivan de deltas del joint chain del IK (escala 1):
-        # hay que inyectar el globalScale en la matriz de skinning para que el
-        # spine escale igual que el resto del cuerpo (cuyas joints toman el
-        # worldMatrix de controles bajo el masterwalk, con la escala incluida).
-        global_scale_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_spineSkinningGlobalScale_CMX", ss=True)
-        for axis in "XYZ":
-            cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{global_scale_cmx}.inputScale{axis}")
+        global_scale_cmx = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spineSkinningGlobalScale_FBF", ss=True)
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{global_scale_cmx}.in00")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{global_scale_cmx}.in11")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{global_scale_cmx}.in22")
 
         output_joints = []
 
@@ -473,7 +470,7 @@ class SpineModule(object):
 
             jnt = cmds.createNode("joint", name=f"{ctl.replace('AttatchedFk_CTL', 'Skinning_JNT')}", ss=True, p=self.skeleton_grp)
             scale_mmx = cmds.createNode("multMatrix", name=f"{ctl.replace('AttatchedFk_CTL', 'SkinningScale_MMX')}", ss=True)
-            cmds.connectAttr(f"{global_scale_cmx}.outputMatrix", f"{scale_mmx}.matrixIn[0]")
+            cmds.connectAttr(f"{global_scale_cmx}.output", f"{scale_mmx}.matrixIn[0]")
             cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{scale_mmx}.matrixIn[1]")
             cmds.connectAttr(f"{scale_mmx}.matrixSum", f"{jnt}.offsetParentMatrix")
             output_joints.append(jnt)

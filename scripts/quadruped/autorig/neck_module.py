@@ -145,31 +145,97 @@ class NeckModule(object):
             self.neck_nodes.append(corner_nodes[0])
             self.neck_ctls.append(corner_ctl)
 
-        # Make hierarchy
-        for i, node in enumerate(self.neck_nodes):
-            if i == 1:
-                cmds.parent(node, self.neck_ctls[0])
-            elif i == len(self.neck_nodes) // 2:
-                ctl = self.neck_ctls[i]
-                cmds.addAttr(ctl, longName="TANGENT_VISIBILITY", niceName="TANGENT VISIBILITY -----", attributeType="enum", enumName="-----")
-                cmds.setAttr(f"{ctl}.TANGENT_VISIBILITY", lock=True, keyable=False, channelBox=True)
-                cmds.addAttr(ctl, longName="Controllers_Visibility", niceName="Controllers Visibility", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
-                cmds.parent(node, self.neck_ctls[0])
-            elif i == len(self.neck_nodes) - 2:
-                cmds.parent(node, self.neck_ctls[-1])
-            elif i == len(self.neck_nodes) - 1:
-                cmds.parent(node, self.neck_ctls[len(self.neck_ctls)// 2])
+        # # Make hierarchy
+        # for i, node in enumerate(self.neck_nodes):
+        #     print(node)
+        #     print(self.neck_ctls[i])
+        #     if i == 1:
+        #         cmds.parent(node, self.neck_ctls[0])
+        #     if i == len(self.neck_nodes) // 2:
+        #         ctl = self.neck_ctls[i]
+        #         cmds.addAttr(ctl, longName="TANGENT_VISIBILITY", niceName="TANGENT VISIBILITY -----", attributeType="enum", enumName="-----")
+        #         cmds.setAttr(f"{ctl}.TANGENT_VISIBILITY", lock=True, keyable=False, channelBox=True)
+        #         cmds.addAttr(ctl, longName="Controllers_Visibility", niceName="Controllers Visibility", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+        #         cmds.parent(node, self.neck_ctls[0])
+        #     elif i == len(self.neck_nodes) - 2:
+        #         cmds.parent(node, self.neck_ctls[-1])
+        #     elif i == len(self.neck_nodes) - 1:
+        #         cmds.parent(node, self.neck_ctls[len(self.neck_ctls)// 2])
 
         self.head_nodes, self.head_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
         cmds.parent(face_nodes[0], self.head_ctl)
-    
+
+        # ----- Stretch setup -----
+
+        # Create the attribute for stretch in the neck root controller
+        cmds.addAttr(self.neck_ctls[0], longName="Stretch", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.neck_ctls[0]}.Stretch", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.neck_ctls[0], longName="Stretch_Activate", niceName="Stretch Activate", attributeType="bool", defaultValue=0, keyable=True)
+        cmds.setAttr(f"{self.neck_ctls[0]}.Stretch_Activate", lock=False, keyable=False, channelBox=True)
+
+        # Cadena de drivers del ribbon (solo nodos DG), igual que en el spine:
+        # cada segmento apunta al control siguiente y su longitud es un blend
+        # entre la longitud de guía (rígido, Stretch OFF) y la distancia real al
+        # control (Stretch ON, el driver cae exacto sobre el control y toda la
+        # cadena se estira).
+        if self.primary_axis == (1, 0, 0):
+            translate_attr = "inputTranslateX"
+        elif self.primary_axis == (0, 0, 1):
+            translate_attr = "inputTranslateZ"
+        else:
+            translate_attr = "inputTranslateY"
+
+        guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.neck_guides_matrices]
+
+        self.stretch_drivers = [self.neck_ctls[0]]
+        prev_plug = f"{self.neck_ctls[0]}.worldMatrix[0]"
+
+        for i in range(1, len(self.neck_ctls)):
+
+            rest_length = (guide_positions[i] - guide_positions[i - 1]).length()
+            target_plug = f"{self.neck_ctls[i]}.worldMatrix[0]"
+
+            dbt = cmds.createNode("distanceBetween", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_DBT", ss=True)
+            cmds.connectAttr(prev_plug, f"{dbt}.inMatrix1")
+            cmds.connectAttr(target_plug, f"{dbt}.inMatrix2")
+
+            length_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_neck{str(i).zfill(2)}StretchLength_B2A", ss=True)
+            cmds.setAttr(f"{length_blend}.input[0]", rest_length)
+            cmds.connectAttr(f"{dbt}.distance", f"{length_blend}.input[1]")
+            cmds.connectAttr(f"{self.neck_ctls[0]}.Stretch_Activate", f"{length_blend}.attributesBlender")
+
+            aim = cmds.createNode("aimMatrix", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_AIM", ss=True)
+            cmds.setAttr(f"{aim}.primaryInputAxis", *self.primary_axis, type="double3")
+            cmds.setAttr(f"{aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
+            cmds.setAttr(f"{aim}.secondaryTargetVector", *self.secondary_axis, type="double3")
+            cmds.setAttr(f"{aim}.secondaryMode", 2)  # Align: el twist sigue al control
+            cmds.connectAttr(prev_plug, f"{aim}.inputMatrix")
+            cmds.connectAttr(target_plug, f"{aim}.primary.primaryTargetMatrix")
+            cmds.connectAttr(target_plug, f"{aim}.secondary.secondaryTargetMatrix")
+
+            cmx = cmds.createNode("composeMatrix", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_CMX", ss=True)
+            cmds.connectAttr(f"{length_blend}.output", f"{cmx}.{translate_attr}")
+
+            mmx = cmds.createNode("multMatrix", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_MMX", ss=True)
+            cmds.connectAttr(f"{cmx}.outputMatrix", f"{mmx}.matrixIn[0]")
+            cmds.connectAttr(f"{aim}.outputMatrix", f"{mmx}.matrixIn[1]")
+
+            self.stretch_drivers.append(mmx)
+            prev_plug = f"{mmx}.matrixSum"
+
     def ribbon_setup(self, skinning_joints_number):
 
         """
         Set up the ribbon for the neck module.
         """
-        sel = self.neck_ctls
-        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number) # Do the ribbon setup, with the created controllers
+        # Los drivers del ribbon son la cadena de stretch (nodos DG).
+        # tangent_cvs: sin tangentes la curva solo lee traslaciones y rotar un
+        # driver únicamente twistea; con ellas el bend llega a los joints.
+        guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.neck_guides_matrices]
+        segment_length = (guide_positions[-1] - guide_positions[0]).length() / (len(guide_positions) - 1)
+
+        sel = tuple(self.stretch_drivers)
+        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number, d=3, tangent_cvs=segment_length * 0.3, tangent_axis="x", param_from_length=True) # Do the ribbon setup, with the created controllers
 
         for t in temp:
             cmds.delete(t)
@@ -190,11 +256,36 @@ class NeckModule(object):
         cmds.setAttr(f"{self.head_ctl}.NECK_FOLLOW", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.head_ctl, longName="HEAD_FOLLOW", niceName="Head Follow", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
 
-        
+        # Réplica del neck_space del horse_rig v2.6 (orientConstraint dual con
+        # pesos complementarios via reverse), hecho con matrices: la cabeza
+        # SIEMPRE viaja con el cuello en traslación, y HEAD_FOLLOW blendea solo
+        # la ROTACIÓN entre el espacio mundo (masterwalk) y el cuello.
+
+        # "neckspace": offset de reposo de la cabeza montado sobre el último
+        # control del cuello (traslación + rotación siguiendo al cuello)
+        head_neck_offset = om.MMatrix(self.head_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]")).inverse()
+        neck_space_mmx = cmds.createNode("multMatrix", name=f"{self.side}_headNeckSpace_MMX", ss=True)
+        cmds.setAttr(f"{neck_space_mmx}.matrixIn[0]", list(head_neck_offset), type="matrix")
+        cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{neck_space_mmx}.matrixIn[1]")
+
+        # "worldspace": offset de reposo montado sobre el masterwalk (la
+        # orientación se queda en mundo pero sigue la colocación global del rig)
+        head_world_offset = om.MMatrix(self.head_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]")).inverse()
+        world_space_mmx = cmds.createNode("multMatrix", name=f"{self.side}_headWorldSpace_MMX", ss=True)
+        cmds.setAttr(f"{world_space_mmx}.matrixIn[0]", list(head_world_offset), type="matrix")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{world_space_mmx}.matrixIn[1]")
+
+        # peso complementario (reverse), como el worldspaceW0 del v2.6
+        reverse_follow = cmds.createNode("reverse", name=f"{self.side}_headFollow_REV", ss=True)
+        cmds.connectAttr(f"{self.head_ctl}.HEAD_FOLLOW", f"{reverse_follow}.inputX")
+
         blend_matrix_head = cmds.createNode("blendMatrix", name=f"{self.side}_headLocal_BLM", ss=True)
-        cmds.setAttr(f"{blend_matrix_head}.inputMatrix", self.head_guide_matrix, type="matrix")
-        cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_head}.target[0].targetMatrix")
-        cmds.connectAttr(f"{self.head_ctl}.HEAD_FOLLOW", f"{blend_matrix_head}.target[0].weight")
+        cmds.connectAttr(f"{neck_space_mmx}.matrixSum", f"{blend_matrix_head}.inputMatrix")
+        cmds.connectAttr(f"{world_space_mmx}.matrixSum", f"{blend_matrix_head}.target[0].targetMatrix")
+        cmds.setAttr(f"{blend_matrix_head}.target[0].translateWeight", 0)  # solo rotación, como el orientConstraint
+        cmds.setAttr(f"{blend_matrix_head}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{blend_matrix_head}.target[0].shearWeight", 0)
+        cmds.connectAttr(f"{reverse_follow}.outputX", f"{blend_matrix_head}.target[0].weight")
         cmds.connectAttr(f"{blend_matrix_head}.outputMatrix", f"{self.head_nodes[0]}.offsetParentMatrix")
 
         

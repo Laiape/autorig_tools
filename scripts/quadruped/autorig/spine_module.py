@@ -90,45 +90,25 @@ class SpineModule(object):
         """
         Create the logic for spine guides.
         """
-        guide_root = cmds.createNode("transform", name=f"{self.side}_spineRoot_Guide", ss=True, p=self.module_trn)
-        cmds.matchTransform(guide_root, self.spine_chain[0], pos=True)
-
-        guide_end = cmds.createNode("transform", name=f"{self.side}_spineEnd_Guide", ss=True, p=guide_root)
-        cmds.matchTransform(guide_end, self.spine_chain[-1], pos=True)
-
+        # Nuevo método de guías: matrices horneadas en Python entre la guía root
+        # y la end. Todas comparten la misma orientación (X apunta a la guía
+        # siguiente, Y mira al up del mundo) con las posiciones repartidas en
+        # línea recta entre ambas — tantas como controladores se pidan.
+        root_pos = om.MVector(cmds.xform(self.spine_chain[0], q=True, ws=True, t=True))
+        end_pos = om.MVector(cmds.xform(self.spine_chain[-1], q=True, ws=True, t=True))
         cmds.delete(self.spine_chain[0])
 
-        # Build the guides logic
-        aim_matrix_guide_00 = cmds.createNode("aimMatrix", name=f"{self.side}_spine00_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix_guide_00}.primaryInputAxis", *self.primary_input_axis, type="double3")
-        cmds.setAttr(f"{aim_matrix_guide_00}.secondaryInputAxis", *self.secondary_input_axis, type="double3")
-        cmds.connectAttr(f"{guide_root}.worldMatrix[0]", f"{aim_matrix_guide_00}.inputMatrix")
-        cmds.connectAttr(f"{guide_end}.worldMatrix[0]", f"{aim_matrix_guide_00}.primaryTargetMatrix")
+        base_matrix = guides_manager._aim_matrix(
+            root_pos, end_pos, root_pos + om.MVector(0.0, 1.0, 0.0),
+            self.primary_input_axis, self.secondary_input_axis
+        )
 
-        blend_matrix_guide_04 = cmds.createNode("blendMatrix", name=f"{self.side}_spine04_BLM", ss=True)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].weight", 1)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].rotateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].shearWeight", 0)
-        cmds.setAttr(f"{blend_matrix_guide_04}.target[0].translateWeight", 0)
-        cmds.connectAttr(f"{guide_end}.worldMatrix[0]", f"{blend_matrix_guide_04}.inputMatrix")
-        cmds.connectAttr(f"{aim_matrix_guide_00}.outputMatrix", f"{blend_matrix_guide_04}.target[0].targetMatrix")
+        self.spine_guides_matrices = []
+        for i in range(self.spine_controllers):
+            weight = i / (self.spine_controllers - 1)
+            pos = root_pos * (1.0 - weight) + end_pos * weight
+            self.spine_guides_matrices.append(list(guides_manager._with_translation(base_matrix, pos)))
 
-        self.spine_guides_matrices = [f"{aim_matrix_guide_00}.outputMatrix"]
-
-        for i in range(self.spine_controllers - 2): # We assume there are 5 guides for the spine (3 + 2 ends)
-
-            blend_matrix_guide = cmds.createNode("blendMatrix", name=f"{self.side}_spine0{i+1}_BLM", ss=True)
-            cmds.setAttr(f"{blend_matrix_guide}.target[0].weight", (i + 1) / (self.spine_controllers - 1))
-            cmds.setAttr(f"{blend_matrix_guide}.target[0].scaleWeight", 0)
-            cmds.setAttr(f"{blend_matrix_guide}.target[0].rotateWeight", 0)
-            cmds.setAttr(f"{blend_matrix_guide}.target[0].shearWeight", 0)
-            cmds.connectAttr(f"{aim_matrix_guide_00}.outputMatrix", f"{blend_matrix_guide}.inputMatrix")
-            cmds.connectAttr(f"{blend_matrix_guide_04}.outputMatrix", f"{blend_matrix_guide}.target[0].targetMatrix")
-            self.spine_guides_matrices.append(f"{blend_matrix_guide}.outputMatrix")
-
-        self.spine_guides_matrices.append(f"{blend_matrix_guide_04}.outputMatrix")
-       
 
     def controller_creation(self):
 
@@ -143,18 +123,26 @@ class SpineModule(object):
         
 
 
-        cmds.connectAttr(f"{self.spine_guides_matrices[0]}", f"{self.body_nodes[0]}.offsetParentMatrix")
-        cmds.connectAttr(f"{self.spine_guides_matrices[0]}", f"{self.local_hip_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.body_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
+        cmds.setAttr(f"{self.local_hip_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
 
         # Create the spine controllers
 
         self.spine_nodes = []
         self.spine_ctls = []
-        
+
+        # Los GRP viven dentro del body_ctl y deben quedar freezeados (locales a
+        # cero): el opm se hornea RELATIVO al body en reposo (m_i * m_0^-1) para
+        # no aplicar la matriz del body dos veces (opm compone con el worldMatrix
+        # del padre) y que la cadena siga al body en vivo.
+        body_rest_inverse = om.MMatrix(self.spine_guides_matrices[0]).inverse()
+
         for i, matrix in enumerate(self.spine_guides_matrices):
 
             spine_node, spine_ctl = curve_tool.create_controller(name=f"{self.side}_spine0{i}", offset=["GRP", "SPC", "ANM"], parent=self.body_ctl, locked_attrs=["v"])
-            cmds.connectAttr(matrix, f"{spine_node[0]}.offsetParentMatrix")
+            local_matrix = om.MMatrix(matrix) * body_rest_inverse
+            cmds.setAttr(f"{spine_node[0]}.offsetParentMatrix", list(local_matrix), type="matrix")
+            cmds.xform(spine_node[0], m=om.MMatrix.kIdentity)
             self.spine_nodes.append(spine_node)
             self.spine_ctls.append(spine_ctl)
 
@@ -166,42 +154,54 @@ class SpineModule(object):
         cmds.addAttr(self.body_ctl, longName="Stretch_Activate", niceName="Stretch Activate", attributeType="bool", defaultValue=0, keyable=True)
         cmds.setAttr(f"{self.body_ctl}.Stretch_Activate", lock=False, keyable=False, channelBox=True)
 
+        # Cadena de drivers del ribbon (solo nodos DG): cada segmento apunta al
+        # control siguiente y su longitud es un blend entre la longitud de guía
+        # (rígido, Stretch OFF) y la distancia real al control (Stretch ON, el
+        # driver cae exacto sobre el control y toda la cadena se estira).
+        if self.primary_input_axis == (1, 0, 0):
+            translate_attr = "inputTranslateX"
+        elif self.primary_input_axis == (0, 0, 1):
+            translate_attr = "inputTranslateZ"
+        else:
+            translate_attr = "inputTranslateY"
 
-        self.stretch_blms = []
-        for i, ctl in enumerate(self.spine_ctls[:-1]):
+        guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.spine_guides_matrices]
 
-            real_dbt = cmds.createNode("distanceBetween", name=f"{self.side}_spine0{i}_DBT")
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{real_dbt}.inMatrix1")
-            cmds.connectAttr(f"{self.spine_ctls[i+1]}.worldMatrix[0]", f"{real_dbt}.inMatrix2")
+        self.stretch_drivers = [self.spine_ctls[0]]
+        prev_plug = f"{self.spine_ctls[0]}.worldMatrix[0]"
 
-            initial_dbt = cmds.createNode("distanceBetween", name=f"{self.side}_spine0{i}_InitialDistance_DBT")
-            cmds.connectAttr(f"{self.spine_guides_matrices[i]}", f"{initial_dbt}.inMatrix1")
-            cmds.connectAttr(f"{self.spine_guides_matrices[i+1]}", f"{initial_dbt}.inMatrix2")
+        for i in range(1, len(self.spine_ctls)):
 
-            initial_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spine0{i}_InitialDist_FBF")
-            cmds.setAttr(f"{initial_fbf}.in00", 1)
-            cmds.setAttr(f"{initial_fbf}.in11", 1)
-            cmds.setAttr(f"{initial_fbf}.in22", 1)
-            cmds.setAttr(f"{initial_fbf}.in33", 1)
+            rest_length = (guide_positions[i] - guide_positions[i - 1]).length()
+            target_plug = f"{self.spine_ctls[i]}.worldMatrix[0]"
 
-            real_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spine0{i}_RealDist_FBF")
-            cmds.setAttr(f"{real_fbf}.in00", 1)
-            cmds.setAttr(f"{real_fbf}.in11", 1)
-            cmds.setAttr(f"{real_fbf}.in22", 1)
-            cmds.setAttr(f"{real_fbf}.in33", 1)
+            dbt = cmds.createNode("distanceBetween", name=f"{self.side}_spine0{i}Stretch_DBT", ss=True)
+            cmds.connectAttr(prev_plug, f"{dbt}.inMatrix1")
+            cmds.connectAttr(target_plug, f"{dbt}.inMatrix2")
 
-            if self.primary_input_axis == (1, 0, 0):
-                cmds.connectAttr(f"{initial_dbt}.distance", f"{initial_fbf}.in30")
-                cmds.connectAttr(f"{real_dbt}.distance", f"{real_fbf}.in30")
-            elif self.primary_input_axis == (0, 0, 1):
-                cmds.connectAttr(f"{initial_dbt}.distance", f"{initial_fbf}.in32")
-                cmds.connectAttr(f"{real_dbt}.distance", f"{real_fbf}.in32")
+            length_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_spine0{i}StretchLength_B2A", ss=True)
+            cmds.setAttr(f"{length_blend}.input[0]", rest_length)
+            cmds.connectAttr(f"{dbt}.distance", f"{length_blend}.input[1]")
+            cmds.connectAttr(f"{self.body_ctl}.Stretch_Activate", f"{length_blend}.attributesBlender")
 
-            stretch_blm = cmds.createNode("blendMatrix", name=f"{self.side}_spine0{i}_Stretch_BLM")
-            cmds.connectAttr(f"{initial_fbf}.output", f"{stretch_blm}.inputMatrix")
-            cmds.connectAttr(f"{real_fbf}.output", f"{stretch_blm}.target[0].targetMatrix")
-            cmds.connectAttr(f"{self.body_ctl}.Stretch_Activate", f"{stretch_blm}.target[0].weight")
-            self.stretch_blms.append(stretch_blm)
+            aim = cmds.createNode("aimMatrix", name=f"{self.side}_spine0{i}Stretch_AIM", ss=True)
+            cmds.setAttr(f"{aim}.primaryInputAxis", *self.primary_input_axis, type="double3")
+            cmds.setAttr(f"{aim}.secondaryInputAxis", *self.secondary_input_axis, type="double3")
+            cmds.setAttr(f"{aim}.secondaryTargetVector", *self.secondary_input_axis, type="double3")
+            cmds.setAttr(f"{aim}.secondaryMode", 2)  # Align: el twist sigue al control
+            cmds.connectAttr(prev_plug, f"{aim}.inputMatrix")
+            cmds.connectAttr(target_plug, f"{aim}.primary.primaryTargetMatrix")
+            cmds.connectAttr(target_plug, f"{aim}.secondary.secondaryTargetMatrix")
+
+            cmx = cmds.createNode("composeMatrix", name=f"{self.side}_spine0{i}Stretch_CMX", ss=True)
+            cmds.connectAttr(f"{length_blend}.output", f"{cmx}.{translate_attr}")
+
+            mmx = cmds.createNode("multMatrix", name=f"{self.side}_spine0{i}Stretch_MMX", ss=True)
+            cmds.connectAttr(f"{cmx}.outputMatrix", f"{mmx}.matrixIn[0]")
+            cmds.connectAttr(f"{aim}.outputMatrix", f"{mmx}.matrixIn[1]")
+
+            self.stretch_drivers.append(mmx)
+            prev_plug = f"{mmx}.matrixSum"
 
 
 
@@ -288,18 +288,15 @@ class SpineModule(object):
             self.fk_nodes.append(fk_node)
             self.fk_controllers.append(fk_ctl)
 
-        stretch_transforms = [self.spine_ctls[0]]
-        for i, blm in enumerate(self.stretch_blms):
-            t = cmds.createNode("transform", name=f"{self.side}_spine0{i+1}_StretchPos_TRN", ss=True, p=self.module_trn)
-            cmds.setAttr(f"{t}.inheritsTransform", 0)
-            mmt = cmds.createNode("multMatrix", name=f"{self.side}_spine0{i+1}_StretchPos_MMX")
-            cmds.connectAttr(f"{blm}.outputMatrix", f"{mmt}.matrixIn[0]")
-            cmds.connectAttr(f"{self.spine_ctls[i]}.worldMatrix[0]", f"{mmt}.matrixIn[1]")
-            cmds.connectAttr(f"{mmt}.matrixSum", f"{t}.offsetParentMatrix")
-            stretch_transforms.append(t)
+        # Los drivers del ribbon son la cadena de stretch (nodos DG, sin
+        # transforms): el de_boor_ribbon acepta nodos de matriz directamente.
+        # tangent_cvs: sin tangentes la curva solo lee traslaciones y rotar un
+        # driver únicamente twistea; con ellas el bend llega a los joints.
+        guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.spine_guides_matrices]
+        segment_length = (guide_positions[-1] - guide_positions[0]).length() / (len(guide_positions) - 1)
 
-        sel = tuple(stretch_transforms)
-        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="z", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp)
+        sel = tuple(self.stretch_drivers)
+        output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="z", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp, d=3, tangent_cvs=segment_length * 0.3, tangent_axis="x", param_from_length=True)
         for t in temp:
             cmds.delete(t)
     

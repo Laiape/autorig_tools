@@ -11,9 +11,51 @@ AXIS_VECTOR = {'x': (1, 0, 0), 'y': (0, 1, 0), 'z': (0, 0, 1), "-x": (-1, 0, 0),
 KNOT_TO_FORM_INDEX = {OPEN: om.MFnNurbsCurve.kOpen, PERIODIC: om.MFnNurbsCurve.kPeriodic}
 
 
+def _matrix_plug(node_or_plug):
+    """Devuelve el plug de matriz de un driver (transform o nodo DG)."""
+    for attr in ("worldMatrix[0]", "outputMatrix", "output", "matrix", "matrixSum"):
+        if cmds.objExists(f"{node_or_plug}.{attr}"):
+            return f"{node_or_plug}.{attr}"
+    return None
+
+
+def _insert_tangent_cvs(cvs, axis, length, name):
+    """
+    Inserta CVs de tangente a ±length sobre el eje local `axis` de cada driver.
+    La curva del ribbon se construye solo con las TRASLACIONES de los CVs, así
+    que rotar un driver sobre su pivote no la dobla (solo llega el twist por el
+    up). Con las tangentes, la rotación del driver arrastra sus CVs vecinos y
+    los joints rotan en todos los ejes (bend), no solo en el twist.
+    """
+    translate_attr = {"x": "inputTranslateX", "y": "inputTranslateY", "z": "inputTranslateZ"}[axis]
+
+    def tangent_cv(plug, offset, tangent_name):
+        cmx = cmds.createNode("composeMatrix", n=f"{tangent_name}_CMX")
+        cmds.setAttr(f"{cmx}.{translate_attr}", offset)
+        mmx = cmds.createNode("multMatrix", n=f"{tangent_name}_MMX")
+        cmds.connectAttr(f"{cmx}.outputMatrix", f"{mmx}.matrixIn[0]")
+        cmds.connectAttr(plug, f"{mmx}.matrixIn[1]")
+        return mmx
+
+    expanded = []
+    for i, cv in enumerate(cvs):
+        plug = _matrix_plug(cv)
+        if plug is None:
+            expanded.append(cv)
+            continue
+        if i > 0:
+            expanded.append(tangent_cv(plug, -length, f"{name}_cv{i}TangentIn"))
+        expanded.append(cv)
+        if i < len(cvs) - 1:
+            expanded.append(tangent_cv(plug, length, f"{name}_cv{i}TangentOut"))
+
+    return expanded
+
+
 def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, tangent_offset=0.001, d=None, kv_type=OPEN,
                    param_from_length=False, tol=0.000001, name='ribbon', use_position=True, use_tangent=True,
-                   use_up=True, use_scale=True, custom_parameter=[], skeleton_grp=None):
+                   use_up=True, use_scale=True, custom_parameter=[], skeleton_grp=None,
+                   tangent_cvs=0.0, tangent_axis=None):
     """
     Use controls and de_boor function to get position, tangent and up values for joints.  The param_from_length can
     be used to get the parameter values using a fraction of the curve length, otherwise the parameter values will be
@@ -127,6 +169,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
     else:
 
         ctls = cvs
+
+    # CVs de tangente: la rotación de los drivers dobla la curva (ver helper)
+    if tangent_cvs:
+        cvs = _insert_tangent_cvs(cvs, tangent_axis or aim_axis, tangent_cvs, name)
 
     num_cvs = len(cvs)
     original_cvs = cvs[:]
