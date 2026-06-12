@@ -45,6 +45,7 @@ from biped.autorig import fingers_module
 
 from quadruped.autorig import tail_module
 from quadruped.autorig import limb_module
+from quadruped.autorig import leg_module as quad_leg_module
 from quadruped.autorig import spine_module as quad_spine_module
 from quadruped.autorig import neck_module as neck_module_quad
 
@@ -67,6 +68,7 @@ reload(neck_module)
 reload(fingers_module)
 reload(tail_module)
 reload(limb_module)
+reload(quad_leg_module)
 reload(quad_spine_module)
 reload(neck_module_quad)
 reload(eyebrow_module)
@@ -444,10 +446,19 @@ def build_rig(character_name, on_step=None):
             leg_module.LegModule().make("L", leg_skinning_jnts)
             leg_module.LegModule().make("R", leg_skinning_jnts)
 
-    # --- Limbs (Solo Quadruped) ---
+    # --- Legs (Solo Quadruped) ---
     if rig_type == 1:
-        # Patas Delanteras
-        if check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
+        leg_solver = rig_settings.get("leg_solver", "spring")
+
+        # Patas Delanteras (módulo de pierna nuevo)
+        if check("L_frontLegHip_JNT") and check("R_frontLegHip_JNT"):
+            step("Building front legs…")
+            reload(quad_leg_module)
+            quad_leg_module.FrontLegModule().make("L", solver=leg_solver)
+            quad_leg_module.FrontLegModule().make("R", solver=leg_solver)
+
+        # Fallback: limb genérico con el naming antiguo
+        elif check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
             step("Building front limbs…")
             reload(limb_module)
 
@@ -459,18 +470,12 @@ def build_rig(character_name, on_step=None):
             limb_module.LimbModule().make("L", leg_skinning_jnts)
             limb_module.LimbModule().make("R", leg_skinning_jnts)
 
-        # Patas Traseras
+        # Patas Traseras (módulo de pierna nuevo)
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
-            step("Building back limbs…")
-            reload(limb_module)
-
-            data_manager.DataExportBiped().append_data("limb_module",
-                            {
-                                "guides_data" : ["L_backLegHip_JNT", "R_backLegHip_JNT"],
-                            })
-
-            limb_module.LimbModule().make("L", leg_skinning_jnts)
-            limb_module.LimbModule().make("R", leg_skinning_jnts)
+            step("Building back legs…")
+            reload(quad_leg_module)
+            quad_leg_module.BackLegModule().make("L", solver=leg_solver)
+            quad_leg_module.BackLegModule().make("R", solver=leg_solver)
 
     # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
