@@ -85,24 +85,45 @@ class EyebrowModule(object):
     def local(self, ctl):
 
         """
-        Create a local transform node for a controller.
+        Create the local matrix network for a controller WITHOUT transforms:
+        - Local_MMT: ctl.worldMatrix * GRP.worldInverseMatrix (the ctl local motion)
+        - LocalGrp_MMX: replaces the old Local_GRP (baked bind matrix, or bind
+          offset * parent local matrixSum after local_parent)
+        - Local_MMX: replaces the old Local_TRN worldMatrix (Local_MMT * LocalGrp_MMX)
         Args:
             ctl (str): The name of the controller.
         Returns:
-            str: The name of the local transform node.
+            tuple: (LocalGrp_MMX, Local_MMX) multMatrix nodes.
         """
 
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
+        local_grp = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "LocalGrp_MMX"), ss=True)
+        cmds.setAttr(f"{local_grp}.matrixIn[0]", cmds.getAttr(f"{ctl}.worldMatrix[0]"), type="matrix")
+        local_trn = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
         grp = ctl.replace("_CTL", "_GRP")
         mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMT"))
         cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
         cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{local_trn}.offsetParentMatrix")
-        cmds.matchTransform(local_grp, ctl)
-        # cmds.parent(local_trn, self.module_trn)
+        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{local_trn}.matrixIn[0]")
+        cmds.connectAttr(f"{local_grp}.matrixSum", f"{local_trn}.matrixIn[1]")
 
         return local_grp, local_trn
+
+    def local_parent(self, local_grp_mmx, ctl, parent_local_mmx, parent_ctl):
+
+        """
+        Equivalent of parenting the old Local_GRP under another Local_TRN, without
+        transforms: bake the bind offset between both controllers and chain the
+        parent local network.
+        Args:
+            local_grp_mmx (str): the LocalGrp_MMX of the child controller.
+            ctl (str): the child controller.
+            parent_local_mmx (str): the Local_MMX of the parent controller.
+            parent_ctl (str): the parent controller.
+        """
+
+        offset = om.MMatrix(cmds.getAttr(f"{ctl}.worldMatrix[0]")) * om.MMatrix(cmds.getAttr(f"{parent_ctl}.worldMatrix[0]")).inverse()
+        cmds.setAttr(f"{local_grp_mmx}.matrixIn[0]", list(offset), type="matrix")
+        cmds.connectAttr(f"{parent_local_mmx}.matrixSum", f"{local_grp_mmx}.matrixIn[1]", force=True)
 
     def load_guides(self):
 
@@ -175,7 +196,7 @@ class EyebrowModule(object):
             mid_eyebrow_guide = cmds.createNode("transform", name="C_eyebrowMid_GUIDE", ss=True, p=self.module_trn)
             cmds.matchTransform(mid_eyebrow_guide, self.mid_eyebrow)
             jnt = cmds.createNode("joint", name="C_eyebrowMidSkinning_JNT", ss=True, p=self.skeleton_grp)
-            cmds.connectAttr(f"{mid_local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
+            cmds.connectAttr(f"{mid_local_trn}.matrixSum", f"{jnt}.offsetParentMatrix")
 
             # Set up mid eyebrow parentMatrix
             fbf_mid = cmds.createNode("fourByFourMatrix", name="C_eyebrowMid_FBF", ss=True)
@@ -186,28 +207,29 @@ class EyebrowModule(object):
             
             parent_matrix = cmds.createNode("parentMatrix", name="C_eyebrowMid_PM", ss=True)
             cmds.connectAttr(f"{fbf_mid}.output", f"{parent_matrix}.inputMatrix")
-            cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[0].targetMatrix")
+            cmds.connectAttr(f"{main_local_trn}.matrixSum", f"{parent_matrix}.target[0].targetMatrix")
 
             mult_matrix = cmds.createNode("multMatrix", name="C_eyebrowMid_MMX", ss=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
             cmds.setAttr(f"{mult_matrix}.matrixIn[1]", cmds.getAttr(f"{self.head_ctl}.worldInverseMatrix[0]"), type="matrix")
             cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{mid_eyebrow_nodes[0]}.offsetParentMatrix")
-            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mid_local_grp}.offsetParentMatrix")
+            # The old mid Local_GRP took the parentMatrix output as its whole world
+            cmds.setAttr(f"{mid_local_grp}.matrixIn[0]", list(om.MMatrix.kIdentity), type="matrix")
+            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mid_local_grp}.matrixIn[1]")
             cmds.setAttr(f"{parent_matrix}.envelope", 0.5)
-        
-            cmds.xform(mid_local_grp, m=om.MMatrix.kIdentity)
+
             cmds.xform(mid_eyebrow_nodes[0], m=om.MMatrix.kIdentity)
-            
+
         else:
             parent_matrix = "C_eyebrowMid_PM"
             mid_eyebrow_nodes = "C_eyebrowMid_GRP" # Dummy for get_offset_matrix
             mid_eyebrow_guide = "C_eyebrowMid_GUIDE" # Dummy for get_offset_matrix
-            cmds.connectAttr(f"{main_local_trn}.worldMatrix[0]", f"{parent_matrix}.target[1].targetMatrix")
+            cmds.connectAttr(f"{main_local_trn}.matrixSum", f"{parent_matrix}.target[1].targetMatrix")
 
         if self.side == "L":
-            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", *self.get_offset_matrix(mid_eyebrow_guide, main_local_trn), type="matrix")
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", *matrix_manager.get_offset_matrix(mid_eyebrow_guide, f"{main_local_trn}.matrixSum"), type="matrix")
         else:
-            cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *self.get_offset_matrix(mid_eyebrow_guide, main_local_trn), type="matrix")
+            cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *matrix_manager.get_offset_matrix(mid_eyebrow_guide, f"{main_local_trn}.matrixSum"), type="matrix")
             cmds.delete(mid_eyebrow_guide)
 
         names = {"In": 0, "InTan": 1, "Mid": len(self.eyebrows) // 2, "OutTan": -2, "Out": -1}
@@ -220,7 +242,7 @@ class EyebrowModule(object):
             self.lock_attributes(eyebrow_ctl, ["visibility"])
 
             local_grp, local_trn = self.local(eyebrow_ctl)
-            cmds.parent(local_grp, main_local_trn)
+            self.local_parent(local_grp, eyebrow_ctl, main_local_trn, self.main_eyebrow_ctl)
             self.eyebrow_controllers.append(eyebrow_ctl)
             self.eyebrow_nodes.append(eyebrow_nodes)
             self.local_trns.append(local_trn)
@@ -228,8 +250,8 @@ class EyebrowModule(object):
 
         cmds.parent(self.eyebrow_nodes[-2], self.eyebrow_controllers[-1]) # OutTan to Out
         cmds.parent(self.eyebrow_nodes[1], self.eyebrow_controllers[0]) # InTan to In
-        cmds.parent(self.local_grps[-2], self.local_trns[-1]) # OutTan to Out
-        cmds.parent(self.local_grps[1], self.local_trns[0]) # InTan to In
+        self.local_parent(self.local_grps[-2], self.eyebrow_controllers[-2], self.local_trns[-1], self.eyebrow_controllers[-1]) # OutTan to Out
+        self.local_parent(self.local_grps[1], self.eyebrow_controllers[1], self.local_trns[0], self.eyebrow_controllers[0]) # InTan to In
 
         condition_secondary = cmds.createNode("condition", name="C_eyebrowSecondary_COND", ss=True)
         cmds.setAttr(f"{condition_secondary}.operation", 3)  # Greater Than or Equal
@@ -257,13 +279,15 @@ class EyebrowModule(object):
         in_local_trn  = self.local_trns[0]
         out_local_trn = self.local_trns[-1]
 
-        # Shared decompose nodes for In and Out world Y
-        dcm_in = cmds.createNode("decomposeMatrix",
-                                  name=f"{self.side}_eyebrowAutoTanIn_DCM", ss=True)
-        dcm_out = cmds.createNode("decomposeMatrix",
-                                   name=f"{self.side}_eyebrowAutoTanOut_DCM", ss=True)
-        cmds.connectAttr(f"{in_local_trn}.worldMatrix[0]",  f"{dcm_in}.inputMatrix")
-        cmds.connectAttr(f"{out_local_trn}.worldMatrix[0]", f"{dcm_out}.inputMatrix")
+        # Shared translation-row nodes for In and Out world Y (row 3 = translation)
+        rfm_in = cmds.createNode("rowFromMatrix",
+                                  name=f"{self.side}_eyebrowAutoTanIn_RFM", ss=True)
+        rfm_out = cmds.createNode("rowFromMatrix",
+                                   name=f"{self.side}_eyebrowAutoTanOut_RFM", ss=True)
+        cmds.setAttr(f"{rfm_in}.input", 3)
+        cmds.setAttr(f"{rfm_out}.input", 3)
+        cmds.connectAttr(f"{in_local_trn}.matrixSum",  f"{rfm_in}.matrix")
+        cmds.connectAttr(f"{out_local_trn}.matrixSum", f"{rfm_out}.matrix")
 
         # Project each tangent onto the In-Out line to get its t parameter
         in_pos  = om.MVector(cmds.xform(self.eyebrow_controllers[0],  q=True, ws=True, t=True))
@@ -282,61 +306,64 @@ class EyebrowModule(object):
                 t_val = 0.333 if idx == 1 else 0.667
 
             # Target world Y = In.Y*(1-t) + Out.Y*t
-            md_in_t = cmds.createNode("multiplyDivide",
-                                       name=f"{self.side}_eyebrow{name}AutoTanInT_MD", ss=True)
-            md_out_t = cmds.createNode("multiplyDivide",
-                                        name=f"{self.side}_eyebrow{name}AutoTanOutT_MD", ss=True)
-            cmds.setAttr(f"{md_in_t}.operation",  1)
-            cmds.setAttr(f"{md_out_t}.operation", 1)
-            cmds.connectAttr(f"{dcm_in}.outputTranslateY",  f"{md_in_t}.input1X")
-            cmds.setAttr(f"{md_in_t}.input2X",  1.0 - t_val)
-            cmds.connectAttr(f"{dcm_out}.outputTranslateY", f"{md_out_t}.input1X")
-            cmds.setAttr(f"{md_out_t}.input2X", t_val)
+            mul_in_t = cmds.createNode("multiply",
+                                       name=f"{self.side}_eyebrow{name}AutoTanInT_MUL", ss=True)
+            mul_out_t = cmds.createNode("multiply",
+                                        name=f"{self.side}_eyebrow{name}AutoTanOutT_MUL", ss=True)
+            cmds.connectAttr(f"{rfm_in}.outputY",  f"{mul_in_t}.input[0]")
+            cmds.setAttr(f"{mul_in_t}.input[1]",  1.0 - t_val)
+            cmds.connectAttr(f"{rfm_out}.outputY", f"{mul_out_t}.input[0]")
+            cmds.setAttr(f"{mul_out_t}.input[1]", t_val)
 
             pma_world_y = cmds.createNode("plusMinusAverage",
                                            name=f"{self.side}_eyebrow{name}AutoTanWorldY_PMA", ss=True)
             cmds.setAttr(f"{pma_world_y}.operation", 1)  # Add
-            cmds.connectAttr(f"{md_in_t}.outputX",  f"{pma_world_y}.input1D[0]")
-            cmds.connectAttr(f"{md_out_t}.outputX", f"{pma_world_y}.input1D[1]")
+            cmds.connectAttr(f"{mul_in_t}.output",  f"{pma_world_y}.input1D[0]")
+            cmds.connectAttr(f"{mul_out_t}.output", f"{pma_world_y}.input1D[1]")
 
             # Auto local Y (in GRP space) = target_world_Y - GRP_world_Y
-            dcm_grp = cmds.createNode("decomposeMatrix",
-                                       name=f"{self.side}_eyebrow{name}AutoTanGRP_DCM", ss=True)
-            cmds.connectAttr(f"{local_grp}.worldMatrix[0]", f"{dcm_grp}.inputMatrix")
+            rfm_grp = cmds.createNode("rowFromMatrix",
+                                       name=f"{self.side}_eyebrow{name}AutoTanGRP_RFM", ss=True)
+            cmds.setAttr(f"{rfm_grp}.input", 3)  # translation row
+            cmds.connectAttr(f"{local_grp}.matrixSum", f"{rfm_grp}.matrix")
 
             pma_local_y = cmds.createNode("plusMinusAverage",
                                            name=f"{self.side}_eyebrow{name}AutoTanLocalY_PMA", ss=True)
             cmds.setAttr(f"{pma_local_y}.operation", 2)  # Subtract
             cmds.connectAttr(f"{pma_world_y}.output1D",       f"{pma_local_y}.input1D[0]")
-            cmds.connectAttr(f"{dcm_grp}.outputTranslateY",   f"{pma_local_y}.input1D[1]")
+            cmds.connectAttr(f"{rfm_grp}.outputY",            f"{pma_local_y}.input1D[1]")
 
             # Manual Y: CTL offset from its GRP (already driving local_trn.offsetParentMatrix)
             mmt_name = self.eyebrow_controllers[idx].replace("_CTL", "Local_MMT")
-            dcm_curr = cmds.createNode("decomposeMatrix",
-                                        name=f"{self.side}_eyebrow{name}AutoTanManual_DCM", ss=True)
-            cmds.connectAttr(f"{mmt_name}.matrixSum", f"{dcm_curr}.inputMatrix")
+            rfm_curr_t = cmds.createNode("rowFromMatrix",
+                                          name=f"{self.side}_eyebrow{name}AutoTanManual_RFM", ss=True)
+            cmds.setAttr(f"{rfm_curr_t}.input", 3)  # translation row
+            cmds.connectAttr(f"{mmt_name}.matrixSum", f"{rfm_curr_t}.matrix")
 
             # Blend: attributesBlender=0 -> manual, =1 -> auto
             bta = cmds.createNode("blendTwoAttr",
                                    name=f"{self.side}_eyebrow{name}AutoTan_BTA", ss=True)
             cmds.connectAttr(f"{self.main_eyebrow_ctl}.autoTangent", f"{bta}.attributesBlender")
-            cmds.connectAttr(f"{dcm_curr}.outputTranslateY",          f"{bta}.input[0]")
+            cmds.connectAttr(f"{rfm_curr_t}.outputY",                 f"{bta}.input[0]")
             cmds.connectAttr(f"{pma_local_y}.output1D",               f"{bta}.input[1]")
 
-            # Recompose: replace Y with blended value, keep X/Z/rotation/scale from CTL
-            cm = cmds.createNode("composeMatrix",
-                                  name=f"{self.side}_eyebrow{name}AutoTan_CM", ss=True)
-            cmds.connectAttr(f"{dcm_curr}.outputTranslateX", f"{cm}.inputTranslateX")
-            cmds.connectAttr(f"{bta}.output",                f"{cm}.inputTranslateY")
-            cmds.connectAttr(f"{dcm_curr}.outputTranslateZ", f"{cm}.inputTranslateZ")
-            cmds.connectAttr(f"{dcm_curr}.outputRotateX",    f"{cm}.inputRotateX")
-            cmds.connectAttr(f"{dcm_curr}.outputRotateY",    f"{cm}.inputRotateY")
-            cmds.connectAttr(f"{dcm_curr}.outputRotateZ",    f"{cm}.inputRotateZ")
-            cmds.connectAttr(f"{dcm_curr}.outputScaleX",     f"{cm}.inputScaleX")
-            cmds.connectAttr(f"{dcm_curr}.outputScaleY",     f"{cm}.inputScaleY")
-            cmds.connectAttr(f"{dcm_curr}.outputScaleZ",     f"{cm}.inputScaleZ")
+            # Recompose with rowFromMatrix + fourByFourMatrix (no decompose/compose):
+            # rows 0-2 keep rotation/scale from the CTL, row 3 keeps X/Z and takes
+            # the blended Y
+            fbf = cmds.createNode("fourByFourMatrix",
+                                   name=f"{self.side}_eyebrow{name}AutoTan_FBF", ss=True)
+            for row_index in range(3):
+                rfm_row = cmds.createNode("rowFromMatrix",
+                                           name=f"{self.side}_eyebrow{name}AutoTan0{row_index}_RFM", ss=True)
+                cmds.setAttr(f"{rfm_row}.input", row_index)
+                cmds.connectAttr(f"{mmt_name}.matrixSum", f"{rfm_row}.matrix")
+                for col_index, axis in enumerate("XYZ"):
+                    cmds.connectAttr(f"{rfm_row}.output{axis}", f"{fbf}.in{row_index}{col_index}")
+            cmds.connectAttr(f"{rfm_curr_t}.outputX", f"{fbf}.in30")
+            cmds.connectAttr(f"{bta}.output",         f"{fbf}.in31")
+            cmds.connectAttr(f"{rfm_curr_t}.outputZ", f"{fbf}.in32")
 
-            cmds.connectAttr(f"{cm}.outputMatrix", f"{local_trn}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{fbf}.output", f"{local_trn}.matrixIn[0]", force=True)
 
     def ribbon_setup(self):
 
@@ -372,28 +399,35 @@ class EyebrowModule(object):
             closest_point = cmds.createNode("closestPointOnSurface", name=jnt.replace("_JNT", "Slide_CPOS"), ss=True)
             row_from_matrix_projection = cmds.createNode("rowFromMatrix", name=jnt.replace("_JNT", "Slide_RFM"), ss=True)
             cmds.setAttr(f"{row_from_matrix_projection}.input", 3) # Getting the translation row
-            compose_matrix = cmds.createNode("composeMatrix", name=jnt.replace("_JNT", "Slide_CM"), ss=True)
-            decompose_matrix = cmds.createNode("decomposeMatrix", name=jnt.replace("_JNT", "Slide_DCM"), ss=True)
             parent_matrix = cmds.createNode("parentMatrix", name=jnt.replace("_JNT", "Slide_PM"), ss=True)
             jnt_input = cmds.listConnections(jnt, source=True, destination=True, plugs=True)[0] # Getting the input matrix of the joint
 
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{closest_point}.inputSurface") # Sphere world matrix to CPOS
             cmds.connectAttr(jnt_input, f"{row_from_matrix_projection}.matrix") # Joint input matrix to RFM
             cmds.connectAttr(f"{row_from_matrix_projection}.outputX", f"{closest_point}.inPositionX")
-            cmds.connectAttr(f"{row_from_matrix_projection}.outputY", f"{closest_point}.inPositionY") 
+            cmds.connectAttr(f"{row_from_matrix_projection}.outputY", f"{closest_point}.inPositionY")
             cmds.connectAttr(f"{row_from_matrix_projection}.outputZ", f"{closest_point}.inPositionZ")
-            cmds.connectAttr(jnt_input, f"{decompose_matrix}.inputMatrix") # Joint input matrix to CM
-            cmds.connectAttr(f"{closest_point}.position", f"{compose_matrix}.inputTranslate") # CPOS position to CM
-            cmds.connectAttr(f"{decompose_matrix}.outputRotate", f"{compose_matrix}.inputRotate") # DM to CM
-            cmds.connectAttr(f"{decompose_matrix}.outputScale", f"{compose_matrix}.inputScale") # DM to CM
+
+            # Rebuild the slid matrix with rowFromMatrix + fourByFourMatrix (no
+            # decompose/compose): rows 0-2 keep the joint rotation/scale, row 3
+            # takes the CPOS projected position
+            four_by_four = cmds.createNode("fourByFourMatrix", name=jnt.replace("_JNT", "Slide_FBF"), ss=True)
+            for row_index in range(3):
+                rfm_row = cmds.createNode("rowFromMatrix", name=jnt.replace("_JNT", f"Slide0{row_index}_RFM"), ss=True)
+                cmds.setAttr(f"{rfm_row}.input", row_index)
+                cmds.connectAttr(jnt_input, f"{rfm_row}.matrix")
+                for col_index, axis in enumerate("XYZ"):
+                    cmds.connectAttr(f"{rfm_row}.output{axis}", f"{four_by_four}.in{row_index}{col_index}")
+            for col_index, axis in enumerate("XYZ"):
+                cmds.connectAttr(f"{closest_point}.position{axis}", f"{four_by_four}.in3{col_index}")
 
             cmds.connectAttr(jnt_input, f"{parent_matrix}.target[0].targetMatrix")
-            cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{parent_matrix}.inputMatrix")
+            cmds.connectAttr(f"{four_by_four}.output", f"{parent_matrix}.inputMatrix")
             reverse_slide = cmds.createNode("reverse", name=jnt.replace("_JNT", "Slide_Reverse"), ss=True)
             cmds.connectAttr(f"{self.main_eyebrow_ctl}.slide", f"{reverse_slide}.inputX")
             cmds.connectAttr(f"{reverse_slide}.outputX", f"{parent_matrix}.target[0].weight")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{jnt}.offsetParentMatrix", force=True)
-            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(f"{compose_matrix}.outputMatrix", jnt_input), type="matrix")
+            cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(f"{four_by_four}.output", jnt_input), type="matrix")
 
         for jnt in self.eyebrows:
             cmds.delete(jnt)

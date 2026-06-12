@@ -36,19 +36,14 @@ def auto_collision_rig(collider_list, target_obj, axis='Z', direction=1):
     min_dist_node = cmds.createNode('plusMinusAverage', name=f"{prefix}_minDist")
     cmds.setAttr(f"{min_dist_node}.operation", 3) # Operation 3 = Minimum
     
-    # Get the target's world position via Decompose Matrix
-    decomp_target = cmds.createNode('decomposeMatrix', name=f"{prefix}_target_dcm")
-    cmds.connectAttr(f"{auto_offset_grp}.worldMatrix[0]", f"{decomp_target}.inputMatrix")
-
-    # Connect each collider
+    # Connect each collider: distanceBetween reads the matrices directly
+    # (inMatrix1/2), so no decomposeMatrix is needed at all
     for i, col in enumerate(collider_list):
-        col_dcm = cmds.createNode('decomposeMatrix', name=f"{col}_dcm")
         dist_node = cmds.createNode('distanceBetween', name=f"{col}_to_target_dist")
-        
-        cmds.connectAttr(f"{col}.worldMatrix[0]", f"{col_dcm}.inputMatrix")
-        cmds.connectAttr(f"{col_dcm}.outputTranslate", f"{dist_node}.point1")
-        cmds.connectAttr(f"{decomp_target}.outputTranslate", f"{dist_node}.point2")
-        
+
+        cmds.connectAttr(f"{col}.worldMatrix[0]", f"{dist_node}.inMatrix1")
+        cmds.connectAttr(f"{auto_offset_grp}.worldMatrix[0]", f"{dist_node}.inMatrix2")
+
         # Feed distance into the 'Minimum' selector
         cmds.connectAttr(f"{dist_node}.distance", f"{min_dist_node}.input1D[{i}]")
 

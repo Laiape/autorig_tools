@@ -250,16 +250,23 @@ def create_matrix_pole_vector(self, m1_attr, m2_attr, m3_attr, pole_distance=1.0
             return f'{vp}.output'
 
         def scale_vector(input_vec, scalar_attr, name):
-            md = cmds.createNode('multiplyDivide', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_MDV", ss=True)
-            cmds.setAttr(f'{md}.operation', 1)
-            cmds.connectAttr(input_vec, f'{md}.input1')
+            mults = []
+            outputs = []
             for axis in 'XYZ':
-                cmds.connectAttr(scalar_attr, f'{md}.input2{axis}')
-            return md, f'{md}.output'
+                mult = cmds.createNode('multiply', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}{axis}_MUL", ss=True)
+                cmds.connectAttr(f'{input_vec}{axis}', f'{mult}.input[0]')
+                cmds.connectAttr(scalar_attr, f'{mult}.input[1]')
+                mults.append(mult)
+                outputs.append(f'{mult}.output')
+            return mults, outputs
 
         def add_vectors(vecA, vecB, name):
             node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
             for i, vector in enumerate([vecA, vecB]):
+                if isinstance(vector, (list, tuple)):
+                    for axis, plug in zip("xyz", vector):
+                        cmds.connectAttr(plug, f'{node}.input3D[{i}].input3D{axis}')
+                    continue
                 try:
                     cmds.connectAttr(vector, f'{node}.input3D[{i}]')
                 except:
@@ -551,7 +558,7 @@ def bend_factor(m0, m1, m2, name="bend"):
         name (str): prefix for the created nodes.
 
     Returns:
-        str: a `.outFloat` plug (0-1).
+        str: a `.output` plug (0-1).
     """
     def pos(m, tag):
         r = cmds.createNode("rowFromMatrix", name=f"{name}{tag}Pos_RFM", ss=True)
@@ -581,17 +588,15 @@ def bend_factor(m0, m1, m2, name="bend"):
     cmds.connectAttr(f"{upper}.output", f"{dot}.input1")
     cmds.connectAttr(f"{lower}.output", f"{dot}.input2")
 
-    one_minus = cmds.createNode("floatMath", name=f"{name}OneMinus_FLM", ss=True)
-    cmds.setAttr(f"{one_minus}.operation", 1)  # subtract -> 1 - cos
-    cmds.setAttr(f"{one_minus}.floatA", 1.0)
-    cmds.connectAttr(f"{dot}.outputX", f"{one_minus}.floatB")
+    one_minus = cmds.createNode("subtract", name=f"{name}OneMinus_SUB", ss=True)  # 1 - cos
+    cmds.setAttr(f"{one_minus}.input1", 1.0)
+    cmds.connectAttr(f"{dot}.outputX", f"{one_minus}.input2")
 
-    half = cmds.createNode("floatMath", name=f"{name}Half_FLM", ss=True)
-    cmds.setAttr(f"{half}.operation", 2)  # multiply -> * 0.5
-    cmds.connectAttr(f"{one_minus}.outFloat", f"{half}.floatA")
-    cmds.setAttr(f"{half}.floatB", 0.5)
+    half = cmds.createNode("multiply", name=f"{name}Half_MUL", ss=True)  # * 0.5
+    cmds.connectAttr(f"{one_minus}.output", f"{half}.input[0]")
+    cmds.setAttr(f"{half}.input[1]", 0.5)
 
-    return f"{half}.outFloat"
+    return f"{half}.output"
 
 
 def segment_volume(m_start, m_end, rest_len, volume_attr, global_scale_attr, name="vol"):
@@ -608,7 +613,7 @@ def segment_volume(m_start, m_end, rest_len, volume_attr, global_scale_attr, nam
         name (str): prefix for the created nodes.
 
     Returns:
-        str: the `.outFloat` plug with the secondary scale factor.
+        str: the `.output` plug with the secondary scale factor.
     """
     dist = cmds.createNode("distanceBetween", name=f"{name}Vol_DBT", ss=True)
     cmds.connectAttr(f"{m_start}.outputMatrix", f"{dist}.inMatrix1")
@@ -618,29 +623,24 @@ def segment_volume(m_start, m_end, rest_len, volume_attr, global_scale_attr, nam
     cmds.connectAttr(f"{dist}.distance", f"{norm}.input1")
     cmds.connectAttr(global_scale_attr, f"{norm}.input2")
 
-    stretch = cmds.createNode("floatMath", name=f"{name}VolStretch_FLM", ss=True)
-    cmds.setAttr(f"{stretch}.operation", 3)  # divide
-    cmds.connectAttr(f"{norm}.output", f"{stretch}.floatA")
-    cmds.setAttr(f"{stretch}.floatB", rest_len if rest_len else 1.0)
+    stretch = cmds.createNode("divide", name=f"{name}VolStretch_DIV", ss=True)
+    cmds.connectAttr(f"{norm}.output", f"{stretch}.input1")
+    cmds.setAttr(f"{stretch}.input2", rest_len if rest_len else 1.0)
 
-    inv_sqrt = cmds.createNode("floatMath", name=f"{name}VolInvSqrt_FLM", ss=True)
-    cmds.setAttr(f"{inv_sqrt}.operation", 6)  # power
-    cmds.connectAttr(f"{stretch}.outFloat", f"{inv_sqrt}.floatA")
-    cmds.setAttr(f"{inv_sqrt}.floatB", -0.5)  # 1/sqrt(stretch)
+    inv_sqrt = cmds.createNode("power", name=f"{name}VolInvSqrt_POW", ss=True)
+    cmds.connectAttr(f"{stretch}.output", f"{inv_sqrt}.input")
+    cmds.setAttr(f"{inv_sqrt}.exponent", -0.5)  # 1/sqrt(stretch)
 
-    minus = cmds.createNode("floatMath", name=f"{name}VolMinus_FLM", ss=True)
-    cmds.setAttr(f"{minus}.operation", 1)  # subtract
-    cmds.connectAttr(f"{inv_sqrt}.outFloat", f"{minus}.floatA")
-    cmds.setAttr(f"{minus}.floatB", 1.0)
+    minus = cmds.createNode("subtract", name=f"{name}VolMinus_SUB", ss=True)
+    cmds.connectAttr(f"{inv_sqrt}.output", f"{minus}.input1")
+    cmds.setAttr(f"{minus}.input2", 1.0)
 
-    mult = cmds.createNode("floatMath", name=f"{name}VolMult_FLM", ss=True)
-    cmds.setAttr(f"{mult}.operation", 2)  # multiply
-    cmds.connectAttr(f"{minus}.outFloat", f"{mult}.floatA")
-    cmds.connectAttr(volume_attr, f"{mult}.floatB")
+    mult = cmds.createNode("multiply", name=f"{name}VolMult_MUL", ss=True)
+    cmds.connectAttr(f"{minus}.output", f"{mult}.input[0]")
+    cmds.connectAttr(volume_attr, f"{mult}.input[1]")
 
-    add = cmds.createNode("floatMath", name=f"{name}VolAdd_FLM", ss=True)
-    cmds.setAttr(f"{add}.operation", 0)  # add
-    cmds.connectAttr(f"{mult}.outFloat", f"{add}.floatA")
-    cmds.setAttr(f"{add}.floatB", 1.0)
+    add = cmds.createNode("sum", name=f"{name}VolAdd_SUM", ss=True)
+    cmds.connectAttr(f"{mult}.output", f"{add}.input[0]")
+    cmds.setAttr(f"{add}.input[1]", 1.0)
 
-    return f"{add}.outFloat"
+    return f"{add}.output"

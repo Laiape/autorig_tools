@@ -211,15 +211,39 @@ class SpineModule(object):
         # ------ Local hip setup ------
         cmds.select(clear=True)
         local_hip_skinning_jnt = cmds.joint(name=f"{self.side}_localHipSkinning_JNT")
-        decompose_translation_node = cmds.createNode("decomposeMatrix", name=f"{self.side}_localHipTranslation_DCM")
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{decompose_translation_node}.inputMatrix")
-        decompose_rotation_node = cmds.createNode("decomposeMatrix", name=f"{self.side}_localHipRotation_DCM")
-        cmds.connectAttr(f"{self.local_hip_ctl}.worldMatrix[0]", f"{decompose_rotation_node}.inputMatrix")
-        compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_localHip_CMP")
-        cmds.connectAttr(f"{decompose_translation_node}.outputTranslate", f"{compose_matrix}.inputTranslate")
-        cmds.connectAttr(f"{decompose_translation_node}.outputScale", f"{compose_matrix}.inputScale")
-        cmds.connectAttr(f"{decompose_rotation_node}.outputRotate", f"{compose_matrix}.inputRotate")
-        cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{local_hip_skinning_jnt}.offsetParentMatrix")
+        # rowFromMatrix + fourByFourMatrix, behaviour-preserving: rows 0-2 are the
+        # hip ctl rotation rows NORMALIZED (drop the hip scale, like the rotation
+        # decompose did) and rescaled with the spine ctl row lengths (= its
+        # outputScale); row 3 is the spine ctl translation.
+        four_by_four = cmds.createNode("fourByFourMatrix", name=f"{self.side}_localHip_FBF")
+        row_translation = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipTranslation_RFM")
+        cmds.setAttr(f"{row_translation}.input", 3)
+        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{row_translation}.matrix")
+        for col_index, axis in enumerate("XYZ"):
+            cmds.connectAttr(f"{row_translation}.output{axis}", f"{four_by_four}.in3{col_index}")
+
+        for row_index in range(3):
+            row_rotation = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipRotation0{row_index}_RFM")
+            cmds.setAttr(f"{row_rotation}.input", row_index)
+            cmds.connectAttr(f"{self.local_hip_ctl}.worldMatrix[0]", f"{row_rotation}.matrix")
+            normalize_row = cmds.createNode("normalize", name=f"{self.side}_localHipRotation0{row_index}_NRM")
+
+            row_scale = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipScale0{row_index}_RFM")
+            cmds.setAttr(f"{row_scale}.input", row_index)
+            cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{row_scale}.matrix")
+            scale_length = cmds.createNode("length", name=f"{self.side}_localHipScale0{row_index}_LEN")
+
+            for axis in "XYZ":
+                cmds.connectAttr(f"{row_rotation}.output{axis}", f"{normalize_row}.input{axis}")
+                cmds.connectAttr(f"{row_scale}.output{axis}", f"{scale_length}.input{axis}")
+
+            for col_index, axis in enumerate("XYZ"):
+                mult = cmds.createNode("multiply", name=f"{self.side}_localHipRow{row_index}{axis}_MUL")
+                cmds.connectAttr(f"{normalize_row}.output{axis}", f"{mult}.input[0]")
+                cmds.connectAttr(f"{scale_length}.output", f"{mult}.input[1]")
+                cmds.connectAttr(f"{mult}.output", f"{four_by_four}.in{row_index}{col_index}")
+
+        cmds.connectAttr(f"{four_by_four}.output", f"{local_hip_skinning_jnt}.offsetParentMatrix")
         
         cmds.setAttr(f"{self.local_hip_nodes[0]}.inheritsTransform", 0)
         cmds.parent(local_hip_skinning_jnt, self.skeleton_grp)

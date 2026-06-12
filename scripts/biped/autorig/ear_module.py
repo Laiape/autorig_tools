@@ -84,23 +84,16 @@ class EarModule(object):
     def local(self, ctl):
 
         """
-        Create a local transform node for a controller.
+        Create the local matrix network for a controller WITHOUT transforms:
+        ctl.worldMatrix * GRP.worldInverseMatrix * baked bind matrix (what the old
+        Local_TRN worldMatrix was). See matrix_manager.local_mmx.
         Args:
             ctl (str): The name of the controller.
         Returns:
-            str: The name of the local transform node.
+            str: The Local_MMX multMatrix node.
         """
 
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
-        grp = ctl.replace("_CTL", "_GRP")
-        mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMT"))
-        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{local_trn}.offsetParentMatrix")
-        cmds.matchTransform(local_grp, ctl)
-
-        return local_grp, local_trn
+        return matrix_manager.local_mmx(ctl, ctl.replace("_CTL", "_GRP"))
 
     def load_guides(self):
 
@@ -148,43 +141,40 @@ class EarModule(object):
         """
         ear_controllers = []
         skinning_joints = []
-        local_trns = []
+        local_mmxs = []
 
         cmds.select(clear=True)
 
         for i, guide in enumerate(self.ear_guides):
-            
+
             nodes, ctl = curve_tool.create_controller(name=guide.replace("_JNT", ""), offset=["GRP", "ANM"])
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.matchTransform(nodes[0], guide)
-            local_grp = cmds.createNode("transform", name=guide.replace("_JNT", "Local_GRP"), ss=True, p=self.module_trn)
-            local_trn = cmds.createNode("transform", name=guide.replace("_JNT", "Local_TRN"), ss=True, p=local_grp)
-            cmds.matchTransform(local_grp, ctl)
             jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint
             cmds.parent(nodes[0], self.controllers_grp)
 
-            mult_matrix_local = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMT"))
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{mult_matrix_local}.matrixIn[0]")
-            cmds.connectAttr(f"{nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix_local}.matrixIn[1]")
-            cmds.connectAttr(f"{mult_matrix_local}.matrixSum", f"{local_trn}.offsetParentMatrix")
+            # Local network without transforms: ctl.worldMatrix * GRP.worldInverseMatrix * baked bind matrix
+            local_mmx = matrix_manager.local_mmx(ctl, nodes[0])
 
             if i > 0:
                 cmds.parent(nodes[0], ear_controllers[i-1]) # Parent controller to previous controller
+                inverse_prev_local = cmds.createNode("inverseMatrix", name=ctl.replace("_CTL", "LocalPrev_INV"), ss=True)
+                cmds.connectAttr(f"{local_mmxs[i-1]}.matrixSum", f"{inverse_prev_local}.inputMatrix")
                 mult_matrix = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Parent_MMT"))
-                cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{mult_matrix}.matrixIn[0]")
-                cmds.connectAttr(f"{local_trns[i-1]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+                cmds.connectAttr(f"{local_mmx}.matrixSum", f"{mult_matrix}.matrixIn[0]")
+                cmds.connectAttr(f"{inverse_prev_local}.outputMatrix", f"{mult_matrix}.matrixIn[1]")
                 cmds.connectAttr(f"{ear_controllers[i-1]}.matrix", f"{mult_matrix}.matrixIn[2]")
                 cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{jnt}.offsetParentMatrix")
                 cmds.parent(jnt, skinning_joints[i-1]) # Parent skinning joint to previous skinning joint
-                
+
             else:
-                cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
+                cmds.connectAttr(f"{local_mmx}.matrixSum", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
 
             cmds.xform(jnt, m=om.MMatrix.kIdentity) # Reset joint transformations
 
             ear_controllers.append(ctl)
             skinning_joints.append(jnt)
-            local_trns.append(local_trn)
+            local_mmxs.append(local_mmx)
 
         for i, jnt in enumerate(skinning_joints): # Reset joint transformations
             

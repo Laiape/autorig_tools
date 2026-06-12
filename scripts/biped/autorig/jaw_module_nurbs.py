@@ -896,13 +896,12 @@ class JawModule(object):
                 if roll_factor == 0:
                     roll_factor = 0.001
 
-                # ---MULTIPLY DIVIDE ---
-                roll_mdv = cmds.createNode("multiplyDivide", name=f"{out_joint}_Roll_MDV", ss=True)
-                cmds.setAttr(f"{roll_mdv}.operation", 1)  # Multiply for both L and R
+                # ---MULTIPLY ---
+                roll_mul = cmds.createNode("multiply", name=f"{out_joint}_Roll_MUL", ss=True)
 
-                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_mdv}.input1X")
-                cmds.setAttr(f"{roll_mdv}.input2X", roll_factor)
-                cmds.connectAttr(f"{roll_mdv}.outputX", f"{out_joint}.rotateX", f=True)
+                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_mul}.input[0]")
+                cmds.setAttr(f"{roll_mul}.input[1]", roll_factor)
+                cmds.connectAttr(f"{roll_mul}.output", f"{out_joint}.rotateX", f=True)
         
         
 

@@ -177,12 +177,15 @@ class ArmModule(object):
         cmds.connectAttr(f"{pv_pos}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_armPv_CRV") # Create a line that points always to the PV
-        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPv_DCM", ss=True)
-        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_armPvCtl_DCM", ss=True)
-        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
-        cmds.connectAttr(self.guides_matrices[1], f"{decompose_knee}.inputMatrix")
-        cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
-        cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
+        row_knee = cmds.createNode("rowFromMatrix", name=f"{self.side}_armPv_RFM", ss=True)
+        row_ctl = cmds.createNode("rowFromMatrix", name=f"{self.side}_armPvCtl_RFM", ss=True)
+        cmds.setAttr(f"{row_knee}.input", 3)  # translation row
+        cmds.setAttr(f"{row_ctl}.input", 3)
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{row_ctl}.matrix")
+        cmds.connectAttr(self.guides_matrices[1], f"{row_knee}.matrix")
+        for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
+            cmds.connectAttr(f"{row_knee}.output{axis}", f"{crv_point_pv}.controlPoints[0].{value}")
+            cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv_point_pv}.controlPoints[1].{value}")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
         cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
@@ -229,16 +232,23 @@ class ArmModule(object):
             return f'{vp}.output'
 
         def scale_vector(input_vec, scalar_attr, name):
-            md = cmds.createNode('multiplyDivide', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_MDV", ss=True)
-            cmds.setAttr(f'{md}.operation', 1)
-            cmds.connectAttr(input_vec, f'{md}.input1')
+            mults = []
+            outputs = []
             for axis in 'XYZ':
-                cmds.connectAttr(scalar_attr, f'{md}.input2{axis}')
-            return md, f'{md}.output'
+                mult = cmds.createNode('multiply', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}{axis}_MUL", ss=True)
+                cmds.connectAttr(f'{input_vec}{axis}', f'{mult}.input[0]')
+                cmds.connectAttr(scalar_attr, f'{mult}.input[1]')
+                mults.append(mult)
+                outputs.append(f'{mult}.output')
+            return mults, outputs
 
         def add_vectors(vecA, vecB, name):
             node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
             for i, vector in enumerate([vecA, vecB]):
+                if isinstance(vector, (list, tuple)):
+                    for axis, plug in zip("xyz", vector):
+                        cmds.connectAttr(plug, f'{node}.input3D[{i}].input3D{axis}')
+                    continue
                 try:
                     cmds.connectAttr(vector, f'{node}.input3D[{i}]')
                 except:

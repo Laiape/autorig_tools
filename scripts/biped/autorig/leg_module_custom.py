@@ -272,12 +272,15 @@ class LegModule(object):
         cmds.connectAttr(f"{pv_pos}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix", force=True)
 
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_legPv_CRV") # Create a line that points always to the PV
-        decompose_knee = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPv_DCM", ss=True)
-        decompose_ctl = cmds.createNode("decomposeMatrix", name=f"{self.side}_legPvCtl_DCM", ss=True)
-        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{decompose_ctl}.inputMatrix")
-        cmds.connectAttr(self.guides_matrices[1], f"{decompose_knee}.inputMatrix")
-        cmds.connectAttr(f"{decompose_knee}.outputTranslate", f"{crv_point_pv}.controlPoints[0]")
-        cmds.connectAttr(f"{decompose_ctl}.outputTranslate", f"{crv_point_pv}.controlPoints[1]")
+        row_knee = cmds.createNode("rowFromMatrix", name=f"{self.side}_legPv_RFM", ss=True)
+        row_ctl = cmds.createNode("rowFromMatrix", name=f"{self.side}_legPvCtl_RFM", ss=True)
+        cmds.setAttr(f"{row_knee}.input", 3)  # translation row
+        cmds.setAttr(f"{row_ctl}.input", 3)
+        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{row_ctl}.matrix")
+        cmds.connectAttr(self.guides_matrices[1], f"{row_knee}.matrix")
+        for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
+            cmds.connectAttr(f"{row_knee}.output{axis}", f"{crv_point_pv}.controlPoints[0].{value}")
+            cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv_point_pv}.controlPoints[1].{value}")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
         cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
@@ -314,16 +317,23 @@ class LegModule(object):
             return f'{vp}.output'
 
         def scale_vector(input_vec, scalar_attr, name):
-            md = cmds.createNode('multiplyDivide', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_MDV", ss=True)
-            cmds.setAttr(f'{md}.operation', 1)
-            cmds.connectAttr(input_vec, f'{md}.input1')
+            mults = []
+            outputs = []
             for axis in 'XYZ':
-                cmds.connectAttr(scalar_attr, f'{md}.input2{axis}')
-            return md, f'{md}.output'
+                mult = cmds.createNode('multiply', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}{axis}_MUL", ss=True)
+                cmds.connectAttr(f'{input_vec}{axis}', f'{mult}.input[0]')
+                cmds.connectAttr(scalar_attr, f'{mult}.input[1]')
+                mults.append(mult)
+                outputs.append(f'{mult}.output')
+            return mults, outputs
 
         def add_vectors(vecA, vecB, name):
             node = cmds.createNode('plusMinusAverage', name=f"{self.side}_{self.module_name}Pv{name.capitalize()}_PMA", ss=True)
             for i, vector in enumerate([vecA, vecB]):
+                if isinstance(vector, (list, tuple)):
+                    for axis, plug in zip("xyz", vector):
+                        cmds.connectAttr(plug, f'{node}.input3D[{i}].input3D{axis}')
+                    continue
                 try:
                     cmds.connectAttr(vector, f'{node}.input3D[{i}]')
                 except:
@@ -513,12 +523,11 @@ class LegModule(object):
         cmds.setAttr(f"{roll_straight_angle}.outputMin", 0)
         cmds.setAttr(f"{roll_straight_angle}.outputMax", 1)
 
-        multiply_divide_node = cmds.createNode("multiplyDivide", name=f"{self.side}_legRollStraightAngle_MDV", ss=True)
-        cmds.setAttr(f"{multiply_divide_node}.operation", 1)
-        cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{multiply_divide_node}.input1X")
-        cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{multiply_divide_node}.input2X")
+        multiply_node = cmds.createNode("multiply", name=f"{self.side}_legRollStraightAngle_MUL", ss=True)
+        cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{multiply_node}.input[0]")
+        cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{multiply_node}.input[1]")
         negate_roll_straight = cmds.createNode("negate", name=f"{self.side}_legRollStraight_NEG", ss=True)
-        cmds.connectAttr(f"{multiply_divide_node}.outputX", f"{negate_roll_straight}.input")
+        cmds.connectAttr(f"{multiply_node}.output", f"{negate_roll_straight}.input")
         cmds.connectAttr(f"{negate_roll_straight}.output", f"{self.ik_sdk_nodes[-2]}.rotateZ")
 
         roll_break_angle = cmds.createNode("remapValue", name=f"{self.side}_legRollBreakAngle_RMV", ss=True)
@@ -530,17 +539,15 @@ class LegModule(object):
         reverse = cmds.createNode("reverse", name=f"{self.side}_legRollBreakAngle_REV", ss=True)
         cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{reverse}.inputX")
 
-        roll_angle_enable_mdv = cmds.createNode("multiplyDivide", name=f"{self.side}_legRollAngleEnable_MDV", ss=True)
-        cmds.setAttr(f"{roll_angle_enable_mdv}.operation", 1)
-        cmds.connectAttr(f"{reverse}.outputX", f"{roll_angle_enable_mdv}.input1X")
-        cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_angle_enable_mdv}.input2X")
+        roll_angle_enable_mul = cmds.createNode("multiply", name=f"{self.side}_legRollAngleEnable_MUL", ss=True)
+        cmds.connectAttr(f"{reverse}.outputX", f"{roll_angle_enable_mul}.input[0]")
+        cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_angle_enable_mul}.input[1]")
 
-        roll_lift_angle_mdv = cmds.createNode("multiplyDivide", name=f"{self.side}_legRollLiftAngle_MDV", ss=True)
-        cmds.setAttr(f"{roll_lift_angle_mdv}.operation", 1)
-        cmds.connectAttr(f"{roll_break_angle}.outValue", f"{roll_lift_angle_mdv}.input1X")
-        cmds.connectAttr(f"{roll_angle_enable_mdv}.outputX", f"{roll_lift_angle_mdv}.input2X")
+        roll_lift_angle_mul = cmds.createNode("multiply", name=f"{self.side}_legRollLiftAngle_MUL", ss=True)
+        cmds.connectAttr(f"{roll_break_angle}.outValue", f"{roll_lift_angle_mul}.input[0]")
+        cmds.connectAttr(f"{roll_angle_enable_mul}.output", f"{roll_lift_angle_mul}.input[1]")
         negate_roll_lift = cmds.createNode("negate", name=f"{self.side}_legRollLift_NEG", ss=True)
-        cmds.connectAttr(f"{roll_lift_angle_mdv}.outputX", f"{negate_roll_lift}.input")
+        cmds.connectAttr(f"{roll_lift_angle_mul}.output", f"{negate_roll_lift}.input")
         cmds.connectAttr(f"{negate_roll_lift}.output", f"{self.ik_sdk_nodes[-1]}.rotateZ")
 
         roll_heel_clamp = cmds.createNode("clamp", name=f"{self.side}_legRollHeel_CLM", ss=True)

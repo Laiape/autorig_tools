@@ -45,7 +45,7 @@
     },
     "arm_module": {
         "L_shoulder_JNT": "L_shoulder_JNT",
-        "L_wrist_JNT": "L_wrist_JNT",
+        "L_wrist_JNT": "L_wristSkinning_JNT",
         "L_armSettings": "L_armSettings_CTL",
         "L_armIk": "L_armIkWrist_CTL",
         "L_armPv": "L_armPv_CTL",
@@ -53,7 +53,7 @@
         "L_armIkRoot": "L_armIkRoot_CTL",
         "L_skinningJoints": null,
         "R_shoulder_JNT": "R_shoulder_JNT",
-        "R_wrist_JNT": "R_wrist_JNT",
+        "R_wrist_JNT": "R_wristSkinning_JNT",
         "R_armSettings": "R_armSettings_CTL",
         "R_armIk": "R_armIkWrist_CTL",
         "R_armPv": "R_armPv_CTL",

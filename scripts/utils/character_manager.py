@@ -635,7 +635,7 @@ class AssetManagerUI(QtWidgets.QWidget):
         splitter.setHandleWidth(1)
         splitter.addWidget(self._make_sidebar())
         splitter.addWidget(self._make_center())
-        splitter.setSizes([200, 620])
+        splitter.setSizes([280, 540])
         root.addWidget(splitter, 1)
 
         root.addWidget(self._make_footer())
@@ -725,7 +725,7 @@ class AssetManagerUI(QtWidgets.QWidget):
         tw.addLayout(cam_row)
 
         self.thumbnail = QtWidgets.QLabel("NO IMAGE")
-        self.thumbnail.setFixedSize(184, 130)
+        self.thumbnail.setFixedSize(264, 240)
         self.thumbnail.setAlignment(QtCore.Qt.AlignCenter)
         self.thumbnail.setStyleSheet(f"""
             background:{C_BG0}; border:none; border-top:2px solid {C_BORDER};
@@ -840,7 +840,7 @@ class AssetManagerUI(QtWidgets.QWidget):
                 break
         if path:
             pix = QtGui.QPixmap(path).scaled(
-                184, 140, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+                264, 240, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
             self.thumbnail.setPixmap(pix)
             self.thumbnail.setText("")
         else:

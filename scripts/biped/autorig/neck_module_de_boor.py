@@ -186,15 +186,39 @@ class NeckModule(object):
         head_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_headSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.setAttr(f"{head_skinning_jnt}.inheritsTransform", 0)
 
-        decompose_translation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headTranslation_DCM")
-        cmds.connectAttr(f"{self.output_joints[-1]}.worldMatrix[0]", f"{decompose_translation}.inputMatrix")
-        decompose_rotation = cmds.createNode("decomposeMatrix", name=f"{self.side}_headRotation_DCM")
-        cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{decompose_rotation}.inputMatrix")
-        compose_head = cmds.createNode("composeMatrix", name=f"{self.side}_head_CMP")
-        cmds.connectAttr(f"{decompose_translation}.outputTranslate", f"{compose_head}.inputTranslate")
-        cmds.connectAttr(f"{decompose_translation}.outputScale", f"{compose_head}.inputScale")
-        cmds.connectAttr(f"{decompose_rotation}.outputRotate", f"{compose_head}.inputRotate")
-        cmds.connectAttr(f"{compose_head}.outputMatrix", f"{head_skinning_jnt}.offsetParentMatrix")
+        # rowFromMatrix + fourByFourMatrix, behaviour-preserving: rows 0-2 are the
+        # head ctl rotation rows NORMALIZED (drop the ctl scale, like the rotation
+        # decompose did) and rescaled with the output joint row lengths (= its
+        # outputScale); row 3 is the output joint translation.
+        four_by_four = cmds.createNode("fourByFourMatrix", name=f"{self.side}_head_FBF")
+        row_translation = cmds.createNode("rowFromMatrix", name=f"{self.side}_headTranslation_RFM")
+        cmds.setAttr(f"{row_translation}.input", 3)
+        cmds.connectAttr(f"{self.output_joints[-1]}.worldMatrix[0]", f"{row_translation}.matrix")
+        for col_index, axis in enumerate("XYZ"):
+            cmds.connectAttr(f"{row_translation}.output{axis}", f"{four_by_four}.in3{col_index}")
+
+        for row_index in range(3):
+            row_rotation = cmds.createNode("rowFromMatrix", name=f"{self.side}_headRotation0{row_index}_RFM")
+            cmds.setAttr(f"{row_rotation}.input", row_index)
+            cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{row_rotation}.matrix")
+            normalize_row = cmds.createNode("normalize", name=f"{self.side}_headRotation0{row_index}_NRM")
+
+            row_scale = cmds.createNode("rowFromMatrix", name=f"{self.side}_headScale0{row_index}_RFM")
+            cmds.setAttr(f"{row_scale}.input", row_index)
+            cmds.connectAttr(f"{self.output_joints[-1]}.worldMatrix[0]", f"{row_scale}.matrix")
+            scale_length = cmds.createNode("length", name=f"{self.side}_headScale0{row_index}_LEN")
+
+            for axis in "XYZ":
+                cmds.connectAttr(f"{row_rotation}.output{axis}", f"{normalize_row}.input{axis}")
+                cmds.connectAttr(f"{row_scale}.output{axis}", f"{scale_length}.input{axis}")
+
+            for col_index, axis in enumerate("XYZ"):
+                mult = cmds.createNode("multiply", name=f"{self.side}_headRow{row_index}{axis}_MUL")
+                cmds.connectAttr(f"{normalize_row}.output{axis}", f"{mult}.input[0]")
+                cmds.connectAttr(f"{scale_length}.output", f"{mult}.input[1]")
+                cmds.connectAttr(f"{mult}.output", f"{four_by_four}.in{row_index}{col_index}")
+
+        cmds.connectAttr(f"{four_by_four}.output", f"{head_skinning_jnt}.offsetParentMatrix")
 
         cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
         cmds.delete(self.neck_chain[0])

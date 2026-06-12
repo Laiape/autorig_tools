@@ -170,15 +170,39 @@ class SpineModule(object):
         # ------ Local hip setup ------
         cmds.select(clear=True)
         local_hip_skinning_jnt = cmds.joint(name=f"{self.side}_localHipSkinning_JNT")
-        decompose_translation_node = cmds.createNode("decomposeMatrix", name=f"{self.side}_localHipTranslation_DCM")
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{decompose_translation_node}.inputMatrix")
-        decompose_rotation_node = cmds.createNode("decomposeMatrix", name=f"{self.side}_localHipRotation_DCM")
-        cmds.connectAttr(f"{self.local_hip_ctl}.worldMatrix[0]", f"{decompose_rotation_node}.inputMatrix")
-        compose_matrix = cmds.createNode("composeMatrix", name=f"{self.side}_localHip_CMP")
-        cmds.connectAttr(f"{decompose_translation_node}.outputTranslate", f"{compose_matrix}.inputTranslate")
-        cmds.connectAttr(f"{decompose_translation_node}.outputScale", f"{compose_matrix}.inputScale")
-        cmds.connectAttr(f"{decompose_rotation_node}.outputRotate", f"{compose_matrix}.inputRotate")
-        cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{local_hip_skinning_jnt}.offsetParentMatrix")
+        # rowFromMatrix + fourByFourMatrix, behaviour-preserving: rows 0-2 are the
+        # hip ctl rotation rows NORMALIZED (drop the hip scale, like the rotation
+        # decompose did) and rescaled with the spine ctl row lengths (= its
+        # outputScale); row 3 is the spine ctl translation.
+        four_by_four = cmds.createNode("fourByFourMatrix", name=f"{self.side}_localHip_FBF")
+        row_translation = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipTranslation_RFM")
+        cmds.setAttr(f"{row_translation}.input", 3)
+        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{row_translation}.matrix")
+        for col_index, axis in enumerate("XYZ"):
+            cmds.connectAttr(f"{row_translation}.output{axis}", f"{four_by_four}.in3{col_index}")
+
+        for row_index in range(3):
+            row_rotation = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipRotation0{row_index}_RFM")
+            cmds.setAttr(f"{row_rotation}.input", row_index)
+            cmds.connectAttr(f"{self.local_hip_ctl}.worldMatrix[0]", f"{row_rotation}.matrix")
+            normalize_row = cmds.createNode("normalize", name=f"{self.side}_localHipRotation0{row_index}_NRM")
+
+            row_scale = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipScale0{row_index}_RFM")
+            cmds.setAttr(f"{row_scale}.input", row_index)
+            cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{row_scale}.matrix")
+            scale_length = cmds.createNode("length", name=f"{self.side}_localHipScale0{row_index}_LEN")
+
+            for axis in "XYZ":
+                cmds.connectAttr(f"{row_rotation}.output{axis}", f"{normalize_row}.input{axis}")
+                cmds.connectAttr(f"{row_scale}.output{axis}", f"{scale_length}.input{axis}")
+
+            for col_index, axis in enumerate("XYZ"):
+                mult = cmds.createNode("multiply", name=f"{self.side}_localHipRow{row_index}{axis}_MUL")
+                cmds.connectAttr(f"{normalize_row}.output{axis}", f"{mult}.input[0]")
+                cmds.connectAttr(f"{scale_length}.output", f"{mult}.input[1]")
+                cmds.connectAttr(f"{mult}.output", f"{four_by_four}.in{row_index}{col_index}")
+
+        cmds.connectAttr(f"{four_by_four}.output", f"{local_hip_skinning_jnt}.offsetParentMatrix")
         
         cmds.setAttr(f"{self.local_hip_nodes[0]}.inheritsTransform", 0)
         cmds.parent(local_hip_skinning_jnt, self.skeleton_grp)
@@ -235,9 +259,12 @@ class SpineModule(object):
 
         for i, ctl in enumerate(self.spine_ctls):
             
-            decompose_matrix = cmds.createNode("decomposeMatrix", name=ctl.replace("_CTL", "_DCM"))
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{decompose_matrix}.inputMatrix")
-            cmds.connectAttr(f"{decompose_matrix}.outputTranslate", f"{ik_curve}.controlPoints[{i}]")
+            row_from_matrix = cmds.createNode("rowFromMatrix", name=f"{self.side}_spine0{i}Translation_RFM")
+            cmds.setAttr(f"{row_from_matrix}.input", 3) #Translate
+            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
+            cmds.connectAttr(f"{row_from_matrix}.outputX", f"{ik_curve}.controlPoints[{i}].xValue")
+            cmds.connectAttr(f"{row_from_matrix}.outputY", f"{ik_curve}.controlPoints[{i}].yValue")
+            cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{ik_curve}.controlPoints[{i}].zValue")
 
         # ------ Create the IK reversed setup ------
         reversed_spine_chain = []
@@ -317,7 +344,9 @@ class SpineModule(object):
         # ------ Offset setup ------
         nearest_point_node = cmds.createNode("nearestPointOnCurve", name=f"{self.side}_spineOffset_NPC")
         cmds.connectAttr(f"{ik_curve}.worldSpace[0]", f"{nearest_point_node}.inputCurve")
-        cmds.connectAttr(f"{decompose_matrix}.outputTranslate", f"{nearest_point_node}.inPosition")
+        cmds.connectAttr(f"{row_from_matrix}.outputX", f"{nearest_point_node}.inPositionX")
+        cmds.connectAttr(f"{row_from_matrix}.outputY", f"{nearest_point_node}.inPositionY")
+        cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{nearest_point_node}.inPositionZ")
         attributes_blender = cmds.createNode("blendTwoAttr", name=f"{self.side}_spineOffset_B2A")
         cmds.connectAttr(f"{self.body_ctl}.spineOffset", f"{attributes_blender}.attributesBlender")
         cmds.connectAttr(f"{nearest_point_node}.parameter", f"{attributes_blender}.input[1]")
@@ -426,14 +455,16 @@ class SpineModule(object):
         
 
         for i, joint in enumerate(self.spine_chain):
-            dcm = cmds.createNode("decomposeMatrix", n=f"C_{joint}Squash_DCM")
-            cmds.connectAttr(f"{joint}.worldMatrix[0]", f"{dcm}.inputMatrix")
-            cmds.connectAttr(f"{dcm}.outputTranslate", f"{squash_curve}.controlPoints[{i}]")
+            rfm = cmds.createNode("rowFromMatrix", n=f"C_{joint}Squash_RFM")
+            cmds.setAttr(f"{rfm}.input", 3)  # translation row
+            cmds.connectAttr(f"{joint}.worldMatrix[0]", f"{rfm}.matrix")
+            for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
+                cmds.connectAttr(f"{rfm}.output{axis}", f"{squash_curve}.controlPoints[{i}].{value}")
 
         nodes_to_create = {
             "C_spineSquash_CIN": ("curveInfo", None),
-            "C_spineSquashBaseLength_FLM": ("floatMath", 2),
-            "C_spineSquashFactor_FLM": ("floatMath", 3),
+            "C_spineSquashBaseLength_MUL": ("multiply", None),
+            "C_spineSquashFactor_DIV": ("divide", None),
         }
 
         created_nodes = []
@@ -444,20 +475,20 @@ class SpineModule(object):
                 cmds.setAttr(f'{node}.operation', operation)
 
         cmds.connectAttr(f"{squash_curve}.worldSpace[0]", created_nodes[0]+".inputCurve")
-        cmds.connectAttr(created_nodes[0] + ".arcLength", created_nodes[2]+".floatA")
-        cmds.connectAttr(created_nodes[1] + ".outFloat", created_nodes[2]+".floatB") 
-        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", created_nodes[1]+".floatA") 
-        cmds.setAttr(created_nodes[1]+".floatB", cmds.getAttr(created_nodes[0]+".arcLength"))
+        cmds.connectAttr(created_nodes[0] + ".arcLength", created_nodes[2]+".input1")
+        cmds.connectAttr(created_nodes[1] + ".output", created_nodes[2]+".input2")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", created_nodes[1]+".input[0]")
+        cmds.setAttr(created_nodes[1]+".input[1]", cmds.getAttr(created_nodes[0]+".arcLength"))
 
-        self.squash_factor_fml = created_nodes[2]
+        self.squash_factor_div = created_nodes[2]
 
         nodes_to_create = {
             "C_spineVolumeLowBound_RMV": ("remapValue", None),# 0
             "C_spineVolumeHighBound_RMV": ("remapValue", None),# 1
-            "C_spineVolumeLowBoundNegative_FLM": ("floatMath", 1),# 2
-            "C_spineVolumeHighBoundNegative_FLM": ("floatMath", 1),# 3
-            "C_spineVolumeSquashDelta_FLM": ("floatMath", 1), # 4
-            "C_spineVolumeStretchDelta_FLM": ("floatMath", 1), # 5
+            "C_spineVolumeLowBoundNegative_SUB": ("subtract", None),# 2
+            "C_spineVolumeHighBoundNegative_SUB": ("subtract", None),# 3
+            "C_spineVolumeSquashDelta_SUB": ("subtract", None), # 4
+            "C_spineVolumeStretchDelta_SUB": ("subtract", None), # 5
         } 
 
         main_created_nodes = []
@@ -471,21 +502,21 @@ class SpineModule(object):
             cmds.connectAttr(f"{self.body_ctl}.spineFalloff", f"{main_created_nodes[i]}.inputValue")
             cmds.connectAttr(f"{self.body_ctl}.spineSquashMaxPos", f"{main_created_nodes[i]}.outputMin")
             cmds.setAttr(f"{main_created_nodes[i]}.outputMax", values[i])
-            cmds.connectAttr(f"{main_created_nodes[i]}.outValue", f"{main_created_nodes[i+2]}.floatB")
+            cmds.connectAttr(f"{main_created_nodes[i]}.outValue", f"{main_created_nodes[i+2]}.input2")
 
-        cmds.setAttr(f"{main_created_nodes[2]}.floatA", 0)
-        cmds.setAttr(f"{main_created_nodes[3]}.floatA", 2)
-        cmds.setAttr(f"{main_created_nodes[4]}.floatB", 1)
-        cmds.setAttr(f"{main_created_nodes[5]}.floatA", 1)
-        cmds.connectAttr(f"{spine_settings_trn}.maxStretchEffect", f"{main_created_nodes[4]}.floatA")
-        cmds.connectAttr(f"{spine_settings_trn}.minStretchEffect", f"{main_created_nodes[5]}.floatB")
+        cmds.setAttr(f"{main_created_nodes[2]}.input1", 0)
+        cmds.setAttr(f"{main_created_nodes[3]}.input1", 2)
+        cmds.setAttr(f"{main_created_nodes[4]}.input2", 1)
+        cmds.setAttr(f"{main_created_nodes[5]}.input1", 1)
+        cmds.connectAttr(f"{spine_settings_trn}.maxStretchEffect", f"{main_created_nodes[4]}.input1")
+        cmds.connectAttr(f"{spine_settings_trn}.minStretchEffect", f"{main_created_nodes[5]}.input2")
 
         for i, joint in enumerate(output_joints):
             nodes_to_create = {
-                f"C_spineVolumeSquashFactor0{i+1}_FLM": ("floatMath", 2), # 0
-                f"C_spineVolumeStretchFactor0{i+1}_FLM": ("floatMath", 2), # 1
-                f"C_spineVolumeStretchFullValue0{i+1}_FLM": ("floatMath", 1), # 2
-                f"C_spineVolumeSquashFullValue0{i+1}_FLM": ("floatMath", 0), # 3
+                f"C_spineVolumeSquashFactor0{i+1}_MUL": ("multiply", None), # 0
+                f"C_spineVolumeStretchFactor0{i+1}_MUL": ("multiply", None), # 1
+                f"C_spineVolumeStretchFullValue0{i+1}_SUB": ("subtract", None), # 2
+                f"C_spineVolumeSquashFullValue0{i+1}_SUM": ("sum", None), # 3
                 f"C_spineVolume0{i+1}_RMV": ("remapValue", None), # 4
                 f"C_spineVolumeFactor0{i+1}_RMV": ("remapValue", None), # 5
             }
@@ -498,24 +529,24 @@ class SpineModule(object):
                     cmds.setAttr(f'{node}.operation', operation)
 
             cmds.connectAttr(f"{spine_settings_trn}.spine0{i+1}SquashPercentage", f"{created_nodes[5]}.inputValue")
-            cmds.connectAttr(f"{main_created_nodes[2]}.outFloat", f"{created_nodes[5]}.value[0].value_Position")
+            cmds.connectAttr(f"{main_created_nodes[2]}.output", f"{created_nodes[5]}.value[0].value_Position")
             cmds.connectAttr(f"{main_created_nodes[0]}.outValue", f"{created_nodes[5]}.value[1].value_Position")
             cmds.connectAttr(f"{main_created_nodes[1]}.outValue", f"{created_nodes[5]}.value[2].value_Position")
-            cmds.connectAttr(f"{main_created_nodes[3]}.outFloat", f"{created_nodes[5]}.value[3].value_Position")
+            cmds.connectAttr(f"{main_created_nodes[3]}.output", f"{created_nodes[5]}.value[3].value_Position")
 
 
-            cmds.connectAttr(created_nodes[0] + ".outFloat", created_nodes[3]+".floatA")
-            cmds.connectAttr(created_nodes[1] + ".outFloat", created_nodes[2]+".floatB")
-            cmds.connectAttr(created_nodes[2] + ".outFloat", created_nodes[4]+".value[2].value_FloatValue")
-            cmds.connectAttr(created_nodes[3] + ".outFloat", created_nodes[4]+".value[0].value_FloatValue")
-            cmds.connectAttr(self.squash_factor_fml + ".outFloat", created_nodes[4]+".inputValue")
-            cmds.setAttr(f"{created_nodes[3]}.floatB", 1)
-            cmds.setAttr(f"{created_nodes[2]}.floatA", 1)
+            cmds.connectAttr(created_nodes[0] + ".output", created_nodes[3]+".input[0]")
+            cmds.connectAttr(created_nodes[1] + ".output", created_nodes[2]+".input2")
+            cmds.connectAttr(created_nodes[2] + ".output", created_nodes[4]+".value[2].value_FloatValue")
+            cmds.connectAttr(created_nodes[3] + ".output", created_nodes[4]+".value[0].value_FloatValue")
+            cmds.connectAttr(self.squash_factor_div + ".output", created_nodes[4]+".inputValue")
+            cmds.setAttr(f"{created_nodes[3]}.input[1]", 1)
+            cmds.setAttr(f"{created_nodes[2]}.input1", 1)
 
-            cmds.connectAttr(f"{main_created_nodes[4]}.outFloat", created_nodes[0]+".floatA")
-            cmds.connectAttr(f"{main_created_nodes[5]}.outFloat", created_nodes[1]+".floatA")
-            cmds.connectAttr(f"{created_nodes[5]}.outValue", created_nodes[0]+".floatB")
-            cmds.connectAttr(f"{created_nodes[5]}.outValue", created_nodes[1]+".floatB")
+            cmds.connectAttr(f"{main_created_nodes[4]}.output", created_nodes[0]+".input[0]")
+            cmds.connectAttr(f"{main_created_nodes[5]}.output", created_nodes[1]+".input[0]")
+            cmds.connectAttr(f"{created_nodes[5]}.outValue", created_nodes[0]+".input[1]")
+            cmds.connectAttr(f"{created_nodes[5]}.outValue", created_nodes[1]+".input[1]")
 
             cmds.connectAttr(f"{spine_settings_trn}.maxStretchLength", f"{created_nodes[4]}.value[2].value_Position")
             cmds.connectAttr(f"{spine_settings_trn}.minStretchLength", f"{created_nodes[4]}.value[0].value_Position")   

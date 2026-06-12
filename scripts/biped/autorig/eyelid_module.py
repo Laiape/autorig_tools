@@ -97,19 +97,21 @@ class EyelidModule(object):
         Returns:
             str: The name of the local transform node.
         """
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.local_jnts_grp)
-        cmds.matchTransform(local_grp, ctl)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
-    
+        # Local network without transforms: ctl.matrix * baked bind matrix replaces
+        # the old Local_GRP/Local_TRN pair. The joint stays because skinClusters
+        # need a DAG influence, and takes the network through offsetParentMatrix.
+        local_mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
+        cmds.connectAttr(f"{ctl}.matrix", f"{local_mmx}.matrixIn[0]")
+        cmds.setAttr(f"{local_mmx}.matrixIn[1]", cmds.getAttr(f"{ctl}.worldMatrix[0]"), type="matrix")
+
         if "01" in ctl:
-            local_jnt = cmds.createNode("joint", name=ctl.replace("01_CTL", "01Local_JNT"), ss=True, p=local_trn)
+            local_jnt = cmds.createNode("joint", name=ctl.replace("01_CTL", "01Local_JNT"), ss=True, p=self.local_jnts_grp)
             cmds.delete(local_jnt.replace("01Local_JNT", "Local_JNT"))
         else:
-            local_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Local_JNT"), ss=True, p=local_trn)
-        cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix")
-        
+            local_jnt = cmds.createNode("joint", name=ctl.replace("_CTL", "Local_JNT"), ss=True, p=self.local_jnts_grp)
+        cmds.connectAttr(f"{local_mmx}.matrixSum", f"{local_jnt}.offsetParentMatrix")
 
-        return local_trn, local_jnt
+        return local_mmx, local_jnt
     
     def create_curves(self):
 
@@ -300,14 +302,11 @@ class EyelidModule(object):
         self.constraints_callback(guide=self.lower_guides[1], driven=self.lower_nodes[1], drivers=[self.lower_controllers[2], self.lower_controllers[0]], local_jnt=self.lower_local_jnt[1])
         self.constraints_callback(guide=self.lower_guides[-2], driven=self.lower_nodes[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]], local_jnt=self.lower_local_jnt[-2])
 
-        self.upper_local_grps = [trn.replace("TRN", "GRP") for trn in self.upper_local_trn]
-        self.lower_local_grps = [trn.replace("TRN", "GRP") for trn in self.lower_local_trn]
-
-        for trn in self.upper_local_grps:
-
-            cmds.matchTransform(trn, trn.replace("Local_GRP", "_CTL"), pos=True, rot=True)
-        for trn in self.lower_local_grps:
-            cmds.matchTransform(trn, trn.replace("Local_GRP", "_CTL"), pos=True, rot=True)
+        # Re-bake the bind matrix of every local network now that the controllers
+        # are in place (what the old matchTransform on the Local_GRPs did)
+        for local_mmx in set(self.upper_local_trn + self.lower_local_trn):
+            ctl = local_mmx.replace("Local_MMX", "_CTL")
+            cmds.setAttr(f"{local_mmx}.matrixIn[1]", cmds.getAttr(f"{ctl}.worldMatrix[0]"), type="matrix")
 
         self.local_constraints_callback(driven_jnt=self.upper_local_trn[1], drivers=[self.upper_controllers[2], self.upper_controllers[0]])
         self.local_constraints_callback(driven_jnt=self.upper_local_trn[-2], drivers=[self.upper_controllers[2], self.upper_controllers[-1]])
@@ -526,7 +525,7 @@ class EyelidModule(object):
             decompose_matrix_final = cmds.createNode("decomposeMatrix", name=f"{self.side}_fleshyPositionFinal_DECM", ss=True)
             cmds.connectAttr(f"{mult_matrix_position_final}.matrixSum", f"{decompose_matrix_final}.inputMatrix")
             cmds.connectAttr(f"{decompose_matrix_final}.outputRotate", f"{ctl.replace('GRP', 'OFF')}.rotate")
-            cmds.connectAttr(f"{decompose_matrix_final}.outputRotate", f"{ctl.replace('_GRP', 'Local_TRN')}.rotate")
+            cmds.connectAttr(f"{decompose_matrix_final}.outputRotate", f"{ctl.replace('_GRP', 'Local_JNT')}.rotate")
      
                 
 
@@ -867,45 +866,27 @@ class EyelidModule(object):
             driven_jnt (str): The name of the driven object.
             drivers (list): A list of driver objects. Driver[0] == 0.7 weight, Driver[1] == 0.3 weight
         """
-        driven_ctl = driven_jnt.replace("Local_TRN", "_CTL")
+        driven_ctl = driven_jnt.replace("Local_MMX", "_CTL")
 
-        mult_matrix = cmds.createNode("multMatrix", name=driven_jnt.replace("TRN", "MMT"), ss=True)
+        mult_matrix = cmds.createNode("multMatrix", name=driven_jnt.replace("MMX", "MMT"), ss=True)
 
-        multiply_divide_driver_0_rotate = cmds.createNode("multiplyDivide", name=drivers[0].replace("_CTL", f"Rotation00_MDV"), ss=True)
-        multiply_divide_driver_0_translate = cmds.createNode("multiplyDivide", name=drivers[0].replace("_CTL", f"Translation00_MDV"), ss=True)
-        multiply_divide_driver_1_rotate = cmds.createNode("multiplyDivide", name=drivers[1].replace("_CTL", f"Rotation00_MDV"), ss=True)
-        multiply_divide_driver_1_translate = cmds.createNode("multiplyDivide", name=drivers[1].replace("_CTL", f"Translation00_MDV"), ss=True)
+        compose_matrix_00 = cmds.createNode("composeMatrix", name=driven_jnt.replace("00_MMX", "00_CMT"), ss=True)
+        compose_matrix_01 = cmds.createNode("composeMatrix", name=driven_jnt.replace("01_MMX", "01_CMT"), ss=True)
 
-        compose_matrix_00 = cmds.createNode("composeMatrix", name=driven_jnt.replace("00_TRN", "00_CMT"), ss=True)
-        compose_matrix_01 = cmds.createNode("composeMatrix", name=driven_jnt.replace("01_TRN", "01_CMT"), ss=True)
-
-
-        cmds.setAttr(f"{multiply_divide_driver_0_rotate}.input2X", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0_rotate}.input2Y", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0_rotate}.input2Z", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0_translate}.input2X", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0_translate}.input2Y", 0.7)
-        cmds.setAttr(f"{multiply_divide_driver_0_translate}.input2Z", 0.7)
-
-        cmds.setAttr(f"{multiply_divide_driver_1_rotate}.input2X", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1_rotate}.input2Y", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1_rotate}.input2Z", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2X", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2Y", 0.3)
-        cmds.setAttr(f"{multiply_divide_driver_1_translate}.input2Z", 0.3)
-
-        cmds.connectAttr(f"{drivers[0]}.rotate", f"{multiply_divide_driver_0_rotate}.input1") # Connect driver rotation to multiply divide
-        cmds.connectAttr(f"{drivers[0]}.translate", f"{multiply_divide_driver_0_translate}.input1") # Connect driver translation to multiply divide
-        cmds.connectAttr(f"{drivers[1]}.rotate", f"{multiply_divide_driver_1_rotate}.input1")
-        cmds.connectAttr(f"{drivers[1]}.translate", f"{multiply_divide_driver_1_translate}.input1")
-        cmds.connectAttr(f"{multiply_divide_driver_0_rotate}.output", f"{compose_matrix_00}.inputRotate") # Connect multiply divide output to compose matrix
-        cmds.connectAttr(f"{multiply_divide_driver_0_translate}.output", f"{compose_matrix_00}.inputTranslate") # Connect multiply divide output to compose matrix
-        cmds.connectAttr(f"{multiply_divide_driver_1_rotate}.output", f"{compose_matrix_01}.inputRotate")
-        cmds.connectAttr(f"{multiply_divide_driver_1_translate}.output", f"{compose_matrix_01}.inputTranslate")
+        # One scalar multiply per axis: driver rotate/translate channel * weight -> compose matrix
+        compose_matrices = [compose_matrix_00, compose_matrix_01]
+        weights = [0.7, 0.3]
+        for driver, compose_matrix, weight in zip(drivers, compose_matrices, weights):
+            for channel, label, compose_attr in (("rotate", "Rotation", "inputRotate"), ("translate", "Translation", "inputTranslate")):
+                for axis in "XYZ":
+                    mult = cmds.createNode("multiply", name=driver.replace("_CTL", f"{label}00{axis}_MUL"), ss=True)
+                    cmds.connectAttr(f"{driver}.{channel}{axis}", f"{mult}.input[0]")
+                    cmds.setAttr(f"{mult}.input[1]", weight)
+                    cmds.connectAttr(f"{mult}.output", f"{compose_matrix}.{compose_attr}{axis}")
         cmds.connectAttr(f"{driven_ctl}.matrix", f"{mult_matrix}.matrixIn[0]") # Connect driven controller matrix to mult matrix
         cmds.connectAttr(f"{compose_matrix_00}.outputMatrix", f"{mult_matrix}.matrixIn[1]") # Connect compose matrix 0.7 to mult matrix
         cmds.connectAttr(f"{compose_matrix_01}.outputMatrix", f"{mult_matrix}.matrixIn[2]") # Connect compose matrix 0.3 to mult matrix
-        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{driven_jnt}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{driven_jnt}.matrixIn[0]", force=True)
 
             
 

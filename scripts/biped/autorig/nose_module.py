@@ -83,22 +83,31 @@ class NoseModule(object):
         for attr in attrs:
             cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
-    def local(self, ctl):
+    def local(self, ctl, parent_ctl=None):
 
         """
-        Create a local transform node for a controller.
+        Create the local matrix network for a controller WITHOUT transforms:
+        ctl.matrix * baked bind matrix (* parent local matrixSum when parent_ctl
+        is given). Equivalent to the old Local_GRP/Local_TRN pair, with the
+        parenting expressed as a baked offset + the parent's Local_MMX chain.
         Args:
             ctl (str): The name of the controller.
+            parent_ctl (str): The controller whose local network acts as parent.
         Returns:
-            str: The name of the local transform node.
+            str: The Local_MMX multMatrix node.
         """
 
-        local_grp = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_GRP"), ss=True, p=self.module_trn)
-        local_trn = cmds.createNode("transform", name=ctl.replace("_CTL", "Local_TRN"), ss=True, p=local_grp)
-        cmds.matchTransform(local_grp, ctl)
-        cmds.connectAttr(f"{ctl}.matrix", f"{local_trn}.offsetParentMatrix")
-        
-        return local_grp, local_trn
+        local_mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
+        cmds.connectAttr(f"{ctl}.matrix", f"{local_mmx}.matrixIn[0]")
+        ctl_world = om.MMatrix(cmds.getAttr(f"{ctl}.worldMatrix[0]"))
+        if parent_ctl is None:
+            cmds.setAttr(f"{local_mmx}.matrixIn[1]", list(ctl_world), type="matrix")
+        else:
+            parent_world = om.MMatrix(cmds.getAttr(f"{parent_ctl}.worldMatrix[0]"))
+            cmds.setAttr(f"{local_mmx}.matrixIn[1]", list(ctl_world * parent_world.inverse()), type="matrix")
+            cmds.connectAttr(f"{parent_ctl.replace('_CTL', 'Local_MMX')}.matrixSum", f"{local_mmx}.matrixIn[2]")
+
+        return local_mmx
 
     def load_guides(self):
 
@@ -143,37 +152,37 @@ class NoseModule(object):
         if self.side == "L":
             base_nodes, base_ctl = curve_tool.create_controller(name="C_baseNose", offset=["GRP"], parent=self.controllers_grp) # Base nose controller
             cmds.matchTransform(base_nodes[0], self.nose_guide)
-            base_grp, base_trn = self.local(base_ctl)
+            base_local_mmx = self.local(base_ctl)
         cmds.delete(self.nose_guide)
 
         for i, guide in enumerate(self.nose_guides):
             nodes, ctl = curve_tool.create_controller(name=guide.replace("_JNT", ""), offset=["GRP"], parent=self.controllers_grp)
-            
+
             if "tril" not in guide:
                 self.lock_attributes(ctl, ["v"])
             else:
                 self.lock_attributes(ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "v"])
             cmds.matchTransform(nodes[0], guide)
-            local_grp, local_trn = self.local(ctl)
+
+            parent_ctl = None
             if self.side == "L":
                 if i != 0:
-                    cmds.parent(nodes[0], "C_baseNose_CTL")
-                    cmds.parent(local_grp, "C_baseNoseLocal_TRN")
+                    parent_ctl = "C_baseNose_CTL"
                     if guide == f"{self.side}_nose_JNT":
-                        cmds.parent(nodes[0], f"{self.side}_nosetril_CTL")
-                        cmds.parent(local_grp, f"{self.side}_nosetrilLocal_TRN")
-                
+                        parent_ctl = f"{self.side}_nosetril_CTL"
             else:
-                cmds.parent(nodes[0], f"C_baseNose_CTL")
-                cmds.parent(local_grp, f"C_baseNoseLocal_TRN")
+                parent_ctl = "C_baseNose_CTL"
                 if guide == f"{self.side}_nose_JNT":
-                    cmds.parent(nodes[0], f"{self.side}_nosetril_CTL")
-                    cmds.parent(local_grp, f"{self.side}_nosetrilLocal_TRN")
-            
+                    parent_ctl = f"{self.side}_nosetril_CTL"
+
+            if parent_ctl is not None:
+                cmds.parent(nodes[0], parent_ctl)
+            local_mmx = self.local(ctl, parent_ctl)
+
             nose_controllers.append(ctl)
-            
+
             jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint
-            cmds.connectAttr(f"{local_trn}.worldMatrix[0]", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
+            cmds.connectAttr(f"{local_mmx}.matrixSum", f"{jnt}.offsetParentMatrix") # Connect controller to skinning joint
             skinning_joints.append(jnt)
             cmds.delete(guide)
         
