@@ -452,7 +452,7 @@ def build_rig(character_name, on_step=None):
         leg_solver = rig_settings.get("leg_solver", "spring")
 
         # Patas Delanteras (módulo de pierna nuevo)
-        if check("L_frontLegHip_JNT") and check("R_frontLegHip_JNT"):
+        if check("L_frontLegShoulder_JNT") and check("R_frontLegShoulder_JNT"):
             step("Building front legs…")
             reload(quad_leg_module)
             quad_leg_module.FrontLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)

@@ -21,10 +21,10 @@ class LegModule(object):
 
     """
     Pierna de cuadrúpedo basada en el leg del bípedo:
-        - Guías: {side}_{LEG_PREFIX}Hip_JNT -> Knee -> Ankle [-> Ball] -> Tip.
-          La cadena de pierna puede ser de 4 joints (Hip/Knee/Ankle/Ball, 3
-          huesos) o de 3 (Hip/Knee/Ankle, 2 huesos); el Tip es el pivote de la
-          punta del casco. El módulo detecta la longitud automáticamente.
+        - Guías (anatomía equina): {side}_{LEG_PREFIX}Hip_JNT -> Knee -> Ankle
+          -> Fetlock -> Pastern -> Tip. La cadena puede tener más o menos huesos
+          intermedios; el módulo es genérico por índice. El Tip es el pivote de
+          la punta del casco. El módulo detecta la longitud automáticamente.
         - solver: "spring" (ikSpringSolver, reparte el bend entre los 3 huesos)
           o "rp" (ikRPsolver hip->ankle + SC para el resto, estilo bípedo).
           Con cadena de 2 huesos siempre se usa RP (spring no aporta nada).
@@ -37,6 +37,21 @@ class LegModule(object):
     """
 
     LEG_PREFIX = "backLeg"
+    ROOT_JOINT = "Hip"  # joint raíz de la cadena (front lo sobreescribe a "Shoulder")
+    # Índice de la articulación apex del pole vector (desde la que se proyecta).
+    # Es la gran articulación que dobla hacia ATRÁS: el corvejón (hock) en la
+    # trasera y el carpo (la "rodilla" del caballo) en la delantera — ambos en
+    # el índice 2 con la cadena estándar de 6 joints. Si la cadena tiene otra
+    # cuenta, se cae al knee (índice 1).
+    PV_APEX_INDEX = 2
+    STANDARD_JOINT_COUNT = 6
+    SIDE_AXIS = (1, 0, 0)  # eje lateral del personaje (guías en orientación canónica)
+    # La delantera es casi recta (carpo) y el spring no sabe doblar -> hay que
+    # sembrarle la dirección de flexión. La trasera tiene el corvejón doblado y
+    # captura bien el preferredAngle: NO se toca. Front lo pone a True.
+    SEED_STRAIGHT_BEND = False
+    FORWARD_AXIS = (0, 0, 1)  # hacia dónde mira el personaje; la PV apunta aquí
+                              # para que el apex (carpo/corvejón) doble hacia atrás
 
     def __init__(self):
 
@@ -66,6 +81,9 @@ class LegModule(object):
         self.bendys = bendys
         self.primary_axis = primaryInputAxis if side == "L" else tuple(-x for x in primaryInputAxis)
         self.secondary_axis = secondaryInputAxis if side == "L" else tuple(-x for x in secondaryInputAxis)
+        # Eje lateral por lado: +X en L, -X en R, para que la R sea MIRROR de la
+        # L (frames, root y controles reflejados) en vez de world-consistente.
+        self.side_vec = om.MVector(*self.SIDE_AXIS) * (1 if side == "L" else -1)
 
         self.module_name = f"{self.side}_{self.LEG_PREFIX}"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
@@ -126,34 +144,89 @@ class LegModule(object):
     # ─────────────────────────────────────────────────────────────────────────
     def load_guides(self):
 
-        self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}Hip_JNT")
+        self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
         cmds.parent(self.leg_chain[0], self.module_trn)
         self._setup_chain()
 
     def _setup_chain(self):
 
         """
-        Indices y matrices de la cadena. Cadena esperada (genérica en número de
-        huesos de pierna): Hip [-> FrontKnee -> BackKnee | -> Knee] -> Ankle ->
-        Ball -> Tip. El IK principal va de Hip a Ankle; Ball es la pisada y Tip
-        el pivote de la punta.
+        Indices y matrices de la cadena. Cadena esperada (anatomía equina,
+        genérica en número de huesos): Hip -> Knee -> Ankle -> Fetlock ->
+        Pastern -> Tip. El IK principal va de Hip al Fetlock; el Pastern es la
+        pisada y el Tip el pivote de la punta del casco.
         """
         self.leg_joints = self.leg_chain[:-1]  # todo menos el Tip
         self.tip_joint = self.leg_chain[-1]
-        self.plant_index = len(self.leg_chain) - 2          # Ball
-        self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Ankle (fin del IK principal)
+        self.plant_index = len(self.leg_chain) - 2          # Pastern (pisada)
+        self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
 
-        # Matrices horneadas (X a la siguiente guía, secondary hacia la previa)
-        self.guides_matrices, self.guides_points = guides_manager.orient_guides(
-            guides=self.leg_chain, primaryInputAxis=self.primary_axis, secondaryInputAxis=self.secondary_axis
-        )
-        self.guides_matrices = [cmds.getAttr(attr) for attr in self.guides_matrices]
-        self.guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.guides_matrices]
+        # Articulación apex del pole vector: el PV sale de ESTA joint (carpo en
+        # delantera / corvejón en trasera = índice 2; knee si la cadena no es
+        # estándar). Se usa tanto para colocar el PV como para la línea guía.
+        self.pv_apex_index = self.PV_APEX_INDEX if len(self.leg_chain) == self.STANDARD_JOINT_COUNT else 1
+        self.pv_apex_index = max(1, min(self.pv_apex_index, self.leg_end_index - 1))
 
-        # La red de orient_guides ya no hace falta: los valores están horneados
-        net = self.guides_points[0].split(".")[0]
-        if cmds.objExists(net):
-            cmds.delete(net)
+        # Posiciones world de las guías (de los joints importados tal cual)
+        self.guide_positions = [om.MVector(cmds.xform(j, q=True, ws=True, t=True)) for j in self.leg_chain]
+
+        # Frames de la cadena (lo que pide el setup, ver foto):
+        #   X = aim al siguiente joint (baja por el hueso)
+        #   Z = eje lateral del personaje (side_vec, world) → eje de flexión,
+        #       IGUAL en toda la cadena (eje del mundo como referencia FIJA, no la
+        #       normal del plano de la pata, inestable en patas rectas).
+        #   Y = perpendicular en el plano (delante/atrás)
+        side_ref = self.side_vec  # +X en L, -X en R (mirror)
+        hip_p, knee_p = self.guide_positions[0], self.guide_positions[1]
+        ankle_p = self.guide_positions[self.leg_end_index]
+        self.plane_normal = (knee_p - hip_p) ^ (ankle_p - hip_p)
+        self.plane_normal = self.plane_normal.normal() if self.plane_normal.length() > 1e-4 else om.MVector(side_ref)
+
+        # Dirección de la PV (hacia DELANTE, plano sagital). El spring dobla el
+        # apex en sentido opuesto, así que el corvejón/carpo dobla hacia ATRÁS.
+        root_p, end_p = self.guide_positions[0], self.guide_positions[self.leg_end_index]
+        line = end_p - root_p
+        self.leg_line_len = line.length()
+        line_dir = line.normal() if self.leg_line_len > 1e-6 else om.MVector(0.0, 0.0, 1.0)
+        bend_dir = side_ref ^ line_dir
+        if bend_dir.length() < 1e-4:
+            bend_dir = self.plane_normal ^ line_dir
+        bend_dir.normalize()
+        if (bend_dir * om.MVector(*self.FORWARD_AXIS)) < 0:
+            bend_dir = -bend_dir
+        self.bend_dir = bend_dir
+
+        # Cadena IK: en patas casi rectas (delantera) se PRE-DOBLAN los joints
+        # intermedios hacia atrás (-bend_dir) para que el spring tenga un bulto
+        # real (como el corvejón) y doble hacia atrás limpio, sin depender de
+        # seeds que pelean con la PV. La trasera no se pre-dobla (ya tiene su
+        # zigzag). La calibración corrige el reposo a las guías; los FK usan las
+        # posiciones originales.
+        ik_positions = list(self.guide_positions)
+        if self.SEED_STRAIGHT_BEND:
+            bulge = bend_dir * (-self.leg_line_len * 0.1)  # bulto sagital (limpio, sin lateral)
+            for i in range(1, self.leg_end_index):
+                ik_positions[i] = self.guide_positions[i] + bulge
+
+        self.ik_frames = self._build_frames(ik_positions, side_ref)
+        self.guides_matrices = [list(f) for f in self._build_frames(self.guide_positions, side_ref)]
+
+    def _build_frames(self, positions, side_ref):
+        """Frames X=aim, Z=lateral(side_ref), Y=delante/atrás para una lista de posiciones."""
+        frames = []
+        x_axis = om.MVector(1.0, 0.0, 0.0)
+        for i, pos in enumerate(positions):
+            if i < len(positions) - 1:
+                x_axis = (positions[i + 1] - pos).normal()
+            y_axis = (side_ref ^ x_axis).normal()
+            z_axis = (x_axis ^ y_axis).normal()
+            frames.append(om.MMatrix([
+                x_axis.x, x_axis.y, x_axis.z, 0.0,
+                y_axis.x, y_axis.y, y_axis.z, 0.0,
+                z_axis.x, z_axis.y, z_axis.z, 0.0,
+                pos.x, pos.y, pos.z, 1.0,
+            ]))
+        return frames
 
     def create_chains(self):
 
@@ -168,34 +241,9 @@ class LegModule(object):
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName="Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
         cmds.parent(self.settings_node[0], self.controllers_grp)
 
-        # Cadena IK (no hay cadena FK: los controles FK alimentan el blend).
-        # Frames PLANARES propios: X hacia la siguiente guía y Z = normal del
-        # plano de la cadena para TODOS los joints. El spring/RP distribuye el
-        # bend alrededor de los ejes locales: con frames consistentes en el
-        # plano la pose de reposo se reproduce exacta (los frames de
-        # orient_guides usan el secondary hacia la guía anterior, casi colineal,
-        # y desvían el solve).
-        hip_p = self.guide_positions[0]
-        knee_p = self.guide_positions[1]
-        ankle_p = self.guide_positions[self.leg_end_index]
-        plane_normal = (knee_p - hip_p) ^ (ankle_p - hip_p)
-        if plane_normal.length() < 1e-4:
-            plane_normal = om.MVector(1.0, 0.0, 0.0)
-        plane_normal.normalize()
-
-        self.ik_frames = []
-        x_axis = om.MVector(1.0, 0.0, 0.0)
-        for i, pos in enumerate(self.guide_positions):
-            if i < len(self.guide_positions) - 1:
-                x_axis = (self.guide_positions[i + 1] - pos).normal()
-            y_axis = (plane_normal ^ x_axis).normal()
-            self.ik_frames.append(om.MMatrix([
-                x_axis.x, x_axis.y, x_axis.z, 0.0,
-                y_axis.x, y_axis.y, y_axis.z, 0.0,
-                plane_normal.x, plane_normal.y, plane_normal.z, 0.0,
-                pos.x, pos.y, pos.z, 1.0,
-            ]))
-
+        # Cadena IK: usa los frames planares ya calculados en _setup_chain
+        # (X aim, Z = eje lateral consistente, Y en el plano) — misma
+        # orientación que los controles FK.
         self.ik_chain = []
         for joint, frame in zip(self.leg_chain, self.ik_frames):
             cmds.select(clear=True)
@@ -325,14 +373,14 @@ class LegModule(object):
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
 
-        # Línea que apunta del knee al PV
+        # Línea que apunta del apex (carpo/corvejón) al PV
         crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.module_name}Pv_CRV")
         row_knee = cmds.createNode("rowFromMatrix", name=f"{self.module_name}Pv_RFM", ss=True)
         row_ctl = cmds.createNode("rowFromMatrix", name=f"{self.module_name}PvCtl_RFM", ss=True)
         cmds.setAttr(f"{row_knee}.input", 3)
         cmds.setAttr(f"{row_ctl}.input", 3)
         cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{row_ctl}.matrix")
-        cmds.connectAttr(f"{self.ik_chain[1]}.worldMatrix[0]", f"{row_knee}.matrix")
+        cmds.connectAttr(f"{self.ik_chain[self.pv_apex_index]}.worldMatrix[0]", f"{row_knee}.matrix")
         for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
             cmds.connectAttr(f"{row_knee}.output{axis}", f"{crv_point_pv}.controlPoints[0].{value}")
             cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv_point_pv}.controlPoints[1].{value}")
@@ -403,24 +451,21 @@ class LegModule(object):
             for attr in ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"]:
                 cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{handle}.{attr}")
 
-        # Colocación del PV: la dirección del poleVector AUTOMÁTICO del handle
-        # es la única que preserva el reposo del spring (cualquier otra rota el
-        # plano: verificado, ~10u de salto en las rodillas con la posición
-        # isósceles). El poleVector vive en el espacio del padre del root joint
-        # (module_trn = identidad → mundo).
-        root_p = self.guide_positions[0]
-        knee_p = self.guide_positions[1]
-        end_p = self.guide_positions[self.leg_end_index]
-        distance = ((knee_p - root_p).length() + (end_p - knee_p).length()) * 0.5
+        # Colocación del PV — geométrica en WORLD, en el plano sagital de la pata.
+        # bend_dir (calculado en _setup_chain) apunta hacia DELANTE; el spring
+        # dobla el apex en sentido opuesto, así que el corvejón/carpo dobla hacia
+        # ATRÁS. El reposo del solve lo corrige ik_calibration(), así que la
+        # posición del PV es libre geométricamente.
+        apex_index = self.pv_apex_index
+        apex_p = self.guide_positions[apex_index]
+        bend_dir = self.bend_dir
+        distance = self.leg_line_len * 0.5
+        pv_pos = apex_p + bend_dir * distance
 
-        auto_pole = om.MVector(cmds.getAttr(f"{self.ik_handle}.poleVector")[0])
-        if auto_pole.length() < 1e-6:
-            auto_pole = om.MVector(0.0, 0.0, 1.0)
-        pv_pos = root_p + auto_pole.normal() * distance
-
-        knee_x_axis = om.MVector(self.guides_matrices[1][0], self.guides_matrices[1][1], self.guides_matrices[1][2])
+        # Orientación del control (pvOrientation): Z hacia el apex
+        apex_x_axis = om.MVector(self.guides_matrices[apex_index][0], self.guides_matrices[apex_index][1], self.guides_matrices[apex_index][2])
         cmds.setAttr(f"{self.pv_orient_blm}.inputMatrix", self._translation_matrix(pv_pos), type="matrix")
-        pv_aimed = guides_manager._aim_matrix(pv_pos, knee_p, pv_pos + knee_x_axis, (0, 0, 1), (1, 0, 0))
+        pv_aimed = guides_manager._aim_matrix(pv_pos, apex_p, pv_pos + apex_x_axis, (0, 0, 1), (1, 0, 0))
         cmds.setAttr(f"{self.pv_orient_blm}.target[0].targetMatrix", list(pv_aimed), type="matrix")
 
         # poleVectorConstraint clásico: con los preferred angles puestos y el
@@ -696,7 +741,7 @@ class LegModule(object):
         del hueso, siguiendo el blend FK/IK) y un ribbon de Boor por tramo
         [inicio, bendy, fin] que genera las joints de skinning. El twist viaja
         solo: los up del ribbon salen de las matrices blendeadas de cada
-        extremo. El tramo Ankle->Ball y el Tip se cubren con joints directas.
+        extremo. El tramo Fetlock->Pastern y el Tip se cubren con joints directas.
         """
         segment_count = self.main_end_index
         if segment_count == 2:
@@ -779,12 +824,12 @@ class LegModule(object):
             for t in temp:
                 cmds.delete(t)
 
-        # Ankle, Ball y Tip (el tramo del pie no lleva bendy)
-        ankle_skinning = cmds.createNode("joint", name=f"{self.module_name}AnkleSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(blend_wm[self.main_end_index], f"{ankle_skinning}.offsetParentMatrix")
+        # Fetlock, Pastern y Tip (el tramo del pie no lleva bendy)
+        fetlock_skinning = cmds.createNode("joint", name=f"{self.module_name}FetlockSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(blend_wm[self.main_end_index], f"{fetlock_skinning}.offsetParentMatrix")
 
-        ball_skinning = cmds.createNode("joint", name=f"{self.module_name}BallSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(blend_wm[self.plant_index], f"{ball_skinning}.offsetParentMatrix")
+        pastern_skinning = cmds.createNode("joint", name=f"{self.module_name}PasternSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(blend_wm[self.plant_index], f"{pastern_skinning}.offsetParentMatrix")
 
         tip_offset = om.MMatrix(self.guides_matrices[-1]) * om.MMatrix(self.guides_matrices[self.plant_index]).inverse()
         tip_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}TipSkinning_MMX", ss=True)
@@ -826,14 +871,19 @@ class BackLegModule(LegModule):
 class FrontLegModule(LegModule):
 
     """
-    Pierna delantera: {side}_frontLegHip_JNT -> ... -> Tip.
-    Misma construcción que la trasera (el PV se calcula del plano real de la
-    cadena, así que el bend invertido del carpo sale solo) más la escápula
-    (master + escápula aimada al root de la pierna + end con space switch),
-    portada del dragon_leg del TFG. Necesita la guía {side}_frontLegScapula_JNT.
+    Pierna delantera (anatomía equina): {side}_scapula_JNT -> Shoulder -> Elbow
+    -> Ankle -> Fetlock -> Pastern -> Tip. Misma construcción que la trasera (el
+    PV se calcula del plano real de la cadena, así que el bend invertido del
+    carpo sale solo) más la escápula (master + escápula aimada al root de la
+    pierna + end con space switch), portada del dragon_leg del TFG.
     """
 
     LEG_PREFIX = "frontLeg"
+    ROOT_JOINT = "Shoulder"  # la delantera arranca en el shoulder (no hip)
+    SEED_STRAIGHT_BEND = True  # delantera casi recta: hay que sembrar el bend
+    # PV desde el carpo (la "rodilla" equina = índice 2), igual que la trasera
+    # desde el corvejón: ambas son la articulación que dobla hacia atrás. Hereda
+    # PV_APEX_INDEX = 2 de la base.
 
     def make(self, side, solver="spring", skinning_jnts=5, bendys=True, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
         super().make(side, solver=solver, skinning_jnts=skinning_jnts, bendys=bendys,
@@ -844,8 +894,8 @@ class FrontLegModule(LegModule):
 
         """
         La cadena delantera cuelga de la escápula: {side}_scapula_JNT ->
-        frontLegHip -> ... -> Tip. Se importa todo desde la escápula, se separa
-        la pierna y la guía de escápula se hornea (posición) y se borra.
+        Shoulder -> ... -> Tip. Se importa todo desde la escápula, se separa la
+        pierna y la guía de escápula se hornea (posición) y se borra.
         """
         chain = guides_manager.get_guides(f"{self.side}_scapula_JNT")
         if not chain:
