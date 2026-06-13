@@ -60,6 +60,8 @@ class AutoRig(object):
         progress = rig_progress.RigProgressDialog(char_name, mgear=mgear)
         progress.show()
 
+        session = self._begin_fast_session()
+
         try:
             progress._set_pct("Creating basic structure…", 2)
             data_manager.DataExportBiped().new_build()
@@ -81,6 +83,15 @@ class AutoRig(object):
             progress._set_pct("Setting inherit transforms…", 88)
             self.inherit_transforms()
 
+            # Cerrar la sesión rápida ANTES del import de pesos: el fast-session
+            # (eval off, refresh suspendido, undo off) acelera la CREACIÓN de
+            # nodos del rig, pero no aporta nada al import de skin —que es API
+            # pesada de setWeights— y bajo refresh suspendido / eval off puede
+            # bindear con matrices sin evaluar o saltarse mallas. El skin import,
+            # los blendshapes correctivos y el picker corren con Maya normal.
+            self._end_fast_session(session)
+            session = None
+
             progress._set_pct("Importing skin weights…", 91)
             self.import_weights()
 
@@ -97,9 +108,80 @@ class AutoRig(object):
                 om.MGlobal.displayWarning(f"[Picker] Could not generate picker: {e}")
 
         finally:
+            self._end_fast_session(session)
             elapsed = time.time() - start
             progress.finish(elapsed)
         # self.proxy_locator()
+
+    def _begin_fast_session(self):
+
+        """
+        Pone Maya en modo "build rápido": en Parallel/Serial cada connectAttr
+        reconstruye el grafo de evaluación y el viewport se redibuja sin parar.
+        Devuelve el estado previo para restaurarlo en _end_fast_session.
+        """
+        state = {}
+        try:
+            state["eval_mode"] = cmds.evaluationManager(q=True, mode=True)[0]
+            cmds.evaluationManager(mode="off")  # DG lazy: no reconstruye el grafo por nodo
+        except Exception:
+            state["eval_mode"] = None
+        try:
+            state["cycle_check"] = cmds.cycleCheck(q=True, evaluation=True)
+            cmds.cycleCheck(e=True, evaluation=False)  # sin chequeo de ciclos en cada conexión
+        except Exception:
+            state["cycle_check"] = None
+        try:
+            state["undo"] = cmds.undoInfo(q=True, state=True)
+            cmds.undoInfo(stateWithoutFlush=False)  # sin cola de undo (memoria + velocidad)
+        except Exception:
+            state["undo"] = None
+        try:
+            cmds.scriptEditorInfo(e=True, suppressInfo=True, suppressWarnings=True, suppressResults=True)
+            state["script_editor"] = True
+        except Exception:
+            state["script_editor"] = None
+        try:
+            cmds.refresh(suspend=True)  # congela el viewport durante el build
+            state["refresh"] = True
+        except Exception:
+            state["refresh"] = None
+        return state
+
+    def _end_fast_session(self, state):
+
+        """Restaura el estado guardado por _begin_fast_session (siempre, en finally)."""
+        if not state:
+            return
+        if state.get("refresh"):
+            try:
+                cmds.refresh(suspend=False)
+            except Exception:
+                pass
+        if state.get("script_editor"):
+            try:
+                cmds.scriptEditorInfo(e=True, suppressInfo=False, suppressWarnings=False, suppressResults=False)
+            except Exception:
+                pass
+        if state.get("undo") is not None:
+            try:
+                cmds.undoInfo(stateWithoutFlush=state["undo"])
+            except Exception:
+                pass
+        if state.get("cycle_check") is not None:
+            try:
+                cmds.cycleCheck(e=True, evaluation=state["cycle_check"])
+            except Exception:
+                pass
+        if state.get("eval_mode"):
+            try:
+                cmds.evaluationManager(mode=state["eval_mode"])
+            except Exception:
+                pass
+        try:
+            cmds.refresh(force=True)  # un único redibujado al final
+        except Exception:
+            pass
 
     def basic_structure(self):
 

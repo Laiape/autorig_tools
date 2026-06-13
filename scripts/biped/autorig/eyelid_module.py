@@ -322,10 +322,6 @@ class EyelidModule(object):
 
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
-        aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eyeDirect_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix}.inputMatrix", self.eye_guide_matrix, type="matrix")
-        cmds.setAttr(f"{aim_matrix}.primaryTargetMatrix", self.eye_end_guide_matrix, type="matrix")
-        cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 0, 0, 1)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", self.eye_guide_matrix, type="matrix")
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[1]", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
@@ -491,18 +487,16 @@ class EyelidModule(object):
         cmds.connectAttr(f"{blend_colors_corners}.output", f"{compose_matrix_corners}.inputRotate")
 
 
-        corner_fleshy = []
-        fleshy = []
-
+        # primary_controller = [upper[0], upper[2], upper[-1], lower[2]]: los
+        # índices 0 y 2 son las ESQUINAS de la boca (extremos del labio
+        # superior) y usan el blend de esquinas; el resto, el fleshy normal.
         for i, ctl in enumerate(self.primary_controller):
-            if i == 0 or i == 2:
-                corner_fleshy.append(ctl.replace("GRP", "OFF")) 
-            if i == 1 or i == 3:
-                fleshy.append(ctl.replace("GRP", "OFF"))
-            
+
+            is_corner = i == 0 or i == 2
+
             mult_matrix_position = cmds.createNode("multMatrix", name=f"{self.side}_fleshyPosition_MMX", ss=True)
             cmds.connectAttr(f"{self.eye_aim_matrix}.outputMatrix", f"{mult_matrix_position}.matrixIn[0]")
-            if ctl in corner_fleshy:
+            if is_corner:
                 cmds.connectAttr(f"{compose_matrix_corners}.outputMatrix", f"{mult_matrix_position}.matrixIn[1]")
             else:
                 cmds.connectAttr(f"{compose_matrix}.outputMatrix", f"{mult_matrix_position}.matrixIn[1]")
@@ -591,10 +585,6 @@ class EyelidModule(object):
             cmds.connectAttr(f"{four_by_four_matrix_origin}.output", f"{parent_matrix}.inputMatrix") # Connect the four by four matrix to the parent matrix input
             cmds.connectAttr(f"{four_by_four_matrix}.output", f"{parent_matrix}.target[0].targetMatrix") # Connect the origin four by four matrix to the parent matrix target
 
-            aim_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_{name}Eyelid0{i}_AIM", ss=True)
-            cmds.setAttr(f"{aim_matrix}.inputMatrix", self.eye_guide_matrix, type="matrix")
-            cmds.setAttr(f"{aim_matrix}.primaryInputAxis", 0, 0, 1)
-            cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{aim_matrix}.primaryTargetMatrix")
             temp_trn = cmds.createNode("transform", name=f"{self.side}_{name}Eyelid0{i}_TEMP", ss=True)
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{temp_trn}.offsetParentMatrix")
             if "upper" in name:

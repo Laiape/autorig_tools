@@ -610,21 +610,12 @@ class LegModule(object):
 
         cmds.connectAttr(f"{self.root_ik_ctl}.worldMatrix[0]", f"{self.created_nodes[0]}.inMatrix1")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.created_nodes[1]}.input2")
-        if self.side == "R":
-            
-            negate_upper_length = cmds.createNode("negate", name=f"{self.side}_legUpperLength_NEG", ss=True)
-            negate_lower_length = cmds.createNode("negate", name=f"{self.side}_legLowerLength_NEG", ss=True)
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{negate_upper_length}.input")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{negate_lower_length}.input")
-            cmds.connectAttr(f"{negate_upper_length}.output", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{negate_lower_length}.output", f"{self.ik_chain[2]}.translateX")
 
-        else:
+        # El translateX del IK chain lo conduce knee_pin_setup (lee el valor del
+        # stretch en created_nodes[18] y lo mezcla con el pinning), así que aquí
+        # NO se conecta: lo pisaría igualmente con force=True y dejaría estos
+        # negates como nodos muertos.
 
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[2]}.translateX")
-        
-        
         cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_cmx}.inputTranslateX")
 
         cmds.connectAttr(f"{self.soft_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix", force=True)
@@ -673,15 +664,6 @@ class LegModule(object):
         """
         Create a de Boor ribbon setup.
         """
-
-        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_legGuides_AIM", ss=True)
-        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
-        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primary_axis, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
-
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollAlign_BLM", ss=True)
         nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_legNonRollAim_AMX", ss=True)

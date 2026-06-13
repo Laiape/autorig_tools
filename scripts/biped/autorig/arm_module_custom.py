@@ -474,13 +474,6 @@ class ArmModule(object):
         """
 
 
-        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
-        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
-        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondaryInputAxis, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
 
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_armNonRollAlign_BLM", ss=True)

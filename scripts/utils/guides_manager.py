@@ -13,6 +13,49 @@ from utils import rig_manager
 reload(data_manager)
 reload(rig_manager)
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Cache del archivo .guides
+# Cada get_guides() releía el JSON de disco (+ listado de directorio para
+# resolver la versión). En un build completo eso son decenas de relecturas del
+# mismo archivo (en disco de red, segundos perdidos). Se cachea la resolución
+# de ruta y el JSON parseado por personaje; se invalida al empezar un build o
+# al re-exportar las guías.
+# ─────────────────────────────────────────────────────────────────────────────
+# Sobrevive a reload(): importlib.reload re-ejecuta el módulo sobre su mismo
+# __dict__ sin limpiarlo, así que el guard conserva el cache entre los
+# reload(guides_manager) que hace cada submódulo de autorig al importarse.
+if "_GUIDES_CACHE" not in globals():
+    _GUIDES_CACHE = {}  # character_name -> (template_file, parsed_data)
+
+
+def clear_guides_cache():
+    """Vacía el cache del .guides. Llamar al empezar un build o tras re-exportar."""
+    _GUIDES_CACHE.clear()
+
+
+def _load_guides_file(character_name):
+    """
+    Devuelve (template_file, guides_data) para un personaje, cacheado.
+    template_file/guides_data son None si no existe el archivo.
+    """
+    cached = _GUIDES_CACHE.get(character_name)
+    if cached is not None:
+        return cached
+
+    template_path = rig_manager.asset_path(character_name, "guides")
+    template_file = rig_manager.get_latest_version(template_path)
+
+    if not template_file or not os.path.exists(template_file):
+        _GUIDES_CACHE[character_name] = (None, None)
+        return None, None
+
+    with open(template_file, "r") as input_file:
+        guides_data = json.load(input_file)
+
+    _GUIDES_CACHE[character_name] = (template_file, guides_data)
+    return template_file, guides_data
+
 def get_guides_info(path=None):
     """
     Get the guides transform and take the information from the joints and locators.
@@ -183,7 +226,9 @@ def get_guides_info(path=None):
 
     with open(TEMPLATE_FILE, "w") as output_file:
         json.dump(guides_data, output_file, indent=4)
-    
+
+    clear_guides_cache()  # el archivo en disco cambió: invalida el cache
+
     om.MGlobal.displayInfo(f"Guías guardadas con éxito en: {TEMPLATE_FILE}")
 
     rig_manager.get_rig_data(character_name=CHARACTER_NAME, guides_transform=guides_node)
@@ -408,25 +453,20 @@ def get_guides(guide_export, parent=None):
     """
 
     CHARACTER_NAME = rig_manager.get_character_name_from_build()
-    TEMPLATE_PATH = rig_manager.asset_path(CHARACTER_NAME, "guides")
-    TEMPLATE_FILE = rig_manager.get_latest_version(TEMPLATE_PATH)
+    TEMPLATE_FILE, guides_data = _load_guides_file(CHARACTER_NAME)
 
-    
-    path = pathlib.Path(TEMPLATE_FILE)
-    parts = path.parts # Get the parts of the path
-    name = parts[parts.index('assets') + 1] # Get the character name after 'assets'
-
-    if not os.path.exists(TEMPLATE_FILE):
+    if not TEMPLATE_FILE:
 
         om.MGlobal.displayError("Guides path does not exist. Please create the guides first.")
 
-        return 
-    
+        return
+
     else:
 
-        with open(TEMPLATE_FILE, "r") as input_file:
-            guides_data = json.load(input_file)
-              
+        path = pathlib.Path(TEMPLATE_FILE)
+        parts = path.parts # Get the parts of the path
+        name = parts[parts.index('assets') + 1] # Get the character name after 'assets'
+
         try:
             if guides_data[name][guide_export]["isJoint"] == True:
                 chain = []
@@ -606,36 +646,21 @@ def read_guides_info(character_name, guide_name=None):
         None: Si hay error.
     """
     try:
-        complete_path = os.path.realpath(__file__)
-        relative_path = complete_path.split(os.sep + "scripts")[0]
-        base_path = os.path.join(relative_path, "assets")
-        character_path = os.path.join(base_path, character_name)
-        guides_folder = os.path.join(character_path, "guides")
-        
-        guides_file = rig_manager.get_latest_version(guides_folder)
-        
-    except Exception as e:
-        om.MGlobal.displayError(f"[LOG ERROR] Error rutas: {str(e)}")
-        return None
-
-    if not guides_file or not os.path.exists(guides_file):
-        om.MGlobal.displayError(f"[LOG ERROR] No se encontró archivo de guías en: {guides_folder}")
-        return None
-
-    try:
-        with open(guides_file, 'r') as file:
-            guides_info = json.load(file)
+        guides_file, guides_info = _load_guides_file(character_name)
     except Exception as e:
         om.MGlobal.displayError(f"[LOG ERROR] Error leyendo JSON: {str(e)}")
         return None
 
+    if not guides_file:
+        om.MGlobal.displayError(f"[LOG ERROR] No se encontró archivo de guías para: {character_name}")
+        return None
+
     character_data = guides_info.get(character_name)
-    
+
     if character_data is None:
         om.MGlobal.displayError(f"[LOG ERROR] El personaje '{character_name}' no está en el JSON.")
         return None
 
-    
     if guide_name is None:
         return character_data
 

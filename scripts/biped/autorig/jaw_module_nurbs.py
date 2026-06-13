@@ -405,7 +405,6 @@ class JawModule(object):
             parent_matrix_blender_local = cmds.createNode("parentMatrix", name=f"{side}_lowerLipLocal_PMX", ss=True)
             mmx_offset_jaw_pos = cmds.createNode("multMatrix", name=f"{side}_lowerLipOffsetJawPos_MMT", ss=True)
             inverse_matrix_jaw = cmds.createNode("inverseMatrix", name=f"{side}_lowerLipInverse_IMT", ss=True)
-            reverse_height = cmds.createNode("reverse", name=f"{side}_cornerLipHeight_REV", ss=True)
             cmds.setAttr(f"{rfm_local}.input", 3)  # Set rowFromMatrix to output translation
 
             cmds.connectAttr(f"{corner_ctl}.matrix", f"{mmx_local}.matrixIn[0]")
@@ -425,7 +424,6 @@ class JawModule(object):
             cmds.connectAttr(f"{self.mult_matrix_upper_jaw_local}.matrixSum", f"{wta_local}.wtMatrix[0].matrixIn")
             cmds.connectAttr(f"{corner_ctl}.Height", f"{wta_local}.wtMatrix[0].weightIn")
             cmds.connectAttr(f"{self.mult_matrix_jaw_local}.matrixSum", f"{wta_local}.wtMatrix[1].matrixIn")
-            cmds.connectAttr(f"{corner_ctl}.Height", f"{reverse_height}.inputX")
             cmds.connectAttr(f"{reverse_blender}.outputX", f"{wta_local}.wtMatrix[1].weightIn")
             cmds.connectAttr(f"{fbf_corner_lip_pos_only}.output", f"{parent_matrix_blender_local}.inputMatrix")
             cmds.connectAttr(f"{wta_local}.matrixSum", f"{parent_matrix_blender_local}.target[0].targetMatrix")
@@ -878,13 +876,10 @@ class JawModule(object):
                 cmds.setAttr(f"{remap_value}.value[1].value_Position", activate_max)
                 cmds.setAttr(f"{remap_value}.value[1].value_FloatValue", 1)
 
-                # Conexiones de los blendMatrix a las joints
-                blend_matrix_sticky_no_rot = cmds.createNode("blendMatrix", name=f"{non_rot_joint}Sticky_BMX", ss=True)
-                cmds.connectAttr(f"{pick_matrices[part][i]}.outputMatrix", f"{blend_matrix_sticky_no_rot}.inputMatrix")
-                cmds.connectAttr(f"{uv_pin_mid}.outputMatrix[{i}]", f"{blend_matrix_sticky_no_rot}.target[0].targetMatrix")
-                cmds.connectAttr(f"{remap_value}.outValue", f"{blend_matrix_sticky_no_rot}.target[0].weight")
-                # cmds.connectAttr(f"{blend_matrix_sticky_no_rot}.outputMatrix", f"{non_rot_joint}.offsetParentMatrix", f=True)
-
+                # Conexión del blendMatrix sticky a la joint de salida.
+                # (Antes se creaba además un blend_matrix_sticky_no_rot para las
+                # non_rotate joints, pero su salida estaba comentada → era un
+                # nodo muerto por joint de labio; eliminado.)
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
                 cmds.connectAttr(f"{aim_matrices[part][i]}.outputMatrix", f"{blend_matrix_sticky_rot}.inputMatrix")
                 cmds.connectAttr(f"{uv_pin_mid}.outputMatrix[{i}]", f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
@@ -927,14 +922,6 @@ class JawModule(object):
         cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
         cmds.connectAttr(f"{self.face_ctl}.Lips", f"{condition_secondary}.firstTerm")
         cmds.connectAttr(f"{condition_secondary}.outColorR", f"{secondary_controllers_nodes}.visibility", f=True)
-        condition_all = cmds.createNode("condition", name="C_lipsAllControllers_COND", ss=True)
-        cmds.setAttr(f"{condition_all}.operation", 0)  # Equal
-        cmds.setAttr(f"{condition_all}.secondTerm", 3)
-        cmds.setAttr(f"{condition_all}.colorIfTrueR", 1)
-        cmds.setAttr(f"{condition_all}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{self.face_ctl}.Lips", f"{condition_all}.firstTerm")
-        # cmds.connectAttr(f"{condition_all}.outColorR", f"{out_controllers}.visibility", f=True)
-
         condition_jaw = cmds.createNode("condition", name="C_jawControllers_COND", ss=True)
         cmds.setAttr(f"{condition_jaw}.operation", 3)  # Greater Than or Equal
         cmds.setAttr(f"{condition_jaw}.secondTerm", 1)

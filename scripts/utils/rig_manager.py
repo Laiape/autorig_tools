@@ -377,6 +377,7 @@ def build_rig(character_name, on_step=None):
             on_step(label, _step[0], _TOTAL)
 
     reload(guides_manager)
+    guides_manager.clear_guides_cache()  # empieza con cache limpio (guías quizá re-exportadas)
     all_guides_data = guides_manager.read_guides_info(character_name)
 
     if not all_guides_data:

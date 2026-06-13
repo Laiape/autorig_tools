@@ -453,18 +453,10 @@ class ArmModule(object):
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{self.created_nodes[1]}.input2")
 
         cmds.connectAttr(f"{self.created_nodes[18]}.outColorR", f"{self.soft_cmx}.inputTranslateX")
-        if self.side == "L":
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{self.ik_chain[-1]}.translateX")
-        else:
-            abs_up = cmds.createNode("multiply", n=f"{self.side}_armAbsUpper_MUL")
-            abs_low = cmds.createNode("multiply", n=f"{self.side}_armAbsLower_MUL")
-            cmds.setAttr(f"{abs_up}.input[1]", -1)
-            cmds.setAttr(f"{abs_low}.input[1]", -1)
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorG", f"{abs_up}.input[0]")
-            cmds.connectAttr(f"{self.created_nodes[18]}.outColorB", f"{abs_low}.input[0]")
-            cmds.connectAttr(f"{abs_up}.output", f"{self.ik_chain[1]}.translateX")
-            cmds.connectAttr(f"{abs_low}.output", f"{self.ik_chain[-1]}.translateX")
+
+        # El translateX del IK chain lo conduce elbow_pin_setup (lee el stretch
+        # de created_nodes[18] y lo mezcla con el pinning); aquí no se conecta
+        # porque lo pisaría con force=True dejando estos nodos muertos.
 
         cmds.connectAttr(f"{self.soft_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix", force=True)
         cmds.orientConstraint(self.ik_wrist_ctl, self.ik_chain[-1], maintainOffset=False)
@@ -522,15 +514,6 @@ class ArmModule(object):
         """
         Create a de Boor ribbon setup.
         """
-
-
-        guides_aim = cmds.createNode("aimMatrix", name=f"{self.side}_armGuides_AIM", ss=True)
-        cmds.connectAttr(self.guides_trns[0], f"{guides_aim}.inputMatrix")
-        cmds.connectAttr(self.guides_trns[1], f"{guides_aim}.primary.primaryTargetMatrix")
-        cmds.connectAttr(self.guides_trns[2], f"{guides_aim}.secondary.secondaryTargetMatrix")
-        cmds.setAttr(f"{guides_aim}.primaryInputAxis", *self.primaryInputAxis, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryInputAxis", *self.secondaryInputAxis, type="double3")
-        cmds.setAttr(f"{guides_aim}.secondaryMode", 1) # Aim
 
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_armNonRollAlign_BLM", ss=True)
