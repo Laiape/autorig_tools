@@ -164,20 +164,18 @@ class NeckModule(object):
 
         self.head_nodes, self.head_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
         cmds.parent(face_nodes[0], self.head_ctl)
+        cmds.setAttr(f"{self.head_nodes[0]}.inheritsTransform", 0)
+
 
         # ----- Stretch setup -----
 
-        # Create the attribute for stretch in the neck root controller
+        # Stretch UNIFORME (igual que el spine): un factor único multiplica por
+        # igual la distancia entre todos los joints. factor = longitud real total
+        # de la cadena de controles / longitud de reposo. Stretch float 0-1.
         cmds.addAttr(self.neck_ctls[0], longName="Stretch", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.neck_ctls[0]}.Stretch", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.neck_ctls[0], longName="Stretch_Activate", niceName="Stretch Activate", attributeType="bool", defaultValue=0, keyable=True)
-        cmds.setAttr(f"{self.neck_ctls[0]}.Stretch_Activate", lock=False, keyable=False, channelBox=True)
+        cmds.addAttr(self.neck_ctls[0], longName="Stretch_Activate", niceName="Stretch", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
 
-        # Cadena de drivers del ribbon (solo nodos DG), igual que en el spine:
-        # cada segmento apunta al control siguiente y su longitud es un blend
-        # entre la longitud de guía (rígido, Stretch OFF) y la distancia real al
-        # control (Stretch ON, el driver cae exacto sobre el control y toda la
-        # cadena se estira).
         if self.primary_axis == (1, 0, 0):
             translate_attr = "inputTranslateX"
         elif self.primary_axis == (0, 0, 1):
@@ -186,23 +184,44 @@ class NeckModule(object):
             translate_attr = "inputTranslateY"
 
         guide_positions = [om.MVector(m[12], m[13], m[14]) for m in self.neck_guides_matrices]
+        rest_lengths = [(guide_positions[i] - guide_positions[i - 1]).length() for i in range(1, len(self.neck_ctls))]
+        total_rest = sum(rest_lengths)
+
+        # Longitud real total = suma de las distancias entre controles consecutivos
+        total_dist = cmds.createNode("plusMinusAverage", name=f"{self.side}_neckStretchTotal_PMA", ss=True)
+        cmds.setAttr(f"{total_dist}.operation", 1)  # sum
+        for i in range(1, len(self.neck_ctls)):
+            dbt = cmds.createNode("distanceBetween", name=f"{self.side}_neck{str(i).zfill(2)}StretchDist_DBT", ss=True)
+            cmds.connectAttr(f"{self.neck_ctls[i - 1]}.worldMatrix[0]", f"{dbt}.inMatrix1")
+            cmds.connectAttr(f"{self.neck_ctls[i]}.worldMatrix[0]", f"{dbt}.inMatrix2")
+            cmds.connectAttr(f"{dbt}.distance", f"{total_dist}.input1D[{i - 1}]")
+
+        # Factor uniforme = (longitud real / globalScale) / longitud de reposo
+        global_div = cmds.createNode("divide", name=f"{self.side}_neckStretchGlobal_DIV", ss=True)
+        cmds.connectAttr(f"{total_dist}.output1D", f"{global_div}.input1")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{global_div}.input2")
+
+        factor_div = cmds.createNode("divide", name=f"{self.side}_neckStretchFactor_DIV", ss=True)
+        cmds.connectAttr(f"{global_div}.output", f"{factor_div}.input1")
+        cmds.setAttr(f"{factor_div}.input2", total_rest)
+
+        # Blend 1 (sin stretch) <-> factor (con stretch), por Stretch (float 0-1)
+        factor_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_neckStretchFactor_B2A", ss=True)
+        cmds.setAttr(f"{factor_blend}.input[0]", 1.0)
+        cmds.connectAttr(f"{factor_div}.output", f"{factor_blend}.input[1]")
+        cmds.connectAttr(f"{self.neck_ctls[0]}.Stretch_Activate", f"{factor_blend}.attributesBlender")
 
         self.stretch_drivers = [self.neck_ctls[0]]
         prev_plug = f"{self.neck_ctls[0]}.worldMatrix[0]"
 
         for i in range(1, len(self.neck_ctls)):
 
-            rest_length = (guide_positions[i] - guide_positions[i - 1]).length()
             target_plug = f"{self.neck_ctls[i]}.worldMatrix[0]"
 
-            dbt = cmds.createNode("distanceBetween", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_DBT", ss=True)
-            cmds.connectAttr(prev_plug, f"{dbt}.inMatrix1")
-            cmds.connectAttr(target_plug, f"{dbt}.inMatrix2")
-
-            length_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_neck{str(i).zfill(2)}StretchLength_B2A", ss=True)
-            cmds.setAttr(f"{length_blend}.input[0]", rest_length)
-            cmds.connectAttr(f"{dbt}.distance", f"{length_blend}.input[1]")
-            cmds.connectAttr(f"{self.neck_ctls[0]}.Stretch_Activate", f"{length_blend}.attributesBlender")
+            # Longitud uniforme de este segmento = rest_length * factor
+            seg_len = cmds.createNode("multiply", name=f"{self.side}_neck{str(i).zfill(2)}StretchLen_MUL", ss=True)
+            cmds.setAttr(f"{seg_len}.input[0]", rest_lengths[i - 1])
+            cmds.connectAttr(f"{factor_blend}.output", f"{seg_len}.input[1]")
 
             aim = cmds.createNode("aimMatrix", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_AIM", ss=True)
             cmds.setAttr(f"{aim}.primaryInputAxis", *self.primary_axis, type="double3")
@@ -214,7 +233,7 @@ class NeckModule(object):
             cmds.connectAttr(target_plug, f"{aim}.secondary.secondaryTargetMatrix")
 
             cmx = cmds.createNode("composeMatrix", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_CMX", ss=True)
-            cmds.connectAttr(f"{length_blend}.output", f"{cmx}.{translate_attr}")
+            cmds.connectAttr(f"{seg_len}.output", f"{cmx}.{translate_attr}")
 
             mmx = cmds.createNode("multMatrix", name=f"{self.side}_neck{str(i).zfill(2)}Stretch_MMX", ss=True)
             cmds.connectAttr(f"{cmx}.outputMatrix", f"{mmx}.matrixIn[0]")
@@ -235,7 +254,7 @@ class NeckModule(object):
         segment_length = (guide_positions[-1] - guide_positions[0]).length() / (len(guide_positions) - 1)
 
         sel = tuple(self.stretch_drivers)
-        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number, d=3, tangent_cvs=segment_length * 0.3, tangent_axis="x", param_from_length=True) # Do the ribbon setup, with the created controllers
+        self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number, d=3, tangent_cvs=0, tangent_axis="x", param_from_length=True) # Do the ribbon setup, with the created controllers (tangent_cvs=0 -> stretch uniforme)
 
         for t in temp:
             cmds.delete(t)

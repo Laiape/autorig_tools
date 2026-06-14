@@ -521,8 +521,10 @@ def build_rig(character_name, on_step=None):
     if check("L_eye_JNT") and check("R_eye_JNT"):
         step("Building eyelids…")
         reload(eyelid_module)
-        eyelid_module.EyelidModule().make("L")
-        eyelid_module.EyelidModule().make("R")
+        # En cuadrúpedo no se crean sockets (no hay cejas/guías de socket)
+        build_sockets = (rig_type == 0)
+        eyelid_module.EyelidModule().make("L", sockets=build_sockets)
+        eyelid_module.EyelidModule().make("R", sockets=build_sockets)
 
     if check("C_tongue00_JNT"):
         step("Building tongue…")

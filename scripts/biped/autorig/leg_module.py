@@ -124,8 +124,7 @@ class LegModule(object):
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
         cmds.parent(self.settings_node[0], self.controllers_grp)
 
-        # No FK joint chain: the FK controllers feed the blend matrices directly
-        # (see controllers_creation), so only the IK chain is needed.
+        # Create the IK joint chain based on the leg guides
         self.ik_chain = []
 
         for joint in self.leg_chain:

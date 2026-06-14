@@ -17,6 +17,32 @@ reload(matrix_manager)
 reload(ribbon)
 
 
+# Ejes canónicos: las guías solo dan POSICIÓN; la orientación se construye con
+# estas variables (nunca hardcodeadas), así un cambio de convención se propaga.
+_AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
+
+
+def _axis_letter(vec):
+    """Letra del eje ('x'/'y'/'z') de un vector tipo (1,0,0), ignorando el signo."""
+    a = tuple(round(abs(c)) for c in vec)
+    for letter, v in _AXIS_VECTORS.items():
+        if a == tuple(int(c) for c in v):
+            return letter
+    return "x"
+
+
+def _third_axis_letter(a, b):
+    """La letra de eje restante dadas otras dos (p.ej. 'x','y' -> 'z')."""
+    return ({"x", "y", "z"} - {a, b}).pop()
+
+
+def _axis_letter_signed(vec):
+    """Letra con signo ('x'/'-x'/'z'...) de un vector tipo (-1,0,0)."""
+    letter = _axis_letter(vec)
+    idx = {"x": 0, "y": 1, "z": 2}[letter]
+    return ("-" + letter) if vec[idx] < 0 else letter
+
+
 class LegModule(object):
 
     """
@@ -50,8 +76,16 @@ class LegModule(object):
     # sembrarle la dirección de flexión. La trasera tiene el corvejón doblado y
     # captura bien el preferredAngle: NO se toca. Front lo pone a True.
     SEED_STRAIGHT_BEND = False
-    FORWARD_AXIS = (0, 0, 1)  # hacia dónde mira el personaje; la PV apunta aquí
+    FORWARD_AXIS = (0, 0, -1)  # PV invertido (apunta hacia atrás); Y de las patas hacia delante
                               # para que el apex (carpo/corvejón) doble hacia atrás
+    # Signo de colocación del PV respecto a bend_dir. Permite decuplar el LADO del
+    # PV de la dirección de plegado (el back lo pone a -1 para que el PV quede
+    # caudal aunque doble hacia atrás).
+    PV_SIGN = 1
+    # Reposicionar la cadena IK sobre las guías tras capturar el preferredAngle
+    # (sin desplazamiento del solver). Requiere que el PV vaya alineado con el
+    # doblez (PV_SIGN) y que la guía marque el doblez en esa dirección.
+    REPOSITION_IK_TO_GUIDES = False
 
     def __init__(self):
 
@@ -81,9 +115,25 @@ class LegModule(object):
         self.bendys = bendys
         self.primary_axis = primaryInputAxis if side == "L" else tuple(-x for x in primaryInputAxis)
         self.secondary_axis = secondaryInputAxis if side == "L" else tuple(-x for x in secondaryInputAxis)
+        # --- Convención de ejes (no hardcodear nada: todo deriva de aquí) ---
+        # aim = primaryInputAxis (baja por el hueso); fb = secondaryInputAxis
+        # (delante/atrás); lateral (up) = el eje restante, al que se alinea la
+        # orientación hacia self.lateral_ref. Letras y vector para los nodos.
+        self.aim_letter = _axis_letter(primaryInputAxis)
+        self.fb_letter = _axis_letter(secondaryInputAxis)
+        self.up_letter = _third_axis_letter(self.aim_letter, self.fb_letter)
+        self.up_axis = _AXIS_VECTORS[self.up_letter]
+        # aim con SIGNO para el ribbon ("x" en L, "-x" en R), derivado del
+        # primary_axis ya espejado por lado.
+        self.aim_axis_str = _axis_letter_signed(self.primary_axis)
         # Eje lateral por lado: +X en L, -X en R, para que la R sea MIRROR de la
         # L (frames, root y controles reflejados) en vez de world-consistente.
         self.side_vec = om.MVector(*self.SIDE_AXIS) * (1 if side == "L" else -1)
+        # Lateral de ORIENTACIÓN (al que se alinea la Z de los frames). Negado
+        # respecto a side_vec para que la Y de las patas apunte hacia DELANTE (la Z
+        # lateral se invierte como consecuencia: no se puede flipar la Y sola). El
+        # PV se invierte aparte con FORWARD_AXIS = -Z.
+        self.lateral_ref = self.side_vec * -1
 
         self.module_name = f"{self.side}_{self.LEG_PREFIX}"
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
@@ -176,7 +226,7 @@ class LegModule(object):
         #       IGUAL en toda la cadena (eje del mundo como referencia FIJA, no la
         #       normal del plano de la pata, inestable en patas rectas).
         #   Y = perpendicular en el plano (delante/atrás)
-        side_ref = self.side_vec  # +X en L, -X en R (mirror)
+        side_ref = self.lateral_ref  # lateral de orientación (Y hacia delante)
         hip_p, knee_p = self.guide_positions[0], self.guide_positions[1]
         ankle_p = self.guide_positions[self.leg_end_index]
         self.plane_normal = (knee_p - hip_p) ^ (ankle_p - hip_p)
@@ -222,11 +272,11 @@ class LegModule(object):
         cmds.connectAttr(blend_plug, f"{nonroll}.inputMatrix")
         cmds.connectAttr(aim_target_plug, f"{nonroll}.primary.primaryTargetMatrix")
         cmds.setAttr(f"{nonroll}.primaryInputAxis", *self.primary_axis, type="double3")
-        cmds.setAttr(f"{nonroll}.secondaryInputAxis", 0, 0, 1, type="double3")  # local Z = lateral
+        cmds.setAttr(f"{nonroll}.secondaryInputAxis", *self.up_axis, type="double3")  # eje lateral local
         cmds.setAttr(f"{nonroll}.secondaryMode", 2)  # alinear al vector
-        cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.side_vec.x, self.side_vec.y, self.side_vec.z, type="double3")
+        cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
 
-        twist_qn = matrix_manager.extract_twist(blend_plug, f"{nonroll}.outputMatrix", axis="x", name=name, return_quat=True)
+        twist_qn = matrix_manager.extract_twist(blend_plug, f"{nonroll}.outputMatrix", axis=self.aim_letter, name=name, return_quat=True)
         cmp = cmds.createNode("composeMatrix", name=f"{name}RollTwist_CMP", ss=True)
         cmds.setAttr(f"{cmp}.useEulerRotation", 0)
         cmds.connectAttr(f"{twist_qn}.outputQuat", f"{cmp}.inputQuat")
@@ -235,19 +285,26 @@ class LegModule(object):
         cmds.connectAttr(f"{nonroll}.outputMatrix", f"{roll}.matrixIn[1]")
         return roll
 
-    def _build_frames(self, positions, side_ref):
-        """Frames X=aim, Z=lateral(side_ref), Y=delante/atrás para una lista de posiciones."""
+    def _build_frames(self, positions, lateral_ref):
+        """
+        Frames a partir de POSICIONES + la convención de ejes del módulo: aim
+        (aim_letter) baja por el hueso, lateral (up_letter) se alinea a
+        lateral_ref, y delante/atrás (fb_letter) sale del cruz. Las tres se
+        colocan en las filas X/Y/Z según sus letras (sin hardcodear ejes).
+        """
         frames = []
-        x_axis = om.MVector(1.0, 0.0, 0.0)
+        aim = om.MVector(*_AXIS_VECTORS[self.aim_letter])
         for i, pos in enumerate(positions):
             if i < len(positions) - 1:
-                x_axis = (positions[i + 1] - pos).normal()
-            y_axis = (side_ref ^ x_axis).normal()
-            z_axis = (x_axis ^ y_axis).normal()
+                aim = (positions[i + 1] - pos).normal()
+            fb = (lateral_ref ^ aim).normal()
+            lateral = (aim ^ fb).normal()
+            rows = {self.aim_letter: aim, self.fb_letter: fb, self.up_letter: lateral}
+            rx, ry, rz = rows["x"], rows["y"], rows["z"]
             frames.append(om.MMatrix([
-                x_axis.x, x_axis.y, x_axis.z, 0.0,
-                y_axis.x, y_axis.y, y_axis.z, 0.0,
-                z_axis.x, z_axis.y, z_axis.z, 0.0,
+                rx.x, rx.y, rx.z, 0.0,
+                ry.x, ry.y, ry.z, 0.0,
+                rz.x, rz.y, rz.z, 0.0,
                 pos.x, pos.y, pos.z, 1.0,
             ]))
         return frames
@@ -432,6 +489,16 @@ class LegModule(object):
         # rodillas saltan al pasar a IK (verificado: drift ~10u -> 0 con spa)
         cmds.joint(self.ik_chain[0], e=True, setPreferredAngles=True, children=True)
 
+        # El preferredAngle ya quedó capturado del pre-bend. Si el módulo lo pide,
+        # reposicionamos la cadena IK EXACTAMENTE sobre las guías: las joints del
+        # solver reposan en su sitio (nada desplazado) y, como el reposo del solve
+        # coincide con las guías, la calibración queda en identidad y el fold sigue
+        # la dirección del DOBLEZ DE LA GUÍA. La delantera NO lo usa porque su guía
+        # casi recta necesita el pre-bend desplazado para doblar bien.
+        if self.REPOSITION_IK_TO_GUIDES:
+            for i, ik_joint in enumerate(self.ik_chain):
+                cmds.xform(ik_joint, ws=True, m=list(self.guides_matrices[i]))
+
         use_spring = self.solver == "spring" and ankle_index >= 3
         solver_name = "ikRPsolver"
         if use_spring:
@@ -484,12 +551,16 @@ class LegModule(object):
         apex_p = self.guide_positions[apex_index]
         bend_dir = self.bend_dir
         distance = self.leg_line_len * 0.5
-        pv_pos = apex_p + bend_dir * distance
+        pv_pos = apex_p + bend_dir * distance * self.PV_SIGN
 
-        # Orientación del control (pvOrientation): Z hacia el apex
-        apex_x_axis = om.MVector(self.guides_matrices[apex_index][0], self.guides_matrices[apex_index][1], self.guides_matrices[apex_index][2])
+        # Orientación del control (pvOrientation): el eje lateral (up) del control
+        # apunta al apex, y el eje aim del control se alinea al eje aim del apex.
+        aim_row = {"x": 0, "y": 1, "z": 2}[self.aim_letter] * 4
+        m = self.guides_matrices[apex_index]
+        apex_aim_axis = om.MVector(m[aim_row], m[aim_row + 1], m[aim_row + 2])
         cmds.setAttr(f"{self.pv_orient_blm}.inputMatrix", self._translation_matrix(pv_pos), type="matrix")
-        pv_aimed = guides_manager._aim_matrix(pv_pos, apex_p, pv_pos + apex_x_axis, (0, 0, 1), (1, 0, 0))
+        pv_aimed = guides_manager._aim_matrix(pv_pos, apex_p, pv_pos + apex_aim_axis,
+                                              self.up_axis, _AXIS_VECTORS[self.aim_letter])
         cmds.setAttr(f"{self.pv_orient_blm}.target[0].targetMatrix", list(pv_aimed), type="matrix")
 
         # poleVectorConstraint clásico: con los preferred angles puestos y el
@@ -778,10 +849,6 @@ class LegModule(object):
         blend_wm = [f"{bm[0]}.outputMatrix" for bm in self.blend_matrices]
         cv_nodes = [bm[0] for bm in self.blend_matrices]
 
-        # Non-roll del primer segmento (pairblends del TFG): la cadera blendeada
-        # se realinea contra una referencia sin twist (root IK o GRP del primer
-        # FK según el switch) y se re-aima a la rodilla. Evita el flip de twist
-        # del hip en el ribbon del primer bendy.
         non_roll_space = cmds.createNode("blendMatrix", name=f"{self.module_name}NonRollSpace_BLM", ss=True)
         cmds.connectAttr(f"{self.root_ik_nodes[0]}.worldMatrix[0]", f"{non_roll_space}.inputMatrix")
         cmds.connectAttr(f"{self.fk_nodes[0]}.worldMatrix[0]", f"{non_roll_space}.target[0].targetMatrix")
@@ -798,15 +865,14 @@ class LegModule(object):
         cmds.connectAttr(f"{non_roll_align}.outputMatrix", f"{non_roll_aim}.inputMatrix")
         cmds.connectAttr(blend_wm[1], f"{non_roll_aim}.primary.primaryTargetMatrix")
         cmds.setAttr(f"{non_roll_aim}.primaryInputAxis", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{non_roll_aim}.secondaryInputAxis", *self.up_axis, type="double3")
+        cmds.setAttr(f"{non_roll_aim}.secondaryMode", 2)
+        cmds.setAttr(f"{non_roll_aim}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
 
         self.raw_hip_blend = blend_wm[0]  # con twist, para el bendy ctl
         blend_wm[0] = f"{non_roll_aim}.outputMatrix"
         cv_nodes[0] = non_roll_aim
 
-        # Roll anti-flip en el RESTO de joints del IK principal (igual que el
-        # bípedo): cada CV del ribbon recibe un frame con el eje lateral estable
-        # + el twist limpio (swing-twist), en vez del blend crudo que flippea.
-        # roll_wm guarda el plug de cada frame (para el ribbon y el bendy ctl).
         roll_wm = list(blend_wm)
         roll_wm[0] = f"{non_roll_aim}.outputMatrix"
         for i in range(1, self.main_end_index + 1):
@@ -817,20 +883,16 @@ class LegModule(object):
         bendy_grp = cmds.createNode("transform", name=f"{self.module_name}BendyControllers_GRP", ss=True, p=self.controllers_grp)
         cmds.setAttr(f"{bendy_grp}.inheritsTransform", 0)
 
-        aim_axis = "x" if self.side == "L" else "-x"
+        aim_axis = self.aim_axis_str
 
-        # Up estable para las joints de skinning: alineamos su Z lateral al eje X
-        # del masterwalk (referencia que NO se pliega) en vez de derivar la Z del
-        # cross aim×up del de Boor (que la inclinaba en los acodamientos, p.ej. el
-        # gaskin). Resultado: X=hueso, Y=delante/atrás, Z=lateral limpio en toda la
-        # cadena, sin flip y consistente con el chain. up_object_vector = lado
-        # (+X en L, -X en R) para que la Z mire al lateral correcto.
-        up_object_vector = (self.side_vec.x, self.side_vec.y, self.side_vec.z)
-
-        # El último joint de cada tramo se queda a 0.95 para no solaparse con
-        # el primero del tramo siguiente (mismo truco que el TFG)
+        up_object_vector = (self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z)
         params = [i / (self.skinning_jnts - 1) for i in range(self.skinning_jnts)]
         params[-1] = 0.95
+        hip_ctl_roll = f"{self._roll_cv(self.raw_hip_blend, blend_wm[1], f'{self.module_name}HipCtl')}.matrixSum"
+
+        # Add attribute in self.settings_ctl to control the bendy controllers visibility
+        cmds.addAttr(self.settings_ctl, longName="Bendy_Controllers", niceName="Bendy_Controllers", attributeType="bool", defaultValue=True, keyable=True)
+        cmds.setAttr(f"{self.settings_ctl}.Bendy_Controllers", lock=False, keyable=False, channelBox=True)
 
         self.bendy_ctls = []
         for i in range(segment_count):
@@ -838,8 +900,7 @@ class LegModule(object):
             name = f"{self.module_name}{segment_names[i]}Bendy"
 
             mid_blm = cmds.createNode("blendMatrix", name=f"{name}_BLM", ss=True)
-            # Rotación desde los frames ROLL limpios (anti-flip), no el blend crudo
-            cmds.connectAttr(self.raw_hip_blend if i == 0 else roll_wm[i], f"{mid_blm}.inputMatrix")
+            cmds.connectAttr(hip_ctl_roll if i == 0 else roll_wm[i], f"{mid_blm}.inputMatrix")
             cmds.connectAttr(roll_wm[i + 1], f"{mid_blm}.target[0].targetMatrix")
             cmds.setAttr(f"{mid_blm}.target[0].translateWeight", 0.5)
             cmds.setAttr(f"{mid_blm}.target[0].rotateWeight", 0)
@@ -847,8 +908,6 @@ class LegModule(object):
             cmds.setAttr(f"{mid_blm}.target[0].shearWeight", 0)
 
             if i == 0:
-                # Medio twist en el bendy de la cadera (TFG): blend de rotación
-                # 0.5 entre la cadera con twist y la versión non-roll
                 cmds.connectAttr(roll_wm[0], f"{mid_blm}.target[1].targetMatrix")
                 cmds.setAttr(f"{mid_blm}.target[1].translateWeight", 0)
                 cmds.setAttr(f"{mid_blm}.target[1].rotateWeight", 0.5)
@@ -856,20 +915,20 @@ class LegModule(object):
                 cmds.setAttr(f"{mid_blm}.target[1].shearWeight", 0)
 
             bendy_nodes, bendy_ctl = curve_tool.create_controller(name=name, offset=["GRP", "ANM"], parent=bendy_grp)
+            cmds.connectAttr(f"{self.settings_ctl}.Bendy_Controllers", f"{bendy_nodes[0]}.visibility")
             self.lock_attributes(bendy_ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{mid_blm}.outputMatrix", f"{bendy_nodes[0]}.offsetParentMatrix")
             self.bendy_ctls.append(bendy_ctl)
 
             segment_jnts, temp = ribbon.de_boor_ribbon(
                 cvs=(cv_nodes[i], bendy_ctl, cv_nodes[i + 1]),
-                aim_axis=aim_axis, up_axis="z", num_joints=self.skinning_jnts,
+                aim_axis=aim_axis, up_axis=self.up_letter, num_joints=self.skinning_jnts,
                 skeleton_grp=self.skeleton_grp, name=name, custom_parameter=params,
                 up_object=self.masterwalk_ctl, up_object_vector=up_object_vector,
             )
             for t in temp:
                 cmds.delete(t)
 
-        # Fetlock, Pastern y Tip (el tramo del pie no lleva bendy)
         fetlock_skinning = cmds.createNode("joint", name=f"{self.module_name}FetlockSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(blend_wm[self.main_end_index], f"{fetlock_skinning}.offsetParentMatrix")
 
@@ -911,6 +970,14 @@ class BackLegModule(LegModule):
     """Pierna trasera: {side}_backLegHip_JNT -> ... -> Tip."""
 
     LEG_PREFIX = "backLeg"
+    # Dobla hacia ATRÁS (corvejón caudal): el fold sigue al PRE-BEND, así que se
+    # siembra hacia caudal (FORWARD_AXIS = +Z -> pre-bend -Z). El PV se mantiene en
+    # el lado caudal (PV_SIGN = -1) aunque doble hacia atrás. Y se reposiciona la
+    # cadena IK sobre las guías: nada desplazado (el corvejón ya marca el doblez).
+    FORWARD_AXIS = (0, 0, 1)
+    SEED_STRAIGHT_BEND = True
+    PV_SIGN = -1
+    REPOSITION_IK_TO_GUIDES = True
 
 
 class FrontLegModule(LegModule):
@@ -924,9 +991,13 @@ class FrontLegModule(LegModule):
     """
 
     LEG_PREFIX = "frontLeg"
-    ROOT_JOINT = "Shoulder"  # la delantera arranca en el shoulder (no hip)
-    SEED_STRAIGHT_BEND = True  # delantera casi recta: hay que sembrar el bend
-    # PV desde el carpo (la "rodilla" equina = índice 2). Hereda PV_APEX_INDEX = 2.
+    ROOT_JOINT = "Shoulder"
+    # Doblez CRANIAL (carpo adelante). Para reposicionar sin desplazamiento, el PV
+    # debe ir alineado con el doblez (lado cranial), igual que la trasera con su
+    # corvejón: PV_SIGN = -1 lo lleva al lado del doblez.
+    PV_SIGN = -1
+    REPOSITION_IK_TO_GUIDES = True
+    SEED_STRAIGHT_BEND = True
 
     def make(self, side, solver="spring", skinning_jnts=5, bendys=True, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
         super().make(side, solver=solver, skinning_jnts=skinning_jnts, bendys=bendys,
@@ -942,7 +1013,6 @@ class FrontLegModule(LegModule):
         """
         chain = guides_manager.get_guides(f"{self.side}_scapula_JNT")
         if not chain:
-            # Asset sin escápula: cadena directa desde el hip
             super().load_guides()
             return
         cmds.parent(chain[0], self.module_trn)

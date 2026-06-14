@@ -142,6 +142,7 @@ class TailModule(object):
                 cmds.connectAttr(f"{self.tail_controllers[i+1]}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
                 cmds.connectAttr(f"{bendy_ctl}.Bendy", f"{blend_matrix_node}.envelope")
                 cmds.connectAttr(f"{blend_matrix_node}.outputMatrix", f"{bendy_nodes[0]}.offsetParentMatrix")
+                cmds.setAttr(f"{bendy_nodes[0]}.inheritsTransform", 0)
                 self.bendy_controllers.append(bendy_ctl)
 
     def ik_setup(self):

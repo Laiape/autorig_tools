@@ -32,12 +32,15 @@ class EyelidModule(object):
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
-    def make(self, side):
+    def make(self, side, sockets=True):
 
-        """ 
+        """
         Create the eyelid module structure and controllers. Call this method with the side ('L' or 'R') to create the respective eyelid module.
         Args:
             side (str): The side of the eyelid ('L' or 'R').
+            sockets (bool): construir los sockets del párpado (dependen de la ceja
+                y de las guías de socket). En cuadrúpedo se pasa False: no hay
+                cejas/sockets, así que no se crean.
 
         """
         self.side = side
@@ -69,12 +72,15 @@ class EyelidModule(object):
         self.create_blink_setup()
         self.fleshy_setup()
         self.skinning_joints()
-        socket_main_controllers = self.sockets()
 
-        data_manager.DataExportBiped().append_data("eyelid_module",
-                            {
-                                f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
-                            })
+        # Sockets: solo en biped (dependen de la ceja y de las guías de socket).
+        # En cuadrúpedo no se crean.
+        if sockets:
+            socket_main_controllers = self.sockets()
+            data_manager.DataExportBiped().append_data("eyelid_module",
+                                {
+                                    f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
+                                })
 
     def lock_attributes(self, ctl, attrs):
 

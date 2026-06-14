@@ -54,17 +54,18 @@ def _parent_model_under_final(main_xf, geo_grp, final_geo, character_name):
     por defecto y guías, y evita el ciclo de emparentar el propio main transform.
 
     Enruta por tipo según el nombre:
-        - hueso/esqueleto (skel/_BONE/_SKEL)  -> geo_GRP/skeleton
-        - músculo (muscle/_MSCL)              -> geo_GRP/muscles
+        - hueso/esqueleto (skel/_BONE/_SKEL)  -> geo_GRP/skeleton_GRP
+        - músculo (muscle/_MSCL)              -> geo_GRP/muscles_GRP
         - el resto (render geo)               -> geo_GRP/FINAL
-    Los transforms 'skeleton' y 'muscles' solo se crean si hay contenido de ese
-    tipo en la escena (si no, no hacen falta). Todo en una sesión rápida.
+    Los buckets _GRP solo se crean si hay contenido de ese tipo; si el modelo ya
+    trae un grupo con ese nombre (p.ej. skeleton_GRP) se reutiliza. Además se crea
+    un renderGeo_GRP vacío (placeholder de la copia de render). Sesión rápida.
     """
     def short(n):
         return n.rsplit("|", 1)[-1]
 
     rig_sys = {character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP",
-               "skel_GRP", "modules_GRP", "PROXY", "FINAL", "LOCAL", "muscles", "skeleton"}
+               "skel_GRP", "modules_GRP", "PROXY", "FINAL", "LOCAL"}
     rig_prefixes = ("C_character", "C_masterwalk", "C_settings", "C_freeze")
     default_cams = {"persp", "top", "front", "side"}
     ignore = {"C_guides_GRP", "Mechanic_sets_grp"}
@@ -80,11 +81,9 @@ def _parent_model_under_final(main_xf, geo_grp, final_geo, character_name):
         return False
 
     geo_roots = []
-    # contenido del modelo que cuelga directo del main transform (root reutilizado)
     for c in (cmds.listRelatives(main_xf, children=True, type="transform", fullPath=True) or []):
         if not is_rig_or_system(c):
             geo_roots.append(c)
-    # mallas / grupos sueltos a nivel raíz (assemblies)
     for a in (cmds.ls(assemblies=True, transforms=True, long=True) or []):
         if short(a) == short(main_xf):
             continue
@@ -103,44 +102,135 @@ def _parent_model_under_final(main_xf, geo_grp, final_geo, character_name):
         s = short(node).lower()
         return ("muscle" in s) or s.endswith("_mscl")
 
-    buckets = {"skeleton": [], "muscles": [], "FINAL": []}
-    for g in geo_roots:
-        if is_skeleton(g):
-            buckets["skeleton"].append(g)
-        elif is_muscle(g):
-            buckets["muscles"].append(g)
-        else:
-            buckets["FINAL"].append(g)
+    def bulk_parent(nodes_list, dest):
+        nodes_list = [n for n in nodes_list if cmds.objExists(n)]
+        if not nodes_list:
+            return 0
+        try:  # en bloque (rápido); fallback a uno a uno
+            cmds.parent(*(nodes_list + [dest]))
+        except Exception:
+            for n in nodes_list:
+                try: cmds.parent(n, dest)
+                except Exception: pass
+        return len(nodes_list)
 
-    # Destino de cada bucket. 'skeleton'/'muscles' solo se crean si hay contenido.
-    existing = set(cmds.listRelatives(geo_grp, children=True, type="transform") or [])
-    targets = {"FINAL": final_geo}
-    for name in ("muscles", "skeleton"):
-        if not buckets[name]:
-            continue
-        if name in existing:
-            targets[name] = name
-        else:
-            targets[name] = cmds.createNode("transform", name=name, ss=True, p=geo_grp)
+    skeleton_nodes = [g for g in geo_roots if is_skeleton(g)]
+    muscle_nodes   = [g for g in geo_roots if is_muscle(g) and not is_skeleton(g)]
+    render_nodes   = [g for g in geo_roots if g not in skeleton_nodes and g not in muscle_nodes]
+
+    def get_bucket(name):
+        for k in (cmds.listRelatives(geo_grp, children=True, type="transform", fullPath=True) or []):
+            if short(k) == name:
+                return k
+        match = cmds.ls(name, type="transform", long=True) or []
+        if match:
+            try: return cmds.parent(match[0], geo_grp)[0]
+            except Exception: pass
+        return cmds.createNode("transform", name=name, ss=True, p=geo_grp)
 
     moved = {}
     restore = _suspend_eval()
     try:
-        for name, nodes_list in buckets.items():
-            if not nodes_list:
+        if skeleton_nodes:
+            bucket = get_bucket("skeleton_GRP")
+            others = [g for g in skeleton_nodes if short(g) != "skeleton_GRP"]
+            moved["skeleton"] = bulk_parent(others, bucket)
+        if muscle_nodes:
+            bucket = get_bucket("muscles_GRP")
+            others = [g for g in muscle_nodes if short(g) != "muscles_GRP"]
+            moved["muscles"] = bulk_parent(others, bucket)
+
+        final_count = 0
+        for g in render_nodes:
+            if not cmds.objExists(g):
                 continue
-            dest = targets.get(name, final_geo)
-            try:  # en bloque (rápido), fallback a uno a uno
-                cmds.parent(*(nodes_list + [dest]))
-            except Exception:
-                for g in nodes_list:
-                    try: cmds.parent(g, dest)
+            kids = cmds.listRelatives(g, children=True, type="transform", fullPath=True) or []
+            if "render" in short(g).lower() and kids:
+                final_count += bulk_parent(kids, final_geo)
+                if not (cmds.listRelatives(g, children=True) or []):
+                    try: cmds.delete(g)
                     except Exception: pass
-            moved[name] = len(nodes_list)
+            else:
+                final_count += bulk_parent([g], final_geo)
+        if final_count:
+            moved["FINAL"] = final_count
+
+        if not any(short(k) == "renderGeo_GRP"
+                   for k in (cmds.listRelatives(geo_grp, children=True, type="transform", fullPath=True) or [])):
+            cmds.createNode("transform", name="renderGeo_GRP", ss=True, p=geo_grp)
     finally:
         restore()
 
     return moved
+
+def _create_display_layers(geo_grp):
+    """
+    Crea display layers para la geo organizada y prepara las capas de AdonisFX.
+    Solo actúa si existen los grupos 'muscles_GRP' y 'skeleton_GRP' bajo geo_GRP.
+    Las layers van con nombre LIMPIO (los transforms llevan _GRP, así no chocan):
+
+        - muscles_GRP   -> layer 'muscles' (ROJO)
+        - skeleton_GRP  -> layer 'skeleton'
+        - renderGeo_GRP -> layer 'renderGeo'
+        - AdonisFX: transform 'mummy_GRP' + layer 'mummy', y layers 'fat'/'skin'/
+          'fascia' SOLO si existen nodos de esa capa en la escena.
+    """
+    def child_path(name):
+        for k in (cmds.listRelatives(geo_grp, children=True, type="transform", fullPath=True) or []):
+            if k.rsplit("|", 1)[-1] == name:
+                return k
+        return None
+
+    muscles = child_path("muscles_GRP")
+    skeleton = child_path("skeleton_GRP")
+    if not (muscles and skeleton):
+        return  # sin muscles_GRP+skeleton_GRP no se crean layers
+
+    def get_layer(name):
+        if cmds.objExists(name) and cmds.nodeType(name) == "displayLayer":
+            return name
+        return cmds.createDisplayLayer(name=name, empty=True)
+
+    def layer_add(name, members, color_index=None):
+        members = [m for m in members if m and cmds.objExists(m)]
+        lyr = get_layer(name)
+        if members:
+            cmds.editDisplayLayerMembers(lyr, *members, noRecurse=True)
+        if color_index is not None:
+            try: cmds.setAttr(f"{lyr}.color", color_index)
+            except Exception: pass
+        return lyr
+
+    RED = 13  # índice de color rojo de Maya
+    YELLOW = 17
+    GREEN = 14
+    BLUE = 6
+
+    # ----- Layers de geo -----
+    layer_add("muscles", [muscles], color_index=RED)
+    layer_add("skeleton", [skeleton], color_index=YELLOW)
+    render = child_path("renderGeo_GRP")
+    
+
+    # ----- AdonisFX -----
+    def find_adonis(term):
+        wanted = {term, f"{term}_grp", f"{term}grp", f"{term}_geo"}
+        return [t for t in (cmds.ls(type="transform", long=True) or [])
+                if t.rsplit("|", 1)[-1].lower() in wanted]
+
+    mummy = child_path("mummy_GRP")
+    if not mummy:
+        mummy = cmds.createNode("transform", name="mummy_GRP", ss=True, p=geo_grp)
+    layer_add("mummy", [mummy] + find_adonis("mummy"), color_index=GREEN)
+
+    if render:
+        layer_add("renderGeo", [render], color_index=BLUE)
+
+    for term in ("fat", "skin", "fascia"):
+        nodes = find_adonis(term)
+        if nodes:
+            layer_add(term, nodes)
+
 
 def create_basic_structure(character_name=None):
 
@@ -200,6 +290,7 @@ def create_basic_structure(character_name=None):
 
         moved = _parent_model_under_final(nodes[character_name], nodes["geo_GRP"], final_geo, character_name)
         print(f"--- Geo organizada en geo_GRP: {moved} ---")
+        _create_display_layers(nodes["geo_GRP"])
 
         # Controllers
         if not cmds.objExists("C_character_CTL"):
