@@ -696,11 +696,12 @@ def quadruped_space_switches():
         local_hip = data.get_data("spine_module", "local_hip_ctl")
         local_chest = data.get_data("spine_module", "local_chest_ctl")
         neck = data.get_data("neck_module", "neck_ctl")
+        tail = data.get_data("tail_module", "tail_ctl")
 
-        # ---- Spine / Neck ----
+        # ---- Spine / Neck / Tail ----
         _ss(local_hip, [body], default_rotate=1, default_translate=1)          # Local hip
         _ss(neck, [local_chest, body], default_rotate=1, default_translate=1)  # Neck
-
+        _ss(tail, [local_hip, body], default_rotate=1, default_translate=1)    # Tail
         for side in ["L", "R"]:
 
             # =========================== BACK LEG ===========================

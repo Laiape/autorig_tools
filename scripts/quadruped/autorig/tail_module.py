@@ -53,6 +53,11 @@ class TailModule(object):
         # self.pair_blends_setup()
         self.de_boors_call()
 
+        data_manager.DataExportBiped().append_data("tail_module",
+                            {
+                                "tail_ctl": self.tail_controllers[0] if self.tail_controllers else None,
+                            })
+
     
     def import_guides(self):
 

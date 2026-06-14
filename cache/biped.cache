@@ -44,12 +44,16 @@
         "L_legIk": "L_frontLegAnkleIk_CTL",
         "L_hipFk": "L_frontLegShoulderFk_CTL",
         "L_legPv": "L_frontLegPv_CTL",
+        "L_legHock": "L_frontLegHockIk_CTL",
+        "L_legLowerPv": "L_frontLegLowerPv_CTL",
         "L_rootIk": "L_frontLegRootIk_CTL",
         "L_ikFkSwitch": "L_frontLegSettings_CTL",
         "L_bendy_ctls": [
-            "L_frontLegUpperBendy_CTL",
-            "L_frontLegMiddleBendy_CTL",
-            "L_frontLegLowerBendy_CTL"
+            "L_frontLegSegment00Bendy_CTL",
+            "L_frontLegSegment01Bendy_CTL",
+            "L_frontLegSegment02Bendy_CTL",
+            "L_frontLegSegment03Bendy_CTL",
+            "L_frontLegSegment04Bendy_CTL"
         ],
         "L_scapula_ctl": "L_frontLegScapula_CTL",
         "L_scapula_master_ctl": "L_frontLegScapulaMaster_CTL",
@@ -58,12 +62,16 @@
         "R_legIk": "R_frontLegAnkleIk_CTL",
         "R_hipFk": "R_frontLegShoulderFk_CTL",
         "R_legPv": "R_frontLegPv_CTL",
+        "R_legHock": "R_frontLegHockIk_CTL",
+        "R_legLowerPv": "R_frontLegLowerPv_CTL",
         "R_rootIk": "R_frontLegRootIk_CTL",
         "R_ikFkSwitch": "R_frontLegSettings_CTL",
         "R_bendy_ctls": [
-            "R_frontLegUpperBendy_CTL",
-            "R_frontLegMiddleBendy_CTL",
-            "R_frontLegLowerBendy_CTL"
+            "R_frontLegSegment00Bendy_CTL",
+            "R_frontLegSegment01Bendy_CTL",
+            "R_frontLegSegment02Bendy_CTL",
+            "R_frontLegSegment03Bendy_CTL",
+            "R_frontLegSegment04Bendy_CTL"
         ],
         "R_scapula_ctl": "R_frontLegScapula_CTL",
         "R_scapula_master_ctl": "R_frontLegScapulaMaster_CTL",
@@ -74,6 +82,8 @@
         "L_legIk": "L_backLegAnkleIk_CTL",
         "L_hipFk": "L_backLegHipFk_CTL",
         "L_legPv": "L_backLegPv_CTL",
+        "L_legHock": null,
+        "L_legLowerPv": null,
         "L_rootIk": "L_backLegRootIk_CTL",
         "L_ikFkSwitch": "L_backLegSettings_CTL",
         "L_bendy_ctls": [
@@ -85,6 +95,8 @@
         "R_legIk": "R_backLegAnkleIk_CTL",
         "R_hipFk": "R_backLegHipFk_CTL",
         "R_legPv": "R_backLegPv_CTL",
+        "R_legHock": null,
+        "R_legLowerPv": null,
         "R_rootIk": "R_backLegRootIk_CTL",
         "R_ikFkSwitch": "R_backLegSettings_CTL",
         "R_bendy_ctls": [
@@ -92,6 +104,9 @@
             "R_backLegMiddleBendy_CTL",
             "R_backLegLowerBendy_CTL"
         ]
+    },
+    "tail_module": {
+        "tail_ctl": "C_tailFk00_CTL"
     },
     "jaw_module": {
         "jaw_ctl": "C_jaw_CTL",

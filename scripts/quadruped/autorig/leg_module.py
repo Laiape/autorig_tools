@@ -63,29 +63,17 @@ class LegModule(object):
     """
 
     LEG_PREFIX = "backLeg"
-    ROOT_JOINT = "Hip"  # joint raíz de la cadena (front lo sobreescribe a "Shoulder")
-    # Índice de la articulación apex del pole vector (desde la que se proyecta).
-    # Es la gran articulación que dobla hacia ATRÁS: el corvejón (hock) en la
-    # trasera y el carpo (la "rodilla" del caballo) en la delantera — ambos en
-    # el índice 2 con la cadena estándar de 6 joints. Si la cadena tiene otra
-    # cuenta, se cae al knee (índice 1).
+    ROOT_JOINT = "Hip"
     PV_APEX_INDEX = 2
     STANDARD_JOINT_COUNT = 6
-    SIDE_AXIS = (1, 0, 0)  # eje lateral del personaje (guías en orientación canónica)
-    # La delantera es casi recta (carpo) y el spring no sabe doblar -> hay que
-    # sembrarle la dirección de flexión. La trasera tiene el corvejón doblado y
-    # captura bien el preferredAngle: NO se toca. Front lo pone a True.
+    SIDE_AXIS = (1, 0, 0)
     SEED_STRAIGHT_BEND = False
-    FORWARD_AXIS = (0, 0, -1)  # PV invertido (apunta hacia atrás); Y de las patas hacia delante
-                              # para que el apex (carpo/corvejón) doble hacia atrás
-    # Signo de colocación del PV respecto a bend_dir. Permite decuplar el LADO del
-    # PV de la dirección de plegado (el back lo pone a -1 para que el PV quede
-    # caudal aunque doble hacia atrás).
+    FORWARD_AXIS = (0, 0, -1)
     PV_SIGN = 1
-    # Reposicionar la cadena IK sobre las guías tras capturar el preferredAngle
-    # (sin desplazamiento del solver). Requiere que el PV vaya alineado con el
-    # doblez (PV_SIGN) y que la guía marque el doblez en esa dirección.
     REPOSITION_IK_TO_GUIDES = False
+    DOUBLE_BEND = False
+    DOUBLE_BEND_FRACTION = 0.45
+    DOUBLE_BEND_PREBEND = 0.045
 
     def __init__(self):
 
@@ -115,24 +103,12 @@ class LegModule(object):
         self.bendys = bendys
         self.primary_axis = primaryInputAxis if side == "L" else tuple(-x for x in primaryInputAxis)
         self.secondary_axis = secondaryInputAxis if side == "L" else tuple(-x for x in secondaryInputAxis)
-        # --- Convención de ejes (no hardcodear nada: todo deriva de aquí) ---
-        # aim = primaryInputAxis (baja por el hueso); fb = secondaryInputAxis
-        # (delante/atrás); lateral (up) = el eje restante, al que se alinea la
-        # orientación hacia self.lateral_ref. Letras y vector para los nodos.
         self.aim_letter = _axis_letter(primaryInputAxis)
         self.fb_letter = _axis_letter(secondaryInputAxis)
         self.up_letter = _third_axis_letter(self.aim_letter, self.fb_letter)
         self.up_axis = _AXIS_VECTORS[self.up_letter]
-        # aim con SIGNO para el ribbon ("x" en L, "-x" en R), derivado del
-        # primary_axis ya espejado por lado.
         self.aim_axis_str = _axis_letter_signed(self.primary_axis)
-        # Eje lateral por lado: +X en L, -X en R, para que la R sea MIRROR de la
-        # L (frames, root y controles reflejados) en vez de world-consistente.
         self.side_vec = om.MVector(*self.SIDE_AXIS) * (1 if side == "L" else -1)
-        # Lateral de ORIENTACIÓN (al que se alinea la Z de los frames). Negado
-        # respecto a side_vec para que la Y de las patas apunte hacia DELANTE (la Z
-        # lateral se invierte como consecuencia: no se puede flipar la Y sola). El
-        # PV se invierte aparte con FORWARD_AXIS = -Z.
         self.lateral_ref = self.side_vec * -1
 
         self.module_name = f"{self.side}_{self.LEG_PREFIX}"
@@ -158,6 +134,8 @@ class LegModule(object):
                                 f"{self.side}_legIk": self.ik_controllers[0],
                                 f"{self.side}_hipFk": self.fk_controllers[0],
                                 f"{self.side}_legPv": self.pv_ctl,
+                                f"{self.side}_legHock": getattr(self, "hock_ctl", None),
+                                f"{self.side}_legLowerPv": getattr(self, "lower_pv_ctl", None),
                                 f"{self.side}_rootIk": self.root_ik_ctl,
                                 f"{self.side}_ikFkSwitch": self.settings_ctl,
                                 f"{self.side}_bendy_ctls": getattr(self, "bendy_ctls", []),
@@ -196,7 +174,39 @@ class LegModule(object):
 
         self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
         cmds.parent(self.leg_chain[0], self.module_trn)
+        if self.DOUBLE_BEND:
+            self._insert_double_joints()
         self._setup_chain()
+
+    def _insert_double_joints(self):
+        """
+        Inserta Knee2 (entre Knee y Ankle) y Ankle2 (entre Ankle y Fetlock) en la
+        cadena de guías, para el setup de doble doblez (dos ángulos de ~90°). Las
+        guías solo traen Hip/Knee/Ankle/Fetlock/Pastern/Tip; estos joints se crean
+        aquí en el build a una fracción del hueso. Solo se necesita la posición:
+        _build_frames recalcula la orientación.
+        """
+        frac = self.DOUBLE_BEND_FRACTION
+
+        def world_pos(j):
+            return om.MVector(cmds.xform(j, q=True, ws=True, t=True))
+
+        def insert_between(parent_jnt, child_jnt, new_suffix):
+            p = world_pos(parent_jnt)
+            c = world_pos(child_jnt)
+            pos = p * (1.0 - frac) + c * frac
+            new_jnt = cmds.createNode("joint", name=parent_jnt.replace("_JNT", f"{new_suffix}_JNT"), ss=True)
+            cmds.xform(new_jnt, ws=True, t=(pos.x, pos.y, pos.z))
+            cmds.parent(new_jnt, parent_jnt)
+            cmds.parent(child_jnt, new_jnt)
+            return new_jnt
+
+        # leg_chain = [Hip, Knee, Ankle, Fetlock, Pastern, Tip]
+        knee, ankle, fetlock = self.leg_chain[1], self.leg_chain[2], self.leg_chain[3]
+        knee2 = insert_between(knee, ankle, "2")     # Knee2 entre Knee y Ankle
+        ankle2 = insert_between(ankle, fetlock, "2")  # Ankle2 entre Ankle y Fetlock
+
+        self.leg_chain = [self.leg_chain[0], knee, knee2, ankle, ankle2] + self.leg_chain[3:]
 
     def _setup_chain(self):
 
@@ -211,21 +221,17 @@ class LegModule(object):
         self.plant_index = len(self.leg_chain) - 2          # Pastern (pisada)
         self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
 
-        # Articulación apex del pole vector: el PV sale de ESTA joint (carpo en
-        # delantera / corvejón en trasera = índice 2; knee si la cadena no es
-        # estándar). Se usa tanto para colocar el PV como para la línea guía.
-        self.pv_apex_index = self.PV_APEX_INDEX if len(self.leg_chain) == self.STANDARD_JOINT_COUNT else 1
-        self.pv_apex_index = max(1, min(self.pv_apex_index, self.leg_end_index - 1))
+        if self.DOUBLE_BEND:
+            self.spring_end_index = self.leg_end_index - 2     # Ankle (corvejón)
+            self.pv_apex_index = self.spring_end_index - 1      # Knee2 (apex superior)
+            self.lower_pv_apex_index = self.leg_end_index - 1   # Ankle2 (apex inferior)
+        else:
+            self.spring_end_index = self.leg_end_index
+            self.pv_apex_index = self.PV_APEX_INDEX if len(self.leg_chain) == self.STANDARD_JOINT_COUNT else 1
+            self.pv_apex_index = max(1, min(self.pv_apex_index, self.leg_end_index - 1))
 
         # Posiciones world de las guías (de los joints importados tal cual)
         self.guide_positions = [om.MVector(cmds.xform(j, q=True, ws=True, t=True)) for j in self.leg_chain]
-
-        # Frames de la cadena (lo que pide el setup, ver foto):
-        #   X = aim al siguiente joint (baja por el hueso)
-        #   Z = eje lateral del personaje (side_vec, world) → eje de flexión,
-        #       IGUAL en toda la cadena (eje del mundo como referencia FIJA, no la
-        #       normal del plano de la pata, inestable en patas rectas).
-        #   Y = perpendicular en el plano (delante/atrás)
         side_ref = self.lateral_ref  # lateral de orientación (Y hacia delante)
         hip_p, knee_p = self.guide_positions[0], self.guide_positions[1]
         ankle_p = self.guide_positions[self.leg_end_index]
@@ -246,15 +252,13 @@ class LegModule(object):
             bend_dir = -bend_dir
         self.bend_dir = bend_dir
 
-        # Cadena IK: en patas casi rectas (delantera) se PRE-DOBLAN los joints
-        # intermedios hacia atrás (-bend_dir) para que el spring tenga un bulto
-        # real (como el corvejón) y doble hacia atrás limpio, sin depender de
-        # seeds que pelean con la PV. La trasera no se pre-dobla (ya tiene su
-        # zigzag). La calibración corrige el reposo a las guías; los FK usan las
-        # posiciones originales.
+        if self.DOUBLE_BEND:
+            nudge = bend_dir * (-self.leg_line_len * self.DOUBLE_BEND_PREBEND)
+            for i in (self.spring_end_index - 1, self.leg_end_index - 1):  # Knee2, Ankle2
+                self.guide_positions[i] = self.guide_positions[i] + nudge
         ik_positions = list(self.guide_positions)
         if self.SEED_STRAIGHT_BEND:
-            bulge = bend_dir * (-self.leg_line_len * 0.1)  # bulto sagital (limpio, sin lateral)
+            bulge = bend_dir * (-self.leg_line_len * 0.1)
             for i in range(1, self.leg_end_index):
                 ik_positions[i] = self.guide_positions[i] + bulge
 
@@ -416,6 +420,24 @@ class LegModule(object):
 
         cmds.parent(self.ik_nodes[0], ik_controllers_trn)
 
+        # Hock IK (solo double bend): dirige el extremo del spring (Ankle/corvejón)
+        # para posar el PRIMER 90° de forma independiente. Por defecto SIGUE al pie
+        # (offset de reposo) para que sin tocarlo la pata se vea natural; el animador
+        # lo separa para marcar el ángulo del corvejón.
+        if self.DOUBLE_BEND:
+            self.hock_nodes, self.hock_ctl = curve_tool.create_controller(name=f"{self.module_name}HockIk", offset=["GRP", "ANM"])
+            self.lock_attributes(self.hock_ctl, ["sx", "sy", "sz", "v"])
+            hock_rest = self._translation_matrix(self.guide_positions[self.spring_end_index])
+            if self.side == "R":
+                hock_rest = self._mirror_matrix(hock_rest)
+            hock_offset = om.MMatrix(hock_rest) * om.MMatrix(ankle_rest).inverse()
+            hock_follow_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}HockFollow_MMX", ss=True)
+            cmds.setAttr(f"{hock_follow_mmx}.matrixIn[0]", list(hock_offset), type="matrix")
+            cmds.connectAttr(f"{self.ik_controllers[0]}.worldMatrix[0]", f"{hock_follow_mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{hock_follow_mmx}.matrixSum", f"{self.hock_nodes[0]}.offsetParentMatrix")
+            cmds.parent(self.hock_nodes[0], ik_controllers_trn)
+            cmds.xform(self.hock_nodes[0], m=om.MMatrix.kIdentity)
+
         # Root IK
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.module_name}RootIk", offset=["GRP", "ANM"])
         self.lock_attributes(self.root_ik_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
@@ -439,37 +461,80 @@ class LegModule(object):
         # Pole vector: el control se crea aquí, pero su posición de reposo se
         # hornea en ik_setup desde el poleVector automático del handle (es la
         # única dirección que preserva el reposo del spring; verificado).
-        self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.module_name}Pv", offset=["GRP", "ANM"])
-        self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        self.pv_nodes, self.pv_ctl, self.pv_orient_blm = self._create_pv_control(
+            f"{self.module_name}Pv", self.pv_apex_index, ik_controllers_trn)
 
-        cmds.addAttr(self.pv_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
-        cmds.setAttr(f"{self.pv_ctl}.extraAttr", channelBox=True, lock=True)
-        cmds.addAttr(self.pv_ctl, longName="pvOrientation", niceName="Pv Orientation", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
+        # Double bend: un segundo PV para el tramo inferior (RP Ankle->Fetlock),
+        # con su apex en Ankle2.
+        if self.DOUBLE_BEND:
+            self.lower_pv_nodes, self.lower_pv_ctl, self.lower_pv_orient_blm = self._create_pv_control(
+                f"{self.module_name}LowerPv", self.lower_pv_apex_index, ik_controllers_trn)
 
-        # pvOrientation (TFG): 0 = orientado a mundo, 1 = Z apuntando a la rodilla
-        self.pv_orient_blm = cmds.createNode("blendMatrix", name=f"{self.module_name}PvOrient_BLM", ss=True)
-        cmds.connectAttr(f"{self.pv_ctl}.pvOrientation", f"{self.pv_orient_blm}.target[0].weight")
-        cmds.connectAttr(f"{self.pv_orient_blm}.outputMatrix", f"{self.pv_nodes[0]}.offsetParentMatrix")
+    def _create_pv_control(self, name, apex_index, parent_trn):
 
-        cmds.parent(self.pv_nodes[0], ik_controllers_trn)
-        cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
+        """
+        Crea un control de pole vector (con su grupo, el blendMatrix de
+        orientación pvOrientation y la línea apex->PV). Devuelve
+        (nodes, ctl, orient_blm). La posición de reposo se hornea luego en
+        ik_setup/_place_pv desde el PV automático del handle.
+        """
+        pv_nodes, pv_ctl = curve_tool.create_controller(name=name, offset=["GRP", "ANM"])
+        self.lock_attributes(pv_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
 
-        # Línea que apunta del apex (carpo/corvejón) al PV
-        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.module_name}Pv_CRV")
-        row_knee = cmds.createNode("rowFromMatrix", name=f"{self.module_name}Pv_RFM", ss=True)
-        row_ctl = cmds.createNode("rowFromMatrix", name=f"{self.module_name}PvCtl_RFM", ss=True)
-        cmds.setAttr(f"{row_knee}.input", 3)
+        cmds.addAttr(pv_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{pv_ctl}.extraAttr", channelBox=True, lock=True)
+        cmds.addAttr(pv_ctl, longName="pvOrientation", niceName="Pv Orientation", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
+
+        # pvOrientation (TFG): 0 = orientado a mundo, 1 = Z apuntando al apex
+        pv_orient_blm = cmds.createNode("blendMatrix", name=f"{name}Orient_BLM", ss=True)
+        cmds.connectAttr(f"{pv_ctl}.pvOrientation", f"{pv_orient_blm}.target[0].weight")
+        cmds.connectAttr(f"{pv_orient_blm}.outputMatrix", f"{pv_nodes[0]}.offsetParentMatrix")
+
+        cmds.parent(pv_nodes[0], parent_trn)
+        cmds.xform(pv_nodes[0], m=om.MMatrix.kIdentity)
+
+        # Línea que apunta del apex (carpo/corvejón/Ankle2) al PV
+        crv_point_pv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{name}_CRV")
+        row_apex = cmds.createNode("rowFromMatrix", name=f"{name}_RFM", ss=True)
+        row_ctl = cmds.createNode("rowFromMatrix", name=f"{name}Ctl_RFM", ss=True)
+        cmds.setAttr(f"{row_apex}.input", 3)
         cmds.setAttr(f"{row_ctl}.input", 3)
-        cmds.connectAttr(f"{self.pv_ctl}.worldMatrix[0]", f"{row_ctl}.matrix")
-        cmds.connectAttr(f"{self.ik_chain[self.pv_apex_index]}.worldMatrix[0]", f"{row_knee}.matrix")
+        cmds.connectAttr(f"{pv_ctl}.worldMatrix[0]", f"{row_ctl}.matrix")
+        cmds.connectAttr(f"{self.ik_chain[apex_index]}.worldMatrix[0]", f"{row_apex}.matrix")
         for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
-            cmds.connectAttr(f"{row_knee}.output{axis}", f"{crv_point_pv}.controlPoints[0].{value}")
+            cmds.connectAttr(f"{row_apex}.output{axis}", f"{crv_point_pv}.controlPoints[0].{value}")
             cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv_point_pv}.controlPoints[1].{value}")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
         cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
         cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
-        cmds.parent(crv_point_pv, self.pv_ctl)
+        cmds.parent(crv_point_pv, pv_ctl)
+        return pv_nodes, pv_ctl, pv_orient_blm
+
+    def _place_pv(self, ik_handle, pv_ctl, pv_orient_blm, apex_index):
+
+        """
+        Coloca un PV geométricamente en WORLD, en el plano sagital de la pata:
+        apex + bend_dir * media-longitud * PV_SIGN. Orienta el blendMatrix
+        (up al apex, aim alineado al aim del apex) y aplica el
+        poleVectorConstraint. El reposo del solve lo corrige ik_calibration, así
+        que la posición es libre geométricamente.
+        """
+        apex_p = self.guide_positions[apex_index]
+        distance = self.leg_line_len * 0.5
+        pv_pos = apex_p + self.bend_dir * distance * self.PV_SIGN
+
+        aim_row = {"x": 0, "y": 1, "z": 2}[self.aim_letter] * 4
+        m = self.guides_matrices[apex_index]
+        apex_aim_axis = om.MVector(m[aim_row], m[aim_row + 1], m[aim_row + 2])
+        cmds.setAttr(f"{pv_orient_blm}.inputMatrix", self._translation_matrix(pv_pos), type="matrix")
+        pv_aimed = guides_manager._aim_matrix(pv_pos, apex_p, pv_pos + apex_aim_axis,
+                                              self.up_axis, _AXIS_VECTORS[self.aim_letter])
+        cmds.setAttr(f"{pv_orient_blm}.target[0].targetMatrix", list(pv_aimed), type="matrix")
+
+        # poleVectorConstraint clásico: con los preferred angles puestos y el
+        # PV sobre la dirección automática, preserva el reposo exacto.
+        cmds.poleVectorConstraint(pv_ctl, ik_handle)
 
     def ik_setup(self):
 
@@ -482,8 +547,7 @@ class LegModule(object):
         foot_ctl, toe_ctl, ball_ctl = self.ik_controllers
         handles = []
 
-        ankle_index = self.leg_end_index
-        self.main_end_index = ankle_index
+        self.main_end_index = self.leg_end_index
 
         # Sin preferred angles el spring no codifica el zigzag de reposo y las
         # rodillas saltan al pasar a IK (verificado: drift ~10u -> 0 con spa)
@@ -498,6 +562,32 @@ class LegModule(object):
         if self.REPOSITION_IK_TO_GUIDES:
             for i, ik_joint in enumerate(self.ik_chain):
                 cmds.xform(ik_joint, ws=True, m=list(self.guides_matrices[i]))
+
+        if self.DOUBLE_BEND:
+            self._ik_setup_layered(foot_ctl, toe_ctl, ball_ctl, handles)
+        else:
+            self._ik_setup_single(foot_ctl, toe_ctl, ball_ctl, handles)
+
+        freeze_float_constant = cmds.createNode("floatConstant", name=f"{self.module_name}Freeze_FCN", ss=True)
+        cmds.setAttr(f"{freeze_float_constant}.inFloat", 0)
+        for handle in handles:
+            cmds.parent(handle, self.module_trn)
+            cmds.setAttr(f"{handle}.visibility", 0)
+            for attr in ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"]:
+                cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{handle}.{attr}")
+
+        # PV(s): el tramo superior (spring) en su apex; en double bend, además el
+        # tramo inferior (RP) en Ankle2.
+        if self.DOUBLE_BEND:
+            self._place_pv(self.spring_handle, self.pv_ctl, self.pv_orient_blm, self.pv_apex_index)
+            self._place_pv(self.ik_handle, self.lower_pv_ctl, self.lower_pv_orient_blm, self.lower_pv_apex_index)
+        else:
+            self._place_pv(self.ik_handle, self.pv_ctl, self.pv_orient_blm, self.pv_apex_index)
+
+    def _ik_setup_single(self, foot_ctl, toe_ctl, ball_ctl, handles):
+
+        """IK clásico de una capa: spring/RP Hip->Fetlock + pie SC."""
+        ankle_index = self.leg_end_index
 
         use_spring = self.solver == "spring" and ankle_index >= 3
         solver_name = "ikRPsolver"
@@ -534,39 +624,51 @@ class LegModule(object):
         cmds.connectAttr(f"{toe_ctl}.worldMatrix[0]", f"{toe_handle}.offsetParentMatrix")
         handles.append(toe_handle)
 
-        freeze_float_constant = cmds.createNode("floatConstant", name=f"{self.module_name}Freeze_FCN", ss=True)
-        cmds.setAttr(f"{freeze_float_constant}.inFloat", 0)
-        for handle in handles:
-            cmds.parent(handle, self.module_trn)
-            cmds.setAttr(f"{handle}.visibility", 0)
-            for attr in ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"]:
-                cmds.connectAttr(f"{freeze_float_constant}.outFloat", f"{handle}.{attr}")
+    def _ik_setup_layered(self, foot_ctl, toe_ctl, ball_ctl, handles):
 
-        # Colocación del PV — geométrica en WORLD, en el plano sagital de la pata.
-        # bend_dir (calculado en _setup_chain) apunta hacia DELANTE; el spring
-        # dobla el apex en sentido opuesto, así que el corvejón/carpo dobla hacia
-        # ATRÁS. El reposo del solve lo corrige ik_calibration(), así que la
-        # posición del PV es libre geométricamente.
-        apex_index = self.pv_apex_index
-        apex_p = self.guide_positions[apex_index]
-        bend_dir = self.bend_dir
-        distance = self.leg_line_len * 0.5
-        pv_pos = apex_p + bend_dir * distance * self.PV_SIGN
+        """
+        IK en CAPAS para el galope (double knee/ankle):
+          - Spring Hip(0)->Ankle(spring_end): primer 90°, lo dirige el hock ctl.
+          - RP Ankle(spring_end)->Fetlock(leg_end): segundo 90°, lo dirige el pie
+            (ball ctl) con el offset Fetlock->Pastern, igual que el ankle del
+            setup clásico. Su startJoint = fin del spring, así queda ENCADENADO.
+          - Pie SC: Fetlock->Pastern (ball) y Pastern->Tip (toe), como siempre.
+        """
+        spring_end = self.spring_end_index
+        fetlock = self.leg_end_index
 
-        # Orientación del control (pvOrientation): el eje lateral (up) del control
-        # apunta al apex, y el eje aim del control se alinea al eje aim del apex.
-        aim_row = {"x": 0, "y": 1, "z": 2}[self.aim_letter] * 4
-        m = self.guides_matrices[apex_index]
-        apex_aim_axis = om.MVector(m[aim_row], m[aim_row + 1], m[aim_row + 2])
-        cmds.setAttr(f"{self.pv_orient_blm}.inputMatrix", self._translation_matrix(pv_pos), type="matrix")
-        pv_aimed = guides_manager._aim_matrix(pv_pos, apex_p, pv_pos + apex_aim_axis,
-                                              self.up_axis, _AXIS_VECTORS[self.aim_letter])
-        cmds.setAttr(f"{self.pv_orient_blm}.target[0].targetMatrix", list(pv_aimed), type="matrix")
+        cmds.loadPlugin("ikSpringSolver", quiet=True)
+        if not cmds.objExists("ikSpringSolver"):
+            mel.eval("ikSpringSolver;")
+        upper_solver = "ikSpringSolver" if self.solver == "spring" else "ikRPsolver"
 
-        # poleVectorConstraint clásico: con los preferred angles puestos y el
-        # PV sobre la dirección automática, preserva el reposo exacto
-        # (verificado: cualquier conexión manual del poleVector lo rompe)
-        cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
+        # --- Spring (tramo superior), dirigido por el hock ctl ---
+        self.spring_handle = cmds.ikHandle(name=f"{self.module_name}Ik_HDL", startJoint=self.ik_chain[0],
+                                           endEffector=self.ik_chain[spring_end], solver=upper_solver)[0]
+        cmds.connectAttr(f"{self.hock_ctl}.worldMatrix[0]", f"{self.spring_handle}.offsetParentMatrix")
+        handles.append(self.spring_handle)
+
+        # --- RP (tramo inferior), dirigido por el pie con el offset de reposo ---
+        self.ik_handle = cmds.ikHandle(name=f"{self.module_name}LowerIk_HDL", startJoint=self.ik_chain[spring_end],
+                                       endEffector=self.ik_chain[fetlock], solver="ikRPsolver")[0]
+        fetlock_offset = om.MMatrix(self.guides_matrices[fetlock]) * om.MMatrix(self.guides_matrices[self.plant_index]).inverse()
+        fetlock_follow_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}FetlockFollow_MMX", ss=True)
+        cmds.setAttr(f"{fetlock_follow_mmx}.matrixIn[0]", list(fetlock_offset), type="matrix")
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{fetlock_follow_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{fetlock_follow_mmx}.matrixSum", f"{self.ik_handle}.offsetParentMatrix")
+        self.ik_handle_target = f"{fetlock_follow_mmx}.matrixSum"
+        handles.append(self.ik_handle)
+
+        # --- Pie SC: Fetlock->Pastern (ball) y Pastern->Tip (toe) ---
+        ball_handle = cmds.ikHandle(name=f"{self.module_name}BallIk_HDL", startJoint=self.ik_chain[fetlock],
+                                    endEffector=self.ik_chain[self.plant_index], solver="ikSCsolver")[0]
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ball_handle}.offsetParentMatrix")
+        handles.append(ball_handle)
+
+        toe_handle = cmds.ikHandle(name=f"{self.module_name}ToeIk_HDL", startJoint=self.ik_chain[self.plant_index],
+                                   endEffector=self.ik_chain[-1], solver="ikSCsolver")[0]
+        cmds.connectAttr(f"{toe_ctl}.worldMatrix[0]", f"{toe_handle}.offsetParentMatrix")
+        handles.append(toe_handle)
 
     def ik_stretch_soft(self):
 
@@ -771,12 +873,22 @@ class LegModule(object):
         cmds.setAttr(f"{roll_straight_angle}.outputMin", 0)
         cmds.setAttr(f"{roll_straight_angle}.outputMax", 1)
 
+        # Signo del roll por lado: los frames del pie de la R son MIRROR de los de la
+        # L (Z lateral invertida), así que el mismo rotateZ local gira en sentidos
+        # opuestos en mundo. Para que la L salga mirror exacto de la R, el roll va con
+        # signo +1 en L y -1 en R, TANTO en la punta como en el ball. (Antes se negaba
+        # igual en ambos: en la L el toe-roll caía en el sentido MUERTO del SC
+        # Pastern->Tip —la punta no rodaba— y el ball rodaba hacia el lado contrario.
+        # Verificado headless: con este signo dTip de la L == X-mirror de la R, err 0.)
+        roll_sign = 1 if self.side == "L" else -1
+
         multiply_node = cmds.createNode("multiply", name=f"{self.module_name}RollStraightAngle_MUL", ss=True)
         cmds.connectAttr(f"{roll_straight_angle}.outValue", f"{multiply_node}.input[0]")
         cmds.connectAttr(f"{foot_ctl}.Roll", f"{multiply_node}.input[1]")
-        negate_roll_straight = cmds.createNode("negate", name=f"{self.module_name}RollStraight_NEG", ss=True)
-        cmds.connectAttr(f"{multiply_node}.output", f"{negate_roll_straight}.input")
-        cmds.connectAttr(f"{negate_roll_straight}.output", f"{toe_sdk}.rotateZ")
+        toe_roll_sign = cmds.createNode("multiply", name=f"{self.module_name}RollStraight_NEG", ss=True)
+        cmds.connectAttr(f"{multiply_node}.output", f"{toe_roll_sign}.input[0]")
+        cmds.setAttr(f"{toe_roll_sign}.input[1]", roll_sign)
+        cmds.connectAttr(f"{toe_roll_sign}.output", f"{toe_sdk}.rotateZ")
 
         roll_break_angle = cmds.createNode("remapValue", name=f"{self.module_name}RollBreakAngle_RMV", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Roll", f"{roll_break_angle}.inputValue")
@@ -794,9 +906,10 @@ class LegModule(object):
         roll_lift_angle_mul = cmds.createNode("multiply", name=f"{self.module_name}RollLiftAngle_MUL", ss=True)
         cmds.connectAttr(f"{roll_break_angle}.outValue", f"{roll_lift_angle_mul}.input[0]")
         cmds.connectAttr(f"{roll_angle_enable_mul}.output", f"{roll_lift_angle_mul}.input[1]")
-        negate_roll_lift = cmds.createNode("negate", name=f"{self.module_name}RollLift_NEG", ss=True)
-        cmds.connectAttr(f"{roll_lift_angle_mul}.output", f"{negate_roll_lift}.input")
-        cmds.connectAttr(f"{negate_roll_lift}.output", f"{ball_sdk}.rotateZ")
+        lift_roll_sign = cmds.createNode("multiply", name=f"{self.module_name}RollLift_NEG", ss=True)
+        cmds.connectAttr(f"{roll_lift_angle_mul}.output", f"{lift_roll_sign}.input[0]")
+        cmds.setAttr(f"{lift_roll_sign}.input[1]", roll_sign)
+        cmds.connectAttr(f"{lift_roll_sign}.output", f"{ball_sdk}.rotateZ")
 
     def fk_stretch(self):
 
@@ -998,6 +1111,15 @@ class FrontLegModule(LegModule):
     PV_SIGN = -1
     REPOSITION_IK_TO_GUIDES = True
     SEED_STRAIGHT_BEND = True
+    # Galope: dos ángulos de ~90° (double knee + double ankle), spring arriba + RP
+    # abajo. Inserta Elbow2 (entre Elbow y carpo) y Ankle2 (entre carpo y Fetlock).
+    DOUBLE_BEND = True
+    # Floating scapula: el omóplato se DESLIZA sobre una NURBS surface (el caballo
+    # no tiene clavícula; la escápula flota sobre la caja torácica) para un
+    # movimiento realista del hombro. Flag para activar/desactivar el setup.
+    SCAPULA_FLOATING = True
+    FLOATING_WIDTH_MULT = 3.0   # ancho de la superficie (U, fore/aft) ~ longitud escápula→root
+    FLOATING_LENGTH_MULT = 2.0  # alto (V, up/down)
 
     def make(self, side, solver="spring", skinning_jnts=5, bendys=True, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
         super().make(side, solver=solver, skinning_jnts=skinning_jnts, bendys=bendys,
@@ -1023,6 +1145,8 @@ class FrontLegModule(LegModule):
         cmds.delete(chain[0])
 
         self.leg_chain = chain[1:]
+        if self.DOUBLE_BEND:
+            self._insert_double_joints()
         self._setup_chain()
 
     def scapula_setup(self):
@@ -1092,9 +1216,15 @@ class FrontLegModule(LegModule):
         cmds.setAttr(f"{end_space_blm}.target[0].shearWeight", 0)
         cmds.connectAttr(f"{end_space_blm}.outputMatrix", f"{end_nodes[0]}.offsetParentMatrix")
 
-        # Skinning joints de la escápula
+        # Skinning joints de la escápula. Con floating, el omóplato no sigue
+        # directamente al control sino su proyección sobre la NURBS surface.
+        if self.SCAPULA_FLOATING:
+            scapula_drive = self._scapula_floating_setup(scapula_nodes[0], scapula_rest, root_pos, scapula_pos)
+        else:
+            scapula_drive = f"{self.scapula_ctl}.worldMatrix[0]"
+
         scapula_skinning = cmds.createNode("joint", name=f"{self.module_name}ScapulaSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{self.scapula_ctl}.worldMatrix[0]", f"{scapula_skinning}.offsetParentMatrix")
+        cmds.connectAttr(scapula_drive, f"{scapula_skinning}.offsetParentMatrix")
         scapula_end_skinning = cmds.createNode("joint", name=f"{self.module_name}ScapulaEndSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{self.scapula_end_ctl}.worldMatrix[0]", f"{scapula_end_skinning}.offsetParentMatrix")
 
@@ -1104,3 +1234,128 @@ class FrontLegModule(LegModule):
                                 f"{self.side}_scapula_master_ctl": self.scapula_master_ctl,
                                 f"{self.side}_scapula_end_ctl": self.scapula_end_ctl,
                             })
+
+    def _scapula_floating_setup(self, grp, scapula_rest, root_pos, scapula_pos):
+
+        """
+        Floating scapula ("floating shoulder"): el omóplato se desliza sobre una
+        MEDIA ESFERA (NURBS) que aproxima la caja torácica, para un movimiento
+        realista. La cúpula **pasa por la escápula (reposo) y por el shoulder**
+        (radio = distancia escápula→shoulder; centro de curvatura entre ambos,
+        hundido hacia dentro del cuerpo). El control proyecta su posición sobre la
+        esfera (closestPointOnSurface) y el omóplato sigue el punto proyectado,
+        conservando la rotación del control. El atributo Floating (0-1) mezcla
+        entre el comportamiento directo y el flotante.
+
+        Toda la proyección se hace en el ESPACIO DEL GRP del control (vía
+        `worldInverseMatrix`), así que es independiente del cuerpo y no hay offset
+        horneado: en reposo el control está en el origen del GRP, que está SOBRE la
+        esfera → el punto proyectado es él mismo → sin desplazamiento. La superficie
+        se PARENTA EN `modules` (no en controles) y sigue al cuerpo conectando su
+        `offsetParentMatrix` al worldMatrix del GRP.
+
+        Returns:
+            str: el plug de matriz (worldMatrix) que dirige el joint de skinning.
+        """
+        radius = (root_pos - scapula_pos).length() or 10.0
+        scapula_rest_mtx = om.MMatrix(scapula_rest)
+
+        # --- Cúpula (media esfera) en el espacio del GRP -----------------------
+        # La escápula (origen del GRP) va en el BORDE/corte y el shoulder en la
+        # parte REDONDA: el ápice de la cúpula apunta hacia el shoulder y el borde
+        # (rim) pasa por la escápula. Esfera equidistante de escápula y shoulder
+        # (pasa por ambos), centro hundido en -Z (lateral interno).
+        root_local = om.MPoint(root_pos.x, root_pos.y, root_pos.z) * scapula_rest_mtx.inverse()
+        mid_x = root_local.x * 0.5
+        center_z = -math.sqrt(max(radius * radius - mid_x * mid_x, 0.0))
+        center = om.MVector(mid_x, 0.0, center_z)
+
+        scap_dir = (om.MVector(0.0, 0.0, 0.0) - center).normal()           # escápula desde el centro
+        sho_dir = (om.MVector(root_local.x, 0.0, 0.0) - center).normal()   # shoulder desde el centro
+        plane_n = (scap_dir ^ sho_dir).normal()                            # normal del plano escápula-shoulder
+        apex_dir = (plane_n ^ scap_dir).normal()                           # 90° desde la escápula hacia el shoulder
+        # el shoulder (~60° de la escápula) cae DENTRO de la cúpula (90°) -> redondo;
+        # la escápula a 90° del ápice -> en el borde/corte (sin desplazamiento).
+
+        # Perfil: arco de 90° del ápice (sobre el eje, hacia el shoulder) al borde
+        # (la escápula). Revolve 360° alrededor del eje del ápice -> cúpula. Los CVs
+        # quedan ya en espacio GRP (se construye en world sin transform).
+        profile_pts = []
+        for i in range(7):
+            a = math.radians(90.0 * i / 6.0)
+            p = center + radius * (apex_dir * math.cos(a) + scap_dir * math.sin(a))
+            profile_pts.append((p.x, p.y, p.z))
+        profile = cmds.curve(d=3, p=profile_pts, name=f"{self.module_name}ScapulaFloatingProfile_CRV")
+        surf_tf = cmds.revolve(profile, axis=(apex_dir.x, apex_dir.y, apex_dir.z),
+                               pivot=(center.x, center.y, center.z), startSweep=0, endSweep=360,
+                               sections=16, degree=3, name=f"{self.module_name}ScapulaFloating_NRB")[0]
+        cmds.delete(profile)
+        cmds.delete(surf_tf, ch=True)  # sin historia: CVs editables (el rigger esculpe la curvatura del torso)
+        cmds.makeIdentity(surf_tf, apply=True, t=1, r=1, s=1, n=0)  # CVs en espacio GRP, transform identidad
+        cmds.parent(surf_tf, self.module_trn, relative=True)
+        cmds.setAttr(f"{surf_tf}.inheritsTransform", 0)
+        cmds.xform(surf_tf, matrix=list(om.MMatrix.kIdentity))
+        cmds.connectAttr(f"{grp}.worldMatrix[0]", f"{surf_tf}.offsetParentMatrix")
+        cmds.setAttr(f"{surf_tf}.overrideEnabled", 1)
+        cmds.setAttr(f"{surf_tf}.overrideDisplayType", 2)  # reference: visible para esculpir, no seleccionable
+        cmds.setAttr(f"{surf_tf}.visibility", 0)
+        self.lock_attributes(surf_tf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        self.scapula_floating_surface = surf_tf
+        surf_shape = cmds.listRelatives(surf_tf, shapes=True)[0]
+
+        ctl = self.scapula_ctl
+
+        # Control en el espacio del GRP (independiente del cuerpo)
+        ctl_in_grp = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingLocal_MMX", ss=True)
+        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{ctl_in_grp}.matrixIn[0]")
+        cmds.connectAttr(f"{grp}.worldInverseMatrix[0]", f"{ctl_in_grp}.matrixIn[1]")
+
+        rfm = cmds.createNode("rowFromMatrix", name=f"{self.module_name}ScapulaFloatingPos_RFM", ss=True)
+        cmds.setAttr(f"{rfm}.input", 3)
+        cmds.connectAttr(f"{ctl_in_grp}.matrixSum", f"{rfm}.matrix")
+
+        # Punto más cercano sobre la esfera, en espacio objeto (= espacio GRP)
+        cps = cmds.createNode("closestPointOnSurface", name=f"{self.module_name}ScapulaFloating_CPS", ss=True)
+        cmds.connectAttr(f"{surf_shape}.local", f"{cps}.inputSurface")
+        for axis in "XYZ":
+            cmds.connectAttr(f"{rfm}.output{axis}", f"{cps}.inPosition{axis}")
+
+        posi = cmds.createNode("pointOnSurfaceInfo", name=f"{self.module_name}ScapulaFloating_POSI", ss=True)
+        cmds.connectAttr(f"{surf_shape}.local", f"{posi}.inputSurface")
+        cmds.connectAttr(f"{cps}.parameterU", f"{posi}.parameterU")
+        cmds.connectAttr(f"{cps}.parameterV", f"{posi}.parameterV")
+
+        # Traslación proyectada (espacio GRP)
+        pos_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.module_name}ScapulaFloatingPos_FBF", ss=True)
+        for col, axis in enumerate("XYZ"):
+            cmds.connectAttr(f"{posi}.position{axis}", f"{pos_fbf}.in3{col}")
+
+        # Rotación del control (espacio GRP): el omóplato conserva su orientación
+        pick_rot = cmds.createNode("pickMatrix", name=f"{self.module_name}ScapulaFloatingRot_PMX", ss=True)
+        cmds.connectAttr(f"{ctl_in_grp}.matrixSum", f"{pick_rot}.inputMatrix")
+        cmds.setAttr(f"{pick_rot}.useTranslate", 0)
+        cmds.setAttr(f"{pick_rot}.useScale", 0)
+        cmds.setAttr(f"{pick_rot}.useShear", 0)
+
+        # bone_grp = rotación_control * traslación_proyectada ; bone_world = bone_grp * GRP.world
+        bone_grp = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingBone_MMX", ss=True)
+        cmds.connectAttr(f"{pick_rot}.outputMatrix", f"{bone_grp}.matrixIn[0]")
+        cmds.connectAttr(f"{pos_fbf}.output", f"{bone_grp}.matrixIn[1]")
+
+        bone_world = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingWorld_MMX", ss=True)
+        cmds.connectAttr(f"{bone_grp}.matrixSum", f"{bone_world}.matrixIn[0]")
+        cmds.connectAttr(f"{grp}.worldMatrix[0]", f"{bone_world}.matrixIn[1]")
+
+        # Atributo Floating (0-1): mezcla directo <-> flotante
+        cmds.addAttr(ctl, longName="FLOATING_SEP", niceName="FLOATING ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{ctl}.FLOATING_SEP", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(ctl, longName="Floating", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
+
+        blend = cmds.createNode("blendMatrix", name=f"{self.module_name}ScapulaFloating_BLM", ss=True)
+        cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend}.inputMatrix")
+        cmds.connectAttr(f"{bone_world}.matrixSum", f"{blend}.target[0].targetMatrix")
+        cmds.connectAttr(f"{ctl}.Floating", f"{blend}.target[0].weight")
+        cmds.setAttr(f"{blend}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{blend}.target[0].shearWeight", 0)
+
+        return f"{blend}.outputMatrix"
