@@ -15,6 +15,133 @@ def lock_attributes(ctl, attrs):
     for attr in attrs:
         cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
+
+def _suspend_eval():
+    """
+    Suspende refresco y evaluation manager para operaciones en bloque (p.ej.
+    reparentar cientos de nodos de geo). Devuelve un callable que restaura el
+    estado previo. En headless (sin viewport) el suspend es no-op, así que es
+    seguro llamarlo siempre.
+    """
+    prev = {}
+    try:
+        prev["em"] = (cmds.evaluationManager(q=True, mode=True) or ["parallel"])[0]
+        cmds.evaluationManager(mode="off")
+    except Exception:
+        prev["em"] = None
+    try:
+        cmds.refresh(suspend=True)
+        prev["refresh"] = True
+    except Exception:
+        prev["refresh"] = False
+
+    def restore():
+        if prev.get("refresh"):
+            try: cmds.refresh(suspend=False)
+            except Exception: pass
+        if prev.get("em"):
+            try: cmds.evaluationManager(mode=prev["em"])
+            except Exception: pass
+
+    return restore
+
+
+def _parent_model_under_final(main_xf, geo_grp, final_geo, character_name):
+    """
+    Organiza TODO el contenido del modelo bajo geo_GRP: lo que cuelga del main
+    transform (cuando el root del modelo se reutiliza como main) y las mallas /
+    grupos sueltos a nivel raíz. Excluye estructura de rig, controladores, cámaras
+    por defecto y guías, y evita el ciclo de emparentar el propio main transform.
+
+    Enruta por tipo según el nombre:
+        - hueso/esqueleto (skel/_BONE/_SKEL)  -> geo_GRP/skeleton
+        - músculo (muscle/_MSCL)              -> geo_GRP/muscles
+        - el resto (render geo)               -> geo_GRP/FINAL
+    Los transforms 'skeleton' y 'muscles' solo se crean si hay contenido de ese
+    tipo en la escena (si no, no hacen falta). Todo en una sesión rápida.
+    """
+    def short(n):
+        return n.rsplit("|", 1)[-1]
+
+    rig_sys = {character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP",
+               "skel_GRP", "modules_GRP", "PROXY", "FINAL", "LOCAL", "muscles", "skeleton"}
+    rig_prefixes = ("C_character", "C_masterwalk", "C_settings", "C_freeze")
+    default_cams = {"persp", "top", "front", "side"}
+    ignore = {"C_guides_GRP", "Mechanic_sets_grp"}
+
+    def is_rig_or_system(node):
+        s = short(node)
+        if s in rig_sys or s in default_cams or s in ignore:
+            return True
+        if any(s.startswith(p) for p in rig_prefixes):
+            return True
+        if cmds.listRelatives(node, type="camera", noIntermediate=True):
+            return True
+        return False
+
+    geo_roots = []
+    # contenido del modelo que cuelga directo del main transform (root reutilizado)
+    for c in (cmds.listRelatives(main_xf, children=True, type="transform", fullPath=True) or []):
+        if not is_rig_or_system(c):
+            geo_roots.append(c)
+    # mallas / grupos sueltos a nivel raíz (assemblies)
+    for a in (cmds.ls(assemblies=True, transforms=True, long=True) or []):
+        if short(a) == short(main_xf):
+            continue
+        if not is_rig_or_system(a):
+            geo_roots.append(a)
+
+    geo_roots = [g for g in geo_roots if cmds.objExists(g)]
+    if not geo_roots:
+        return {}
+
+    def is_skeleton(node):
+        s = short(node).lower()
+        return ("skel" in s) or s.endswith("_bone")
+
+    def is_muscle(node):
+        s = short(node).lower()
+        return ("muscle" in s) or s.endswith("_mscl")
+
+    buckets = {"skeleton": [], "muscles": [], "FINAL": []}
+    for g in geo_roots:
+        if is_skeleton(g):
+            buckets["skeleton"].append(g)
+        elif is_muscle(g):
+            buckets["muscles"].append(g)
+        else:
+            buckets["FINAL"].append(g)
+
+    # Destino de cada bucket. 'skeleton'/'muscles' solo se crean si hay contenido.
+    existing = set(cmds.listRelatives(geo_grp, children=True, type="transform") or [])
+    targets = {"FINAL": final_geo}
+    for name in ("muscles", "skeleton"):
+        if not buckets[name]:
+            continue
+        if name in existing:
+            targets[name] = name
+        else:
+            targets[name] = cmds.createNode("transform", name=name, ss=True, p=geo_grp)
+
+    moved = {}
+    restore = _suspend_eval()
+    try:
+        for name, nodes_list in buckets.items():
+            if not nodes_list:
+                continue
+            dest = targets.get(name, final_geo)
+            try:  # en bloque (rápido), fallback a uno a uno
+                cmds.parent(*(nodes_list + [dest]))
+            except Exception:
+                for g in nodes_list:
+                    try: cmds.parent(g, dest)
+                    except Exception: pass
+            moved[name] = len(nodes_list)
+    finally:
+        restore()
+
+    return moved
+
 def create_basic_structure(character_name=None):
 
     # data_manager.DataExportBiped().new_build()
@@ -71,12 +198,8 @@ def create_basic_structure(character_name=None):
         local     = create_sub_geo("LOCAL",  nodes["geo_GRP"])
         cmds.setAttr(f"{local}.visibility", 0)
 
-        for assembly in scene_assemblies:
-            if cmds.objExists(assembly):
-                current_p = cmds.listRelatives(assembly, parent=True)
-                if not current_p or current_p[0] != final_geo:
-                    try: cmds.parent(assembly, final_geo)
-                    except: pass
+        moved = _parent_model_under_final(nodes[character_name], nodes["geo_GRP"], final_geo, character_name)
+        print(f"--- Geo organizada en geo_GRP: {moved} ---")
 
         # Controllers
         if not cmds.objExists("C_character_CTL"):

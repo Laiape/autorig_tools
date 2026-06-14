@@ -211,6 +211,30 @@ class LegModule(object):
         self.ik_frames = self._build_frames(ik_positions, side_ref)
         self.guides_matrices = [list(f) for f in self._build_frames(self.guide_positions, side_ref)]
 
+    def _roll_cv(self, blend_plug, aim_target_plug, name):
+        """
+        Frame anti-flip para alimentar el ribbon: aim al siguiente joint con el
+        eje lateral ALINEADO al lado del personaje (estable, no se retuerce) +
+        el twist LIMPIO del joint real extraído por swing-twist (cuaternión, sin
+        flip, neutralizado a 0 en reposo). Devuelve el multMatrix (.matrixSum).
+        """
+        nonroll = cmds.createNode("aimMatrix", name=f"{name}NonRoll_AMX", ss=True)
+        cmds.connectAttr(blend_plug, f"{nonroll}.inputMatrix")
+        cmds.connectAttr(aim_target_plug, f"{nonroll}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{nonroll}.primaryInputAxis", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{nonroll}.secondaryInputAxis", 0, 0, 1, type="double3")  # local Z = lateral
+        cmds.setAttr(f"{nonroll}.secondaryMode", 2)  # alinear al vector
+        cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.side_vec.x, self.side_vec.y, self.side_vec.z, type="double3")
+
+        twist_qn = matrix_manager.extract_twist(blend_plug, f"{nonroll}.outputMatrix", axis="x", name=name, return_quat=True)
+        cmp = cmds.createNode("composeMatrix", name=f"{name}RollTwist_CMP", ss=True)
+        cmds.setAttr(f"{cmp}.useEulerRotation", 0)
+        cmds.connectAttr(f"{twist_qn}.outputQuat", f"{cmp}.inputQuat")
+        roll = cmds.createNode("multMatrix", name=f"{name}Roll_MMX", ss=True)
+        cmds.connectAttr(f"{cmp}.outputMatrix", f"{roll}.matrixIn[0]")
+        cmds.connectAttr(f"{nonroll}.outputMatrix", f"{roll}.matrixIn[1]")
+        return roll
+
     def _build_frames(self, positions, side_ref):
         """Frames X=aim, Z=lateral(side_ref), Y=delante/atrás para una lista de posiciones."""
         frames = []
@@ -779,10 +803,29 @@ class LegModule(object):
         blend_wm[0] = f"{non_roll_aim}.outputMatrix"
         cv_nodes[0] = non_roll_aim
 
+        # Roll anti-flip en el RESTO de joints del IK principal (igual que el
+        # bípedo): cada CV del ribbon recibe un frame con el eje lateral estable
+        # + el twist limpio (swing-twist), en vez del blend crudo que flippea.
+        # roll_wm guarda el plug de cada frame (para el ribbon y el bendy ctl).
+        roll_wm = list(blend_wm)
+        roll_wm[0] = f"{non_roll_aim}.outputMatrix"
+        for i in range(1, self.main_end_index + 1):
+            aim_target = blend_wm[i + 1] if i + 1 < len(blend_wm) else blend_wm[i]
+            cv_nodes[i] = self._roll_cv(blend_wm[i], aim_target, f"{self.module_name}Roll0{i}")
+            roll_wm[i] = f"{cv_nodes[i]}.matrixSum"
+
         bendy_grp = cmds.createNode("transform", name=f"{self.module_name}BendyControllers_GRP", ss=True, p=self.controllers_grp)
         cmds.setAttr(f"{bendy_grp}.inheritsTransform", 0)
 
         aim_axis = "x" if self.side == "L" else "-x"
+
+        # Up estable para las joints de skinning: alineamos su Z lateral al eje X
+        # del masterwalk (referencia que NO se pliega) en vez de derivar la Z del
+        # cross aim×up del de Boor (que la inclinaba en los acodamientos, p.ej. el
+        # gaskin). Resultado: X=hueso, Y=delante/atrás, Z=lateral limpio en toda la
+        # cadena, sin flip y consistente con el chain. up_object_vector = lado
+        # (+X en L, -X en R) para que la Z mire al lateral correcto.
+        up_object_vector = (self.side_vec.x, self.side_vec.y, self.side_vec.z)
 
         # El último joint de cada tramo se queda a 0.95 para no solaparse con
         # el primero del tramo siguiente (mismo truco que el TFG)
@@ -795,8 +838,9 @@ class LegModule(object):
             name = f"{self.module_name}{segment_names[i]}Bendy"
 
             mid_blm = cmds.createNode("blendMatrix", name=f"{name}_BLM", ss=True)
-            cmds.connectAttr(self.raw_hip_blend if i == 0 else blend_wm[i], f"{mid_blm}.inputMatrix")
-            cmds.connectAttr(blend_wm[i + 1], f"{mid_blm}.target[0].targetMatrix")
+            # Rotación desde los frames ROLL limpios (anti-flip), no el blend crudo
+            cmds.connectAttr(self.raw_hip_blend if i == 0 else roll_wm[i], f"{mid_blm}.inputMatrix")
+            cmds.connectAttr(roll_wm[i + 1], f"{mid_blm}.target[0].targetMatrix")
             cmds.setAttr(f"{mid_blm}.target[0].translateWeight", 0.5)
             cmds.setAttr(f"{mid_blm}.target[0].rotateWeight", 0)
             cmds.setAttr(f"{mid_blm}.target[0].scaleWeight", 0)
@@ -805,7 +849,7 @@ class LegModule(object):
             if i == 0:
                 # Medio twist en el bendy de la cadera (TFG): blend de rotación
                 # 0.5 entre la cadera con twist y la versión non-roll
-                cmds.connectAttr(blend_wm[0], f"{mid_blm}.target[1].targetMatrix")
+                cmds.connectAttr(roll_wm[0], f"{mid_blm}.target[1].targetMatrix")
                 cmds.setAttr(f"{mid_blm}.target[1].translateWeight", 0)
                 cmds.setAttr(f"{mid_blm}.target[1].rotateWeight", 0.5)
                 cmds.setAttr(f"{mid_blm}.target[1].scaleWeight", 0)
@@ -818,8 +862,9 @@ class LegModule(object):
 
             segment_jnts, temp = ribbon.de_boor_ribbon(
                 cvs=(cv_nodes[i], bendy_ctl, cv_nodes[i + 1]),
-                aim_axis=aim_axis, up_axis="y", num_joints=self.skinning_jnts,
+                aim_axis=aim_axis, up_axis="z", num_joints=self.skinning_jnts,
                 skeleton_grp=self.skeleton_grp, name=name, custom_parameter=params,
+                up_object=self.masterwalk_ctl, up_object_vector=up_object_vector,
             )
             for t in temp:
                 cmds.delete(t)
@@ -881,9 +926,7 @@ class FrontLegModule(LegModule):
     LEG_PREFIX = "frontLeg"
     ROOT_JOINT = "Shoulder"  # la delantera arranca en el shoulder (no hip)
     SEED_STRAIGHT_BEND = True  # delantera casi recta: hay que sembrar el bend
-    # PV desde el carpo (la "rodilla" equina = índice 2), igual que la trasera
-    # desde el corvejón: ambas son la articulación que dobla hacia atrás. Hereda
-    # PV_APEX_INDEX = 2 de la base.
+    # PV desde el carpo (la "rodilla" equina = índice 2). Hereda PV_APEX_INDEX = 2.
 
     def make(self, side, solver="spring", skinning_jnts=5, bendys=True, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
         super().make(side, solver=solver, skinning_jnts=skinning_jnts, bendys=bendys,

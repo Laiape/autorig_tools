@@ -55,12 +55,12 @@ class SpineModule(object):
         self.local_hip_chest_setup()
         self.ribbon_setup()
 
-        # data_manager.DataExportBiped().append_data("spine_module",
-        #                     {
-        #                         "local_hip_ctl": self.local_hip_ctl,
-        #                         "body_ctl": self.body_ctl,
-        #                         "local_chest_ctl": self.local_chest_ctl,
-        #                     })
+        data_manager.DataExportBiped().append_data("spine_module",
+                            {
+                                "local_hip_ctl": self.local_hip_ctl,
+                                "body_ctl": self.body_ctl,
+                                "local_chest_ctl": self.local_chest_ctl,
+                            })
         
 
     def lock_attributes(self, ctl, attrs):
@@ -120,44 +120,36 @@ class SpineModule(object):
         self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_pelvis", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         
-        
-
-
         cmds.setAttr(f"{self.body_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
         cmds.setAttr(f"{self.local_hip_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
 
         # Create the spine controllers
-
         self.spine_nodes = []
         self.spine_ctls = []
 
-        # Los GRP viven dentro del body_ctl y deben quedar freezeados (locales a
-        # cero): el opm se hornea RELATIVO al body en reposo (m_i * m_0^-1) para
-        # no aplicar la matriz del body dos veces (opm compone con el worldMatrix
-        # del padre) y que la cadena siga al body en vivo.
         body_rest_inverse = om.MMatrix(self.spine_guides_matrices[0]).inverse()
 
         for i, matrix in enumerate(self.spine_guides_matrices):
 
-            spine_node, spine_ctl = curve_tool.create_controller(name=f"{self.side}_spine0{i}", offset=["GRP", "SPC", "ANM"], parent=self.body_ctl, locked_attrs=["v"])
+            spine_node, spine_ctl = curve_tool.create_controller(name=f"{self.side}_spine0{i}", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
             local_matrix = om.MMatrix(matrix) * body_rest_inverse
             cmds.setAttr(f"{spine_node[0]}.offsetParentMatrix", list(local_matrix), type="matrix")
             cmds.xform(spine_node[0], m=om.MMatrix.kIdentity)
             self.spine_nodes.append(spine_node)
             self.spine_ctls.append(spine_ctl)
 
-        # ----- Stretch setup -----
+        # Connect the spine controllers to the body controller
+        cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{self.spine_nodes[0][0]}.offsetParentMatrix")
+        for i in range(1, len(self.spine_nodes)):
+            cmds.setAttr(f"{self.spine_nodes[i][0]}.offsetParentMatrix", self.spine_guides_matrices[i], type="matrix")
 
+        # ----- Stretch setup -----
         # Create the attribute for stretch in the body controller
         cmds.addAttr(self.body_ctl, longName="Stretch", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.Stretch", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.body_ctl, longName="Stretch_Activate", niceName="Stretch Activate", attributeType="bool", defaultValue=0, keyable=True)
         cmds.setAttr(f"{self.body_ctl}.Stretch_Activate", lock=False, keyable=False, channelBox=True)
 
-        # Cadena de drivers del ribbon (solo nodos DG): cada segmento apunta al
-        # control siguiente y su longitud es un blend entre la longitud de guía
-        # (rígido, Stretch OFF) y la distancia real al control (Stretch ON, el
-        # driver cae exacto sobre el control y toda la cadena se estira).
         if self.primary_input_axis == (1, 0, 0):
             translate_attr = "inputTranslateX"
         elif self.primary_input_axis == (0, 0, 1):

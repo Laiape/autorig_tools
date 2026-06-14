@@ -29,7 +29,7 @@ class TailModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
         self.primary_axis = (1,0,0)
-        self.secondary_axis = (0,1,0)
+        self.secondary_axis = (0,-1,0)
 
     def make(self, side, skinning_joints_number, controllers_number):
 

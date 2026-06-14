@@ -55,7 +55,8 @@ def _insert_tangent_cvs(cvs, axis, length, name):
 def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, tangent_offset=0.001, d=None, kv_type=OPEN,
                    param_from_length=False, tol=0.000001, name='ribbon', use_position=True, use_tangent=True,
                    use_up=True, use_scale=True, custom_parameter=[], skeleton_grp=None,
-                   tangent_cvs=0.0, tangent_axis=None):
+                   tangent_cvs=0.0, tangent_axis=None, up_slerp=False,
+                   up_object=None, up_object_vector=(0, 1, 0)):
     """
     Use controls and de_boor function to get position, tangent and up values for joints.  The param_from_length can
     be used to get the parameter values using a fraction of the curve length, otherwise the parameter values will be
@@ -403,7 +404,36 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
         up_plug = f'{skeleton_grp}.worldMatrix'
 
         # ----- up setup
-        if use_up:
+        if use_up and up_object is not None:
+
+            # Up estable: alinea (secondaryMode=2) el eje up del joint a un eje
+            # FIJO de un objeto de referencia que NO se pliega (p.ej. el lateral
+            # del masterwalk). Así la lateral del joint se mantiene limpia en los
+            # acodamientos (no se inclina con el aim) y nunca flippea, porque la
+            # referencia no rota con el doblez de la cadena. No propaga twist.
+            up_plug = f'{up_object}.worldMatrix[0]'
+
+        elif use_up and up_slerp:
+
+            # Slerp up: en cadenas que se pliegan fuerte (patas), el blend LINEAL
+            # de las matrices de los CV (wtAddMatrix de abajo) deja de ser
+            # ortonormal cuando los extremos divergen >~90deg y el punto up salta
+            # al otro lado -> flip. Aqui interpolamos la ROTACION por cuaternion
+            # (blendMatrix) entre el primer y el ultimo CV con peso = parametro, y
+            # alineamos (secondaryMode=2) en vez de aim: el twist viaja monotono
+            # sin flip. Solo dos extremos -> apto para tramos [inicio, mid, fin].
+            p0 = _matrix_plug(cvs[0])
+            p1 = _matrix_plug(cvs[-1])
+            up_blm = cmds.createNode('blendMatrix', n=f'{name}_upSlerp_{i}_BLM')
+            cmds.connectAttr(p0, f'{up_blm}.inputMatrix')
+            cmds.connectAttr(p1, f'{up_blm}.target[0].targetMatrix')
+            cmds.setAttr(f'{up_blm}.target[0].translateWeight', param)
+            cmds.setAttr(f'{up_blm}.target[0].rotateWeight', param)
+            cmds.setAttr(f'{up_blm}.target[0].scaleWeight', 0)
+            cmds.setAttr(f'{up_blm}.target[0].shearWeight', 0)
+            up_plug = f'{up_blm}.outputMatrix'
+
+        elif use_up:
 
             temp = cmds.createNode('transform')
             cmds.parent(temp, skeleton_grp)
@@ -488,8 +518,10 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
 
         cmds.setAttr(f'{aim}.primaryInputAxis', *aim_vector)
         cmds.setAttr(f'{aim}.secondaryInputAxis', *AXIS_VECTOR[up_axis])
-        cmds.setAttr(f'{aim}.secondaryMode', 1) # Aim
-        # cmds.setAttr(f'{aim}.secondaryTargetVector', *AXIS_VECTOR[up_axis])
+        cmds.setAttr(f'{aim}.secondaryMode', 2 if (up_slerp or up_object is not None) else 1) # 2=Align, 1=Aim
+        if up_object is not None:
+            # Qué eje del objeto de referencia alinear con el up del joint
+            cmds.setAttr(f'{aim}.secondaryTargetVector', *up_object_vector)
 
         if use_scale:
             scale_wam = create_wt_add_matrix(sca_off_plugs, wts, f'{name}_scale_{i}_WAM', tol=tol)

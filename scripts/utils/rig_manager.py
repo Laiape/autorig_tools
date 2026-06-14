@@ -555,6 +555,9 @@ def build_rig(character_name, on_step=None):
     if rig_type == 0 and mGear_integration == 0:
         step("Creating space switches…")
         biped_space_switches()
+    elif rig_type == 1:
+        step("Creating space switches…")
+        quadruped_space_switches()
 
     # step("Applying character extras…")
     # apply_character_extras(rig_settings)
@@ -655,7 +658,72 @@ def biped_space_switches():
             matrix_manager.space_switches(target=hip_fk, sources=[body, local_hip], default_rotate=1, default_translate=1) # Hip fk
             matrix_manager.space_switches(target=root_ik, sources=[local_hip], default_rotate=1, default_translate=1) # Root ik
             matrix_manager.space_switches(target=clavicle, sources=[chest, body], default_rotate=1, default_translate=1) # Clavicle
-            matrix_manager.space_switches(target=arm_ik_root, sources=[clavicle, chest], default_rotate=1, default_translate=1) # Arm ik root       
+            matrix_manager.space_switches(target=arm_ik_root, sources=[clavicle, chest], default_rotate=1, default_translate=1) # Arm ik root
+
+
+def quadruped_space_switches():
+
+        """
+        Crea los space switches para el Rig Quadruped (basado en el
+        skeleton_hierarchy del TFG): patas traseras y delanteras (con escápula)
+        contra spine/neck. Cada switch usa las keys que exportan los módulos:
+            - backLeg_module / frontLeg_module: {side}_legIk, {side}_legPv,
+              {side}_hipFk, {side}_rootIk (+ scapula_ctl / scapula_master_ctl).
+            - spine_module: local_hip_ctl, body_ctl, local_chest_ctl.
+            - neck_module: neck_ctl.
+        """
+
+        data = data_manager.DataExportBiped()
+
+        def _node(x):
+            # get_data puede devolver lista (p.ej. fk_ctls) o string; normaliza
+            if isinstance(x, (list, tuple)):
+                x = x[0] if x else None
+            return x if (x and cmds.objExists(x)) else None
+
+        def _ss(target, sources, **kwargs):
+            # No-op si falta el target o todos los sources (módulo no construido)
+            target = _node(target)
+            sources = [s for s in (_node(s) for s in sources) if s]
+            if not target or not sources:
+                return
+            matrix_manager.space_switches(target=target, sources=sources, **kwargs)
+
+        # ---- Drivers de spine / neck ----
+        body = data.get_data("spine_module", "body_ctl")
+        local_hip = data.get_data("spine_module", "local_hip_ctl")
+        local_chest = data.get_data("spine_module", "local_chest_ctl")
+        neck = data.get_data("neck_module", "neck_ctl")
+
+        # ---- Spine / Neck ----
+        _ss(local_hip, [body], default_rotate=1, default_translate=1)          # Local hip
+        _ss(neck, [local_chest, body], default_rotate=1, default_translate=1)  # Neck
+
+        for side in ["L", "R"]:
+
+            # =========================== BACK LEG ===========================
+            bl_ik   = data.get_data("backLeg_module", f"{side}_legIk")
+            bl_pv   = data.get_data("backLeg_module", f"{side}_legPv")
+            bl_fk   = data.get_data("backLeg_module", f"{side}_hipFk")
+            bl_root = data.get_data("backLeg_module", f"{side}_rootIk")
+
+            _ss(bl_ik, [local_hip, body], default_rotate=0, default_translate=0)        # Back leg ik
+            _ss(bl_pv, [bl_ik, local_hip, body], default_rotate=1, default_translate=1, pv=True)  # Back leg pv
+            _ss(bl_fk, [local_hip, body], default_rotate=1, default_translate=1)        # Back hip fk
+            _ss(bl_root, [local_hip, body], default_rotate=1, default_translate=1)      # Back root ik
+
+            # =========================== FRONT LEG ==========================
+            fl_ik       = data.get_data("frontLeg_module", f"{side}_legIk")
+            fl_pv       = data.get_data("frontLeg_module", f"{side}_legPv")
+            fl_fk       = data.get_data("frontLeg_module", f"{side}_hipFk")
+            fl_root     = data.get_data("frontLeg_module", f"{side}_rootIk")
+            scapula_mst = data.get_data("frontLeg_module", f"{side}_scapula_master_ctl")
+
+            _ss(scapula_mst, [local_chest, body], default_rotate=1, default_translate=1)            # Scapula master
+            _ss(fl_fk, [scapula_mst, local_chest, body], default_rotate=1, default_translate=1)     # Front fk
+            _ss(fl_root, [scapula_mst, local_chest, body], default_rotate=1, default_translate=1)   # Front root ik
+            _ss(fl_ik, [local_chest, body], default_rotate=0, default_translate=0)                  # Front leg ik
+            _ss(fl_pv, [fl_ik, local_chest, body], default_rotate=1, default_translate=1, pv=True)  # Front leg pv
 
 
 def create_rig_settings(guides_transform, load=False):
