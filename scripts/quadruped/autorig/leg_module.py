@@ -1325,32 +1325,75 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{cps}.parameterU", f"{posi}.parameterU")
         cmds.connectAttr(f"{cps}.parameterV", f"{posi}.parameterV")
 
-        # Traslación proyectada (espacio GRP)
-        pos_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.module_name}ScapulaFloatingPos_FBF", ss=True)
+        # Frame de la superficie en el punto proyectado (espacio GRP): tangentes
+        # + normal (rotación) + posición.
+        surf_frame = cmds.createNode("fourByFourMatrix", name=f"{self.module_name}ScapulaFloatingSurf_FBF", ss=True)
+        for row, attr in ((0, "normalizedTangentU"), (1, "normalizedTangentV"), (2, "normalizedNormal")):
+            for col, axis in enumerate("XYZ"):
+                cmds.connectAttr(f"{posi}.{attr}{axis}", f"{surf_frame}.in{row}{col}")
         for col, axis in enumerate("XYZ"):
-            cmds.connectAttr(f"{posi}.position{axis}", f"{pos_fbf}.in3{col}")
+            cmds.connectAttr(f"{posi}.position{axis}", f"{surf_frame}.in3{col}")
 
-        # Rotación del control (espacio GRP): el omóplato conserva su orientación
+        # Traslación proyectada (posición sobre la cúpula)
+        surf_pos = cmds.createNode("pickMatrix", name=f"{self.module_name}ScapulaFloatingPos_PMX", ss=True)
+        cmds.connectAttr(f"{surf_frame}.output", f"{surf_pos}.inputMatrix")
+        cmds.setAttr(f"{surf_pos}.useRotate", 0)
+        cmds.setAttr(f"{surf_pos}.useScale", 0)
+        cmds.setAttr(f"{surf_pos}.useShear", 0)
+
+        # --- Atributos ---
+        cmds.addAttr(ctl, longName="FLOATING_SEP", niceName="FLOATING ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{ctl}.FLOATING_SEP", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(ctl, longName="Floating", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
+        cmds.addAttr(ctl, longName="Auto_Orient", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+
+        # Auto-orient: el omóplato se inclina siguiendo la rotación del frame de la
+        # cúpula al deslizar. surf_rot = rotación del frame de superficie; S0inv
+        # (constante, horneado del reposo) la cancela en reposo -> el delta es
+        # identidad en reposo (sin desplazamiento sea cual sea Auto_Orient).
+        surf_rot = cmds.createNode("pickMatrix", name=f"{self.module_name}ScapulaFloatingSurfRot_PMX", ss=True)
+        cmds.connectAttr(f"{surf_frame}.output", f"{surf_rot}.inputMatrix")
+        cmds.setAttr(f"{surf_rot}.useTranslate", 0)
+        cmds.setAttr(f"{surf_rot}.useScale", 0)
+        cmds.setAttr(f"{surf_rot}.useShear", 0)
+
+        cmds.dgdirty(allPlugs=True)
+        s0_inv = list(om.MMatrix(cmds.getAttr(f"{surf_rot}.outputMatrix")).inverse())
+        surf_delta = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingSurfDelta_MMX", ss=True)
+        cmds.setAttr(f"{surf_delta}.matrixIn[0]", s0_inv, type="matrix")
+        cmds.connectAttr(f"{surf_rot}.outputMatrix", f"{surf_delta}.matrixIn[1]")
+
+        # Mezcla del delta por Auto_Orient (0 = conserva la orientación del control,
+        # 1 = sigue la normal/tangentes de la cúpula)
+        orient_blend = cmds.createNode("blendMatrix", name=f"{self.module_name}ScapulaFloatingOrient_BLM", ss=True)
+        cmds.connectAttr(f"{surf_delta}.matrixSum", f"{orient_blend}.target[0].targetMatrix")
+        cmds.connectAttr(f"{ctl}.Auto_Orient", f"{orient_blend}.target[0].weight")
+        cmds.setAttr(f"{orient_blend}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{orient_blend}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{orient_blend}.target[0].shearWeight", 0)
+
+        # Rotación del control (espacio GRP)
         pick_rot = cmds.createNode("pickMatrix", name=f"{self.module_name}ScapulaFloatingRot_PMX", ss=True)
         cmds.connectAttr(f"{ctl_in_grp}.matrixSum", f"{pick_rot}.inputMatrix")
         cmds.setAttr(f"{pick_rot}.useTranslate", 0)
         cmds.setAttr(f"{pick_rot}.useScale", 0)
         cmds.setAttr(f"{pick_rot}.useShear", 0)
 
-        # bone_grp = rotación_control * traslación_proyectada ; bone_world = bone_grp * GRP.world
+        # orient = rotación_control * delta_superficie (en reposo = rotación_control)
+        orient = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingOrient_MMX", ss=True)
+        cmds.connectAttr(f"{pick_rot}.outputMatrix", f"{orient}.matrixIn[0]")
+        cmds.connectAttr(f"{orient_blend}.outputMatrix", f"{orient}.matrixIn[1]")
+
+        # bone_grp = orient * traslación_proyectada ; bone_world = bone_grp * GRP.world
         bone_grp = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingBone_MMX", ss=True)
-        cmds.connectAttr(f"{pick_rot}.outputMatrix", f"{bone_grp}.matrixIn[0]")
-        cmds.connectAttr(f"{pos_fbf}.output", f"{bone_grp}.matrixIn[1]")
+        cmds.connectAttr(f"{orient}.matrixSum", f"{bone_grp}.matrixIn[0]")
+        cmds.connectAttr(f"{surf_pos}.outputMatrix", f"{bone_grp}.matrixIn[1]")
 
         bone_world = cmds.createNode("multMatrix", name=f"{self.module_name}ScapulaFloatingWorld_MMX", ss=True)
         cmds.connectAttr(f"{bone_grp}.matrixSum", f"{bone_world}.matrixIn[0]")
         cmds.connectAttr(f"{grp}.worldMatrix[0]", f"{bone_world}.matrixIn[1]")
 
-        # Atributo Floating (0-1): mezcla directo <-> flotante
-        cmds.addAttr(ctl, longName="FLOATING_SEP", niceName="FLOATING ------", attributeType="enum", enumName="------", keyable=True)
-        cmds.setAttr(f"{ctl}.FLOATING_SEP", keyable=False, channelBox=True, lock=True)
-        cmds.addAttr(ctl, longName="Floating", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
-
+        # Floating (0-1): mezcla directo <-> flotante
         blend = cmds.createNode("blendMatrix", name=f"{self.module_name}ScapulaFloating_BLM", ss=True)
         cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{blend}.inputMatrix")
         cmds.connectAttr(f"{bone_world}.matrixSum", f"{blend}.target[0].targetMatrix")

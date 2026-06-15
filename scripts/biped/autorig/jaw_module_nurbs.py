@@ -169,6 +169,101 @@ class JawModule(object):
         cmds.connectAttr(f"{self.compose_matrix_jaw}.outputMatrix", f"{self.upper_jaw_ctl}.offsetParentMatrix")  # Connect the output of the blendTwoAttr to the rotateX of the upper jaw controller
 
 
+    def _skin_lip_curve_to_locals(self, skin_cluster, curve, local_jnts):
+
+        """
+        Reparte cada CV del rebuild curve entre los 3 joints locales (2 esquinas +
+        medio) según su posición a lo largo de la curva: blend lineal
+        esquina_inicio -> medio -> esquina_fin. Asignación GEOMÉTRICA (no por
+        índice): el medio es el joint más cercano al CV central y las esquinas se
+        asignan a inicio/fin por cercanía a los CVs extremos. Vale para cualquier
+        número de CVs (resolución escalable con los spans de la guía).
+        """
+        def jpos(j):
+            return cmds.xform(j, q=True, ws=True, translation=True)
+
+        def dist(a, b):
+            return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2) ** 0.5
+
+        cvs = cmds.ls(f"{curve}.cv[*]", flatten=True)
+        n = len(cvs)
+        start_p = cmds.pointPosition(cvs[0], world=True)
+        mid_p = cmds.pointPosition(cvs[n // 2], world=True)
+
+        mid_jnt = min(local_jnts, key=lambda j: dist(jpos(j), mid_p))
+        corners = [j for j in local_jnts if j != mid_jnt]
+        start_corner = min(corners, key=lambda j: dist(jpos(j), start_p))
+        end_corner = corners[1] if corners[0] == start_corner else corners[0]
+
+        for i, cv in enumerate(cvs):
+            t = i / (n - 1) if n > 1 else 0.0
+            if t <= 0.5:
+                w = t / 0.5  # 0 en la esquina de inicio, 1 en el medio
+                vals = [(start_corner, 1.0 - w), (mid_jnt, w)]
+            else:
+                w = (t - 0.5) / 0.5  # 0 en el medio, 1 en la esquina de fin
+                vals = [(mid_jnt, 1.0 - w), (end_corner, w)]
+            cmds.skinPercent(skin_cluster, cv, transformValue=vals)
+
+    def _ribbon_from_curve(self, curve, width, name, lock_axis=(0.0, 1.0, 0.0)):
+
+        """
+        Cinta NURBS estable que sigue la curva SIN twist (portado del core del
+        módulo de referencia). El binormal sale de `tangente × up_bloqueado` (con
+        fallback si son casi paralelos), así no se retuerce en curvas 3D. La curva
+        queda en el CENTRO de la cinta (V=0.5) → las joints pineadas a V=0.5 caen
+        sobre el labio. Normal de la superficie ≈ eje del lock_axis (Y), que es lo
+        que esperan los uvPin (normalAxis=Y). Construye los CVs en el reposo.
+        """
+        sel = om.MSelectionList()
+        sel.add(curve)
+        crv_path = sel.getDagPath(0)
+        crv_path.extendToShape()
+        fn_crv = om.MFnNurbsCurve(crv_path)
+
+        cvs = fn_crv.cvPositions(om.MSpace.kWorld)
+        knots_u = fn_crv.knots()
+        degree_u = fn_crv.degree
+        form_u = fn_crv.form
+        n = len(cvs)
+        half = width * 0.5
+        up = om.MVector(*lock_axis).normalize()
+
+        pts = om.MPointArray()
+        for i in range(n):
+            p = cvs[i]
+            pv = om.MVector(p)
+            if i == 0:
+                tangent = om.MVector(cvs[1]) - pv
+            elif i == n - 1:
+                tangent = pv - om.MVector(cvs[n - 2])
+            else:
+                tangent = (pv - om.MVector(cvs[i - 1])) + (om.MVector(cvs[i + 1]) - pv)
+            tangent.normalize()
+
+            cur_up = up
+            if abs(tangent * cur_up) > 0.95:
+                cur_up = om.MVector(0, 0, 1)
+                if abs(tangent * cur_up) > 0.95:
+                    cur_up = om.MVector(1, 0, 0)
+            binormal = (tangent ^ cur_up).normalize()
+
+            left = pv + binormal * half
+            right = pv - binormal * half
+            pts.append(om.MPoint(left.x, left.y, left.z, p.w))
+            pts.append(p)
+            pts.append(om.MPoint(right.x, right.y, right.z, p.w))
+
+        knots_v = om.MDoubleArray([0.0, 0.0, 1.0, 1.0])
+        fn_surf = om.MFnNurbsSurface()
+        tf = fn_surf.create(
+            pts, knots_u, knots_v, degree_u, 2,
+            form_u, om.MFnNurbsSurface.kOpen, True, om.MObject.kNullObj
+        )
+        final = cmds.rename(om.MFnDagNode(tf).fullPathName(), name)
+        cmds.sets(final, edit=True, forceElement="initialShadingGroup")
+        return final
+
     def create_lips_setup(self):
 
         """
@@ -447,19 +542,14 @@ class JawModule(object):
         up_cvs = cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)
         low_cvs = cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True)
 
-        # Sample start, middle, end positions using pointPosition
-        up_positions = [
-            cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[0]", world=True),
-            cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{len(up_cvs) // 2}]", world=True),
-            cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{len(up_cvs) - 1}]", world=True),
-        ]
-        low_positions = [
-            cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[0]", world=True),
-            cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[{len(low_cvs) // 2}]", world=True),
-            cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[{len(low_cvs) - 1}]", world=True),
-        ]
+        # Muestrear TODOS los CVs de la linear curve guía para CONSERVAR su shape.
+        # (Antes solo cogía 3 anclas -inicio/medio/fin-, así que la curva base y la
+        # nurbs perdían la forma real de la guía y las joints de skinning, que se
+        # proyectan con las posiciones de los CVs de la guía, caían mal.)
+        up_positions = [cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{i}]", world=True) for i in range(len(up_cvs))]
+        low_positions = [cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[{i}]", world=True) for i in range(len(low_cvs))]
 
-        # Create linear curves from 3 anchor points
+        # Curvas base a partir de TODOS los puntos de la guía (mismo grado lineal)
         self.upper_curve = cmds.curve(name="C_upperLip_CRV", degree=1, point=up_positions)
         self.lower_curve = cmds.curve(name="C_lowerLip_CRV", degree=1, point=low_positions)
         upper_shape = cmds.listRelatives(self.upper_curve, shapes=True)[0]
@@ -467,14 +557,18 @@ class JawModule(object):
         cmds.rename(upper_shape, f"{self.upper_curve}Shape_CRV")
         cmds.rename(lower_shape, f"{self.lower_curve}Shape_CRV")
 
-        # Rebuild into smooth cubic curves
+        # Rebuild into smooth cubic curves. Los controladores (= CVs del rebuild)
+        # escalan con la guía pero ACOTADOS a 6-10 (no uno por CV de la linear).
+        # Mismo span en upper y lower → superficies con idéntica topología (lo
+        # necesita el blendShape de sticky lips). Grado 3: nCVs = spans + 3.
+        controller_spans = max(6, min(10, len(up_cvs))) - 3
         self.upper_rebuild_lip_curve = cmds.rebuildCurve(
             self.upper_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,
-            s=4, d=3, tol=0.01, name="C_upperLip_CRV"
+            s=controller_spans, d=3, tol=0.01, name="C_upperLip_CRV"
         )[0]
         self.lower_rebuild_lip_curve = cmds.rebuildCurve(
             self.lower_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,
-            s=4, d=3, tol=0.01, name="C_lowerLip_CRV"
+            s=controller_spans, d=3, tol=0.01, name="C_lowerLip_CRV"
         )[0]
 
         cmds.parent(self.upper_rebuild_lip_curve, self.lower_rebuild_lip_curve, self.module_trn)
@@ -483,99 +577,28 @@ class JawModule(object):
         self.upper_skin_cluster = cmds.skinCluster(upper_local_jnts, self.upper_rebuild_lip_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_upperLip_SKIN")[0]
         self.lower_skin_cluster = cmds.skinCluster(lower_local_jnts, self.lower_rebuild_lip_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_lowerLip_SKIN")[0]
 
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[0]", transformValue=[upper_local_jnts[2], 1.0])
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[1]", transformValue=[(upper_local_jnts[2], 0.5), (upper_local_jnts[1], 0.5)])
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[2]", transformValue=[(upper_local_jnts[2], 0.2), (upper_local_jnts[1], 0.8)])
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[3]", transformValue=[upper_local_jnts[1], 1.0])
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[4]", transformValue=[(upper_local_jnts[1], 0.8), (upper_local_jnts[0], 0.2)])
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[5]", transformValue=[(upper_local_jnts[1], 0.5), (upper_local_jnts[0], 0.5)])
-        cmds.skinPercent(self.upper_skin_cluster, f"{self.upper_rebuild_lip_curve}.cv[6]", transformValue=[upper_local_jnts[0], 1.0])
-
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[0]", transformValue=[lower_local_jnts[2], 1.0])
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[1]", transformValue=[(lower_local_jnts[2], 0.5), (lower_local_jnts[1], 0.5)])
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[2]", transformValue=[(lower_local_jnts[2], 0.2), (lower_local_jnts[1], 0.8)])
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[3]", transformValue=[lower_local_jnts[1], 1.0])
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[4]", transformValue=[(lower_local_jnts[1], 0.8), (lower_local_jnts[0], 0.2)])
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[5]", transformValue=[(lower_local_jnts[1], 0.5), (lower_local_jnts[0], 0.5)])
-        cmds.skinPercent(self.lower_skin_cluster, f"{self.lower_rebuild_lip_curve}.cv[6]", transformValue=[lower_local_jnts[0], 1.0])
+        # Reparto geométrico (esquina_inicio -> medio -> esquina_fin) para
+        # cualquier número de CVs (antes cableado a 7 CVs por índice, lo que con
+        # la guía real dejaba cv[0] -esquina- pesado al medio y rompía la boca).
+        self._skin_lip_curve_to_locals(self.upper_skin_cluster, self.upper_rebuild_lip_curve, upper_local_jnts)
+        self._skin_lip_curve_to_locals(self.lower_skin_cluster, self.lower_rebuild_lip_curve, lower_local_jnts)
 
 
-        # Make rebuilded bezier
-        upper_curve_dup = cmds.duplicate(self.upper_rebuild_lip_curve, name="C_upperLipToNurbs_CRV")[0]
-        lower_curve_dup = cmds.duplicate(self.lower_rebuild_lip_curve, name="C_lowerLipToNurbs_CRV")[0]
-        # Las curvas originales están skinneadas: sin limpiar la historia de los
-        # duplicados, offsetCurve/loft con ch=False fuerzan historia y avisan
-        cmds.delete(upper_curve_dup, lower_curve_dup, constructionHistory=True)
-        cmds.select(clear=True)
-
-        # Do an offset curve to avoid having the nurbs surface right on top of the rebuild curve, which causes issues when lofting
-        upper_offset = cmds.offsetCurve(
-            upper_curve_dup,
-            distance=1,
-            constructionHistory=False,
-            reparameterize=False,
-            cutLoop=True,
-            cutRadius=0.1,
-            tolerance=0.001,
-            subdivisionDensity=0,
-            useGivenNormal=False
-    )
-    
-        upper_offset_curve = upper_offset[0]
-        lower_offset = cmds.offsetCurve(
-            lower_curve_dup,
-            distance=1,
-            constructionHistory=False,
-            reparameterize=False,
-            cutLoop=True,
-            cutRadius=0.1,
-            tolerance=0.001,
-            subdivisionDensity=0,
-            useGivenNormal=False
-        )
-        lower_offset_curve = lower_offset[0]
-
-        upper_nurbs_surface = cmds.loft(
-        [upper_offset_curve, upper_curve_dup],
-        constructionHistory=False,
-        uniform=True,
-        close=False,
-        autoReverse=True,
-        degree=3,
-        sectionSpans=2,
-        reverseSurfaceNormals=True,
-        polygon=0,
-        name="C_upperLip_NURB"
-        )[0]
-
-        lower_nurbs_surface = cmds.loft(
-            [lower_offset_curve, lower_curve_dup],
-            constructionHistory=False,
-            uniform=True,
-            close=False,
-            autoReverse=True,
-            degree=3,
-            sectionSpans=2,
-            reverseSurfaceNormals=True,
-            polygon=0,
-            name="C_lowerLip_NURB"
-        )[0]
-
-        cmds.delete(upper_curve_dup, lower_curve_dup, upper_offset_curve, lower_offset_curve)
-
+        # Superficie de labio: CINTA NURBS ESTABLE a partir del rebuild curve, SIN
+        # twist (la curva queda en el CENTRO de la cinta, V=0.5). Sustituye al
+        # offsetCurve(normal automática)+loft, que se retorcía en la curva 3D del
+        # labio y dejaba las joints (pineadas a V=0.5) fuera del labio.
         rebuilded_cvs = len(cmds.ls(f"{self.upper_rebuild_lip_curve}.cv[*]", flatten=True))
 
-        # Rebuild + reverse ANTES del skinCluster: las superficies del loft aún
-        # no tienen historia de deformación, así que el ch=0 es limpio y no
-        # aparecen los warnings de "History will be on for the command"
-        degree_num = 3
-        spans_u_num = len(cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)) - 1
-        self.upper_lip_nurbs = cmds.rebuildSurface(upper_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_upperLip_NURB")[0]
-        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs, d=2)
-        cmds.reverseSurface(self.upper_lip_nurbs, constructionHistory=False, name=self.upper_lip_nurbs)
-        self.lower_lip_nurbs = cmds.rebuildSurface(lower_nurbs_surface, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, su=spans_u_num, sv=1, du=degree_num, dv=degree_num, tol=0.01, name="C_lowerLip_NURB")[0]
-        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs, d=2)
-        cmds.reverseSurface(self.lower_lip_nurbs, constructionHistory=False, name=self.lower_lip_nurbs)
+        def _span_len(crv):
+            a = cmds.pointPosition(f"{crv}.cv[0]", world=True)
+            b = cmds.pointPosition(f"{crv}.cv[{rebuilded_cvs - 1}]", world=True)
+            return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2) ** 0.5
+
+        lip_width = max(0.2, _span_len(self.upper_rebuild_lip_curve) * 0.08)
+
+        self.upper_lip_nurbs = self._ribbon_from_curve(self.upper_rebuild_lip_curve, lip_width, "C_upperLip_NURB")
+        self.lower_lip_nurbs = self._ribbon_from_curve(self.lower_rebuild_lip_curve, lip_width, "C_lowerLip_NURB")
         cmds.parent(self.upper_lip_nurbs, self.lower_lip_nurbs, self.module_trn)
 
         # Create secondary nodes GRP to control visibility
