@@ -521,10 +521,14 @@ def build_rig(character_name, on_step=None):
     if check("L_eye_JNT") and check("R_eye_JNT"):
         step("Building eyelids…")
         reload(eyelid_module)
-        # En cuadrúpedo no se crean sockets (no hay cejas/guías de socket)
+        # En cuadrúpedo no se crean sockets (no hay cejas/guías de socket).
         build_sockets = (rig_type == 0)
-        eyelid_module.EyelidModule().make("L", sockets=build_sockets)
-        eyelid_module.EyelidModule().make("R", sockets=build_sockets)
+        # surface: proyecta las joints del párpado sobre la NURBS del ojo (blink
+        # estable + horizontal). Activado en cuadrúpedos y en personajes concretos.
+        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya"}
+        eyelid_surface = (rig_type != 0) or (str(character_name).lower() in EYELID_SURFACE_CHARS)
+        eyelid_module.EyelidModule().make("L", sockets=build_sockets, surface=eyelid_surface)
+        eyelid_module.EyelidModule().make("R", sockets=build_sockets, surface=eyelid_surface)
 
     if check("C_tongue00_JNT"):
         step("Building tongue…")

@@ -56,6 +56,7 @@ class EyebrowModule(object):
 
         self.load_guides()
         self.create_controllers()
+        self.curve_setup()
         self.ribbon_setup()
         self.slide_setup()
         self.auto_tangent_setup()
@@ -365,13 +366,76 @@ class EyebrowModule(object):
 
             cmds.connectAttr(f"{fbf}.output", f"{local_trn}.matrixIn[0]", force=True)
 
+    def curve_setup(self):
+
+        """
+        Asymmetric brow curve when the main control is raised (no set driven keys).
+
+        Imitates the kessi brow behaviour: lifting the main eyebrow control bends
+        the brow into an arch because the controllers closer to the ear "lag
+        behind" the lift, while lowering keeps a straight line.
+
+        Mechanism (same spirit as kessi's per-section setRange + sum, here solved
+        with matrices): only the POSITIVE part of the main control translateY is
+        taken (a clamp -> down keeps the strip straight). That up amount, scaled
+        by the 'browCurve' attribute and by a per-controller weight that grows
+        toward the ear, is subtracted in Y from every sub-controller before the
+        ribbon reads it. Inner controllers barely lag (weight ~0), the outer ear
+        controller lags the most (weight 1) -> arch on the way up, straight on the
+        way down.
+
+        Each sub-controller matrix that feeds the ribbon becomes:
+            curve = local_trn * translate(0, -weight * upAmount * browCurve, 0)
+        Post-multiplying by the translation adds a pure +Y in the ribbon (head
+        local) space, leaving rotation/scale untouched.
+        """
+        cmds.addAttr(self.main_eyebrow_ctl,
+                     longName="EXTRA_ATTRIBUTES",
+                     niceName="EXTRA_ATTRIBUTES ------",
+                     attributeType="enum",
+                     enumName="------")
+        cmds.setAttr(f"{self.main_eyebrow_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(self.main_eyebrow_ctl, longName="browCurve", attributeType="float",
+                     min=0, max=2, defaultValue=0.7, keyable=True)
+
+        up_clamp = cmds.createNode("clamp", name=f"{self.side}_eyebrowCurveUp_CLAMP", ss=True)
+        cmds.setAttr(f"{up_clamp}.minR", 0)
+        cmds.setAttr(f"{up_clamp}.maxR", 100000)
+        cmds.connectAttr(f"{self.main_eyebrow_ctl}.translateY", f"{up_clamp}.inputR")
+
+        num = len(self.local_trns)
+        self.curve_trns = []
+
+        for i, local_trn in enumerate(self.local_trns):
+
+            t = i / (num - 1) if num > 1 else 0.0
+            weight = t * t
+
+            ctl = self.eyebrow_controllers[i]
+
+            if weight == 0.0:
+                self.curve_trns.append(local_trn)
+                continue
+
+            mult = cmds.createNode("multiply", name=ctl.replace("_CTL", "Curve_MUL"), ss=True)
+            cmds.connectAttr(f"{up_clamp}.outputR", f"{mult}.input[0]")
+            cmds.connectAttr(f"{self.main_eyebrow_ctl}.browCurve", f"{mult}.input[1]")
+            cmds.setAttr(f"{mult}.input[2]", -weight)
+            fbf = cmds.createNode("fourByFourMatrix", name=ctl.replace("_CTL", "Curve_FBF"), ss=True)
+            cmds.connectAttr(f"{mult}.output", f"{fbf}.in31")
+            curve_mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Curve_MMX"), ss=True)
+            cmds.connectAttr(f"{local_trn}.matrixSum", f"{curve_mmx}.matrixIn[0]")
+            cmds.connectAttr(f"{fbf}.output", f"{curve_mmx}.matrixIn[1]")
+
+            self.curve_trns.append(curve_mmx)
+
     def ribbon_setup(self):
 
         """
         Set up ribbon system for the eyebrow module.
         """
 
-        sel = [trn for trn in self.local_trns]
+        sel = [trn for trn in self.curve_trns]
 
         self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_eyebrowSkinning", aim_axis='x', up_axis='y', num_joints=len(self.eyebrows), skeleton_grp=self.skeleton_grp)
 
@@ -385,12 +449,7 @@ class EyebrowModule(object):
         Set up the slide functionality for the eyebrow module.
 
         """
-        cmds.addAttr(self.main_eyebrow_ctl,
-                     longName="EXTRA_ATTRIBUTES",
-                     niceName="EXTRA_ATTRIBUTES ------",
-                     attributeType="enum",
-                     enumName="------")
-        cmds.setAttr(f"{self.main_eyebrow_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        
         cmds.addAttr(self.main_eyebrow_ctl, longName="slide", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
 

@@ -1,14 +1,17 @@
 """
-DWPicker biped body picker generator.
+DWPicker generator (body + face), layout ANATÓMICO sobre silueta.
 
-Generates a standard body picker for all biped characters built with autorig_tools.
-Facial controls are excluded. The layout is fixed — only controller names change.
+Genera un picker de DWPicker con dos paneles ("Body" y "Face") para los
+personajes construidos con autorig_tools. Los controles se colocan
+anatómicamente sobre una silueta de cuerpo / cara (vista frontal espejada:
+R_ = derecha del personaje = izquierda del visor en rojo; L_ = azul/teal;
+C_ = centro). El layout es fijo — solo cambian los nombres de los controles.
 
-Usage (in Maya, after rig build):
+Usage (en Maya, tras construir el rig):
     from utils import picker
     picker.generate_and_load()
 
-    # Or save to file only:
+    # Solo guardar el JSON:
     picker.generate_and_load(load=False)
 """
 import json
@@ -22,8 +25,8 @@ import maya.api.OpenMaya as om
 #  Layout constants
 # ─────────────────────────────────────────────────────────────────
 
-CANVAS_W = 480
-CANVAS_H = 680
+CANVAS_W = 700
+CANVAS_H = 800
 
 # Column left-edge x positions
 XL = 10    # L_ controls  (character's left = viewer's right)
@@ -174,14 +177,17 @@ def _label_bg(text, x, y, w, h, color="#1A1A1A", text_color="#777777", panel=0,
 def _build_body_shapes():
     """
     Returns all shapes for the BODY panel (panel index 0).
-    Layout: 3 columns (L_ | C_ | R_), top-to-bottom.
-    L_ = character's left side = viewer's RIGHT column.
-    R_ = character's right side = viewer's LEFT column.
+    Layout ANATÓMICO sobre una silueta de cuerpo (vista frontal espejada):
+      R_ (lado derecho del personaje) -> IZQUIERDA del visor (rojo)
+      L_ (lado izquierdo)             -> DERECHA del visor (azul/teal)
+      C_                              -> centro (azul/oro)
     """
-    P = 0  # panel index
+    P = 0
     shapes = []
+    CX = 350  # línea central
+    SIL = "#2D2D2D"  # color de la silueta
 
-    def btn(name, x, y, w=CW, h=CH, **kw):
+    def btn(name, x, y, w, h, **kw):
         kw.setdefault("panel", P)
         shapes.append(_btn(name, x, y, w, h, **kw))
 
@@ -189,118 +195,89 @@ def _build_body_shapes():
         kw.setdefault("panel", P)
         shapes.append(_label_bg(text, x, y, w, h, **kw))
 
-    # ── GLOBAL ──────────────────────────────── y=5
-    bg("", 0, 0, CANVAS_W, 62, color="#111111")
-    btn("C_character_CTL",  130, 5,  220, 26, color=COL_GLOBAL, size=10)
-    btn("C_settings_CTL",   365, 5,  105, 26, color="#333355",  label="settings")
-    btn("C_masterwalk_CTL", 145, 36, 190, 22, color=COL_GLOBAL, label="masterwalk")
+    def sil(x, y, w, h, c=10):
+        bg("", x, y, w, h, color=SIL, shape_type="rounded_rect", corners=c)
 
-    # ── HEAD / NECK ─────────────────────────── y=72
-    y = 72
-    btn("C_head_CTL",   180, y,      CWC, 26, color=COL_CENTER, label="head")
-    y += 26 + GAP
-    btn("C_neck_CTL",   190, y, 130, CH,  color=COL_CENTER,   label="neck")
-    y += CH + GAP
-    btn("C_throat_CTL", 205, y, 100, 18,  color=COL_CTR_SOFT, label="throat", size=8)
+    # ── SILUETA (fondo) ────────────────────────────────────────────
+    bg("", 0, 0, CANVAS_W, CANVAS_H, color="#191919")
+    sil(CX - 58, 40, 116, 116, 58)        # cabeza
+    sil(CX - 24, 150, 48, 30, 6)          # cuello
+    sil(CX - 152, 176, 304, 58, 24)       # hombros
+    sil(CX - 118, 224, 236, 222, 30)      # torso
+    sil(CX - 120, 432, 240, 82, 28)       # pelvis
+    sil(CX - 214, 192, 70, 150, 26)       # R brazo sup (izq visor)
+    sil(CX - 236, 330, 64, 150, 22)       # R antebrazo
+    sil(CX - 258, 478, 82, 94, 16)        # R mano
+    sil(CX + 144, 192, 70, 150, 26)       # L brazo sup (der visor)
+    sil(CX + 172, 330, 64, 150, 22)       # L antebrazo
+    sil(CX + 176, 478, 82, 94, 16)        # L mano
+    sil(CX - 110, 498, 88, 160, 26)       # R muslo
+    sil(CX - 102, 652, 76, 122, 20)       # R gemelo
+    sil(CX - 114, 766, 96, 30, 10)        # R pie
+    sil(CX + 22, 498, 88, 160, 26)        # L muslo
+    sil(CX + 26, 652, 76, 122, 20)        # L gemelo
+    sil(CX + 18, 766, 96, 30, 10)         # L pie
 
-    # ── CLAVICLE ────────────────────────────── y=158
-    y = 158
-    bg("", 0, y - 2, CANVAS_W, CH + 4, color="#161616")
-    btn("L_clavicle_CTL", XL, y, CW, CH, color=COL_L_CLAV, label="clavicle")
-    btn("C_localChest_CTL", XC, y, CWC, CH, color=COL_CTR_SOFT, label="localChest")
-    btn("R_clavicle_CTL", XR, y, CW, CH, color=COL_R_CLAV, label="clavicle")
+    # ── GLOBAL (fila superior) ─────────────────────────────────────
+    btn("C_character_CTL",  CX - 172, 6,  118, 22, color=COL_GLOBAL,  label="character", size=8)
+    btn("C_masterwalk_CTL", CX - 48,  6,  96,  22, color=COL_GLOBAL,  label="master",    size=8)
+    btn("C_settings_CTL",   CX + 54,  6,  118, 22, color="#333355",   label="settings",  size=8)
 
-    # ── ARM FK / SPINE ──────────────────────── y=185
-    y = 185
-    # Arm FK (L and R) run alongside the spine
-    btn("L_shoulderFk_CTL", XL, y,      CW, CH, color=COL_L_FK, label="shoulderFk")
-    btn("C_spine07_CTL",    XC, y,      CWC,CH, color=COL_CENTER, label="spine top")
-    btn("R_shoulderFk_CTL", XR, y,      CW, CH, color=COL_R_FK, label="shoulderFk")
+    # ── CABEZA / CUELLO ────────────────────────────────────────────
+    btn("C_head_CTL",   CX - 42, 66,  84, 28, color=COL_CENTER,   label="head")
+    btn("C_neck_CTL",   CX - 34, 126, 68, 20, color=COL_CENTER,   label="neck",   size=8)
+    btn("C_throat_CTL", CX - 28, 150, 56, 16, color=COL_CTR_SOFT, label="throat", size=7)
 
-    y += CH + GAP
-    btn("L_elbowFk_CTL",    XL, y,      CW, CH, color=COL_L_FK, label="elbowFk")
-    btn("C_spine06Tan_CTL", XC, y,      CWC,18, color=COL_TAN,  label="spine06Tan", size=8)
-    btn("R_elbowFk_CTL",    XR, y,      CW, CH, color=COL_R_FK, label="elbowFk")
+    # ── CLAVÍCULAS (hombros) ───────────────────────────────────────
+    btn("R_clavicle_CTL", CX - 150, 182, 72, 20, color=COL_R_CLAV, label="clav", size=8)
+    btn("L_clavicle_CTL", CX + 78,  182, 72, 20, color=COL_L_CLAV, label="clav", size=8)
 
-    y += CH + GAP
-    btn("L_wristFk_CTL",    XL, y,      CW, CH, color=COL_L_FK, label="wristFk")
-    btn("C_spine03_CTL",    XC, y,      CWC,CH, color=COL_CENTER,label="spine mid")
-    btn("R_wristFk_CTL",    XR, y,      CW, CH, color=COL_R_FK, label="wristFk")
+    # ── COLUMNA (spine, torso) ─────────────────────────────────────
+    sx, sw = CX - 33, 66
+    btn("C_localChest_CTL", sx + 2, 206, 62, 16, color=COL_CTR_SOFT, label="locChest", size=7)
+    spy = 226
+    for i in (7, 6, 5, 4, 3, 2, 1, 0):
+        btn(f"C_spine0{i}_CTL", sx, spy, sw, 22, color=COL_CENTER, label=f"spine{i}", size=7)
+        spy += 25
+    btn("C_body_CTL",     CX - 42, 432, 84, 22, color=COL_CENTER,   label="body")
+    btn("C_localHip_CTL", CX - 34, 458, 68, 18, color=COL_CTR_SOFT, label="locHip", size=7)
 
-    y += CH + GAP
-    btn("L_armSettings_CTL",XL, y,      CW, CH, color=COL_SETTINGS, label="IK / FK")
-    btn("C_spine01Tan_CTL", XC, y,      CWC,18, color=COL_TAN,  label="spine01Tan", size=8)
-    btn("R_armSettings_CTL",XR, y,      CW, CH, color=COL_SETTINGS, label="IK / FK")
+    # ── BRAZOS (FK por el brazo, IK junto a la mano) ───────────────
+    for s, sgn, c_fk, c_ik in (("R", -1, COL_R_FK, COL_R_IK), ("L", 1, COL_L_FK, COL_L_IK)):
+        ax = CX + (sgn * 210 if sgn < 0 else 144)   # x base del brazo FK
+        ix = CX + (sgn * 300 if sgn < 0 else 224)   # x columna IK (fuera)
+        ox = 0 if sgn < 0 else 0
+        # FK chain
+        btn(f"{s}_shoulderFk_CTL", ax,            200, 66, 22, color=c_fk, label="shldFk", size=7)
+        btn(f"{s}_elbowFk_CTL",    ax + sgn * 16,  260, 66, 22, color=c_fk, label="elbFk",  size=7)
+        btn(f"{s}_wristFk_CTL",    ax + sgn * 28,  340, 66, 22, color=c_fk, label="wrstFk", size=7)
+        btn(f"{s}_armSettings_CTL",ax + sgn * 28,  366, 66, 16, color=COL_SETTINGS, label="IK/FK", size=7)
+        # IK (columna fuera del brazo)
+        btn(f"{s}_armPv_CTL",      ix, 300, 60, 20, color=c_ik, label="armPv",  size=7)
+        btn(f"{s}_armIkWrist_CTL", ix, 484, 72, 22, color=c_ik, label="ikWrist",size=7)
+        btn(f"{s}_armIkRoot_CTL",  ix, 508, 72, 18, color=c_ik, label="ikRoot", size=7)
+        # dedos (en la mano)
+        hx = CX + (sgn * 254 if sgn < 0 else 178)
+        btn(f"{s}_fingersAttributes_CTL", hx, 542, 80, 18, color=COL_SETTINGS, label="fingers", size=7)
 
-    y += CH + GAP
-    btn("L_armIkWrist_CTL", XL, y,      CW, CH, color=COL_L_IK, label="armIk wrist")
-    btn("C_spine00_CTL",    XC, y,      CWC,CH, color=COL_CENTER,label="spine bot")
-    btn("R_armIkWrist_CTL", XR, y,      CW, CH, color=COL_R_IK, label="armIk wrist")
-
-    y += CH + GAP
-    btn("L_armIkRoot_CTL",  XL, y,      CW, CH, color=COL_L_IK, label="armIk root")
-    btn("C_body_CTL",       XC, y,      CWC,CH, color=COL_CENTER,label="body")
-    btn("R_armIkRoot_CTL",  XR, y,      CW, CH, color=COL_R_IK, label="armIk root")
-
-    y += CH + GAP
-    btn("L_armPv_CTL",      XL, y,      CW, CH, color=COL_L_IK, label="armPv")
-    btn("C_localHip_CTL",   XC, y,      CWC,CH, color=COL_CTR_SOFT, label="localHip")
-    btn("R_armPv_CTL",      XR, y,      CW, CH, color=COL_R_IK, label="armPv")
-
-    # ── FINGER ATTRIBUTES (inline, small) ───
-    y += CH + GAP
-    btn("L_fingersAttributes_CTL", XL, y, CW, 18, color=COL_SETTINGS, label="fingers attr", size=8)
-    btn("R_fingersAttributes_CTL", XR, y, CW, 18, color=COL_SETTINGS, label="fingers attr", size=8)
-
-    # ── LEGS SEPARATOR ──────────────────────────
-    y += 18 + SGAP
-    bg("  LEGS", 0, y, CANVAS_W, 16, color="#111111", text_color="#555555")
-    y += 16 + GAP
-
-    # ── LEG SETTINGS ────────────────────────
-    btn("L_legSettings_CTL", XL, y, CW, CH, color=COL_SETTINGS, label="IK / FK")
-    btn("R_legSettings_CTL", XR, y, CW, CH, color=COL_SETTINGS, label="IK / FK")
-
-    # ── LEG FK ──────────────────────────────
-    y += CH + GAP
-    btn("L_hipFk_CTL",   XL, y, CW, CH, color=COL_L_FK, label="hipFk")
-    btn("R_hipFk_CTL",   XR, y, CW, CH, color=COL_R_FK, label="hipFk")
-
-    y += CH + GAP
-    btn("L_kneeFk_CTL",  XL, y, CW, CH, color=COL_L_FK, label="kneeFk")
-    btn("R_kneeFk_CTL",  XR, y, CW, CH, color=COL_R_FK, label="kneeFk")
-
-    y += CH + GAP
-    btn("L_ankleFk_CTL", XL, y, CW, CH, color=COL_L_FK, label="ankleFk")
-    btn("R_ankleFk_CTL", XR, y, CW, CH, color=COL_R_FK, label="ankleFk")
-
-    y += CH + GAP
-    btn("L_ballFk_CTL",  XL, y, CW, CH, color=COL_L_FK, label="ballFk")
-    btn("R_ballFk_CTL",  XR, y, CW, CH, color=COL_R_FK, label="ballFk")
-
-    # ── LEG IK ──────────────────────────────
-    y += CH + SGAP
-    btn("L_legRootIk_CTL", XL, y, CW, CH, color=COL_L_IK, label="legRootIk")
-    btn("R_legRootIk_CTL", XR, y, CW, CH, color=COL_R_IK, label="legRootIk")
-
-    y += CH + GAP
-    btn("L_legPv_CTL",     XL, y, CW, CH, color=COL_L_IK, label="legPv")
-    btn("R_legPv_CTL",     XR, y, CW, CH, color=COL_R_IK, label="legPv")
-
-    y += CH + GAP
-    btn("L_ankleIk_CTL",   XL, y, CW, CH, color=COL_L_IK, label="ankleIk")
-    btn("R_ankleIk_CTL",   XR, y, CW, CH, color=COL_R_IK, label="ankleIk")
-
-    # toe + ball on same row (split)
-    y += CH + GAP
-    btn("L_toeIk_CTL",  XL,         y, 96, CH, color=COL_L_IK, label="toeIk")
-    btn("L_ballIk_CTL", XL + 100,   y, 50, CH, color=COL_L_IK, label="ball", size=8)
-    btn("R_toeIk_CTL",  XR,         y, 96, CH, color=COL_R_IK, label="toeIk")
-    btn("R_ballIk_CTL", XR + 100,   y, 50, CH, color=COL_R_IK, label="ball", size=8)
-
-    y += CH + GAP
-    btn("L_heel_CTL", XL, y, CW, CH, color=COL_L_IK, label="heel")
-    btn("R_heel_CTL", XR, y, CW, CH, color=COL_R_IK, label="heel")
+    # ── PIERNAS (FK por la pierna, IK junto al pie) ────────────────
+    for s, c_fk, c_ik, lx, ix, fx in (
+        ("R", COL_R_FK, COL_R_IK, CX - 102, CX - 178, CX - 112),
+        ("L", COL_L_FK, COL_L_IK, CX + 30,  CX + 120, CX + 18),
+    ):
+        btn(f"{s}_legSettings_CTL", lx, 486, 74, 16, color=COL_SETTINGS, label="IK/FK", size=7)
+        btn(f"{s}_hipFk_CTL",   lx, 510, 74, 22, color=c_fk, label="hipFk",  size=7)
+        btn(f"{s}_kneeFk_CTL",  lx + (4 if s == "R" else -4), 600, 70, 22, color=c_fk, label="kneeFk", size=7)
+        btn(f"{s}_ankleFk_CTL", lx + (4 if s == "R" else -4), 662, 70, 22, color=c_fk, label="anklFk", size=7)
+        btn(f"{s}_ballFk_CTL",  fx + 24, 724, 64, 16, color=c_fk, label="ballFk", size=7)
+        # IK (columna fuera de la pierna)
+        btn(f"{s}_legRootIk_CTL", ix, 520, 58, 20, color=c_ik, label="rootIk", size=7)
+        btn(f"{s}_legPv_CTL",     ix, 600, 58, 20, color=c_ik, label="legPv", size=7)
+        btn(f"{s}_ankleIk_CTL",   ix, 690, 58, 20, color=c_ik, label="anklIk", size=7)
+        btn(f"{s}_heel_CTL",      ix, 714, 58, 18, color=c_ik, label="heel",  size=7)
+        # toe + ball en el pie
+        btn(f"{s}_toeIk_CTL",  fx, 768, 56, 18, color=c_ik, label="toe", size=7)
+        btn(f"{s}_ballIk_CTL", fx + 60, 768, 34, 18, color=c_ik, label="bl", size=6)
 
     return shapes
 
@@ -348,172 +325,92 @@ def _build_face_shapes():
     def sep(label, y, color="#111111", text_color="#555555"):
         bg(f"  {label}", 0, y, CW_FACE, 13, color=color, text_color=text_color)
 
-    CW_FACE = 460
-    XR   = 5      # viewer's left  (char's right)
-    XL   = 273    # viewer's right (char's left)
-    W_SIDE = 183
-    W_EAR  = 28
-    W_BROW = 35
-    W_ELD  = _ELD_BTN_W
-    W_CB   = 44
+    CX = 260            # línea central de la cara
+    SIL = "#2D2D2D"
 
-    # ── LAYER 0: full canvas bg ─────────────────────────────────
-    bg("", 0, 0, CW_FACE, 500, color="#0E0E0E")
+    # ── SILUETA: óvalo de la cara + orejas ──────────────────────
+    bg("", 0, 0, 520, 600, color="#161616")
+    bg("", CX - 155, 28, 310, 500, color="#221E1B", shape_type="rounded_rect", corners=135)
+    bg("", CX - 188, 210, 36, 96, color=SIL, shape_type="rounded_rect", corners=14)   # oreja R (izq)
+    bg("", CX + 152, 210, 36, 96, color=SIL, shape_type="rounded_rect", corners=14)   # oreja L (der)
 
-    # ── LAYER 1: face oval ──────────────────────────────────────
-    bg("", 55, 28, 350, 458, color="#131110",
-       shape_type="rounded_rect", corners=80)
-
-    # ── HEADER: ears + face CTL ─────────────────────────────────
-    bg("", 0, 0, CW_FACE, 28, color="#111111")
+    btn("C_face_CTL", CX - 62, 8, 124, 22, color=COL_CTR_SOFT, label="face", size=9)
     for i in range(3):
-        btn(f"R_ear0{i}_CTL", XR + i*(W_EAR+3), 4, W_EAR, 20,
-            color=COL_R_FK, label=f"ear{i}", size=7)
-        btn(f"L_ear0{i}_CTL", 423 - i*(W_EAR+3), 4, W_EAR, 20,
-            color=COL_L_FK, label=f"ear{i}", size=7)
-    btn("C_face_CTL", 128, 4, 204, 20, color=COL_CTR_SOFT, label="face", size=9)
+        btn(f"R_ear0{i}_CTL", CX - 185, 214 + i*30, 32, 26, color=COL_R_FK, label=f"e{i}", size=6)
+        btn(f"L_ear0{i}_CTL", CX + 153, 214 + i*30, 32, 26, color=COL_L_FK, label=f"e{i}", size=6)
 
-    # ═══════════════════════════════════════════════════════════
-    #  BROWS
-    # ═══════════════════════════════════════════════════════════
-    y = 32
-    sep("BROWS", y, color="#1E1900", text_color="#887733")
-    y += 17
+    # ── CEJAS (encima de los ojos) ──────────────────────────────
+    by = 56
+    btn("R_eyebrowMain_CTL", CX - 184, by, 112, 18, color=COL_R_FK,   label="browMain", size=6)
+    btn("C_eyebrowMid_CTL",  CX - 30,  by, 60,  18, color=COL_CENTER, label="mid",      size=6)
+    btn("L_eyebrowMain_CTL", CX + 72,  by, 112, 18, color=COL_L_FK,   label="browMain", size=6)
+    for i, n in enumerate(_BROW_SEC_R):
+        btn(f"R_eyebrow{n}_CTL", CX - 184 + i*23, by + 20, 21, 15, color=COL_R_FK, label=n[:2], size=6)
+    for i, n in enumerate(_BROW_SEC_L):
+        btn(f"L_eyebrow{n}_CTL", CX + 72 + i*23,  by + 20, 21, 15, color=COL_L_FK, label=n[:2], size=6)
 
-    XCBMID = (CW_FACE - 70) // 2
-    btn("R_eyebrowMain_CTL", XR,     y, W_SIDE, CH, color=COL_R_FK,   label="eyebrowMain")
-    btn("C_eyebrowMid_CTL",  XCBMID, y, 70,     CH, color=COL_CENTER, label="browMid")
-    btn("L_eyebrowMain_CTL", XL,     y, W_SIDE, CH, color=COL_L_FK,   label="eyebrowMain")
-    y += CH + 4
-
-    for i, name in enumerate(_BROW_SEC_R):
-        btn(f"R_eyebrow{name}_CTL", XR + i*(W_BROW+2), y, W_BROW, 18,
-            color=COL_R_FK, label=name[:3], size=7)
-    for i, name in enumerate(_BROW_SEC_L):
-        btn(f"L_eyebrow{name}_CTL", XL + i*(W_BROW+2), y, W_BROW, 18,
-            color=COL_L_FK, label=name[:3], size=7)
-    y += 18 + 6
-
-    # ═══════════════════════════════════════════════════════════
-    #  EYES
-    # ═══════════════════════════════════════════════════════════
-    sep("EYES", y, color="#0D1525", text_color="#4466AA")
-    # Eye socket bgs — drawn before buttons so they appear below
-    _eye_h = CH + 4 + 18 + 3 + 18 + 2  # covers eye row + both eyelid rows
-    bg("", XR-2, y+13, 189, _eye_h, color="#0B1018",
-       shape_type="rounded_rect", corners=6)
-    bg("", XL-2, y+13, 189, _eye_h, color="#0B1018",
-       shape_type="rounded_rect", corners=6)
-    y += 17
-
-    EW1, EW2 = 88, 82
-    XCE = (CW_FACE - 74) // 2
-    btn("R_eye_CTL",       XR,       y, EW1, CH, color=COL_R_IK, label="eye")
-    btn("R_eyeDirect_CTL", XR+EW1+3, y, EW2, CH, color=COL_R_FK, label="eyeDirect", size=8)
-    btn("C_eyeMain_CTL",   XCE,      y, 74,  CH, color=COL_CENTER, label="eyeMain", size=8)
-    btn("L_eye_CTL",       XL,       y, EW1, CH, color=COL_L_IK, label="eye")
-    btn("L_eyeDirect_CTL", XL+EW1+3, y, EW2, CH, color=COL_L_FK, label="eyeDirect", size=8)
-    y += CH + 4
-
+    # ── OJOS (clúster por ojo: párpado sup / ojo / párpado inf) ──
+    ey = 104
+    bg("", CX - 188, ey - 4, 128, 84, color="#13100E", shape_type="rounded_rect", corners=10)
+    bg("", CX + 60,  ey - 4, 128, 84, color="#13100E", shape_type="rounded_rect", corners=10)
     ELD_R    = ["Out", "OutUp",   "Up",   "InUp",   "In"]
     ELD_L    = ["In",  "InUp",    "Up",   "OutUp",  "Out"]
     ELD_R_LO = ["Out", "OutDown", "Down", "InDown", "In"]
     ELD_L_LO = ["In",  "InDown",  "Down", "OutDown","Out"]
+    ew = 25
+    for i, n in enumerate(ELD_R):
+        btn(f"R_eyelid{n}_CTL", CX - 186 + i*ew, ey, ew - 3, 15, color=COL_R_FK, label=n[:3], size=6)
+    for i, n in enumerate(ELD_L):
+        btn(f"L_eyelid{n}_CTL", CX + 62 + i*ew,  ey, ew - 3, 15, color=COL_L_FK, label=n[:3], size=6)
+    btn("R_eye_CTL",       CX - 186, ey + 17, 60, 22, color=COL_R_IK,  label="eye",    size=7)
+    btn("R_eyeDirect_CTL", CX - 124, ey + 17, 60, 22, color=COL_R_FK,  label="direct", size=6)
+    btn("C_eyeMain_CTL",   CX - 28,  ey + 17, 56, 22, color=COL_CENTER,label="eyeMain",size=6)
+    btn("L_eye_CTL",       CX + 126, ey + 17, 60, 22, color=COL_L_IK,  label="eye",    size=7)
+    btn("L_eyeDirect_CTL", CX + 64,  ey + 17, 60, 22, color=COL_L_FK,  label="direct", size=6)
+    for i, n in enumerate(ELD_R_LO):
+        btn(f"R_eyelid{n}_CTL", CX - 186 + i*ew, ey + 41, ew - 3, 15, color=COL_R_FK, label=n[:3], size=6)
+    for i, n in enumerate(ELD_L_LO):
+        btn(f"L_eyelid{n}_CTL", CX + 62 + i*ew,  ey + 41, ew - 3, 15, color=COL_L_FK, label=n[:3], size=6)
 
-    for i, name in enumerate(ELD_R):
-        btn(f"R_eyelid{name}_CTL", XR + i*(W_ELD+2), y, W_ELD, 18,
-            color=COL_R_FK, label=name[:4], size=7)
-    for i, name in enumerate(ELD_L):
-        btn(f"L_eyelid{name}_CTL", XL + i*(W_ELD+2), y, W_ELD, 18,
-            color=COL_L_FK, label=name[:4], size=7)
-    y += 18 + 3
+    # ── MEJILLAS (laterales, bajo los ojos) ─────────────────────
+    cy = 198
+    btn("R_cheek_CTL", CX - 184, cy, 96, 18, color=COL_R_FK, label="cheek", size=6)
+    btn("L_cheek_CTL", CX + 88,  cy, 96, 18, color=COL_L_FK, label="cheek", size=6)
+    for i, (sfx, lbl) in enumerate(zip(["", "00", "01", "02"], ["rt", "0", "1", "2"])):
+        btn(f"R_cheekbone{sfx}_CTL", CX - 184 + i*24, cy + 20, 22, 15, color=COL_R_FK, label=lbl, size=6)
+        btn(f"L_cheekbone{sfx}_CTL", CX + 88 + i*24,  cy + 20, 22, 15, color=COL_L_FK, label=lbl, size=6)
 
-    for i, name in enumerate(ELD_R_LO):
-        btn(f"R_eyelid{name}_CTL", XR + i*(W_ELD+2), y, W_ELD, 18,
-            color=COL_R_FK, label=name[:4], size=7)
-    for i, name in enumerate(ELD_L_LO):
-        btn(f"L_eyelid{name}_CTL", XL + i*(W_ELD+2), y, W_ELD, 18,
-            color=COL_L_FK, label=name[:4], size=7)
-    y += 18 + 6
+    # ── NARIZ (centro) ──────────────────────────────────────────
+    ny = 196
+    btn("C_baseNose_CTL", CX - 27, ny,      54, 17, color=COL_CENTER, label="base", size=6)
+    btn("C_noseMain_CTL", CX - 27, ny + 19, 54, 17, color=COL_CENTER, label="main", size=6)
+    btn("C_noseTip_CTL",  CX - 27, ny + 38, 54, 17, color=COL_CENTER, label="tip",  size=6)
+    btn("R_nose_CTL",     CX - 70, ny + 19, 38, 17, color=COL_R_FK, label="nose",  size=6)
+    btn("L_nose_CTL",     CX + 32, ny + 19, 38, 17, color=COL_L_FK, label="nose",  size=6)
+    btn("R_nosetril_CTL", CX - 70, ny + 38, 38, 17, color=COL_R_FK, label="ntril", size=6)
+    btn("L_nosetril_CTL", CX + 32, ny + 38, 38, 17, color=COL_L_FK, label="ntril", size=6)
 
-    # ═══════════════════════════════════════════════════════════
-    #  CHEEKS
-    # ═══════════════════════════════════════════════════════════
-    sep("CHEEKS", y, color="#111111", text_color="#666666")
-    y += 17
+    # ── BOCA ────────────────────────────────────────────────────
+    my = 296
+    btn("R_lipCorner_CTL", CX - 178, my, 72,  20, color=COL_R_FK,   label="corner",  size=6)
+    btn("C_upperLip_CTL",  CX - 70,  my, 140, 20, color=COL_CENTER, label="upperLip",size=7)
+    btn("L_lipCorner_CTL", CX + 106, my, 72,  20, color=COL_L_FK,   label="corner",  size=6)
 
-    for i, (sfx, lbl) in enumerate(zip(["", "00", "01", "02"],
-                                        ["root", "00", "01", "02"])):
-        btn(f"R_cheekbone{sfx}_CTL", XR + i*(W_CB+2), y, W_CB, CH,
-            color=COL_R_FK, label=lbl, size=7)
-        btn(f"L_cheekbone{sfx}_CTL", XL + i*(W_CB+2), y, W_CB, CH,
-            color=COL_L_FK, label=lbl, size=7)
-    y += CH + 4
-
-    btn("R_cheek_CTL", XR, y, W_SIDE, CH, color=COL_R_FK, label="cheek")
-    btn("L_cheek_CTL", XL, y, W_SIDE, CH, color=COL_L_FK, label="cheek")
-    y += CH + 6
-
-    # ═══════════════════════════════════════════════════════════
-    #  NOSE
-    # ═══════════════════════════════════════════════════════════
-    sep("NOSE", y, color="#111111", text_color="#666666")
-    y += 17
-
-    nose_btns = [
-        ("R_nosetril_CTL", 46, COL_R_FK,   "nosetril"),
-        ("R_nose_CTL",     88, COL_R_FK,   "nose"),
-        ("C_baseNose_CTL", 50, COL_CENTER, "base"),
-        ("C_noseMain_CTL", 54, COL_CENTER, "noseMain"),
-        ("C_noseTip_CTL",  50, COL_CENTER, "noseTip"),
-        ("L_nose_CTL",     88, COL_L_FK,   "nose"),
-        ("L_nosetril_CTL", 46, COL_L_FK,   "nosetril"),
-    ]
-    total_w = sum(w for _, w, _, _ in nose_btns)
-    gap_n   = (CW_FACE - total_w) // (len(nose_btns) - 1)
-    nx = 0
-    for name, w, col, lbl in nose_btns:
-        btn(name, nx, y, w, CH, color=col, label=lbl, size=8)
-        nx += w + gap_n
-    y += CH + 6
-
-    # ═══════════════════════════════════════════════════════════
-    #  MOUTH
-    # ═══════════════════════════════════════════════════════════
-    sep("MOUTH", y, color="#1E1000", text_color="#996633")
-    y += 17
-
-    WLC, WUL = 130, 160
-    XUL = (CW_FACE - WUL) // 2
-    btn("R_lipCorner_CTL", XR,          y, WLC, CH, color=COL_R_FK,   label="lipCorner")
-    btn("C_upperLip_CTL",  XUL,         y, WUL, CH, color=COL_CENTER, label="upperLip")
-    btn("L_lipCorner_CTL", CW_FACE-WLC, y, WLC, CH, color=COL_L_FK,   label="lipCorner")
-    y += CH + 4
-
-    WJ = 150
-    XJ = (CW_FACE - WJ) // 2
-    btn("C_upperJaw_CTL", XJ, y, WJ, CH, color=COL_CENTER, label="upperJaw")
-    y += CH + 4
-    btn("C_jaw_CTL",      XJ, y, WJ, CH, color=COL_CENTER, label="jaw")
-    y += CH + 4
-    btn("C_lowerLip_CTL", XJ, y, WJ, CH, color=COL_CENTER, label="lowerLip")
-    y += CH + 8
-
-    # ═══════════════════════════════════════════════════════════
-    #  SECONDARY LIPS
-    # ═══════════════════════════════════════════════════════════
-    sep("secondary lips", y, color="#111111", text_color="#555555")
-    y += 16
-
-    LIP_W = 50
-    LIP_G = (CW_FACE - 8 * LIP_W) // 7
+    # secondary lips (naming mirror: R 00-03, C 00, L 00-03)
+    _LIP_SEQ = [("R","00"), ("R","01"), ("R","02"), ("R","03"), ("C","00"),
+                ("L","03"), ("L","02"), ("L","01"), ("L","00")]
     LIP_COL = {"R": COL_R_FK, "C": COL_CENTER, "L": COL_L_FK}
-    for part in ("upper", "lower"):
-        for idx, (lbl, side) in enumerate(zip(_LIP_LABELS, _LIP_SIDES)):
-            nx = idx * (LIP_W + LIP_G)
-            btn(f"{side}_{part}Lip{lbl}_CTL", nx, y, LIP_W, 18,
-                color=LIP_COL[side], label=lbl, size=8)
-        y += 18 + 3
+    lw = 28.0
+    lx0 = CX - (len(_LIP_SEQ) * lw) / 2.0
+    for i, (sd, lb) in enumerate(_LIP_SEQ):
+        btn(f"{sd}_upperLip{lb}_CTL", lx0 + i*lw, my + 22, lw - 1, 14, color=LIP_COL[sd], label=lb, size=6)
+
+    btn("C_upperJaw_CTL", CX - 60, my + 40, 120, 18, color=COL_CENTER, label="upperJaw", size=6)
+    btn("C_jaw_CTL",      CX - 60, my + 60, 120, 20, color=COL_CENTER, label="jaw",      size=7)
+    btn("C_lowerLip_CTL", CX - 60, my + 82, 120, 18, color=COL_CENTER, label="lowerLip", size=6)
+
+    for i, (sd, lb) in enumerate(_LIP_SEQ):
+        btn(f"{sd}_lowerLip{lb}_CTL", lx0 + i*lw, my + 102, lw - 1, 14, color=LIP_COL[sd], label=lb, size=6)
 
     return shapes
 

@@ -32,7 +32,7 @@ class EyelidModule(object):
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
         self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
-    def make(self, side, sockets=True):
+    def make(self, side, sockets=True, surface=False):
 
         """
         Create the eyelid module structure and controllers. Call this method with the side ('L' or 'R') to create the respective eyelid module.
@@ -41,9 +41,15 @@ class EyelidModule(object):
             sockets (bool): construir los sockets del párpado (dependen de la ceja
                 y de las guías de socket). En cuadrúpedo se pasa False: no hay
                 cejas/sockets, así que no se crean.
+            surface (bool): si es True, las joints de skinning del párpado se
+                PROYECTAN sobre una NURBS surface esférica centrada en el ojo (del
+                tamaño del ojo), así siempre van por encima del globo ocular y el
+                blink no se rompe (no se hunden dentro al cerrar). Flag por
+                personaje.
 
         """
         self.side = side
+        self.surface = surface
         self.module_name = f"C_eyelid"
         if cmds.objExists(f"{self.module_name}Module_GRP"):
             self.module_trn = f"{self.module_name}Module_GRP"
@@ -71,6 +77,8 @@ class EyelidModule(object):
         self.eye_direct()
         self.create_blink_setup()
         self.fleshy_setup()
+        if self.surface:
+            self.create_eye_surface()
         self.skinning_joints()
 
         # Sockets: solo en biped (dependen de la ceja y de las guías de socket).
@@ -232,11 +240,33 @@ class EyelidModule(object):
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
             cmds.parent(self.main_aim_nodes[0], self.head_ctl)
             self.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
-            centered_eye_matrix = list(self.eye_guide_matrix)
-            centered_eye_matrix[12] = 0.0  # ojo centrado en X (antes se ponía tx=0 en la guía)
-            cmds.xform(self.main_aim_nodes[0], ws=True, m=centered_eye_matrix)
-            cmds.select(self.main_aim_nodes[0])
-            cmds.move(0, 0, 30, relative=True, objectSpace=True, worldSpaceDistance=True)
+            # C_eyeMain en el PUNTO MEDIO de los aim de los DOS ojos (cada aim va a 30
+            # DELANTE de su ojo por su mirada = eje Z del ojo). Se leen las matrices
+            # de guía de ambos ojos del archivo (las guías pueden ser asimétricas, p.
+            # ej. el cuadrúpedo), así el medio es correcto aunque no haya simetría.
+            # Orientado a la CABEZA (antes usaba la orientación LATERAL del ojo +
+            # mover por su Z, que en cuadrúpedos mandaba el control de lado). En biped
+            # (ojos al frente, simétricos) equivale al comportamiento anterior.
+            def _eye_aim(eye_matrix):
+                z = om.MVector(eye_matrix[8], eye_matrix[9], eye_matrix[10]).normal()
+                c = om.MVector(eye_matrix[12], eye_matrix[13], eye_matrix[14])
+                return c + z * 30.0
+            aim_l = _eye_aim(self.eye_guide_matrix)
+            aim_r = None
+            try:
+                r_chain = guides_manager.get_guides("R_eye_JNT")  # crea R_eye_JNT (+End) temporal
+                aim_r = _eye_aim(cmds.getAttr(f"{r_chain[0]}.worldMatrix[0]"))
+                cmds.delete(r_chain[0])  # borra (con su hijo) -> el build de R la recrea
+            except Exception:
+                aim_r = None
+            if aim_r is not None:
+                mid = (aim_l + aim_r) * 0.5
+            else:
+                # fallback: simétrico en X (centro del personaje), altura/profundidad del aim L
+                mid = om.MVector(0.0, aim_l.y, aim_l.z)
+            h = self.head_guide_matrix
+            main_matrix = [h[0], h[1], h[2], 0, h[4], h[5], h[6], 0, h[8], h[9], h[10], 0, mid.x, mid.y, mid.z, 1]
+            cmds.xform(self.main_aim_nodes[0], ws=True, m=main_matrix)
 
         side_aim_nodes, self.side_aim_ctl = curve_tool.create_controller(name=f"{self.side}_eye", offset=["GRP"])
         cmds.parent(side_aim_nodes[0], self.controllers_grp)
@@ -327,6 +357,12 @@ class EyelidModule(object):
         """
 
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
+        if self.surface:
+            # Gizmo DELANTE del ojo (a lo largo de la mirada = Z local del control)
+            # para agarrarlo, pero el pivote/transform queda en el CENTRO del ojo, así
+            # rotarlo rota el ojo sobre su centro (no lo orbita). En cuadrúpedos el ojo
+            # mira de lado, así que 'delante' es la Z del ojo, no el frente de la cara.
+            cmds.move(0, 0, 15, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", self.eye_guide_matrix, type="matrix")
@@ -527,8 +563,69 @@ class EyelidModule(object):
      
                 
 
+    def create_eye_surface(self):
+
+        """
+        NURBS surface esférica del tamaño del ojo, centrada en el ojo, sobre la que
+        se proyectan las joints del párpado (flag `surface`). El radio = distancia
+        media del centro del ojo a los CVs de las guías lineales del párpado (el
+        borde del párpado descansa sobre el globo). Estática en el mismo espacio
+        que las joints del párpado (mundo, bajo el module_trn), reference+oculta.
+        """
+        m = self.eye_guide_matrix
+        center = om.MVector(m[12], m[13], m[14])
+        cvs = cmds.ls(f"{self.linear_upper_curve}.cv[*]", fl=True) + cmds.ls(f"{self.linear_lower_curve}.cv[*]", fl=True)
+        dists = [(om.MVector(*cmds.pointPosition(cv, w=True)) - center).length() for cv in cvs]
+        radius = (sum(dists) / len(dists)) if dists else 1.0
+        self.eye_radius = radius
+
+        surf = cmds.sphere(radius=radius, ch=False, name=f"{self.side}_eyeSurface_NRB")[0]
+        cmds.xform(surf, ws=True, t=(center.x, center.y, center.z))
+        cmds.parent(surf, self.module_trn)
+        cmds.setAttr(f"{surf}.overrideEnabled", 1)
+        cmds.setAttr(f"{surf}.overrideDisplayType", 2)  # reference (visible para ajustar, no seleccionable)
+        cmds.setAttr(f"{surf}.visibility", 0)
+        self.lock_attributes(surf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        self.eye_surface = surf
+        self.eye_surface_shape = cmds.listRelatives(surf, shapes=True)[0]
+
+        # --- Blink HORIZONTAL (aplanado al proyectar) ---
+        # Al cerrar, la ALTURA (eje up del ojo, Y local) de las joints converge a un
+        # nivel COMÚN -> la línea de cierre queda horizontal en el frame del ojo. El
+        # nivel sigue a Blink_Height (entre el borde inferior y el superior). Se usan
+        # los atributos del blink directamente (no se toca la cadena de blendShapes).
+        self.eye_inv_matrix = list(om.MMatrix(self.eye_guide_matrix).inverse())
+        inv = om.MMatrix(self.eye_guide_matrix).inverse()
+
+        def _local_y_avg(curve):
+            ys = [(om.MPoint(*cmds.pointPosition(c, w=True)) * inv).y for c in cmds.ls(f"{curve}.cv[*]", fl=True)]
+            return sum(ys) / len(ys) if ys else 0.0
+
+        up_y = _local_y_avg(self.linear_upper_curve)
+        dn_y = _local_y_avg(self.linear_lower_curve)
+
+        # flat_Y = dn_y + Blink_Height * (up_y - dn_y)
+        fy_mul = cmds.createNode("multiply", name=f"{self.side}_blinkFlatY_MUL", ss=True)
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{fy_mul}.input[0]")
+        cmds.setAttr(f"{fy_mul}.input[1]", up_y - dn_y)
+        fy_sum = cmds.createNode("sum", name=f"{self.side}_blinkFlatY_SUM", ss=True)
+        cmds.connectAttr(f"{fy_mul}.output", f"{fy_sum}.input[0]")
+        cmds.setAttr(f"{fy_sum}.input[1]", dn_y)
+        self.blink_flat_y = f"{fy_sum}.output"
+
+        # cantidad de cierre (0..1) por párpado: solo cerrar (Blink>0) aplana
+        def _amount(attr, suffix):
+            clamp_node = cmds.createNode("clamp", name=f"{self.side}_{suffix}BlinkAmount_CLP", ss=True)
+            cmds.setAttr(f"{clamp_node}.minR", 0)
+            cmds.setAttr(f"{clamp_node}.maxR", 1)
+            cmds.connectAttr(f"{self.eye_direct_ctl}.{attr}", f"{clamp_node}.inputR")
+            return f"{clamp_node}.outputR"
+
+        self.upper_blink_amount = _amount("Upper_Blink", "upper")
+        self.lower_blink_amount = _amount("Lower_Blink", "lower")
+
     def skinning_joints(self):
-        
+
         """
         Output the skinning joints for the eyelid module, creating one for each vertex on the upper and lower eyelid curves.
         """
@@ -622,7 +719,71 @@ class EyelidModule(object):
             
             cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, 0, -1)
 
-            cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{skinning_jnt}.offsetParentMatrix", f=True)
+            if self.surface:
+                # BLINK HORIZONTAL + sobre la esfera, todo en espacio LOCAL del ojo:
+                # (a) aplana la ALTURA (Y local) hacia el nivel de cierre según el blink
+                #     del párpado -> la línea de cierre queda horizontal en el frame.
+                # (b) proyecta PRESERVANDO esa Y: lleva (X,Z) al círculo de la esfera a
+                #     esa latitud (radio sqrt(r^2 - Y^2)), así queda sobre el globo Y
+                #     horizontal (el closestPointOnSurface radial deshacía el aplanado).
+                amount = self.upper_blink_amount if "upper" in name else self.lower_blink_amount
+                to_local = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Local_MMX", ss=True)
+                cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{to_local}.matrixIn[0]")
+                cmds.setAttr(f"{to_local}.matrixIn[1]", self.eye_inv_matrix, type="matrix")  # mundo -> local ojo
+                loc_rfm = cmds.createNode("rowFromMatrix", name=f"{self.side}_{name}Eyelid0{i}Local_RFM", ss=True)
+                cmds.setAttr(f"{loc_rfm}.input", 3)
+                cmds.connectAttr(f"{to_local}.matrixSum", f"{loc_rfm}.matrix")
+                flat_y = cmds.createNode("blendTwoAttr", name=f"{self.side}_{name}Eyelid0{i}FlatY_BTA", ss=True)
+                cmds.connectAttr(f"{loc_rfm}.outputY", f"{flat_y}.input[0]")
+                cmds.connectAttr(self.blink_flat_y, f"{flat_y}.input[1]")
+                cmds.connectAttr(amount, f"{flat_y}.attributesBlender")
+                # escala (X,Z) al círculo de radio sqrt(r^2 - Y^2) a esa latitud
+                xsq = cmds.createNode("multiply", name=f"{self.side}_{name}Eyelid0{i}Xsq_MUL", ss=True)
+                cmds.connectAttr(f"{loc_rfm}.outputX", f"{xsq}.input[0]"); cmds.connectAttr(f"{loc_rfm}.outputX", f"{xsq}.input[1]")
+                zsq = cmds.createNode("multiply", name=f"{self.side}_{name}Eyelid0{i}Zsq_MUL", ss=True)
+                cmds.connectAttr(f"{loc_rfm}.outputZ", f"{zsq}.input[0]"); cmds.connectAttr(f"{loc_rfm}.outputZ", f"{zsq}.input[1]")
+                xzsq = cmds.createNode("sum", name=f"{self.side}_{name}Eyelid0{i}XZsq_SUM", ss=True)
+                cmds.connectAttr(f"{xsq}.output", f"{xzsq}.input[0]"); cmds.connectAttr(f"{zsq}.output", f"{xzsq}.input[1]")
+                xzlen = cmds.createNode("power", name=f"{self.side}_{name}Eyelid0{i}XZlen_POW", ss=True)
+                cmds.connectAttr(f"{xzsq}.output", f"{xzlen}.input"); cmds.setAttr(f"{xzlen}.exponent", 0.5)
+                ysq = cmds.createNode("multiply", name=f"{self.side}_{name}Eyelid0{i}Ysq_MUL", ss=True)
+                cmds.connectAttr(f"{flat_y}.output", f"{ysq}.input[0]"); cmds.connectAttr(f"{flat_y}.output", f"{ysq}.input[1]")
+                horizsq = cmds.createNode("subtract", name=f"{self.side}_{name}Eyelid0{i}Horizsq_SUB", ss=True)
+                cmds.setAttr(f"{horizsq}.input1", self.eye_radius * self.eye_radius)
+                cmds.connectAttr(f"{ysq}.output", f"{horizsq}.input2")
+                horizmax = cmds.createNode("max", name=f"{self.side}_{name}Eyelid0{i}Horizmax_MAX", ss=True)
+                cmds.connectAttr(f"{horizsq}.output", f"{horizmax}.input[0]"); cmds.setAttr(f"{horizmax}.input[1]", 0.0001)
+                horiz = cmds.createNode("power", name=f"{self.side}_{name}Eyelid0{i}Horiz_POW", ss=True)
+                cmds.connectAttr(f"{horizmax}.output", f"{horiz}.input"); cmds.setAttr(f"{horiz}.exponent", 0.5)
+                scale_xz = cmds.createNode("divide", name=f"{self.side}_{name}Eyelid0{i}ScaleXZ_DIV", ss=True)
+                cmds.connectAttr(f"{horiz}.output", f"{scale_xz}.input1"); cmds.connectAttr(f"{xzlen}.output", f"{scale_xz}.input2")
+                xp = cmds.createNode("multiply", name=f"{self.side}_{name}Eyelid0{i}Xp_MUL", ss=True)
+                cmds.connectAttr(f"{loc_rfm}.outputX", f"{xp}.input[0]"); cmds.connectAttr(f"{scale_xz}.output", f"{xp}.input[1]")
+                zp = cmds.createNode("multiply", name=f"{self.side}_{name}Eyelid0{i}Zp_MUL", ss=True)
+                cmds.connectAttr(f"{loc_rfm}.outputZ", f"{zp}.input[0]"); cmds.connectAttr(f"{scale_xz}.output", f"{zp}.input[1]")
+                loc_fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{name}Eyelid0{i}LocalProj_F4X4", ss=True)
+                cmds.connectAttr(f"{xp}.output", f"{loc_fbf}.in30")
+                cmds.connectAttr(f"{flat_y}.output", f"{loc_fbf}.in31")
+                cmds.connectAttr(f"{zp}.output", f"{loc_fbf}.in32")
+                to_world = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}World_MMX", ss=True)
+                cmds.connectAttr(f"{loc_fbf}.output", f"{to_world}.matrixIn[0]")
+                cmds.setAttr(f"{to_world}.matrixIn[1]", self.eye_guide_matrix, type="matrix")  # local ojo -> mundo
+                # posición proyectada + ORIENTACIÓN del aim (-Z al centro = normal)
+                wpos_rfm = cmds.createNode("rowFromMatrix", name=f"{self.side}_{name}Eyelid0{i}Wpos_RFM", ss=True)
+                cmds.setAttr(f"{wpos_rfm}.input", 3)
+                cmds.connectAttr(f"{to_world}.matrixSum", f"{wpos_rfm}.matrix")
+                proj_pos = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{name}Eyelid0{i}ProjPos_F4X4", ss=True)
+                for col, axis in enumerate("XYZ"):
+                    cmds.connectAttr(f"{wpos_rfm}.output{axis}", f"{proj_pos}.in3{col}")
+                proj_rot = cmds.createNode("pickMatrix", name=f"{self.side}_{name}Eyelid0{i}ProjRot_PMX", ss=True)
+                cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{proj_rot}.inputMatrix")
+                cmds.setAttr(f"{proj_rot}.useTranslate", 0)
+                proj_mmx = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Proj_MMX", ss=True)
+                cmds.connectAttr(f"{proj_rot}.outputMatrix", f"{proj_mmx}.matrixIn[0]")
+                cmds.connectAttr(f"{proj_pos}.output", f"{proj_mmx}.matrixIn[1]")
+                cmds.connectAttr(f"{proj_mmx}.matrixSum", f"{skinning_jnt}.offsetParentMatrix", f=True)
+            else:
+                cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{skinning_jnt}.offsetParentMatrix", f=True)
 
             skinning_jnts.append(skinning_jnt)
             skinning_aims.append(aim_matrix_final)

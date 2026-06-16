@@ -367,7 +367,9 @@ class JawModule(object):
         cmds.connectAttr(f"{inverse_matrix_upper}.outputMatrix", f"{mmx_offset_jaw_pos_up}.matrixIn[1]")
         cmds.connectAttr(f"{parent_matrix_upper_local}.outputMatrix", f"{mmx_offset_jaw_pos_up}.matrixIn[2]")
         cmds.connectAttr(f"{mmx_offset_jaw_pos_up}.matrixSum", f"{upper_local_jnt}.offsetParentMatrix")
-        cmds.connectAttr(f"{upper_lip_ctl}.rotate", f"{upper_local_jnt}.rotate")
+        # El roll del labio NO se aplica rotando el joint central (quedaba feo:
+        # solo se retorcía el centro). Se aplica por joint de salida alrededor de
+        # su tangente, con falloff centro->esquinas (ver loop de output joints).
         cmds.connectAttr(f"{upper_lip_ctl}.scale", f"{upper_local_jnt}.scale")
 
         # Create lower controller
@@ -425,7 +427,7 @@ class JawModule(object):
         cmds.connectAttr(f"{inverse_matrix_lower}.outputMatrix", f"{mmx_offset_jaw_pos_low}.matrixIn[1]")
         cmds.connectAttr(f"{parent_matrix_lower_local}.outputMatrix", f"{mmx_offset_jaw_pos_low}.matrixIn[2]")
         cmds.connectAttr(f"{mmx_offset_jaw_pos_low}.matrixSum", f"{lower_local_jnt}.offsetParentMatrix")
-        cmds.connectAttr(f"{lower_lip_ctl}.rotate", f"{lower_local_jnt}.rotate")
+        # Roll por joint de salida (abajo), no rotando el joint central.
         cmds.connectAttr(f"{lower_lip_ctl}.scale", f"{lower_local_jnt}.scale")
         
         
@@ -541,15 +543,9 @@ class JawModule(object):
         # Get CV count once per curve
         up_cvs = cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)
         low_cvs = cmds.ls(f"{self.lower_linear_lip_curve}.cv[*]", flatten=True)
-
-        # Muestrear TODOS los CVs de la linear curve guía para CONSERVAR su shape.
-        # (Antes solo cogía 3 anclas -inicio/medio/fin-, así que la curva base y la
-        # nurbs perdían la forma real de la guía y las joints de skinning, que se
-        # proyectan con las posiciones de los CVs de la guía, caían mal.)
         up_positions = [cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{i}]", world=True) for i in range(len(up_cvs))]
         low_positions = [cmds.pointPosition(f"{self.lower_linear_lip_curve}.cv[{i}]", world=True) for i in range(len(low_cvs))]
 
-        # Curvas base a partir de TODOS los puntos de la guía (mismo grado lineal)
         self.upper_curve = cmds.curve(name="C_upperLip_CRV", degree=1, point=up_positions)
         self.lower_curve = cmds.curve(name="C_lowerLip_CRV", degree=1, point=low_positions)
         upper_shape = cmds.listRelatives(self.upper_curve, shapes=True)[0]
@@ -557,11 +553,14 @@ class JawModule(object):
         cmds.rename(upper_shape, f"{self.upper_curve}Shape_CRV")
         cmds.rename(lower_shape, f"{self.lower_curve}Shape_CRV")
 
-        # Rebuild into smooth cubic curves. Los controladores (= CVs del rebuild)
-        # escalan con la guía pero ACOTADOS a 6-10 (no uno por CV de la linear).
-        # Mismo span en upper y lower → superficies con idéntica topología (lo
-        # necesita el blendShape de sticky lips). Grado 3: nCVs = spans + 3.
-        controller_spans = max(6, min(10, len(up_cvs))) - 3
+        # Nº de controladores (= CVs del rebuild) en 6-10 pero IMPAR, para que la C
+        # caiga en el CV CENTRAL exacto de la curva/nurbs y R/L queden simétricos.
+        # Grado 3: nCVs = spans + 3. Mismo span en upper/lower (topología para el
+        # blendShape de sticky lips).
+        n_controllers = max(6, min(10, len(up_cvs)))
+        if n_controllers % 2 == 0:
+            n_controllers -= 1
+        controller_spans = n_controllers - 3
         self.upper_rebuild_lip_curve = cmds.rebuildCurve(
             self.upper_curve, ch=0, rpo=1, rt=0, end=1, kr=0, kcp=0, kep=1, kt=0,
             s=controller_spans, d=3, tol=0.01, name="C_upperLip_CRV"
@@ -576,18 +575,8 @@ class JawModule(object):
         # Skin cluster to local joints
         self.upper_skin_cluster = cmds.skinCluster(upper_local_jnts, self.upper_rebuild_lip_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_upperLip_SKIN")[0]
         self.lower_skin_cluster = cmds.skinCluster(lower_local_jnts, self.lower_rebuild_lip_curve, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, name="C_lowerLip_SKIN")[0]
-
-        # Reparto geométrico (esquina_inicio -> medio -> esquina_fin) para
-        # cualquier número de CVs (antes cableado a 7 CVs por índice, lo que con
-        # la guía real dejaba cv[0] -esquina- pesado al medio y rompía la boca).
         self._skin_lip_curve_to_locals(self.upper_skin_cluster, self.upper_rebuild_lip_curve, upper_local_jnts)
         self._skin_lip_curve_to_locals(self.lower_skin_cluster, self.lower_rebuild_lip_curve, lower_local_jnts)
-
-
-        # Superficie de labio: CINTA NURBS ESTABLE a partir del rebuild curve, SIN
-        # twist (la curva queda en el CENTRO de la cinta, V=0.5). Sustituye al
-        # offsetCurve(normal automática)+loft, que se retorcía en la curva 3D del
-        # labio y dejaba las joints (pineadas a V=0.5) fuera del labio.
         rebuilded_cvs = len(cmds.ls(f"{self.upper_rebuild_lip_curve}.cv[*]", flatten=True))
 
         def _span_len(crv):
@@ -619,12 +608,15 @@ class JawModule(object):
 
                 if index < mid_point:
                     side = "R"
+                    i = index
                 elif index == mid_point:
                     side = "C"
+                    i = 0  # la C es el centro -> nombre 00 (mirror limpio)
                 else:
                     side = "L"
+                    i = rebuilded_cvs - 1 - index
 
-                ctl_name = f"{side}_{part}Lip{str(index).zfill(2)}"
+                ctl_name = f"{side}_{part}Lip{str(i).zfill(2)}"
 
                 secondary_nodes, secondary_ctl = curve_tool.create_controller(
                     ctl_name,
@@ -716,6 +708,7 @@ class JawModule(object):
         output_joints = { "upper": [], "lower": [] }
         non_rotate_output_joints = { "upper": [], "lower": [] }
         aim_matrices = { "upper": [], "lower": [] }
+        orient_plugs = { "upper": [], "lower": [] }
         pick_matrices = { "upper": [], "lower": [] }
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
@@ -807,8 +800,9 @@ class JawModule(object):
     
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}_JNT", ss=True, parent=self.skeleton_grp)
                 cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{out_joint}.offsetParentMatrix")
-                
+
                 aim_matrices[part].append(aim_matrix_vector)
+                orient_plugs[part].append(f"{aim_matrix_vector}.outputMatrix")
                 output_joints[part].append(out_joint)
 
             for i, aim_matrix_vector in enumerate(aim_matrices[part]):
@@ -834,6 +828,37 @@ class JawModule(object):
                 pick_matrices[part].append(pick_matrix_non_rot)
         
 
+
+        # ----- ANTI-PINCH DE ESQUINAS -----
+        # En cada esquina coinciden (misma posición) el primer/último joint de upper
+        # y de lower con ORIENTACIÓN distinta -> la malla pegada a ambos pinza. Para
+        # evitarlo, cerca de cada esquina las joints de upper y lower CONVERGEN en
+        # rotación hacia su orientación MEDIA, con un falloff que decrece de la
+        # esquina hacia dentro (1 -> 0 en `corner_blend` joints). Solo rotación: cada
+        # joint conserva su propia posición (translateWeight=0), así no se mueven.
+        n_out = len(output_joints["upper"])
+        corner_blend = min(4, n_out // 2)  # nº de joints desde cada esquina que convergen
+        for corner_idx in (0, n_out - 1):
+            for k in range(corner_blend):
+                idx = corner_idx + k if corner_idx == 0 else corner_idx - k
+                w = 1.0 - k / float(corner_blend)  # 1 en la esquina -> baja hacia dentro
+                up_aim = aim_matrices["upper"][idx]
+                lo_aim = aim_matrices["lower"][idx]
+                avg = cmds.createNode("blendMatrix", name=f"C_lipCorner{idx:02d}Avg_BMX", ss=True)
+                cmds.connectAttr(f"{up_aim}.outputMatrix", f"{avg}.inputMatrix")
+                cmds.connectAttr(f"{lo_aim}.outputMatrix", f"{avg}.target[0].targetMatrix")
+                cmds.setAttr(f"{avg}.target[0].weight", 0.5)
+                for part in ("upper", "lower"):
+                    own = aim_matrices[part][idx]
+                    jb = cmds.createNode("blendMatrix", name=f"C_{part}LipCorner{idx:02d}Blend_BMX", ss=True)
+                    cmds.connectAttr(f"{own}.outputMatrix", f"{jb}.inputMatrix")
+                    cmds.connectAttr(f"{avg}.outputMatrix", f"{jb}.target[0].targetMatrix")
+                    cmds.setAttr(f"{jb}.target[0].translateWeight", 0)  # conserva la posición propia
+                    cmds.setAttr(f"{jb}.target[0].rotateWeight", w)     # converge en rotación hacia la media
+                    cmds.setAttr(f"{jb}.target[0].scaleWeight", 0)
+                    cmds.setAttr(f"{jb}.target[0].shearWeight", 0)
+                    orient_plugs[part][idx] = f"{jb}.outputMatrix"
+                    cmds.connectAttr(f"{jb}.outputMatrix", f"{output_joints[part][idx]}.offsetParentMatrix", force=True)
 
         # ----- STICKY LIPS SETUP -----
         mid_nurbs = cmds.duplicate(self.upper_lip_nurbs, name="C_midLip_NURB")[0]
@@ -904,7 +929,7 @@ class JawModule(object):
                 # non_rotate joints, pero su salida estaba comentada → era un
                 # nodo muerto por joint de labio; eliminado.)
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
-                cmds.connectAttr(f"{aim_matrices[part][i]}.outputMatrix", f"{blend_matrix_sticky_rot}.inputMatrix")
+                cmds.connectAttr(orient_plugs[part][i], f"{blend_matrix_sticky_rot}.inputMatrix")
                 cmds.connectAttr(f"{uv_pin_mid}.outputMatrix[{i}]", f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
                 cmds.connectAttr(f"{remap_value}.outValue", f"{blend_matrix_sticky_rot}.target[0].weight")
                 cmds.connectAttr(f"{blend_matrix_sticky_rot}.outputMatrix", f"{out_joint}.offsetParentMatrix", f=True)
@@ -921,10 +946,23 @@ class JawModule(object):
                 if roll_factor == 0:
                     roll_factor = 0.001
 
+                # Driver del roll = rotateX del control + atributo Roll, para que
+                # ROTAR el control (rotateX) también role (no solo el attr Roll). El
+                # roll va al rotateX LOCAL de la joint -> rota alrededor de su
+                # tangente (curl hacia dentro/fuera), encima del sticky, con falloff
+                # smoothstep (máximo en el centro, 0 en las esquinas).
+                # (rotateX -> nodo multiply lo expone en grados, coherente con Roll.)
+                roll_rx_deg = cmds.createNode("multiply", name=f"{out_joint}RollRxDeg_MUL", ss=True)
+                cmds.connectAttr(f"{roll_controller}.rotateX", f"{roll_rx_deg}.input[0]")
+                cmds.setAttr(f"{roll_rx_deg}.input[1]", 1.0)
+                roll_drive = cmds.createNode("plusMinusAverage", name=f"{out_joint}RollDrive_PMA", ss=True)
+                cmds.connectAttr(f"{roll_rx_deg}.output", f"{roll_drive}.input1D[0]")
+                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_drive}.input1D[1]")
+
                 # ---MULTIPLY ---
                 roll_mul = cmds.createNode("multiply", name=f"{out_joint}_Roll_MUL", ss=True)
 
-                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_mul}.input[0]")
+                cmds.connectAttr(f"{roll_drive}.output1D", f"{roll_mul}.input[0]")
                 cmds.setAttr(f"{roll_mul}.input[1]", roll_factor)
                 cmds.connectAttr(f"{roll_mul}.output", f"{out_joint}.rotateX", f=True)
         
