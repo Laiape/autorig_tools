@@ -62,6 +62,7 @@ class NeckModule(object):
             self.controller_creation()
             self.ribbon_setup(skinning_joints_number)
             self.local_head()
+            self.head_squash_setup()
 
             # Store data for later use
             data_manager.DataExportBiped().append_data("neck_module",
@@ -70,6 +71,7 @@ class NeckModule(object):
                                 "neck_ctl": self.neck_ctls[0],
                                 "head_guide_matrix": self.head_guide_matrix,
                                 "face_ctl": self.face_ctl,
+                                "head_squash_ctl": self.head_squash_ctl,
                             })
             # Clean up and store data
             if cmds.objExists(self.throat_guide[0]):
@@ -184,6 +186,7 @@ class NeckModule(object):
 
         head_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_headSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.setAttr(f"{head_skinning_jnt}.inheritsTransform", 0)
+        self.head_skinning_jnt = head_skinning_jnt
 
         # rowFromMatrix + fourByFourMatrix, behaviour-preserving: rows 0-2 are the
         # head ctl rotation rows NORMALIZED (drop the ctl scale, like the rotation
@@ -223,6 +226,63 @@ class NeckModule(object):
         cmds.delete(self.neck_chain[0])
         
         matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_rotate=1, default_translate=1) # Neck base and masterwalk
+
+    def head_squash_setup(self):
+
+        """
+        Stretch & squash de la cabeza (inspirado en el head_squash_ctl de Vittorio,
+        pero por ESCALA del joint en vez de un deformer no-lineal, para que viva en
+        el módulo de joints sin depender de la geometría).
+
+        Un control bajo la cabeza: su translateY ESTIRA (arriba) o APLASTA (abajo) el
+        headSkinning_JNT a lo largo de su eje vertical (Y local), y los ejes
+        perpendiculares (X,Z) compensan con preservación de volumen modulada por el
+        atributo Volume (1 = volumen exacto, 0 = sin compensación, >1 = exagerado).
+        El factor se normaliza por la longitud del cuello, así es independiente de la
+        escala del rig. Identidad en reposo (ty=0 -> escala 1).
+        """
+
+        squash_nodes, squash_ctl = curve_tool.create_controller(name=f"{self.side}_headSquash", offset=["GRP"], parent=self.neck_ctls[-1])
+        self.head_squash_ctl = squash_ctl
+        self.lock_attributes(squash_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        cmds.addAttr(squash_ctl, longName="Volume", attributeType="double", min=0, max=10, defaultValue=1, keyable=True)
+
+        # Colocar el control en la cabeza (hereda del head ctl, que ya está ahí).
+        cmds.matchTransform(squash_nodes[0], self.neck_ctls[-1], pos=True, rot=True)
+
+        # Longitud de referencia (cuello) -> factor independiente de la escala del rig.
+        neck_m = om.MMatrix(self.neck_guide_matrix)
+        head_m = om.MMatrix(self.head_guide_matrix)
+        neck_len = max(0.001, ((neck_m[12] - head_m[12]) ** 2 +
+                               (neck_m[13] - head_m[13]) ** 2 +
+                               (neck_m[14] - head_m[14]) ** 2) ** 0.5)
+
+        # factor = translateY / neck_len
+        factor = cmds.createNode("multiply", name=f"{self.side}_headSquashFactor_MUL", ss=True)
+        cmds.connectAttr(f"{squash_ctl}.translateY", f"{factor}.input[0]")
+        cmds.setAttr(f"{factor}.input[1]", 1.0 / neck_len)
+
+        # scaleY = 1 + factor (clamp > 0.05 para no invertir)
+        scale_y = cmds.createNode("sum", name=f"{self.side}_headSquashScaleY_SUM", ss=True)
+        cmds.setAttr(f"{scale_y}.input[0]", 1.0)
+        cmds.connectAttr(f"{factor}.output", f"{scale_y}.input[1]")
+        scale_y_clamp = cmds.createNode("clamp", name=f"{self.side}_headSquashScaleY_CLP", ss=True)
+        cmds.setAttr(f"{scale_y_clamp}.minR", 0.05)
+        cmds.setAttr(f"{scale_y_clamp}.maxR", 1000)
+        cmds.connectAttr(f"{scale_y}.output", f"{scale_y_clamp}.inputR")
+
+        # exponente = -0.5 * Volume ; scaleXZ = scaleY ^ exponente (preserva volumen)
+        exponent = cmds.createNode("multiply", name=f"{self.side}_headSquashExp_MUL", ss=True)
+        cmds.connectAttr(f"{squash_ctl}.Volume", f"{exponent}.input[0]")
+        cmds.setAttr(f"{exponent}.input[1]", -0.5)
+        scale_xz = cmds.createNode("power", name=f"{self.side}_headSquashScaleXZ_POW", ss=True)
+        cmds.connectAttr(f"{scale_y_clamp}.outputR", f"{scale_xz}.input")
+        cmds.connectAttr(f"{exponent}.output", f"{scale_xz}.exponent")
+
+        # Aplicar al joint de la cabeza (Y = eje de stretch, X/Z = compensación).
+        cmds.connectAttr(f"{scale_y_clamp}.outputR", f"{self.head_skinning_jnt}.scaleY")
+        cmds.connectAttr(f"{scale_xz}.output", f"{self.head_skinning_jnt}.scaleX")
+        cmds.connectAttr(f"{scale_xz}.output", f"{self.head_skinning_jnt}.scaleZ")
 
     def mGear_integration(self):
 

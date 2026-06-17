@@ -214,8 +214,7 @@ class SpineModule(object):
         cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
         cmds.xform(self.local_chest_nodes[0], m=om.MMatrix.kIdentity)
 
-        local_chest_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_localChestSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{self.local_chest_ctl}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix")
+        
 
         # Create a space switch in the last controller
         cmds.addAttr(self.spine_ctls[-1], longName="follow", niceName="Follow", attributeType="enum", enumName="Local:World", keyable=True, dv=0)
@@ -596,3 +595,6 @@ class SpineModule(object):
             for i in range(0,4):
                 cmds.setAttr(f"{created_nodes[5]}.value[{i}].value_Interp", 2)
                 cmds.setAttr(f"{created_nodes[5]}.value[{i}].value_FloatValue", values[i])
+
+        local_chest_skinning_jnt = cmds.createNode("joint", name=f"{self.side}_localChestSkinning_JNT", ss=True, p=self.skeleton_grp)
+        cmds.connectAttr(f"{self.local_chest_ctl}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix")

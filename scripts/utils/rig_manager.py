@@ -425,19 +425,7 @@ def build_rig(character_name, on_step=None):
             reload(quad_spine_module)
             quad_spine_module.SpineModule().make("C", spine_skinning_jnts, spine_controllers)
 
-    # --- Neck ---
-    if check("C_neck00_JNT"):
-        step("Building neck…")
-        if rig_type == 0:
-            if mGear_integration:
-                reload(neck_module)
-                neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers, mGear_integration=True)
-            else:
-                reload(neck_module)
-                neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
-        else:
-            reload(neck_module_quad)
-            neck_module_quad.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
+    
 
     # --- Legs (Solo Biped) ---
     if rig_type == 0:
@@ -503,6 +491,20 @@ def build_rig(character_name, on_step=None):
         reload(tail_module)
         tail_module.TailModule().make("C", tail_skinning_jnts, tail_controllers)
 
+    # --- Neck ---
+    if check("C_neck00_JNT"):
+        step("Building neck…")
+        if rig_type == 0:
+            if mGear_integration:
+                reload(neck_module)
+                neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers, mGear_integration=True)
+            else:
+                reload(neck_module)
+                neck_module.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
+        else:
+            reload(neck_module_quad)
+            neck_module_quad.NeckModule().make("C", neck_skinning_jnts, neck_controllers)
+
     # =========================================================================
     # BUILD: FACIAL
     # =========================================================================
@@ -564,6 +566,8 @@ def build_rig(character_name, on_step=None):
     elif rig_type == 1:
         step("Creating space switches…")
         quadruped_space_switches()
+    
+    skeleton_hierarchy()
 
     # step("Applying character extras…")
     # apply_character_extras(rig_settings)
@@ -873,8 +877,138 @@ def build_rig_from_data(character_name):
     except Exception as e:
         om.MGlobal.displayError(f"Error leyendo JSON: {str(e)}")
         return None
-    
 
+def parented_chain(skinning_joints, parent=None, hand_value=False):
+
+    """
+    Crea los joints _ENV de un módulo a partir de sus _JNT de skinning, PRESERVANDO
+    la jerarquía real, los conecta a su _JNT negando el padre, y rompe el inverseScale.
+    Modelado en puiastreTools.autorig.skeleton_hierarchy.parented_chain.
+
+    Args:
+        skinning_joints (list): _JNT del módulo (paths). Se ordenan top-down solos.
+        parent (str|None): joint _ENV (o _JNT, se convierte) bajo el que cuelgan las
+            raíces del módulo. None -> cuelgan del skeletonHierarchy_GRP.
+        hand_value (bool): compatibilidad de firma; los dedos ya se separan solos al
+            preservar la jerarquía (cada dedo es su propia raíz), no hace falta split.
+    Returns:
+        list: paths de los joints _ENV creados (en orden top-down).
+    """
+
+    skel_grp = "skeletonHierarchy_GRP"
+    # Si nos pasan un _JNT como parent y existe su _ENV, usar el _ENV.
+    if parent and cmds.objExists(parent.replace("_JNT", "_ENV")):
+        parent = parent.replace("_JNT", "_ENV")
+    root_parent = parent if parent else skel_grp
+
+    jnts = list(skinning_joints)
+    jnts.sort(key=lambda j: j.count("|"))   # padres antes que hijos (top-down)
+
+    jnt_to_env = {}   # jnt (path) -> env (path)  | paths completos: robusto a nombres repetidos
+    created = []
+    for jnt in jnts:
+        env_name = jnt.split("|")[-1].replace("Skinning_JNT", "_ENV").replace("_JNT", "_ENV")
+        jp = cmds.listRelatives(jnt, parent=True, type="joint", fullPath=True)
+        parent_node = jnt_to_env[jp[0]] if (jp and jp[0] in jnt_to_env) else root_parent
+        # createNode con parent crea en sitio y devuelve el path completo (estable).
+        env = cmds.createNode("joint", name=env_name, parent=parent_node)
+        # Romper el inverseScale: la escala se hereda de verdad (export limpio).
+        inv = cmds.listConnections(f"{env}.inverseScale", destination=False, source=True, plugs=True)
+        if inv:
+            cmds.disconnectAttr(inv[0], f"{env}.inverseScale")
+        jnt_to_env[jnt] = env
+        created.append((jnt, env))
+
+    # Conexión _ENV -> _JNT negando el padre inmediato del _ENV:
+    #   env.offsetParentMatrix = jnt.worldMatrix * envParent.worldInverseMatrix
+    #   (joint nace en identidad local; en reposo da identidad -> env.world == jnt.world)
+    for jnt, env in created:
+        env_parent = cmds.listRelatives(env, parent=True, fullPath=True)
+        negate = env_parent[0] if env_parent else None
+        if negate and negate.split("|")[-1] != skel_grp:
+            mmx = cmds.createNode("multMatrix", name=env.split("|")[-1].replace("_ENV", "Env_MMX"), ss=True)
+            cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{mmx}.matrixIn[0]", force=True)
+            cmds.connectAttr(f"{negate}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]", force=True)
+            cmds.connectAttr(f"{mmx}.matrixSum", f"{env}.offsetParentMatrix", force=True)
+        else:
+            # raíz directamente bajo el grupo (sin padre joint): world directo
+            cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{env}.offsetParentMatrix", force=True)
+        cmds.setAttr(f"{env}.jointOrient", 0, 0, 0, type="double3")
+
+    return [env for _, env in created]
+
+
+def skeleton_hierarchy():
+
+    """
+    Construye el esqueleto de export (_ENV) a partir de los _JNT de skinning.
+    Modelado en puiastreTools.autorig.skeleton_hierarchy: duplica la jerarquía de
+    cada módulo (vía parented_chain), parentea las raíces según reglas, y conecta
+    cada _ENV a su _JNT negando el padre.
+
+    Reglas de parent del joint raíz de cada módulo:
+      - spine                      -> skeletonHierarchy_GRP (raíz)
+      - faciales                   -> cabeza (*head_ENV)
+      - arm / fingers (mismo lado) -> L/R clavicle / L/R wrist
+      - leg                        -> localHip
+      - clavicle / neck            -> localChest
+      - resto                      -> último joint del módulo anterior
+    """
+
+    if not cmds.objExists("skeletonHierarchy_GRP"):
+        cmds.group(empty=True, name="skeletonHierarchy_GRP")
+    else:
+        om.MGlobal.displayInfo("Grupo 'skeletonHierarchy_GRP' ya existe.")
+
+    if not cmds.objExists("skel_GRP"):
+        return
+
+    facial_modules = {"jaw", "eyelid", "eyebrow", "nose", "cheekbone", "ear", "tongue", "teeth", "eye"}
+    parent_same_side = {"arm": "clavicle", "fingers": "wrist"}        # mismo lado, módulo -> token de joint
+    child_to_parent_jnt = {"leg": "localHip", "clavicle": "localChest", "neck": "localChest"}
+
+    # Recopilar módulos (grupos hijos de skel_GRP) con sus joints de skinning.
+    module_grps = cmds.listRelatives("skel_GRP", type="transform", fullPath=True) or []
+    modules = []
+    for grp in module_grps:
+        parts = grp.split("|")[-1].split("_")   # ej. ["L","armSkinning","GRP"]
+        side = parts[0]
+        clean = parts[1].replace("Skinning", "")
+        jnts = cmds.listRelatives(grp, allDescendents=True, type="joint", fullPath=True) or []
+        if jnts:
+            modules.append((side, clean, jnts))
+
+    # Orden por fases: que el parent exista cuando se procesa el hijo.
+    #   0 spine -> 1 cuerpo(legs/clavicle/neck/...) -> 2 arm -> 3 fingers -> 4 facial
+    def phase(clean):
+        if clean == "spine":            return 0
+        if clean in facial_modules:     return 4
+        if clean == "fingers":          return 3
+        if clean == "arm":              return 2
+        return 1
+    modules.sort(key=lambda m: phase(m[1]))
+
+    def find_env(pattern):
+        f = cmds.ls(pattern, type="joint", long=True) or []
+        return f[0] if f else None
+
+    last_module_end = None
+    for side, clean, jnts in modules:
+        if clean == "spine":
+            parent = None
+        elif clean in facial_modules:
+            parent = find_env("*head_ENV")
+        elif clean in parent_same_side:
+            parent = find_env(f"{side}_{parent_same_side[clean]}*_ENV")
+        elif clean in child_to_parent_jnt:
+            parent = find_env(f"*{child_to_parent_jnt[clean]}*_ENV")
+        else:
+            parent = last_module_end   # por defecto: último joint del módulo anterior
+
+        ends = parented_chain(jnts, parent)
+        if ends:
+            last_module_end = ends[-1]
+                
 
 
     

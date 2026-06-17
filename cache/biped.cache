@@ -17,29 +17,6 @@
         "local_chest_ctl": "C_localChest_CTL",
         "last_spine_jnt": "C_spine07_JNT"
     },
-    "neck_module": {
-        "head_ctl": "C_head_CTL",
-        "neck_ctl": "C_neck_CTL",
-        "head_guide_matrix": [
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.9987163386777256,
-            -0.0506524911347753,
-            0.0,
-            0.0,
-            0.0506524911347753,
-            0.9987163386777256,
-            0.0,
-            0.0,
-            80.62926193268876,
-            -2.684175101821637,
-            1.0
-        ],
-        "face_ctl": "C_face_CTL"
-    },
     "leg_module": {
         "L_hip_JNT": "L_hip_JNT",
         "L_knee_JNT": "L_knee_JNT",
@@ -78,9 +55,34 @@
         "R_armIkRoot": "R_armIkRoot_CTL",
         "R_skinningJoints": null
     },
+    "neck_module": {
+        "head_ctl": "C_head_CTL",
+        "neck_ctl": "C_neck_CTL",
+        "head_guide_matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9987163386777256,
+            -0.050652491134775386,
+            0.0,
+            0.0,
+            0.050652491134775386,
+            0.9987163386777256,
+            0.0,
+            6.2281776957993525e-15,
+            80.62926193268876,
+            -2.6841751018216375,
+            1.0
+        ],
+        "face_ctl": "C_face_CTL",
+        "head_squash_ctl": "C_headSquash_CTL"
+    },
     "jaw_module": {
         "jaw_ctl": "C_jaw_CTL",
         "upper_jaw_ctl": "C_upperJaw_CTL",
+        "main_mouth_ctl": "C_mainMouth_CTL",
         "local_jaw_mmx": "C_jawLocal_MMT",
         "local_upper_jaw_mmx": "C_upperJawLocal_MMT"
     },

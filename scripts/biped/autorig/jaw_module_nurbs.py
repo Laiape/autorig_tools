@@ -57,6 +57,8 @@ class JawModule(object):
 
         cmds.parent(self.controllers_grp, self.face_ctl)
 
+        self.main_mouth_setup()
+
         # Clean up
         # cmds.delete("L_jaw_JNT", "R_jaw_JNT")
 
@@ -64,6 +66,7 @@ class JawModule(object):
                                                 
                                                 {"jaw_ctl": self.jaw_ctl,
                                                  "upper_jaw_ctl": self.upper_jaw_ctl,
+                                                 "main_mouth_ctl": self.main_mouth_ctl,
                                                  "local_jaw_mmx" : self.mult_matrix_jaw_local,
                                                  "local_upper_jaw_mmx" : self.mult_matrix_upper_jaw_local
                                                 })
@@ -288,7 +291,8 @@ class JawModule(object):
             (bbox[1] + bbox[4]) / 2,
             (bbox[2] + bbox[5]) / 2
         ]
-        
+        self.mouth_center = center
+
         bbox_loc = cmds.spaceLocator(name="C_bboxCenterMouth_LOC")[0]
         cmds.xform(bbox_loc, worldSpace=True, translation=center)
         cmds.parent(bbox_loc, self.module_trn)
@@ -316,7 +320,12 @@ class JawModule(object):
         
         # Create main lip controllers
         lips_controllers_grp = cmds.createNode("transform", name="C_lipsControllers_GRP", ss=True, p=self.controllers_grp)
+        self.lips_controllers_grp = lips_controllers_grp
         main_lips_controllers = cmds.createNode("transform", name="C_primaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
+
+        # Grupo propio para los joints de LABIO (separado de los del jaw), para que
+        # el main de boca pueda mover solo los labios.
+        self.lips_skinning_grp = cmds.createNode("transform", name="C_lipsSkinning_GRP", ss=True, p=self.skeleton_grp)
 
         # Create upper controller
         upper_lip_nodes, upper_lip_ctl = curve_tool.create_controller("C_upperLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
@@ -798,7 +807,7 @@ class JawModule(object):
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryTargetVector", 1,0,0)
                 cmds.setAttr(f"{aim_matrix_vector}.secondaryMode", 2) # Align to World
     
-                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}_JNT", ss=True, parent=self.skeleton_grp)
+                out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}_JNT", ss=True, parent=self.lips_skinning_grp)
                 cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{out_joint}.offsetParentMatrix")
 
                 aim_matrices[part].append(aim_matrix_vector)
@@ -819,7 +828,7 @@ class JawModule(object):
                     side = "L"
                     name_index = (linear_curve_cvs - 1) - i
 
-                non_rot_out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}NonRot_JNT", ss=True, parent=self.skeleton_grp)
+                non_rot_out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}NonRot_JNT", ss=True, parent=self.lips_skinning_grp)
                 pick_matrix_non_rot = cmds.createNode("pickMatrix", name=f"{side}_{part}Lip{name_index:02d}NonRot_PCM", ss=True)
                 cmds.setAttr(f"{pick_matrix_non_rot}.useRotate", 0)
                 cmds.connectAttr(f"{aim_matrix_vector}.outputMatrix", f"{pick_matrix_non_rot}.inputMatrix")
@@ -860,36 +869,38 @@ class JawModule(object):
                     orient_plugs[part][idx] = f"{jb}.outputMatrix"
                     cmds.connectAttr(f"{jb}.outputMatrix", f"{output_joints[part][idx]}.offsetParentMatrix", force=True)
 
-        # ----- STICKY LIPS SETUP -----
-        mid_nurbs = cmds.duplicate(self.upper_lip_nurbs, name="C_midLip_NURB")[0]
-        # cmds.parent(mid_nurbs, self.module_trn)
-        blend_shape_mid_nurbs = cmds.blendShape(self.upper_lip_nurbs, self.lower_lip_nurbs, mid_nurbs, name="C_midLip_BLS")[0]
-        cmds.setAttr(f"{blend_shape_mid_nurbs}.{self.upper_lip_nurbs}", 0.5)
-        cmds.setAttr(f"{blend_shape_mid_nurbs}.{self.lower_lip_nurbs}", 0.5)
-
-        uv_pin_mid = cmds.createNode("uvPin", name="C_midLip_UVP", ss=True)
-        cmds.setAttr(f"{uv_pin_mid}.normalAxis", 1)  # Y
-        cmds.setAttr(f"{uv_pin_mid}.tangentAxis", 0)  # X
-        cmds.connectAttr(f"{mid_nurbs}.worldSpace[0]", f"{uv_pin_mid}.deformedGeometry")
-
-        for i in range(0, linear_curve_cvs):
-            vertex_cv_pos = cmds.xform(f"{linear_curve}.cv[{i}]", query=True, worldSpace=True, translation=True)
-            param_linear = self.getClosestParamToPosition(offset_curve, vertex_cv_pos)
-            cmds.setAttr(f"{uv_pin_mid}.coordinate[{i}].coordinateU", param_linear)
-            cmds.setAttr(f"{uv_pin_mid}.coordinate[{i}].coordinateV", 0.5)
-
-        # Identificamos los controladores L y R explícitamente desde tu lista previa
+        # ----- STICKY LIPS / ZIPPER (100% matrices, inspirado en Vittorio) -----
+        # La línea de cierre se calcula POR PUNTO como un blendMatrix entre el labio
+        # superior y el inferior (sin nurbs media / blendShape / uvPin intermedios),
+        # y cada labio hace "zip" hacia esa matriz con un peso escalonado de esquina
+        # a centro. Al estar la línea de cierre derivada de los propios labios, sigue
+        # a la mandíbula y al habla automáticamente.
         l_corner_ctl = next((c for c in corner_controllers if "L_" in c), corner_controllers[0])
         r_corner_ctl = next((c for c in corner_controllers if "R_" in c), corner_controllers[1])
 
-        # Creamos un nodo Condition para calcular el MÁXIMO entre el Zip L y el Zip R para el Centro
-        center_zip_cond = cmds.createNode("condition", name=f"C_{part}LipZipMax_COND", ss=True)
-        cmds.setAttr(f"{center_zip_cond}.operation", 2) # Greater Than (Mayor que)
+        # mouthHeight sesga dónde se juntan los labios: 0.5 = en medio, ->1 sube al
+        # labio superior, ->0 baja al inferior.
+        cmds.addAttr(self.jaw_ctl, longName="mouthHeight", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
+        mouth_height_rev = cmds.createNode("reverse", name="C_lipsMouthHeight_REV", ss=True)
+        cmds.connectAttr(f"{self.jaw_ctl}.mouthHeight", f"{mouth_height_rev}.inputX")
+
+        # Zip del centro = máximo(Zip L, Zip R)
+        center_zip_cond = cmds.createNode("condition", name="C_lipsZipMax_COND", ss=True)
+        cmds.setAttr(f"{center_zip_cond}.operation", 2)  # Greater Than
         cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{center_zip_cond}.firstTerm")
         cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.secondTerm")
         cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{center_zip_cond}.colorIfTrueR")
         cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.colorIfFalseR")
-        
+
+        # Matriz de cierre por punto = blend(superior -> inferior, peso = 1-mouthHeight)
+        meeting_plugs = []
+        for i in range(len(output_joints["upper"])):
+            meet = cmds.createNode("blendMatrix", name=f"C_lipsZipMeet{i:02d}_BMX", ss=True)
+            cmds.connectAttr(orient_plugs["upper"][i], f"{meet}.inputMatrix")
+            cmds.connectAttr(orient_plugs["lower"][i], f"{meet}.target[0].targetMatrix")
+            cmds.connectAttr(f"{mouth_height_rev}.outputX", f"{meet}.target[0].weight")
+            meeting_plugs.append(f"{meet}.outputMatrix")
+
         for part in ["upper", "lower"]:
 
             for i, (non_rot_joint, out_joint) in enumerate(zip(non_rotate_output_joints[part], output_joints[part])):
@@ -920,9 +931,11 @@ class JawModule(object):
                 
                 cmds.setAttr(f"{remap_value}.value[0].value_Position", activate_min)
                 cmds.setAttr(f"{remap_value}.value[0].value_FloatValue", 0)
-                
+                cmds.setAttr(f"{remap_value}.value[0].value_Interp", 2)  # smooth -> zip progresivo
+
                 cmds.setAttr(f"{remap_value}.value[1].value_Position", activate_max)
                 cmds.setAttr(f"{remap_value}.value[1].value_FloatValue", 1)
+                cmds.setAttr(f"{remap_value}.value[1].value_Interp", 2)
 
                 # Conexión del blendMatrix sticky a la joint de salida.
                 # (Antes se creaba además un blend_matrix_sticky_no_rot para las
@@ -930,7 +943,7 @@ class JawModule(object):
                 # nodo muerto por joint de labio; eliminado.)
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
                 cmds.connectAttr(orient_plugs[part][i], f"{blend_matrix_sticky_rot}.inputMatrix")
-                cmds.connectAttr(f"{uv_pin_mid}.outputMatrix[{i}]", f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
+                cmds.connectAttr(meeting_plugs[i], f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
                 cmds.connectAttr(f"{remap_value}.outValue", f"{blend_matrix_sticky_rot}.target[0].weight")
                 cmds.connectAttr(f"{blend_matrix_sticky_rot}.outputMatrix", f"{out_joint}.offsetParentMatrix", f=True)
 
@@ -994,20 +1007,49 @@ class JawModule(object):
 
     def main_mouth_setup(self):
         """
-        Main setup for the mouth rig, including creating joints, curves, skinning, and setting up the sticky lips system.
+        Controlador main que mueve TODOS los controladores de la boca (mandíbula,
+        labios, esquinas y secundarios) y su deformación como un único bloque
+        rígido, encima del rig existente.
+
+        El rig deforma con matrices locales rest-relativas (cancelan el movimiento
+        del grupo padre), así que SIMPLEMENTE emparentar los controles bajo un main
+        los movería en viewport pero NO movería los joints. En su lugar se calcula
+        el delta rígido del main (identidad en reposo, independiente de la cara) y se
+        inyecta en dos únicos puntos (SOLO labios, la mandíbula NO se mueve):
+            - lips_controllers_grp.offsetParentMatrix -> todos los controles de labio siguen en viewport
+            - lips_skinning_grp.offsetParentMatrix    -> todos los joints de labio deforman
         """
-        
+
         main_mouth_nodes, main_mouth_ctl = curve_tool.create_controller(
-            name="C_mainMouth_CTL",
+            "C_mainMouth",
             offset=["GRP", "OFF"],
             parent=self.face_ctl
         )
+        self.main_mouth_ctl = main_mouth_ctl
+        self.lock_attributes(main_mouth_ctl, ["sx", "sy", "sz", "v"])
 
-        mmx_main_mouth = cmds.createNode("multMatrix", name="C_mainMouth_MMX", ss=True)
-        cmds.connectAttr(f"{main_mouth_ctl}.worldMatrix[0]", f"{mmx_main_mouth}.matrixIn[0]")
-        cmds.connectAttr(f"{main_mouth_nodes[0]}.worldInverseMatrix[0]", f"{mmx_main_mouth}.matrixIn[1]")
+        # Colocar en el centro de la boca, eje-alineado (igual que las guías del jaw).
+        place = [1, 0, 0, 0,
+                 0, 1, 0, 0,
+                 0, 0, 1, 0,
+                 self.mouth_center[0], self.mouth_center[1], self.mouth_center[2], 1]
+        cmds.setAttr(f"{main_mouth_nodes[0]}.offsetParentMatrix", place, type="matrix")
+        local_mmx = cmds.createNode("multMatrix", name="C_mainMouthLocal_MMX", ss=True)
+        cmds.connectAttr(f"{main_mouth_ctl}.worldMatrix[0]", f"{local_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{main_mouth_nodes[0]}.worldInverseMatrix[0]", f"{local_mmx}.matrixIn[1]")
+        grp_rest = cmds.getAttr(f"{main_mouth_nodes[0]}.worldMatrix[0]")
+        cmds.setAttr(f"{local_mmx}.matrixIn[2]", grp_rest, type="matrix")
 
-    
+        delta_mmx = cmds.createNode("multMatrix", name="C_mainMouthDelta_MMX", ss=True)
+        cmds.setAttr(f"{delta_mmx}.matrixIn[0]", list(om.MMatrix(grp_rest).inverse()), type="matrix")
+        cmds.connectAttr(f"{local_mmx}.matrixSum", f"{delta_mmx}.matrixIn[1]")
+
+        cmds.connectAttr(f"{delta_mmx}.matrixSum", f"{self.lips_controllers_grp}.offsetParentMatrix", force=True)
+        cmds.connectAttr(f"{delta_mmx}.matrixSum", f"{self.lips_skinning_grp}.offsetParentMatrix", force=True)
+
+        cmds.xform(main_mouth_nodes[0], m=om.MMatrix.kIdentity)
+        cmds.setAttr(f"{main_mouth_nodes[0]}.inheritsTransform", 0)
+
     def get_offset_matrix(self, child, parent):
         """
         Calculate the offset matrix between a child and parent transform in Maya.
