@@ -880,48 +880,48 @@ def build_rig_from_data(character_name):
 
 def parented_chain(skinning_joints, parent=None, hand_value=False):
 
-    """
-    Crea los joints _ENV de un módulo a partir de sus _JNT de skinning, PRESERVANDO
-    la jerarquía real, los conecta a su _JNT negando el padre, y rompe el inverseScale.
-    Modelado en puiastreTools.autorig.skeleton_hierarchy.parented_chain.
-
-    Args:
-        skinning_joints (list): _JNT del módulo (paths). Se ordenan top-down solos.
-        parent (str|None): joint _ENV (o _JNT, se convierte) bajo el que cuelgan las
-            raíces del módulo. None -> cuelgan del skeletonHierarchy_GRP.
-        hand_value (bool): compatibilidad de firma; los dedos ya se separan solos al
-            preservar la jerarquía (cada dedo es su propia raíz), no hace falta split.
-    Returns:
-        list: paths de los joints _ENV creados (en orden top-down).
-    """
-
     skel_grp = "skeletonHierarchy_GRP"
-    # Si nos pasan un _JNT como parent y existe su _ENV, usar el _ENV.
     if parent and cmds.objExists(parent.replace("_JNT", "_ENV")):
         parent = parent.replace("_JNT", "_ENV")
     root_parent = parent if parent else skel_grp
 
     jnts = list(skinning_joints)
-    jnts.sort(key=lambda j: j.count("|"))   # padres antes que hijos (top-down)
+    jnt_set = set(jnts)
+    has_hierarchy = any(
+        ((cmds.listRelatives(j, parent=True, type="joint", fullPath=True) or [None])[0] in jnt_set)
+        for j in jnts
+    )
 
-    jnt_to_env = {}   # jnt (path) -> env (path)  | paths completos: robusto a nombres repetidos
-    created = []
-    for jnt in jnts:
-        env_name = jnt.split("|")[-1].replace("Skinning_JNT", "_ENV").replace("_JNT", "_ENV")
-        jp = cmds.listRelatives(jnt, parent=True, type="joint", fullPath=True)
-        parent_node = jnt_to_env[jp[0]] if (jp and jp[0] in jnt_to_env) else root_parent
-        # createNode con parent crea en sitio y devuelve el path completo (estable).
-        env = cmds.createNode("joint", name=env_name, parent=parent_node)
-        # Romper el inverseScale: la escala se hereda de verdad (export limpio).
+    def _env_name(jnt):
+        return jnt.split("|")[-1].replace("Skinning_JNT", "_ENV").replace("_JNT", "_ENV")
+
+    def _make(jnt, parent_node):
+        env = cmds.createNode("joint", name=_env_name(jnt), parent=parent_node)
         inv = cmds.listConnections(f"{env}.inverseScale", destination=False, source=True, plugs=True)
         if inv:
             cmds.disconnectAttr(inv[0], f"{env}.inverseScale")
-        jnt_to_env[jnt] = env
-        created.append((jnt, env))
+        return env
 
-    # Conexión _ENV -> _JNT negando el padre inmediato del _ENV:
-    #   env.offsetParentMatrix = jnt.worldMatrix * envParent.worldInverseMatrix
-    #   (joint nace en identidad local; en reposo da identidad -> env.world == jnt.world)
+    created = []
+    if has_hierarchy:
+        jnts.sort(key=lambda j: j.count("|"))
+        jnt_to_env = {}
+        for jnt in jnts:
+            jp = cmds.listRelatives(jnt, parent=True, type="joint", fullPath=True)
+            parent_node = jnt_to_env[jp[0]] if (jp and jp[0] in jnt_to_env) else root_parent
+            env = _make(jnt, parent_node)
+            jnt_to_env[jnt] = env
+            created.append((jnt, env))
+    else:
+        sides = {}
+        for jnt in jnts:
+            sides.setdefault(jnt.split("|")[-1].split("_")[0], []).append(jnt)
+        for chain in sides.values():
+            prev = None
+            for jnt in chain:
+                env = _make(jnt, root_parent if prev is None else prev)
+                created.append((jnt, env))
+                prev = env
     for jnt, env in created:
         env_parent = cmds.listRelatives(env, parent=True, fullPath=True)
         negate = env_parent[0] if env_parent else None
@@ -931,7 +931,6 @@ def parented_chain(skinning_joints, parent=None, hand_value=False):
             cmds.connectAttr(f"{negate}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]", force=True)
             cmds.connectAttr(f"{mmx}.matrixSum", f"{env}.offsetParentMatrix", force=True)
         else:
-            # raíz directamente bajo el grupo (sin padre joint): world directo
             cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{env}.offsetParentMatrix", force=True)
         cmds.setAttr(f"{env}.jointOrient", 0, 0, 0, type="double3")
 
@@ -964,22 +963,19 @@ def skeleton_hierarchy():
         return
 
     facial_modules = {"jaw", "eyelid", "eyebrow", "nose", "cheekbone", "ear", "tongue", "teeth", "eye"}
-    parent_same_side = {"arm": "clavicle", "fingers": "wrist"}        # mismo lado, módulo -> token de joint
+    parent_same_side = {"arm": "clavicle", "fingers": "wrist"}
     child_to_parent_jnt = {"leg": "localHip", "clavicle": "localChest", "neck": "localChest"}
 
-    # Recopilar módulos (grupos hijos de skel_GRP) con sus joints de skinning.
     module_grps = cmds.listRelatives("skel_GRP", type="transform", fullPath=True) or []
     modules = []
     for grp in module_grps:
-        parts = grp.split("|")[-1].split("_")   # ej. ["L","armSkinning","GRP"]
+        parts = grp.split("|")[-1].split("_")
         side = parts[0]
         clean = parts[1].replace("Skinning", "")
         jnts = cmds.listRelatives(grp, allDescendents=True, type="joint", fullPath=True) or []
         if jnts:
             modules.append((side, clean, jnts))
 
-    # Orden por fases: que el parent exista cuando se procesa el hijo.
-    #   0 spine -> 1 cuerpo(legs/clavicle/neck/...) -> 2 arm -> 3 fingers -> 4 facial
     def phase(clean):
         if clean == "spine":            return 0
         if clean in facial_modules:     return 4
@@ -1003,7 +999,7 @@ def skeleton_hierarchy():
         elif clean in child_to_parent_jnt:
             parent = find_env(f"*{child_to_parent_jnt[clean]}*_ENV")
         else:
-            parent = last_module_end   # por defecto: último joint del módulo anterior
+            parent = last_module_end 
 
         ends = parented_chain(jnts, parent)
         if ends:
