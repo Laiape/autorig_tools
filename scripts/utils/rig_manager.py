@@ -523,10 +523,8 @@ def build_rig(character_name, on_step=None):
     if check("L_eye_JNT") and check("R_eye_JNT"):
         step("Building eyelids…")
         reload(eyelid_module)
-        # En cuadrúpedo no se crean sockets (no hay cejas/guías de socket).
         build_sockets = (rig_type == 0)
-        # surface: proyecta las joints del párpado sobre la NURBS del ojo (blink
-        # estable + horizontal). Activado en cuadrúpedos y en personajes concretos.
+
         EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya"}
         eyelid_surface = (rig_type != 0) or (str(character_name).lower() in EYELID_SURFACE_CHARS)
         eyelid_module.EyelidModule().make("L", sockets=build_sockets, surface=eyelid_surface)
@@ -569,8 +567,6 @@ def build_rig(character_name, on_step=None):
     
     skeleton_hierarchy()
 
-    # step("Applying character extras…")
-    # apply_character_extras(rig_settings)
 
 def apply_character_extras(rig_settings):
     """
@@ -674,8 +670,7 @@ def biped_space_switches():
 def quadruped_space_switches():
 
         """
-        Crea los space switches para el Rig Quadruped (basado en el
-        skeleton_hierarchy del TFG): patas traseras y delanteras (con escápula)
+        Crea los space switches para el Rig Quadruped: patas traseras y delanteras (con escápula)
         contra spine/neck. Cada switch usa las keys que exportan los módulos:
             - backLeg_module / frontLeg_module: {side}_legIk, {side}_legPv,
               {side}_hipFk, {side}_rootIk (+ scapula_ctl / scapula_master_ctl).
@@ -955,10 +950,10 @@ def skeleton_hierarchy():
     """
 
     if not cmds.objExists("skeletonHierarchy_GRP"):
-        cmds.group(empty=True, name="skeletonHierarchy_GRP")
+        skel_grp = cmds.group(empty=True, name="skeletonHierarchy_GRP")
         cmds.parent("skeletonHierarchy_GRP", "rig_GRP")
     else:
-        om.MGlobal.displayInfo("Grupo 'skeletonHierarchy_GRP' ya existe.")
+        skel_grp = "skeletonHierarchy_GRP"
 
     if not cmds.objExists("skel_GRP"):
         return
@@ -967,7 +962,7 @@ def skeleton_hierarchy():
     if cmds.objExists("C_freeze_ENV"):
         freeze_jnt = cmds.ls("C_freeze_ENV", long=True)[0]
     else:
-        freeze_jnt = cmds.createNode("joint", name="C_freeze_ENV", parent="skeletonHierarchy_GRP")
+        freeze_jnt = cmds.createNode("joint", name="C_freeze_ENV", parent=skel_grp)
 
     facial_modules = {"jaw", "eyelid", "eyebrow", "nose", "cheekbone", "ear", "tongue", "teeth", "eye"}
     parent_same_side = {"arm": "clavicle", "fingers": "wrist"}

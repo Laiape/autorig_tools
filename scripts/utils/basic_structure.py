@@ -234,25 +234,19 @@ def _create_display_layers(geo_grp):
 
 def create_basic_structure(character_name=None):
 
-    # data_manager.DataExportBiped().new_build()
-    print("--- CREATING BASIC STRUCTURE ---")
-
     character_name, scene_assemblies = rig_manager.prepare_rig_scene()
     data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
     mgear = data_manager.DataExportBiped().get_data("rig_settings", "mGear_integration")
 
-    # ─────────────────────────────────────────
-    # MGEAR PATH
-    # ─────────────────────────────────────────
     if mgear:
 
         masterwalk_ctl  = "masterWalk"
         character_ctl   = "C_global_CTL"
-        settings_ctl    = "C_settings_CTL"  # lo creamos igualmente, lo metemos bajo global_C0_root
+        settings_ctl    = "C_settings_CTL"
         rig_grp         = "setup"
         skel_grp        = "jnt_org"
         geo_grp         = "geo"
-        modules_grp     = "modules_GRP"     # lo creamos bajo setup
+        modules_grp     = "modules_GRP"
 
         # Validar que los nodos de mGear existen
         for node in [masterwalk_ctl, character_ctl, rig_grp, skel_grp, geo_grp]:
@@ -261,9 +255,6 @@ def create_basic_structure(character_name=None):
                 mgear = False
                 break
 
-    # ─────────────────────────────────────────
-    # STANDARD PATH
-    # ─────────────────────────────────────────
     if not mgear:
 
         structure_names = [character_name, "rig_GRP", "controls_GRP", "geo_GRP", "deformers_GRP"]
@@ -354,6 +345,7 @@ def create_basic_structure(character_name=None):
     else:
         skel_grp    = get_or_create("transform", "skel_GRP", parent=rig_grp)
         modules_grp = get_or_create("transform", "modules_GRP", parent=rig_grp)
+        skeleton_grp = get_or_create("transform", "skeletonHierarchy_GRP", parent=rig_grp)
 
     # globalScale en masterwalk (ambos paths)
     if not cmds.attributeQuery("globalScale", node=masterwalk_ctl, exists=True):
@@ -374,10 +366,12 @@ def create_basic_structure(character_name=None):
     cmds.setAttr(f"{settings_ctl}.RIG_SEP", keyable=False, channelBox=True, lock=True)
     add_attr_safe(settings_ctl, longName="showModules", niceName="Show Modules", attributeType="bool", defaultValue=True, keyable=True)
     add_attr_safe(settings_ctl, longName="showSkeleton", niceName="Show Skeleton", attributeType="bool", defaultValue=True, keyable=True)
+    add_attr_safe(settings_ctl, longName="showSkeletonHierarchy", niceName="Show Skeleton Hierarchy", attributeType="bool", defaultValue=True, keyable=True)
     add_attr_safe(settings_ctl, longName="PLAYBLAST_SEP", niceName="PLAYBLAST ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.PLAYBLAST_SEP", keyable=False, channelBox=True, lock=True)
     add_attr_safe(settings_ctl, longName="hideControllersOnPlayblast", niceName="Hide Controllers on Playblast", attributeType="bool", defaultValue=True, keyable=True)
     cmds.setAttr(f"{settings_ctl}.showSkeleton", lock=False, keyable=False, channelBox=True)
+    cmds.setAttr(f"{settings_ctl}.showSkeletonHierarchy", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.showModules", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.hideControllersOnPlayblast", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.geometryType", lock=False, keyable=False, channelBox=True)
@@ -433,8 +427,10 @@ def create_basic_structure(character_name=None):
 
     # --- RIG VISIBILITY ---
     safe_connect(f"{settings_ctl}.showSkeleton", f"{skel_grp}.visibility")
+    safe_connect(f"{settings_ctl}.showSkeletonHierarchy", f"{skel_grp}.visibility")
     safe_connect(f"{settings_ctl}.showModules",  f"{modules_grp}.visibility")
     cmds.setAttr(f"{settings_ctl}.showSkeleton", 0)
+    cmds.setAttr(f"{settings_ctl}.showSkeletonHierarchy", 0)
     cmds.setAttr(f"{settings_ctl}.showModules",  0)
 
     # --- LOCKS ---
