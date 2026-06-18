@@ -946,21 +946,28 @@ def skeleton_hierarchy():
     cada _ENV a su _JNT negando el padre.
 
     Reglas de parent del joint raíz de cada módulo:
-      - spine                      -> skeletonHierarchy_GRP (raíz)
+      - spine                      -> C_freeze_ENV (joint raíz, padre de todo)
       - faciales                   -> cabeza (*head_ENV)
       - arm / fingers (mismo lado) -> L/R clavicle / L/R wrist
       - leg                        -> localHip
       - clavicle / neck            -> localChest
-      - resto                      -> último joint del módulo anterior
+      - resto                      -> último joint del módulo anterior (o C_freeze_ENV)
     """
 
     if not cmds.objExists("skeletonHierarchy_GRP"):
         cmds.group(empty=True, name="skeletonHierarchy_GRP")
+        cmds.parent("skeletonHierarchy_GRP", "rig_GRP")
     else:
         om.MGlobal.displayInfo("Grupo 'skeletonHierarchy_GRP' ya existe.")
 
     if not cmds.objExists("skel_GRP"):
         return
+
+    # Joint "freeze": raíz / padre de TODO el esqueleto _ENV.
+    if cmds.objExists("C_freeze_ENV"):
+        freeze_jnt = cmds.ls("C_freeze_ENV", long=True)[0]
+    else:
+        freeze_jnt = cmds.createNode("joint", name="C_freeze_ENV", parent="skeletonHierarchy_GRP")
 
     facial_modules = {"jaw", "eyelid", "eyebrow", "nose", "cheekbone", "ear", "tongue", "teeth", "eye"}
     parent_same_side = {"arm": "clavicle", "fingers": "wrist"}
@@ -991,7 +998,7 @@ def skeleton_hierarchy():
     last_module_end = None
     for side, clean, jnts in modules:
         if clean == "spine":
-            parent = None
+            parent = freeze_jnt
         elif clean in facial_modules:
             parent = find_env("*head_ENV")
         elif clean in parent_same_side:
@@ -999,12 +1006,36 @@ def skeleton_hierarchy():
         elif clean in child_to_parent_jnt:
             parent = find_env(f"*{child_to_parent_jnt[clean]}*_ENV")
         else:
-            parent = last_module_end 
+            parent = last_module_end or freeze_jnt
 
         ends = parented_chain(jnts, parent)
         if ends:
             last_module_end = ends[-1]
-                
+
+def corrective_joints(joint, shape="square"):
+
+    """
+    Crea un joint correctivo para el joint dado.
+    El joint correctivo se crea como hijo del joint original y se conecta
+    a su worldMatrix para que siga la transformación del joint padre.
+    """
+    if not cmds.objExists(joint):
+        om.MGlobal.displayError(f"El joint '{joint}' no existe.")
+        return None
+
+    joint_name = joint.split("|")[-1]
+    joint_name_base = joint_name.split("_")[1]
+    joint_up_axys = "y"
+    joint_up_axys_vector = (0,1,0)
+    axys = {"x": (3, 0, 0), "y": (0, 3, 0), "z": (0, 0, 3), joint_up_axys: joint_up_axys_vector}
+    identity_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+
+    # Crear shape cuadrada desde el joint original
+    for ax, vec in axys.items():
+        corrective_joint = cmds.createNode("joint", name=f"{joint_name_base}_CRT", parent=joint)
+        corrective_matrix = om.MMatrix(identity_matrix) * om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, vec[0], vec[1], vec[2], 1])
+        cmds.setAttr(f"{corrective_joint}.offsetParentMatrix", list(corrective_matrix), type="matrix")
+
 
 
     
