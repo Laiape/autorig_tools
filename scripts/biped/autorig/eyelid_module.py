@@ -833,11 +833,42 @@ class EyelidModule(object):
             "upInSocket", "upOutSocket", "downInSocket", "downOutSocket"
         ]
 
-        sockets = []
-        for name in socket_names:
-            cmds.select(cl=True)
-            sockets.append(guides_manager.get_guides(guide_export=f"{self.side}_{name}_JNT")[0])
+        # Fuente de las posiciones de los sockets: una CURVA {side}_sockets_CRV (cada
+        # CV = un socket, en el ORDEN de socket_names: upper, lower, in, out, upIn,
+        # upOut, downIn, downOut) o las guías {side}_{name}_JNT (método actual).
+        from_curve = False
+        socket_positions = {}
+        crv = None
+        try:
+            res = guides_manager.get_guides(f"{self.side}_sockets_CRVShape", parent=self.module_trn)
+            if res and isinstance(res, str) and cmds.objExists(res):
+                crv = res
+        except Exception:
+            crv = None
+
+        if crv:
+            from_curve = True
+            cv_list = cmds.ls(f"{crv}.cv[*]", flatten=True)
+            for i, name in enumerate(socket_names):
+                if i < len(cv_list):
+                    socket_positions[name] = cmds.pointPosition(cv_list[i], world=True)
+            crv_tf = cmds.listRelatives(crv, parent=True, fullPath=True)
+            cmds.delete(crv_tf[0] if crv_tf else crv)
+        else:
+            for name in socket_names:
+                cmds.select(cl=True)
+                guides_manager.get_guides(guide_export=f"{self.side}_{name}_JNT")
+                socket_positions[name] = cmds.xform(f"{self.side}_{name}_JNT", q=True, ws=True, t=True)
         cmds.select(cl=True)
+
+        def socket_matrix(name):
+            # Matriz de guía del socket: desde la curva (posición + escala X en R) o
+            # desde la guía JNT (matriz de mundo completa).
+            if from_curve:
+                p = socket_positions[name]
+                sx = -1.0 if self.side == "R" else 1.0
+                return om.MMatrix([sx, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, p[0], p[1], p[2], 1])
+            return om.MMatrix(cmds.getAttr(f"{self.side}_{name}_JNT.worldMatrix[0]"))
 
         main_sockets = cmds.createNode("transform", name=f"{self.side}_mainEyelidSockets_GRP", ss=True, p=self.controllers_grp)
         cmds.setAttr(f"{main_sockets}.offsetParentMatrix", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
@@ -872,8 +903,8 @@ class EyelidModule(object):
         for socket, (driver1, driver2) in socket_logic.items():
 
             parent_name = f"{self.side}_{socket}"
-            # Matriz horneada de la guía del socket (posición + escala X en R), sin transform _GUIDE vivo
-            socket_pos = cmds.xform(f"{self.side}_{socket}_JNT", q=True, ws=True, t=True)
+            # Posición del socket (de la curva o de la guía JNT), matriz posición + escala X en R
+            socket_pos = socket_positions[socket]
             scale_x = -1.0 if self.side == "R" else 1.0
             parent_guide_matrix = [scale_x, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, socket_pos[0], socket_pos[1], socket_pos[2], 1]
 
@@ -908,10 +939,8 @@ class EyelidModule(object):
 
                 if driver_name not in driver_ctls_cache:
 
-                    # Matriz horneada de la guía del driver, sin transform _GUIDE vivo
-                    driver_guide_matrices[driver_name] = om.MMatrix(
-                        cmds.getAttr(f"{self.side}_{driver}_JNT.worldMatrix[0]")
-                    )
+                    # Matriz de guía del driver (curva o JNT)
+                    driver_guide_matrices[driver_name] = socket_matrix(driver)
 
                     driver_nodes, driver_ctl = curve_tool.create_controller(
                         name=driver_name, offset=["GRP", "OFF"], parent=secondary_sockets
@@ -951,9 +980,11 @@ class EyelidModule(object):
                 cmds.xform(driver_nodes[0], m=om.MMatrix.kIdentity)
                 cmds.xform(driver_skinning_jnt, m=om.MMatrix.kIdentity)
 
-        for name in socket_names:
-            cmds.delete(f"{self.side}_{name}_JNT")
-        
+        if not from_curve:
+            for name in socket_names:
+                if cmds.objExists(f"{self.side}_{name}_JNT"):
+                    cmds.delete(f"{self.side}_{name}_JNT")
+
         return socket_main_controllers
 
     def getClosestParamToPosition(self, curve, position):

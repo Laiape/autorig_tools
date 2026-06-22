@@ -129,37 +129,54 @@ class EyebrowModule(object):
     def load_guides(self):
 
         cmds.select(clear=True)
-        eyebrows = guides_manager.get_guides(f"{self.side}_eyebrowMain_JNT")
-        cmds.parent(eyebrows[0], self.module_trn)
-        self.main_eyebrow = eyebrows[0]
-        cmds.select(clear=True)
 
-        # Si existe la curva de guía {side}_eyebrow_CRV, cada CV -> una joint (las
-        # secciones de la ceja). Si no existe, se sigue con el método actual (las
-        # joints hijas de la guía main).
-        eyebrow_crv = None
+        # Si existe la curva de guía {side}_eyebrow_CRV (guardada como shape), cada CV
+        # -> una joint (las secciones de la ceja) y el main se coloca en el centro de
+        # la curva. Si NO existe, se sigue con el método actual (guía {side}_eyebrowMain_JNT
+        # con sus hijas). get_guides para una curva DEVUELVE el nombre del SHAPE (string).
+        eyebrow_shape = None
         try:
-            crv = guides_manager.get_guides(f"{self.side}_eyebrow_CRV")
-            if crv and cmds.objExists(crv[0]):
-                eyebrow_crv = crv[0]
+            res = guides_manager.get_guides(f"{self.side}_eyebrow_CRVShape", parent=self.module_trn)
+            if res and isinstance(res, str) and cmds.objExists(res):
+                eyebrow_shape = res
         except Exception:
-            eyebrow_crv = None
+            pass
 
-        if eyebrow_crv:
-            shape = (cmds.listRelatives(eyebrow_crv, shapes=True, type="nurbsCurve") or [None])[0]
-            cvs = cmds.ls(f"{shape}.cv[*]", flatten=True) if shape else []
+        if eyebrow_shape:
+            cvs = cmds.ls(f"{eyebrow_shape}.cv[*]", flatten=True)
             self.eyebrows = []
             for i, cv in enumerate(cvs):
                 pos = cmds.pointPosition(cv, world=True)
                 jnt = cmds.createNode("joint", name=f"{self.side}_eyebrow{i:02d}_JNT", ss=True, p=self.module_trn)
                 cmds.xform(jnt, worldSpace=True, translation=pos)
                 self.eyebrows.append(jnt)
-            # las joints de sección de la guía main ya no se usan (usamos la curva)
-            extra = [j for j in eyebrows[1:] if cmds.objExists(j)]
-            if extra:
-                cmds.delete(extra)
-            cmds.delete(eyebrow_crv)
+
+            # Orientar cada joint a lo largo de la curva: X aim al siguiente CV, Y up
+            # (coherente con el ribbon: aim_axis='x', up_axis='y'). El último copia la
+            # orientación del anterior.
+            for i in range(len(self.eyebrows)):
+                if i < len(self.eyebrows) - 1:
+                    ac = cmds.aimConstraint(self.eyebrows[i + 1], self.eyebrows[i],
+                                            aimVector=(1, 0, 0), upVector=(0, 1, 0),
+                                            worldUpType="vector", worldUpVector=(0, 1, 0))
+                    cmds.delete(ac)
+                elif len(self.eyebrows) > 1:
+                    cmds.matchTransform(self.eyebrows[i], self.eyebrows[i - 1], rotation=True, position=False, scale=False)
+
+            # Con la curva no hay guía main: el main se coloca en el centro de la curva,
+            # con la orientación de la sección central.
+            mid_jnt = self.eyebrows[len(self.eyebrows) // 2]
+            mid_pos = cmds.xform(mid_jnt, q=True, ws=True, t=True)
+            self.main_eyebrow = cmds.createNode("joint", name=f"{self.side}_eyebrowMain_JNT", ss=True, p=self.module_trn)
+            cmds.xform(self.main_eyebrow, worldSpace=True, translation=mid_pos)
+            cmds.matchTransform(self.main_eyebrow, mid_jnt, rotation=True, position=False, scale=False)
+
+            crv_tf = cmds.listRelatives(eyebrow_shape, parent=True, fullPath=True)
+            cmds.delete(crv_tf[0] if crv_tf else eyebrow_shape)
         else:
+            eyebrows = guides_manager.get_guides(f"{self.side}_eyebrowMain_JNT")
+            cmds.parent(eyebrows[0], self.module_trn)
+            self.main_eyebrow = eyebrows[0]
             self.eyebrows = sorted(eyebrows[1:])
             for jnt in self.eyebrows:
                 cmds.parent(jnt, self.module_trn)

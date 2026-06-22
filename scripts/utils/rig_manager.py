@@ -514,7 +514,8 @@ def build_rig(character_name, on_step=None):
         reload(jaw_module_nurbs)
         jaw_module_nurbs.JawModule().make("C")
 
-    if check("L_eyebrowMain_JNT") and check("R_eyebrowMain_JNT"):
+    if (check("L_eyebrowMain_JNT") and check("R_eyebrowMain_JNT")) or \
+       (check("L_eyebrow_CRVShape") and check("R_eyebrow_CRVShape")):
         step("Building eyebrows…")
         reload(eyebrow_module)
         eyebrow_module.EyebrowModule().make("L")
