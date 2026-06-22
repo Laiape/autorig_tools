@@ -187,12 +187,16 @@ class ArmModule(object):
         cmds.addAttr(settings, longName="RingInflate", attributeType="float", defaultValue=push_dv, keyable=True)
 
         enable = f"{settings}.CorrectivesEnable"
-        # bíceps: flexión (rotateZ 0 -> 100) empuja +Z (delante)
+        # bíceps: al rotar el codo HACIA DENTRO/flexión (rotateZ 0 -> 100) empuja
+        # ADELANTE (+Z = anterior) -> saca el bíceps.
         correctives.corrective_push(f"{self.side}_bicepsCorrective", base, driver, 0, 100, (0, 0, 1), f"{settings}.BicepsPush", enable)
-        # triceps: extensión (rotateZ 0 -> -100) empuja -Z (detrás)
-        correctives.corrective_push(f"{self.side}_tricepsCorrective", base, driver, 0, -100, (0, 0, -1), f"{settings}.TricepsPush", enable)
-        # anillo de volumen alrededor del bíceps, infla al flexionar
-        correctives.corrective_ring(f"{self.side}_bicepsRing", base, 4, radius, driver, 0, 100, f"{settings}.RingInflate", normal_axis="X", enable_attr=enable)
+        # triceps: al echar el brazo ATRÁS/extensión (rotateZ 0 -> -100) SUBE y SALE
+        # (+Y arriba, -Z atrás/fuera) -> saca el triceps.
+        correctives.corrective_push(f"{self.side}_tricepsCorrective", base, driver, 0, -100, (0, 1, -1), f"{settings}.TricepsPush", enable)
+        # anillo de volumen en el CODO (no en el bíceps), infla al flexionar.
+        elbow_base = f"{self.side}_armLower00_JNT"
+        if cmds.objExists(elbow_base):
+            correctives.corrective_ring(f"{self.side}_elbowRing", elbow_base, 4, radius, driver, 0, 100, f"{settings}.RingInflate", normal_axis="X", enable_attr=enable)
 
     def lock_attributes(self, ctl, attrs):
 

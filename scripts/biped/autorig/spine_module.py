@@ -80,7 +80,20 @@ class SpineModule(object):
 
         # Matrices horneadas de las guías (estáticas) en lugar de transforms _GUIDE vivos
         self.body_guide_matrix = cmds.getAttr(f"{self.spine_chain[0]}.worldMatrix[0]")
-        self.chest_guide_matrix = cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")
+
+        # Chest: si existe la guía C_chest_JNT, el localChest se coloca ahí; si no,
+        # se queda en la ÚLTIMA joint del spine (comportamiento por defecto).
+        self.has_chest_guide = False
+        try:
+            chest = guides_manager.get_guides("C_chest_JNT")
+            if chest and cmds.objExists(chest[0]):
+                self.chest_guide_matrix = cmds.getAttr(f"{chest[0]}.worldMatrix[0]")
+                self.has_chest_guide = True
+                cmds.delete(chest[0])
+        except Exception:
+            self.has_chest_guide = False
+        if not self.has_chest_guide:
+            self.chest_guide_matrix = cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")
 
     def controller_creation(self):
 
@@ -207,7 +220,16 @@ class SpineModule(object):
 
         # ----- Local chest setup ------
         blend_matrix_node = cmds.createNode("blendMatrix", name=f"{self.side}_localChest_BLM")
-        cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix")
+        if self.has_chest_guide:
+            # localChest en la posición de C_chest_JNT, pero SIGUIENDO a la última
+            # joint del spine (offset estático * worldMatrix viva).
+            chest_off = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")).inverse()
+            chest_follow = cmds.createNode("multMatrix", name=f"{self.side}_localChestFollow_MMX", ss=True)
+            cmds.setAttr(f"{chest_follow}.matrixIn[0]", list(chest_off), type="matrix")
+            cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{chest_follow}.matrixIn[1]")
+            cmds.connectAttr(f"{chest_follow}.matrixSum", f"{blend_matrix_node}.inputMatrix")
+        else:
+            cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
         cmds.connectAttr(f"{blend_matrix_node}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
         cmds.setAttr(f"{blend_matrix_node}.target[0].translateWeight", 0)
