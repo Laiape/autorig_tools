@@ -525,7 +525,7 @@ def build_rig(character_name, on_step=None):
         reload(eyelid_module)
         build_sockets = (rig_type == 0)
 
-        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya"}
+        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya", "maui"}
         eyelid_surface = (rig_type != 0) or (str(character_name).lower() in EYELID_SURFACE_CHARS)
         eyelid_module.EyelidModule().make("L", sockets=build_sockets, surface=eyelid_surface)
         eyelid_module.EyelidModule().make("R", sockets=build_sockets, surface=eyelid_surface)
@@ -559,10 +559,8 @@ def build_rig(character_name, on_step=None):
         cheekbone_module.CheekboneModule().make("R")
 
     if rig_type == 0 and mGear_integration == 0:
-        step("Creating space switches…")
         biped_space_switches()
     elif rig_type == 1:
-        step("Creating space switches…")
         quadruped_space_switches()
     
     skeleton_hierarchy()
@@ -777,8 +775,6 @@ def create_rig_settings(guides_transform, load=False):
         else:
             for axis in ['X', 'Y', 'Z']:
                 cmds.setAttr(f"{guides_transform}.{attr}{axis}", lock=True, keyable=False, channelBox=False)
-
-    print("--- Creando/Actualizando ajustes del Rig ---")
     
     for key, value in rig_settings_config.items():
         attr_path = f"{guides_transform}.{key}"
@@ -990,8 +986,18 @@ def skeleton_hierarchy():
         f = cmds.ls(pattern, type="joint", long=True) or []
         return f[0] if f else None
 
+    def _is_corrective(j):
+        n = j.split("|")[-1].lower()
+        return "corrective" in n or "ring" in n
+
     last_module_end = None
     for side, clean, jnts in modules:
+        # Las joints correctivas (pushers/anillos) NO entran en el encadenado del
+        # módulo: se preservan aparte como hijas de su joint padre, así no rompen la
+        # detección plano/jerárquico de la cadena principal.
+        correctives = [j for j in jnts if _is_corrective(j)]
+        main = [j for j in jnts if j not in set(correctives)]
+
         if clean == "spine":
             parent = freeze_jnt
         elif clean in facial_modules:
@@ -1003,9 +1009,19 @@ def skeleton_hierarchy():
         else:
             parent = last_module_end or freeze_jnt
 
-        ends = parented_chain(jnts, parent)
+        ends = parented_chain(main, parent) if main else []
         if ends:
             last_module_end = ends[-1]
+
+        # Correctivas: cada una cuelga del _ENV de su joint padre (preservadas).
+        for cj in correctives:
+            jp = cmds.listRelatives(cj, parent=True, type="joint", fullPath=True)
+            if not jp:
+                continue
+            p_env_name = jp[0].split("|")[-1].replace("Skinning_JNT", "_ENV").replace("_JNT", "_ENV")
+            p_env = find_env(p_env_name)
+            if p_env:
+                parented_chain([cj], p_env)
 
 def corrective_joints(joint, shape="square"):
 

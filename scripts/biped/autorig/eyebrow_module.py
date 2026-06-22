@@ -132,23 +132,43 @@ class EyebrowModule(object):
         eyebrows = guides_manager.get_guides(f"{self.side}_eyebrowMain_JNT")
         cmds.parent(eyebrows[0], self.module_trn)
         self.main_eyebrow = eyebrows[0]
-        self.eyebrows = sorted(eyebrows[1:])
         cmds.select(clear=True)
 
-        for jnt in self.eyebrows:
-            cmds.parent(jnt, self.module_trn)
+        # Si existe la curva de guía {side}_eyebrow_CRV, cada CV -> una joint (las
+        # secciones de la ceja). Si no existe, se sigue con el método actual (las
+        # joints hijas de la guía main).
+        eyebrow_crv = None
+        try:
+            crv = guides_manager.get_guides(f"{self.side}_eyebrow_CRV")
+            if crv and cmds.objExists(crv[0]):
+                eyebrow_crv = crv[0]
+        except Exception:
+            eyebrow_crv = None
+
+        if eyebrow_crv:
+            shape = (cmds.listRelatives(eyebrow_crv, shapes=True, type="nurbsCurve") or [None])[0]
+            cvs = cmds.ls(f"{shape}.cv[*]", flatten=True) if shape else []
+            self.eyebrows = []
+            for i, cv in enumerate(cvs):
+                pos = cmds.pointPosition(cv, world=True)
+                jnt = cmds.createNode("joint", name=f"{self.side}_eyebrow{i:02d}_JNT", ss=True, p=self.module_trn)
+                cmds.xform(jnt, worldSpace=True, translation=pos)
+                self.eyebrows.append(jnt)
+            # las joints de sección de la guía main ya no se usan (usamos la curva)
+            extra = [j for j in eyebrows[1:] if cmds.objExists(j)]
+            if extra:
+                cmds.delete(extra)
+            cmds.delete(eyebrow_crv)
+        else:
+            self.eyebrows = sorted(eyebrows[1:])
+            for jnt in self.eyebrows:
+                cmds.parent(jnt, self.module_trn)
+
+        cmds.select(clear=True)
 
         if self.side == "L":
             self.mid_eyebrow = guides_manager.get_guides("C_eyebrowMid_JNT")[0]
             cmds.parent(self.mid_eyebrow, self.module_trn)
-
-        # try:
-        #     eyebrow_crv = guides_manager.get_guides(f"{self.side}_eyebrow_CRV")
-        #     cvs = cmds.ls(f"{eyebrow_crv[0]}Shape.cv[*]", long=True)
-        #     for i, cv in enumerate(cvs):
-        #         pos = cmds.pointPosition(cv, world=True)
-        # except:
-        #     pass
 
             
 

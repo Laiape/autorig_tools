@@ -11,12 +11,14 @@ from utils import guides_manager
 from utils import curve_tool
 from utils import matrix_manager
 from utils import ribbon
+from utils import correctives
 
 reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
+reload(correctives)
 
 class ArmModule(object):
 
@@ -71,8 +73,126 @@ class ArmModule(object):
                                 f"{self.side}_armIkRoot": self.ik_root_ctl,
                                 f"{self.side}_skinningJoints": skel_env
                             })
-        
+
+        self.auto_clavicle()
+        self.corrective_setup()
+
         cmds.delete(self.arm_chain)
+
+    def auto_clavicle(self):
+
+        """
+        Auto-clavicle (bípedos): cuando el FK del hombro eleva el brazo por encima
+        de la altura de la clavícula, la clavícula sube con el hombro.
+
+        Driver = rotación LOCAL del FK del hombro (rotateZ = elevación). Se usa el
+        control FK y NO el joint del hombro porque el brazo SIGUE a la clavícula
+        (un driver basado en el world del joint crearía un ciclo). La rotación
+        automática se inyecta en el OFF de la clavícula, así el control manual de la
+        clavícula suma por encima.
+
+        Atributos (en el control de la clavícula):
+            AutoClavicle (0-1) : on/off del efecto.
+            StartAngle         : ángulo del hombro a partir del cual la clavícula
+                                 empieza a seguir (= "altura de la clavícula").
+            Factor (0-1)       : cuánto sigue la clavícula por grado por encima.
+        """
+
+        clavicle_ctl = data_manager.DataExportBiped().get_data("clavicle_module", f"{self.side}_clavicle")
+        if not clavicle_ctl or not cmds.objExists(clavicle_ctl):
+            return
+        clavicle_off = clavicle_ctl.replace("_CTL", "_OFF")
+        if not cmds.objExists(clavicle_off):
+            return
+
+        fk = self.fk_controllers[0]
+        s = 1.0 if self.side == "L" else -1.0   # signo de elevación / lift por lado
+
+        cmds.addAttr(clavicle_ctl, longName="AUTO_CLAVICLE", niceName="AUTO CLAVICLE ------", attributeType="enum", enumName="------", keyable=False)
+        cmds.setAttr(f"{clavicle_ctl}.AUTO_CLAVICLE", channelBox=True, lock=True)
+        cmds.addAttr(clavicle_ctl, longName="AutoClavicle", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
+        cmds.addAttr(clavicle_ctl, longName="StartAngle", niceName="Start Angle", attributeType="float", defaultValue=45, keyable=True)
+        cmds.addAttr(clavicle_ctl, longName="Factor", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
+
+        # raise = shoulderFk.rotateZ * s  (positivo al elevar el brazo en ambos lados)
+        raise_mul = cmds.createNode("multiply", name=f"{self.side}_autoClavicleRaise_MUL", ss=True)
+        cmds.connectAttr(f"{fk}.rotateZ", f"{raise_mul}.input[0]")
+        cmds.setAttr(f"{raise_mul}.input[1]", s)
+
+        # excess = raise - StartAngle
+        excess = cmds.createNode("subtract", name=f"{self.side}_autoClavicleExcess_SUB", ss=True)
+        cmds.connectAttr(f"{raise_mul}.output", f"{excess}.input1")
+        cmds.connectAttr(f"{clavicle_ctl}.StartAngle", f"{excess}.input2")
+
+        # clamp >= 0  (por debajo de la altura de la clavícula no hace nada)
+        clamp = cmds.createNode("clamp", name=f"{self.side}_autoClavicleClamp_CLP", ss=True)
+        cmds.setAttr(f"{clamp}.minR", 0)
+        cmds.setAttr(f"{clamp}.maxR", 100000)
+        cmds.connectAttr(f"{excess}.output", f"{clamp}.inputR")
+
+        # amount = excess * Factor * AutoClavicle, con el signo del lado -> OFF.rotateZ
+        amount = cmds.createNode("multiply", name=f"{self.side}_autoClavicleAmount_MUL", ss=True)
+        cmds.connectAttr(f"{clamp}.outputR", f"{amount}.input[0]")
+        cmds.connectAttr(f"{clavicle_ctl}.Factor", f"{amount}.input[1]")
+        cmds.connectAttr(f"{clavicle_ctl}.AutoClavicle", f"{amount}.input[2]")
+
+        sign = cmds.createNode("multiply", name=f"{self.side}_autoClavicleSign_MUL", ss=True)
+        cmds.connectAttr(f"{amount}.output", f"{sign}.input[0]")
+        cmds.setAttr(f"{sign}.input[1]", s)
+        cmds.connectAttr(f"{sign}.output", f"{clavicle_off}.rotateZ")
+
+    def corrective_setup(self):
+
+        """
+        Joints correctivas del brazo (driven por el codo), vía utils.correctives:
+          - bíceps : se empuja al FLEXIONAR el codo (elbowFk.rotateZ > 0).
+          - triceps: se empuja al EXTENDER el codo (elbowFk.rotateZ < 0).
+          - anillo : 4 joints en círculo alrededor del bíceps que INFLAN radialmente
+                     al flexionar (volumen automático).
+
+        Todo cuelga de un joint medio del brazo superior (sigue al miembro). Las
+        cantidades son atributos en el settings del brazo (tunables en vivo); los
+        ejes (bíceps delante / triceps detrás) son por defecto y el rigger los ajusta.
+        """
+
+        elbow = f"{self.side}_elbowFk_CTL"
+        if not cmds.objExists(elbow):
+            return
+        # joint medio del brazo superior como base (sigue al brazo)
+        ups = cmds.ls(f"{self.side}_armUpper*_JNT", type="joint") or []
+        if not ups:
+            return
+        base = f"{self.side}_armUpper02_JNT"
+        if base not in ups:
+            base = ups[len(ups) // 2]
+        settings = self.settings_ctl
+        driver = f"{elbow}.rotateZ"
+
+        # longitud del brazo superior -> tamaños por defecto independientes de escala
+        try:
+            p0 = om.MVector(*cmds.xform(f"{self.side}_armUpper00_JNT", q=True, ws=True, t=True))
+            p1 = om.MVector(*cmds.xform(f"{self.side}_armLower00_JNT", q=True, ws=True, t=True))
+            upper_len = (p1 - p0).length() or 10.0
+        except Exception:
+            upper_len = 10.0
+        push_dv = round(upper_len * 0.12, 4)
+        radius = round(upper_len * 0.12, 4)
+
+        # atributos en el settings del brazo
+        cmds.addAttr(settings, longName="CORRECTIVES_SEP", niceName="CORRECTIVES ------", attributeType="enum", enumName="------", keyable=False)
+        cmds.setAttr(f"{settings}.CORRECTIVES_SEP", channelBox=True, lock=True)
+        cmds.addAttr(settings, longName="CorrectivesEnable", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
+        cmds.addAttr(settings, longName="BicepsPush", attributeType="float", defaultValue=push_dv, keyable=True)
+        cmds.addAttr(settings, longName="TricepsPush", attributeType="float", defaultValue=push_dv, keyable=True)
+        cmds.addAttr(settings, longName="RingInflate", attributeType="float", defaultValue=push_dv, keyable=True)
+
+        enable = f"{settings}.CorrectivesEnable"
+        # bíceps: flexión (rotateZ 0 -> 100) empuja +Z (delante)
+        correctives.corrective_push(f"{self.side}_bicepsCorrective", base, driver, 0, 100, (0, 0, 1), f"{settings}.BicepsPush", enable)
+        # triceps: extensión (rotateZ 0 -> -100) empuja -Z (detrás)
+        correctives.corrective_push(f"{self.side}_tricepsCorrective", base, driver, 0, -100, (0, 0, -1), f"{settings}.TricepsPush", enable)
+        # anillo de volumen alrededor del bíceps, infla al flexionar
+        correctives.corrective_ring(f"{self.side}_bicepsRing", base, 4, radius, driver, 0, 100, f"{settings}.RingInflate", normal_axis="X", enable_attr=enable)
 
     def lock_attributes(self, ctl, attrs):
 

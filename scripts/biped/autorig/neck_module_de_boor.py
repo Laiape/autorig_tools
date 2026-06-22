@@ -74,8 +74,8 @@ class NeckModule(object):
                                 "head_squash_ctl": self.head_squash_ctl,
                             })
             # Clean up and store data
-            if cmds.objExists(self.throat_guide[0]):
-                cmds.delete(self.throat_guide)
+            # if cmds.objExists(self.throat_guide[0]):
+            #     cmds.delete(self.throat_guide)
    
 
     def lock_attributes(self, ctl, attrs):
@@ -98,8 +98,6 @@ class NeckModule(object):
 
         self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT", parent=self.module_trn)
         cmds.select(clear=True)
-        if self.mGear_integration_ == False:
-            self.throat_guide = guides_manager.get_guides(f"{self.side}_throat_JNT", parent=self.module_trn)
 
         cmds.select(clear=True)
         # Matrices horneadas de las guías (estáticas) en lugar de transforms _GUIDE vivos
@@ -153,12 +151,12 @@ class NeckModule(object):
         for i , ctl in enumerate(self.neck_ctls):
             self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
 
-        throat_nodes, throat_ctl = curve_tool.create_controller(name=f"{self.side}_throat", offset=["GRP"], parent=self.neck_ctls[0])
-        self.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
-        cmds.matchTransform(throat_nodes[0], self.throat_guide[0], pos=True, rot=True, scl=False)
-        skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
-        cmds.connectAttr(f"{throat_ctl}.matrix", f"{skin_throat_jnt}.offsetParentMatrix")
-        cmds.matchTransform(skin_throat_jnt, self.throat_guide[0], pos=True, rot=True, scl=False)
+        # throat_nodes, throat_ctl = curve_tool.create_controller(name=f"{self.side}_throat", offset=["GRP"], parent=self.neck_ctls[0])
+        # self.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
+        # cmds.matchTransform(throat_nodes[0], self.throat_guide[0], pos=True, rot=True, scl=False)
+        # skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
+        # cmds.connectAttr(f"{throat_ctl}.matrix", f"{skin_throat_jnt}.offsetParentMatrix")
+        # cmds.matchTransform(skin_throat_jnt, self.throat_guide[0], pos=True, rot=True, scl=False)
     
 
 
