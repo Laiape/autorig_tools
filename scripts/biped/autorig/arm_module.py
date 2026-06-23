@@ -144,20 +144,16 @@ class ArmModule(object):
     def corrective_setup(self):
 
         """
-        Joints correctivas del brazo (driven por el codo), vía utils.correctives:
-          - bíceps : se empuja al FLEXIONAR el codo (elbowFk.rotateZ > 0).
-          - triceps: se empuja al EXTENDER el codo (elbowFk.rotateZ < 0).
-          - anillo : 4 joints en círculo alrededor del bíceps que INFLAN radialmente
-                     al flexionar (volumen automático).
+        Joints correctivas del brazo (driven por el CODO), vía utils.correctives.
+        Siempre activas, sin atributos de tuneo (cantidades hardcoded = 12% del brazo):
+          - bíceps : se empuja ADELANTE al FLEXIONAR el codo (+ sube cerca de la flexión máx).
+          - triceps: se empuja ARRIBA/ATRÁS al EXTENDER el codo.
+          - anillo : 4 joints en círculo alrededor del codo que INFLAN al flexionar.
 
-        Todo cuelga de un joint medio del brazo superior (sigue al miembro). Las
-        cantidades son atributos en el settings del brazo (tunables en vivo); los
-        ejes (bíceps delante / triceps detrás) son por defecto y el rigger los ajusta.
+        DRIVER = ángulo de flexión del codo desde matrices MUNDO (armUpper00 vs
+        armLower00) -> funciona igual en FK y en IK. Signo por lado (R espejado).
         """
 
-        elbow = f"{self.side}_elbowFk_CTL"
-        if not cmds.objExists(elbow):
-            return
         # joint medio del brazo superior como base (sigue al brazo)
         ups = cmds.ls(f"{self.side}_armUpper*_JNT", type="joint") or []
         if not ups:
@@ -165,38 +161,47 @@ class ArmModule(object):
         base = f"{self.side}_armUpper02_JNT"
         if base not in ups:
             base = ups[len(ups) // 2]
-        settings = self.settings_ctl
-        driver = f"{elbow}.rotateZ"
+        upper = f"{self.side}_armUpper00_JNT"
+        lower = f"{self.side}_armLower00_JNT"
+        if not (cmds.objExists(upper) and cmds.objExists(lower)):
+            return
 
-        # longitud del brazo superior -> tamaños por defecto independientes de escala
+        # ángulo de flexión del codo (eje Y), FK/IK-agnóstico, rest a 0.
+        # El ángulo de la matriz relativa NO cambia de signo en R (la flexión da el mismo
+        # signo en ambos lados), así que NO se invierte el signo -> L y R idénticos.
+        driver = correctives.bend_driver(f"{self.side}_elbowBend", upper, lower, "Y")
+
+        # longitud del brazo superior -> tamaños independientes de escala
         try:
-            p0 = om.MVector(*cmds.xform(f"{self.side}_armUpper00_JNT", q=True, ws=True, t=True))
-            p1 = om.MVector(*cmds.xform(f"{self.side}_armLower00_JNT", q=True, ws=True, t=True))
+            p0 = om.MVector(*cmds.xform(upper, q=True, ws=True, t=True))
+            p1 = om.MVector(*cmds.xform(lower, q=True, ws=True, t=True))
             upper_len = (p1 - p0).length() or 10.0
         except Exception:
             upper_len = 10.0
         push_dv = round(upper_len * 0.12, 4)
-        radius = round(upper_len * 0.12, 4)
+        radius = push_dv
 
-        # atributos en el settings del brazo
-        cmds.addAttr(settings, longName="CORRECTIVES_SEP", niceName="CORRECTIVES ------", attributeType="enum", enumName="------", keyable=False)
-        cmds.setAttr(f"{settings}.CORRECTIVES_SEP", channelBox=True, lock=True)
-        cmds.addAttr(settings, longName="CorrectivesEnable", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
-        cmds.addAttr(settings, longName="BicepsPush", attributeType="float", defaultValue=push_dv, keyable=True)
-        cmds.addAttr(settings, longName="TricepsPush", attributeType="float", defaultValue=push_dv, keyable=True)
-        cmds.addAttr(settings, longName="RingInflate", attributeType="float", defaultValue=push_dv, keyable=True)
+        # En R los ejes locales NO son un espejo limpio (joints con mirror de
+        # comportamiento): el mismo push local apunta al revés en mundo. Se niega el
+        # vector COMPLETO en R (v_R = -v_L) -> el push da el espejo sagital correcto.
+        def _ax(v):
+            return v if self.side == "L" else (-v[0], -v[1], -v[2])
 
-        enable = f"{settings}.CorrectivesEnable"
-        # bíceps: al rotar el codo HACIA DENTRO/flexión (rotateZ 0 -> 100) empuja
-        # ADELANTE (+Z = anterior) -> saca el bíceps.
-        correctives.corrective_push(f"{self.side}_bicepsCorrective", base, driver, 0, 100, (0, 0, 1), f"{settings}.BicepsPush", enable)
-        # triceps: al echar el brazo ATRÁS/extensión (rotateZ 0 -> -100) SUBE y SALE
-        # (+Y arriba, -Z atrás/fuera) -> saca el triceps.
-        correctives.corrective_push(f"{self.side}_tricepsCorrective", base, driver, 0, -100, (0, 1, -1), f"{settings}.TricepsPush", enable)
-        # anillo de volumen en el CODO (no en el bíceps), infla al flexionar.
-        elbow_base = f"{self.side}_armLower00_JNT"
-        if cmds.objExists(elbow_base):
-            correctives.corrective_ring(f"{self.side}_elbowRing", elbow_base, 4, radius, driver, 0, 100, f"{settings}.RingInflate", normal_axis="X", enable_attr=enable)
+        # bíceps: flexión (-Y) empuja ADELANTE (+Z = anterior) -> saca el bíceps.
+        biceps_jnt = correctives.corrective_push(f"{self.side}_bicepsCorrective", base, driver, 0, -100, _ax((0, 0, 1)), push_dv)
+        # ...y cerca de la flexión MÁXIMA (~wrist a la altura del codo) además SUBE (+Y).
+        # El ÁNGULO en que empieza a subir se expone como atributo en el bendy upper.
+        bendy_upper = f"{self.side}_armUpperMainBendy_CTL"
+        rise_start = -60.0
+        if cmds.objExists(bendy_upper):
+            if not cmds.attributeQuery("BicepsRiseStart", node=bendy_upper, exists=True):
+                cmds.addAttr(bendy_upper, longName="BicepsRiseStart", niceName="Biceps Rise Start", attributeType="float", defaultValue=rise_start, keyable=True)
+            rise_start = f"{bendy_upper}.BicepsRiseStart"
+        correctives.corrective_extra(biceps_jnt, f"{self.side}_bicepsRise", driver, rise_start, -100, _ax((0, 1, 0)), push_dv)
+        # triceps: extensión (+Y) SUBE y SALE (+Y arriba, -Z atrás/fuera) -> saca el triceps.
+        correctives.corrective_push(f"{self.side}_tricepsCorrective", base, driver, 0, 100, _ax((0, 1, -1)), push_dv)
+        # anillo de volumen en el CODO, infla en la flexión (-Y, con el bíceps).
+        correctives.corrective_ring(f"{self.side}_elbowRing", lower, 4, radius, driver, 0, -100, push_dv, normal_axis="X")
 
     def lock_attributes(self, ctl, attrs):
 

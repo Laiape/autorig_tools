@@ -95,6 +95,9 @@ class AutoRig(object):
             progress._set_pct("Importing skin weights…", 91)
             self.import_weights()
 
+            progress._set_pct("Localizing corrective skin…", 95)
+            self.localize_correctives()
+
             progress._set_pct("Importing corrective blendshapes…", 96)
             self.import_corrective_blendshapes()
 
@@ -363,6 +366,29 @@ class AutoRig(object):
         skinner.import_skins()
 
         # self._auto_transfer_from_source()
+
+    def localize_correctives(self):
+        """
+        Hace LOCALES los skinClusters de correctivas para que NO se rompan al mover el
+        rig global (masterwalk). Soluciona la doble transformación de apilar dos
+        skinClusters (body + correctivas): conecta el bindPreMatrix de cada influencia
+        a la worldInverseMatrix de su hueso padre, así su contribución es identidad en
+        reposo y solo aplica el delta local del push.
+
+        Se ejecuta en pose neutra (justo tras importar pesos) y detecta automáticamente
+        cualquier skinCluster cuyo nombre contenga 'corrective' (p.ej. C_corrective_SKC).
+        """
+        from utils import correctives
+        reload(correctives)
+        skins = [s for s in (cmds.ls(type="skinCluster") or []) if "corrective" in s.lower()]
+        if not skins:
+            return
+        for s in skins:
+            try:
+                done = correctives.localize_corrective_skin(s)
+                om.MGlobal.displayInfo(f"[Correctives] Skin '{s}' localizado ({len(done)} influencias).")
+            except Exception as e:
+                om.MGlobal.displayWarning(f"[Correctives] No se pudo localizar '{s}': {e}")
 
     
     def proxy_locator(self):

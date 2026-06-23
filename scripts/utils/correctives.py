@@ -18,12 +18,21 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 
 
+def _set_or_connect(plug, value):
+    """setAttr si value es número, connectAttr si es un plug (string)."""
+    if isinstance(value, str):
+        cmds.connectAttr(value, plug)
+    else:
+        cmds.setAttr(plug, value)
+
+
 def _remap01(name, driver, in_min, in_max):
-    """remapValue 0..1 (auto-clamp) desde driver en [in_min, in_max]."""
+    """remapValue 0..1 (auto-clamp) desde driver en [in_min, in_max].
+    in_min/in_max pueden ser número o un plug (atributo) para hacerlos tunables."""
     rmv = cmds.createNode("remapValue", name=f"{name}_RMV", ss=True)
     cmds.connectAttr(driver, f"{rmv}.inputValue")
-    cmds.setAttr(f"{rmv}.inputMin", in_min)
-    cmds.setAttr(f"{rmv}.inputMax", in_max)
+    _set_or_connect(f"{rmv}.inputMin", in_min)
+    _set_or_connect(f"{rmv}.inputMax", in_max)
     cmds.setAttr(f"{rmv}.outputMin", 0)
     cmds.setAttr(f"{rmv}.outputMax", 1)
     return f"{rmv}.outValue"
@@ -60,13 +69,42 @@ def corrective_push(name, base_joint, driver, in_min, in_max, axis, amount_attr,
             continue
         mul = cmds.createNode("multiply", name=f"{name}T{comp}_MUL", ss=True)
         cmds.connectAttr(drv, f"{mul}.input[0]")          # 0..1
-        cmds.connectAttr(amount_attr, f"{mul}.input[1]")  # distancia máx (vivo)
+        _set_or_connect(f"{mul}.input[1]", amount_attr)  # distancia máx (vivo)
         cmds.setAttr(f"{mul}.input[2]", float(ax[i]))     # componente del eje
-        if enable_attr:
-            cmds.connectAttr(enable_attr, f"{mul}.input[3]")
+        if enable_attr is not None:
+            _set_or_connect(f"{mul}.input[3]", enable_attr)
         cmds.connectAttr(f"{mul}.output", f"{jnt}.translate{comp}")
 
     return jnt
+
+
+def corrective_extra(joint, name, driver, in_min, in_max, axis, amount_attr, enable_attr=None):
+
+    """
+    Añade un empuje EXTRA (otro rango/eje) sobre una joint correctiva YA creada.
+    Para una segunda fase: p.ej. que el bíceps además SUBA (+Y) cerca de la flexión
+    máxima del codo, encima del empuje principal hacia delante.
+
+    IMPORTANTE: usar canales de translate NO usados por el push principal (si el
+    push principal ya escribe translateZ, aquí usa translateY/X).
+    """
+    drv = _remap01(name, driver, in_min, in_max)
+    ax = om.MVector(*axis)
+    if ax.length() > 1e-9:
+        ax.normalize()
+
+    for i, comp in enumerate("XYZ"):
+        if abs(ax[i]) < 1e-6:
+            continue
+        mul = cmds.createNode("multiply", name=f"{name}T{comp}_MUL", ss=True)
+        cmds.connectAttr(drv, f"{mul}.input[0]")
+        _set_or_connect(f"{mul}.input[1]", amount_attr)
+        cmds.setAttr(f"{mul}.input[2]", float(ax[i]))
+        if enable_attr is not None:
+            _set_or_connect(f"{mul}.input[3]", enable_attr)
+        cmds.connectAttr(f"{mul}.output", f"{joint}.translate{comp}")
+
+    return joint
 
 
 def corrective_ring(name, base_joint, count, radius, driver, in_min, in_max, amount_attr, normal_axis="X", enable_attr=None):
@@ -103,7 +141,7 @@ def corrective_ring(name, base_joint, count, radius, driver, in_min, in_max, amo
                 continue
             mul = cmds.createNode("multiply", name=f"{name}{k:02d}T{comp}_MUL", ss=True)
             cmds.connectAttr(drv, f"{mul}.input[0]")
-            cmds.connectAttr(amount_attr, f"{mul}.input[1]")
+            _set_or_connect(f"{mul}.input[1]", amount_attr)
             cmds.setAttr(f"{mul}.input[2]", float(direction[i]))
             if enable_attr:
                 cmds.connectAttr(enable_attr, f"{mul}.input[3]")
@@ -116,3 +154,147 @@ def corrective_ring(name, base_joint, count, radius, driver, in_min, in_max, amo
         ring.append(jnt)
 
     return ring
+
+
+def bend_driver(name, upper_joint, lower_joint, axis, sign=1.0):
+
+    """
+    Ángulo de flexión de `lower_joint` respecto a `upper_joint` calculado desde sus
+    matrices MUNDO -> FUNCIONA IGUAL EN FK Y EN IK (solo depende de la pose final, no
+    de qué control la genera). Sustituye a leer la rotación de un FK_CTL (que solo
+    existe en FK) o la de un joint del esqueleto (que en este rig va por matriz y su
+    rotate local es 0).
+
+    relativeMatrix = lower.worldMatrix x upper.worldInverseMatrix -> decompose -> euler.
+    Se devuelve el plug del eje pedido, con el REST (pose de bind) llevado a 0 y
+    multiplicado por `sign` (para igualar el comportamiento L/R, ya que en R el miembro
+    está espejado y el ángulo sale con signo contrario).
+
+    Args:
+        name (str): prefijo de nodos.
+        upper_joint (str): hueso superior (p.ej. armUpper00 / legUpper00).
+        lower_joint (str): hueso inferior = la articulación (armLower00 / legLower00).
+        axis (str): "X"/"Y"/"Z" (codo = "Y", rodilla = "Z").
+        sign (float): +1 en L, -1 en R.
+    Returns:
+        str: plug con el ángulo de flexión (grados), rest a 0.
+    """
+    mm = cmds.createNode("multMatrix", name=f"{name}_MM", ss=True)
+    cmds.connectAttr(f"{lower_joint}.worldMatrix[0]", f"{mm}.matrixIn[0]")
+    cmds.connectAttr(f"{upper_joint}.worldInverseMatrix[0]", f"{mm}.matrixIn[1]")
+    dec = cmds.createNode("decomposeMatrix", name=f"{name}_DEC", ss=True)
+    cmds.connectAttr(f"{mm}.matrixSum", f"{dec}.inputMatrix")
+    # rotateOrder con el EJE DE LA BISAGRA primero -> ese ángulo tiene rango completo
+    # (±180) y NO se flippea al pasar de 90° (con XYZ, el eje del medio salta de signo).
+    # X->xyz(0), Y->yzx(1), Z->zxy(2)
+    cmds.setAttr(f"{dec}.inputRotateOrder", {"X": 0, "Y": 1, "Z": 2}[axis])
+    raw = f"{dec}.outputRotate{axis}"
+
+    # rest (bind) -> 0
+    rest = cmds.getAttr(raw)
+    sub = cmds.createNode("subtract", name=f"{name}Rest_SUB", ss=True)
+    cmds.connectAttr(raw, f"{sub}.input1")
+    cmds.setAttr(f"{sub}.input2", rest)
+    drv = f"{sub}.output"
+
+    if abs(sign - 1.0) > 1e-9:
+        mul = cmds.createNode("multiply", name=f"{name}Sign_MUL", ss=True)
+        cmds.connectAttr(drv, f"{mul}.input[0]")
+        cmds.setAttr(f"{mul}.input[1]", float(sign))
+        drv = f"{mul}.output"
+
+    return drv
+
+
+def corrective_offset_push(name, base_joint, driver, in_min, in_max, rest_offset, push_axis, amount, enable_attr=None):
+
+    """
+    Como corrective_push pero la joint NACE con un OFFSET de reposo (`rest_offset`,
+    vector local) y ADEMÁS se empuja a lo largo de `push_axis` cuando el driver va de
+    in_min a in_max. translate = rest_offset + empuje.
+
+    Útil p.ej. para el trasero del muslo: parte ya desplazado DETRÁS (rest_offset) y al
+    flexionar la rodilla se CONTRAE (push_axis hacia el hueso/arriba).
+    """
+    jnt = cmds.createNode("joint", name=f"{name}_JNT", ss=True, parent=base_joint)
+    cmds.setAttr(f"{jnt}.jointOrient", 0, 0, 0)
+    cmds.setAttr(f"{jnt}.translate", float(rest_offset[0]), float(rest_offset[1]), float(rest_offset[2]))
+
+    drv = _remap01(name, driver, in_min, in_max)
+    ax = om.MVector(*push_axis)
+    if ax.length() > 1e-9:
+        ax.normalize()
+
+    for i, comp in enumerate("XYZ"):
+        base_val = float(rest_offset[i])
+        if abs(ax[i]) < 1e-6:
+            continue  # ese canal se queda en su rest (ya seteado arriba)
+        mul = cmds.createNode("multiply", name=f"{name}T{comp}_MUL", ss=True)
+        cmds.connectAttr(drv, f"{mul}.input[0]")
+        _set_or_connect(f"{mul}.input[1]", amount)
+        cmds.setAttr(f"{mul}.input[2]", float(ax[i]))
+        if enable_attr is not None:
+            _set_or_connect(f"{mul}.input[3]", enable_attr)
+        add = cmds.createNode("sum", name=f"{name}T{comp}_SUM", ss=True)
+        cmds.setAttr(f"{add}.input[0]", base_val)
+        cmds.connectAttr(f"{mul}.output", f"{add}.input[1]")
+        cmds.connectAttr(f"{add}.output", f"{jnt}.translate{comp}")
+
+    return jnt
+
+
+def _inf_index(skin_cluster, inf):
+    """Índice lógico de la influencia `inf` en el array .matrix del skinCluster."""
+    conns = cmds.listConnections(f"{inf}.worldMatrix[0]", source=False, destination=True, plugs=True) or []
+    for c in conns:
+        if c.startswith(f"{skin_cluster}.matrix["):
+            return int(c.split("[", 1)[1].split("]", 1)[0])
+    return None
+
+
+def localize_corrective_skin(skin_cluster):
+
+    """
+    Hace LOCAL un skinCluster de correctivas para que NO se rompa al mover el rig
+    (masterwalk u otra transform global). Soluciona la DOBLE TRANSFORMACIÓN que ocurre
+    al apilar dos skinClusters sobre la misma malla (body + correctivas): el segundo
+    re-aplicaba el movimiento global porque su bindPreMatrix era estático.
+
+    Para cada influencia conecta su `bindPreMatrix` a la worldInverseMatrix de su JOINT
+    PADRE (el hueso del que cuelga la correctiva), de modo que:
+        contribución = bindPreMatrix * worldMatrix = identidad cuando el push = 0,
+    para CUALQUIER pose/posición global -> solo se aplica el DELTA local del empuje.
+    No hay pop: en la pose actual el valor coincide con el bindPreMatrix original.
+
+    Llamar UNA VEZ después de pintar/bindear el skinCluster de correctivas, con el rig
+    en la pose neutra (correctivas a 0). Idempotente por influencia (reescribe la conexión).
+
+    Args:
+        skin_cluster (str): el skinCluster de correctivas (p.ej. "C_corrective_SKC").
+    Returns:
+        list: influencias localizadas.
+    """
+    infs = cmds.skinCluster(skin_cluster, query=True, influence=True) or []
+    done = []
+    for inf in infs:
+        parent = (cmds.listRelatives(inf, parent=True, fullPath=True) or [None])[0]
+        if not parent:
+            continue  # influencia raíz: nada que cancelar
+        idx = _inf_index(skin_cluster, inf)
+        if idx is None:
+            continue
+        bpm = om.MMatrix(cmds.getAttr(f"{skin_cluster}.bindPreMatrix[{idx}]"))
+        pw = om.MMatrix(cmds.getAttr(f"{parent}.worldMatrix[0]"))
+        # restLocal^-1 (constante) = parentWorld_bind * bindPreMatrix_estatico
+        const = pw * bpm
+        mm = cmds.createNode("multMatrix", name=f"{_short(inf)}_localBPM_MM", ss=True)
+        cmds.connectAttr(f"{parent}.worldInverseMatrix[0]", f"{mm}.matrixIn[0]")
+        cmds.setAttr(f"{mm}.matrixIn[1]", list(const), type="matrix")
+        cmds.connectAttr(f"{mm}.matrixSum", f"{skin_cluster}.bindPreMatrix[{idx}]", force=True)
+        done.append(inf)
+    return done
+
+
+def _short(n):
+    return n.rsplit("|", 1)[-1].split(":")[-1]
+

@@ -9,12 +9,14 @@ from utils import guides_manager
 from utils import curve_tool
 from utils import matrix_manager
 from utils import ribbon
+from utils import correctives
 
 reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
+reload(correctives)
 
 class LegModule(object):
 
@@ -76,6 +78,7 @@ class LegModule(object):
         self.knee_pin_setup()
         self.foot_attributes()
         self.de_boor_ribbon(self.skinning_joint_numbers)
+        self.corrective_setup()
 
         data_manager.DataExportBiped().append_data("leg_module",
                             {
@@ -89,6 +92,55 @@ class LegModule(object):
                             })
         
         cmds.delete(self.leg_chain)
+
+    def corrective_setup(self):
+
+        """
+        Joints correctivas del MUSLO (upper leg), driven por la RODILLA. Siempre activas,
+        sin atributos de tuneo (cantidades hardcoded = 12% del muslo). Cuelgan del joint
+        medio del muslo (legUpper02_JNT, sigue al miembro):
+
+          - thighFront (cuádriceps): al rotar la rodilla hacia DELANTE (z+) sale hacia
+            DELANTE (+Y local = anterior).
+          - thighBack: REST ya desplazado DETRÁS (-Y, la posición que tenía al final).
+            Al SUBIR la rodilla (flexión, z-) la pierna se CONTRAE: la masa trasera sube
+            por el hueso (-X = hacia la cadera) y entra (+Y).
+
+        DRIVER = ángulo de flexión de la rodilla desde matrices MUNDO (legUpper00 vs
+        legLower00) -> funciona igual en FK y en IK. Signo por lado (R espejado). Las
+        correctivas empujan en LOCAL -> el mirror (matriz) las gestiona solo.
+        """
+
+        base = f"{self.side}_legUpper02_JNT"
+        upper = f"{self.side}_legUpper00_JNT"
+        lower = f"{self.side}_legLower00_JNT"
+        if not (cmds.objExists(base) and cmds.objExists(upper) and cmds.objExists(lower)):
+            return
+
+        # ángulo de flexión de la rodilla (eje Z), FK/IK-agnóstico, rest a 0.
+        # El ángulo de la matriz relativa NO cambia de signo en R, así que NO se invierte
+        # el signo -> L y R idénticos.
+        driver = correctives.bend_driver(f"{self.side}_kneeBend", upper, lower, "Z")
+
+        # longitud del muslo -> tamaños independientes de escala
+        try:
+            p0 = om.MVector(*cmds.xform(upper, q=True, ws=True, t=True))
+            p1 = om.MVector(*cmds.xform(lower, q=True, ws=True, t=True))
+            thigh_len = (p1 - p0).length() or 10.0
+        except Exception:
+            thigh_len = 10.0
+        push_dv = round(thigh_len * 0.12, 4)
+
+        # En R los ejes locales NO son un espejo limpio: se niega el vector COMPLETO en R
+        # (v_R = -v_L) para que el push dé el espejo sagital correcto.
+        def _ax(v):
+            return v if self.side == "L" else (-v[0], -v[1], -v[2])
+
+        # rodilla DELANTE (z+) -> cuádriceps sale ADELANTE (+Y = anterior)
+        correctives.corrective_push(f"{self.side}_thighFrontCorrective", base, driver, 0, 100, _ax((0, 1, 0)), push_dv)
+        # thighBack: parte DETRÁS (rest -Y) y al subir la rodilla (z-) se CONTRAE (sube -X, entra +Y)
+        correctives.corrective_offset_push(f"{self.side}_thighBackCorrective", base, driver, 0, -100,
+                                           _ax((0.0, -push_dv, 0.0)), _ax((-1, 1, 0)), push_dv)
 
     def lock_attributes(self, ctl, attrs):
 

@@ -345,7 +345,8 @@ def create_basic_structure(character_name=None):
     else:
         skel_grp    = get_or_create("transform", "skel_GRP", parent=rig_grp)
         modules_grp = get_or_create("transform", "modules_GRP", parent=rig_grp)
-        skeleton_grp = get_or_create("transform", "skeletonHierarchy_GRP", parent=rig_grp)
+    # skeletonHierarchy_GRP (jerarquía exportable) en ambos paths
+    skeleton_grp = get_or_create("transform", "skeletonHierarchy_GRP", parent=rig_grp)
 
     # globalScale en masterwalk (ambos paths)
     if not cmds.attributeQuery("globalScale", node=masterwalk_ctl, exists=True):
@@ -362,6 +363,36 @@ def create_basic_structure(character_name=None):
     cmds.setAttr(f"{settings_ctl}.GEO_SEP", keyable=False, channelBox=True, lock=True)
     add_attr_safe(settings_ctl, longName="geometryType", niceName="Type", attributeType="enum", enumName="Final:Proxy", keyable=True)
     add_attr_safe(settings_ctl, longName="geoDisplay", niceName="Display", attributeType="enum", enumName="Locked:Selectable:Off", keyable=True)
+
+    # --- CLOTHES VISIBILITY (en la sección GEOMETRY, debajo de Display) ---
+    # Si el modelo trae un "clothes" group (sufijo _geo/_GEO/_grp/_GRP) se crea un
+    # booleano non-keyable "clothes" (main) + uno por cada transform dentro
+    # (p.ej. "shoes_GRP" -> "shoes"). Cada atributo controla la visibilidad de su grupo.
+    _CLOTHES_SUFFIXES = ("_geo", "_GEO", "_grp", "_GRP")
+
+    def _short(n):
+        return n.rsplit("|", 1)[-1].split(":")[-1]
+
+    def _strip_suffix(name):
+        for suf in _CLOTHES_SUFFIXES:
+            if name.endswith(suf):
+                return name[:-len(suf)]
+        return name
+
+    def _is_clothes(short_name):
+        return short_name.lower() in {f"clothes{suf.lower()}" for suf in _CLOTHES_SUFFIXES}
+
+    clothes_grp = next((n for n in (cmds.ls(type="transform", long=True) or [])
+                        if _is_clothes(_short(n))), None)
+    if clothes_grp:
+        def add_clothes_bool(attr_name, target):
+            add_attr_safe(settings_ctl, longName=attr_name, attributeType="bool", defaultValue=1, keyable=False)
+            cmds.setAttr(f"{settings_ctl}.{attr_name}", channelBox=True)  # visible, non-keyable
+            safe_connect(f"{settings_ctl}.{attr_name}", f"{target}.visibility")
+        add_clothes_bool("clothes", clothes_grp)
+        for child in (cmds.listRelatives(clothes_grp, children=True, type="transform", fullPath=True) or []):
+            add_clothes_bool(_strip_suffix(_short(child)), child)
+
     add_attr_safe(settings_ctl, longName="RIG_SEP", niceName="RIG ------", attributeType="enum", enumName="------")
     cmds.setAttr(f"{settings_ctl}.RIG_SEP", keyable=False, channelBox=True, lock=True)
     add_attr_safe(settings_ctl, longName="showModules", niceName="Show Modules", attributeType="bool", defaultValue=True, keyable=True)
@@ -427,7 +458,7 @@ def create_basic_structure(character_name=None):
 
     # --- RIG VISIBILITY ---
     safe_connect(f"{settings_ctl}.showSkeleton", f"{skel_grp}.visibility")
-    safe_connect(f"{settings_ctl}.showSkeletonHierarchy", f"{skel_grp}.visibility")
+    safe_connect(f"{settings_ctl}.showSkeletonHierarchy", f"{skeleton_grp}.visibility")
     safe_connect(f"{settings_ctl}.showModules",  f"{modules_grp}.visibility")
     cmds.setAttr(f"{settings_ctl}.showSkeleton", 0)
     cmds.setAttr(f"{settings_ctl}.showSkeletonHierarchy", 0)
