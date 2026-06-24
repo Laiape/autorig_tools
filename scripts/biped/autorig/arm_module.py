@@ -178,7 +178,7 @@ class ArmModule(object):
             upper_len = (p1 - p0).length() or 10.0
         except Exception:
             upper_len = 10.0
-        push_dv = round(upper_len * 0.12, 4)
+        push_dv = round(upper_len * 0.12, 1)  # 1 decimal -> valores por defecto limpios
         radius = push_dv
 
         # En R los ejes locales NO son un espejo limpio (joints con mirror de
@@ -187,19 +187,35 @@ class ArmModule(object):
         def _ax(v):
             return v if self.side == "L" else (-v[0], -v[1], -v[2])
 
-        # bíceps: flexión (-Y) empuja ADELANTE (+Z = anterior) -> saca el bíceps.
-        biceps_jnt = correctives.corrective_push(f"{self.side}_bicepsCorrective", base, driver, 0, -100, _ax((0, 0, 1)), push_dv)
-        # ...y cerca de la flexión MÁXIMA (~wrist a la altura del codo) además SUBE (+Y).
-        # El ÁNGULO en que empieza a subir se expone como atributo en el bendy upper.
-        bendy_upper = f"{self.side}_armUpperMainBendy_CTL"
-        rise_start = -60.0
-        if cmds.objExists(bendy_upper):
-            if not cmds.attributeQuery("BicepsRiseStart", node=bendy_upper, exists=True):
-                cmds.addAttr(bendy_upper, longName="BicepsRiseStart", niceName="Biceps Rise Start", attributeType="float", defaultValue=rise_start, keyable=True)
-            rise_start = f"{bendy_upper}.BicepsRiseStart"
-        correctives.corrective_extra(biceps_jnt, f"{self.side}_bicepsRise", driver, rise_start, -100, _ax((0, 1, 0)), push_dv)
-        # triceps: extensión (+Y) SUBE y SALE (+Y arriba, -Z atrás/fuera) -> saca el triceps.
-        correctives.corrective_push(f"{self.side}_tricepsCorrective", base, driver, 0, 100, _ax((0, 1, -1)), push_dv)
+        # bendy del brazo superior: ahí van los atributos de control de las correctivas.
+        bendy = f"{self.side}_armUpperMainBendy_CTL"
+        host = bendy if cmds.objExists(bendy) else self.settings_ctl
+
+        # separador visual "CORRECTIVES" (antes de los atributos -> orden del channelBox)
+        if not cmds.attributeQuery("CORRECTIVES_SEP", node=host, exists=True):
+            cmds.addAttr(host, longName="CORRECTIVES_SEP", niceName="CORRECTIVES", attributeType="enum", enumName="------", keyable=False)
+            cmds.setAttr(f"{host}.CORRECTIVES_SEP", keyable=False, channelBox=True, lock=True)
+
+        def arc_attrs(prefix, fwd_dv, up_dv):
+            """3 atributos en el bendy: Enable (on/off) + PushForward/PushUp (LÍMITES)."""
+            en, pf, pu = f"{prefix}Enable", f"{prefix}PushForward", f"{prefix}PushUp"
+            if not cmds.attributeQuery(en, node=host, exists=True):
+                cmds.addAttr(host, longName=en, niceName=f"{prefix} Enable", attributeType="bool", defaultValue=1, keyable=True)
+            if not cmds.attributeQuery(pf, node=host, exists=True):
+                cmds.addAttr(host, longName=pf, niceName=f"{prefix} Push Forward", attributeType="float", defaultValue=fwd_dv, keyable=True)
+            if not cmds.attributeQuery(pu, node=host, exists=True):
+                cmds.addAttr(host, longName=pu, niceName=f"{prefix} Push Up", attributeType="float", defaultValue=up_dv, keyable=True)
+            return f"{host}.{en}", f"{host}.{pf}", f"{host}.{pu}"
+
+        # bíceps: flexión (-Y). ARCO: sale ADELANTE (+Z) y cuanto más avanza más SUBE
+        # por el eje del hueso hacia el hombro (-X = arriba).
+        en, pf, pu = arc_attrs("Biceps", push_dv, push_dv)
+        correctives.corrective_arc(f"{self.side}_bicepsCorrective", base, driver, 0, -100,
+                                   _ax((0, 0, 1)), _ax((-1, 0, 0)), pf, pu, enable_attr=en)
+        # triceps: extensión (+Y). ARCO: sale ATRÁS/FUERA (-Z) y SUBE hacia el hombro (-X).
+        en, pf, pu = arc_attrs("Triceps", push_dv, push_dv)
+        correctives.corrective_arc(f"{self.side}_tricepsCorrective", base, driver, 0, 100,
+                                   _ax((0, 0, -1)), _ax((-1, 0, 0)), pf, pu, enable_attr=en)
         # anillo de volumen en el CODO, infla en la flexión (-Y, con el bíceps).
         correctives.corrective_ring(f"{self.side}_elbowRing", lower, 4, radius, driver, 0, -100, push_dv, normal_axis="X")
 

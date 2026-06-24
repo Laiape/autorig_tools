@@ -243,6 +243,69 @@ def corrective_offset_push(name, base_joint, driver, in_min, in_max, rest_offset
     return jnt
 
 
+def corrective_arc(name, base_joint, driver, in_min, in_max,
+                   forward_axis, up_axis, forward_limit, up_limit,
+                   enable_attr=None, rest_offset=(0.0, 0.0, 0.0), up_power=2.0):
+
+    """
+    Joint correctiva con trayectoria en ARCO. Cuando el driver va de in_min a in_max:
+      - se EMPUJA a lo largo de `forward_axis` de forma lineal con el progreso, y
+      - A LA VEZ SUBE a lo largo de `up_axis` siguiendo progreso^up_power (sube tarde),
+    de modo que describe una CURVA: primero sale, y cuanto más avanza más sube.
+
+    `forward_limit` / `up_limit` son LÍMITES (hasta dónde llega como máximo, en unidades),
+    NO activación -> se pasan como plug (atributo) para tunearlos en vivo.
+    `enable_attr` (0/1) activa/desactiva TODA la función. `rest_offset` = offset de reposo
+    (vector local). `up_power` = curvatura del arco (2 = sube tarde; mayor = más tarde).
+
+    Returns: la joint.
+    """
+    jnt = cmds.createNode("joint", name=f"{name}_JNT", ss=True, parent=base_joint)
+    cmds.setAttr(f"{jnt}.jointOrient", 0, 0, 0)
+    cmds.setAttr(f"{jnt}.translate", float(rest_offset[0]), float(rest_offset[1]), float(rest_offset[2]))
+
+    prog = _remap01(name, driver, in_min, in_max)            # 0..1 (avance del push)
+    pown = cmds.createNode("power", name=f"{name}UpProg_POW", ss=True)
+    cmds.connectAttr(prog, f"{pown}.input")
+    cmds.setAttr(f"{pown}.exponent", float(up_power))
+    prog_up = f"{pown}.output"                                # progreso de subida (arco)
+
+    fA = om.MVector(*forward_axis)
+    if fA.length() > 1e-9:
+        fA.normalize()
+    uA = om.MVector(*up_axis)
+    if uA.length() > 1e-9:
+        uA.normalize()
+
+    for i, comp in enumerate("XYZ"):
+        terms = []
+        if abs(fA[i]) > 1e-6:
+            m = cmds.createNode("multiply", name=f"{name}Fwd{comp}_MUL", ss=True)
+            cmds.connectAttr(prog, f"{m}.input[0]")
+            _set_or_connect(f"{m}.input[1]", forward_limit)
+            cmds.setAttr(f"{m}.input[2]", float(fA[i]))
+            if enable_attr is not None:
+                _set_or_connect(f"{m}.input[3]", enable_attr)
+            terms.append(f"{m}.output")
+        if abs(uA[i]) > 1e-6:
+            m = cmds.createNode("multiply", name=f"{name}Up{comp}_MUL", ss=True)
+            cmds.connectAttr(prog_up, f"{m}.input[0]")
+            _set_or_connect(f"{m}.input[1]", up_limit)
+            cmds.setAttr(f"{m}.input[2]", float(uA[i]))
+            if enable_attr is not None:
+                _set_or_connect(f"{m}.input[3]", enable_attr)
+            terms.append(f"{m}.output")
+        if not terms:
+            continue
+        s = cmds.createNode("sum", name=f"{name}T{comp}_SUM", ss=True)
+        cmds.setAttr(f"{s}.input[0]", float(rest_offset[i]))
+        for k, t in enumerate(terms):
+            cmds.connectAttr(t, f"{s}.input[{k + 1}]")
+        cmds.connectAttr(f"{s}.output", f"{jnt}.translate{comp}")
+
+    return jnt
+
+
 def _inf_index(skin_cluster, inf):
     """Índice lógico de la influencia `inf` en el array .matrix del skinCluster."""
     conns = cmds.listConnections(f"{inf}.worldMatrix[0]", source=False, destination=True, plugs=True) or []

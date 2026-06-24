@@ -1,0 +1,10 @@
+^C:\GIT\AUTORIG_TOOLS\SCRIPTS\TOOLS\COLLIDERS\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/GIT/autorig_tools/scripts/tools/colliders -BC:/GIT/autorig_tools/scripts/tools/colliders/build/2026 --check-stamp-file C:/GIT/autorig_tools/scripts/tools/colliders/build/2026/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

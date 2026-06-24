@@ -563,8 +563,11 @@ def build_rig(character_name, on_step=None):
         biped_space_switches()
     elif rig_type == 1:
         quadruped_space_switches()
-    
+
     skeleton_hierarchy()
+
+    # Overrides por personaje (p.ej. valores de correctivas) definidos en el .build
+    apply_character_extras(rig_settings)
 
 
 def apply_character_extras(rig_settings):
@@ -581,10 +584,22 @@ def apply_character_extras(rig_settings):
         min     — optional minimum value
         max     — optional maximum value
         default — optional default value (default: 0.0)
+
+    set_attrs: list of dicts with keys (setea valores en atributos YA existentes, p.ej.
+               para overrides por personaje de las correctivas):
+        node    — "module/key" o nombre literal de Maya
+        name    — atributo
+        value   — valor a aplicar
     """
     extras = rig_settings.get("character_extras", {})
     if not extras:
         return
+
+    def _resolve(node_path):
+        if "/" in node_path:
+            module, key = node_path.split("/", 1)
+            return data_manager.DataExportBiped().get_data(module, key)
+        return node_path
 
     for attr_def in extras.get("add_attrs", []):
         node_path = attr_def.get("node", "")
@@ -623,6 +638,23 @@ def apply_character_extras(rig_settings):
 
         cmds.addAttr(node, **kwargs)
         om.MGlobal.displayInfo(f"character_extras: added '{attr_name}' → '{node}'")
+
+    # --- set_attrs: overrides de valor en atributos existentes ---
+    for s in extras.get("set_attrs", []):
+        node = _resolve(s.get("node", ""))
+        attr_name = s.get("name")
+        value = s.get("value")
+        if not node or not cmds.objExists(node):
+            om.MGlobal.displayWarning(f"character_extras set: node not found → '{s.get('node')}'")
+            continue
+        if not (attr_name and cmds.attributeQuery(attr_name, node=node, exists=True)):
+            om.MGlobal.displayWarning(f"character_extras set: attr not found → '{node}.{attr_name}'")
+            continue
+        try:
+            cmds.setAttr(f"{node}.{attr_name}", value)
+            om.MGlobal.displayInfo(f"character_extras: set '{node}.{attr_name}' = {value}")
+        except Exception as e:
+            om.MGlobal.displayWarning(f"character_extras set: could not set '{node}.{attr_name}' → {e}")
 
 def biped_space_switches():
 

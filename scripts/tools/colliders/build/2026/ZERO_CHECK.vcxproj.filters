@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\GIT\autorig_tools\scripts\tools\colliders\build\2026\CMakeFiles\83e4844fd8110d6db49bcd0271ec8c6c\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{000D3F5D-B1A0-3019-8864-1CC7E23F18B5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

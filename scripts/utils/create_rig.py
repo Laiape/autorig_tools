@@ -98,6 +98,9 @@ class AutoRig(object):
             progress._set_pct("Localizing corrective skin…", 95)
             self.localize_correctives()
 
+            progress._set_pct("Creating clothing colliders…", 96)
+            self.create_clothing_colliders(char_name)
+
             progress._set_pct("Importing corrective blendshapes…", 96)
             self.import_corrective_blendshapes()
 
@@ -366,6 +369,102 @@ class AutoRig(object):
         skinner.import_skins()
 
         # self._auto_transfer_from_source()
+
+    def create_clothing_colliders(self, char_name=""):
+        """
+        Si el personaje trae una falda/vestido (grupo 'skirt'/'dress' con sufijo
+        _geo/_GEO/_grp/_GRP), crea el skirtBellCollider cableado a los joints _ENV del rig
+        (tools.colliders.create_skirt_collider_from_rig). No rompe el build si el plugin
+        C++ no está disponible (p.ej. sin build para esta versión de Maya): solo avisa.
+        """
+        suffixes = ("_geo", "_GEO", "_grp", "_GRP")
+
+        def _short(n):
+            return n.rsplit("|", 1)[-1].split(":")[-1]
+
+        def _is_skirt(s):
+            sl = s.lower()
+            return any(sl == f"{w}{suf.lower()}" for w in ("skirt", "dress") for suf in suffixes)
+
+        grp = next((n for n in (cmds.ls(type="transform", long=True) or [])
+                    if _is_skirt(_short(n))), None)
+        if not grp:
+            return
+
+        try:
+            from tools import colliders
+            reload(colliders)
+            if not colliders.load_plugin():
+                om.MGlobal.displayWarning("colliders: plugin no disponible; skirt collider no creado.")
+                return
+            prefix = f"{char_name}_" if char_name else ""
+            res = colliders.create_skirt_collider_from_rig(prefix=prefix, with_heels=True, attach_joints=True)
+            if res:
+                node, bell, surf, joints = res
+                self._organize_skirt(prefix, node, bell, surf, joints)
+                om.MGlobal.displayInfo(f"colliders: skirt collider creado para '{_short(grp)}'.")
+        except Exception as e:
+            om.MGlobal.displayWarning(f"colliders: no se pudo crear el skirt collider -> {e}")
+
+    def _organize_skirt(self, prefix, node, bell, surf, joints):
+        """
+        Coloca lo que crea el skirt collider en su sitio del rig:
+          - mecánica (collider transform, locator/bell, superficie) -> C_skirtModule_GRP
+            (dentro de modules_GRP).
+          - skinning joints -> C_skirtSkinning_GRP (dentro de skel_GRP) y de ahí al
+            skeleton_hierarchy: por cada joint se crea su _ENV bajo la cintura
+            (C_localHip_ENV) negando el padre, igual que el resto del esqueleto de export.
+        """
+        dm = data_manager.DataExportBiped()
+        modules_grp = dm.get_data("basic_structure", "modules_GRP")
+        skel_grp = dm.get_data("basic_structure", "skel_GRP")
+
+        def _reparent(n, dest):
+            if not (n and cmds.objExists(n) and dest and cmds.objExists(dest)):
+                return
+            cur = cmds.listRelatives(n, parent=True, fullPath=True)
+            if not cur or cur[0].split("|")[-1] != dest.split("|")[-1]:
+                try:
+                    cmds.parent(n, dest)
+                except Exception:
+                    pass
+
+        # 1) módulo en modules
+        mod = "C_skirtModule_GRP"
+        if not cmds.objExists(mod):
+            mod = cmds.createNode("transform", name=mod, parent=modules_grp)
+        for m in (f"{prefix}skirtBellCollider_transform", bell, surf):
+            _reparent(m, mod)
+
+        # 2) skinning joints -> skel_GRP + skeleton_hierarchy
+        if not joints:
+            return
+        skin = "C_skirtSkinning_GRP"
+        if not cmds.objExists(skin):
+            skin = cmds.createNode("transform", name=skin, parent=skel_grp)
+        _reparent(f"{prefix}attachedJoints_group", skin)
+
+        waist_env = next((j for j in ("C_localHip_ENV", "C_freeze_ENV") if cmds.objExists(j)), None)
+        if not waist_env:
+            om.MGlobal.displayWarning("colliders: no se encontró cintura _ENV (C_localHip_ENV); skirt joints sin _ENV.")
+            return
+        for jnt in joints:
+            if not cmds.objExists(jnt):
+                continue
+            env_name = jnt.split("|")[-1].replace("_joint", "_ENV")
+            if not env_name.endswith("_ENV"):
+                env_name += "_ENV"
+            if cmds.objExists(env_name):
+                continue
+            env = cmds.createNode("joint", name=env_name, parent=waist_env)
+            inv = cmds.listConnections(f"{env}.inverseScale", destination=False, source=True, plugs=True)
+            if inv:
+                cmds.disconnectAttr(inv[0], f"{env}.inverseScale")
+            mmx = cmds.createNode("multMatrix", name=env_name.replace("_ENV", "Env_MMX"), ss=True)
+            cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{mmx}.matrixIn[0]", force=True)
+            cmds.connectAttr(f"{waist_env}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]", force=True)
+            cmds.connectAttr(f"{mmx}.matrixSum", f"{env}.offsetParentMatrix", force=True)
+            cmds.setAttr(f"{env}.jointOrient", 0, 0, 0, type="double3")
 
     def localize_correctives(self):
         """

@@ -129,16 +129,40 @@ class LegModule(object):
             thigh_len = (p1 - p0).length() or 10.0
         except Exception:
             thigh_len = 10.0
-        push_dv = round(thigh_len * 0.12, 4)
+        push_dv = round(thigh_len * 0.12, 1)  # 1 decimal -> valores por defecto limpios
 
         # En R los ejes locales NO son un espejo limpio: se niega el vector COMPLETO en R
         # (v_R = -v_L) para que el push dé el espejo sagital correcto.
         def _ax(v):
             return v if self.side == "L" else (-v[0], -v[1], -v[2])
 
-        # rodilla DELANTE (z+) -> cuádriceps sale ADELANTE (+Y = anterior)
-        correctives.corrective_push(f"{self.side}_thighFrontCorrective", base, driver, 0, 100, _ax((0, 1, 0)), push_dv)
-        # thighBack: parte DETRÁS (rest -Y) y al subir la rodilla (z-) se CONTRAE (sube -X, entra +Y)
+        # bendy del muslo: ahí van los atributos de control de la correctiva.
+        bendy = f"{self.side}_legUpperMainBendy_CTL"
+        host = bendy if cmds.objExists(bendy) else self.settings_ctl
+
+        # separador visual "CORRECTIVES" (antes de los atributos -> orden del channelBox)
+        if not cmds.attributeQuery("CORRECTIVES_SEP", node=host, exists=True):
+            cmds.addAttr(host, longName="CORRECTIVES_SEP", niceName="CORRECTIVES", attributeType="enum", enumName="------", keyable=False)
+            cmds.setAttr(f"{host}.CORRECTIVES_SEP", keyable=False, channelBox=True, lock=True)
+
+        def arc_attrs(prefix, fwd_dv, up_dv):
+            """3 atributos en el bendy: Enable (on/off) + PushForward/PushUp (LÍMITES)."""
+            en, pf, pu = f"{prefix}Enable", f"{prefix}PushForward", f"{prefix}PushUp"
+            if not cmds.attributeQuery(en, node=host, exists=True):
+                cmds.addAttr(host, longName=en, niceName=f"{prefix} Enable", attributeType="bool", defaultValue=1, keyable=True)
+            if not cmds.attributeQuery(pf, node=host, exists=True):
+                cmds.addAttr(host, longName=pf, niceName=f"{prefix} Push Forward", attributeType="float", defaultValue=fwd_dv, keyable=True)
+            if not cmds.attributeQuery(pu, node=host, exists=True):
+                cmds.addAttr(host, longName=pu, niceName=f"{prefix} Push Up", attributeType="float", defaultValue=up_dv, keyable=True)
+            return f"{host}.{en}", f"{host}.{pf}", f"{host}.{pu}"
+
+        # cuádriceps: rodilla DELANTE (z+). ARCO: sale ADELANTE (+Y) y cuanto más avanza
+        # más SUBE hacia la cadera (-X).
+        en, pf, pu = arc_attrs("ThighFront", push_dv, push_dv)
+        correctives.corrective_arc(f"{self.side}_thighFrontCorrective", base, driver, 0, 100,
+                                   _ax((0, 1, 0)), _ax((-1, 0, 0)), pf, pu, enable_attr=en)
+        # thighBack (contracción): parte DETRÁS (rest -Y) y al subir la rodilla (z-) se CONTRAE
+        # (sube -X, entra +Y). Se mantiene como contracción, no como arco.
         correctives.corrective_offset_push(f"{self.side}_thighBackCorrective", base, driver, 0, -100,
                                            _ax((0.0, -push_dv, 0.0)), _ax((-1, 1, 0)), push_dv)
 
