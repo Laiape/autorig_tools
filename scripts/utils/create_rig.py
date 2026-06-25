@@ -373,9 +373,10 @@ class AutoRig(object):
     def create_clothing_colliders(self, char_name=""):
         """
         Si el personaje trae una falda/vestido (grupo 'skirt'/'dress' con sufijo
-        _geo/_GEO/_grp/_GRP), crea el skirtBellCollider cableado a los joints _ENV del rig
-        (tools.colliders.create_skirt_collider_from_rig). No rompe el build si el plugin
-        C++ no está disponible (p.ej. sin build para esta versión de Maya): solo avisa.
+        _geo/_GEO/_grp/_GRP), monta la falda con colisión contra las piernas usando la
+        versión NATIVA (utils.native_collider) -> solo nodos de Maya, SIN plugin, así el
+        rig es portable (no necesita el .mll al entregarlo). Crea los joints en cadenas
+        dentro de skel_GRP y sus _ENV en el skeleton_hierarchy. No rompe el build si falla.
         """
         suffixes = ("_geo", "_GEO", "_grp", "_GRP")
 
@@ -392,19 +393,20 @@ class AutoRig(object):
             return
 
         try:
-            from tools import colliders
-            reload(colliders)
-            if not colliders.load_plugin():
-                om.MGlobal.displayWarning("colliders: plugin no disponible; skirt collider no creado.")
-                return
+            from utils import native_collider
+            reload(native_collider)
+            dm = data_manager.DataExportBiped()
+            skel_grp = dm.get_data("basic_structure", "skel_GRP")
+            modules_grp = dm.get_data("basic_structure", "modules_GRP")
             prefix = f"{char_name}_" if char_name else ""
-            res = colliders.create_skirt_collider_from_rig(prefix=prefix, with_heels=True, attach_joints=True)
+            # Versión con SUPERFICIE: colisión -> NURBS surface -> joints (deformación limpia).
+            res = native_collider.build_native_skirt_surface_from_rig(
+                prefix=prefix, module_parent=modules_grp, skinning_parent=skel_grp)
             if res:
-                node, bell, surf, joints = res
-                self._organize_skirt(prefix, node, bell, surf, joints)
-                om.MGlobal.displayInfo(f"colliders: skirt collider creado para '{_short(grp)}'.")
+                _, _, _, joints = res
+                om.MGlobal.displayInfo(f"native skirt: falda (superficie) creada para '{_short(grp)}' ({len(joints)} joints, sin plugin).")
         except Exception as e:
-            om.MGlobal.displayWarning(f"colliders: no se pudo crear el skirt collider -> {e}")
+            om.MGlobal.displayWarning(f"native skirt: no se pudo crear la falda -> {e}")
 
     def _organize_skirt(self, prefix, node, bell, surf, joints):
         """

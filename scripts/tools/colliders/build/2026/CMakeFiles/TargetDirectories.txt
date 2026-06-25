@@ -1,3 +1,0 @@
-C:/GIT/autorig_tools/scripts/tools/colliders/build/2026/CMakeFiles/colliders.dir
-C:/GIT/autorig_tools/scripts/tools/colliders/build/2026/CMakeFiles/ALL_BUILD.dir
-C:/GIT/autorig_tools/scripts/tools/colliders/build/2026/CMakeFiles/ZERO_CHECK.dir
