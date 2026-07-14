@@ -82,13 +82,6 @@ class AutoRig(object):
 
             progress._set_pct("Setting inherit transforms…", 88)
             self.inherit_transforms()
-
-            # Cerrar la sesión rápida ANTES del import de pesos: el fast-session
-            # (eval off, refresh suspendido, undo off) acelera la CREACIÓN de
-            # nodos del rig, pero no aporta nada al import de skin —que es API
-            # pesada de setWeights— y bajo refresh suspendido / eval off puede
-            # bindear con matrices sin evaluar o saltarse mallas. El skin import,
-            # los blendshapes correctivos y el picker corren con Maya normal.
             self._end_fast_session(session)
             session = None
 
@@ -97,6 +90,9 @@ class AutoRig(object):
 
             progress._set_pct("Localizing corrective skin…", 95)
             self.localize_correctives()
+
+            # progress._set_pct("Applying delta mush…", 95)
+            # self.apply_delta_mush()
 
             progress._set_pct("Creating clothing colliders…", 96)
             self.create_clothing_colliders(char_name)
@@ -467,6 +463,40 @@ class AutoRig(object):
             cmds.connectAttr(f"{waist_env}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]", force=True)
             cmds.connectAttr(f"{mmx}.matrixSum", f"{env}.offsetParentMatrix", force=True)
             cmds.setAttr(f"{env}.jointOrient", 0, 0, 0, type="double3")
+
+    def apply_delta_mush(self):
+        """
+        Capa de deltaMush DESPUÉS de los skinClusters en toda malla skineada (patrón
+        del rig de kessi): settings default de Maya (smoothingIterations=10,
+        smoothingStep=0.5, pinBorderVertices=1, sin overrides) y el `.scale` conectado
+        al masterwalk para que no se rompa al escalar el rig. Deja el rig más fino.
+        """
+        mw = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+        dcm = None
+        for skc in cmds.ls(type="skinCluster") or []:
+            for mesh_shape in cmds.deformer(skc, q=True, geometry=True) or []:
+                if cmds.nodeType(mesh_shape) != "mesh":
+                    continue  # solo geo de render; las curvas/NURBS son mecánica del rig
+                mesh = (cmds.listRelatives(mesh_shape, parent=True, fullPath=True) or [mesh_shape])[0]
+                short = mesh.split("|")[-1]
+                if not any(w in short.lower() for w in ("body", "skin")):
+                    continue  # solo el body/skin (como capa principal de kessi; freya usa "skin")
+                if cmds.objExists(f"{short}_DMH"):
+                    continue  # una capa por malla (aunque tenga 2 skc apilados)
+                try:
+                    dm = cmds.deltaMush(mesh, name=f"{short}_DMH",
+                                        smoothingIterations=10, smoothingStep=0.5,
+                                        pinBorderVertices=True)[0]
+                except Exception as e:
+                    om.MGlobal.displayWarning(f"[DeltaMush] '{short}': {e}")
+                    continue
+                # scale del rig -> mush (como kessi: decomposeMatrix del main -> .scale)
+                if mw and cmds.objExists(mw) and cmds.attributeQuery("scale", node=dm, exists=True):
+                    if dcm is None:
+                        dcm = cmds.createNode("decomposeMatrix", name="C_deltaMushScale_DCM", ss=True)
+                        cmds.connectAttr(f"{mw}.worldMatrix[0]", f"{dcm}.inputMatrix")
+                    cmds.connectAttr(f"{dcm}.outputScale", f"{dm}.scale")
+                om.MGlobal.displayInfo(f"[DeltaMush] '{short}' -> {dm}")
 
     def localize_correctives(self):
         """

@@ -147,7 +147,7 @@ class EarModule(object):
             local_mmxs.append(local_mmx)
 
         for i, jnt in enumerate(skinning_joints): # Reset joint transformations
-            
+
             cmds.xform(jnt, m=om.MMatrix.kIdentity)
             cmds.setAttr(f"{jnt}.jointOrient", 0, 0, 0)
             cmds.setAttr(f"{jnt}.translate", 0, 0, 0)

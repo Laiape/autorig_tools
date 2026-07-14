@@ -282,6 +282,10 @@ class JawModule(object):
         self.sphere = guides_manager.get_guides("C_jaw_NURBShape", parent=self.module_trn) # NURBS surface guide
         cmds.hide(self.sphere)
         cmds.parent(self.sphere, self.module_trn)
+        # Copia ESTÁTICA (sin el shrink de corners): los labios se re-proyectan sobre
+        # ella para quedarse pegados a la jaw y no hundirse al encoger la esfera.
+        self.sphere_static = cmds.duplicate(self.sphere, name="C_jawStatic_NURB")[0]
+        cmds.hide(self.sphere_static)
 
         # Create a bbox
         bbox = cmds.exactWorldBoundingBox(self.sphere)
@@ -365,9 +369,10 @@ class JawModule(object):
         cmds.connectAttr(f"{rfm_upper_local}.outputY", f"{cps_upper_local}.inPositionY")
         cmds.connectAttr(f"{rfm_upper_local}.outputZ", f"{cps_upper_local}.inPositionZ")
         cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_upper_local}.inputSurface")
-        cmds.connectAttr(f"{cps_upper_local}.positionX", f"{fbf_upper_lip_projected}.in30")
-        cmds.connectAttr(f"{cps_upper_local}.positionY", f"{fbf_upper_lip_projected}.in31")
-        cmds.connectAttr(f"{cps_upper_local}.positionZ", f"{fbf_upper_lip_projected}.in32")
+        cps_upper_static = self.reproject_static("C_upperLipLocal", cps_upper_local)
+        cmds.connectAttr(f"{cps_upper_static}.positionX", f"{fbf_upper_lip_projected}.in30")
+        cmds.connectAttr(f"{cps_upper_static}.positionY", f"{fbf_upper_lip_projected}.in31")
+        cmds.connectAttr(f"{cps_upper_static}.positionZ", f"{fbf_upper_lip_projected}.in32")
         cmds.connectAttr(f"{fbf_upper_lip}.output", f"{parent_matrix_upper_local}.inputMatrix")
         cmds.connectAttr(f"{self.mult_matrix_upper_jaw_local}.matrixSum", f"{parent_matrix_upper_local}.target[0].targetMatrix")
         cmds.setAttr(f"{parent_matrix_upper_local}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_upper_lip_projected}.output", f"{self.mult_matrix_upper_jaw_local}.matrixSum"), type="matrix")
@@ -425,9 +430,10 @@ class JawModule(object):
         cmds.connectAttr(f"{rfm_lower_local}.outputY", f"{cps_lower_local}.inPositionY")
         cmds.connectAttr(f"{rfm_lower_local}.outputZ", f"{cps_lower_local}.inPositionZ")
         cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_lower_local}.inputSurface")
-        cmds.connectAttr(f"{cps_lower_local}.positionX", f"{fbf_lower_lip_projected}.in30")
-        cmds.connectAttr(f"{cps_lower_local}.positionY", f"{fbf_lower_lip_projected}.in31")
-        cmds.connectAttr(f"{cps_lower_local}.positionZ", f"{fbf_lower_lip_projected}.in32")
+        cps_lower_static = self.reproject_static("C_lowerLipLocal", cps_lower_local)
+        cmds.connectAttr(f"{cps_lower_static}.positionX", f"{fbf_lower_lip_projected}.in30")
+        cmds.connectAttr(f"{cps_lower_static}.positionY", f"{fbf_lower_lip_projected}.in31")
+        cmds.connectAttr(f"{cps_lower_static}.positionZ", f"{fbf_lower_lip_projected}.in32")
         cmds.connectAttr(f"{fbf_lower_lip_pos_only}.output", f"{parent_matrix_lower_local}.inputMatrix")
         cmds.connectAttr(f"{self.mult_matrix_jaw_local}.matrixSum", f"{parent_matrix_lower_local}.target[0].targetMatrix")
         cmds.setAttr(f"{parent_matrix_lower_local}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_lower_lip_projected}.output", f"{self.mult_matrix_jaw_local}.matrixSum"), type="matrix")
@@ -446,6 +452,7 @@ class JawModule(object):
 
         corner_nodes_ctls = []
         corner_controllers = []
+        corner_proj = {}  # side -> (rfm_local, cps_local) para el narrow pull por-lado
 
         # Create corner controllers
         for side in ["L", "R"]:
@@ -520,9 +527,10 @@ class JawModule(object):
             cmds.connectAttr(f"{rfm_local}.outputY", f"{cps_local}.inPositionY")
             cmds.connectAttr(f"{rfm_local}.outputZ", f"{cps_local}.inPositionZ")
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_local}.inputSurface")
-            cmds.connectAttr(f"{cps_local}.positionX", f"{fbf_lip_projected}.in30")
-            cmds.connectAttr(f"{cps_local}.positionY", f"{fbf_lip_projected}.in31")
-            cmds.connectAttr(f"{cps_local}.positionZ", f"{fbf_lip_projected}.in32")
+            cps_corner_static = self.reproject_static(f"{side}_cornerLipLocal", cps_local)
+            cmds.connectAttr(f"{cps_corner_static}.positionX", f"{fbf_lip_projected}.in30")
+            cmds.connectAttr(f"{cps_corner_static}.positionY", f"{fbf_lip_projected}.in31")
+            cmds.connectAttr(f"{cps_corner_static}.positionZ", f"{fbf_lip_projected}.in32")
             fbf_corner_lip_pos_only = cmds.createNode("fourByFourMatrix", name=f"{side}_lipCornerPosOnly_FBF", ss=True)
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.xCoordinate", f"{fbf_corner_lip_pos_only}.in30")
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.yCoordinate", f"{fbf_corner_lip_pos_only}.in31")
@@ -539,15 +547,152 @@ class JawModule(object):
             cmds.connectAttr(f"{inverse_matrix_jaw}.outputMatrix", f"{mmx_offset_jaw_pos}.matrixIn[1]")
             cmds.connectAttr(f"{parent_matrix_blender_local}.outputMatrix", f"{mmx_offset_jaw_pos}.matrixIn[2]")
             cmds.connectAttr(f"{mmx_offset_jaw_pos}.matrixSum", f"{local_jnt}.offsetParentMatrix")
-
-            
+            corner_proj[side] = (rfm_local, cps_local)
 
             upper_local_jnts.append(local_jnt)
             lower_local_jnts.append(local_jnt)
             if side == "L":
                 upper_local_jnts.append(upper_local_jnt)
                 lower_local_jnts.append(lower_local_jnt)
-            
+
+
+        # --- NARROW/WIDE POR LADO (sin cross-talk L<->R) ---
+        # Driver por lado = tx del corner en fracción del semiancho, con signo geométrico
+        # (dot del eje X del GRP con la dirección centro->corner, capturado al build).
+        # Mover el corner L NO afecta al lado R.
+        sphere_trn = self.sphere if cmds.nodeType(self.sphere) == "transform" \
+            else cmds.listRelatives(self.sphere, parent=True, fullPath=True)[0]
+        corner_dist = cmds.createNode("distanceBetween", name="C_lipCorners_DIST", ss=True)
+        cmds.connectAttr(f"{corner_controllers[0]}.worldMatrix[0]", f"{corner_dist}.inMatrix1")
+        cmds.connectAttr(f"{corner_controllers[1]}.worldMatrix[0]", f"{corner_dist}.inMatrix2")
+        rest_dist = cmds.getAttr(f"{corner_dist}.distance") or 1.0
+        shrink_div = cmds.createNode("divide", name="C_lipCornersShrink_DIV", ss=True)
+        cmds.connectAttr(f"{corner_dist}.distance", f"{shrink_div}.input1")
+        cmds.setAttr(f"{shrink_div}.input2", rest_dist)
+        shrink_clamp = cmds.createNode("clamp", name="C_lipCornersShrink_CLM", ss=True)
+        cmds.connectAttr(f"{shrink_div}.output", f"{shrink_clamp}.inputR")
+        cmds.setAttr(f"{shrink_clamp}.minR", 0.05)
+        cmds.setAttr(f"{shrink_clamp}.maxR", 1.0)  # ratio global: solo para push/roll (centro)
+
+        half = rest_dist / 2.0
+        for ctl in corner_controllers:
+            side = ctl.split("_")[0]
+            # Driver = proyección del TRANSLATE COMPLETO del ctl sobre la dirección
+            # hacia-fuera, con jacobiano medido EMPIRICAMENTE al build (cuánto mueve en
+            # mundo cada eje local): robusto ante frames rotados/mirror y ante drags
+            # que se reparten entre tx/ty/tz.
+            p0 = om.MVector(*cmds.xform(ctl, q=True, ws=True, t=True))
+            outdir = (p0 - om.MVector(*self.mouth_center)).normal()
+            jac = []
+            for ax in "XYZ":
+                cmds.setAttr(f"{ctl}.translate{ax}", 1.0)
+                p1 = om.MVector(*cmds.xform(ctl, q=True, ws=True, t=True))
+                cmds.setAttr(f"{ctl}.translate{ax}", 0.0)
+                jac.append(((p1 - p0) * outdir) / half)
+            frac = cmds.createNode("vectorProduct", name=f"{side}_lipOutFrac_VPR", ss=True)
+            cmds.setAttr(f"{frac}.operation", 1)  # dot
+            cmds.connectAttr(f"{ctl}.translate", f"{frac}.input1")
+            cmds.setAttr(f"{frac}.input2", jac[0], jac[1], jac[2], type="double3")
+            wide = cmds.createNode("clamp", name=f"{side}_lipWide_CLM", ss=True)
+            cmds.connectAttr(f"{frac}.outputX", f"{wide}.inputR")
+            cmds.setAttr(f"{wide}.minR", 0); cmds.setAttr(f"{wide}.maxR", 10)
+            neg = cmds.createNode("multiply", name=f"{side}_lipInNeg_MUL", ss=True)
+            cmds.connectAttr(f"{frac}.outputX", f"{neg}.input[0]"); cmds.setAttr(f"{neg}.input[1]", -1.0)
+            inw = cmds.createNode("clamp", name=f"{side}_lipNarrow_CLM", ss=True)
+            cmds.connectAttr(f"{neg}.output", f"{inw}.inputR")
+            cmds.setAttr(f"{inw}.minR", 0); cmds.setAttr(f"{inw}.maxR", 1)
+        # Efectos CENTRALES driveados por el MINIMO de ambos lados: solo actúan cuando
+        # LOS DOS corners van hacia dentro (pucker real). Mover un solo lado deja el
+        # centro (y por la curva, el otro lado) quieto -> sin cross-talk L<->R.
+        in_min = cmds.createNode("condition", name="C_lipNarrowMin_COND", ss=True)
+        cmds.setAttr(f"{in_min}.operation", 4)  # Less Than
+        cmds.connectAttr("L_lipNarrow_CLM.outputR", f"{in_min}.firstTerm")
+        cmds.connectAttr("R_lipNarrow_CLM.outputR", f"{in_min}.secondTerm")
+        cmds.connectAttr("L_lipNarrow_CLM.outputR", f"{in_min}.colorIfTrueR")
+        cmds.connectAttr("R_lipNarrow_CLM.outputR", f"{in_min}.colorIfFalseR")
+        in_center = f"{in_min}.outColorR"
+
+        # NARROW PULL por-lado: el input de la proyección se acerca al centro de la boca
+        # (sustituye a escalar la esfera, que movía TAMBIÉN el otro lado). Corner L con
+        # su driver, corner R con el suyo, upper/lower (centro) con el promedio.
+        def _narrow_pull(name, rfm, cps, in_plug):
+            f_sub = cmds.createNode("subtract", name=f"{name}PullF_SUB", ss=True)
+            cmds.setAttr(f"{f_sub}.input1", 1.0)
+            f_mul = cmds.createNode("multiply", name=f"{name}PullF_MUL", ss=True)
+            cmds.connectAttr(in_plug, f"{f_mul}.input[0]")
+            cmds.setAttr(f"{f_mul}.input[1]", 0.5)  # ponytail: pull max 50% hacia el centro
+            cmds.connectAttr(f"{f_mul}.output", f"{f_sub}.input2")
+            rel = cmds.createNode("plusMinusAverage", name=f"{name}PullRel_PMA", ss=True)
+            cmds.setAttr(f"{rel}.operation", 2)
+            for i, ax in enumerate("XYZ"):
+                cmds.connectAttr(f"{rfm}.output{ax}", f"{rel}.input3D[0].input3D{ax.lower()}")
+            cmds.setAttr(f"{rel}.input3D[1]", *self.mouth_center, type="double3")
+            sc = cmds.createNode("multiplyDivide", name=f"{name}PullScl_MUL", ss=True)
+            cmds.connectAttr(f"{rel}.output3D", f"{sc}.input1")
+            for ax in "XYZ":
+                cmds.connectAttr(f"{f_sub}.output", f"{sc}.input2{ax}")
+            add = cmds.createNode("plusMinusAverage", name=f"{name}Pull_PMA", ss=True)
+            cmds.connectAttr(f"{sc}.output", f"{add}.input3D[0]")
+            cmds.setAttr(f"{add}.input3D[1]", *self.mouth_center, type="double3")
+            for ax in "XYZ":
+                cmds.connectAttr(f"{add}.output3D.output3D{ax.lower()}", f"{cps}.inPosition{ax}", force=True)
+        for side, (rfm_c, cps_c) in corner_proj.items():
+            _narrow_pull(f"{side}_cornerLip", rfm_c, cps_c, f"{side}_lipNarrow_CLM.outputR")
+        _narrow_pull("C_upperLip", rfm_upper_local, cps_upper_local, in_center)
+        _narrow_pull("C_lowerLip", rfm_lower_local, cps_lower_local, in_center)
+
+        # --- FOLLOW VERTICAL de la NURBS ---
+        # Solo con los ctls CENTRALES (upper/lower): los corners quedan fuera para que
+        # mover un solo lado no desplace las esferas (cross-talk L<->R).
+        static_trn = self.sphere_static if cmds.nodeType(self.sphere_static) == "transform" \
+            else cmds.listRelatives(self.sphere_static, parent=True, fullPath=True)[0]
+        y_avg = cmds.createNode("plusMinusAverage", name="C_lipVertFollow_PMA", ss=True)
+        cmds.setAttr(f"{y_avg}.operation", 3)
+        for k, ctl in enumerate([upper_lip_ctl, lower_lip_ctl]):
+            cmds.connectAttr(f"{ctl}.translateY", f"{y_avg}.input1D[{k}]")
+        y_mul = cmds.createNode("multiply", name="C_lipVertFollow_MUL", ss=True)
+        cmds.connectAttr(f"{y_avg}.output1D", f"{y_mul}.input[0]")
+        cmds.setAttr(f"{y_mul}.input[1]", 0.5)  # ponytail: follow al 50%, ajustar aqui si hace falta
+        for trn in (sphere_trn, static_trn):
+            y_sum = cmds.createNode("sum", name=f"{trn.split('|')[-1]}VertFollow_SUM", ss=True)
+            cmds.setAttr(f"{y_sum}.input[0]", cmds.getAttr(f"{trn}.translateY"))
+            cmds.connectAttr(f"{y_mul}.output", f"{y_sum}.input[1]")
+            cmds.connectAttr(f"{y_sum}.output", f"{trn}.translateY")
+
+        # --- PUSH hacia FUERA de upper/lower lip al juntar los corners (pucker) ---
+        # push = (1 - ratio) * PushOut (attr en cada corner ctl, promediados). Se suma en
+        # Z DESPUÉS de la proyección (un offset en la entrada lo cancelaría el
+        # closest-point) -> el labio se adelanta de verdad al cerrar los corners.
+        push_avg = cmds.createNode("plusMinusAverage", name="C_lipPushOutAvg_PMA", ss=True)
+        cmds.setAttr(f"{push_avg}.operation", 3)
+        for k, ctl in enumerate(corner_controllers):
+            cmds.addAttr(ctl, longName="PushOut", attributeType="float", min=0, defaultValue=1.0, keyable=True)
+            cmds.connectAttr(f"{ctl}.PushOut", f"{push_avg}.input1D[{k}]")
+        # driver = MINIMO de ambos narrow (solo pucker de los dos lados; sin cross-talk)
+        push_mul = cmds.createNode("multiply", name="C_lipPushOut_MUL", ss=True)
+        cmds.connectAttr(in_center, f"{push_mul}.input[0]")
+        cmds.connectAttr(f"{push_avg}.output1D", f"{push_mul}.input[1]")
+        # ...y un poco de ROLL: el upper rota hacia ARRIBA y el lower hacia ABAJO (evert).
+        rot_mul = cmds.createNode("multiply", name="C_lipPushRoll_MUL", ss=True)
+        cmds.connectAttr(in_center, f"{rot_mul}.input[0]")
+        cmds.setAttr(f"{rot_mul}.input[1]", 20.0)  # ponytail: 20 grados a cierre total, ajustar aqui
+        for tag, cps_st, fbf, jnt_local, mmx_off, sign in (
+                ("Upper", cps_upper_static, fbf_upper_lip_projected, upper_local_jnt, mmx_offset_jaw_pos_up, -1.0),
+                ("Lower", cps_lower_static, fbf_lower_lip_projected, lower_local_jnt, mmx_offset_jaw_pos_low, 1.0)):
+            z_sum = cmds.createNode("sum", name=f"C_lipPushOut{tag}_SUM", ss=True)
+            cmds.connectAttr(f"{cps_st}.positionZ", f"{z_sum}.input[0]")
+            cmds.connectAttr(f"{push_mul}.output", f"{z_sum}.input[1]")
+            cmds.connectAttr(f"{z_sum}.output", f"{fbf}.in32", force=True)
+            # roll: R primero en la cadena -> rota el joint local en su propio pivot
+            sign_mul = cmds.createNode("multiply", name=f"C_lipPushRoll{tag}_MUL", ss=True)
+            cmds.connectAttr(f"{rot_mul}.output", f"{sign_mul}.input[0]")
+            cmds.setAttr(f"{sign_mul}.input[1]", sign)
+            roll_cmp = cmds.createNode("composeMatrix", name=f"C_lipPushRoll{tag}_CMP", ss=True)
+            cmds.connectAttr(f"{sign_mul}.output", f"{roll_cmp}.inputRotateX")
+            roll_mmx = cmds.createNode("multMatrix", name=f"C_lipPushRoll{tag}_MMT", ss=True)
+            cmds.connectAttr(f"{roll_cmp}.outputMatrix", f"{roll_mmx}.matrixIn[0]")
+            cmds.connectAttr(f"{mmx_off}.matrixSum", f"{roll_mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{roll_mmx}.matrixSum", f"{jnt_local}.offsetParentMatrix", force=True)
 
         # Get CV count once per curve
         up_cvs = cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)
@@ -869,6 +1014,35 @@ class JawModule(object):
                     orient_plugs[part][idx] = f"{jb}.outputMatrix"
                     cmds.connectAttr(f"{jb}.outputMatrix", f"{output_joints[part][idx]}.offsetParentMatrix", force=True)
 
+        # ----- VOLUMEN AL ESTIRAR (labios hacia FUERA), POR LADO -----
+        # Cada lado adelgaza SOLO con su propio corner (driver {side}_lipWide_CLM, sin
+        # cross-talk); los joints centrales (C_) usan el promedio de ambos lados.
+        side_scale = {}
+        for ctl in corner_controllers:
+            side = ctl.split("_")[0]
+            cmds.addAttr(ctl, longName="StretchVolume", attributeType="float", min=0, defaultValue=0.1, keyable=True)
+            vol_mul = cmds.createNode("multiply", name=f"{side}_lipStretchVol_MUL", ss=True)
+            cmds.connectAttr(f"{side}_lipWide_CLM.outputR", f"{vol_mul}.input[0]")
+            cmds.connectAttr(f"{ctl}.StretchVolume", f"{vol_mul}.input[1]")
+            vol_sub = cmds.createNode("subtract", name=f"{side}_lipStretchScale_SUB", ss=True)
+            cmds.setAttr(f"{vol_sub}.input1", 1.0)
+            cmds.connectAttr(f"{vol_mul}.output", f"{vol_sub}.input2")
+            vol_scale = cmds.createNode("clamp", name=f"{side}_lipStretchScale_CLM", ss=True)
+            cmds.connectAttr(f"{vol_sub}.output", f"{vol_scale}.inputR")
+            cmds.setAttr(f"{vol_scale}.minR", 0.1)  # nunca colapsa a 0
+            cmds.setAttr(f"{vol_scale}.maxR", 1.0)
+            side_scale[side] = f"{vol_scale}.outputR"
+        center_scale = cmds.createNode("plusMinusAverage", name="C_lipStretchScaleAvg_PMA", ss=True)
+        cmds.setAttr(f"{center_scale}.operation", 3)
+        cmds.connectAttr(side_scale["L"], f"{center_scale}.input1D[0]")
+        cmds.connectAttr(side_scale["R"], f"{center_scale}.input1D[1]")
+        for part in ("upper", "lower"):
+            for jnt in output_joints[part] + non_rotate_output_joints[part]:
+                jside = jnt.split("|")[-1].split("_")[0]
+                plug = side_scale.get(jside, f"{center_scale}.output1D")
+                for ax in "XYZ":
+                    cmds.connectAttr(plug, f"{jnt}.scale{ax}")
+
         # ----- STICKY LIPS / ZIPPER (100% matrices, inspirado en Vittorio) -----
         # La línea de cierre se calcula POR PUNTO como un blendMatrix entre el labio
         # superior y el inferior (sin nurbs media / blendShape / uvPin intermedios),
@@ -891,6 +1065,33 @@ class JawModule(object):
         cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.secondTerm")
         cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{center_zip_cond}.colorIfTrueR")
         cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.colorIfFalseR")
+
+        # ----- AUTO STICKY al abrir la jaw -----
+        # Al abrir la mandíbula los labios se quedan pegados y se despegan por los
+        # LATERALES primero, el CENTRO al final. StickyLips = cantidad (0 = off),
+        # StickyRange = grados de apertura para despegar del todo.
+        cmds.addAttr(self.jaw_ctl, longName="StickyLips", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
+        cmds.addAttr(self.jaw_ctl, longName="StickyRange", attributeType="float", min=1, defaultValue=5.0, keyable=True)
+        # signo de apertura medido EMPIRICAMENTE (rx que baja el labio inferior)
+        probe = output_joints["lower"][len(output_joints["lower"]) // 2]
+        y0 = cmds.xform(probe, q=True, ws=True, t=True)[1]
+        cmds.setAttr(f"{self.jaw_ctl}.rotateX", 10)
+        y1 = cmds.xform(probe, q=True, ws=True, t=True)[1]
+        cmds.setAttr(f"{self.jaw_ctl}.rotateX", 0)
+        open_sign = 1.0 if y1 < y0 else -1.0
+        open_mul = cmds.createNode("multiply", name="C_lipsAutoStickyOpen_MUL", ss=True)
+        cmds.connectAttr(f"{self.jaw_ctl}.rotateX", f"{open_mul}.input[0]")
+        cmds.setAttr(f"{open_mul}.input[1]", open_sign)
+        open_div = cmds.createNode("divide", name="C_lipsAutoStickyOpen_DIV", ss=True)
+        cmds.connectAttr(f"{open_mul}.output", f"{open_div}.input1")
+        cmds.connectAttr(f"{self.jaw_ctl}.StickyRange", f"{open_div}.input2")
+        open_clamp = cmds.createNode("clamp", name="C_lipsAutoStickyOpen_CLM", ss=True)
+        cmds.connectAttr(f"{open_div}.output", f"{open_clamp}.inputR")
+        cmds.setAttr(f"{open_clamp}.minR", 0); cmds.setAttr(f"{open_clamp}.maxR", 1)
+        v_auto_sub = cmds.createNode("subtract", name="C_lipsAutoStickyV_SUB", ss=True)
+        cmds.setAttr(f"{v_auto_sub}.input1", 1.0)
+        cmds.connectAttr(f"{open_clamp}.outputR", f"{v_auto_sub}.input2")
+        v_auto = f"{v_auto_sub}.output"  # 1 = jaw cerrada -> 0 = abierta del todo
 
         # Matriz de cierre por punto = blend(superior -> inferior, peso = 1-mouthHeight)
         meeting_plugs = []
@@ -937,6 +1138,29 @@ class JawModule(object):
                 cmds.setAttr(f"{remap_value}.value[1].value_FloatValue", 1)
                 cmds.setAttr(f"{remap_value}.value[1].value_Interp", 2)
 
+                # AUTO STICKY por punto: el CENTRO se despega primero (umbral alto) y los
+                # laterales aguantan pegados hasta el final (umbral bajo).
+                k_stick = 1.0 if side == "C" else (float(real_index) / float(mid_point))
+                auto_min = k_stick * 0.9
+                auto_rmv = cmds.createNode("remapValue", name=f"{non_rot_joint}AutoSticky_RMV", ss=True)
+                cmds.connectAttr(v_auto, f"{auto_rmv}.inputValue")
+                cmds.setAttr(f"{auto_rmv}.value[0].value_Position", auto_min)
+                cmds.setAttr(f"{auto_rmv}.value[0].value_FloatValue", 0)
+                cmds.setAttr(f"{auto_rmv}.value[0].value_Interp", 2)
+                cmds.setAttr(f"{auto_rmv}.value[1].value_Position", min(auto_min + 0.1, 1.0))
+                cmds.setAttr(f"{auto_rmv}.value[1].value_FloatValue", 1)
+                cmds.setAttr(f"{auto_rmv}.value[1].value_Interp", 2)
+                auto_amt = cmds.createNode("multiply", name=f"{non_rot_joint}AutoSticky_MUL", ss=True)
+                cmds.connectAttr(f"{auto_rmv}.outValue", f"{auto_amt}.input[0]")
+                cmds.connectAttr(f"{self.jaw_ctl}.StickyLips", f"{auto_amt}.input[1]")
+                # peso final = max(zip manual, auto sticky)
+                w_max = cmds.createNode("condition", name=f"{non_rot_joint}StickyMax_COND", ss=True)
+                cmds.setAttr(f"{w_max}.operation", 2)  # Greater Than
+                cmds.connectAttr(f"{remap_value}.outValue", f"{w_max}.firstTerm")
+                cmds.connectAttr(f"{auto_amt}.output", f"{w_max}.secondTerm")
+                cmds.connectAttr(f"{remap_value}.outValue", f"{w_max}.colorIfTrueR")
+                cmds.connectAttr(f"{auto_amt}.output", f"{w_max}.colorIfFalseR")
+
                 # Conexión del blendMatrix sticky a la joint de salida.
                 # (Antes se creaba además un blend_matrix_sticky_no_rot para las
                 # non_rotate joints, pero su salida estaba comentada → era un
@@ -944,7 +1168,7 @@ class JawModule(object):
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
                 cmds.connectAttr(orient_plugs[part][i], f"{blend_matrix_sticky_rot}.inputMatrix")
                 cmds.connectAttr(meeting_plugs[i], f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
-                cmds.connectAttr(f"{remap_value}.outValue", f"{blend_matrix_sticky_rot}.target[0].weight")
+                cmds.connectAttr(f"{w_max}.outColorR", f"{blend_matrix_sticky_rot}.target[0].weight")
                 cmds.connectAttr(f"{blend_matrix_sticky_rot}.outputMatrix", f"{out_joint}.offsetParentMatrix", f=True)
 
                 max_index = mid_point - 1
@@ -1033,13 +1257,26 @@ class JawModule(object):
                  0, 1, 0, 0,
                  0, 0, 1, 0,
                  self.mouth_center[0], self.mouth_center[1], self.mouth_center[2], 1]
-        cmds.setAttr(f"{main_mouth_nodes[0]}.offsetParentMatrix", place, type="matrix")
+        # Sigue a la cabeza: offsetParentMatrix driveado por head.worldMatrix (place
+        # guardado en local de la cabeza). El delta se calcula en local del grupo
+        # -> identidad cuando solo se mueve la cabeza -> sin doble transformación.
+        place_local = list(om.MMatrix(place) * om.MMatrix(cmds.getAttr(f"{self.head_ctl}.worldMatrix[0]")).inverse())
+        follow_mmx = cmds.createNode("multMatrix", name="C_mainMouthFollow_MMX", ss=True)
+        cmds.setAttr(f"{follow_mmx}.matrixIn[0]", place_local, type="matrix")
+        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{follow_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{follow_mmx}.matrixSum", f"{main_mouth_nodes[0]}.offsetParentMatrix")
+        # normalizar el grupo (solo offsetParentMatrix manda) ANTES de capturar el reposo
+        cmds.xform(main_mouth_nodes[0], m=om.MMatrix.kIdentity)
+        cmds.setAttr(f"{main_mouth_nodes[0]}.inheritsTransform", 0)
+
+        # delta LOCAL al grupo (worldInverse EN VIVO): el grupo sigue la cabeza, así que
+        # la cabeza se cancela en el delta -> a los labios solo llega lo que el animador
+        # mueva el ctl (identidad si solo se mueve la cabeza; sin doble transformación).
+        grp_rest = cmds.getAttr(f"{main_mouth_nodes[0]}.worldMatrix[0]")
         local_mmx = cmds.createNode("multMatrix", name="C_mainMouthLocal_MMX", ss=True)
         cmds.connectAttr(f"{main_mouth_ctl}.worldMatrix[0]", f"{local_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{main_mouth_nodes[0]}.worldInverseMatrix[0]", f"{local_mmx}.matrixIn[1]")
-        grp_rest = cmds.getAttr(f"{main_mouth_nodes[0]}.worldMatrix[0]")
         cmds.setAttr(f"{local_mmx}.matrixIn[2]", grp_rest, type="matrix")
-
         delta_mmx = cmds.createNode("multMatrix", name="C_mainMouthDelta_MMX", ss=True)
         cmds.setAttr(f"{delta_mmx}.matrixIn[0]", list(om.MMatrix(grp_rest).inverse()), type="matrix")
         cmds.connectAttr(f"{local_mmx}.matrixSum", f"{delta_mmx}.matrixIn[1]")
@@ -1047,8 +1284,13 @@ class JawModule(object):
         cmds.connectAttr(f"{delta_mmx}.matrixSum", f"{self.lips_controllers_grp}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{delta_mmx}.matrixSum", f"{self.lips_skinning_grp}.offsetParentMatrix", force=True)
 
-        cmds.xform(main_mouth_nodes[0], m=om.MMatrix.kIdentity)
-        cmds.setAttr(f"{main_mouth_nodes[0]}.inheritsTransform", 0)
+    def reproject_static(self, name, cps):
+        """Re-proyecta el resultado de un closestPointOnSurface sobre la jaw ESTÁTICA
+        (sin shrink) -> el punto queda siempre en la superficie de la jaw."""
+        cps2 = cmds.createNode("closestPointOnSurface", name=f"{name}Static_CPS", ss=True)
+        cmds.connectAttr(f"{self.sphere_static}.worldSpace[0]", f"{cps2}.inputSurface")
+        cmds.connectAttr(f"{cps}.position", f"{cps2}.inPosition")
+        return cps2
 
     def get_offset_matrix(self, child, parent):
         """
