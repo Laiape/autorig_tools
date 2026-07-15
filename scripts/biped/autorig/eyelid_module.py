@@ -362,7 +362,7 @@ class EyelidModule(object):
             # para agarrarlo, pero el pivote/transform queda en el CENTRO del ojo, así
             # rotarlo rota el ojo sobre su centro (no lo orbita). En cuadrúpedos el ojo
             # mira de lado, así que 'delante' es la Z del ojo, no el frente de la cara.
-            cmds.move(0, 0, 15, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 0, 8, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", self.eye_guide_matrix, type="matrix")

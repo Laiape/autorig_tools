@@ -493,7 +493,6 @@ class JawModule(object):
             cmds.addAttr(corner_ctl, longName="EXTRA_ATTRIBUTES", attributeType="enum", enumName="____")
             cmds.setAttr(f"{corner_ctl}.EXTRA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
             cmds.addAttr(corner_ctl, longName="Height", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
-            cmds.addAttr(corner_ctl, longName="Zip", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
 
             parent_matrix_blender = cmds.createNode("parentMatrix", name=f"{side}_lipCorner_PMX", ss=True)
             cmds.connectAttr(f"{aim_matrix_corner}.outputMatrix", f"{parent_matrix_blender}.inputMatrix")
@@ -1058,14 +1057,6 @@ class JawModule(object):
         mouth_height_rev = cmds.createNode("reverse", name="C_lipsMouthHeight_REV", ss=True)
         cmds.connectAttr(f"{self.jaw_ctl}.mouthHeight", f"{mouth_height_rev}.inputX")
 
-        # Zip del centro = máximo(Zip L, Zip R)
-        center_zip_cond = cmds.createNode("condition", name="C_lipsZipMax_COND", ss=True)
-        cmds.setAttr(f"{center_zip_cond}.operation", 2)  # Greater Than
-        cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{center_zip_cond}.firstTerm")
-        cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.secondTerm")
-        cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{center_zip_cond}.colorIfTrueR")
-        cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{center_zip_cond}.colorIfFalseR")
-
         # ----- AUTO STICKY al abrir la jaw -----
         # Al abrir la mandíbula los labios se quedan pegados y se despegan por los
         # LATERALES primero, el CENTRO al final. StickyLips = cantidad (0 = off),
@@ -1114,32 +1105,8 @@ class JawModule(object):
 
                 side = non_rot_joint.split("_")[0]
 
-                remap_value = cmds.createNode("remapValue", name=f"{non_rot_joint}Sticky_RMV", ss=True)
-                
-                # --- CONEXIÓN INDEPENDIENTE POR LADOS ---
-                if side == "L":
-                    cmds.connectAttr(f"{l_corner_ctl}.Zip", f"{remap_value}.inputValue")
-                elif side == "R":
-                    cmds.connectAttr(f"{r_corner_ctl}.Zip", f"{remap_value}.inputValue")
-                else: 
-                    # side == "C" (El centro usa el valor máximo de ambos lados)
-                    cmds.connectAttr(f"{center_zip_cond}.outColorR", f"{remap_value}.inputValue")
-
-                cmds.setAttr(f"{remap_value}.inputMin", 0)
-                cmds.setAttr(f"{remap_value}.inputMax", 1)
-                cmds.setAttr(f"{remap_value}.outputMin", 0)
-                cmds.setAttr(f"{remap_value}.outputMax", 1)
-                
-                cmds.setAttr(f"{remap_value}.value[0].value_Position", activate_min)
-                cmds.setAttr(f"{remap_value}.value[0].value_FloatValue", 0)
-                cmds.setAttr(f"{remap_value}.value[0].value_Interp", 2)  # smooth -> zip progresivo
-
-                cmds.setAttr(f"{remap_value}.value[1].value_Position", activate_max)
-                cmds.setAttr(f"{remap_value}.value[1].value_FloatValue", 1)
-                cmds.setAttr(f"{remap_value}.value[1].value_Interp", 2)
-
-                # AUTO STICKY por punto: el CENTRO se despega primero (umbral alto) y los
-                # laterales aguantan pegados hasta el final (umbral bajo).
+                # AUTO STICKY por punto (sustituye al Zip manual): el CENTRO se despega
+                # primero (umbral alto) y los laterales aguantan pegados hasta el final.
                 k_stick = 1.0 if side == "C" else (float(real_index) / float(mid_point))
                 auto_min = k_stick * 0.9
                 auto_rmv = cmds.createNode("remapValue", name=f"{non_rot_joint}AutoSticky_RMV", ss=True)
@@ -1153,23 +1120,23 @@ class JawModule(object):
                 auto_amt = cmds.createNode("multiply", name=f"{non_rot_joint}AutoSticky_MUL", ss=True)
                 cmds.connectAttr(f"{auto_rmv}.outValue", f"{auto_amt}.input[0]")
                 cmds.connectAttr(f"{self.jaw_ctl}.StickyLips", f"{auto_amt}.input[1]")
-                # peso final = max(zip manual, auto sticky)
-                w_max = cmds.createNode("condition", name=f"{non_rot_joint}StickyMax_COND", ss=True)
-                cmds.setAttr(f"{w_max}.operation", 2)  # Greater Than
-                cmds.connectAttr(f"{remap_value}.outValue", f"{w_max}.firstTerm")
-                cmds.connectAttr(f"{auto_amt}.output", f"{w_max}.secondTerm")
-                cmds.connectAttr(f"{remap_value}.outValue", f"{w_max}.colorIfTrueR")
-                cmds.connectAttr(f"{auto_amt}.output", f"{w_max}.colorIfFalseR")
 
                 # Conexión del blendMatrix sticky a la joint de salida.
-                # (Antes se creaba además un blend_matrix_sticky_no_rot para las
-                # non_rotate joints, pero su salida estaba comentada → era un
-                # nodo muerto por joint de labio; eliminado.)
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
                 cmds.connectAttr(orient_plugs[part][i], f"{blend_matrix_sticky_rot}.inputMatrix")
                 cmds.connectAttr(meeting_plugs[i], f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
-                cmds.connectAttr(f"{w_max}.outColorR", f"{blend_matrix_sticky_rot}.target[0].weight")
+                cmds.connectAttr(f"{auto_amt}.output", f"{blend_matrix_sticky_rot}.target[0].weight")
                 cmds.connectAttr(f"{blend_matrix_sticky_rot}.outputMatrix", f"{out_joint}.offsetParentMatrix", f=True)
+
+                # ...y también a la NON-ROTATE (solo traslación: conserva su no-rotación).
+                blend_matrix_sticky_nr = cmds.createNode("blendMatrix", name=f"{non_rot_joint}Sticky_BMX", ss=True)
+                cmds.connectAttr(f"{pick_matrices[part][i]}.outputMatrix", f"{blend_matrix_sticky_nr}.inputMatrix")
+                cmds.connectAttr(meeting_plugs[i], f"{blend_matrix_sticky_nr}.target[0].targetMatrix")
+                cmds.connectAttr(f"{auto_amt}.output", f"{blend_matrix_sticky_nr}.target[0].weight")
+                cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].rotateWeight", 0)
+                cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].scaleWeight", 0)
+                cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].shearWeight", 0)
+                cmds.connectAttr(f"{blend_matrix_sticky_nr}.outputMatrix", f"{non_rot_joint}.offsetParentMatrix", f=True)
 
                 max_index = mid_point - 1
                 if side == "C":

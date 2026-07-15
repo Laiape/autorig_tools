@@ -94,9 +94,6 @@ class AutoRig(object):
             # progress._set_pct("Applying delta mush…", 95)
             # self.apply_delta_mush()
 
-            progress._set_pct("Creating clothing colliders…", 96)
-            self.create_clothing_colliders(char_name)
-
             progress._set_pct("Importing corrective blendshapes…", 96)
             self.import_corrective_blendshapes()
 
@@ -365,104 +362,6 @@ class AutoRig(object):
         skinner.import_skins()
 
         # self._auto_transfer_from_source()
-
-    def create_clothing_colliders(self, char_name=""):
-        """
-        Si el personaje trae una falda/vestido (grupo 'skirt'/'dress' con sufijo
-        _geo/_GEO/_grp/_GRP), monta la falda con colisión contra las piernas usando la
-        versión NATIVA (utils.native_collider) -> solo nodos de Maya, SIN plugin, así el
-        rig es portable (no necesita el .mll al entregarlo). Crea los joints en cadenas
-        dentro de skel_GRP y sus _ENV en el skeleton_hierarchy. No rompe el build si falla.
-        """
-        suffixes = ("_geo", "_GEO", "_grp", "_GRP")
-
-        def _short(n):
-            return n.rsplit("|", 1)[-1].split(":")[-1]
-
-        def _is_skirt(s):
-            sl = s.lower()
-            return any(sl == f"{w}{suf.lower()}" for w in ("skirt", "dress") for suf in suffixes)
-
-        grp = next((n for n in (cmds.ls(type="transform", long=True) or [])
-                    if _is_skirt(_short(n))), None)
-        if not grp:
-            return
-
-        try:
-            from utils import native_collider
-            reload(native_collider)
-            dm = data_manager.DataExportBiped()
-            skel_grp = dm.get_data("basic_structure", "skel_GRP")
-            modules_grp = dm.get_data("basic_structure", "modules_GRP")
-            prefix = f"{char_name}_" if char_name else ""
-            # Versión con SUPERFICIE: colisión -> NURBS surface -> joints (deformación limpia).
-            res = native_collider.build_native_skirt_surface_from_rig(
-                prefix=prefix, module_parent=modules_grp, skinning_parent=skel_grp)
-            if res:
-                _, _, _, joints = res
-                om.MGlobal.displayInfo(f"native skirt: falda (superficie) creada para '{_short(grp)}' ({len(joints)} joints, sin plugin).")
-        except Exception as e:
-            om.MGlobal.displayWarning(f"native skirt: no se pudo crear la falda -> {e}")
-
-    def _organize_skirt(self, prefix, node, bell, surf, joints):
-        """
-        Coloca lo que crea el skirt collider en su sitio del rig:
-          - mecánica (collider transform, locator/bell, superficie) -> C_skirtModule_GRP
-            (dentro de modules_GRP).
-          - skinning joints -> C_skirtSkinning_GRP (dentro de skel_GRP) y de ahí al
-            skeleton_hierarchy: por cada joint se crea su _ENV bajo la cintura
-            (C_localHip_ENV) negando el padre, igual que el resto del esqueleto de export.
-        """
-        dm = data_manager.DataExportBiped()
-        modules_grp = dm.get_data("basic_structure", "modules_GRP")
-        skel_grp = dm.get_data("basic_structure", "skel_GRP")
-
-        def _reparent(n, dest):
-            if not (n and cmds.objExists(n) and dest and cmds.objExists(dest)):
-                return
-            cur = cmds.listRelatives(n, parent=True, fullPath=True)
-            if not cur or cur[0].split("|")[-1] != dest.split("|")[-1]:
-                try:
-                    cmds.parent(n, dest)
-                except Exception:
-                    pass
-
-        # 1) módulo en modules
-        mod = "C_skirtModule_GRP"
-        if not cmds.objExists(mod):
-            mod = cmds.createNode("transform", name=mod, parent=modules_grp)
-        for m in (f"{prefix}skirtBellCollider_transform", bell, surf):
-            _reparent(m, mod)
-
-        # 2) skinning joints -> skel_GRP + skeleton_hierarchy
-        if not joints:
-            return
-        skin = "C_skirtSkinning_GRP"
-        if not cmds.objExists(skin):
-            skin = cmds.createNode("transform", name=skin, parent=skel_grp)
-        _reparent(f"{prefix}attachedJoints_group", skin)
-
-        waist_env = next((j for j in ("C_localHip_ENV", "C_freeze_ENV") if cmds.objExists(j)), None)
-        if not waist_env:
-            om.MGlobal.displayWarning("colliders: no se encontró cintura _ENV (C_localHip_ENV); skirt joints sin _ENV.")
-            return
-        for jnt in joints:
-            if not cmds.objExists(jnt):
-                continue
-            env_name = jnt.split("|")[-1].replace("_joint", "_ENV")
-            if not env_name.endswith("_ENV"):
-                env_name += "_ENV"
-            if cmds.objExists(env_name):
-                continue
-            env = cmds.createNode("joint", name=env_name, parent=waist_env)
-            inv = cmds.listConnections(f"{env}.inverseScale", destination=False, source=True, plugs=True)
-            if inv:
-                cmds.disconnectAttr(inv[0], f"{env}.inverseScale")
-            mmx = cmds.createNode("multMatrix", name=env_name.replace("_ENV", "Env_MMX"), ss=True)
-            cmds.connectAttr(f"{jnt}.worldMatrix[0]", f"{mmx}.matrixIn[0]", force=True)
-            cmds.connectAttr(f"{waist_env}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]", force=True)
-            cmds.connectAttr(f"{mmx}.matrixSum", f"{env}.offsetParentMatrix", force=True)
-            cmds.setAttr(f"{env}.jointOrient", 0, 0, 0, type="double3")
 
     def apply_delta_mush(self):
         """

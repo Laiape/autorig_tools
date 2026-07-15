@@ -399,6 +399,7 @@ class SkinManager(object):
                     
                     # IMPORTANTE: multi=True permite stackear deformadores
                     new_skin = cmds.skinCluster(valid_joints, mesh_path.fullPathName(), n=skin_name, toSelectedBones=True, multi=True)[0]
+                    skin_name = new_skin  # Maya puede renombrar por colisión: usar SIEMPRE el nodo real
                     sel_s = om.MSelectionList()
                     sel_s.add(new_skin)
                     mf_skin = oma.MFnSkinCluster(sel_s.getDependNode(0))
