@@ -46,9 +46,11 @@ para profundizar y encontrar tutoriales/tools actuales.
 
 Léelos según los necesites — no hace falta cargarlos todos de golpe:
 
-- **`references/metodos.md`** — el **catálogo** de métodos por familia (qué es, cómo funciona,
-  precisión, secundario, límites, cuándo usarlo y encaje en su pipeline), con tabla-resumen y
-  recursos. **Es el backbone de la skill: léelo antes de recomendar nada.**
+- **`references/metodos.md`** — el **catálogo** (8 familias, ~50 métodos): qué es, cómo funciona,
+  precisión y por qué, secundario, límites, cuándo usarlo y encaje en su pipeline, con tabla-resumen,
+  recomendación transversal y recursos por familia. **Es el backbone de la skill.** No hace falta
+  leerlo entero: empieza por la **tabla-resumen** y baja solo a la(s) familia(s) que aplican al caso.
+  Consúltalo antes de recomendar nada.
 - **`references/como-elegir.md`** — árbol de decisión y preguntas de encuadre para pasar del "qué
   prenda tienes" al "usa esto". Léelo al principio de cada encargo.
 - **`references/estudio-profesional.md`** — el marco de **producción**: cómo reparte un estudio la
