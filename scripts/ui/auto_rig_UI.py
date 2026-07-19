@@ -76,6 +76,7 @@ def create_custom_menu():
     cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
     cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
     cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
+    cmds.menuItem(label="Proxy Skinning", command=lambda x: proxy_skinning(), image="paintSkinWeights.png")
     cmds.setParent('..', menu=True)
 
     # ── SIMULATION / ADONIS ───────────────────────────────────────────────────
@@ -183,6 +184,46 @@ def open_skin_transfer_ui():
     from ui import skin_transfer_UI
     reload(skin_transfer_UI)
     skin_transfer_UI.show()
+
+def proxy_skinning():
+    """
+    Proxy skinning del cuerpo con la cadena recomendada (Geodesic Voxel Binding -> transferir
+    con copySkinWeights -> optimizar -> Delta Mush). No usa auto_skin_transfer.
+
+    Selección esperada (en cualquier orden): la malla PROXY, la malla de ALTA y la RAÍZ del
+    esqueleto (joint). El PRIMER mesh seleccionado es el proxy; el segundo, la alta.
+    """
+    from tools import proxy_skinning as ps
+    reload(ps)
+
+    sel = cmds.ls(sl=True) or []
+    meshes, joints = [], []
+    for node in sel:
+        if cmds.nodeType(node) == "joint":
+            joints.append(node)
+        elif cmds.listRelatives(node, shapes=True, type="mesh"):
+            meshes.append(node)
+
+    if len(meshes) != 2 or len(joints) != 1:
+        cmds.inViewMessage(
+            amg="Proxy Skinning: selecciona <hl>PROXY</hl>, <hl>ALTA</hl> y la <hl>raíz del "
+                "esqueleto</hl> (2 mallas + 1 joint).",
+            pos='midCenter', fade=True, fadeStayTime=2500)
+        return
+
+    proxy, high, root = meshes[0], meshes[1], joints[0]
+    cmds.undoInfo(openChunk=True)
+    try:
+        res = ps.proxy_skin(proxy, high, root, max_influences=4, uv_space=False,
+                            use_labels=True, delta_mush=True, bake=False)
+    finally:
+        cmds.undoInfo(closeChunk=True)
+
+    rep = res.get("report", {})
+    cmds.inViewMessage(
+        amg=f"Proxy Skinning hecho en <hl>{high}</hl> · máx influencias/vértice: "
+            f"<hl>{rep.get('max_per_vertex', '?')}</hl>.",
+        pos='midCenter', fade=True, fadeStayTime=2500)
 
 def export_source_skin_data():
     from tools import mesh_data_exporter

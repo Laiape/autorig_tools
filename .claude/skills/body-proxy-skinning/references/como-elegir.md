@@ -54,8 +54,9 @@ PASO 2 — ¿PROXY?
   └── No → skinnea directo la alta.
 
 PASO 3 — TRANSFERIR proxy -> alta (si hay proxy):
-  Topología distinta o cambiante → transfer por UV independiente de topología (tu auto_skin_transfer)
-  o Copy Skin Weights con -uvSpace + -influenceAssociation label.
+  Topología distinta o cambiante → `copySkinWeights -uvSpace <src> <dst> -influenceAssociation label`
+  (nativo; UV/label separan las partes → no cruza). Es lo que usa el botón *Proxy Skinning*.
+  (Nota: `auto_skin_transfer` está roto — no lo uses.)
   Misma topología → Copy Skin Weights index-for-index. Para seguir la superficie: cvWrap/proximityWrap.
 
 PASO 4 — AFINAR:
@@ -87,5 +88,6 @@ cadena donde está el problema y sube desde ahí.
   proxy + transfer por UV.
 - **Hornear lo dinámico.** bakeDeformer/dm2skin capturan deformación función-de-pose, no inercia ni
   colisión. No esperes secundario de un skin horneado.
-- **Recomendar en el vacío.** Conecta con lo que ya tiene (ngSkinTools2, `auto_skin_transfer`,
-  `skincluster_surface`, `SkinManager`, Delta Mush).
+- **Recomendar en el vacío.** Conecta con lo que ya tiene (ngSkinTools2, `copySkinWeights -uvSpace
+  -label`, `skincluster_surface`, `SkinManager`, Delta Mush, botón *Proxy Skinning*). No propongas
+  `auto_skin_transfer` (roto).

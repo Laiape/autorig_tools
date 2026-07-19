@@ -8,6 +8,12 @@
 > closest-joint no es preciso)** y la **§2 tabla-resumen**, y baja solo a la(s) familia(s) que
 > aplican al caso. Al final tienes la **§8 receta recomendada end-to-end** y la **§9 recursos**.
 
+> ⚠ **`auto_skin_transfer.py` está actualmente NO OPERATIVO** (el usuario lo confirma roto). **No
+> lo recomiendes** para el paso de transferencia. El transfer nativo por defecto es
+> **`copySkinWeights -uvSpace <src> <dst> -influenceAssociation label`** (o `skincluster_surface`,
+> o `VertexTransferMode.vertexId` de ngSkinTools2 si la topología coincide). Las menciones a
+> `auto_skin_transfer` de abajo se conservan como documentación de la técnica, no como recomendación.
+
 ## 1. Por qué el "closest-joint" no es preciso
 
 El "assign closest joint" de ngSkinTools (y el `bindMethod=0`, *closest distance*, de Maya) asigna a cada vértice el joint más cercano midiendo la **distancia euclídea en línea recta**, atravesando el aire. Esa métrica no tiene noción de "dentro del cuerpo": el rayo de medida cruza el hueco entre dos partes anatómicas como si no existiera. Por eso, en toda **zona de contacto**, el hueso equivocado queda a pocos centímetros en recta y captura la influencia:
@@ -48,7 +54,8 @@ Además su falloff es duro y no continuo, así que, aparte de cruzar, deja escal
 | copySkinWeights por superficie | Transfer | Media | Alta | Parcial (closestPoint cruza) | Bajo | Maya nativo |
 | copySkinWeights `-uvSpace` | Transfer | Alta | Alta | No (si UV separa) | Medio | Maya nativo |
 | ngSkinTools2 transfer (vertexId / closestPoint) | Transfer | Alta | Media | Parcial | Medio | ngSkinTools2 |
-| **`auto_skin_transfer.py` (UV esqueleto + KNN/IDW)** | Transfer | Alta | Alta | No* (separa en U) | Medio | Tuyo |
+| ~~`auto_skin_transfer.py` (UV esqueleto + KNN/IDW)~~ **⚠ roto** | Transfer | — | — | — | — | Tuyo (no operativo) |
+| **`copySkinWeights -uvSpace -label`** (transfer nativo por defecto) | Transfer | Alta | Alta | No (si UV/label separan) | Bajo | Maya nativo |
 | Robust Skin Weights Transfer (inpainting) | Transfer | Alta | Media | No | Medio | Repo/Maya (comunidad) |
 | cvWrap (deformación) | Transfer | Alta | Media (runtime) | No | Medio | Plugin (Chad Vernon) |
 | proximityWrap (Maya 2020+) | Transfer | Media | Media (runtime) | No (si falloff ajustado) | Bajo | Maya nativo |
@@ -205,7 +212,11 @@ Concentras el trabajo de precisión en un intermediario controlable (low-res, ca
 - **Corrección de atribución:** tu `skin_manager_ng.py` usa **`VertexTransferMode.vertexId`** (por índice de vértice, dependiente de topología/orden), **no por UV**. Sí usa `InfluenceMappingConfig.transfer_defaults()` con `use_name_matching`. El transfer topology-independent por UV vive en `auto_skin_transfer.py`, no aquí.
 - **Encaje:** estandariza: pinta y limpia el proxy por capas → transfiere con `vertexId` si la topología coincide, `closestPoint` (+ máscaras por isla) si no. Un manager guarda capas ng (JSON), otro el skin plano `.skc`.
 
-### 4.8 `auto_skin_transfer.py` — UV esqueleto-relativa + KNN + IDW (tu caballo de batalla)
+### 4.8 `auto_skin_transfer.py` — UV esqueleto-relativa + KNN + IDW ⚠ **actualmente NO OPERATIVO**
+
+> ⚠ **Roto según el usuario: no lo recomiendes ni lo uses.** Se documenta aquí solo como *técnica*
+> (el concepto de transfer por UV esqueleto-relativa es válido). Para transferir de verdad, usa
+> **`copySkinWeights -uvSpace -influenceAssociation label`** (§4.7) o el inpainting robusto (§4.9).
 
 - **Qué es:** tu sistema propio de transferir el skin del proxy a la alta **sin depender de topología**, proyectando ambos a un espacio UV relativo al esqueleto y haciendo lookup por KNN + IDW.
 - **Cómo funciona:** 5 módulos. `UVMatchingModule` genera el UV set `skinTransfer_UV` (modo skeleton por defecto: U = índice DFS del hueso + t a lo largo del segmento, V = ángulo alrededor del eje; cylindrical/planar de respaldo). `SkinSamplingModule` construye `SkinUVMap` (uv N×2, weights N×J). `JointMappingModule` mapea joints origen↔destino por nombre/proximidad. `WeightProjectionModule` busca los K=4 vecinos en UV y mezcla por distancia inversa (IDW, 1/dist²), renormaliza y aplica con `MFnSkinCluster.setWeights`. `RefinementModule` limita influencias (argpartition), suaviza y da pasadas extra en flex zones. Como la U es esqueleto-relativa, dos partes pegadas en 3D caen en U distinta (huesos distintos) → **no cruza** como el closest-point 3D.
@@ -442,9 +453,10 @@ Flujo de estudio para un proxy skinning del cuerpo **eficiente y que quede bien*
 
 4. **Afina con ngSkinTools2 por capas** sobre esa base limpia: smooth por adyacencia, flood, mirror no destructivo, máscaras por región (entrepierna, axila, cuello). **Nunca** su "assign closest joint" para inicializar. Complementa con `brSmoothWeights`. Valida cruces por zona con `proxy_locator.py`. Guarda las capas y el `.skc` en SkinManager.
 
-5. **Transfiere a la alta** con un método consciente de topología/UV:
-   - Topología distinta y esqueleto compartido → **`auto_skin_transfer.py`** (modo skeleton; clamp `maxInfluences=4` y smoothing en flex zones). Evalúa el inpainting robusto (Abdrashitov et al.) para zonas con huecos.
-   - UV de producción que separa partes → **`copySkinWeights -uvSpace <src> <dst> -influenceAssociation name`** (nativo, sin numpy).
+5. **Transfiere a la alta** con un método consciente de topología/UV (⚠ **NO** `auto_skin_transfer`, está roto):
+   - **Por defecto** → **`copySkinWeights -uvSpace <src> <dst> -influenceAssociation label`** (nativo, sin numpy; el UV/label separan las partes → no cruza). Es lo que usa el botón *Proxy Skinning* (`tools/proxy_skinning.py`).
+   - Sin UV coherente → `copySkinWeights -surfaceAssociation closestComponent -influenceAssociation label`, o `skincluster_surface.py` (De Boor 2D) sobre una superficie.
+   - Topología con huecos difíciles → inpainting robusto (Abdrashitov et al., §4.9).
    - Misma topología → `ngSkinTools2` `VertexTransferMode.vertexId`.
    - Necesitas que la alta siga al proxy/sim en vivo antes de hornear → **cvWrap** (plugin) o **proximityWrap** (nativo 2020+).
    - **Nunca** `copySkinWeights closestPoint/closestComponent` sin más entre partes que se tocan: reintroduce el cruce.

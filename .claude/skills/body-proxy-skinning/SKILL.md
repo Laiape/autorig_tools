@@ -1,6 +1,6 @@
 ---
 name: body-proxy-skinning
-description: 'Ayuda a skinnear el CUERPO de un personaje de forma eficiente y que quede bien, con enfoque de PROXY SKINNING (skinnear/pintar un proxy low-res y transferir a la malla de alta) y refinado. Resuelve la queja de que el "assign closest joint" de ngSkinTools no es preciso: el binding por joint/distancia más cercana CRUZA influencias entre partes anatómicas próximas (muslo interior con la otra pierna, axila con el pecho, entre dedos), y esta skill enseña los métodos volumétricos que NO lo hacen (Geodesic Voxel Binding, heat map, BBW) más el flujo proxy→alta, el refinado (Delta Mush, Direct Delta Mush, ngSkinTools por capas) y cómo dejarlo eficiente (bake a skin lineal con dm2skin/bakeDeformer) y con correctivos en las zonas problema. Aterrizada en el pipeline del usuario (autorig en Maya + Python, ngSkinTools2, auto_skin_transfer por UV, skincluster_surface, SkinManager, AdonisFX, Delta Mush). Úsala siempre que el usuario quiera skinnear el cuerpo, montar o mejorar un proxy skinning, arreglar un bind impreciso, elegir un binding que no cruce influencias, transferir pesos de un proxy a la alta, refinar un skin con Delta Mush, o dejar un skin eficiente y limpio. Dispara ante frases como "proxy skinning del cuerpo", "skinnear el cuerpo", "el closest joint no es preciso / me cruza influencias", "cómo hago un buen skin eficiente", "binding que no cruce", "transferir pesos del proxy a la alta", "refinar el skin con delta mush", "assign closest joint no me vale".'
+description: 'Ayuda a skinnear el CUERPO de un personaje de forma eficiente y que quede bien, con enfoque de PROXY SKINNING (skinnear/pintar un proxy low-res y transferir a la malla de alta) y refinado. Resuelve la queja de que el "assign closest joint" de ngSkinTools no es preciso: el binding por joint/distancia más cercana CRUZA influencias entre partes anatómicas próximas (muslo interior con la otra pierna, axila con el pecho, entre dedos), y esta skill enseña los métodos volumétricos que NO lo hacen (Geodesic Voxel Binding, heat map, BBW) más el flujo proxy→alta, el refinado (Delta Mush, Direct Delta Mush, ngSkinTools por capas) y cómo dejarlo eficiente (bake a skin lineal con dm2skin/bakeDeformer) y con correctivos en las zonas problema. Aterrizada en el pipeline del usuario (autorig en Maya + Python, ngSkinTools2, copySkinWeights por UV/label, skincluster_surface, SkinManager, AdonisFX, Delta Mush) e implementada en el botón Proxy Skinning (tools/proxy_skinning.py). Úsala siempre que el usuario quiera skinnear el cuerpo, montar o mejorar un proxy skinning, arreglar un bind impreciso, elegir un binding que no cruce influencias, transferir pesos de un proxy a la alta, refinar un skin con Delta Mush, o dejar un skin eficiente y limpio. Dispara ante frases como "proxy skinning del cuerpo", "skinnear el cuerpo", "el closest joint no es preciso / me cruza influencias", "cómo hago un buen skin eficiente", "binding que no cruce", "transferir pesos del proxy a la alta", "refinar el skin con delta mush", "assign closest joint no me vale".'
 ---
 
 # Body Proxy Skinning — skinnear el cuerpo eficiente y que quede bien
@@ -62,7 +62,9 @@ Combina un **catálogo de referencia** curado con **búsqueda web en vivo** para
 4. **Recomienda una receta, no un método suelto.** El patrón de estudio es una **cadena**:
    binding volumétrico → (proxy) → transferir a alta → **afinar con ngSkin por capas** → Delta Mush
    → (bake a skin lineal) → correctivos en zonas problema. Di **por qué** cada paso y mapea a lo que
-   ya tiene (ngSkinTools2, `auto_skin_transfer`, `skincluster_surface`, `SkinManager`, AdonisFX).
+   ya tiene (ngSkinTools2, `copySkinWeights -uvSpace -label`, `skincluster_surface`, `SkinManager`,
+   AdonisFX). **Ojo: `auto_skin_transfer` está roto — no lo recomiendes;** el transfer por defecto es
+   `copySkinWeights -uvSpace -label` (lo que usa el botón *Proxy Skinning*, `tools/proxy_skinning.py`).
 
 5. **Si lo pide, aterriza en pasos.** Plan de implementación o snippet en el estilo del repo
    (`maya.cmds`/OpenMaya, rig por matrices, lectura por API). **No rehagas su pipeline entero**:
@@ -81,7 +83,7 @@ Qué es y cómo funciona: <1–3 líneas>
 Calidad: <baja/media/alta> · Eficiencia: <baja/media/alta> · ¿Cruza influencias?: <sí/no/parcial>
 Frente a closest-joint: <qué gana, qué cuesta>
 Límite real: <dónde deja de funcionar>
-Encaje en tu pipeline: <ngSkin / auto_skin_transfer / skincluster_surface / Delta Mush / bake>
+Encaje en tu pipeline: <ngSkin / copySkinWeights -uvSpace -label / skincluster_surface / Delta Mush / bake>
 Para profundizar: <tutorial/doc/repo/tool concretos>
 ```
 
@@ -98,8 +100,9 @@ simple que resuelve el problema hacia arriba.
 - **Recomienda la cadena más simple que resuelve el problema.** No lleves a correctivos PSD si un
   buen bind + ngSkin + Delta Mush ya deja el cuerpo bien. La calidad se sube por escalones.
 - **Aterriza en su pipeline.** Conecta cada recomendación con lo que ya tiene (`skin_manager_ng` con
-  ngSkinTools2, `auto_skin_transfer` por UV con clamp/smooth, `skincluster_surface`, `SkinManager`
-  `.skc`, Delta Mush) y con el rig por matrices. Ojo: `proxy_locator.py` es un **locator visual** de
+  ngSkinTools2, `copySkinWeights -uvSpace -label` para transferir, `skincluster_surface`, `SkinManager`
+  `.skc`, Delta Mush, el botón *Proxy Skinning* → `tools/proxy_skinning.py`) y con el rig por matrices.
+  **`auto_skin_transfer` está roto: no lo propongas.** Ojo: `proxy_locator.py` es un **locator visual** de
   región de piel, no la tool de proxy skinning; no lo presentes como tal.
 - **Honestidad técnica.** Di los trade-offs: más calidad suele costar autoría o evaluación. Si el
   bind volumétrico + Delta Mush ya basta, dilo en vez de sobredimensionar.
