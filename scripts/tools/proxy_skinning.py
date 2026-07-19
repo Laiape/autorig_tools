@@ -76,6 +76,11 @@ def _gvb_bind(mesh, joints, max_influences, voxel_resolution=256):
     Bind Geodesic Voxel de `mesh` a `joints`. Devuelve el skinCluster.
     GVB no cruza influencias (mide por el volumen), a diferencia del closest-joint.
     """
+    if cmds.about(batch=True):
+        cmds.warning("[proxy_skinning] Geodesic Voxel Binding usa viewport/GPU; en batch (mayapy) "
+                     "puede fallar — ejecútalo en Maya interactivo.")
+    # la resolución de vóxel debe ser potencia de dos (mín. 64)
+    voxel_resolution = 1 << max(6, int(voxel_resolution).bit_length() - 1)
     sc = cmds.skinCluster(joints, mesh, toSelectedBones=True, bindMethod=3,
                           skinMethod=0, normalizeWeights=1,
                           maximumInfluences=max_influences, obeyMaxInfluences=True,
@@ -115,6 +120,40 @@ def skin_report(mesh, sc=None, threshold=1e-4):
     return {"skinCluster": sc, "influences_total": len(skfn.influenceObjects()),
             "max_per_vertex": max_pv,
             "avg_per_vertex": round(total_pv / float(n_verts), 2) if n_verts else 0}
+
+
+def _clamp_max_influences(mesh, sc, max_influences):
+    """
+    Recorta CADA vértice a sus `max_influences` mayores influencias y renormaliza.
+    Necesario porque `copySkinWeights` NO respeta maxInfluences y `.maxInfluences`/
+    `.maintainMaxInfluences` no re-clampan los pesos ya existentes (solo edición futura).
+    """
+    if not _HAS_OM:
+        cmds.warning("[proxy_skinning] sin OpenMaya no puedo clampar influencias por conteo; "
+                     "el skin puede superar maxInfluences.")
+        return
+    sel = om.MSelectionList(); sel.add(sc)
+    skfn = oma.MFnSkinCluster(sel.getDependNode(0))
+    msel = om.MSelectionList()
+    shp = cmds.listRelatives(mesh, s=True, ni=True, type="mesh")
+    msel.add(shp[0] if shp else mesh)
+    dag = msel.getDagPath(0)
+    n_verts = om.MFnMesh(dag).numVertices
+    comp_fn = om.MFnSingleIndexedComponent()
+    comp = comp_fn.create(om.MFn.kMeshVertComponent)
+    comp_fn.addElements(list(range(n_verts)))
+    weights, n_w = skfn.getWeights(dag, comp)
+    if n_w <= max_influences:
+        return
+    new = om.MDoubleArray(len(weights), 0.0)
+    for vi in range(n_verts):
+        base = vi * n_w
+        row = sorted(((weights[base + j], j) for j in range(n_w)), reverse=True)
+        keep = row[:max_influences]
+        s = sum(w for w, _ in keep) or 1.0
+        for w, j in keep:
+            new[base + j] = w / s
+    skfn.setWeights(dag, comp, om.MIntArray(list(range(n_w))), new, False)
 
 
 # --------------------------------------------------------------------------------------- #
@@ -164,14 +203,23 @@ def proxy_skin(proxy, high, root_joint, max_influences=4, uv_space=False, use_la
     # 1) proxy skinneado (usar el suyo o bindearlo GVB)
     proxy_sc = _skincluster(proxy) or _gvb_bind(proxy, joints, max_influences, voxel_resolution)
 
+    # aviso si el proxy ya venía skinneado a joints fuera de la cadena destino (transfer sesgado)
+    outside = [j for j in (cmds.skinCluster(proxy_sc, q=True, influence=True) or [])
+               if j not in joints]
+    if outside:
+        cmds.warning(f"[proxy_skinning] el skin del proxy usa {len(outside)} joint(s) fuera de la "
+                     f"cadena de '{root_joint}' (p.ej. {outside[:3]}); la transferencia puede quedar mal.")
+
     # 2) bind de la alta a los mismos joints + transferir del proxy
     high_sc = _skincluster(high)
     if not high_sc:
         high_sc = _gvb_bind(high, joints, max_influences, voxel_resolution)
     copy_weights(proxy, proxy_sc, high, high_sc, uv_space=uv_space, use_labels=use_labels)
 
-    # 3) optimizar (skin eficiente)
+    # 3) optimizar (skin eficiente): prune por umbral + CLAMP real por conteo + normalizar.
+    #    copySkinWeights no respeta maxInfluences, así que el clamp por conteo es imprescindible.
     cmds.skinPercent(high_sc, high, pruneWeights=prune, normalize=True)
+    _clamp_max_influences(high, high_sc, max_influences)
     cmds.setAttr(high_sc + ".maxInfluences", max_influences)
     cmds.setAttr(high_sc + ".maintainMaxInfluences", True)
     cmds.setAttr(high_sc + ".skinningMethod", 1 if dual_quaternion else 0)
@@ -181,23 +229,20 @@ def proxy_skin(proxy, high, root_joint, max_influences=4, uv_space=False, use_la
     if delta_mush:
         dm_node = cmds.deltaMush(high, smoothingIterations=dm_iterations)[0]
 
-    # 5) hornear Delta Mush -> skin lineal (opcional, deja un único skinCluster barato)
+    # 5) hornear Delta Mush -> skin lineal (opcional). Con src==dst, bakeDeformer REEMPLAZA las
+    #    deformaciones de 'high' (Delta Mush + skin) por un único skinCluster lineal horneado sobre
+    #    la propia malla. (No se usa un duplicado: cmds.duplicate NO arrastra los deformadores.)
     baked = False
     if bake and dm_node:
-        src = cmds.duplicate(high, name=f"{high}_dmSrc")[0]
         try:
-            cmds.bakeDeformer(srcMeshName=src, dstMeshName=high,
+            cmds.bakeDeformer(srcMeshName=high, dstMeshName=high,
                               srcSkeletonName=root_joint, dstSkeletonName=root_joint,
                               maxInfluences=max_influences)
-            cmds.delete(dm_node)  # ya está horneado en el skin
-            dm_node = None
             baked = True
+            dm_node = None  # el bake ya sustituyó el Delta Mush por el skin lineal
+            high_sc = _skincluster(high) or high_sc
         except Exception as exc:
             cmds.warning(f"[proxy_skinning] bakeDeformer falló, se conserva el Delta Mush: {exc}")
-        finally:
-            if cmds.objExists(src):
-                cmds.delete(src)
-        high_sc = _skincluster(high) or high_sc
 
     return {"proxy_skinCluster": proxy_sc, "high_skinCluster": high_sc,
             "delta_mush": dm_node, "baked": baked,

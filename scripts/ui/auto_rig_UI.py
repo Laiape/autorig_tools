@@ -196,18 +196,29 @@ def proxy_skinning():
     from tools import proxy_skinning as ps
     reload(ps)
 
-    sel = cmds.ls(sl=True) or []
-    meshes, joints = [], []
+    # orderedSelection preserva el orden en que se seleccionó (proxy primero, alta después)
+    sel = cmds.ls(sl=True, orderedSelection=True) or []
+    meshes, joints, seen = [], [], set()
     for node in sel:
-        if cmds.nodeType(node) == "joint":
-            joints.append(node)
+        nt = cmds.nodeType(node)
+        if nt == "joint":
+            if node not in seen:
+                seen.add(node); joints.append(node)
+            continue
+        # normaliza a transform tanto si se seleccionó la malla como su shape
+        xform = None
+        if nt == "mesh":
+            par = cmds.listRelatives(node, parent=True, type="transform")
+            xform = par[0] if par else None
         elif cmds.listRelatives(node, shapes=True, type="mesh"):
-            meshes.append(node)
+            xform = node
+        if xform and xform not in seen:
+            seen.add(xform); meshes.append(xform)
 
     if len(meshes) != 2 or len(joints) != 1:
         cmds.inViewMessage(
             amg="Proxy Skinning: selecciona <hl>PROXY</hl>, <hl>ALTA</hl> y la <hl>raíz del "
-                "esqueleto</hl> (2 mallas + 1 joint).",
+                "esqueleto</hl> en ese orden (2 mallas + 1 joint).",
             pos='midCenter', fade=True, fadeStayTime=2500)
         return
 
@@ -221,8 +232,8 @@ def proxy_skinning():
 
     rep = res.get("report", {})
     cmds.inViewMessage(
-        amg=f"Proxy Skinning hecho en <hl>{high}</hl> · máx influencias/vértice: "
-            f"<hl>{rep.get('max_per_vertex', '?')}</hl>.",
+        amg=f"Proxy Skinning: proxy <hl>{proxy}</hl> → alta <hl>{high}</hl> · máx "
+            f"influencias/vértice: <hl>{rep.get('max_per_vertex', '?')}</hl>.",
         pos='midCenter', fade=True, fadeStayTime=2500)
 
 def export_source_skin_data():
