@@ -14,6 +14,15 @@ Set v1 (cada bloque se salta con un warning si su driver o su joint base no exis
                 con el signo de apertura medido (reutiliza el del auto-sticky).
   - Smile     : cheek raise L/R + nasolabial fold L/R.  Driver: lipCorner ty > 0.
   - Frown     : comisuras L/R hacia abajo/adentro.      Driver: lipCorner ty < 0.
+  - Corner 4D : correctivas EN la comisura para sus 4 direcciones — arriba (cornerUp,
+                ty > 0), abajo (la propia frown), fuera (cornerOut, tx lateral) y
+                dentro (cornerIn). El signo de tx que significa "fuera" es DISTINTO
+                en L y R (controles espejados): se mide empíricamente en build.
+  - Brow inner: la ceja interna hacia DENTRO y ABAJO (knit/scowl) abulta la carne
+                sobre el entrecejo de ese lado. El frame del ctl eyebrowIn va
+                alineado a la curva (su tx local no es "hacia dentro"), así que el
+                driver proyecta su translate al frame mundo de reposo (vectorProduct
+                con matriz horneada) y combina los componentes dentro + abajo.
   - Ceño      : bulge de la glabella (procerus).        Driver: DISTANCIA entre los dos
                 eyebrowIn (fruncir = juntarse), normalizada por globalScale — inmune a la
                 orientación de los ctls de ceja (van alineados a la curva, no al mundo).
@@ -59,7 +68,7 @@ _NAME_BASES = (
     + [f"{s}_{b}" for s in "LR" for b in
        ["jawCheekCorrective", "smileCheekCorrective", "nasolabialCorrective",
         "frownCornerCorrective", "browRaiseCorrective", "browDownCorrective",
-        "blinkLidCorrective"]]
+        "browInner", "cornerUp", "cornerOut", "cornerIn", "blinkLidCorrective"]]
 )
 
 
@@ -127,6 +136,29 @@ class FacialCorrectivesModule(object):
         """Joint del medio de un patrón ls, en orden NATURAL (aguanta índices >9)."""
         found = sorted(cmds.ls(pattern, type="joint") or [], key=_natural_key)
         return found[len(found) // 2] if found else None
+
+    def _first(self, pattern):
+        """Primera joint (índice más bajo) de un patrón ls, en orden natural."""
+        found = sorted(cmds.ls(pattern, type="joint") or [], key=_natural_key)
+        return found[0] if found else None
+
+    def _probe_tx_out_sign(self, ctl, side):
+        """Mide empíricamente qué signo de translateX del ctl mueve HACIA FUERA
+        (los corners L/R están espejados y su tx no comparte signo): setAttr +0.5,
+        proyectar el delta mundo sobre el vector 'fuera' del lado, restaurar."""
+        p0 = self._world_pos(ctl)
+        prev = cmds.getAttr(f"{ctl}.translateX")
+        cmds.setAttr(f"{ctl}.translateX", prev + 0.5)
+        delta = self._world_pos(ctl) - p0
+        cmds.setAttr(f"{ctl}.translateX", prev)
+        return 1.0 if delta * om.MVector(*_out(side)) >= 0 else -1.0
+
+    def _signed_range(self, name, range_plug, sign):
+        """range_attr × signo medido -> plug para in_max de un remap."""
+        mul = cmds.createNode("multiply", name=f"{name}_MUL", ss=True)
+        cmds.connectAttr(range_plug, f"{mul}.input[0]")
+        cmds.setAttr(f"{mul}.input[1]", float(sign))
+        return f"{mul}.output"
 
     def _closest_joint(self, patterns, world_pos):
         """Joint (no NonRot) más cercana a un punto mundo, entre varios patrones ls."""
@@ -358,18 +390,67 @@ class FacialCorrectivesModule(object):
             # el blend jaw/upperJaw real del corner; colgarla del jaw skinning
             # doblaría la caída con la boca abierta).
             corner_w = self._world_pos(corner_ctl)
-            frown_base = self._closest_joint(
+            corner_base = self._closest_joint(
                 [f"{side}_upperLip*_JNT", f"{side}_lowerLip*_JNT"], corner_w)
-            if frown_base:
+            if corner_base:
                 en, am = self._enable_amount(f"FrownCorner{side}", 0.06 * fs)
                 d = om.MVector(*_out(side)) * -0.5 + om.MVector(0, -0.86, 0)
                 jnt = correctives.corrective_offset_push(
-                    f"{side}_frownCornerCorrective", frown_base, driver, 0, frown_rng,
-                    self._local_point(frown_base, corner_w + om.MVector(0, -0.05 * fs, 0)),
-                    self._local_dir(frown_base, (d.x, d.y, d.z)), am, enable_attr=en)
+                    f"{side}_frownCornerCorrective", corner_base, driver, 0, frown_rng,
+                    self._local_point(corner_base, corner_w + om.MVector(0, -0.05 * fs, 0)),
+                    self._local_dir(corner_base, (d.x, d.y, d.z)), am, enable_attr=en)
                 self.created.append(jnt)
+                self.corner_setup(side, corner_ctl, corner_base, corner_w, smile_rng)
             else:
-                self._skip(f"{side} frown corrective", f"{side}_*Lip*_JNT")
+                self._skip(f"{side} frown/corner correctives", f"{side}_*Lip*_JNT")
+
+    # ------------------------------------------------------------------ corner 4D
+
+    def corner_setup(self, side, corner_ctl, corner_base, corner_w, smile_rng):
+        """Correctivas EN la comisura para arriba (cornerUp), fuera (cornerOut) y
+        dentro (cornerIn) — la de abajo es la frown. Todas nacen en la posición
+        real del corner, colgadas del joint de labio más cercano. El signo de
+        translateX que significa "fuera" se mide empíricamente (L/R espejados:
+        en los assets, L dentro = tx negativo y R dentro = tx positivo)."""
+
+        fs = self.face_scale
+        rest = self._local_point(corner_base, corner_w)
+
+        # --- Arriba (smile en la propia comisura): la carne del corner se apila
+        # siguiendo la diagonal del zygomaticus (fuera+arriba, algo adelante).
+        en, am = self._enable_amount(f"CornerUp{side}", 0.06 * fs)
+        d = (om.MVector(*_out(side)) * 0.5 + om.MVector(*_UP) * 0.75
+             + om.MVector(*_FWD) * 0.35)
+        jnt = correctives.corrective_offset_push(
+            f"{side}_cornerUpCorrective", corner_base, f"{corner_ctl}.translateY",
+            0, smile_rng, rest, self._local_dir(corner_base, (d.x, d.y, d.z)),
+            am, enable_attr=en)
+        self.created.append(jnt)
+
+        # Signo de tx que mueve el corner HACIA FUERA (probe empírico)
+        out_sign = self._probe_tx_out_sign(corner_ctl, side)
+        out_rng = self._attr("CornerOutRange", round(0.4 * fs, 2), minv=0.01)
+        in_rng = self._attr("CornerInRange", round(0.5 * fs, 2), minv=0.01)
+
+        # --- Fuera (stretch, AU20): el labio estirado se aplana contra los
+        # dientes: acompaña fuera con un punto hacia atrás.
+        en, am = self._enable_amount(f"CornerOut{side}", 0.05 * fs)
+        d = om.MVector(*_out(side)) * 0.97 + om.MVector(*_FWD) * -0.25
+        jnt = correctives.corrective_offset_push(
+            f"{side}_cornerOutCorrective", corner_base, f"{corner_ctl}.translateX",
+            0, self._signed_range(f"{side}_cornerOutRange", out_rng, out_sign),
+            rest, self._local_dir(corner_base, (d.x, d.y, d.z)), am, enable_attr=en)
+        self.created.append(jnt)
+
+        # --- Dentro (narrow de ese lado): el corner se frunce y la carne se
+        # proyecta adelante (medio pucker unilateral).
+        en, am = self._enable_amount(f"CornerIn{side}", 0.06 * fs)
+        d = om.MVector(*_out(side)) * -0.3 + om.MVector(*_FWD) * 0.95
+        jnt = correctives.corrective_offset_push(
+            f"{side}_cornerInCorrective", corner_base, f"{corner_ctl}.translateX",
+            0, self._signed_range(f"{side}_cornerInRange", in_rng, -out_sign),
+            rest, self._local_dir(corner_base, (d.x, d.y, d.z)), am, enable_attr=en)
+        self.created.append(jnt)
 
     # ------------------------------------------------------------------ ceño / brow raise
 
@@ -436,6 +517,52 @@ class FacialCorrectivesModule(object):
                 f"{side}_browDownCorrective", brow_base, f"{main_ctl}.translateY",
                 0, down_rng, self._local_dir(brow_base, (0.0, -0.35, 0.94)), am,
                 enable_attr=en)
+            self.created.append(jnt)
+
+        # --- Brow inner (knit/scowl): el eyebrowIn hacia DENTRO y ABAJO abulta la
+        # carne sobre el entrecejo de ese lado (corrugator). El tx local del ctl NO
+        # significa "hacia dentro" (su frame va alineado a la curva de la ceja): se
+        # proyecta su .translate al frame mundo de REPOSO (matriz del GRP horneada,
+        # estática -> independiente de la cabeza) y se combinan dentro + abajo.
+        inner_rng = self._attr("BrowInnerRange", round(0.25 * fs, 2), minv=0.01)
+        for side in "LR":
+            in_ctl = f"{side}_eyebrowIn_CTL"
+            brow_first = self._first(f"{side}_eyebrowSkinning*_JNT")
+            if not (brow_first and self._exists(in_ctl)):
+                self._skip(f"{side} brow inner corrective", f"{in_ctl} / {side}_eyebrowSkinning*")
+                continue
+            parent = (cmds.listRelatives(in_ctl, parent=True, fullPath=True) or [None])[0]
+            if not parent:
+                self._skip(f"{side} brow inner corrective", f"padre de {in_ctl}")
+                continue
+
+            vpr = cmds.createNode("vectorProduct", name=f"{side}_browInnerDelta_VPR", ss=True)
+            cmds.setAttr(f"{vpr}.operation", 3)  # vector × matriz (sin traslación)
+            cmds.connectAttr(f"{in_ctl}.translate", f"{vpr}.input1")
+            cmds.setAttr(f"{vpr}.matrix", cmds.getAttr(f"{parent}.worldMatrix[0]"), type="matrix")
+
+            # abajo = -Y del frame de reposo
+            down_neg = cmds.createNode("negate", name=f"{side}_browInnerDown_NEG", ss=True)
+            cmds.connectAttr(f"{vpr}.outputY", f"{down_neg}.input")
+            down_plug = f"{down_neg}.output"
+            # dentro = hacia la línea media (-X en L, +X en R)
+            if side == "L":
+                in_neg = cmds.createNode("negate", name=f"{side}_browInnerIn_NEG", ss=True)
+                cmds.connectAttr(f"{vpr}.outputX", f"{in_neg}.input")
+                in_plug = f"{in_neg}.output"
+            else:
+                in_plug = f"{vpr}.outputX"
+
+            w_down = correctives._remap01(f"{side}_browInnerDown", down_plug, 0, inner_rng)
+            w_in = correctives._remap01(f"{side}_browInnerIn", in_plug, 0, inner_rng)
+            driver = self._average(f"{side}_browInnerDrv", w_down, w_in)
+
+            en, am = self._enable_amount(f"BrowInner{side}", 0.06 * fs)
+            d = (om.MVector(*_out(side)) * -0.25 + om.MVector(0, -0.2, 0)
+                 + om.MVector(*_FWD) * 0.95)
+            jnt = correctives.corrective_push(
+                f"{side}_browInnerCorrective", brow_first, driver, 0, 1,
+                self._local_dir(brow_first, (d.x, d.y, d.z)), am, enable_attr=en)
             self.created.append(jnt)
 
     # ------------------------------------------------------------------ blink

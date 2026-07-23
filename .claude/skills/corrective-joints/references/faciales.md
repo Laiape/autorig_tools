@@ -15,10 +15,15 @@ visible.
 > cheek raise + nasolabial (smile), comisuras (frown), glabella (ceño, driver por
 > DISTANCIA entre los eyebrowIn — inmune a la orientación de los ctls), párpado (blink,
 > perfil en campana que pica a mitad de cierre), pucker (mínimo L/R, sin cross-talk),
-> brow raise y brow down (hooding de la ceja sobre la órbita al bajar, AU4) — cada bloque
-> se salta con warning si su driver/joint no existe, y `make()` es re-ejecutable (limpia
-> el set anterior). Attrs de tuneo (`*Enable`/`*Amount` + `JawOpenRange`, `SmileRange`,
-> `FrownRange`, `GlabellaKnit`, `BrowRaiseRange`, `BrowDownRange`) en
+> brow raise, brow down (hooding sobre la órbita, AU4), brow inner (eyebrowIn hacia
+> dentro+abajo, proyectado al frame mundo de reposo porque el tx local del ctl va
+> alineado a la curva) y el corner en 4 direcciones — arriba (cornerUp), abajo (frown),
+> fuera (cornerOut) y dentro (cornerIn), con el signo de tx de cada lado medido
+> empíricamente en build (L/R espejados). Cada bloque se salta con warning si su
+> driver/joint no existe, y `make()` es re-ejecutable (limpia el set anterior). Attrs de
+> tuneo (`*Enable`/`*Amount` + `JawOpenRange`, `SmileRange`, `FrownRange`,
+> `GlabellaKnit`, `BrowRaiseRange`, `BrowDownRange`, `BrowInnerRange`,
+> `CornerOutRange`, `CornerInRange`) en
 > `C_face_CTL` bajo `CORRECTIVES_SEP`, con amounts Y rangos proporcionales a la escala
 > de la cara. En personajes con eyelid `surface=True` (thaiz, mechanic, freya, maui,
 > cuadrúpedos) baja `BlinkLid*Amount` o apaga su Enable vía `character_extras`. Para
