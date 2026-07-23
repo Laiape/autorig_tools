@@ -36,21 +36,23 @@ blendshape es correcto aquí (a diferencia del cuerpo).
 | Jaw lateral / thrust | `C_jaw_CTL.translateX` / `translateZ` (o rowFromMatrix del local) | — |
 | Sonrisa / mueca | `{L\|R}_lipCorner_CTL.translateY` | 0→**+2** smile, 0→**−2** frown (separar con `condition`/`max`) |
 | Comisura adentro (pucker parcial) | `{L\|R}_lipCorner_CTL.translateX` | 0→**−2.5** |
-| Narrow / wide de labios | `{side}_lipNarrow_CLM.outputR`, `{side}_lipWide_CLM.outputR` | ya normalizados 0–1 |
+| Narrow de labios | `{side}_lipNarrow_CLM.outputR` | ya normalizado 0–1 |
+| Wide de labios | `{side}_lipWide_CLM.outputR` | clampado 0–**10** (proyección / media boca): pásalo por `remapValue` con su propio rango antes de usarlo como peso |
 | Roll de labios | `C_upperLip_CTL.Roll` / `C_lowerLip_CTL.Roll` | — |
 | Ceño | `{L\|R}_eyebrowIn_CTL.translateX` | 0→**−1.8** |
 | Ceja arriba/abajo | `{side}_eyebrowMain_CTL.translateY` (interno del browCurve) | — |
 | Blink | `{side}_eyeDirect_CTL.Upper_Blink` / `Lower_Blink` | −1..1 |
 | Mirada (fleshy) | rotación del `{side}_eyeDirect_CTL` | — |
-| Pómulo | `{side}_cheekbone_CTL.translateY` (o su `Local_MMX.matrixSum`) | — |
+| Pómulo | `{side}_cheekbone_CTL.translateY` directo (es lo que usa `socketMovement_CON`); para pose compuesta, el `Local_MMX.matrixSum` de un cheekbone SECUNDARIO (`{side}_cheekbone0X…` — el CTL principal no tiene Local_MMX) | — |
 | **Peso de un blendshape** | `C_facial_local_BLS.<alias_del_target>` | 0..1, conectable como cualquier float |
 | Distancias (blink %, sello de labios) | `distanceBetween` entre joints — **divide por `C_masterwalk_CTL.globalScale`** | — |
 
 **Peso de blendshape como driver** (la vía recomendada cuando la correctiva "acompaña" a un
-shape esculpido): el pipeline ya lo usa (el target `C_closed_jaw_bls` de thaiz está
-driveado por el peso de otro target). Ventaja: el CBS manager restaura las driven keys
-control→peso en cada build, así que re-tunear la key re-tunea shape y joint a la vez.
-Si no hay shape, cuelga la correctiva del control directamente (patrón thaiz).
+shape esculpido): los pesos de los targets son plugs 0..1 conectables como cualquier float,
+y el CBS manager restaura en cada build las driven keys que apuntan a ellos (en thaiz los
+targets van driveados por controles: lipCorner, eyebrowIn). Ventaja: re-tunear la driven
+key re-tunea shape y joint a la vez. Si no hay shape, cuelga la correctiva del control
+directamente (patrón thaiz).
 
 ```python
 # correctiva que acompaña la sonrisa esculpida (peso ya 0..1 -> in_min=0, in_max=1)

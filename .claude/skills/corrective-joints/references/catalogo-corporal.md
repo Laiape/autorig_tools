@@ -30,7 +30,7 @@ por lado. El hombro es LA zona donde un solo eje euler no basta → cone driver 
 
 | Correctiva | Nº | Driver | Rango | Empuje | Corrige |
 |---|---|---|---|---|---|
-| Bíceps (YA en el repo) | 1 | flexión codo (`bend_driver` eje Y) | repo: 0→-100° (dead zone: arranca ~20-30°) | arco: adelante +Z y sube -X hacia el hombro | brazo-tubo sin contracción |
+| Bíceps (YA en el repo) | 1 | flexión codo (`bend_driver` eje Y) | repo: 0→-100° lineal desde 0 (sin dead zone; si ensucia poses casi neutras, sube in_min a ~20-30°) | arco: adelante +Z y sube -X hacia el hombro | brazo-tubo sin contracción |
 | Tríceps (YA en el repo) | 1 | extensión codo | repo: 0→+100° | arco: atrás -Z, sube -X | perfil trasero del brazo |
 | Anillo de codo (YA) | 4 | flexión | 0→-100° | radial hacia fuera | volumen del codo al flexionar |
 | Pliegue interior | 2–3 | flexión | 30–145° | modela/apila la carne del pliegue | intersección bíceps-antebrazo |
@@ -48,8 +48,8 @@ La cadera es "el hombro de la pierna": esférica, multi-eje (flexión ~120°, ex
 
 | Correctiva | Nº | Driver | Rango | Empuje | Corrige |
 |---|---|---|---|---|---|
-| ThighFront/cuádriceps (YA) | 1 | flexión rodilla (`bend_driver` eje Z) | repo: 0→+100° | arco: adelante +Y, sube -X | ingle/muslo colapsados |
-| ThighBack/isquios (YA) | 1 | flexión rodilla | repo: 0→-100° | rest detrás (-Y) y se contrae (-X,+Y) | masa trasera del muslo |
+| ThighFront/cuádriceps (YA) | 1 | rodilla hacia delante, z+ (`bend_driver` eje Z) | repo: 0→+100° | arco: adelante +Y, sube -X | ingle/muslo colapsados |
+| ThighBack/isquios (YA) | 1 | flexión, z− (al subir la rodilla se contrae) | repo: 0→-100° | rest detrás (-Y) y se contrae (-X,+Y) | masa trasera del muslo |
 | Glúteo | 1 | flexión + extensión de cadera | 0–120° / 0→-30° | mantiene la masa atrás/arriba | "el culo desaparece" al sentarse (visible ~55°+) |
 | Thigh out/in | 1–2 | abducción / aducción (cone) | 0–60° | trocánter fuera / protege interior | hachazo lateral, interpenetración de muslos |
 | Rótula / knee bend | 1 | flexión rodilla (half-rotation 50%) | 0–150° | mantiene la rótula delante | rodilla-cuchillo |

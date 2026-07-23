@@ -1,6 +1,6 @@
 ---
 name: corrective-joints
-description: 'Diseña, coloca y conecta corrective joints (helper joints / muscle pushers) en los rigs de este autorig de Maya — cuerpo Y cara. Sabe qué son, qué corrigen (pérdida de volumen, candy-wrapper, pliegues, bulges musculares), cuándo ponerlas (y cuándo NO), con qué driver activarlas (bend_driver, bend_factor, twist, cone, pesos de blendshape) y cómo integrarlas en el build de este repo (utils/correctives.py, naming, mirror L/R, skinCluster apilado, export _ENV, persistencia en el .build). Incluye el sistema de correctivas FACIALES: una correctiva por cada shape/expresión del set esculpido (smile, jaw open, blink, brow furrow, pucker, sneer…), pueden ser más o menos según lo que rompa. Úsala SIEMPRE que el usuario hable de correctivas, corrective/helper joints, pushers, bulge de bíceps/deltoides, volumen que se pierde en codo/rodilla/hombro/cadera, el codo que colapsa, correctivas faciales, correctivas por expresión o por blendshape, drivers de pose, o pida añadir/tunear/mirrorear/exportar correctivas en cualquier módulo del autorig.'
+description: 'Diseña, coloca y conecta corrective joints (helper joints / muscle pushers) en los rigs de este autorig de Maya — cuerpo Y cara. Sabe qué son, qué corrigen (pérdida de volumen, candy-wrapper, pliegues, bulges musculares), cuándo ponerlas (y cuándo NO), con qué driver activarlas (bend_driver, bend_factor, twist, cone, pesos de blendshape) y cómo integrarlas en el build de este repo (utils/correctives.py, naming, mirror L/R, skinCluster apilado, export _ENV, persistencia en el .build). Incluye el sistema de correctivas FACIALES: una por cada shape/expresión del set esculpido, más o menos según lo que rompa. Úsala SIEMPRE que el usuario hable de correctivas, corrective/helper joints, pushers, bulge de bíceps/deltoides, volumen que se pierde en codo/rodilla/hombro/cadera, correctivas faciales o por expresión/blendshape, drivers de pose, o pida añadir/tunear/mirrorear/exportar correctivas en cualquier módulo del autorig.'
 ---
 
 # Corrective Joints (cuerpo + faciales)
@@ -66,11 +66,9 @@ forma que el skinning pierde.
 
 ## Flujo de trabajo — FACIAL (una correctiva por shape del set)
 
-La regla del set de expresiones esculpidas (las cabezas de referencia del modelador):
-**por cada shape/expresión del set existe como punto de partida UNA correctiva que la
-acompaña — pueden ser más** (donde una expresión rompe varias zonas o donde dos shapes
-combinados fallan: smile+jaw open) **o menos** (donde los joints de módulo ya deforman
-bien; no corrijas por corregir).
+**Regla del set**: una correctiva por cada shape esculpida (las cabezas de referencia del
+modelador) como punto de partida — más donde rompan combinaciones (smile+jaw open), menos
+donde los joints de módulo ya deformen bien. Detalle y catálogo en `references/faciales.md`.
 
 1. Lee `references/faciales.md` (catálogo por expresión + drivers concretos del repo).
 2. Por cada cabeza esculpida: reproduce la expresión con los controles de módulo →
@@ -80,12 +78,10 @@ bien; no corrijas por corregir).
    módulo correspondiente (cheekbone, jaw, eyebrow…), con las mismas primitivas de
    `correctives.py`.
 4. **Driver facial**: en la cara el control ES la fuente canónica de la pose (no hay
-   dualidad FK/IK), así que aquí SÍ se lee del control o del peso del blendshape:
-   `C_jaw_CTL.rotateX` (apertura), `L_lipCorner_CTL.translateY` (+2 smile / -2 frown),
-   `L_eyebrowIn_CTL.translateX` (ceño), `{side}_eyeDirect_CTL.Upper_Blink`,
-   `{side}_lipNarrow/Wide_CLM.outputR` (ya 0-1), o el peso de un target
-   (`C_facial_local_BLS.<target>` — plug 0..1 conectable). Combos = `multiply` de los dos
-   pesos (o nodo `combinationShape` en modo Lowest weighting).
+   dualidad FK/IK), así que aquí SÍ se lee del control o del peso del blendshape — p.ej.
+   `C_jaw_CTL.rotateX` (apertura), `L_lipCorner_CTL.translateY` (smile/frown) o el peso de
+   un target de `C_facial_local_BLS` (plug 0..1). Tabla completa de plugs, rangos reales y
+   combos: `references/faciales.md` §2.
 5. Lo que la joint no alcance (arruga fina, pliegue esculpido) → corrective blendshape con
    el CBS manager. Es el reparto híbrido: joint = volumen/movimiento, shape = detalle.
 6. NO dupliques lo ya resuelto por diseño: teeth/tongue siguen la jaw por matriz, la

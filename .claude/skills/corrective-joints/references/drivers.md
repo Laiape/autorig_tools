@@ -42,9 +42,12 @@ lleva el rest (bind) a 0. Devuelve un plug en grados.
 
 ### 2.2 `matrix_manager.bend_factor(m0, m1, m2, name)` — factor 0-1 suave
 
-Flexión de una cadena de 3 joints por producto escalar: `(1-cos)/2`. Monótono, sin flips
+Flexión de una cadena de 3 puntos por producto escalar: `(1-cos)/2`. Monótono, sin flips
 cerca de 180°, ya normalizado 0-1. Alternativa a bend_driver cuando quieres un factor
-directo sin pensar en grados.
+directo sin pensar en grados. **Ojo a la firma**: `m0/m1/m2` son NODOS con atributo
+`.outputMatrix` (blendMatrix/aimMatrix — los custom modules le pasan los blendMatrix de la
+cadena), NO joints: con una joint (solo `worldMatrix`) el connectAttr falla. Para joints,
+interpon un nodo o adapta la función a plugs de matriz.
 
 ### 2.3 `matrix_manager.extract_twist(source_plug, ref_plug, axis, name)` — twist
 
@@ -53,9 +56,13 @@ hueso, rest neutralizado). Sin gimbal, exacto. Límite: ±180° (suficiente para
 pronosupinación anatómica ±90–110°; para acumulación >180° haría falta quatSlerp 0.5 ×2 o
 un plugin tipo QuatTwist — documéntalo si surge, no lo improvises).
 
-Receta de correctiva driven por twist (pendiente de instanciar en el repo):
+Receta de correctiva driven por twist (pendiente de instanciar en el repo). Ojo: los
+joints del ribbon reparten el twist creciente hacia la muñeca (`armLower00` ≈ 0%,
+el último ≈ 100%) — lee el twist del joint MÁS DISTAL del ribbon (con
+`arm_skinning_jnts=5`, `armLower04`), no del medio (que solo lleva ~50%):
+
 ```python
-tw = matrix_manager.extract_twist(f"{side}_armLower02_JNT.worldMatrix[0]",
+tw = matrix_manager.extract_twist(f"{side}_armLower04_JNT.worldMatrix[0]",
                                   f"{side}_armLower00_JNT.worldMatrix[0]",
                                   axis="x", name=f"{side}_wristTwist")
 correctives.corrective_push(f"{side}_wristTwistCorrective", base_jnt,
@@ -139,7 +146,9 @@ Las guías se espejan con `mirrorJoint -mirrorBehavior` → en R los ejes locale
 espejo limpio. Consecuencias verificadas en producción (arm/leg):
 
 1. **Driver angular** (bend_driver/bend_factor/twist/cone): da el MISMO signo en L y R →
-   no toques `sign` ni rangos.
+   no toques `sign` ni rangos. (El docstring de `bend_driver` que dice "sign: -1 en R"
+   está obsoleto y contradice las llamadas reales de arm/leg — ignóralo; si tocas esa
+   zona, arregla el docstring.)
 2. **Vectores driven** (ejes de push, rest_offset, forward/up del arc, target_vec del
    cono): **negar el vector COMPLETO en R** — `_ax(v) = v if L else (-vx, -vy, -vz)`.
    (La helper `_ax` está duplicada en arm y leg; si tocas esa zona, muévela a

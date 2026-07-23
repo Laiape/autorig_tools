@@ -17,7 +17,8 @@ del driver pasa por `_remap01` (remapValue 0..1 con auto-clamp).
 | `bend_driver(name, upper_joint, lower_joint, axis, sign=1.0)` | ángulo de flexión por matrices mundo, FK/IK-agnóstico, rest a 0, eje de bisagra primero en el rotate order | devuelve plug en grados; NO para multi-eje |
 | `localize_corrective_skin(skin_cluster)` | conecta `bindPreMatrix[i]` al padre de cada influencia → mata la doble transformación del skin apilado | llamar UNA vez, en pose neutra; el build lo hace solo para `*corrective*` |
 
-En `matrix_manager.py`: `bend_factor(m0,m1,m2,name)` (flexión 0-1 por dot, sin flips),
+En `matrix_manager.py`: `bend_factor(m0,m1,m2,name)` (flexión 0-1 por dot, sin flips —
+sus args son nodos con `.outputMatrix` tipo blendMatrix, NO joints),
 `extract_twist(source_plug, ref_plug, axis, name)` (swing-twist por quats),
 `segment_volume(...)` (squash/stretch respetando globalScale — el patrón a imitar para
 drivers por distancia), `local_mmx(ctl, grp)` (la matriz local rest-relativa facial).
@@ -43,13 +44,17 @@ correctives.corrective_ring(f"{side}_elbowRing", lower, 4, radius, driver, 0, -1
                             push_dv, normal_axis="X")
 ```
 
-`leg_module`: ídem con rodilla eje Z, `thighFrontCorrective` (arc 0→100) y
-`thighBackCorrective` (offset_push 0→-100, rest -Y). Rangos de driver en producción:
-**0→±100°**; host de attrs: bendy CTL del módulo, fallback `settings_ctl`.
+`leg_module`: rodilla eje Z, `thighFrontCorrective` (arc, rodilla adelante z+ 0→100, con
+attrs vía `arc_attrs`) y `thighBackCorrective` (offset_push, flexión z− 0→-100 — amount
+NUMÉRICO y sin Enable: solo ThighFront tiene attrs bajo `CORRECTIVES_SEP`). Rangos de
+driver en producción: **0→±100°**; host de attrs: bendy CTL del módulo, fallback
+`settings_ctl`.
 
-Mejoras pendientes detectadas (hazlas si tocas esa zona): el ring del codo pasa `push_dv`
-numérico → conviértelo a attr para que sea tuneable/persistible; `_ax` duplicada en
-arm/leg → `correctives.mirror_axis(v, side)`.
+Mejoras pendientes detectadas (hazlas si tocas esa zona): el ring del codo y el
+`thighBackCorrective` pasan `push_dv` numérico (y el thighBack no tiene Enable) →
+conviértelos a attrs para que sean tuneables/persistibles; `_ax` duplicada en arm/leg →
+`correctives.mirror_axis(v, side)`; el docstring de `bend_driver` sobre `sign=-1` en R
+está obsoleto (las llamadas reales usan sign=1 en ambos lados).
 
 ## 3. Integración en el build
 
@@ -107,25 +112,29 @@ Pipeline: `create_rig.AutoRig.build()` → `basic_structure` → `rig_manager.bu
 
 Los amounts son plugs → se tunean en vivo, pero el build los resetea. El mecanismo de
 persistencia es el bloque `character_extras` del `.build`
-(`assets/<char>/build/<char>_vNNN.build`), aplicado por `apply_character_extras`:
+(`assets/<char>/build/<char>_vNNN.build`), aplicado por `apply_character_extras`.
+**Formato: listas de DICTS con claves separadas** (con pares `[plug, valor]` el build
+revienta), y los nombres de attr son los reales de `arc_attrs` — `BicepsPushForward`,
+`BicepsEnable`… sin "Corrective":
 
 ```json
 {
   "Rig_Type": 0,
   "character_extras": {
     "set_attrs": [
-      ["L_armUpperMainBendy_CTL.BicepsCorrectivePushForward", 3.4],
-      ["R_armUpperMainBendy_CTL.BicepsCorrectivePushForward", 3.4]
+      {"node": "L_armUpperMainBendy_CTL", "name": "BicepsPushForward", "value": 3.4},
+      {"node": "R_armUpperMainBendy_CTL", "name": "BicepsPushForward", "value": 3.4}
     ],
     "add_attrs": []
   }
 }
 ```
 
-Los nodos se pueden direccionar también como `"modulo/clave"` del data manager. Flujo:
-tunear en vivo → volcar los attrs bajo `CORRECTIVES_SEP` al `.build` → el build los
-reaplica. (Un helper `dump_corrective_attrs()` que recorra esos attrs sería trivial y aún
-no existe.)
+(`assets/anne/build/anne_v001.build` tiene un ejemplo real.) `add_attrs` usa dicts
+análogos (`node`/`name`/`type`/`min`/`max`/`default`). La clave `node` acepta también
+`"modulo/clave"` del data manager. Flujo: tunear en vivo → volcar los attrs bajo
+`CORRECTIVES_SEP` al `.build` → el build los reaplica. (Un helper
+`dump_corrective_attrs()` que recorra esos attrs sería trivial y aún no existe.)
 
 ## 7. Errores comunes (causa → fix)
 
