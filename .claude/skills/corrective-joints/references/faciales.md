@@ -14,10 +14,11 @@ visible.
 > base en cada build (tras los módulos faciales): chin + throat + mejillas (jaw open),
 > cheek raise + nasolabial (smile), comisuras (frown), glabella (ceño, driver por
 > DISTANCIA entre los eyebrowIn — inmune a la orientación de los ctls), párpado (blink,
-> perfil en campana que pica a mitad de cierre), pucker (mínimo L/R, sin cross-talk) y
-> brow raise — cada bloque se salta con warning si su driver/joint no existe, y `make()`
-> es re-ejecutable (limpia el set anterior). Attrs de tuneo (`*Enable`/`*Amount` +
-> `JawOpenRange`, `SmileRange`, `FrownRange`, `GlabellaKnit`, `BrowRaiseRange`) en
+> perfil en campana que pica a mitad de cierre), pucker (mínimo L/R, sin cross-talk),
+> brow raise y brow down (hooding de la ceja sobre la órbita al bajar, AU4) — cada bloque
+> se salta con warning si su driver/joint no existe, y `make()` es re-ejecutable (limpia
+> el set anterior). Attrs de tuneo (`*Enable`/`*Amount` + `JawOpenRange`, `SmileRange`,
+> `FrownRange`, `GlabellaKnit`, `BrowRaiseRange`, `BrowDownRange`) en
 > `C_face_CTL` bajo `CORRECTIVES_SEP`, con amounts Y rangos proporcionales a la escala
 > de la cara. En personajes con eyelid `surface=True` (thaiz, mechanic, freya, maui,
 > cuadrúpedos) baja `BlinkLid*Amount` o apaga su Enable vía `character_extras`. Para

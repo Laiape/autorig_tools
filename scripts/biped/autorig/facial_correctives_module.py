@@ -23,7 +23,9 @@ Set v1 (cada bloque se salta con un warning si su driver o su joint base no exis
                 globo: bajar el Amount o apagar el Enable vía character_extras.
   - Pucker    : labios se proyectan en +Z. Driver: C_lipNarrowMin_COND (mínimo L/R — solo
                 pucker real, sin cross-talk; convención del jaw module).
-  - Brow raise: frente L/R rueda hacia arriba.          Driver: eyebrowMain ty.
+  - Brow raise: frente L/R rueda hacia arriba.          Driver: eyebrowMain ty > 0.
+  - Brow down : la carne de la ceja se amontona sobre la órbita ("hooding") al
+                bajar la ceja (AU4).                    Driver: eyebrowMain ty < 0.
 
 Las direcciones de empuje se definen en MUNDO (personaje mirando +Z, L en +X — se
 comprueba empíricamente en build y se aborta con warning si no se cumple) y se convierten
@@ -56,7 +58,8 @@ _NAME_BASES = (
      "C_puckerAvg"]
     + [f"{s}_{b}" for s in "LR" for b in
        ["jawCheekCorrective", "smileCheekCorrective", "nasolabialCorrective",
-        "frownCornerCorrective", "browRaiseCorrective", "blinkLidCorrective"]]
+        "frownCornerCorrective", "browRaiseCorrective", "browDownCorrective",
+        "blinkLidCorrective"]]
 )
 
 
@@ -408,19 +411,30 @@ class FacialCorrectivesModule(object):
         else:
             self._skip("glabella corrective", f"{glab_base} / eyebrowIn ctls")
 
-        # --- Brow raise: la piel de la frente rueda ARRIBA (y algo adelante) al
-        # subir la ceja; sin esto la frente queda plana.
+        # --- Brow raise / brow down: al SUBIR, la piel de la frente rueda arriba
+        # (sin esto la frente queda plana); al BAJAR (AU4), la carne de la ceja se
+        # amontona sobre el borde orbital y forma el "hooding" que sombrea el ojo —
+        # empuje ADELANTE y algo ABAJO, sobre la misma joint media de la ceja.
+        # Mismo driver con rangos de signo opuesto (patrón bíceps/tríceps).
         raise_rng = self._attr("BrowRaiseRange", round(0.2 * fs, 2))
+        down_rng = self._attr("BrowDownRange", round(-0.2 * fs, 2))
         for side in "LR":
             brow_base = self._mid(f"{side}_eyebrowSkinning*_JNT")
             main_ctl = f"{side}_eyebrowMain_CTL"
             if not (brow_base and self._exists(main_ctl)):
-                self._skip(f"{side} brow raise corrective", f"{side}_eyebrowSkinning*/{main_ctl}")
+                self._skip(f"{side} brow raise/down correctives", f"{side}_eyebrowSkinning*/{main_ctl}")
                 continue
             en, am = self._enable_amount(f"BrowRaise{side}", 0.06 * fs)
             jnt = correctives.corrective_push(
                 f"{side}_browRaiseCorrective", brow_base, f"{main_ctl}.translateY",
                 0, raise_rng, self._local_dir(brow_base, (0.0, 0.8, 0.6)), am,
+                enable_attr=en)
+            self.created.append(jnt)
+
+            en, am = self._enable_amount(f"BrowDown{side}", 0.05 * fs)
+            jnt = correctives.corrective_push(
+                f"{side}_browDownCorrective", brow_base, f"{main_ctl}.translateY",
+                0, down_rng, self._local_dir(brow_base, (0.0, -0.35, 0.94)), am,
                 enable_attr=en)
             self.created.append(jnt)
 
