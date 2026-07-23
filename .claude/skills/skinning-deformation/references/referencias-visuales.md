@@ -59,6 +59,29 @@ contacto), `animal locomotion muybridge` (quadruped clásico).
 - Para cartoon: stills del estilo objetivo (`"<película/estudio>" character arm bend
   still`) — en cartoon la referencia es el estilo, no la anatomía.
 
+### Screencaps de animación (film 3D y sakuga 2D) — muy útiles
+
+Un fotograma de una peli/serie enseña algo que la foto clínica no: la **intención** del
+movimiento — cuánto se exagera la deformación, en qué frame la articulación "marca" el
+gesto (el settle, el overlap de la mano tras el brazo), y qué silueta buscó un animador
+profesional. Para un rig de estilo (no fotorrealista) suelen ser MEJOR objetivo que la
+anatomía real, porque ya traen la estilización que quieres igualar.
+
+- **Cómo enseñarlas al usuario**: cuando pida "screencaps de X", devuelve búsquedas de
+  imágenes y frame-galleries, no solo una foto suelta. La deformación lateral/sutil
+  (p. ej. desviación de muñeca) rara vez tiene un plano dedicado — aparece en frames de
+  *settle/overlap* de un gesto de mano, así que dirige la búsqueda ahí.
+- **Sitios**: sakugabooru.com (2D, pools por tema — hay pool "Hand Animation" nº 94) y
+  sakugaa.com; film-grab.com y movie-screencaps.com (frames 3D de Disney/Pixar/DWA en
+  alta resolución, navegables por película); animationresources.org y el canal
+  "Endless Reference" (recopila reference de acción real por movimiento).
+- **Queries que funcionan**: `sakugabooru hand animation`, `<película> hands screencap`,
+  `film-grab <película>`, `<personaje> gesture animation still`, y para el gesto
+  concreto `hand settle overlap animation frame`.
+- **Ojo**: son referencia de INTENCIÓN, no de proporción anatómica exacta (compresión,
+  motion blur, deformación smear intencionada). Úsalas para decidir la silueta objetivo
+  y la exageración; para el reparto fino de pesos combínalas con foto/scan real.
+
 ## Si el usuario pasa MUCHAS fotos en tanda
 
 Mantén una mini-tabla en la respuesta: foto → zona detectada → diagnóstico (si es
