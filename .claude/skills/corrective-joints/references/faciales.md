@@ -10,6 +10,16 @@ zonas, o combinaciones problemáticas como smile+jaw open) o **menos** (donde lo
 módulo ya deforman bien). No corrijas por corregir: cada correctiva se paga con un defecto
 visible.
 
+> **YA IMPLEMENTADO**: `scripts/biped/autorig/facial_correctives_module.py` crea el set
+> base en cada build (tras los módulos faciales): chin + throat + mejillas (jaw open),
+> cheek raise + nasolabial (smile), comisuras (frown), glabella (ceño), párpado (blink),
+> pucker y brow raise — cada bloque se salta con warning si su driver/joint no existe.
+> Los attrs de tuneo (`*Enable`/`*Amount` + rangos `JawOpenRange`, `SmileRange`,
+> `FrownRange`, `GlabellaRangeL/R`, `BrowRaiseRange`) viven en `C_face_CTL` bajo
+> `CORRECTIVES_SEP`, con defaults proporcionales a la distancia interocular. Para añadir
+> correctivas nuevas (sneer, cheek puff, combos), extiende ese módulo siguiendo sus
+> patrones (`_local_dir`/`_local_point` convierten direcciones mundo → local del padre).
+
 ## 1. Modelo mental: el híbrido
 
 En un rig facial joint-based (este), el reparto de capas es:

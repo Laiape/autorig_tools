@@ -68,9 +68,10 @@ Pipeline: `create_rig.AutoRig.build()` → `basic_structure` → `rig_manager.bu
   `cache/biped.cache`). Los plugs útiles ya publicados: `jaw_module/local_jaw_mmx`,
   `neck_module/face_ctl`, `basic_structure/masterwalk_ctl`…
 - **Dónde va el código nuevo**: método `corrective_setup()` al final del `make()` del
-  módulo (patrón arm/leg). Para faciales: mismo patrón en el módulo facial, o un módulo
-  `facial_correctives` que corra tras todos los faciales (necesita sus drivers ya
-  creados).
+  módulo (patrón arm/leg). Las faciales viven en
+  `scripts/biped/autorig/facial_correctives_module.py` (corre tras todos los módulos
+  faciales, guard `C_jaw_JNT`, host de attrs = `C_face_CTL`): extiéndelo ahí en vez de
+  tocar cada módulo facial.
 - **Export skeleton**: `skeleton_hierarchy()` duplica joints como `*_ENV`; toda joint con
   `corrective`/`ring` en el nombre se excluye del encadenado normal y **se cuelga del
   `_ENV` de su joint padre** — el naming es lo único que lo activa.
