@@ -1,0 +1,186 @@
+# Drivers: cómo se activan las corrective joints
+
+Cómo leer la pose para disparar una correctiva, con las herramientas de ESTE repo.
+
+## 1. Principio fundamental: leer la POSE, no el control
+
+**En el cuerpo**, el driver se lee SIEMPRE del esqueleto de deformación, nunca de los
+controles de animación:
+
+- Un SDK/conexión sobre `ctl_elbow_FK.rotateZ` **muere en IK** (el control FK no rota
+  cuando el solver IK produce la pose). Igual con space switching y mocap.
+- Los canales euler de un control no son función unívoca de la pose (gimbal, rotate order,
+  valores acumulados).
+- En este repo, además, las joints van por `offsetParentMatrix`: su `rotate` local vale
+  **0 siempre** — un driver sobre `joint.rotate*` no lee nada.
+
+→ El driver se calcula desde `worldMatrix` de las joints de deformación: es la única
+representación FK/IK-agnóstica. Es exactamente lo que hace `correctives.bend_driver`.
+
+**Excepción: la cara.** En los módulos faciales no hay dualidad FK/IK — el control facial
+ES la fuente canónica de la pose (las skinning joints se derivan de él por `Local_MMX`).
+Leer `L_lipCorner_CTL.translateY` o un peso de blendshape es correcto y es lo que ya hace
+el pipeline (thaiz). Matiz: si varias capas suman sobre la zona (`C_mainMouth_CTL` encima
+de los lipCorner), lee el `matrixSum` del `Local_MMX` de la skinning joint o los plugs ya
+normalizados (`{side}_lipNarrow_CLM.outputR`). Para la jaw usa `C_jaw_CTL.rotateX` (como el
+auto-sticky, que mide el signo empíricamente en build) o `C_jawLocal_MMT.matrixSum`.
+
+## 2. Los readers del repo (de simple a complejo)
+
+### 2.1 `correctives.bend_driver(name, upper, lower, axis, sign=1.0)` — bisagras
+
+`multMatrix` (lower.worldMatrix × upper.worldInverseMatrix) → `decomposeMatrix` con
+`inputRotateOrder` puesto para que **el eje de la bisagra vaya primero** (X→xyz, Y→yzx,
+Z→zxy: el ángulo tiene rango ±180 completo y no flipa al pasar de 90°) → `subtract` que
+lleva el rest (bind) a 0. Devuelve un plug en grados.
+
+- Úsalo para: codo (eje Y en este rig), rodilla (Z), dedos, flexión de muñeca.
+- **NO lo extiendas a hombro/cadera/muñeca completa**: la resta euler tras el decompose
+  solo es fiable en bisagras casi puras. Multi-eje → cone driver o RBF.
+- L/R: el ángulo de la matriz relativa NO cambia de signo en R (verificado en arm/leg:
+  ambos llaman con sign=1). No inviertas el signo "por si acaso".
+
+### 2.2 `matrix_manager.bend_factor(m0, m1, m2, name)` — factor 0-1 suave
+
+Flexión de una cadena de 3 joints por producto escalar: `(1-cos)/2`. Monótono, sin flips
+cerca de 180°, ya normalizado 0-1. Alternativa a bend_driver cuando quieres un factor
+directo sin pensar en grados.
+
+### 2.3 `matrix_manager.extract_twist(source_plug, ref_plug, axis, name)` — twist
+
+Descomposición **swing-twist por quaternions** (proyección del quaternion sobre el eje del
+hueso, rest neutralizado). Sin gimbal, exacto. Límite: ±180° (suficiente para
+pronosupinación anatómica ±90–110°; para acumulación >180° haría falta quatSlerp 0.5 ×2 o
+un plugin tipo QuatTwist — documéntalo si surge, no lo improvises).
+
+Receta de correctiva driven por twist (pendiente de instanciar en el repo):
+```python
+tw = matrix_manager.extract_twist(f"{side}_armLower02_JNT.worldMatrix[0]",
+                                  f"{side}_armLower00_JNT.worldMatrix[0]",
+                                  axis="x", name=f"{side}_wristTwist")
+correctives.corrective_push(f"{side}_wristTwistCorrective", base_jnt,
+                            f"{tw}.outputRotateX", in_min=0, in_max=90,
+                            axis=..., amount_attr=...)
+# supinación: segunda push con in_max=-90, eje opuesto y canales de translate distintos
+```
+
+### 2.4 Cone driver (multi-eje: hombro, cadera) — receta para `utils/correctives.py`
+
+No existe aún en el repo; impleméntalo en el idioma de `bend_factor` cuando toque hombro o
+cadera:
+
+```
+cone_driver(name, joint, ref_parent, bone_axis="X", target_vec=(0,1,0), cone_angle=60):
+  1. rel_MMX  = joint.worldMatrix[0] × ref_parent.worldInverseMatrix[0]   # multMatrix
+     (dirección medida EN ESPACIO DEL PADRE: acompaña al torso, mundo-agnóstica)
+  2. axis_RFM = rowFromMatrix(rel_MMX.matrixSum, input=0|1|2 según bone_axis)
+  3. axis_NRM = normalize(axis_RFM.output)
+  4. dot_DOT  = vectorProduct(operation=Dot, input1=axis_NRM, input2=target_vec)
+     # target_vec = eje del hueso en la POSE OBJETIVO, capturado en build en espacio
+     # del padre (guárdalo en attrs/floatConstant para re-tunearlo)
+  5. out_RMV  = remapValue(inputValue=dot.outputX,
+                           inputMin=cos(radians(cone_angle)), inputMax=1,
+                           outputMin=0, outputMax=1, interp=smooth)   # auto-clamp
+  return plug 0..1   (rest=0 si la pose de bind cae fuera del cono)
+```
+
+- Cono por pose: **30–60°** cuando hay varias poses solapadas (patrón 4 conos cardinales
+  fwd/bck/in/out estilo MetaHuman); hasta 90–120° si un solo cono cubre un cuadrante.
+- El twist es invisible al cono (girar el hueso sobre su eje no cambia su dirección) — es
+  una feature: swing y twist se leen por canales separados y se combinan con `multiply`.
+- Mirror: en R se niega el `target_vec` COMPLETO (regla del repo); dot y remap idénticos.
+
+### 2.5 RBF / pose space (cuándo escalar)
+
+Un solver RBF interpola N poses ejemplo → valores driven ("next-level set driven key").
+Implementaciones: `weightDriver` (Ingo Clemens / mGear RBF Manager), `poseInterpolator`
+nativo de Maya (Pose Editor), Pose Driver de UE + Pose Driver Connect.
+
+Regla: si estás normalizando conos a mano o encadenando 3+ condition/remap para que las
+poses no se pisen → es momento de RBF. **No reimplementes RBF a mano**: usa mGear
+weightDriver (el `.build` ya tiene el flag `mGear_integration`) o `poseInterpolator`.
+Hasta 4–6 poses por articulación, los conos cardinales bastan.
+
+### 2.6 Drivers faciales
+
+Ver `faciales.md` §drivers — pesos de blendshape (`C_facial_local_BLS.<target>`, plug
+0..1 conectable), controles faciales, `distanceBetween` (blink/sticky — ¡divide por
+`globalScale`!), y combos por `multiply`/`combinationShape`.
+
+## 3. Redes de nodos (Maya 2024+/2025, el estilo del repo)
+
+Cadena estándar por correctiva (así lo hace `correctives.py`):
+
+```
+reader (bend_driver / bend_factor / twist / cone)
+  → remapValue  {name}_RMV     (rango in_min→in_max ⇒ 0..1, AUTO-CLAMP)
+  → multiply    {name}T{X|Y|Z}_MUL:
+       input[0] = 0..1 del remap
+       input[1] = amount (PLUG del atributo tunable, nunca valor horneado)
+       input[2] = componente del eje (normalizado)
+       input[3] = enable (0/1) opcional
+  → jnt.translate{X|Y|Z}       (la joint es hija del hueso, jointOrient=0)
+```
+
+- Nodos math 2024: `multiply`/`sum` con arrays `input[i]`, `subtract` con
+  `input1/input2` — NO uses `multiplyDivide`/`multDoubleLinear` en código nuevo.
+- `remapValue` clampa por defecto fuera de rango: es el seguro contra "la correctiva
+  dispara al infinito a 160°". Siempre entre driver y translate.
+- `rowFromMatrix` `input=0/1/2` = ejes X/Y/Z de una matriz, `input=3` = traslación: el
+  idioma del repo para extraer vectores sin decomposeMatrix.
+- Todo nodo con `ss=True` y sufijo del repo (`_MUL`, `_SUM`, `_RMV`, `_MM`, `_DEC`…) para
+  que `hide_all_utility_nodes()` lo trate bien.
+- Exponer el output del reader como attr legible (p.ej. `settings.elbowAngle`) ayuda a
+  debuggear sin abrir el Node Editor.
+
+## 4. Mirroring L/R — LA regla de este repo (no re-razonarla)
+
+Las guías se espejan con `mirrorJoint -mirrorBehavior` → en R los ejes locales NO son un
+espejo limpio. Consecuencias verificadas en producción (arm/leg):
+
+1. **Driver angular** (bend_driver/bend_factor/twist/cone): da el MISMO signo en L y R →
+   no toques `sign` ni rangos.
+2. **Vectores driven** (ejes de push, rest_offset, forward/up del arc, target_vec del
+   cono): **negar el vector COMPLETO en R** — `_ax(v) = v if L else (-vx, -vy, -vz)`.
+   (La helper `_ax` está duplicada en arm y leg; si tocas esa zona, muévela a
+   `utils/correctives.py` como `mirror_axis(v, side)`.)
+3. **Pesos**: pintar L → `copySkinWeights` con `mirrorMode="YZ"`,
+   `influenceAssociation=["oneToOne","name","closestJoint"]` (el naming L_/R_ hace el
+   match) → exportar `.skc`.
+4. **Blendshapes correctivos**: ya resuelto por el CBS manager (`mirror_targets` niega
+   `tx, ry, rz` del driver — correcto para mirror-behavior).
+5. **Verificación numérica obligatoria**: pose simétrica (ambos codos a 90°) y comparar
+   `getAttr translate` de cada correctiva L vs R. Nunca a ojo.
+
+## 5. Escala global y lejos del origen
+
+- Readers por matriz relativa (`world × worldInverse`) → inmunes al masterwalk. ✔
+- Pushes en translate LOCAL de una hija → heredan el `globalScale` del padre. ✔
+- Defaults calculados de las guías (12% del hueso) → independientes del tamaño. ✔
+- **Riesgo**: drivers por `distanceBetween` (blink, sticky) SÍ dependen de la escala →
+  divide la distancia por `C_masterwalk_CTL.globalScale` (o por una distancia de rest
+  medida en build) antes del remap. El patrón existe: `segment_volume` ya recibe
+  `global_scale_attr`.
+- Test obligatorio: masterwalk a 0.1x/2x/10x, a 1000 unidades y rotado.
+
+## 6. Errores comunes de driver (checklist)
+
+1. ¿Lees `worldMatrix` del esqueleto (cuerpo) o el control/peso canónico (cara)? — nunca
+   el rotate local de una joint por matriz, nunca un FK ctl del cuerpo.
+2. ¿Rest = 0 exacto en el reader?
+3. ¿Rotate order del decompose con el eje de bisagra primero?
+4. ¿Twist por quaternion, no por euler?
+5. ¿remapValue clampa el rango? (nada de extrapolación)
+6. ¿`amount` y `enable` como plugs?
+7. ¿Sin leer la malla deformada, sin escribir hacia arriba de la jerarquía? (ciclos)
+8. ¿Mirror verificado numéricamente?
+9. ¿Sobrevive a masterwalk escalado/trasladado/rotado?
+
+## 7. Export / bake
+
+Los nodos del grafo no viajan por FBX. En este repo el esqueleto de export `_ENV` se
+encadena por matrices y **toda joint con `corrective`/`ring` en el nombre se cuelga del
+`_ENV` de su joint padre automáticamente** (`skeleton_hierarchy`). Para engine: bakear la
+animación sobre los `_ENV` (correctivas incluidas) por clip. Si algún día hace falta
+runtime procedural en UE: Pose Driver / Pose Driver Connect (autoría RBF en Maya, mismo
+solver en UE) — no aplica al pipeline actual.
