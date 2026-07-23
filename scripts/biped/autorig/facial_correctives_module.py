@@ -5,25 +5,34 @@ Correctivas FACIALES por joints — una por cada shape/expresión del set esculp
 Crea leaf joints correctivas colgadas de las skinning joints de los módulos faciales
 (jaw/lips, cheekbone, eyebrow, eyelid), driveadas por los controles canónicos de la cara
 (en facial el control ES la pose: no hay dualidad FK/IK). Usa las primitivas de
-utils/correctives.py; los amounts son atributos tunables en C_face_CTL bajo el separador
-CORRECTIVES_SEP (persistibles vía character_extras del .build) y proporcionales al tamaño
-de la cara (distancia interocular), así que son escala-independientes.
+utils/correctives.py; los amounts Y los rangos de activación son atributos tunables en
+C_face_CTL bajo el separador CORRECTIVES_SEP (persistibles vía character_extras del
+.build) con defaults proporcionales al tamaño de la cara -> escala-independientes.
 
 Set v1 (cada bloque se salta con un warning si su driver o su joint base no existen):
   - Jaw open  : chin (mentalis), mejillas L/R, papada/garganta.  Driver: C_jaw_CTL.rotateX
                 con el signo de apertura medido (reutiliza el del auto-sticky).
   - Smile     : cheek raise L/R + nasolabial fold L/R.  Driver: lipCorner ty > 0.
   - Frown     : comisuras L/R hacia abajo/adentro.      Driver: lipCorner ty < 0.
-  - Ceño      : bulge de la glabella (procerus).        Driver: eyebrowIn tx L+R.
-  - Blink     : párpado superior envuelve la córnea L/R. Driver: eyeDirect Upper_Blink.
-  - Pucker    : labios se proyectan en +Z.              Driver: lipNarrow L+R (0-1).
+  - Ceño      : bulge de la glabella (procerus).        Driver: DISTANCIA entre los dos
+                eyebrowIn (fruncir = juntarse), normalizada por globalScale — inmune a la
+                orientación de los ctls de ceja (van alineados a la curva, no al mundo).
+  - Blink     : párpado superior envuelve la córnea L/R (perfil en campana: pica a mitad
+                de cierre, casi 0 con el ojo cerrado). Driver: eyeDirect Upper_Blink.
+                En personajes con eyelid surface=True el párpado ya se proyecta sobre el
+                globo: bajar el Amount o apagar el Enable vía character_extras.
+  - Pucker    : labios se proyectan en +Z. Driver: C_lipNarrowMin_COND (mínimo L/R — solo
+                pucker real, sin cross-talk; convención del jaw module).
   - Brow raise: frente L/R rueda hacia arriba.          Driver: eyebrowMain ty.
 
-Las direcciones de empuje se definen en MUNDO (personaje mirando +Z, L en +X) y se
-convierten al espacio local de cada joint padre en build -> funcionan aunque las skinning
-joints tengan cualquier orientación. Naming {L|R|C}_xxxCorrective_JNT -> skeleton_hierarchy
-las cuelga automáticamente del _ENV de su padre en el esqueleto de export.
+Las direcciones de empuje se definen en MUNDO (personaje mirando +Z, L en +X — se
+comprueba empíricamente en build y se aborta con warning si no se cumple) y se convierten
+al espacio local de cada joint padre -> funcionan con cualquier orientación de joints.
+make() es re-ejecutable: borra el set anterior antes de reconstruir. Naming
+{L|R|C}_xxxCorrective_JNT -> skeleton_hierarchy las cuelga del _ENV de su padre en export.
 """
+
+import re
 
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
@@ -39,10 +48,26 @@ reload(correctives)
 _FWD = (0.0, 0.0, 1.0)
 _UP = (0.0, 1.0, 0.0)
 
+# Bases de nombre creadas por este módulo (joints + sus redes _MUL/_RMV/_SUM y los
+# nodos de driver propios) — se usan para el cleanup de re-ejecución.
+_NAME_BASES = (
+    ["C_chinCorrective", "C_throatCorrective", "C_glabellaCorrective",
+     "C_puckerCorrective", "C_jawOpenCorrective", "C_glabellaKnit", "C_glabella",
+     "C_puckerAvg"]
+    + [f"{s}_{b}" for s in "LR" for b in
+       ["jawCheekCorrective", "smileCheekCorrective", "nasolabialCorrective",
+        "frownCornerCorrective", "browRaiseCorrective", "blinkLidCorrective"]]
+)
+
 
 def _out(side):
     """Vector 'hacia fuera' del lado (L = +X, R = -X)."""
     return (1.0, 0.0, 0.0) if side == "L" else (-1.0, 0.0, 0.0)
+
+
+def _natural_key(name):
+    """Orden natural: 'x010' después de 'x02' (los ribbons nombran 0{i} sin padding)."""
+    return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", name)]
 
 
 class FacialCorrectivesModule(object):
@@ -50,6 +75,7 @@ class FacialCorrectivesModule(object):
     def __init__(self):
         dm = data_manager.DataExportBiped()
         self.face_ctl = dm.get_data("neck_module", "face_ctl")
+        self.masterwalk = dm.get_data("basic_structure", "masterwalk_ctl")
 
     # ------------------------------------------------------------------ helpers
 
@@ -95,9 +121,45 @@ class FacialCorrectivesModule(object):
         return en, am
 
     def _mid(self, pattern):
-        """Joint del medio de un patrón ls (p.ej. '{side}_cheekbone*Skinning_JNT')."""
-        found = sorted(cmds.ls(pattern, type="joint") or [])
+        """Joint del medio de un patrón ls, en orden NATURAL (aguanta índices >9)."""
+        found = sorted(cmds.ls(pattern, type="joint") or [], key=_natural_key)
         return found[len(found) // 2] if found else None
+
+    def _closest_joint(self, patterns, world_pos):
+        """Joint (no NonRot) más cercana a un punto mundo, entre varios patrones ls."""
+        best, best_d = None, None
+        for pat in patterns:
+            for j in cmds.ls(pat, type="joint") or []:
+                if "NonRot" in j:
+                    continue
+                d = (self._world_pos(j) - world_pos).length()
+                if best_d is None or d < best_d:
+                    best, best_d = j, d
+        return best
+
+    def _cleanup(self):
+        """Borra el set anterior (joints + redes) -> make() re-ejecutable sin duplicar."""
+        stale = []
+        for base in _NAME_BASES:
+            stale += cmds.ls(f"{base}*") or []
+        if stale:
+            cmds.delete(list(set(stale)))
+            om.MGlobal.displayInfo(f"facial_correctives: limpiado set anterior ({len(stale)} nodos)")
+
+    def _check_world_convention(self):
+        """Comprueba empíricamente mira-+Z / L-en-+X; si no se cumple, mejor no
+        construir nada (todos los empujes saldrían invertidos en silencio)."""
+        if self._exists("L_eyeSkinning_JNT", "R_eyeSkinning_JNT"):
+            if self._world_pos("L_eyeSkinning_JNT").x <= self._world_pos("R_eyeSkinning_JNT").x:
+                om.MGlobal.displayWarning(
+                    "facial_correctives: L_eye no está en +X (convención L=+X rota) — skip")
+                return False
+        if self._exists("C_upperLip00_JNT", "C_jawSkinning_JNT"):
+            if self._world_pos("C_upperLip00_JNT").z <= self._world_pos("C_jawSkinning_JNT").z:
+                om.MGlobal.displayWarning(
+                    "facial_correctives: los labios no están en +Z del jaw (¿personaje mirando -Z?) — skip")
+                return False
+        return True
 
     # ------------------------------------------------------------------ drivers
 
@@ -145,16 +207,24 @@ class FacialCorrectivesModule(object):
         self.host = self.face_ctl
         self.created = []
 
+        self._cleanup()
+        if not self._check_world_convention():
+            return
+
         # Separador en el channel box (patrón CORRECTIVES_SEP del arm module)
         if not cmds.attributeQuery("CORRECTIVES_SEP", node=self.host, exists=True):
             cmds.addAttr(self.host, longName="CORRECTIVES_SEP", niceName="CORRECTIVES",
                          attributeType="enum", enumName="____", keyable=False)
             cmds.setAttr(f"{self.host}.CORRECTIVES_SEP", channelBox=True, lock=True)
 
-        # Escala de la cara (interocular; fallback: boca; fallback: 10) -> defaults
-        # de amount proporcionales al personaje, independientes de su tamaño.
+        # Escala de la cara -> defaults de amounts Y rangos proporcionales al personaje.
+        # Base: interocular; en caras de ojos laterales (cuadrúpedos) la interocular se
+        # dispara, así que se capa con la distancia ojos->mandíbula.
         if self._exists("L_eyeSkinning_JNT", "R_eyeSkinning_JNT"):
-            fs = (self._world_pos("L_eyeSkinning_JNT") - self._world_pos("R_eyeSkinning_JNT")).length()
+            l_eye, r_eye = self._world_pos("L_eyeSkinning_JNT"), self._world_pos("R_eyeSkinning_JNT")
+            fs = (l_eye - r_eye).length()
+            if self._exists("C_jawSkinning_JNT"):
+                fs = min(fs, ((l_eye + r_eye) * 0.5 - self._world_pos("C_jawSkinning_JNT")).length())
         elif self._exists("L_lipCorner_CTL", "R_lipCorner_CTL"):
             fs = (self._world_pos("L_lipCorner_CTL") - self._world_pos("R_lipCorner_CTL")).length() * 1.2
         else:
@@ -191,11 +261,12 @@ class FacialCorrectivesModule(object):
         upper_mid = "C_upperLip00_JNT" if cmds.objExists("C_upperLip00_JNT") else None
         lower_mid = "C_lowerLip00_JNT" if cmds.objExists("C_lowerLip00_JNT") else None
 
-        # --- Chin / mentalis: nace en la barbilla y empuja ADELANTE al abrir (la
-        # barbilla se estira y aplana; la correctiva le devuelve el volumen).
+        # --- Chin / mentalis: nace en la ALMOHADILLA del mentón (bajo el surco
+        # labiomental) y empuja ADELANTE al abrir (la barbilla se estira y aplana;
+        # la correctiva le devuelve el volumen).
         if upper_mid and lower_mid:
             lo = self._world_pos(lower_mid)
-            chin_w = lo + (lo - self._world_pos(upper_mid))  # proyección bajo el labio
+            chin_w = lo + (lo - self._world_pos(upper_mid)) + om.MVector(0, -0.10 * fs, 0)
             en, am = self._enable_amount("JawChin", 0.12 * fs)
             jnt = correctives.corrective_offset_push(
                 "C_chinCorrective", jaw, driver, 0, rng,
@@ -213,7 +284,7 @@ class FacialCorrectivesModule(object):
                 self._local_dir(jaw, (0.0, -0.7, -0.7)), am, enable_attr=en)
             self.created.append(jnt)
         else:
-            self._skip("chin/throat correctives", "C_upper/lowerLip*_JNT")
+            self._skip("chin/throat correctives", "C_upper/lowerLip00_JNT")
 
         # --- Mejillas: al abrir, la carne se tensa hacia abajo y se hunde; la
         # correctiva sostiene el volumen empujando hacia FUERA.
@@ -235,9 +306,11 @@ class FacialCorrectivesModule(object):
     def smile_frown_setup(self):
         """Cheek raise + nasolabial (smile) y comisuras abajo (frown), por lado."""
 
-        smile_rng = self._attr("SmileRange", 2.0)    # lipCorner ty a sonrisa completa
-        frown_rng = self._attr("FrownRange", -2.0)   # lipCorner ty a mueca completa
         fs = self.face_scale
+        # Rangos proporcionales a la cara (~2.0 con la interocular de los assets de
+        # referencia): el travel de un ctl facial escala con el personaje.
+        smile_rng = self._attr("SmileRange", round(0.4 * fs, 2))
+        frown_rng = self._attr("FrownRange", round(-0.4 * fs, 2))
 
         for side in "LR":
             corner_ctl = f"{side}_lipCorner_CTL"
@@ -246,12 +319,14 @@ class FacialCorrectivesModule(object):
                 continue
             driver = f"{corner_ctl}.translateY"
 
-            # --- Cheek raise: el pómulo empuja la carne ARRIBA y contra el hueso
-            # (no inflar como globo). Acompaña AU6+AU12.
+            # --- Cheek raise: el "pad malar" sube y va HACIA DELANTE formando la
+            # manzana de la mejilla bajo el ojo (empujar contra el hueso, no
+            # ensanchar la cara). Acompaña AU6+AU12.
             cheek_base = self._mid(f"{side}_cheekbone*Skinning_JNT")
             if cheek_base:
                 en, am = self._enable_amount(f"SmileCheek{side}", 0.10 * fs)
-                d = om.MVector(*_out(side)) * 0.3 + om.MVector(*_UP) * 0.9
+                d = (om.MVector(*_out(side)) * 0.2 + om.MVector(*_UP) * 0.7
+                     + om.MVector(*_FWD) * 0.6)
                 jnt = correctives.corrective_push(
                     f"{side}_smileCheekCorrective", cheek_base, driver, 0, smile_rng,
                     self._local_dir(cheek_base, (d.x, d.y, d.z)), am, enable_attr=en)
@@ -276,16 +351,22 @@ class FacialCorrectivesModule(object):
                 self._skip(f"{side} nasolabial corrective", f"{nostril} / cheek base")
 
             # --- Frown: la comisura baja y va hacia el centro (depressor anguli
-            # oris); cuelga del jaw skinning para acompañar a la mandíbula.
-            if self._exists("C_jawSkinning_JNT"):
-                corner_w = self._world_pos(corner_ctl) + om.MVector(0, -0.05 * fs, 0)
+            # oris). Cuelga del joint de labio MÁS CERCANO a la comisura (que sigue
+            # el blend jaw/upperJaw real del corner; colgarla del jaw skinning
+            # doblaría la caída con la boca abierta).
+            corner_w = self._world_pos(corner_ctl)
+            frown_base = self._closest_joint(
+                [f"{side}_upperLip*_JNT", f"{side}_lowerLip*_JNT"], corner_w)
+            if frown_base:
                 en, am = self._enable_amount(f"FrownCorner{side}", 0.06 * fs)
                 d = om.MVector(*_out(side)) * -0.5 + om.MVector(0, -0.86, 0)
                 jnt = correctives.corrective_offset_push(
-                    f"{side}_frownCornerCorrective", "C_jawSkinning_JNT", driver, 0, frown_rng,
-                    self._local_point("C_jawSkinning_JNT", corner_w),
-                    self._local_dir("C_jawSkinning_JNT", (d.x, d.y, d.z)), am, enable_attr=en)
+                    f"{side}_frownCornerCorrective", frown_base, driver, 0, frown_rng,
+                    self._local_point(frown_base, corner_w + om.MVector(0, -0.05 * fs, 0)),
+                    self._local_dir(frown_base, (d.x, d.y, d.z)), am, enable_attr=en)
                 self.created.append(jnt)
+            else:
+                self._skip(f"{side} frown corrective", f"{side}_*Lip*_JNT")
 
     # ------------------------------------------------------------------ ceño / brow raise
 
@@ -295,16 +376,30 @@ class FacialCorrectivesModule(object):
         fs = self.face_scale
 
         # --- Glabella: procerus/corrugator empujan volumen ENTRE las cejas al
-        # fruncir; el skinning junta las cejas pero no crea el bulge -> push +Z.
-        # Driver = media de los dos ceños (eyebrowIn tx), cada lado con su rango
-        # por si el control R está espejado (rangos tunables en el host).
+        # fruncir -> push +Z. Driver = DISTANCIA entre los dos eyebrowIn: fruncir es
+        # juntarse, da igual la orientación local de los ctls (van alineados a la
+        # curva de la ceja, su translateX NO es "hacia la línea media") y no hay
+        # signo que adivinar en R. Se normaliza por globalScale porque los drivers
+        # por distancia SÍ escalan con el masterwalk.
         glab_base = "C_eyebrowMidSkinning_JNT"
         if self._exists(glab_base, "L_eyebrowIn_CTL", "R_eyebrowIn_CTL"):
-            rng_l = self._attr("GlabellaRangeL", -1.8)  # tx del ceño L a fruncido total
-            rng_r = self._attr("GlabellaRangeR", -1.8)
-            w_l = correctives._remap01("C_glabellaL", "L_eyebrowIn_CTL.translateX", 0, rng_l)
-            w_r = correctives._remap01("C_glabellaR", "R_eyebrowIn_CTL.translateX", 0, rng_r)
-            driver = self._average("C_glabellaAvg", w_l, w_r)
+            rest_d = (self._world_pos("L_eyebrowIn_CTL") - self._world_pos("R_eyebrowIn_CTL")).length()
+            dbt = cmds.createNode("distanceBetween", name="C_glabellaKnit_DBT", ss=True)
+            cmds.connectAttr("L_eyebrowIn_CTL.worldMatrix[0]", f"{dbt}.inMatrix1")
+            cmds.connectAttr("R_eyebrowIn_CTL.worldMatrix[0]", f"{dbt}.inMatrix2")
+            d_plug = f"{dbt}.distance"
+            if self._exists(self.masterwalk) and cmds.attributeQuery(
+                    "globalScale", node=self.masterwalk, exists=True):
+                div = cmds.createNode("divide", name="C_glabellaKnit_DIV", ss=True)
+                cmds.connectAttr(d_plug, f"{div}.input1")
+                cmds.connectAttr(f"{self.masterwalk}.globalScale", f"{div}.input2")
+                d_plug = f"{div}.output"
+            # fracción de la distancia de reposo a la que el fruncido es "total"
+            knit = self._attr("GlabellaKnit", 0.55, minv=0.05, maxv=0.95)
+            in_max = cmds.createNode("multiply", name="C_glabellaKnitMax_MUL", ss=True)
+            cmds.connectAttr(knit, f"{in_max}.input[0]")
+            cmds.setAttr(f"{in_max}.input[1]", rest_d)
+            driver = correctives._remap01("C_glabella", d_plug, rest_d, f"{in_max}.output")
             en, am = self._enable_amount("Glabella", 0.08 * fs)
             jnt = correctives.corrective_push(
                 "C_glabellaCorrective", glab_base, driver, 0, 1,
@@ -315,7 +410,7 @@ class FacialCorrectivesModule(object):
 
         # --- Brow raise: la piel de la frente rueda ARRIBA (y algo adelante) al
         # subir la ceja; sin esto la frente queda plana.
-        raise_rng = self._attr("BrowRaiseRange", 1.0)
+        raise_rng = self._attr("BrowRaiseRange", round(0.2 * fs, 2))
         for side in "LR":
             brow_base = self._mid(f"{side}_eyebrowSkinning*_JNT")
             main_ctl = f"{side}_eyebrowMain_CTL"
@@ -332,8 +427,11 @@ class FacialCorrectivesModule(object):
     # ------------------------------------------------------------------ blink
 
     def blink_setup(self):
-        """El párpado superior envuelve la córnea al cerrar (evita el clipping/bulge):
-        empuja ADELANTE (se separa del globo) a partir del ~20% del cierre."""
+        """El párpado superior envuelve la córnea al cerrar. El error de cuerda del
+        LBS es máximo a MITAD de blink y casi nulo cerrado -> perfil en campana en
+        el remap (0 -> 1 a medio cierre -> 0.15 cerrado). La dirección 'fuera del
+        globo' se saca del eje Z del eye joint (en cuadrúpedos el ojo mira de lado,
+        el +Z mundo sería tangente al globo)."""
 
         for side in "LR":
             lid_base = self._mid(f"{side}_upperEyelid0*Skinning_JNT")
@@ -341,24 +439,50 @@ class FacialCorrectivesModule(object):
             if not (lid_base and self._exists(direct_ctl)):
                 self._skip(f"{side} blink corrective", f"{side}_upperEyelid0*/{direct_ctl}")
                 continue
+
+            eye_jnt = f"{side}_eyeSkinning_JNT"
+            if cmds.objExists(eye_jnt):
+                m = cmds.getAttr(f"{eye_jnt}.worldMatrix[0]")
+                fwd_w = om.MVector(m[8], m[9], m[10])  # eje Z del ojo = mirada
+                if fwd_w.length() > 1e-9:
+                    fwd_w.normalize()
+                fwd_w = (fwd_w.x, fwd_w.y, fwd_w.z)
+            else:
+                fwd_w = _FWD
+
             en, am = self._enable_amount(f"BlinkLid{side}", 0.05 * self.face_scale)
             jnt = correctives.corrective_push(
                 f"{side}_blinkLidCorrective", lid_base, f"{direct_ctl}.Upper_Blink",
-                0.2, 1.0, self._local_dir(lid_base, _FWD), am, enable_attr=en)
+                0.0, 1.0, self._local_dir(lid_base, fwd_w), am, enable_attr=en)
             self.created.append(jnt)
+
+            # Campana sobre el remap creado por corrective_push
+            rmv = f"{side}_blinkLidCorrective_RMV"
+            if cmds.objExists(rmv):
+                for i, (pos, val) in enumerate([(0.0, 0.0), (0.5, 1.0), (1.0, 0.15)]):
+                    cmds.setAttr(f"{rmv}.value[{i}].value_Position", pos)
+                    cmds.setAttr(f"{rmv}.value[{i}].value_FloatValue", val)
+                    cmds.setAttr(f"{rmv}.value[{i}].value_Interp", 2)  # smooth
 
     # ------------------------------------------------------------------ pucker
 
     def pucker_setup(self):
         """Los labios se fruncen Y SE PROYECTAN adelante (orbicularis oris): el
-        skinning los junta pero no los saca en 3D. Driver = media de los narrow
-        L/R (ya normalizados 0-1 por el jaw module)."""
+        skinning los junta pero no los saca en 3D. Driver = MÍNIMO de los narrow
+        L/R (C_lipNarrowMin_COND, convención del jaw module: solo actúa cuando LOS
+        DOS corners van hacia dentro = pucker real, sin cross-talk L<->R)."""
 
         lip_base = "C_upperLip00_JNT" if cmds.objExists("C_upperLip00_JNT") else None
-        if not (lip_base and self._exists("L_lipNarrow_CLM", "R_lipNarrow_CLM")):
-            self._skip("pucker corrective", "C_upperLip*_JNT / lipNarrow_CLMs")
+        if not lip_base:
+            self._skip("pucker corrective", "C_upperLip00_JNT")
             return
-        driver = self._average("C_puckerAvg", "L_lipNarrow_CLM.outputR", "R_lipNarrow_CLM.outputR")
+        if cmds.objExists("C_lipNarrowMin_COND"):
+            driver = "C_lipNarrowMin_COND.outColorR"
+        elif self._exists("L_lipNarrow_CLM", "R_lipNarrow_CLM"):
+            driver = self._average("C_puckerAvg", "L_lipNarrow_CLM.outputR", "R_lipNarrow_CLM.outputR")
+        else:
+            self._skip("pucker corrective", "C_lipNarrowMin_COND / lipNarrow_CLMs")
+            return
         en, am = self._enable_amount("Pucker", 0.15 * self.face_scale)
         jnt = correctives.corrective_push(
             "C_puckerCorrective", lip_base, driver, 0, 1,

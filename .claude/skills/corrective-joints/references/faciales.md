@@ -12,12 +12,16 @@ visible.
 
 > **YA IMPLEMENTADO**: `scripts/biped/autorig/facial_correctives_module.py` crea el set
 > base en cada build (tras los módulos faciales): chin + throat + mejillas (jaw open),
-> cheek raise + nasolabial (smile), comisuras (frown), glabella (ceño), párpado (blink),
-> pucker y brow raise — cada bloque se salta con warning si su driver/joint no existe.
-> Los attrs de tuneo (`*Enable`/`*Amount` + rangos `JawOpenRange`, `SmileRange`,
-> `FrownRange`, `GlabellaRangeL/R`, `BrowRaiseRange`) viven en `C_face_CTL` bajo
-> `CORRECTIVES_SEP`, con defaults proporcionales a la distancia interocular. Para añadir
-> correctivas nuevas (sneer, cheek puff, combos), extiende ese módulo siguiendo sus
+> cheek raise + nasolabial (smile), comisuras (frown), glabella (ceño, driver por
+> DISTANCIA entre los eyebrowIn — inmune a la orientación de los ctls), párpado (blink,
+> perfil en campana que pica a mitad de cierre), pucker (mínimo L/R, sin cross-talk) y
+> brow raise — cada bloque se salta con warning si su driver/joint no existe, y `make()`
+> es re-ejecutable (limpia el set anterior). Attrs de tuneo (`*Enable`/`*Amount` +
+> `JawOpenRange`, `SmileRange`, `FrownRange`, `GlabellaKnit`, `BrowRaiseRange`) en
+> `C_face_CTL` bajo `CORRECTIVES_SEP`, con amounts Y rangos proporcionales a la escala
+> de la cara. En personajes con eyelid `surface=True` (thaiz, mechanic, freya, maui,
+> cuadrúpedos) baja `BlinkLid*Amount` o apaga su Enable vía `character_extras`. Para
+> añadir correctivas (sneer, cheek puff, combos), extiende ese módulo siguiendo sus
 > patrones (`_local_dir`/`_local_point` convierten direcciones mundo → local del padre).
 
 ## 1. Modelo mental: el híbrido
