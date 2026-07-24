@@ -62,6 +62,11 @@ def create_custom_menu():
     cmds.menuItem(label="Skin Split — Surface",    command=lambda x: open_deboor_tools(tab=3), image="paintSkinWeights.png")
     cmds.setParent('..', menu=True)
 
+    # ── ANIMATION ─────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="ANIMATION")
+
+    cmds.menuItem(label="Test Rig", command=lambda x: open_pose_tester(), boldFont=True, image="setKeyframe.png")
+
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
 
@@ -233,3 +238,11 @@ def open_deboor_tools(tab=0):
     from ui import deboor_tools_UI
     reload(deboor_tools_UI)
     deboor_tools_UI.show(tab=tab)
+
+
+def open_pose_tester():
+    from tools import pose_tester
+    reload(pose_tester)
+    from ui import pose_tester_UI
+    reload(pose_tester_UI)
+    pose_tester_UI.show()
