@@ -423,7 +423,14 @@ def build_rig(character_name, on_step=None):
             biped_spine_module.SpineModule().make("C", spine_skinning_jnts, spine_controllers)
         else:
             reload(quad_spine_module)
-            quad_spine_module.SpineModule().make("C", spine_skinning_jnts, spine_controllers)
+            spine = quad_spine_module.SpineModule()
+            # El SAGITTAL_BIAS del módulo (2.4) está calibrado contra la lumbosacra
+            # del CABALLO. Estos personajes reparten la flexión uniforme (bias 1.0),
+            # que es el comportamiento previo al flag.
+            UNIFORM_SPINE_CHARS = {"giraffe"}
+            if str(character_name).lower() in UNIFORM_SPINE_CHARS:
+                spine.SAGITTAL_BIAS = 1.0
+            spine.make("C", spine_skinning_jnts, spine_controllers)
 
     
 

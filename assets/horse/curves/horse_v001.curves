@@ -9754,15 +9754,15 @@
             }
         ]
     },
-    "|horse|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_frontLegControllers_GRP|L_frontLegIkControllers_GRP|L_frontLegHockIk_GRP|L_frontLegHockIk_ANM|L_frontLegHockIk_CTL": {
+    "|horse|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_frontLegControllers_GRP|L_frontLegIkControllers_GRP|L_frontLegCarpusIk_GRP|L_frontLegCarpusIk_ANM|L_frontLegCarpusIk_CTL": {
         "transform": {
-            "name": "L_frontLegHockIk_CTL",
+            "name": "L_frontLegCarpusIk_CTL",
             "overrideEnabled": true,
             "overrideColor": 6
         },
         "shapes": [
             {
-                "name": "L_frontLegHockIk_CTLShape",
+                "name": "L_frontLegCarpusIk_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": false,
@@ -20198,15 +20198,15 @@
             }
         ]
     },
-    "|horse|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_frontLegControllers_GRP|R_frontLegIkControllers_GRP|R_frontLegHockIk_GRP|R_frontLegHockIk_ANM|R_frontLegHockIk_CTL": {
+    "|horse|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_frontLegControllers_GRP|R_frontLegIkControllers_GRP|R_frontLegCarpusIk_GRP|R_frontLegCarpusIk_ANM|R_frontLegCarpusIk_CTL": {
         "transform": {
-            "name": "R_frontLegHockIk_CTL",
+            "name": "R_frontLegCarpusIk_CTL",
             "overrideEnabled": true,
             "overrideColor": 13
         },
         "shapes": [
             {
-                "name": "R_frontLegHockIk_CTLShape01",
+                "name": "R_frontLegCarpusIk_CTLShape01",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": false,

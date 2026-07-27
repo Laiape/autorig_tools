@@ -574,14 +574,19 @@ class JawModule(object):
         cmds.setAttr(f"{shrink_clamp}.maxR", 1.0)  # ratio global: solo para push/roll (centro)
 
         half = rest_dist / 2.0
+        corner_pos = {c.split("_")[0]: om.MVector(*cmds.xform(c, q=True, ws=True, t=True))
+                      for c in corner_controllers}
         for ctl in corner_controllers:
             side = ctl.split("_")[0]
             # Driver = proyección del TRANSLATE COMPLETO del ctl sobre la dirección
             # hacia-fuera, con jacobiano medido EMPIRICAMENTE al build (cuánto mueve en
             # mundo cada eje local): robusto ante frames rotados/mirror y ante drags
             # que se reparten entre tx/ty/tz.
-            p0 = om.MVector(*cmds.xform(ctl, q=True, ws=True, t=True))
-            outdir = (p0 - om.MVector(*self.mouth_center)).normal()
+            # 'hacia fuera' = eje LATERAL puro entre los dos corners (usar el centro de
+            # la esfera contaminaba la dirección con Z y mataba el driver de tx).
+            p0 = corner_pos[side]
+            other = corner_pos["R" if side == "L" else "L"]
+            outdir = (p0 - other).normal()
             jac = []
             for ax in "XYZ":
                 cmds.setAttr(f"{ctl}.translate{ax}", 1.0)
@@ -640,23 +645,9 @@ class JawModule(object):
         _narrow_pull("C_upperLip", rfm_upper_local, cps_upper_local, in_center)
         _narrow_pull("C_lowerLip", rfm_lower_local, cps_lower_local, in_center)
 
-        # --- FOLLOW VERTICAL de la NURBS ---
-        # Solo con los ctls CENTRALES (upper/lower): los corners quedan fuera para que
-        # mover un solo lado no desplace las esferas (cross-talk L<->R).
-        static_trn = self.sphere_static if cmds.nodeType(self.sphere_static) == "transform" \
-            else cmds.listRelatives(self.sphere_static, parent=True, fullPath=True)[0]
-        y_avg = cmds.createNode("plusMinusAverage", name="C_lipVertFollow_PMA", ss=True)
-        cmds.setAttr(f"{y_avg}.operation", 3)
-        for k, ctl in enumerate([upper_lip_ctl, lower_lip_ctl]):
-            cmds.connectAttr(f"{ctl}.translateY", f"{y_avg}.input1D[{k}]")
-        y_mul = cmds.createNode("multiply", name="C_lipVertFollow_MUL", ss=True)
-        cmds.connectAttr(f"{y_avg}.output1D", f"{y_mul}.input[0]")
-        cmds.setAttr(f"{y_mul}.input[1]", 0.5)  # ponytail: follow al 50%, ajustar aqui si hace falta
-        for trn in (sphere_trn, static_trn):
-            y_sum = cmds.createNode("sum", name=f"{trn.split('|')[-1]}VertFollow_SUM", ss=True)
-            cmds.setAttr(f"{y_sum}.input[0]", cmds.getAttr(f"{trn}.translateY"))
-            cmds.connectAttr(f"{y_mul}.output", f"{y_sum}.input[1]")
-            cmds.connectAttr(f"{y_sum}.output", f"{trn}.translateY")
+        # (El follow vertical de las esferas se eliminó: al ser superficies COMPARTIDAS,
+        # mover un labio desplazaba la proyección del contrario. El movimiento de boca
+        # entera ya lo lleva C_mainMouth aguas abajo sin tocar las esferas.)
 
         # --- PUSH hacia FUERA de upper/lower lip al juntar los corners (pucker) ---
         # push = (1 - ratio) * PushOut (attr en cada corner ctl, promediados). Se suma en
@@ -1030,17 +1021,31 @@ class JawModule(object):
             cmds.connectAttr(f"{vol_sub}.output", f"{vol_scale}.inputR")
             cmds.setAttr(f"{vol_scale}.minR", 0.1)  # nunca colapsa a 0
             cmds.setAttr(f"{vol_scale}.maxR", 1.0)
-            side_scale[side] = f"{vol_scale}.outputR"
-        center_scale = cmds.createNode("plusMinusAverage", name="C_lipStretchScaleAvg_PMA", ss=True)
-        cmds.setAttr(f"{center_scale}.operation", 3)
-        cmds.connectAttr(side_scale["L"], f"{center_scale}.input1D[0]")
-        cmds.connectAttr(side_scale["R"], f"{center_scale}.input1D[1]")
+            # delta = scale - 1 (<=0) para poder aplicar FALLOFF por joint
+            d_sub = cmds.createNode("subtract", name=f"{side}_lipStretchDelta_SUB", ss=True)
+            cmds.connectAttr(f"{vol_scale}.outputR", f"{d_sub}.input1")
+            cmds.setAttr(f"{d_sub}.input2", 1.0)
+            side_scale[side] = f"{d_sub}.output"
+        # FALLOFF corner->centro: adelgaza los LATERALES y deja el CENTRO intacto
+        # (labios se mantienen cerrados). scale_joint = 1 + delta_side * w, con w=1 en
+        # la esquina y 0 en el centro (smoothstep).
         for part in ("upper", "lower"):
-            for jnt in output_joints[part] + non_rotate_output_joints[part]:
+            for i, jnt in enumerate(output_joints[part]):
+                real_index = i if i <= mid_point else (linear_curve_cvs - 1) - i
+                t = float(real_index) / float(mid_point)          # 0 esquina -> 1 centro
+                w = (1.0 - t) * (1.0 - t) * (3.0 - 2.0 * (1.0 - t))  # smoothstep(1-t)
                 jside = jnt.split("|")[-1].split("_")[0]
-                plug = side_scale.get(jside, f"{center_scale}.output1D")
-                for ax in "XYZ":
-                    cmds.connectAttr(plug, f"{jnt}.scale{ax}")
+                if jside not in side_scale or w < 1e-3:
+                    continue  # centro (C_) o peso nulo: scale se queda en 1
+                for j in (jnt, non_rotate_output_joints[part][i]):
+                    wm_mul = cmds.createNode("multiply", name=f"{j}StretchW_MUL", ss=True)
+                    cmds.connectAttr(side_scale[jside], f"{wm_mul}.input[0]")
+                    cmds.setAttr(f"{wm_mul}.input[1]", w)
+                    s_sum = cmds.createNode("sum", name=f"{j}StretchScale_SUM", ss=True)
+                    cmds.setAttr(f"{s_sum}.input[0]", 1.0)
+                    cmds.connectAttr(f"{wm_mul}.output", f"{s_sum}.input[1]")
+                    for ax in "XYZ":
+                        cmds.connectAttr(f"{s_sum}.output", f"{j}.scale{ax}")
 
         # ----- STICKY LIPS / ZIPPER (100% matrices, inspirado en Vittorio) -----
         # La línea de cierre se calcula POR PUNTO como un blendMatrix entre el labio
@@ -1083,6 +1088,16 @@ class JawModule(object):
         cmds.setAttr(f"{v_auto_sub}.input1", 1.0)
         cmds.connectAttr(f"{open_clamp}.outputR", f"{v_auto_sub}.input2")
         v_auto = f"{v_auto_sub}.output"  # 1 = jaw cerrada -> 0 = abierta del todo
+        # GATE: con la jaw CERRADA el sticky no actúa (si no, blendea los labios hacia la
+        # media y mover uno arrastra al otro). Satura al 10% del range -> en cuanto la
+        # jaw abre, el sticky ya está a tope.
+        gate_mul = cmds.createNode("multiply", name="C_lipsAutoStickyGate_MUL", ss=True)
+        cmds.connectAttr(f"{open_clamp}.outputR", f"{gate_mul}.input[0]")
+        cmds.setAttr(f"{gate_mul}.input[1]", 10.0)
+        gate = cmds.createNode("clamp", name="C_lipsAutoStickyGate_CLM", ss=True)
+        cmds.connectAttr(f"{gate_mul}.output", f"{gate}.inputR")
+        cmds.setAttr(f"{gate}.minR", 0); cmds.setAttr(f"{gate}.maxR", 1)
+        sticky_gate = f"{gate}.outputR"
 
         # Matriz de cierre por punto = blend(superior -> inferior, peso = 1-mouthHeight)
         meeting_plugs = []
@@ -1120,6 +1135,7 @@ class JawModule(object):
                 auto_amt = cmds.createNode("multiply", name=f"{non_rot_joint}AutoSticky_MUL", ss=True)
                 cmds.connectAttr(f"{auto_rmv}.outValue", f"{auto_amt}.input[0]")
                 cmds.connectAttr(f"{self.jaw_ctl}.StickyLips", f"{auto_amt}.input[1]")
+                cmds.connectAttr(sticky_gate, f"{auto_amt}.input[2]")
 
                 # Conexión del blendMatrix sticky a la joint de salida.
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)

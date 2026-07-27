@@ -362,7 +362,7 @@ class EyelidModule(object):
             # para agarrarlo, pero el pivote/transform queda en el CENTRO del ojo, así
             # rotarlo rota el ojo sobre su centro (no lo orbita). En cuadrúpedos el ojo
             # mira de lado, así que 'delante' es la Z del ojo, no el frente de la cara.
-            cmds.move(0, 0, 8, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
+            cmds.move(0, 0, 2, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", self.eye_guide_matrix, type="matrix")
@@ -376,8 +376,8 @@ class EyelidModule(object):
         cmds.addAttr(self.eye_direct_ctl, ln="Upper_Blink", at="float", min=-1, max=1, dv=0, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Lower_Blink", at="float", min=-1, max=1, dv=0, k=True)
         cmds.addAttr(self.eye_direct_ctl, ln="Blink_Height", at="float", min=0, max=1, dv=0.2, k=True)
-        cmds.addAttr(self.eye_direct_ctl, ln="Fleshy", at="float", min=0, max=1, dv=0.1, k=True)
-        cmds.addAttr(self.eye_direct_ctl, ln="Fleshy_Corners", at="float", min=0, max=1, dv=0, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Fleshy", at="float", min=0, max=1, dv=0.3, k=True)
+        cmds.addAttr(self.eye_direct_ctl, ln="Fleshy_Corners", at="float", min=0, max=1, dv=0.5, k=True)
 
         # ---- Connect blink curve to blend shape ----
         # cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{self.blink_ref_blend_shape}.w[0]", force=True)
