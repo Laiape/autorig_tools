@@ -58,6 +58,7 @@ from biped.autorig import jaw_module_nurbs as jaw_module_nurbs
 from biped.autorig import cheekbone_module
 from biped.autorig import tongue_module
 from biped.autorig import teeth_module
+from biped.autorig import facial_correctives_module
 
 
 reload(arm_module)
@@ -565,6 +566,16 @@ def build_rig(character_name, on_step=None):
         reload(cheekbone_module)
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
+
+    # Correctivas faciales por joints (una por shape del set; cada bloque se salta
+    # solo si su driver/joint base no existe). Debe ir DESPUÉS de todos los módulos
+    # faciales porque lee sus controles y skinning joints. Gate: CUALQUIER guía
+    # facial presente (un busto sin jaw sigue recibiendo blink/brow/glabella).
+    if check("C_jaw_JNT") or check("L_eye_JNT") or \
+       check("L_eyebrowMain_JNT") or check("L_eyebrow_CRVShape"):
+        step("Building facial correctives…")
+        reload(facial_correctives_module)
+        facial_correctives_module.FacialCorrectivesModule().make()
 
     if rig_type == 0 and mGear_integration == 0:
         biped_space_switches()
