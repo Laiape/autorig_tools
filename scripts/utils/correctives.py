@@ -331,7 +331,40 @@ def mirror_axis(v, side):
     return v if side == "L" else (-v[0], -v[1], -v[2])
 
 
-def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02):
+def matrix_source(node):
+    """Plug de matriz mundo de `node`: worldMatrix para DAG, outputMatrix/matrixSum
+    para nodos de matriz (aimMatrix, blendMatrix, multMatrix...). Permite usar como
+    fuente de un pose reader un frame rígido tipo {side}_armNonRollAim_AMX en vez
+    de un joint de ribbon (cuyo aim contaminan los bendys)."""
+    for attr, plug in (("worldMatrix", f"{node}.worldMatrix[0]"),
+                       ("outputMatrix", f"{node}.outputMatrix"),
+                       ("matrixSum", f"{node}.matrixSum")):
+        if cmds.attributeQuery(attr, node=node, exists=True):
+            return plug
+    return None
+
+
+def target_frame_dir(world_dir, rest_bone_world, target_world):
+    """Pre-rota una dirección de empuje autorada EN LA POSE OBJETIVO al frame de
+    BIND. La correctiva vive en el frame del hueso, que rota rest->target cuando
+    el cono se activa: sin esta pre-rotación, a plena activación el push mundial
+    llega girado hasta 90° (p.ej. un deltoides autorado "arriba" acabaría
+    empujando hacia el cuello con el brazo elevado). En rest el push vale ~0
+    (driver 0), así que la dirección solo importa cerca del target.
+
+    dir_bind = dir_pose.rotateBy(swing(rest->target)^-1)
+    """
+    a = om.MVector(rest_bone_world[0], rest_bone_world[1], rest_bone_world[2])
+    b = om.MVector(target_world[0], target_world[1], target_world[2])
+    if a.length() < 1e-9 or b.length() < 1e-9:
+        return om.MVector(world_dir[0], world_dir[1], world_dir[2])
+    a.normalize()
+    b.normalize()
+    q = om.MQuaternion(a, b)
+    return om.MVector(world_dir[0], world_dir[1], world_dir[2]).rotateBy(q.inverse())
+
+
+def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02, half_angle=None):
     """
     Pose reader MULTI-EJE (cono auto-calibrado) para hombro/cadera, donde un
     euler de un eje (bend_driver) no vale. Devuelve un plug 0..1: 0 en la pose
@@ -346,6 +379,14 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
     - `axis_sign`: +1/-1 según el eje local apunte A FAVOR o EN CONTRA del hueso
       (en R el ribbon puede aimear -X); medirlo con la dirección real
       upper->lower y pasarlo aquí.
+    - `half_angle` (grados): SEMIÁNGULO del cono. Sin él, la activación cubre
+      TODO el arco desde bind (con target ⟂ al rest son ~90°: una rampa de
+      hemiesfera que se cuela en poses cotidianas). Con half_angle, el driver
+      arranca a ese ángulo del target: inputMin = max(rest_dot+margin,
+      cos(half_angle)). Valores razonables: 55-65.
+    - `joint` puede ser un joint (worldMatrix) o un nodo de matriz con
+      outputMatrix/matrixSum — p.ej. el {side}_armNonRollAim_AMX: un frame
+      RÍGIDO de la articulación que los bendys del ribbon no contaminan.
     - El TWIST es invisible al cono (girar el hueso sobre su eje no cambia su
       dirección): para poses con twist combinar con matrix_manager.extract_twist.
 
@@ -355,6 +396,10 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
     """
     axis_idx = {"X": 0, "Y": 1, "Z": 2}[bone_axis]
 
+    src = matrix_source(joint)
+    if src is None:
+        return None
+
     # target (y rest) en espacio del padre, estáticos de bind
     pim = om.MMatrix(cmds.getAttr(f"{ref_parent}.worldInverseMatrix[0]"))
     tv = om.MVector(*target_world) * pim
@@ -363,7 +408,7 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
     tv.normalize()
     tv *= float(axis_sign)
 
-    jm = om.MMatrix(cmds.getAttr(f"{joint}.worldMatrix[0]")) * pim
+    jm = om.MMatrix(cmds.getAttr(src)) * pim
     rest_axis = om.MVector(jm[axis_idx * 4], jm[axis_idx * 4 + 1], jm[axis_idx * 4 + 2])
     if rest_axis.length() < 1e-9:
         return None
@@ -374,7 +419,7 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
 
     # dirección del hueso en espacio del padre, EN VIVO
     mm = cmds.createNode("multMatrix", name=f"{name}_MM", ss=True)
-    cmds.connectAttr(f"{joint}.worldMatrix[0]", f"{mm}.matrixIn[0]")
+    cmds.connectAttr(src, f"{mm}.matrixIn[0]")
     cmds.connectAttr(f"{ref_parent}.worldInverseMatrix[0]", f"{mm}.matrixIn[1]")
     rfm = cmds.createNode("rowFromMatrix", name=f"{name}Axis_RFM", ss=True)
     cmds.setAttr(f"{rfm}.input", axis_idx)
@@ -387,9 +432,12 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
         cmds.connectAttr(f"{rfm}.output{ax}", f"{dot}.input1{ax}")
     cmds.setAttr(f"{dot}.input2", tv.x, tv.y, tv.z, type="double3")
 
+    input_min = rest_dot + margin
+    if half_angle is not None:
+        input_min = max(input_min, math.cos(math.radians(float(half_angle))))
     rmv = cmds.createNode("remapValue", name=f"{name}_RMV", ss=True)
     cmds.connectAttr(f"{dot}.outputX", f"{rmv}.inputValue")
-    cmds.setAttr(f"{rmv}.inputMin", min(rest_dot + margin, 0.98))
+    cmds.setAttr(f"{rmv}.inputMin", min(input_min, 0.98))
     cmds.setAttr(f"{rmv}.inputMax", 1.0)
     cmds.setAttr(f"{rmv}.outputMin", 0.0)
     cmds.setAttr(f"{rmv}.outputMax", 1.0)

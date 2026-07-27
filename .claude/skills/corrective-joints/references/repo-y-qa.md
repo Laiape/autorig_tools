@@ -169,6 +169,14 @@ análogos (`node`/`name`/`type`/`min`/`max`/`default`). La clave `node` acepta t
 3. **ROM completa** de nuevo (no solo la pose que motivó la correctiva): codo/rodilla
    0→140°, twists ±90°, poses combinadas (squat, brazos arriba/cruzados); facial: jaw
    0→35°, blinks, las expresiones del set y sus combos.
+   **Poses de doble activación obligatorias** (correctivas de zonas adyacentes con
+   drivers distintos): *sit 90/90* (rodilla+cadera: thighBack sube hacia el pliegue
+   infraglúteo mientras el glute empuja atrás — tunear GluteAmount y ThighBack JUNTOS,
+   pesos en parches excluyentes con frontera en el pliegue), *squat abierto*
+   (glute+groin+hipOut a la vez en diagonal), *reach diagonal arriba-adelante*
+   (deltoid+armpit+pec solapan), *hug/brazos cruzados* (biceps+pec, frontera en el
+   surco deltopectoral), y *brazo a 90° + twist completo del húmero* (las correctivas
+   de hombro NO deben orbitar — viven en el frame non-roll).
 4. **Masterwalk**: escala 0.1x/2x/10x, a 1000 unidades, rotado 90/180° — con un ciclo
    sonando.
 5. **Mirror numérico**: pose simétrica y comparar translates L vs R.

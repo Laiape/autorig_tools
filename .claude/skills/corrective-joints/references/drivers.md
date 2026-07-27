@@ -71,7 +71,7 @@ correctives.corrective_push(f"{side}_wristTwistCorrective", base_jnt,
 # supinación: segunda push con in_max=-90, eje opuesto y canales de translate distintos
 ```
 
-### 2.4 `correctives.cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02)` — multi-eje (hombro, cadera)
+### 2.4 `correctives.cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02, half_angle=None)` — multi-eje (hombro, cadera)
 
 **YA implementado** en `utils/correctives.py`. Pose reader de cono AUTO-CALIBRADO:
 devuelve un plug 0..1 que vale **0 en la pose de build** (sea T-pose o A-pose: el
@@ -84,15 +84,30 @@ target está demasiado cerca del rest (cono degenerado) — trátalo siempre.
 - La dirección se mide respecto a un ref que siga al TORSO/PELVIS
   (`C_localChestSkinning_JNT`, `C_localHipSkinning_JNT`): mundo-agnóstico, inmune a
   masterwalk.
+- **`half_angle` SIEMPRE en producción** (55–65°): sin él, con target ⟂ al rest el "cono"
+  es una rampa de ~90° que se activa desde el primer grado de cualquier pose cotidiana.
+  Con half_angle el driver arranca a ese ángulo del target (`inputMin =
+  max(rest_dot+margin, cos(half_angle))`) y sigue valiendo 0 en bind.
 - **`axis_sign`**: en R el ribbon puede aimear −X a lo largo del hueso — mide el signo con
-  `dot(ejeX_mundo_del_joint, dirección upper→lower)` y pásalo (así lo hacen
+  `dot(ejeX_de_la_fuente, dirección upper→lower)` y pásalo (así lo hacen
   `shoulder_corrective_setup` y `hip_corrective_setup`).
+- **Fuente = frame RÍGIDO, no un joint de ribbon**: los bendys reorientan
+  `armUpper00`/`legUpper00` y contaminan el cono — usa `{side}_armNonRollAim_AMX` /
+  `{side}_legNonRollAim_AMX` (cone_driver acepta nodos con `outputMatrix` vía
+  `matrix_source`). Las correctivas de hombro/cadera van SOLO en upper00 o en un frame
+  non-roll: upper01+ llevan twist y las harían orbitar.
+- **Pre-rota la dirección de empuje**: la correctiva vive en el frame del hueso, que rota
+  rest→target al activarse — una dirección autorada en mundo "en bind" llega girada hasta
+  90° en la pose donde el driver vale 1 (el deltoides empujaría hacia el cuello). Autora
+  la dirección EN LA POSE OBJETIVO y pásala por `correctives.target_frame_dir(dir,
+  bone_rest_world, target_world)` antes de `world_to_local_dir` (patrón de los `push()`
+  de shoulder/hip).
 - El twist es invisible al cono (feature): combínalo con `extract_twist` si la pose
   necesita twist.
-- Usos reales: hombro (`arm_module.shoulder_corrective_setup`: conos a (0,1,0) arriba,
-  (0,0,±1) delante/atrás → deltoid/armpit/pec/shoulderBack) y cadera
-  (`leg_module.hip_corrective_setup`: flexión (0,0,1) y abducción ±X → glute/groin/
-  hipOut).
+- Usos reales: hombro (`arm_module.shoulder_corrective_setup`: conos a (0,1,0) arriba
+  h=60, (0,0,±1) delante/atrás h=65 → deltoid/armpit/pec/shoulderBack, ref = chest) y
+  cadera (`leg_module.hip_corrective_setup`: flexión (0,0,1) y abducción ±X, h=60 →
+  glute/groin/hipOut, ref = pelvis).
 
 ### 2.5 RBF / pose space (cuándo escalar)
 
