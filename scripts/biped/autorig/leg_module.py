@@ -166,6 +166,81 @@ class LegModule(object):
         correctives.corrective_offset_push(f"{self.side}_thighBackCorrective", base, driver, 0, -100,
                                            _ax((0.0, -push_dv, 0.0)), _ax((-1, 1, 0)), push_dv)
 
+        self.hip_corrective_setup(upper, lower, thigh_len, host)
+
+    def hip_corrective_setup(self, upper, lower, thigh_len, host):
+
+        """
+        Correctivas de la CADERA (multi-eje: la rodilla no dice nada de la pose de
+        la cadera). Conos auto-calibrados (correctives.cone_driver) sobre el eje
+        del fémur medido RESPECTO A LA PELVIS (C_localHipSkinning_JNT): 0 en bind,
+        1 en la pose. Direcciones/offsets en MUNDO (mira +Z, L en +X) convertidos
+        al frame local -> sin reglas de signos por lado.
+          - glúteo    : flexión de cadera (sentarse/squat) -> mantiene la masa
+                        trasera ("el culo desaparece" desde ~55° de flexión).
+          - ingle     : flexión -> el pliegue inguinal se dobla limpio en vez de
+                        colapsar, sostiene el volumen alto del cuádriceps.
+          - trocánter : abducción (split/patada lateral) -> lateral de la cadera
+                        sin hachazo.
+        """
+
+        ref = "C_localHipSkinning_JNT"
+        if not cmds.objExists(ref):
+            om.MGlobal.displayInfo(f"{self.side} hip correctives: sin pelvis de referencia — skip")
+            return
+
+        # signo del eje X del ribbon respecto a la dirección real del fémur
+        p_up = om.MVector(*cmds.xform(upper, q=True, ws=True, t=True))
+        p_lo = om.MVector(*cmds.xform(lower, q=True, ws=True, t=True))
+        bone_w = p_lo - p_up
+        if bone_w.length() < 1e-6:
+            return
+        bone_w.normalize()
+        jm = cmds.getAttr(f"{upper}.worldMatrix[0]")
+        x_axis = om.MVector(jm[0], jm[1], jm[2])
+        x_axis.normalize()
+        axis_sign = 1.0 if x_axis * bone_w >= 0 else -1.0
+
+        out_v = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
+        up_v, fwd_v = om.MVector(0, 1, 0), om.MVector(0, 0, 1)
+
+        # flexión = fémur apuntando ADELANTE; abducción = fémur apuntando AL LADO
+        flex_cone = correctives.cone_driver(f"{self.side}_hipFlex", upper, ref, (0, 0, 1), axis_sign=axis_sign)
+        abduct_cone = correctives.cone_driver(f"{self.side}_hipAbduct", upper, ref,
+                                              (out_v.x, out_v.y, out_v.z), axis_sign=axis_sign)
+        push_dv = round(thigh_len * 0.12, 1)
+
+        def en_am(prefix, dv):
+            en, amn = f"{prefix}Enable", f"{prefix}Amount"
+            if not cmds.attributeQuery(en, node=host, exists=True):
+                cmds.addAttr(host, longName=en, niceName=f"{prefix} Enable", attributeType="bool", defaultValue=1, keyable=True)
+            if not cmds.attributeQuery(amn, node=host, exists=True):
+                cmds.addAttr(host, longName=amn, niceName=f"{prefix} Amount", attributeType="float", defaultValue=dv, keyable=True)
+            return f"{host}.{en}", f"{host}.{amn}"
+
+        def push(name, prefix, cone, offset_w, dir_w, dv):
+            if cone is None:
+                om.MGlobal.displayInfo(f"{name}: cono degenerado (target ~= rest) — skip")
+                return
+            en, am = en_am(prefix, round(dv, 1))
+            correctives.corrective_offset_push(
+                name, upper, cone, 0, 1,
+                correctives.world_to_local_point(upper, offset_w),
+                correctives.world_to_local_dir(upper, dir_w), am, enable_attr=en)
+
+        # glúteo: al flexionar, la masa se mantiene ATRÁS (y un punto arriba)
+        push(f"{self.side}_gluteCorrective", "Glute", flex_cone,
+             p_up - fwd_v * 0.15 * thigh_len + up_v * 0.05 * thigh_len,
+             fwd_v * -0.95 + up_v * 0.2, push_dv)
+        # ingle: pliegue inguinal limpio, sostiene el volumen alto del muslo
+        push(f"{self.side}_groinCorrective", "Groin", flex_cone,
+             p_up + fwd_v * 0.15 * thigh_len - out_v * 0.05 * thigh_len,
+             fwd_v * 0.9 + up_v * 0.35, push_dv * 0.8)
+        # trocánter: lateral de la cadera en abducción
+        push(f"{self.side}_hipOutCorrective", "HipOut", abduct_cone,
+             p_up + out_v * 0.12 * thigh_len,
+             out_v * 0.95 + up_v * 0.3, push_dv * 0.8)
+
     def lock_attributes(self, ctl, attrs):
 
         """

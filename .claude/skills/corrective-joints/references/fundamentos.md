@@ -127,5 +127,7 @@ reproduce la expresión con los controles → el delta contra el sculpt es la co
   correctives se desactivan en LODs bajos.
 - Facial de juego "bueno": ~20–30 correctivas sobre 60–80 shapes primarios; techo de gama
   MetaHuman ~128 corrective morphs (orden de magnitud, no cifra exacta).
-- Este repo hoy: codo (bíceps + tríceps + anillo de 4) y rodilla (thighFront + thighBack).
-  El resto del catálogo corporal y toda la facial están por poblar.
+- Este repo hoy: codo (bíceps + tríceps + anillo de 4), rodilla (thighFront + thighBack),
+  hombro (deltoid + armpit + pec + shoulderBack por cone_driver), cadera (glute + groin +
+  hipOut por cone_driver) y el set facial de `facial_correctives_module` (~25 joints).
+  Pendiente: muñeca/tobillo/torso/manos y los pesos de skin de las zonas nuevas.

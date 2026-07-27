@@ -306,6 +306,98 @@ def corrective_arc(name, base_joint, driver, in_min, in_max,
     return jnt
 
 
+def world_to_local_dir(parent, world_dir):
+    """Dirección MUNDO -> espacio local de `parent` (normalizada). Para definir
+    ejes de empuje en mundo (personaje mira +Z, L en +X) y convertirlos al frame
+    real del padre en build -> funciona con joints de cualquier orientación y con
+    el mirror-behavior de R sin reglas de signos a mano."""
+    mi = om.MMatrix(cmds.getAttr(f"{parent}.worldInverseMatrix[0]"))
+    v = om.MVector(*world_dir) * mi
+    if v.length() > 1e-9:
+        v.normalize()
+    return (v.x, v.y, v.z)
+
+
+def world_to_local_point(parent, world_point):
+    """Punto MUNDO -> translate local bajo `parent` (para rest_offset)."""
+    mi = om.MMatrix(cmds.getAttr(f"{parent}.worldInverseMatrix[0]"))
+    p = om.MPoint(world_point[0], world_point[1], world_point[2]) * mi
+    return (p.x, p.y, p.z)
+
+
+def mirror_axis(v, side):
+    """Vector de empuje LOCAL L -> R: negar el vector COMPLETO (las guías se
+    espejan con mirrorBehavior; regla verificada en arm/leg)."""
+    return v if side == "L" else (-v[0], -v[1], -v[2])
+
+
+def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02):
+    """
+    Pose reader MULTI-EJE (cono auto-calibrado) para hombro/cadera, donde un
+    euler de un eje (bend_driver) no vale. Devuelve un plug 0..1: 0 en la pose
+    de BUILD (rest, sea T-pose o A-pose) y 1 cuando el eje `bone_axis` del
+    `joint` apunta a `target_world` (dirección MUNDO en bind).
+
+    - La dirección del hueso se mide EN ESPACIO de `ref_parent` (chest, pelvis,
+      clavícula): acompaña al torso y es inmune a masterwalk/escala.
+    - `target_world` se convierte a espacio del padre EN BUILD y queda estático.
+    - Auto-calibración: inputMin del remap = dot(eje en rest, target) + margin ->
+      el driver vale 0 exacto en bind y rampa suave (smooth) hasta 1 en la pose.
+    - `axis_sign`: +1/-1 según el eje local apunte A FAVOR o EN CONTRA del hueso
+      (en R el ribbon puede aimear -X); medirlo con la dirección real
+      upper->lower y pasarlo aquí.
+    - El TWIST es invisible al cono (girar el hueso sobre su eje no cambia su
+      dirección): para poses con twist combinar con matrix_manager.extract_twist.
+
+    Returns:
+        str|None: plug 0..1, o None si el target está demasiado cerca del rest
+        (cono degenerado: no habría rango útil).
+    """
+    axis_idx = {"X": 0, "Y": 1, "Z": 2}[bone_axis]
+
+    # target (y rest) en espacio del padre, estáticos de bind
+    pim = om.MMatrix(cmds.getAttr(f"{ref_parent}.worldInverseMatrix[0]"))
+    tv = om.MVector(*target_world) * pim
+    if tv.length() < 1e-9:
+        return None
+    tv.normalize()
+    tv *= float(axis_sign)
+
+    jm = om.MMatrix(cmds.getAttr(f"{joint}.worldMatrix[0]")) * pim
+    rest_axis = om.MVector(jm[axis_idx * 4], jm[axis_idx * 4 + 1], jm[axis_idx * 4 + 2])
+    if rest_axis.length() < 1e-9:
+        return None
+    rest_axis.normalize()
+    rest_dot = rest_axis * tv
+    if rest_dot > 1.0 - 2.0 * margin:
+        return None  # el rest ya está "en la pose": el cono no discrimina
+
+    # dirección del hueso en espacio del padre, EN VIVO
+    mm = cmds.createNode("multMatrix", name=f"{name}_MM", ss=True)
+    cmds.connectAttr(f"{joint}.worldMatrix[0]", f"{mm}.matrixIn[0]")
+    cmds.connectAttr(f"{ref_parent}.worldInverseMatrix[0]", f"{mm}.matrixIn[1]")
+    rfm = cmds.createNode("rowFromMatrix", name=f"{name}Axis_RFM", ss=True)
+    cmds.setAttr(f"{rfm}.input", axis_idx)
+    cmds.connectAttr(f"{mm}.matrixSum", f"{rfm}.matrix")
+
+    dot = cmds.createNode("vectorProduct", name=f"{name}_DOT", ss=True)
+    cmds.setAttr(f"{dot}.operation", 1)  # dot product
+    cmds.setAttr(f"{dot}.normalizeOutput", 1)  # cos limpio aunque haya escala
+    for ax in "XYZ":
+        cmds.connectAttr(f"{rfm}.output{ax}", f"{dot}.input1{ax}")
+    cmds.setAttr(f"{dot}.input2", tv.x, tv.y, tv.z, type="double3")
+
+    rmv = cmds.createNode("remapValue", name=f"{name}_RMV", ss=True)
+    cmds.connectAttr(f"{dot}.outputX", f"{rmv}.inputValue")
+    cmds.setAttr(f"{rmv}.inputMin", min(rest_dot + margin, 0.98))
+    cmds.setAttr(f"{rmv}.inputMax", 1.0)
+    cmds.setAttr(f"{rmv}.outputMin", 0.0)
+    cmds.setAttr(f"{rmv}.outputMax", 1.0)
+    for i in (0, 1):  # rampa smooth (entrada/salida suaves del cono)
+        cmds.setAttr(f"{rmv}.value[{i}].value_Interp", 2)
+    return f"{rmv}.outValue"
+
+
 def _inf_index(skin_cluster, inf):
     """Índice lógico de la influencia `inf` en el array .matrix del skinCluster."""
     conns = cmds.listConnections(f"{inf}.worldMatrix[0]", source=False, destination=True, plugs=True) or []

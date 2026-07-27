@@ -16,9 +16,10 @@ Este repo ya tiene `auto_clavicle()` en el arm module.
 | Correctiva | Nº | Driver | Rango | Empuje | Corrige |
 |---|---|---|---|---|---|
 | Escápula | 1 | rot. clavícula + elevación húmero | shrug 0–40°, elev. 0–180° | desliza sobre las costillas | escápula hundida/inmóvil bajo la piel |
-| Deltoides | 1 | abducción del húmero (cone driver) | 0→90/120° | fuera/arriba (bulge) | hombro plano con el brazo en T/arriba |
-| Axila/lat | 1 | abducción | 0→90/120° | abre la axila (abajo/adentro) | interpenetración brazo-torso |
-| Pectoral | 1 | aducción/flexión horizontal | ±60–90° | el pec viaja con el brazo | pecho congelado al cruzar el brazo |
+| Deltoides (YA en el repo) | 1 | cono a (0,1,0) vs chest (`cone_driver`) | 0 en bind → 1 brazo arriba | fuera/arriba (bulge) | hombro plano con el brazo en T/arriba |
+| Axila/lat (YA) | 1 | mismo cono de elevación | ídem | abre la axila (abajo/adentro) | interpenetración brazo-torso |
+| Pectoral (YA) | 1 | cono a (0,0,1) — brazo adelante | 0→1 | el pec viaja con el brazo | pecho congelado al cruzar el brazo |
+| Trasera hombro (YA) | 1 | cono a (0,0,-1) — brazo atrás | 0→1 | atrás/arriba (rear delt/escápula) | hombro trasero plano |
 | Trapecio/shrug | 1–2 | shrug clavícula + elevación >90° | 0–40° | arriba/adentro | trapecio congelado, hombro "cortado" del cuello |
 
 Patrón MetaHuman de referencia: 4 correctivas cardinales por hombro (`upperarm_fwd/bck/
@@ -50,8 +51,9 @@ La cadera es "el hombro de la pierna": esférica, multi-eje (flexión ~120°, ex
 |---|---|---|---|---|---|
 | ThighFront/cuádriceps (YA) | 1 | rodilla hacia delante, z+ (`bend_driver` eje Z) | repo: 0→+100° | arco: adelante +Y, sube -X | ingle/muslo colapsados |
 | ThighBack/isquios (YA) | 1 | flexión, z− (al subir la rodilla se contrae) | repo: 0→-100° | rest detrás (-Y) y se contrae (-X,+Y) | masa trasera del muslo |
-| Glúteo | 1 | flexión + extensión de cadera | 0–120° / 0→-30° | mantiene la masa atrás/arriba | "el culo desaparece" al sentarse (visible ~55°+) |
-| Thigh out/in | 1–2 | abducción / aducción (cone) | 0–60° | trocánter fuera / protege interior | hachazo lateral, interpenetración de muslos |
+| Glúteo (YA en el repo) | 1 | cono de flexión de cadera vs pelvis (`cone_driver` a (0,0,1)) | 0 en bind → 1 muslo horizontal | mantiene la masa atrás/arriba | "el culo desaparece" al sentarse (visible ~55°+) |
+| Ingle/groin (YA) | 1 | mismo cono de flexión | ídem | adelante/arriba | pliegue inguinal colapsado |
+| Trocánter/hipOut (YA) | 1 | cono de abducción (±X) | 0→1 | fuera/arriba | hachazo lateral de la cadera |
 | Rótula / knee bend | 1 | flexión rodilla (half-rotation 50%) | 0–150° | mantiene la rótula delante | rodilla-cuchillo |
 | Hueco poplíteo | 1–3 | flexión rodilla | 60–150° | comprime/apila pantorrilla vs muslo | interpenetración en sentadilla |
 | Gemelo | 1 | flexión rodilla / plantarflexión | 0–150° | posterior (bulge) | pantorrilla plana |

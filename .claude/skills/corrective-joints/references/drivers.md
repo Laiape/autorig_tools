@@ -71,31 +71,28 @@ correctives.corrective_push(f"{side}_wristTwistCorrective", base_jnt,
 # supinación: segunda push con in_max=-90, eje opuesto y canales de translate distintos
 ```
 
-### 2.4 Cone driver (multi-eje: hombro, cadera) — receta para `utils/correctives.py`
+### 2.4 `correctives.cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02)` — multi-eje (hombro, cadera)
 
-No existe aún en el repo; impleméntalo en el idioma de `bend_factor` cuando toque hombro o
-cadera:
+**YA implementado** en `utils/correctives.py`. Pose reader de cono AUTO-CALIBRADO:
+devuelve un plug 0..1 que vale **0 en la pose de build** (sea T-pose o A-pose: el
+`inputMin` del remap se fija al dot del eje en rest contra el target) y **1 cuando el eje
+del hueso apunta a `target_world`** (dirección MUNDO en bind, convertida a espacio de
+`ref_parent` y horneada estática). Grafo: multMatrix (hueso × padre⁻¹) → rowFromMatrix
+(eje) → vectorProduct dot (normalizeOutput) → remapValue smooth. Devuelve `None` si el
+target está demasiado cerca del rest (cono degenerado) — trátalo siempre.
 
-```
-cone_driver(name, joint, ref_parent, bone_axis="X", target_vec=(0,1,0), cone_angle=60):
-  1. rel_MMX  = joint.worldMatrix[0] × ref_parent.worldInverseMatrix[0]   # multMatrix
-     (dirección medida EN ESPACIO DEL PADRE: acompaña al torso, mundo-agnóstica)
-  2. axis_RFM = rowFromMatrix(rel_MMX.matrixSum, input=0|1|2 según bone_axis)
-  3. axis_NRM = normalize(axis_RFM.output)
-  4. dot_DOT  = vectorProduct(operation=Dot, input1=axis_NRM, input2=target_vec)
-     # target_vec = eje del hueso en la POSE OBJETIVO, capturado en build en espacio
-     # del padre (guárdalo en attrs/floatConstant para re-tunearlo)
-  5. out_RMV  = remapValue(inputValue=dot.outputX,
-                           inputMin=cos(radians(cone_angle)), inputMax=1,
-                           outputMin=0, outputMax=1, interp=smooth)   # auto-clamp
-  return plug 0..1   (rest=0 si la pose de bind cae fuera del cono)
-```
-
-- Cono por pose: **30–60°** cuando hay varias poses solapadas (patrón 4 conos cardinales
-  fwd/bck/in/out estilo MetaHuman); hasta 90–120° si un solo cono cubre un cuadrante.
-- El twist es invisible al cono (girar el hueso sobre su eje no cambia su dirección) — es
-  una feature: swing y twist se leen por canales separados y se combinan con `multiply`.
-- Mirror: en R se niega el `target_vec` COMPLETO (regla del repo); dot y remap idénticos.
+- La dirección se mide respecto a un ref que siga al TORSO/PELVIS
+  (`C_localChestSkinning_JNT`, `C_localHipSkinning_JNT`): mundo-agnóstico, inmune a
+  masterwalk.
+- **`axis_sign`**: en R el ribbon puede aimear −X a lo largo del hueso — mide el signo con
+  `dot(ejeX_mundo_del_joint, dirección upper→lower)` y pásalo (así lo hacen
+  `shoulder_corrective_setup` y `hip_corrective_setup`).
+- El twist es invisible al cono (feature): combínalo con `extract_twist` si la pose
+  necesita twist.
+- Usos reales: hombro (`arm_module.shoulder_corrective_setup`: conos a (0,1,0) arriba,
+  (0,0,±1) delante/atrás → deltoid/armpit/pec/shoulderBack) y cadera
+  (`leg_module.hip_corrective_setup`: flexión (0,0,1) y abducción ±X → glute/groin/
+  hipOut).
 
 ### 2.5 RBF / pose space (cuándo escalar)
 
