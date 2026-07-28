@@ -101,7 +101,7 @@ Es tu punto de partida y su techo natural. Todo aquí es **skinning estático**:
 - **Secundario.** Ninguno.
 - **Límites reales.** En faldas holgadas es donde peor va. Solo evita interpenetrar si offset y pesos casan a la perfección.
 - **Cuándo usarlo.** Como **semilla** de pesos, no como resultado final.
-- **Encaje en tu pipeline.** Cambio inmediato: usa `-uvSpace` cuando exista UV coherente cuerpo-prenda, e `-influenceAssociation label` (etiquetando joints) para no cruzar lados. Encapsúlalo como paso automatizable.
+- **Encaje en tu pipeline.** ⚠ **Cuidado con `-uvSpace` para cuerpo→prenda: casi nunca comparten layout de UVs** (cada asset tiene su unwrap), y con layouts distintos la correspondencia es basura — probado en `scripts/tools/tests/test_cloth_skin_transfer.py`: ~73% de vértices a la pierna equivocada en el caso sintético. El defecto correcto es **closest point 3D + baricéntricas + inpainting** (`tools/cloth_skin_transfer.py`, estilo Robust Skin Weights Transfer, sin UVs), con `-influenceAssociation label` si usas `copySkinWeights`. Reserva `-uvSpace` para el caso raro de UVs realmente compartidos (p. ej. prenda derivada de la malla del cuerpo).
 
 ### Heat Map binding (difusión de calor)
 - **Qué es.** Binding automático que reparte pesos resolviendo una difusión de calor sobre la malla, tratando cada joint como fuente.
@@ -810,7 +810,7 @@ Casi ningún plano de cine se resuelve con una sola técnica. Principio: **capa 
 
 El mayor salto de precisión sobre el copy skin viene de tres movimientos **combinables**, no de un solo método:
 
-1. **Sube el escalón del binding y del refinado, ya.** Pasa de `closestPoint` a **geodesic voxel** (o `-uvSpace` + `-influenceAssociation label` en tu transferencia), organiza el afinado con **ngSkinTools**, añade **Delta Mush** como capa de acabado y decide DQ/weight-blended por zona. Es barato, en tiempo real, y elimina el cruce de influencias que hoy te molesta. Sobre esto, **correctivos PSD/RBF por ángulo de pierna** (con `combinationShape` para combos) meten el pliegue por compresión que la sim ganaba.
+1. **Sube el escalón del binding y del refinado, ya.** Pasa de `closestPoint` a **geodesic voxel** para el binding, y para la transferencia cuerpo→prenda usa **closest point 3D + baricéntricas + inpainting** (`tools/cloth_skin_transfer.py`; `-uvSpace` solo si cuerpo y prenda comparten layout de UVs de verdad, que es raro), organiza el afinado con **ngSkinTools**, añade **Delta Mush** como capa de acabado y decide DQ/weight-blended por zona. Es barato, en tiempo real, y elimina el cruce de influencias que hoy te molesta. Sobre esto, **correctivos PSD/RBF por ángulo de pierna** (con `combinationShape` para combos) meten el pliegue por compresión que la sim ganaba.
 2. **Sustituye/complementa tu colisión por distancia con colisión real, al menos como referencia.** En **Vellum**, ajustar substeps y collision thickness sobre el collider Alembic del skin es exactamente el control que hoy te falta; **guía la sim** con el skin/ribbons como goal e `inputMeshAttract` para mezclar seguimiento (cintura) y vuelo libre (bajo). Para prendas holgadas, ese es el techo de realismo.
 3. **Fija la precisión en un asset controlable según el medio.** Para cine: **blend por regiones** y **pase de tech-anim** con caché. Para juego/coste bajo: **sim → correctivos PSD/RBF**, **sim-to-bone (SSDR)**, **VAT** o **spring bones** (Kawaii Physics), reutilizando un único skeleton limpio de falda para cine y juego.
 
