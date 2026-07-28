@@ -48,11 +48,21 @@ except Exception:
 # --------------------------------------------------------------------------------------- #
 
 def _skincluster(mesh):
-    """skinCluster que deforma `mesh`, o None."""
-    for n in (cmds.listHistory(mesh, pruneDagObjects=True) or []):
-        if cmds.nodeType(n) == "skinCluster":
-            return n
-    return None
+    """
+    skinCluster PRINCIPAL que deforma `mesh`, o None. En rigs con skins apilados (skin
+    principal + capa de correctivas, como este repo) el primero del historial suele ser la
+    capa de correctivas (pocas influencias): se elige el de MÁS influencias y se avisa.
+    """
+    scs = [n for n in (cmds.listHistory(mesh, pruneDagObjects=True) or [])
+           if cmds.nodeType(n) == "skinCluster"]
+    if not scs:
+        return None
+    if len(scs) == 1:
+        return scs[0]
+    best = max(scs, key=lambda s: len(cmds.skinCluster(s, q=True, influence=True) or []))
+    cmds.warning(f"[proxy_skinning] '{mesh}' tiene {len(scs)} skinClusters apilados ({scs}); "
+                 f"uso '{best}' (el de más influencias).")
+    return best
 
 
 def _joint_chain(root):

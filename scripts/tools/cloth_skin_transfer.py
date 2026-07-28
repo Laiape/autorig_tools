@@ -223,7 +223,7 @@ def adjacency_from_tris(n_verts, tris):
 # ======================================================================================= #
 
 def transfer(body, cloth, max_dist=2.0, min_normal_dot=0.0, max_influences=4,
-             prune=1e-3, inpaint_iterations=300):
+             prune=1e-3, inpaint_iterations=300, body_skincluster=None):
     """
     Transfiere el skin del cuerpo a la prenda SIN UVs: closest point (MMeshIntersector) +
     baricéntricas + confianza + inpainting. Crea/usa un skinCluster en la prenda con las
@@ -239,15 +239,39 @@ def transfer(body, cloth, max_dist=2.0, min_normal_dot=0.0, max_influences=4,
             raise RuntimeError(f"[cloth_skin_transfer] '{mesh}' no tiene shape de malla.")
         return shapes[0]
 
-    def _skincluster(mesh):
-        for n in (cmds.listHistory(mesh, pruneDagObjects=True) or []):
-            if cmds.nodeType(n) == "skinCluster":
-                return n
-        return None
+    def _skinclusters(mesh):
+        return [n for n in (cmds.listHistory(mesh, pruneDagObjects=True) or [])
+                if cmds.nodeType(n) == "skinCluster"]
 
-    body_sc = _skincluster(body)
+    def _main_skincluster(mesh):
+        """
+        En rigs con skins APILADOS (skin principal + skinCluster de correctivas encima, como
+        este repo: blendshape -> skin -> correctivas -> deltaMush), el primero del historial
+        suele ser la capa de correctivas (pocas influencias). El skin PRINCIPAL es el de más
+        influencias; se elige ese y se avisa. Fuérzalo con body_skincluster= si no aplica.
+        """
+        scs = _skinclusters(mesh)
+        if not scs:
+            return None
+        if len(scs) == 1:
+            return scs[0]
+        best = max(scs, key=lambda s: len(cmds.skinCluster(s, q=True, influence=True) or []))
+        cmds.warning(f"[cloth_skin_transfer] '{mesh}' tiene {len(scs)} skinClusters apilados "
+                     f"({scs}); uso '{best}' (el de más influencias). Pasa body_skincluster= "
+                     "para forzar otro.")
+        return best
+
+    def _skincluster(mesh):
+        scs = _skinclusters(mesh)
+        return scs[0] if scs else None
+
+    body_sc = body_skincluster or _main_skincluster(body)
     if not body_sc:
         raise RuntimeError(f"[cloth_skin_transfer] '{body}' no tiene skinCluster.")
+    n_body_infl = len(cmds.skinCluster(body_sc, q=True, influence=True) or [])
+    if n_body_infl < 10:
+        cmds.warning(f"[cloth_skin_transfer] el skin origen '{body_sc}' solo tiene "
+                     f"{n_body_infl} influencias — ¿seguro que es el skin principal del cuerpo?")
 
     # --- lee el cuerpo: puntos, triángulos y pesos por vértice
     sel = om.MSelectionList(); sel.add(_shape(body)); sel.add(body_sc)
