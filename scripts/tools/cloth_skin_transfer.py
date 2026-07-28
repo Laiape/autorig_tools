@@ -274,10 +274,11 @@ def transfer(body, cloth, max_dist=2.0, min_normal_dot=0.0, max_influences=4,
     for _ in range(len(tri_verts) // 3):
         src_tris.append((next(it), next(it), next(it)))
 
-    # --- closest point acelerado con MMeshIntersector (espacio local del cuerpo)
+    # --- closest point acelerado con MMeshIntersector. La matriz de create() debe llevar los
+    #     puntos de consulta A espacio objeto (doc oficial): mundo->objeto = inclusiveMatrix^-1.
+    #     Así getClosestPoint recibe directamente puntos en mundo. (No transformar dos veces.)
     intersector = om.MMeshIntersector()
-    intersector.create(body_dag.node(), body_dag.inclusiveMatrix())
-    inv = body_dag.inclusiveMatrix().inverse()
+    intersector.create(body_dag.node(), body_dag.inclusiveMatrix().inverse())
 
     # triángulos por (cara, triángulo) para mapear el hit del intersector a src_tris
     face_tri_index = {}
@@ -288,7 +289,7 @@ def transfer(body, cloth, max_dist=2.0, min_normal_dot=0.0, max_influences=4,
             running += 1
 
     def closest_fn(p):
-        mp = om.MPoint(p[0], p[1], p[2]) * inv          # a espacio local del intersector
+        mp = om.MPoint(p[0], p[1], p[2])                # en mundo; create() ya lleva la matriz
         hit = intersector.getClosestPoint(mp)
         ti = face_tri_index[(hit.face, hit.triangle)]
         i0, i1, i2 = src_tris[ti]
@@ -313,8 +314,20 @@ def transfer(body, cloth, max_dist=2.0, min_normal_dot=0.0, max_influences=4,
     weights, matched = transfer_core(body_pts, src_tris, src_weights, dst_verts,
                                      max_dist=max_dist, min_normal_dot=min_normal_dot,
                                      dst_normals=dst_normals, closest_fn=closest_fn)
+    if not any(matched):
+        raise RuntimeError(
+            "[cloth_skin_transfer] ningún vértice pasó el filtro de confianza: el inpainting no "
+            "tiene semillas. Revisa max_dist (en unidades de escena, distancia real prenda-"
+            "cuerpo), pon min_normal_dot=None si las normales de la prenda están invertidas, o "
+            "corrige las normales antes de transferir.")
     weights = inpaint_weights(weights, matched, adjacency, iterations=inpaint_iterations)
     weights = clamp_and_normalize(weights, max_influences=max_influences, prune=prune)
+    empties = [i for i, w in enumerate(weights) if not w]
+    if empties:
+        raise RuntimeError(
+            f"[cloth_skin_transfer] {len(empties)} vértice(s) quedaron sin pesos tras el "
+            f"inpainting (p.ej. {empties[:5]}): suele ser una isla de la prenda sin ningún "
+            "match. Sube max_dist o dale a esa isla al menos un vértice cerca del cuerpo.")
 
     # --- skinCluster en la prenda con las mismas influencias, y escribir pesos de una vez
     cloth_sc = _skincluster(cloth)
@@ -325,9 +338,11 @@ def transfer(body, cloth, max_dist=2.0, min_normal_dot=0.0, max_influences=4,
                                     name=f"{cloth.split('|')[-1]}_SKIN")[0]
     ssel = om.MSelectionList(); ssel.add(cloth_sc)
     cloth_skfn = oma.MFnSkinCluster(ssel.getDependNode(0))
-    # mapa influencia->índice físico del skinCluster de la prenda
-    cloth_infl = {p.partialPathName(): cloth_skfn.indexForInfluenceObject(p)
-                  for p in cloth_skfn.influenceObjects()}
+    # mapa influencia -> índice FÍSICO (posición en influenceObjects()): setWeights espera
+    # índices físicos, NO los lógicos de indexForInfluenceObject (sparse si se quitaron
+    # influencias alguna vez).
+    cloth_infl = {p.partialPathName(): i
+                  for i, p in enumerate(cloth_skfn.influenceObjects())}
     order = [cloth_infl.get(name) for name in influences]
     if any(i is None for i in order):
         missing = [influences[k] for k, i in enumerate(order) if i is None]
