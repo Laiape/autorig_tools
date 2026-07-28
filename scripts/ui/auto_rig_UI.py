@@ -74,6 +74,7 @@ def create_custom_menu():
     cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
     cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
     cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
+    cmds.menuItem(label="Proxy Skinning", command=lambda x: proxy_skinning(), image="paintSkinWeights.png")
     cmds.setParent('..', menu=True)
 
     cmds.menuItem(label="Corrective Curve (Pose → Curve → Joints)",
@@ -186,6 +187,57 @@ def open_skin_transfer_ui():
     from ui import skin_transfer_UI
     reload(skin_transfer_UI)
     skin_transfer_UI.show()
+
+def proxy_skinning():
+    """
+    Proxy skinning del cuerpo con la cadena recomendada (Geodesic Voxel Binding -> transferir
+    con copySkinWeights -> optimizar -> Delta Mush). No usa auto_skin_transfer.
+
+    Selección esperada (en cualquier orden): la malla PROXY, la malla de ALTA y la RAÍZ del
+    esqueleto (joint). El PRIMER mesh seleccionado es el proxy; el segundo, la alta.
+    """
+    from tools import proxy_skinning as ps
+    reload(ps)
+
+    # orderedSelection preserva el orden en que se seleccionó (proxy primero, alta después)
+    sel = cmds.ls(sl=True, orderedSelection=True) or []
+    meshes, joints, seen = [], [], set()
+    for node in sel:
+        nt = cmds.nodeType(node)
+        if nt == "joint":
+            if node not in seen:
+                seen.add(node); joints.append(node)
+            continue
+        # normaliza a transform tanto si se seleccionó la malla como su shape
+        xform = None
+        if nt == "mesh":
+            par = cmds.listRelatives(node, parent=True, type="transform")
+            xform = par[0] if par else None
+        elif cmds.listRelatives(node, shapes=True, type="mesh"):
+            xform = node
+        if xform and xform not in seen:
+            seen.add(xform); meshes.append(xform)
+
+    if len(meshes) != 2 or len(joints) != 1:
+        cmds.inViewMessage(
+            amg="Proxy Skinning: selecciona <hl>PROXY</hl>, <hl>ALTA</hl> y la <hl>raíz del "
+                "esqueleto</hl> en ese orden (2 mallas + 1 joint).",
+            pos='midCenter', fade=True, fadeStayTime=2500)
+        return
+
+    proxy, high, root = meshes[0], meshes[1], joints[0]
+    cmds.undoInfo(openChunk=True)
+    try:
+        res = ps.proxy_skin(proxy, high, root, max_influences=4, uv_space=False,
+                            use_labels=True, delta_mush=True, bake=False)
+    finally:
+        cmds.undoInfo(closeChunk=True)
+
+    rep = res.get("report", {})
+    cmds.inViewMessage(
+        amg=f"Proxy Skinning: proxy <hl>{proxy}</hl> → alta <hl>{high}</hl> · máx "
+            f"influencias/vértice: <hl>{rep.get('max_per_vertex', '?')}</hl>.",
+        pos='midCenter', fade=True, fadeStayTime=2500)
 
 def export_source_skin_data():
     from tools import mesh_data_exporter
