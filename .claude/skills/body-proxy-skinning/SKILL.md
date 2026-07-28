@@ -43,6 +43,11 @@ Combina un **catálogo de referencia** curado con **búsqueda web en vivo** para
   binding?, ¿qué transferencia?, ¿qué refinado?, ¿bake?). Léelo al principio de cada encargo.
 - **`references/investigar.md`** — cómo profundizar en vivo (plantillas de búsqueda, dónde vive la
   info buena, cómo leer una tool ajena). Léelo cuando el catálogo no cubra el caso.
+- **`references/kangaroo-builder.md`** — las tools de skinning de **Kangaroo Builder** (el toolkit
+  que el usuario ya usa y cuyo copy skin "funciona bien"): Copy/Paste con soft selection entre
+  mallas, Flood/Distribute, Bind to Closest & Expand, Change Model/Landmark Warp, y cómo se
+  complementan con las recomendaciones de esta skill. Léelo cuando el usuario mencione Kangaroo o
+  haya que comparar/elegir entre sus tools y las del repo.
 
 ## Flujo de trabajo
 
