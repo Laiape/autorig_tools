@@ -185,7 +185,7 @@ class ArmModule(object):
         # comportamiento): el mismo push local apunta al revés en mundo. Se niega el
         # vector COMPLETO en R (v_R = -v_L) -> el push da el espejo sagital correcto.
         def _ax(v):
-            return v if self.side == "L" else (-v[0], -v[1], -v[2])
+            return correctives.mirror_axis(v, self.side)
 
         # bendy del brazo superior: ahí van los atributos de control de las correctivas.
         bendy = f"{self.side}_armUpperMainBendy_CTL"
@@ -218,6 +218,100 @@ class ArmModule(object):
                                    _ax((0, 0, -1)), _ax((-1, 0, 0)), pf, pu, enable_attr=en)
         # anillo de volumen en el CODO, infla en la flexión (-Y, con el bíceps).
         correctives.corrective_ring(f"{self.side}_elbowRing", lower, 4, radius, driver, 0, -100, push_dv, normal_axis="X")
+
+        self.shoulder_corrective_setup(upper, lower, upper_len, host)
+
+    def shoulder_corrective_setup(self, upper, lower, upper_len, host):
+
+        """
+        Correctivas del HOMBRO (multi-eje: un bend_driver de un eje no vale aquí).
+        Conos auto-calibrados (correctives.cone_driver) sobre el eje del húmero
+        medido RESPECTO AL TORSO (chest; fallback clavícula): 0 en bind, 1 en la
+        pose objetivo. Direcciones/offsets definidos en MUNDO (personaje mira +Z,
+        L en +X) y convertidos al frame local -> sin reglas de signos por lado.
+          - deltoides : brazo ELEVADO -> bulge arriba/afuera sobre el deltoide.
+          - axila     : brazo elevado -> abre la axila (abajo/adentro al torso).
+          - pectoral  : brazo ADELANTE/cruzado -> el pec viaja con el brazo.
+          - trasera   : brazo ATRÁS -> rear delt/borde de la escápula.
+        """
+
+        ref = "C_localChestSkinning_JNT"
+        if not cmds.objExists(ref):
+            # Fallback DEGRADADO: la clavícula co-rota con el brazo (auto_clavicle),
+            # así que el dot no llega a 1 en la pose objetivo y difiere FK vs IK.
+            # Solo pasa en rigs sin spine; documentado en la skill.
+            ref = f"{self.side}_clavicleSkinning_JNT"
+        if not cmds.objExists(ref):
+            om.MGlobal.displayInfo(f"{self.side} shoulder correctives: sin chest/clavícula de referencia — skip")
+            return
+
+        # Fuente del cono: el frame NON-ROLL del hombro (rígido — los bendys del
+        # ribbon reorientan armUpper00 y contaminarían el driver); fallback al joint.
+        src = f"{self.side}_armNonRollAim_AMX"
+        driver_src = src if cmds.objExists(src) else upper
+
+        # signo del eje X de la fuente respecto a la dirección real del hueso
+        # (en R el aim puede ir en -X): dot(ejeX_mundo, hombro->codo)
+        p_up = om.MVector(*cmds.xform(upper, q=True, ws=True, t=True))
+        p_lo = om.MVector(*cmds.xform(lower, q=True, ws=True, t=True))
+        bone_w = p_lo - p_up
+        if bone_w.length() < 1e-6:
+            return
+        bone_w.normalize()
+        sm = cmds.getAttr(correctives.matrix_source(driver_src))
+        x_axis = om.MVector(sm[0], sm[1], sm[2])
+        x_axis.normalize()
+        axis_sign = 1.0 if x_axis * bone_w >= 0 else -1.0
+
+        up_t, fwd_t, bck_t = (0, 1, 0), (0, 0, 1), (0, 0, -1)
+        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, half_angle=60)
+        fwd_cone = correctives.cone_driver(f"{self.side}_shoulderFwd", driver_src, ref, fwd_t, axis_sign=axis_sign, half_angle=65)
+        bck_cone = correctives.cone_driver(f"{self.side}_shoulderBck", driver_src, ref, bck_t, axis_sign=axis_sign, half_angle=65)
+
+        out_v = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
+        up_v, fwd_v = om.MVector(0, 1, 0), om.MVector(0, 0, 1)
+        push_dv = round(upper_len * 0.12, 1)
+
+        def en_am(prefix, dv):
+            """Enable + Amount en el host (bajo el separador CORRECTIVES ya creado)."""
+            en, amn = f"{prefix}Enable", f"{prefix}Amount"
+            if not cmds.attributeQuery(en, node=host, exists=True):
+                cmds.addAttr(host, longName=en, niceName=f"{prefix} Enable", attributeType="bool", defaultValue=1, keyable=True)
+            if not cmds.attributeQuery(amn, node=host, exists=True):
+                cmds.addAttr(host, longName=amn, niceName=f"{prefix} Amount", attributeType="float", defaultValue=dv, keyable=True)
+            return f"{host}.{en}", f"{host}.{amn}"
+
+        def push(name, prefix, cone, target_w, offset_w, dir_w, dv):
+            if cone is None:
+                om.MGlobal.displayInfo(f"{name}: cono degenerado (target ~= rest) — skip")
+                return
+            en, am = en_am(prefix, round(dv, 1))
+            # dir_w está autorada EN LA POSE OBJETIVO (donde el driver = 1): se
+            # pre-rota a bind con el swing rest->target, porque la correctiva vive
+            # en el frame del hueso y rota con él al activarse.
+            dir_bind = correctives.target_frame_dir(dir_w, bone_w, target_w)
+            jnt = correctives.corrective_offset_push(
+                name, upper, cone, 0, 1,
+                correctives.world_to_local_point(upper, offset_w),
+                correctives.world_to_local_dir(upper, dir_bind), am, enable_attr=en)
+            return jnt
+
+        # deltoides: bulge del músculo contraído con el brazo arriba
+        push(f"{self.side}_deltoidCorrective", "Deltoid", up_cone, up_t,
+             p_up + out_v * 0.25 * upper_len + up_v * 0.10 * upper_len,
+             out_v * 0.4 + up_v * 0.9, push_dv)
+        # axila: se abre hacia abajo/adentro al elevar (evita la interpenetración)
+        push(f"{self.side}_armpitCorrective", "Armpit", up_cone, up_t,
+             p_up - out_v * 0.10 * upper_len - up_v * 0.25 * upper_len,
+             out_v * -0.5 - up_v * 0.85, push_dv * 0.8)
+        # pectoral: viaja con el brazo al adelantarlo/cruzarlo
+        push(f"{self.side}_pecCorrective", "Pec", fwd_cone, fwd_t,
+             p_up - out_v * 0.35 * upper_len + fwd_v * 0.15 * upper_len,
+             fwd_v * 0.9 + up_v * 0.2 - out_v * 0.3, push_dv * 0.8)
+        # trasera del hombro: rear delt / borde escapular con el brazo atrás
+        push(f"{self.side}_shoulderBackCorrective", "ShoulderBack", bck_cone, bck_t,
+             p_up - fwd_v * 0.15 * upper_len,
+             fwd_v * -0.95 + up_v * 0.25, push_dv * 0.7)
 
     def lock_attributes(self, ctl, attrs):
 

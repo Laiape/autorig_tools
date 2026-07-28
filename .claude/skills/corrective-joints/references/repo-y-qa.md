@@ -15,6 +15,10 @@ del driver pasa por `_remap01` (remapValue 0..1 con auto-clamp).
 | `corrective_offset_push(...)` | como push pero nace con `rest_offset` (translate = rest + empuje) | p.ej. isquios: parte detrás y se contrae |
 | `corrective_arc(name, base_joint, driver, in_min, in_max, forward_axis, up_axis, forward_limit, up_limit, enable_attr=None, rest_offset=(0,0,0), up_power=2.0)` | trayectoria en arco: forward lineal + up con progreso^up_power ("sube tarde") | forward/up_limit son LÍMITES en unidades → pásalos como plug |
 | `bend_driver(name, upper_joint, lower_joint, axis, sign=1.0)` | ángulo de flexión por matrices mundo, FK/IK-agnóstico, rest a 0, eje de bisagra primero en el rotate order | devuelve plug en grados; NO para multi-eje |
+| `cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0)` | pose reader multi-eje auto-calibrado: 0 en bind, 1 con el eje del hueso en `target_world` | devuelve plug 0..1 o **None** (cono degenerado); `axis_sign` medido contra upper→lower |
+| `world_to_local_dir(parent, world_dir)` / `world_to_local_point(parent, world_point)` | dirección/punto MUNDO → espacio local del padre (ejes de empuje y rest_offsets sin reglas de signos) | usados por shoulder/hip/facial setups |
+| `mirror_axis(v, side)` | vector de empuje local L→R (negación completa) | equivalente a los `_ax` de arm/leg |
+| `corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None, enable_attr=None)` | sistema POSE→CURVA→JOINTS: blendShape frontOfChain sobre una curva skinneada al rig (una target por pose, peso driveado) + N joints montadas en la curva por pointOnCurveInfo | la curva base DEBE ir skinneada al rig; joints `{name}CurveCorrective##_JNT` (export _ENV ok); UI en menú SKINNING → Corrective Curve; re-ejecutable (añade poses) |
 | `localize_corrective_skin(skin_cluster)` | conecta `bindPreMatrix[i]` al padre de cada influencia → mata la doble transformación del skin apilado | llamar UNA vez, en pose neutra; el build lo hace solo para `*corrective*` |
 
 En `matrix_manager.py`: `bend_factor(m0,m1,m2,name)` (flexión 0-1 por dot, sin flips —
@@ -166,6 +170,14 @@ análogos (`node`/`name`/`type`/`min`/`max`/`default`). La clave `node` acepta t
 3. **ROM completa** de nuevo (no solo la pose que motivó la correctiva): codo/rodilla
    0→140°, twists ±90°, poses combinadas (squat, brazos arriba/cruzados); facial: jaw
    0→35°, blinks, las expresiones del set y sus combos.
+   **Poses de doble activación obligatorias** (correctivas de zonas adyacentes con
+   drivers distintos): *sit 90/90* (rodilla+cadera: thighBack sube hacia el pliegue
+   infraglúteo mientras el glute empuja atrás — tunear GluteAmount y ThighBack JUNTOS,
+   pesos en parches excluyentes con frontera en el pliegue), *squat abierto*
+   (glute+groin+hipOut a la vez en diagonal), *reach diagonal arriba-adelante*
+   (deltoid+armpit+pec solapan), *hug/brazos cruzados* (biceps+pec, frontera en el
+   surco deltopectoral), y *brazo a 90° + twist completo del húmero* (las correctivas
+   de hombro NO deben orbitar — viven en el frame non-roll).
 4. **Masterwalk**: escala 0.1x/2x/10x, a 1000 unidades, rotado 90/180° — con un ciclo
    sonando.
 5. **Mirror numérico**: pose simétrica y comparar translates L vs R.

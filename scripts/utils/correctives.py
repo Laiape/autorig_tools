@@ -306,6 +306,278 @@ def corrective_arc(name, base_joint, driver, in_min, in_max,
     return jnt
 
 
+def world_to_local_dir(parent, world_dir):
+    """Dirección MUNDO -> espacio local de `parent` (normalizada). Para definir
+    ejes de empuje en mundo (personaje mira +Z, L en +X) y convertirlos al frame
+    real del padre en build -> funciona con joints de cualquier orientación y con
+    el mirror-behavior de R sin reglas de signos a mano."""
+    mi = om.MMatrix(cmds.getAttr(f"{parent}.worldInverseMatrix[0]"))
+    v = om.MVector(*world_dir) * mi
+    if v.length() > 1e-9:
+        v.normalize()
+    return (v.x, v.y, v.z)
+
+
+def world_to_local_point(parent, world_point):
+    """Punto MUNDO -> translate local bajo `parent` (para rest_offset)."""
+    mi = om.MMatrix(cmds.getAttr(f"{parent}.worldInverseMatrix[0]"))
+    p = om.MPoint(world_point[0], world_point[1], world_point[2]) * mi
+    return (p.x, p.y, p.z)
+
+
+def mirror_axis(v, side):
+    """Vector de empuje LOCAL L -> R: negar el vector COMPLETO (las guías se
+    espejan con mirrorBehavior; regla verificada en arm/leg)."""
+    return v if side == "L" else (-v[0], -v[1], -v[2])
+
+
+def matrix_source(node):
+    """Plug de matriz mundo de `node`: worldMatrix para DAG, outputMatrix/matrixSum
+    para nodos de matriz (aimMatrix, blendMatrix, multMatrix...). Permite usar como
+    fuente de un pose reader un frame rígido tipo {side}_armNonRollAim_AMX en vez
+    de un joint de ribbon (cuyo aim contaminan los bendys)."""
+    for attr, plug in (("worldMatrix", f"{node}.worldMatrix[0]"),
+                       ("outputMatrix", f"{node}.outputMatrix"),
+                       ("matrixSum", f"{node}.matrixSum")):
+        if cmds.attributeQuery(attr, node=node, exists=True):
+            return plug
+    return None
+
+
+def target_frame_dir(world_dir, rest_bone_world, target_world):
+    """Pre-rota una dirección de empuje autorada EN LA POSE OBJETIVO al frame de
+    BIND. La correctiva vive en el frame del hueso, que rota rest->target cuando
+    el cono se activa: sin esta pre-rotación, a plena activación el push mundial
+    llega girado hasta 90° (p.ej. un deltoides autorado "arriba" acabaría
+    empujando hacia el cuello con el brazo elevado). En rest el push vale ~0
+    (driver 0), así que la dirección solo importa cerca del target.
+
+    dir_bind = dir_pose.rotateBy(swing(rest->target)^-1)
+    """
+    a = om.MVector(rest_bone_world[0], rest_bone_world[1], rest_bone_world[2])
+    b = om.MVector(target_world[0], target_world[1], target_world[2])
+    if a.length() < 1e-9 or b.length() < 1e-9:
+        return om.MVector(world_dir[0], world_dir[1], world_dir[2])
+    a.normalize()
+    b.normalize()
+    q = om.MQuaternion(a, b)
+    return om.MVector(world_dir[0], world_dir[1], world_dir[2]).rotateBy(q.inverse())
+
+
+def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02, half_angle=None):
+    """
+    Pose reader MULTI-EJE (cono auto-calibrado) para hombro/cadera, donde un
+    euler de un eje (bend_driver) no vale. Devuelve un plug 0..1: 0 en la pose
+    de BUILD (rest, sea T-pose o A-pose) y 1 cuando el eje `bone_axis` del
+    `joint` apunta a `target_world` (dirección MUNDO en bind).
+
+    - La dirección del hueso se mide EN ESPACIO de `ref_parent` (chest, pelvis,
+      clavícula): acompaña al torso y es inmune a masterwalk/escala.
+    - `target_world` se convierte a espacio del padre EN BUILD y queda estático.
+    - Auto-calibración: inputMin del remap = dot(eje en rest, target) + margin ->
+      el driver vale 0 exacto en bind y rampa suave (smooth) hasta 1 en la pose.
+    - `axis_sign`: +1/-1 según el eje local apunte A FAVOR o EN CONTRA del hueso
+      (en R el ribbon puede aimear -X); medirlo con la dirección real
+      upper->lower y pasarlo aquí.
+    - `half_angle` (grados): SEMIÁNGULO del cono. Sin él, la activación cubre
+      TODO el arco desde bind (con target ⟂ al rest son ~90°: una rampa de
+      hemiesfera que se cuela en poses cotidianas). Con half_angle, el driver
+      arranca a ese ángulo del target: inputMin = max(rest_dot+margin,
+      cos(half_angle)). Valores razonables: 55-65.
+    - `joint` puede ser un joint (worldMatrix) o un nodo de matriz con
+      outputMatrix/matrixSum — p.ej. el {side}_armNonRollAim_AMX: un frame
+      RÍGIDO de la articulación que los bendys del ribbon no contaminan.
+    - El TWIST es invisible al cono (girar el hueso sobre su eje no cambia su
+      dirección): para poses con twist combinar con matrix_manager.extract_twist.
+
+    Returns:
+        str|None: plug 0..1, o None si el target está demasiado cerca del rest
+        (cono degenerado: no habría rango útil).
+    """
+    axis_idx = {"X": 0, "Y": 1, "Z": 2}[bone_axis]
+
+    src = matrix_source(joint)
+    if src is None:
+        return None
+
+    # target (y rest) en espacio del padre, estáticos de bind
+    pim = om.MMatrix(cmds.getAttr(f"{ref_parent}.worldInverseMatrix[0]"))
+    tv = om.MVector(*target_world) * pim
+    if tv.length() < 1e-9:
+        return None
+    tv.normalize()
+    tv *= float(axis_sign)
+
+    jm = om.MMatrix(cmds.getAttr(src)) * pim
+    rest_axis = om.MVector(jm[axis_idx * 4], jm[axis_idx * 4 + 1], jm[axis_idx * 4 + 2])
+    if rest_axis.length() < 1e-9:
+        return None
+    rest_axis.normalize()
+    rest_dot = rest_axis * tv
+    if rest_dot > 1.0 - 2.0 * margin:
+        return None  # el rest ya está "en la pose": el cono no discrimina
+
+    # dirección del hueso en espacio del padre, EN VIVO
+    mm = cmds.createNode("multMatrix", name=f"{name}_MM", ss=True)
+    cmds.connectAttr(src, f"{mm}.matrixIn[0]")
+    cmds.connectAttr(f"{ref_parent}.worldInverseMatrix[0]", f"{mm}.matrixIn[1]")
+    rfm = cmds.createNode("rowFromMatrix", name=f"{name}Axis_RFM", ss=True)
+    cmds.setAttr(f"{rfm}.input", axis_idx)
+    cmds.connectAttr(f"{mm}.matrixSum", f"{rfm}.matrix")
+
+    dot = cmds.createNode("vectorProduct", name=f"{name}_DOT", ss=True)
+    cmds.setAttr(f"{dot}.operation", 1)  # dot product
+    cmds.setAttr(f"{dot}.normalizeOutput", 1)  # cos limpio aunque haya escala
+    for ax in "XYZ":
+        cmds.connectAttr(f"{rfm}.output{ax}", f"{dot}.input1{ax}")
+    cmds.setAttr(f"{dot}.input2", tv.x, tv.y, tv.z, type="double3")
+
+    input_min = rest_dot + margin
+    if half_angle is not None:
+        input_min = max(input_min, math.cos(math.radians(float(half_angle))))
+    rmv = cmds.createNode("remapValue", name=f"{name}_RMV", ss=True)
+    cmds.connectAttr(f"{dot}.outputX", f"{rmv}.inputValue")
+    cmds.setAttr(f"{rmv}.inputMin", min(input_min, 0.98))
+    cmds.setAttr(f"{rmv}.inputMax", 1.0)
+    cmds.setAttr(f"{rmv}.outputMin", 0.0)
+    cmds.setAttr(f"{rmv}.outputMax", 1.0)
+    for i in (0, 1):  # rampa smooth (entrada/salida suaves del cono)
+        cmds.setAttr(f"{rmv}.value[{i}].value_Interp", 2)
+    return f"{rmv}.outValue"
+
+
+def corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None, enable_attr=None):
+    """
+    Sistema POSE -> CURVA -> JOINTS (estilo "curve based joint drivers" de Matt
+    Le-Fevre): en vez de tunear N pushes sueltos, el rigger esculpe EL PERFIL de
+    la zona como curva por pose, y una batería de joints monta la curva y lo
+    reproduce en el skinning. Ideal para siluetas continuas: línea de nudillos,
+    pliegue de la muñeca, perfil del antebrazo, nasolabial.
+
+    Montaje:
+      1. blendShape FRONT OF CHAIN sobre `base_curve` con una target por pose;
+         el peso de cada target = remapValue(driver, in_min..in_max) [x enable].
+         Los targets se esculpen en ESPACIO DE REPOSO (duplicado de la curva
+         base): como el skin de la curva evalúa después, se ve el resultado en
+         vivo con el rig posado mientras mueves CVs del target.
+      2. `num_joints` joints `{name}CurveCorrective{NN}_JNT` montadas sobre la
+         curva (pointOnCurveInfo por porcentaje -> fourByFourMatrix -> multMatrix
+         x parent.worldInverseMatrix -> offsetParentMatrix): siguen la curva
+         deformada Y al rig, sin doble transformación. El naming con "corrective"
+         hace que skeleton_hierarchy las cuelgue del _ENV de `parent_joint`.
+
+    IMPORTANTE: la curva base debe SEGUIR AL RIG — skinnéala a las joints de
+    deformación de la zona (cmds.skinCluster sobre la curva) o cuélgala de un
+    módulo. Si la curva se queda estática en mundo, las joints no acompañarán al
+    personaje. Después, pinta las joints nuevas en el skinCluster de correctivas
+    (`C_corrective_SKC`) como cualquier otra.
+
+    Re-ejecutable: si el blendShape `{name}CurveCorrective_BLS` ya existe sobre
+    la curva, las targets nuevas se AÑADEN a él (para ir sumando poses) y no se
+    recrean las joints existentes.
+
+    Args:
+        name (str): prefijo `{L|R|C}_zona` (p.ej. "L_knuckles").
+        base_curve (str): transform de la curva NURBS de reposo (skinneada al rig).
+        targets (list): tuplas (target_curve, driver, in_min, in_max) — una por
+            pose; driver es un plug (bend_driver, cone_driver, peso de BLS, ctl…)
+            e in_min/in_max aceptan número o plug (auto-clamp del remap).
+        num_joints (int): joints a montar sobre la curva.
+        parent_joint (str|None): joint de deformación del que cuelgan las joints
+            (necesario para el export _ENV). Sin él, se parentan al mundo y NO
+            entran en el esqueleto de export (warning).
+        enable_attr (str|None): plug 0-1 que multiplica TODOS los pesos.
+
+    Returns:
+        dict: {"joints": [...], "blendshape": str, "curve": base_curve}
+    """
+    shapes = cmds.listRelatives(base_curve, shapes=True, noIntermediate=True, fullPath=True) or []
+    shape = shapes[0] if shapes else None
+    if not shape or cmds.nodeType(shape) != "nurbsCurve":
+        cmds.error(f"corrective_curve: '{base_curve}' no tiene shape de curva NURBS no-intermediate")
+
+    bls_name = f"{name}CurveCorrective_BLS"
+
+    # --- blendShape front of chain (reutilizable entre llamadas para sumar poses)
+    if cmds.objExists(bls_name):
+        bls = bls_name
+        # índice libre REAL (weightCount miente si se borró un target intermedio)
+        ids = cmds.getAttr(f"{bls}.weight", multiIndices=True) or []
+        next_idx = (max(ids) + 1) if ids else 0
+        existing_targets = set(cmds.blendShape(bls, q=True, target=True) or [])
+    else:
+        bls = cmds.blendShape(base_curve, name=bls_name, frontOfChain=True)[0]
+        next_idx = 0
+        existing_targets = set()
+
+    idx = next_idx
+    for target_curve, driver, in_min, in_max in targets:
+        t_short = _short(target_curve)
+        if t_short in existing_targets:
+            om.MGlobal.displayWarning(
+                f"corrective_curve {name}: '{t_short}' ya es target del BLS — se salta (no duplicar poses)")
+            continue
+        cmds.blendShape(bls, edit=True, target=(base_curve, idx, target_curve, 1.0))
+        drv = _remap01(f"{name}Crv{t_short}", driver, in_min, in_max)
+        if enable_attr is not None:
+            mul = cmds.createNode("multiply", name=f"{name}Crv{t_short}En_MUL", ss=True)
+            cmds.connectAttr(drv, f"{mul}.input[0]")
+            _set_or_connect(f"{mul}.input[1]", enable_attr)
+            drv = f"{mul}.output"
+        cmds.connectAttr(drv, f"{bls}.weight[{idx}]", force=True)
+        idx += 1
+
+    # --- joints montadas sobre la curva (porcentaje de longitud)
+    if parent_joint is not None and not cmds.objExists(parent_joint):
+        parent_joint = None
+    if parent_joint is None:
+        om.MGlobal.displayWarning(
+            f"corrective_curve {name}: sin parent_joint — las joints NO entrarán en el esqueleto de export")
+
+    stale = cmds.ls(f"{name}CurveCorrective??_JNT", type="joint") or []
+    if stale and len(stale) > num_joints:
+        om.MGlobal.displayWarning(
+            f"corrective_curve {name}: hay {len(stale)} joints y pides {num_joints} — "
+            f"las sobrantes conservan su parámetro antiguo (bórralas si cambias la densidad)")
+
+    joints = []
+    for i in range(num_joints):
+        # fracción de PARÁMETRO (0-1 del dominio de knots), no de longitud de arco
+        param = i / max(num_joints - 1, 1)
+        jnt_name = f"{name}CurveCorrective{i:02d}_JNT"
+        poc_name = f"{name}Crv{i:02d}_POC"
+        if cmds.objExists(jnt_name):
+            # re-ejecución: se conserva la joint pero se re-reparte el parámetro
+            # para que la distribución sea coherente con num_joints actual
+            if cmds.objExists(poc_name):
+                cmds.setAttr(f"{poc_name}.parameter", param)
+            joints.append(jnt_name)
+            continue
+        poc = cmds.createNode("pointOnCurveInfo", name=poc_name, ss=True)
+        cmds.connectAttr(f"{shape}.worldSpace[0]", f"{poc}.inputCurve")
+        cmds.setAttr(f"{poc}.turnOnPercentage", 1)
+        cmds.setAttr(f"{poc}.parameter", param)
+        fbf = cmds.createNode("fourByFourMatrix", name=f"{name}Crv{i:02d}_FBF", ss=True)
+        for ax, slot in (("X", "in30"), ("Y", "in31"), ("Z", "in32")):
+            cmds.connectAttr(f"{poc}.position{ax}", f"{fbf}.{slot}")
+
+        kw = {"name": jnt_name, "ss": True}
+        if parent_joint:
+            kw["parent"] = parent_joint
+        jnt = cmds.createNode("joint", **kw)
+        cmds.setAttr(f"{jnt}.jointOrient", 0, 0, 0)
+        if parent_joint:
+            mm = cmds.createNode("multMatrix", name=f"{name}Crv{i:02d}_MM", ss=True)
+            cmds.connectAttr(f"{fbf}.output", f"{mm}.matrixIn[0]")
+            cmds.connectAttr(f"{parent_joint}.worldInverseMatrix[0]", f"{mm}.matrixIn[1]")
+            cmds.connectAttr(f"{mm}.matrixSum", f"{jnt}.offsetParentMatrix")
+        else:
+            cmds.connectAttr(f"{fbf}.output", f"{jnt}.offsetParentMatrix")
+        joints.append(jnt)
+
+    return {"joints": joints, "blendshape": bls, "curve": base_curve}
+
+
 def _inf_index(skin_cluster, inf):
     """Índice lógico de la influencia `inf` en el array .matrix del skinCluster."""
     conns = cmds.listConnections(f"{inf}.worldMatrix[0]", source=False, destination=True, plugs=True) or []

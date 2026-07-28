@@ -55,13 +55,6 @@ def create_custom_menu():
     cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
     cmds.setParent('..', menu=True)
 
-    cmds.menuItem(label="De Boor Tools", subMenu=True, tearOff=True, image="nurbsCurve.png")
-    cmds.menuItem(label="De Boor Ribbon",          command=lambda x: open_deboor_tools(tab=0), image="kinJoint.png")
-    cmds.menuItem(label="Split Blendshape",        command=lambda x: open_deboor_tools(tab=1), image="blendShape.png")
-    cmds.menuItem(label="Skin Split — Curve",      command=lambda x: open_deboor_tools(tab=2), image="paintSkinWeights.png")
-    cmds.menuItem(label="Skin Split — Surface",    command=lambda x: open_deboor_tools(tab=3), image="paintSkinWeights.png")
-    cmds.setParent('..', menu=True)
-
     # ── ANIMATION ─────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="ANIMATION")
 
@@ -82,6 +75,11 @@ def create_custom_menu():
     cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
     cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
     cmds.setParent('..', menu=True)
+
+    cmds.menuItem(label="Corrective Curve (Pose → Curve → Joints)",
+                  command=lambda x: open_corrective_curve_ui(), image="kinJoint.png")
+    cmds.menuItem(label="Auto Skin Transfer (Clothes)",
+                  command=lambda x: open_skin_transfer_ui(), image="paintSkinWeights.png")
 
     # ── SIMULATION / ADONIS ───────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="SIMULATION")
@@ -234,10 +232,10 @@ def open_adonis_copy_weights():
     copyWeightsAdonis.show()
 
 
-def open_deboor_tools(tab=0):
-    from ui import deboor_tools_UI
-    reload(deboor_tools_UI)
-    deboor_tools_UI.show(tab=tab)
+def open_corrective_curve_ui():
+    from ui import corrective_curve_UI
+    reload(corrective_curve_UI)
+    corrective_curve_UI.show()
 
 
 def open_pose_tester():
