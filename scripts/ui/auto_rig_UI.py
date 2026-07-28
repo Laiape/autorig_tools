@@ -72,7 +72,7 @@ def create_custom_menu():
     cmds.setParent('..', menu=True)
 
     cmds.menuItem(label="Corrective Curve (Pose → Curve → Joints)",
-                  command=lambda x: open_corrective_curve_ui(), image="nurbsCurve.png")
+                  command=lambda x: open_corrective_curve_ui(), image="kinJoint.png")
     cmds.menuItem(label="Auto Skin Transfer (Clothes)",
                   command=lambda x: open_skin_transfer_ui(), image="paintSkinWeights.png")
 
