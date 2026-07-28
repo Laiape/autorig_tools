@@ -58,8 +58,7 @@ def create_custom_menu():
     # ── ANIMATION ─────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="ANIMATION")
 
-    cmds.menuItem(label="Test Rig", command=lambda x: show_rig_tools(),
-                  boldFont=True, image="playblast.png")
+    cmds.menuItem(label="Test Rig", command=lambda x: open_pose_tester(), boldFont=True, image="setKeyframe.png")
 
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
@@ -237,3 +236,11 @@ def open_corrective_curve_ui():
     from ui import corrective_curve_UI
     reload(corrective_curve_UI)
     corrective_curve_UI.show()
+
+
+def open_pose_tester():
+    from tools import pose_tester
+    reload(pose_tester)
+    from ui import pose_tester_UI
+    reload(pose_tester_UI)
+    pose_tester_UI.show()

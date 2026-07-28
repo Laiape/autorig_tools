@@ -18,6 +18,40 @@ reload(ribbon)
 
 class SpineModule(object):
 
+    # Reparto de la flexión sagital: sesga hacia el extremo CAUDAL las posiciones
+    # de REPOSO de los controles -> weight = (i/(n-1))**SAGITTAL_BIAS. Esas
+    # posiciones son los CVs del ribbon, así que juntarlos en la grupa deja que la
+    # curva gire fuerte ahí y siga recta hacia el tórax. 1.0 = uniforme = curvatura
+    # constante = el lomo se arquea parejo de punta a punta, que es la firma FELINA
+    # (el guepardo flexiona mucho y repartido; el caballo, poco y concentrado en la
+    # unión lumbosacra). Ex vivo: lumbosacra 26.3° frente a 5.4° de un nivel
+    # toracolumbar (T17-T18/T18-L1) -> ratio 4.87.
+    #
+    # 2.4 está MEDIDO contra ese ratio, no estimado: metiendo 9° totales en la
+    # columna del caballo (4 ctls, 8 joints) el joint caudal se lleva 3.99° y el
+    # resto 0.50-1.46° -> ratio 4.78. Barrido medido del knob:
+    # 1.0 -> 1.00 · 2.0 -> 3.54 · 2.4 -> 4.78 · 2.5 -> 5.11 · 3.0 -> 6.96.
+    # Este es EL parámetro équido/felino: mismo módulo, distinta ponderación.
+    #
+    # No mueve los joints de skinning en reposo (el ribbon los reparte por fracción
+    # de LONGITUD DE ARCO, param_from_length=True en ribbon_setup), así que los
+    # pesos de piel ya exportados siguen valiendo. Verificado: mismas z de reposo
+    # con bias 1.0 y 2.4.
+    #
+    # OJO: la unión lumbosacra real cae ~19u por detrás de la guía C_spine00
+    # (z≈-75 frente a -55.84), o sea FUERA del ribbon. Esto concentra la flexión en
+    # el extremo caudal DEL TRAMO, no en la lumbosacra. Para que caiga en la
+    # lumbosacra hay que llevar la guía C_spine00 del asset a z≈-75 (y reimportar
+    # pesos: eso sí mueve los joints de skinning).
+    #
+    # ponytail: flag de clase (idioma del repo, como PV_SIGN/DOUBLE_BEND del leg) ->
+    # es por MÓDULO, no por personaje, y los únicos Rig_Type=1 son horse y giraffe.
+    # Si alguna vez necesitan valores distintos, esto sube al .build; ojo: hay que
+    # añadirlo también a create_rig_settings (hoy solo hace int/enum), porque
+    # get_rig_data reescribe el .build desde los atributos de C_guides_GRP y se
+    # comería una clave suelta.
+    SAGITTAL_BIAS = 2.4
+
     def __init__(self):
 
         """
@@ -93,7 +127,9 @@ class SpineModule(object):
         # Nuevo método de guías: matrices horneadas en Python entre la guía root
         # y la end. Todas comparten la misma orientación (X apunta a la guía
         # siguiente, Y mira al up del mundo) con las posiciones repartidas en
-        # línea recta entre ambas — tantas como controladores se pidan.
+        # línea recta entre ambas — tantas como controladores se pidan. El
+        # espaciado lo pondera SAGITTAL_BIAS (ver arriba): no cambia por dónde
+        # pasa la recta, solo dónde caen los controles sobre ella.
         root_pos = om.MVector(cmds.xform(self.spine_chain[0], q=True, ws=True, t=True))
         end_pos = om.MVector(cmds.xform(self.spine_chain[-1], q=True, ws=True, t=True))
         cmds.delete(self.spine_chain[0])
@@ -105,7 +141,7 @@ class SpineModule(object):
 
         self.spine_guides_matrices = []
         for i in range(self.spine_controllers):
-            weight = i / (self.spine_controllers - 1)
+            weight = (i / (self.spine_controllers - 1)) ** self.SAGITTAL_BIAS
             pos = root_pos * (1.0 - weight) + end_pos * weight
             self.spine_guides_matrices.append(list(guides_manager._with_translation(base_matrix, pos)))
 
