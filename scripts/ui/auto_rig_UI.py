@@ -55,6 +55,12 @@ def create_custom_menu():
     cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
     cmds.setParent('..', menu=True)
 
+    # ── ANIMATION ─────────────────────────────────────────────────────────────
+    cmds.menuItem(divider=True, dividerLabel="ANIMATION")
+
+    cmds.menuItem(label="Test Rig", command=lambda x: show_rig_tools(),
+                  boldFont=True, image="playblast.png")
+
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
 
