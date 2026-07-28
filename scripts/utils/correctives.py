@@ -491,24 +491,33 @@ def corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None,
     Returns:
         dict: {"joints": [...], "blendshape": str, "curve": base_curve}
     """
-    shape = (cmds.listRelatives(base_curve, shapes=True, fullPath=True) or [None])[0]
+    shapes = cmds.listRelatives(base_curve, shapes=True, noIntermediate=True, fullPath=True) or []
+    shape = shapes[0] if shapes else None
     if not shape or cmds.nodeType(shape) != "nurbsCurve":
-        cmds.error(f"corrective_curve: '{base_curve}' no es una curva NURBS")
+        cmds.error(f"corrective_curve: '{base_curve}' no tiene shape de curva NURBS no-intermediate")
 
     bls_name = f"{name}CurveCorrective_BLS"
 
     # --- blendShape front of chain (reutilizable entre llamadas para sumar poses)
     if cmds.objExists(bls_name):
         bls = bls_name
-        next_idx = cmds.blendShape(bls, q=True, weightCount=True) or 0
+        # índice libre REAL (weightCount miente si se borró un target intermedio)
+        ids = cmds.getAttr(f"{bls}.weight", multiIndices=True) or []
+        next_idx = (max(ids) + 1) if ids else 0
+        existing_targets = set(cmds.blendShape(bls, q=True, target=True) or [])
     else:
         bls = cmds.blendShape(base_curve, name=bls_name, frontOfChain=True)[0]
         next_idx = 0
+        existing_targets = set()
 
-    for k, (target_curve, driver, in_min, in_max) in enumerate(targets):
-        idx = next_idx + k
-        cmds.blendShape(bls, edit=True, target=(base_curve, idx, target_curve, 1.0))
+    idx = next_idx
+    for target_curve, driver, in_min, in_max in targets:
         t_short = _short(target_curve)
+        if t_short in existing_targets:
+            om.MGlobal.displayWarning(
+                f"corrective_curve {name}: '{t_short}' ya es target del BLS — se salta (no duplicar poses)")
+            continue
+        cmds.blendShape(bls, edit=True, target=(base_curve, idx, target_curve, 1.0))
         drv = _remap01(f"{name}Crv{t_short}", driver, in_min, in_max)
         if enable_attr is not None:
             mul = cmds.createNode("multiply", name=f"{name}Crv{t_short}En_MUL", ss=True)
@@ -516,6 +525,7 @@ def corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None,
             _set_or_connect(f"{mul}.input[1]", enable_attr)
             drv = f"{mul}.output"
         cmds.connectAttr(drv, f"{bls}.weight[{idx}]", force=True)
+        idx += 1
 
     # --- joints montadas sobre la curva (porcentaje de longitud)
     if parent_joint is not None and not cmds.objExists(parent_joint):
@@ -524,23 +534,39 @@ def corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None,
         om.MGlobal.displayWarning(
             f"corrective_curve {name}: sin parent_joint — las joints NO entrarán en el esqueleto de export")
 
+    stale = cmds.ls(f"{name}CurveCorrective??_JNT", type="joint") or []
+    if stale and len(stale) > num_joints:
+        om.MGlobal.displayWarning(
+            f"corrective_curve {name}: hay {len(stale)} joints y pides {num_joints} — "
+            f"las sobrantes conservan su parámetro antiguo (bórralas si cambias la densidad)")
+
     joints = []
     for i in range(num_joints):
+        # fracción de PARÁMETRO (0-1 del dominio de knots), no de longitud de arco
+        param = i / max(num_joints - 1, 1)
         jnt_name = f"{name}CurveCorrective{i:02d}_JNT"
+        poc_name = f"{name}Crv{i:02d}_POC"
         if cmds.objExists(jnt_name):
-            joints.append(jnt_name)  # re-ejecución: solo se añadieron poses
+            # re-ejecución: se conserva la joint pero se re-reparte el parámetro
+            # para que la distribución sea coherente con num_joints actual
+            if cmds.objExists(poc_name):
+                cmds.setAttr(f"{poc_name}.parameter", param)
+            joints.append(jnt_name)
             continue
-        poc = cmds.createNode("pointOnCurveInfo", name=f"{name}Crv{i:02d}_POC", ss=True)
+        poc = cmds.createNode("pointOnCurveInfo", name=poc_name, ss=True)
         cmds.connectAttr(f"{shape}.worldSpace[0]", f"{poc}.inputCurve")
         cmds.setAttr(f"{poc}.turnOnPercentage", 1)
-        cmds.setAttr(f"{poc}.parameter", i / max(num_joints - 1, 1))
+        cmds.setAttr(f"{poc}.parameter", param)
         fbf = cmds.createNode("fourByFourMatrix", name=f"{name}Crv{i:02d}_FBF", ss=True)
         for ax, slot in (("X", "in30"), ("Y", "in31"), ("Z", "in32")):
             cmds.connectAttr(f"{poc}.position{ax}", f"{fbf}.{slot}")
 
-        jnt = cmds.createNode("joint", name=jnt_name, ss=True, parent=parent_joint)
+        kw = {"name": jnt_name, "ss": True}
+        if parent_joint:
+            kw["parent"] = parent_joint
+        jnt = cmds.createNode("joint", **kw)
         cmds.setAttr(f"{jnt}.jointOrient", 0, 0, 0)
-        if parent_joint is not None:
+        if parent_joint:
             mm = cmds.createNode("multMatrix", name=f"{name}Crv{i:02d}_MM", ss=True)
             cmds.connectAttr(f"{fbf}.output", f"{mm}.matrixIn[0]")
             cmds.connectAttr(f"{parent_joint}.worldInverseMatrix[0]", f"{mm}.matrixIn[1]")

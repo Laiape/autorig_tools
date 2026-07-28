@@ -187,25 +187,52 @@ class CorrectiveCurveUI(QtWidgets.QDialog):
     def _bind_curve(self):
         curve = self.curve_le.text()
         jnts = [j for j in (cmds.ls(selection=True) or []) if cmds.nodeType(j) == "joint"]
+        # nunca bindear la curva a sus propias joints montadas (ciclo real:
+        # joint -> skin de la curva -> POC -> offsetParentMatrix de la joint)
+        riders = [j for j in jnts if "CurveCorrective" in j]
+        jnts = [j for j in jnts if "CurveCorrective" not in j]
         if not (curve and cmds.objExists(curve) and jnts):
             self.status.setText("Necesito la curva base en el campo y joints seleccionadas")
             return
+        if cmds.ls(cmds.listHistory(curve) or [], type="skinCluster"):
+            self.status.setText("La curva ya tiene skinCluster — edita sus pesos en vez de re-bindear")
+            return
         skc = cmds.skinCluster(jnts, curve, toSelectedBones=True,
                                name=f"{curve}_SKC")[0]
-        self.status.setText(f"Curva bindeada: {skc} ({len(jnts)} joints)")
+        msg = f"Curva bindeada: {skc} ({len(jnts)} joints)"
+        if riders:
+            msg += f" — {len(riders)} joints CurveCorrective excluidas (ciclo)"
+        self.status.setText(msg)
 
     def _duplicate_target(self):
         curve = self.curve_le.text()
         if not (curve and cmds.objExists(curve)):
             self.status.setText("Pon primero la curva base")
             return
+        # duplicate copia la forma DEFORMADA actual: si la curva está skinneada y
+        # el rig posado, ese snapshot NO es el rest y el blendShape (front of
+        # chain) doblaría la deformación. Nos quedamos con la shape Orig
+        # (intermediate = rest) del duplicado, que es rest en cualquier pose.
         dup = cmds.duplicate(curve, name=f"{curve}_target#")[0]
-        # el duplicado es el REST: se esculpe mientras el rig está en la pose
-        for attr in ("tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz"):
+        shapes = cmds.listRelatives(dup, shapes=True, fullPath=True) or []
+        inter = [s for s in shapes if cmds.getAttr(f"{s}.intermediateObject")]
+        if inter:
+            for s in shapes:
+                if s not in inter:
+                    cmds.delete(s)
+            cmds.setAttr(f"{inter[0]}.intermediateObject", 0)
+            for extra in inter[1:]:
+                cmds.delete(extra)
+        for attr in ("tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"):
             cmds.setAttr(f"{dup}.{attr}", lock=False)
+        cmds.setAttr(f"{dup}.v", 1)
+        # que sea seleccionable/esculpible aunque la base fuera Reference
+        for node in [dup] + (cmds.listRelatives(dup, shapes=True, fullPath=True) or []):
+            if cmds.attributeQuery("overrideEnabled", node=node, exists=True):
+                cmds.setAttr(f"{node}.overrideEnabled", 0)
         self.target_le.setText(dup)
         cmds.select(dup)
-        self.status.setText(f"Target creado: {dup} — esculpe sus CVs con el rig posado")
+        self.status.setText(f"Target creado (forma de REST): {dup} — esculpe sus CVs con el rig posado")
 
     def _create(self):
         name = self.name_le.text().strip()
@@ -228,6 +255,8 @@ class CorrectiveCurveUI(QtWidgets.QDialog):
         result = correctives.corrective_curve(
             name, curve, [(target, driver, self.min_sb.value(), self.max_sb.value())],
             num_joints=self.joints_sb.value(), parent_joint=parent)
+        # limpiar el target evita añadir la misma pose dos veces con doble clic
+        self.target_le.setText("")
         self.status.setText(
             f"OK: {len(result['joints'])} joints sobre {curve} — "
             f"pinta sus pesos en el skinCluster de correctivas (*corrective*)")
