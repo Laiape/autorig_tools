@@ -18,6 +18,7 @@ del driver pasa por `_remap01` (remapValue 0..1 con auto-clamp).
 | `cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0)` | pose reader multi-eje auto-calibrado: 0 en bind, 1 con el eje del hueso en `target_world` | devuelve plug 0..1 o **None** (cono degenerado); `axis_sign` medido contra upper→lower |
 | `world_to_local_dir(parent, world_dir)` / `world_to_local_point(parent, world_point)` | dirección/punto MUNDO → espacio local del padre (ejes de empuje y rest_offsets sin reglas de signos) | usados por shoulder/hip/facial setups |
 | `mirror_axis(v, side)` | vector de empuje local L→R (negación completa) | equivalente a los `_ax` de arm/leg |
+| `corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None, enable_attr=None)` | sistema POSE→CURVA→JOINTS: blendShape frontOfChain sobre una curva skinneada al rig (una target por pose, peso driveado) + N joints montadas en la curva por pointOnCurveInfo | la curva base DEBE ir skinneada al rig; joints `{name}CurveCorrective##_JNT` (export _ENV ok); UI en menú SKINNING → Corrective Curve; re-ejecutable (añade poses) |
 | `localize_corrective_skin(skin_cluster)` | conecta `bindPreMatrix[i]` al padre de cada influencia → mata la doble transformación del skin apilado | llamar UNA vez, en pose neutra; el build lo hace solo para `*corrective*` |
 
 En `matrix_manager.py`: `bend_factor(m0,m1,m2,name)` (flexión 0-1 por dot, sin flips —
