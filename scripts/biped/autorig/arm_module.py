@@ -269,11 +269,22 @@ class ArmModule(object):
 
         # Target del deltoides/axila = DIAGONAL fuera-arriba (el deltoides pica a
         # ~90° de abducción — brazo en T+45 —, no con el brazo en vertical).
-        # onset=25: arranca a 25° de elevación DESDE EL REST, sea bind A o T pose
-        # (un half_angle fijo llegaba tarde con bind en A-pose: arco de 135°).
         up_t = (out_v.x * 0.707, 0.707, 0.0)
         fwd_t, bck_t = (0, 0, 1), (0, 0, -1)
-        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, onset=25)
+        # El cono Up arranca EN EL EJE DE LA CLAVÍCULA, no a N° del rest: 0 con el
+        # brazo alineado con la clavícula (estilo Vittorio pero en el eje, no a 60°)
+        # y 1 en el target. half_angle = ángulo bind clavícula->hombro vs target ->
+        # la frontera del cono cae sobre el eje clavicular sea el bind A o T pose.
+        clav = f"{self.side}_clavicleSkinning_JNT"
+        up_half = 45.0  # fallback sin clavícula: eje horizontal vs diagonal T+45
+        if cmds.objExists(clav):
+            clav_axis = p_up - om.MVector(*cmds.xform(clav, q=True, ws=True, t=True))
+            up_tv = om.MVector(*up_t)
+            if clav_axis.length() > 1e-6:
+                clav_axis.normalize()
+                up_tv.normalize()
+                up_half = math.degrees(math.acos(max(-1.0, min(1.0, clav_axis * up_tv))))
+        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, half_angle=up_half)
         fwd_cone = correctives.cone_driver(f"{self.side}_shoulderFwd", driver_src, ref, fwd_t, axis_sign=axis_sign, onset=30)
         bck_cone = correctives.cone_driver(f"{self.side}_shoulderBck", driver_src, ref, bck_t, axis_sign=axis_sign, onset=30)
 
