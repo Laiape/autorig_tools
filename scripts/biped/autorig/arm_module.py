@@ -106,7 +106,28 @@ class ArmModule(object):
             return
 
         fk = self.fk_controllers[0]
-        s = 1.0 if self.side == "L" else -1.0   # signo de elevación / lift por lado
+
+        # Signos MEDIDOS, no asumidos. Con guías espejadas en posición (no en
+        # comportamiento) el FK derecho eleva con rotateZ del MISMO signo que el
+        # izquierdo: asumir s=-1 en R dejaba el raise siempre negativo -> clamp a 0
+        # -> auto-clavícula muerta solo en R (L y R dejaban de actuar igual).
+        # Mismo patrón de medición que axis_sign en shoulder_corrective_setup.
+        def lift_sign(node, pivot, tip):
+            # +1 si rotateZ POSITIVO eleva la punta: derivada (ejeZ_mundo ^ dir)·Y
+            m = cmds.getAttr(f"{node}.worldMatrix[0]")
+            z = om.MVector(m[8], m[9], m[10]).normalize()
+            d = (om.MVector(*cmds.xform(tip, q=True, ws=True, t=True))
+                 - om.MVector(*cmds.xform(pivot, q=True, ws=True, t=True))).normalize()
+            return 1.0 if (z ^ d).y >= 0 else -1.0
+
+        upper = f"{self.side}_armUpper00_JNT"
+        lower = f"{self.side}_armLower00_JNT"
+        clav_jnt = f"{self.side}_clavicleSkinning_JNT"
+        if all(cmds.objExists(n) for n in (upper, lower, clav_jnt)):
+            s_in = lift_sign(fk, upper, lower)        # signo que ELEVA el brazo en el ctl
+            s_out = lift_sign(clavicle_off, clav_jnt, upper)  # signo que ELEVA la clavícula en el OFF
+        else:
+            s_in = s_out = 1.0 if self.side == "L" else -1.0  # fallback: mirror asumido
 
         cmds.addAttr(clavicle_ctl, longName="AUTO_CLAVICLE", niceName="AUTO CLAVICLE ------", attributeType="enum", enumName="------", keyable=False)
         cmds.setAttr(f"{clavicle_ctl}.AUTO_CLAVICLE", channelBox=True, lock=True)
@@ -114,10 +135,10 @@ class ArmModule(object):
         cmds.addAttr(clavicle_ctl, longName="StartAngle", niceName="Start Angle", attributeType="float", defaultValue=45, keyable=True)
         cmds.addAttr(clavicle_ctl, longName="Factor", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
 
-        # raise = shoulderFk.rotateZ * s  (positivo al elevar el brazo en ambos lados)
+        # raise = shoulderFk.rotateZ * s_in  (positivo al elevar el brazo en ambos lados)
         raise_mul = cmds.createNode("multiply", name=f"{self.side}_autoClavicleRaise_MUL", ss=True)
         cmds.connectAttr(f"{fk}.rotateZ", f"{raise_mul}.input[0]")
-        cmds.setAttr(f"{raise_mul}.input[1]", s)
+        cmds.setAttr(f"{raise_mul}.input[1]", s_in)
 
         # excess = raise - StartAngle
         excess = cmds.createNode("subtract", name=f"{self.side}_autoClavicleExcess_SUB", ss=True)
@@ -138,7 +159,7 @@ class ArmModule(object):
 
         sign = cmds.createNode("multiply", name=f"{self.side}_autoClavicleSign_MUL", ss=True)
         cmds.connectAttr(f"{amount}.output", f"{sign}.input[0]")
-        cmds.setAttr(f"{sign}.input[1]", s)
+        cmds.setAttr(f"{sign}.input[1]", s_out)
         cmds.connectAttr(f"{sign}.output", f"{clavicle_off}.rotateZ")
 
     def corrective_setup(self):
