@@ -1,5 +1,3 @@
-from turtle import up
-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
