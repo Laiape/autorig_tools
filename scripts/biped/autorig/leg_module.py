@@ -210,13 +210,14 @@ class LegModule(object):
         up_v, fwd_v = om.MVector(0, 1, 0), om.MVector(0, 0, 1)
 
         # flexión = fémur apuntando ADELANTE; abducción = fémur apuntando AL LADO.
-        # half_angle 60: el glúteo/ingle arrancan a ~30° de flexión (pico ~90°),
-        # no desde el primer grado de cualquier paso.
+        # onset: el glúteo/ingle arrancan a ~30° de flexión DESDE EL REST (pico
+        # ~90°), no desde el primer grado de cualquier paso — y se auto-adapta
+        # aunque el bind no tenga la pierna vertical.
         flex_t = (0, 0, 1)
         abduct_t = (out_v.x, out_v.y, out_v.z)
-        flex_cone = correctives.cone_driver(f"{self.side}_hipFlex", driver_src, ref, flex_t, axis_sign=axis_sign, half_angle=60)
+        flex_cone = correctives.cone_driver(f"{self.side}_hipFlex", driver_src, ref, flex_t, axis_sign=axis_sign, onset=30)
         abduct_cone = correctives.cone_driver(f"{self.side}_hipAbduct", driver_src, ref,
-                                              abduct_t, axis_sign=axis_sign, half_angle=60)
+                                              abduct_t, axis_sign=axis_sign, onset=25)
         push_dv = round(thigh_len * 0.12, 1)
 
         def en_am(prefix, dv):

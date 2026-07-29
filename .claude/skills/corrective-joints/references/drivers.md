@@ -84,10 +84,15 @@ target está demasiado cerca del rest (cono degenerado) — trátalo siempre.
 - La dirección se mide respecto a un ref que siga al TORSO/PELVIS
   (`C_localChestSkinning_JNT`, `C_localHipSkinning_JNT`): mundo-agnóstico, inmune a
   masterwalk.
-- **`half_angle` SIEMPRE en producción** (55–65°): sin él, con target ⟂ al rest el "cono"
-  es una rampa de ~90° que se activa desde el primer grado de cualquier pose cotidiana.
-  Con half_angle el driver arranca a ese ángulo del target (`inputMin =
-  max(rest_dot+margin, cos(half_angle))`) y sigue valiendo 0 en bind.
+- **`onset` SIEMPRE en producción** (25–30°): grados de VIAJE desde el rest antes de
+  arrancar — se auto-adapta al bind (con A-pose el arco rest→target puede ser 135° y un
+  `half_angle` fijo llegaba tardísimo; con onset arranca a N° de elevación salga de donde
+  salga el rest, y sigue valiendo 0 exacto en bind). `half_angle` existe como alternativa
+  de semiángulo fijo. Sin ninguno: rampa de hemiesfera que se cuela en poses cotidianas.
+- **Targets anatómicos, no cardinales ciegos**: el deltoides pica a ~90° de abducción
+  (brazo en T+45), así que su cono apunta a la DIAGONAL fuera-arriba
+  `(±0.707, 0.707, 0)`, no a (0,1,0) — con target vertical el push llega tarde y débil
+  justo en la pose donde más se ve el hombro.
 - **`axis_sign`**: en R el ribbon puede aimear −X a lo largo del hueso — mide el signo con
   `dot(ejeX_de_la_fuente, dirección upper→lower)` y pásalo (así lo hacen
   `shoulder_corrective_setup` y `hip_corrective_setup`).
@@ -104,10 +109,15 @@ target está demasiado cerca del rest (cono degenerado) — trátalo siempre.
   de shoulder/hip).
 - El twist es invisible al cono (feature): combínalo con `extract_twist` si la pose
   necesita twist.
-- Usos reales: hombro (`arm_module.shoulder_corrective_setup`: conos a (0,1,0) arriba
-  h=60, (0,0,±1) delante/atrás h=65 → deltoid/armpit/pec/shoulderBack, ref = chest) y
-  cadera (`leg_module.hip_corrective_setup`: flexión (0,0,1) y abducción ±X, h=60 →
+- Usos reales: hombro (`arm_module.shoulder_corrective_setup`: diagonal fuera-arriba
+  onset=25 → deltoid/armpit, (0,0,±1) onset=30 → pec/shoulderBack, ref = chest) y cadera
+  (`leg_module.hip_corrective_setup`: flexión (0,0,1) onset=30 y abducción ±X onset=25 →
   glute/groin/hipOut, ref = pelvis).
+- **QA tras pintar influencias nuevas**: `localize_corrective_skin` corre en el BUILD —
+  una influencia añadida al `C_corrective_SKC` después de buildear queda SIN localizar
+  (bindPreMatrix estática → doble transformación: la zona se hunde en vez de empujar).
+  Tras añadir/pintar influencias, re-ejecuta
+  `correctives.localize_corrective_skin("C_corrective_SKC")` en pose neutra (idempotente).
 
 ### 2.5 RBF / pose space (cuándo escalar)
 

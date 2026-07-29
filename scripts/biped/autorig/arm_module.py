@@ -263,14 +263,19 @@ class ArmModule(object):
         x_axis.normalize()
         axis_sign = 1.0 if x_axis * bone_w >= 0 else -1.0
 
-        up_t, fwd_t, bck_t = (0, 1, 0), (0, 0, 1), (0, 0, -1)
-        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, half_angle=60)
-        fwd_cone = correctives.cone_driver(f"{self.side}_shoulderFwd", driver_src, ref, fwd_t, axis_sign=axis_sign, half_angle=65)
-        bck_cone = correctives.cone_driver(f"{self.side}_shoulderBck", driver_src, ref, bck_t, axis_sign=axis_sign, half_angle=65)
-
         out_v = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
         up_v, fwd_v = om.MVector(0, 1, 0), om.MVector(0, 0, 1)
         push_dv = round(upper_len * 0.12, 1)
+
+        # Target del deltoides/axila = DIAGONAL fuera-arriba (el deltoides pica a
+        # ~90° de abducción — brazo en T+45 —, no con el brazo en vertical).
+        # onset=25: arranca a 25° de elevación DESDE EL REST, sea bind A o T pose
+        # (un half_angle fijo llegaba tarde con bind en A-pose: arco de 135°).
+        up_t = (out_v.x * 0.707, 0.707, 0.0)
+        fwd_t, bck_t = (0, 0, 1), (0, 0, -1)
+        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, onset=25)
+        fwd_cone = correctives.cone_driver(f"{self.side}_shoulderFwd", driver_src, ref, fwd_t, axis_sign=axis_sign, onset=30)
+        bck_cone = correctives.cone_driver(f"{self.side}_shoulderBck", driver_src, ref, bck_t, axis_sign=axis_sign, onset=30)
 
         def en_am(prefix, dv):
             """Enable + Amount en el host (bajo el separador CORRECTIVES ya creado)."""

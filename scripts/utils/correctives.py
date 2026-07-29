@@ -364,7 +364,7 @@ def target_frame_dir(world_dir, rest_bone_world, target_world):
     return om.MVector(world_dir[0], world_dir[1], world_dir[2]).rotateBy(q.inverse())
 
 
-def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02, half_angle=None):
+def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=1.0, margin=0.02, half_angle=None, onset=None):
     """
     Pose reader MULTI-EJE (cono auto-calibrado) para hombro/cadera, donde un
     euler de un eje (bend_driver) no vale. Devuelve un plug 0..1: 0 en la pose
@@ -379,11 +379,16 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
     - `axis_sign`: +1/-1 según el eje local apunte A FAVOR o EN CONTRA del hueso
       (en R el ribbon puede aimear -X); medirlo con la dirección real
       upper->lower y pasarlo aquí.
-    - `half_angle` (grados): SEMIÁNGULO del cono. Sin él, la activación cubre
-      TODO el arco desde bind (con target ⟂ al rest son ~90°: una rampa de
-      hemiesfera que se cuela en poses cotidianas). Con half_angle, el driver
-      arranca a ese ángulo del target: inputMin = max(rest_dot+margin,
-      cos(half_angle)). Valores razonables: 55-65.
+    - `onset` (grados, PREFERIDO): grados de VIAJE desde el rest antes de que el
+      driver arranque — se auto-adapta al bind (A-pose o T-pose): con onset=25,
+      la correctiva arranca a 25° de elevación del brazo salga de donde salga el
+      rest, y llega a 1 en el target. inputMin = cos(theta_rest - onset).
+    - `half_angle` (grados, alternativa): semiángulo FIJO alrededor del target
+      (inputMin = cos(half_angle)). Ojo: con bind en A-pose el arco rest→target
+      puede ser 135° y un half_angle de 60 no arranca hasta 75° de viaje —
+      demasiado tarde. Por eso onset es el default recomendado. Sin ninguno de
+      los dos, la activación cubre todo el arco desde bind (rampa de hemiesfera
+      que se cuela en poses cotidianas: evítalo).
     - `joint` puede ser un joint (worldMatrix) o un nodo de matriz con
       outputMatrix/matrixSum — p.ej. el {side}_armNonRollAim_AMX: un frame
       RÍGIDO de la articulación que los bendys del ribbon no contaminan.
@@ -433,7 +438,12 @@ def cone_driver(name, joint, ref_parent, target_world, bone_axis="X", axis_sign=
     cmds.setAttr(f"{dot}.input2", tv.x, tv.y, tv.z, type="double3")
 
     input_min = rest_dot + margin
-    if half_angle is not None:
+    if onset is not None:
+        theta_rest = math.degrees(math.acos(max(-1.0, min(1.0, rest_dot))))
+        # arranca a `onset` grados de viaje desde el rest (cos crece al acercarse
+        # al target, así que esto siempre garantiza 0 exacto en bind)
+        input_min = math.cos(math.radians(max(theta_rest - float(onset), 5.0)))
+    elif half_angle is not None:
         input_min = max(input_min, math.cos(math.radians(float(half_angle))))
     rmv = cmds.createNode("remapValue", name=f"{name}_RMV", ss=True)
     cmds.connectAttr(f"{dot}.outputX", f"{rmv}.inputValue")
