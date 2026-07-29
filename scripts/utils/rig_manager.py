@@ -534,7 +534,7 @@ def build_rig(character_name, on_step=None):
         reload(eyelid_module)
         build_sockets = (rig_type == 0)
 
-        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya", "maui"}
+        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya", "maui", "anne"}
         eyelid_surface = (rig_type != 0) or (str(character_name).lower() in EYELID_SURFACE_CHARS)
         eyelid_module.EyelidModule().make("L", sockets=build_sockets, surface=eyelid_surface)
         eyelid_module.EyelidModule().make("R", sockets=build_sockets, surface=eyelid_surface)
