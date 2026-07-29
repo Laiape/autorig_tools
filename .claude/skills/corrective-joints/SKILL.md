@@ -28,8 +28,9 @@ forma que el skinning pierde.
 ## Lo que este repo YA tiene (no lo reinventes)
 
 - **`scripts/utils/correctives.py`** — primitivas listas: `corrective_push`, `corrective_ring`,
-  `corrective_offset_push`, `corrective_arc`, `corrective_extra`, el pose-reader
-  `bend_driver` (ángulo por matrices mundo, FK/IK-agnóstico, rest a 0) y
+  `corrective_offset_push`, `corrective_arc`, `corrective_extra`, `corrective_curve`
+  (pose→curva→joints para siluetas continuas: nudillos, pliegues — UI en menú SKINNING),
+  los pose-readers `bend_driver` (bisagras) y `cone_driver` (multi-eje auto-calibrado), y
   `localize_corrective_skin` (arregla la doble transformación del skinCluster apilado).
 - **`scripts/utils/matrix_manager.py`** — `bend_factor` (flexión 0-1 por dot product, sin
   flips) y `extract_twist` (swing-twist por quaternions, aún sin usar como driver).

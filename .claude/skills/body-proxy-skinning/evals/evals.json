@@ -1,0 +1,26 @@
+{
+  "skill_name": "body-proxy-skinning",
+  "evals": [
+    {
+      "id": 0,
+      "name": "closest-joint-cruza-influencias",
+      "prompt": "Cuando bindeo el cuerpo con el assign closest joint de ng me cruza pesos entre las piernas por la entrepierna y en las axilas con el pecho. Refino con delta mush pero sigue mal. ¿Como lo hago para que no cruce?",
+      "expected_output": "Identifica que el closest-joint cruza influencias porque mide distancia en linea recta entre partes anatomicas proximas, y que Delta Mush solo suaviza (no reasigna el joint correcto). Recomienda arrancar de un binding VOLUMETRICO (Geodesic Voxel Binding) que mide por el interior del volumen y no cruza, y usar ngSkinTools solo para AFINAR por capas, no para inicializar. Aterriza en su pipeline (geomBind/ngSkinTools2) y cita recurso concreto.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "proxy-malla-densa",
+      "prompt": "Tengo la malla del cuerpo muy densa y pintar pesos va lentisimo, ademas la malla todavia puede cambiar de topologia. ¿Como monto un proxy para skinnear mas rapido y pasarlo luego a la malla de alta?",
+      "expected_output": "Propone el flujo proxy: crear/usar un proxy low-res con loops alineados a las articulaciones, skinnear/afinar en el proxy (bind volumetrico + ngSkin), y transferir a la alta con un metodo ROBUSTO a cambio de topologia (transfer por UV independiente de topologia como su auto_skin_transfer, o copySkinWeights -uvSpace -influenceAssociation label; o cvWrap/proximityWrap para seguir la superficie). Explica por que el proxy hace el skinning mas eficiente e iterable. Cita recurso concreto.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "bake-skin-lineal-juego",
+      "prompt": "He dejado el skin del cuerpo bien con delta mush pero tengo que exportarlo a un juego en engine. ¿Como lo paso a un skin lineal eficiente con pocas influencias sin perder la calidad del delta mush?",
+      "expected_output": "Reconoce que hay que HORNEAR el Delta Mush a un skinCluster lineal: dm2skin (Delta-Mush-to-skin) o bakeDeformer nativo (minimos cuadrados con maxInfluences), luego prune + clamp de influencias + normalizar + skinningMethod lineal. Advierte que solo se hornea deformacion funcion-de-pose (no dinamica) y que conviene muestrear poses representativas. Aterriza en su SkinManager/pipeline y cita recurso concreto (dm2skin/bakeDeformer).",
+      "files": []
+    }
+  ]
+}

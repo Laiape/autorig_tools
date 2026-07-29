@@ -1,0 +1,26 @@
+{
+  "skill_name": "rigging-clothing-methods",
+  "evals": [
+    {
+      "id": 0,
+      "name": "vestido-largo-interpenetra",
+      "prompt": "Tengo el vestido largo de Anne y al andar interpenetra con las piernas por debajo de la rodilla. Ahora mismo solo le he hecho copy skin weights del cuerpo y no me acaba de gustar, no queda preciso. ¿Qué opciones tengo para que quede mejor sin perder control del animador?",
+      "expected_output": "Diagnostica que el sintoma es interpenetracion + falta de secundario en una prenda suelta de cine. No salta a la sim por defecto: propone una pila por escalones (rig de joints/ribbon + colision por distancia como su auto_collision, wrap/correctivos, y sim solo si hace falta el secundario fino con bake a asset controlable). Compara honestamente frente al copy skin, mantiene el control del animador y aterriza en su pipeline de Maya. Cita algun recurso concreto y real.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "camiseta-ajustada-juego-arrugas",
+      "prompt": "Para una camiseta ajustada de un personaje que va a un juego en Unreal, quiero que salgan arrugas en codos y axilas pero tengo presupuesto de rendimiento justo. ¿Como lo enfoco?",
+      "expected_output": "Reconoce que es prenda ajustada + tiempo real, asi que descarta sim cara y recomienda skinning limpio + wrinkle/normal maps por tension y/o correctivos ligeros o huesos de arruga; menciona el balance precision/rendimiento y opciones del engine. Evita recomendar nCloth/Vellum offline como solucion principal. Cita recurso concreto.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "sim-vs-rig-capa",
+      "prompt": "Estoy dudando entre hacer una simulacion de nCloth o montar un rig de joints con dinamica para una capa de un personaje. Es para cine. ¿Que me recomiendas y por que?",
+      "expected_output": "No da una respuesta unica: contrasta control art-directable y coste (rig de joints) frente a realismo de contacto/pliegues (sim), y da el criterio de cuando elegir cada uno (necesidad de control vs realismo, iteracion, secundario). Menciona el flujo hibrido sim->rig/cache y como reintegrar la sim a un asset controlable. Aterriza en Maya/Houdini.",
+      "files": []
+    }
+  ]
+}

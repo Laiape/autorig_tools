@@ -567,10 +567,7 @@ def build_rig(character_name, on_step=None):
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
 
-    # Correctivas faciales por joints (una por shape del set; cada bloque se salta
-    # solo si su driver/joint base no existe). Debe ir DESPUÉS de todos los módulos
-    # faciales porque lee sus controles y skinning joints. Gate: CUALQUIER guía
-    # facial presente (un busto sin jaw sigue recibiendo blink/brow/glabella).
+    # Correctivas faciales por joint
     if check("C_jaw_JNT") or check("L_eye_JNT") or \
        check("L_eyebrowMain_JNT") or check("L_eyebrow_CRVShape"):
         step("Building facial correctives…")
@@ -583,8 +580,6 @@ def build_rig(character_name, on_step=None):
         quadruped_space_switches()
 
     skeleton_hierarchy()
-
-    # Overrides por personaje (p.ej. valores de correctivas) definidos en el .build
     apply_character_extras(rig_settings)
 
 
@@ -730,13 +725,11 @@ def quadruped_space_switches():
         data = data_manager.DataExportBiped()
 
         def _node(x):
-            # get_data puede devolver lista (p.ej. fk_ctls) o string; normaliza
             if isinstance(x, (list, tuple)):
                 x = x[0] if x else None
             return x if (x and cmds.objExists(x)) else None
 
         def _ss(target, sources, **kwargs):
-            # No-op si falta el target o todos los sources (módulo no construido)
             target = _node(target)
             sources = [s for s in (_node(s) for s in sources) if s]
             if not target or not sources:
