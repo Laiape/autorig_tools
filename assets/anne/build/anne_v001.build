@@ -8,13 +8,5 @@
     "leg_skinning_jnts": 5,
     "tail_skinning_jnts": 5,
     "tail_controllers": 5,
-    "mGear_integration": 0,
-    "character_extras": {
-        "set_attrs": [
-            {"node": "L_armUpperMainBendy_CTL", "name": "BicepsPushForward", "value": 1.0},
-            {"node": "R_armUpperMainBendy_CTL", "name": "BicepsPushForward", "value": 1.0},
-            {"node": "L_armUpperMainBendy_CTL", "name": "TricepsPushForward", "value": 1.0},
-            {"node": "R_armUpperMainBendy_CTL", "name": "TricepsPushForward", "value": 1.0}
-        ]
-    }
+    "mGear_integration": 0
 }
