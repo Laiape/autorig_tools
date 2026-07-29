@@ -300,7 +300,7 @@ class VersionTab(QtWidgets.QWidget):
                 cmds.file(save=True, type="mayaAscii")
             elif self.sub_folder == "skin_clusters":
                 reload(skin_manager_api)
-                skin_manager_api.SkinManager().export_skins(path=path)
+                skin_manager_api.SkinManager().export_skins(in_path=path)
             ver = os.path.basename(path)
             cmds.inViewMessage(amg=f"<hl>Saved</hl> {ver}", pos="midCenter", fade=True)
             self.refresh()
@@ -328,7 +328,7 @@ class VersionTab(QtWidgets.QWidget):
                 cmds.file(path, open=True, force=True)
             elif self.sub_folder == "skin_clusters":
                 reload(skin_manager_api)
-                skin_manager_api.SkinManager().import_skins(path=path)
+                skin_manager_api.SkinManager().import_skins(in_path=path)
             cmds.inViewMessage(amg=f"<hl>Imported</hl> {filename}", pos="midCenter", fade=True)
         except Exception as e:
             QtWidgets.QMessageBox.warning(self, "Import Error", str(e))
