@@ -199,8 +199,10 @@ def proxy_skinning():
     from tools import proxy_skinning as ps
     reload(ps)
 
-    # orderedSelection preserva el orden en que se seleccionó (proxy primero, alta después)
-    sel = cmds.ls(sl=True, orderedSelection=True) or []
+    # A nivel de objeto la selección activa ya conserva el orden de clic
+    # (proxy primero, alta después). No usar orderedSelection junto a sl:
+    # los flags -sl/-os son excluyentes y ls lanza RuntimeError.
+    sel = cmds.ls(sl=True) or []
     meshes, joints, seen = [], [], set()
     for node in sel:
         nt = cmds.nodeType(node)
