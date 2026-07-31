@@ -270,7 +270,13 @@ class EyebrowModule(object):
             cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *matrix_manager.get_offset_matrix(mid_eyebrow_guide, f"{main_local_trn}.matrixSum"), type="matrix")
             cmds.delete(mid_eyebrow_guide)
 
-        names = {"In": 0, "InTan": 1, "Mid": len(self.eyebrows) // 2, "OutTan": -2, "Out": -1}
+        # Tangentes proporcionales al número de guías: InTan/OutTan caen al cuarto
+        # y tres cuartos del recorrido en vez de pegadas al vecino de In/Out. Con
+        # 5 guías coincide con el comportamiento anterior (índices 1 y -2).
+        n = len(self.eyebrows)
+        in_tan = max(1, round((n - 1) * 0.25))
+        out_tan = min(n - 2, round((n - 1) * 0.75))
+        names = {"In": 0, "InTan": in_tan, "Mid": n // 2, "OutTan": out_tan, "Out": n - 1}
 
         for name, value in names.items():
 

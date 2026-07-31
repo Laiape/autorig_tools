@@ -16,6 +16,53 @@ reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
 
+def socket_positions_from_ring(curve, side, socket_names, samples=64):
+
+    """
+    Deriva las posiciones de los sockets desde UNA curva-anillo dibujada
+    alrededor del ojo (como la guía de la ceja: da igual cuántos CVs tenga y
+    por dónde empiece). Cada socket se busca por su dirección alrededor del
+    centro del anillo en el plano XY: up=+Y, in=hacia la nariz (x=0), y las
+    diagonales entre medias. Se muestrea la curva y se toma el punto cuya
+    dirección mejor casa con la del socket.
+
+    Args:
+        curve (str): curva-anillo (shape o transform).
+        side (str): 'L' o 'R', decide hacia dónde cae "in".
+        socket_names (list[str]): nombres de socket a resolver.
+        samples (int): puntos muestreados a lo largo de la curva.
+
+    Returns:
+        dict: {socket_name: posición mundo [x, y, z]}
+    """
+
+    points = [cmds.pointOnCurve(curve, pr=i / samples, top=True, position=True) for i in range(samples)]
+    center = [sum(axis) / len(points) for axis in zip(*points)]
+
+    in_x = -1.0 if side == "L" else 1.0  # "in" mira a la nariz (x=0)
+    directions = {
+        "upperSocket": (0, 1), "lowerSocket": (0, -1),
+        "inSocket": (in_x, 0), "outSocket": (-in_x, 0),
+        "upInSocket": (in_x, 1), "upOutSocket": (-in_x, 1),
+        "downInSocket": (in_x, -1), "downOutSocket": (-in_x, -1),
+    }
+
+    positions = {}
+    for name in socket_names:
+        dir_x, dir_y = directions[name]
+        length = math.sqrt(dir_x * dir_x + dir_y * dir_y)
+        dir_x, dir_y = dir_x / length, dir_y / length
+
+        def alignment(point):
+            off_x, off_y = point[0] - center[0], point[1] - center[1]
+            off_len = math.sqrt(off_x * off_x + off_y * off_y) or 1.0
+            return (off_x * dir_x + off_y * dir_y) / off_len
+
+        positions[name] = max(points, key=alignment)
+
+    return positions
+
+
 class EyelidModule(object):
 
     def __init__(self):
@@ -81,14 +128,13 @@ class EyelidModule(object):
             self.create_eye_surface()
         self.skinning_joints()
 
-        # Sockets: solo en biped (dependen de la ceja y de las guías de socket).
-        # En cuadrúpedo no se crean.
         if sockets:
             socket_main_controllers = self.sockets()
-            data_manager.DataExportBiped().append_data("eyelid_module",
-                                {
-                                    f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
-                                })
+            if socket_main_controllers:  # sin guías de socket se omiten, no se para el build
+                data_manager.DataExportBiped().append_data("eyelid_module",
+                                    {
+                                        f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
+                                    })
 
     def lock_attributes(self, ctl, attrs):
 
@@ -111,9 +157,6 @@ class EyelidModule(object):
         Returns:
             str: The name of the local transform node.
         """
-        # Local network without transforms: ctl.matrix * baked bind matrix replaces
-        # the old Local_GRP/Local_TRN pair. The joint stays because skinClusters
-        # need a DAG influence, and takes the network through offsetParentMatrix.
         local_mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
         cmds.connectAttr(f"{ctl}.matrix", f"{local_mmx}.matrixIn[0]")
         cmds.setAttr(f"{local_mmx}.matrixIn[1]", cmds.getAttr(f"{ctl}.worldMatrix[0]"), type="matrix")
@@ -833,14 +876,16 @@ class EyelidModule(object):
             "upInSocket", "upOutSocket", "downInSocket", "downOutSocket"
         ]
 
-        # Fuente de las posiciones de los sockets: una CURVA {side}_sockets_CRV (cada
-        # CV = un socket, en el ORDEN de socket_names: upper, lower, in, out, upIn,
-        # upOut, downIn, downOut) o las guías {side}_{name}_JNT (método actual).
+        # Fuente de las posiciones de los sockets: una CURVA-ANILLO {side}_socket_CRV
+        # dibujada alrededor del ojo (como la guía de la ceja: cualquier número de
+        # CVs, cualquier punto de inicio — cada socket se deriva por su ángulo
+        # alrededor del centro), o las guías {side}_{name}_JNT una a una. Si no hay
+        # ninguna de las dos, se omiten los sockets con un warning: el build sigue.
         from_curve = False
         socket_positions = {}
         crv = None
         try:
-            res = guides_manager.get_guides(f"{self.side}_sockets_CRVShape", parent=self.module_trn)
+            res = guides_manager.get_guides(f"{self.side}_socket_CRVShape", parent=self.module_trn)
             if res and isinstance(res, str) and cmds.objExists(res):
                 crv = res
         except Exception:
@@ -848,17 +893,26 @@ class EyelidModule(object):
 
         if crv:
             from_curve = True
-            cv_list = cmds.ls(f"{crv}.cv[*]", flatten=True)
-            for i, name in enumerate(socket_names):
-                if i < len(cv_list):
-                    socket_positions[name] = cmds.pointPosition(cv_list[i], world=True)
+            socket_positions = socket_positions_from_ring(crv, self.side, socket_names)
             crv_tf = cmds.listRelatives(crv, parent=True, fullPath=True)
             cmds.delete(crv_tf[0] if crv_tf else crv)
         else:
+            missing = []
             for name in socket_names:
                 cmds.select(cl=True)
                 guides_manager.get_guides(guide_export=f"{self.side}_{name}_JNT")
-                socket_positions[name] = cmds.xform(f"{self.side}_{name}_JNT", q=True, ws=True, t=True)
+                if cmds.objExists(f"{self.side}_{name}_JNT"):
+                    socket_positions[name] = cmds.xform(f"{self.side}_{name}_JNT", q=True, ws=True, t=True)
+                else:
+                    missing.append(f"{self.side}_{name}_JNT")
+
+            if missing:
+                for name in socket_names:  # limpiar las guías que sí se importaron
+                    if cmds.objExists(f"{self.side}_{name}_JNT"):
+                        cmds.delete(f"{self.side}_{name}_JNT")
+                om.MGlobal.displayWarning(
+                    f"{self.side} eyelid: sin guía {self.side}_socket_CRV y faltan {missing}: se omiten los sockets.")
+                return None
         cmds.select(cl=True)
 
         def socket_matrix(name):
