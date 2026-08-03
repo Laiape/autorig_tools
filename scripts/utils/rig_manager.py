@@ -44,7 +44,7 @@ from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
 from quadruped.autorig import tail_module
-from scripts.quadruped.autorig import leg_module_self
+from quadruped.autorig import leg_module_self
 from quadruped.autorig import leg_module as quad_leg_module
 from quadruped.autorig import spine_module as quad_spine_module
 from quadruped.autorig import neck_module as neck_module_quad
@@ -464,8 +464,12 @@ def build_rig(character_name, on_step=None):
                                 "guides_data" : ["L_frontLeg_JNT", "R_frontLeg_JNT"],
                             })
 
-            leg_module_self.LimbModule().make("L", leg_skinning_jnts)
-            leg_module_self.LimbModule().make("R", leg_skinning_jnts)
+            # leg_module_self está EN DESARROLLO (plantilla con stubs): la clase es
+            # LegModule + subclasses Front/BackLegModule, no la antigua LimbModule.
+            # Esta rama solo se dispara con el naming antiguo (L_frontLeg_JNT); el
+            # naming nuevo entra por la rama de arriba con quad_leg_module.
+            leg_module_self.FrontLegModule().make("L", skinning_joints_number=leg_skinning_jnts)
+            leg_module_self.FrontLegModule().make("R", skinning_joints_number=leg_skinning_jnts)
 
         # Patas Traseras (módulo de pierna nuevo)
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
