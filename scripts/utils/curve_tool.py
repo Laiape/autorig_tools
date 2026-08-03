@@ -414,6 +414,17 @@ def build_curves_from_template(target_transform_name=None):
     return created_transforms
 
 
+def lock_attributes(ctl, attrs):
+    """
+    Lock and hide attributes on a controller.
+    Args:
+        ctl (str): The name of the controller.
+        attrs (list): A list of attributes to lock and hide.
+    """
+    for attr in attrs:
+        cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
+
+
 def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=None):
     """
     Creates a controller with a specific name and offset transforms and returns the controller and the groups.

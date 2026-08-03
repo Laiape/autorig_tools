@@ -63,18 +63,6 @@ class ClavicleModule(object):
                             })
 
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def get_offset_matrix(self, child, parent):
 
         """
@@ -127,7 +115,7 @@ class ClavicleModule(object):
         created_grps, self.ctl_ik = curve_tool.create_controller(f"{self.side}_clavicle", ["GRP", "OFF"])
         cmds.parent(created_grps[0], self.controllers_grp)
         cmds.setAttr(f"{created_grps[0]}.offsetParentMatrix", self.clavicle_guide_matrix, type="matrix")
-        self.lock_attributes(self.ctl_ik, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.ctl_ik, ["sx", "sy", "sz", "v"])
 
         # Matriz que dirige el joint: directa (control) o proyectada sobre la
         # NURBS surface (floating shoulder), según la flag.
@@ -174,7 +162,7 @@ class ClavicleModule(object):
         cmds.setAttr(f"{surf_tf}.overrideEnabled", 1)
         cmds.setAttr(f"{surf_tf}.overrideDisplayType", 2)  # reference: visible para esculpir, no seleccionable
         cmds.setAttr(f"{surf_tf}.visibility", 0)
-        self.lock_attributes(surf_tf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(surf_tf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
         self.floating_surface = surf_tf
         surf_shape = cmds.listRelatives(surf_tf, shapes=True)[0]
 

@@ -11,11 +11,6 @@ reload(curve_tool)
 reload(rig_manager)
 reload(guides_manager)
 
-def lock_attributes(ctl, attrs):
-    for attr in attrs:
-        cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
-
 def _suspend_eval():
     """
     Suspende refresco y evaluation manager para operaciones en bloque (p.ej.
@@ -466,9 +461,9 @@ def create_basic_structure(character_name=None):
 
     # --- LOCKS ---
     if not mgear:
-        lock_attributes(character_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
-    lock_attributes(settings_ctl,  ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
-    lock_attributes(masterwalk_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(character_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+    curve_tool.lock_attributes(settings_ctl,  ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+    curve_tool.lock_attributes(masterwalk_ctl, ["sx", "sy", "sz", "v"])
 
     # --- FREEZE JOINT ---
     freeze_jnt = get_or_create("joint", "C_freeze_JNT")

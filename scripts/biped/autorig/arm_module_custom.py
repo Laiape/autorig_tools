@@ -75,18 +75,6 @@ class ArmModule(object):
                                 f"{self.side}_skinningJoints": skel_env
                             })
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-    
     def load_guides(self):
 
         self.arm_chain = guides_manager.get_guides(f"{self.side}_shoulder_JNT")
@@ -118,7 +106,7 @@ class ArmModule(object):
         for i, joint in enumerate(self.arm_chain):
 
             fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", "Fk"), offset=["GRP", "ANM"]) # create FK controllers
-            self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+            curve_tool.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
 
             if self.fk_controllers:
                 cmds.parent(fk_node[0], self.fk_controllers[-1])
@@ -154,13 +142,13 @@ class ArmModule(object):
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_armIkControllers_GRP", ss=True, p=self.controllers_grp)
 
         self.ik_wrist_nodes, self.ik_wrist_ctl = curve_tool.create_controller(name=f"{self.side}_armIkWrist", offset=["GRP", "SPC"])
-        self.lock_attributes(self.ik_wrist_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.ik_wrist_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_wrist_nodes[0], ik_controllers_trn)
         # cmds.matchTransform(self.ik_wrist_nodes[0], self.arm_chain[-1], pos=True, rot=True)
         cmds.connectAttr(self.guides_matrices[-1], f"{self.ik_wrist_nodes[0]}.offsetParentMatrix")
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
-        self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
 
         cmds.addAttr(self.pv_ctl, shortName="extraAttr", niceName="EXTRA_ATTRIBUTES", enumName="———", attributeType="enum", keyable=True)
@@ -193,7 +181,7 @@ class ArmModule(object):
         cmds.parent(crv_point_pv, self.pv_ctl)
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
-        self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_root_nodes[0], ik_controllers_trn)
         cmds.connectAttr(self.guides_matrices[0], f"{self.ik_root_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.ik_root_nodes[0], m=om.MMatrix.kIdentity)
@@ -352,7 +340,7 @@ class ArmModule(object):
         cmds.addAttr(self.ik_wrist_ctl, shortName="Soft", minValue=0, defaultValue=0, maxValue=1, keyable=True)
         cmds.addAttr(self.ik_wrist_ctl, shortName="Soft_Start", minValue=0, defaultValue=0.8, maxValue=1, keyable=True)
 
-        self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
         secondary_mode = (0, 1, 0) if self.side == "L" else (0, -1, 0)
 
@@ -472,8 +460,6 @@ class ArmModule(object):
         """
         Create a de Boor ribbon setup.
         """
-
-
 
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_armNonRollAlign_BLM", ss=True)
@@ -615,7 +601,7 @@ class ArmModule(object):
 
         for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
 
-            self.lock_attributes(ctl, ["visibility"])
+            curve_tool.lock_attributes(ctl, ["visibility"])
 
             if i == 0:
                 cmds.addAttr(ctl, longName = "BENDY", niceName="BENDY ------", attributeType="enum", enumName="------", keyable=True)

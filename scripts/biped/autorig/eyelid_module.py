@@ -136,18 +136,6 @@ class EyelidModule(object):
                                         f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
                                     })
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def local(self, ctl):
 
         """
@@ -282,7 +270,7 @@ class EyelidModule(object):
         if self.side == "L":
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
             cmds.parent(self.main_aim_nodes[0], self.head_ctl)
-            self.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+            curve_tool.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
             def _eye_aim(eye_matrix):
                 z = om.MVector(eye_matrix[8], eye_matrix[9], eye_matrix[10]).normal()
                 c = om.MVector(eye_matrix[12], eye_matrix[13], eye_matrix[14])
@@ -308,7 +296,7 @@ class EyelidModule(object):
         cmds.xform(side_aim_nodes[0], ws=True, m=self.eye_guide_matrix)
         cmds.select(side_aim_nodes[0])
         cmds.move(0, 0,30, relative=True, objectSpace=True, worldSpaceDistance=True)
-        self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+        curve_tool.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
         cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
 
 
@@ -330,7 +318,7 @@ class EyelidModule(object):
             suffix = matrix.split("_")[-1]
             node, ctl = curve_tool.create_controller(name=matrix.replace(f"_{suffix}", ""), offset=["GRP", "OFF"])
             local_trn, local_jnt = self.local(ctl)
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             
             # if "eyelidIn_" in matrix or "eyelidOut_" in matrix or "eyelidDown_" in matrix or "eyelidUp_" in matrix:
             #     node_01, ctl_01 = curve_tool.create_controller(name=matrix.replace("_FFX", "01"), offset=["GRP"])
@@ -350,7 +338,7 @@ class EyelidModule(object):
                 self.upper_local_trn.append(local_trn)
                 self.lower_local_trn.append(local_trn)
 
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
 
             cmds.connectAttr(matrix, f"{node[0]}.offsetParentMatrix")
             cmds.parent(node[0], self.controllers_grp)
@@ -399,7 +387,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[1]", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
         cmds.connectAttr(f"{mult_matrix_negate_head}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
-        self.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
 
         cmds.addAttr(self.eye_direct_ctl, ln="EYE_ATTRIBUTES", at="enum", en="____", k=True)
         cmds.setAttr(f"{self.eye_direct_ctl}.EYE_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
@@ -606,7 +594,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{surf}.overrideEnabled", 1)
         cmds.setAttr(f"{surf}.overrideDisplayType", 2)  # reference (visible para ajustar, no seleccionable)
         cmds.setAttr(f"{surf}.visibility", 0)
-        self.lock_attributes(surf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(surf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
         self.eye_surface = surf
         self.eye_surface_shape = cmds.listRelatives(surf, shapes=True)[0]
 
@@ -714,7 +702,7 @@ class EyelidModule(object):
                 node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i}", offset=["GRP", "OFF"])
             if "down" in name:
                 node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i - len(upper_cvs)}", offset=["GRP", "OFF"])
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{node[0]}.offsetParentMatrix")
 
             mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_MMT", ss=True)

@@ -71,18 +71,6 @@ class EyebrowModule(object):
         if self.side == "L":
             cmds.delete(self.mid_eyebrow)
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def local(self, ctl):
 
         """
@@ -219,7 +207,7 @@ class EyebrowModule(object):
         cmds.connectAttr(f"{condition_primary}.outColorR", f"{self.main_eyebrow_nodes[0]}.visibility") # Connect visibility
         
         cmds.parent(self.main_eyebrow_nodes[0], self.controllers_grp)
-        self.lock_attributes(self.main_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.main_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         main_local_grp, main_local_trn = self.local(self.main_eyebrow_ctl)
 
         if self.side == "L":
@@ -228,7 +216,7 @@ class EyebrowModule(object):
             cmds.connectAttr(f"{condition_primary}.outColorR", f"{mid_eyebrow_nodes[0]}.visibility") # Connect visibility
 
             cmds.parent(mid_eyebrow_nodes[0], self.controllers_grp)
-            self.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+            curve_tool.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
             mid_local_grp, mid_local_trn = self.local(mid_eyebrow_ctl)
             mid_eyebrow_guide = cmds.createNode("transform", name="C_eyebrowMid_GUIDE", ss=True, p=self.module_trn)
@@ -283,7 +271,7 @@ class EyebrowModule(object):
             eyebrow_nodes, eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrow{name}", offset=["GRP", "OFF"])
             cmds.matchTransform(eyebrow_nodes[0], self.eyebrows[value], pos=True, rot=True)
             cmds.parent(eyebrow_nodes[0], self.main_eyebrow_ctl)
-            self.lock_attributes(eyebrow_ctl, ["visibility"])
+            curve_tool.lock_attributes(eyebrow_ctl, ["visibility"])
 
             local_grp, local_trn = self.local(eyebrow_ctl)
             self.local_parent(local_grp, eyebrow_ctl, main_local_trn, self.main_eyebrow_ctl)

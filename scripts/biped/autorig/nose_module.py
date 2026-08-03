@@ -71,18 +71,6 @@ class NoseModule(object):
                     cmds.delete(guide)
 
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def local(self, ctl, parent_ctl=None):
 
         """
@@ -159,9 +147,9 @@ class NoseModule(object):
             nodes, ctl = curve_tool.create_controller(name=guide.replace("_JNT", ""), offset=["GRP"], parent=self.controllers_grp)
 
             if "tril" not in guide:
-                self.lock_attributes(ctl, ["v"])
+                curve_tool.lock_attributes(ctl, ["v"])
             else:
-                self.lock_attributes(ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "v"])
+                curve_tool.lock_attributes(ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "v"])
             cmds.matchTransform(nodes[0], guide)
 
             parent_ctl = None

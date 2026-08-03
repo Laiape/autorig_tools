@@ -63,17 +63,6 @@ class CheekboneModule(object):
         self.load_guides()
         self.create_controllers()
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): List of attributes to lock and hide.
-        """
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def load_guides(self):
 
         """
@@ -157,7 +146,7 @@ class CheekboneModule(object):
                 cmds.connectAttr(f"{condition_secondary}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
-            self.lock_attributes(ctl, ["v"])
+            curve_tool.lock_attributes(ctl, ["v"])
 
             cmds.matchTransform(grp[0], guide, pos=True)
 
@@ -179,7 +168,7 @@ class CheekboneModule(object):
             
         # Cheek 
         grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", "ANM"])
-        self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
+        curve_tool.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
         
         # Matriz horneada (solo posición) de la guía del cheek, sin transform _GUIDE vivo
         cheek_pos = cmds.xform(self.cheek_guide[0], q=True, ws=True, t=True)
