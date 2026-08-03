@@ -75,6 +75,12 @@ class ArmModule(object):
         self.auto_clavicle()
         self.corrective_setup()
 
+        # La línea del PV lee el codo de la cadena guía, que se borra justo
+        # debajo: recablear al joint de skinning ANTES del delete (si no, el CV
+        # se congela en la pose de build y la curva no sigue al masterwalk).
+        elbow_skin = f"{self.side}_armLower00_JNT"
+        if cmds.objExists(elbow_skin):
+            cmds.connectAttr(f"{elbow_skin}.worldMatrix[0]", f"{self.side}_armPv_RFM.matrix", force=True)
         cmds.delete(self.arm_chain)
 
     def auto_clavicle(self):

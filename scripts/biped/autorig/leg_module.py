@@ -91,6 +91,12 @@ class LegModule(object):
                                 f"{self.side}_rootIk": self.root_ik_ctl,
                             })
         
+        # La línea del PV lee la rodilla de la cadena guía, que se borra justo
+        # debajo: recablear al joint de skinning ANTES del delete (si no, el CV
+        # se congela en la pose de build y la curva no sigue al masterwalk).
+        knee_skin = f"{self.side}_legLower00_JNT"
+        if cmds.objExists(knee_skin):
+            cmds.connectAttr(f"{knee_skin}.worldMatrix[0]", f"{self.side}_legPv_RFM.matrix", force=True)
         cmds.delete(self.leg_chain)
 
     def corrective_setup(self):

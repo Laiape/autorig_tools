@@ -147,6 +147,11 @@ class LegModule(object):
                                 f"{self.side}_ikFkSwitch": self.settings_ctl,
                                 f"{self.side}_bendy_ctls": getattr(self, "bendy_ctls", []),
                                 f"{self.side}_footOffset": getattr(self, "foot_offset_ctl", None),
+                                # Articulación metacarpo/metatarsofalángica (el "menudillo" del
+                                # équido). Es el MISMO hueso en el ungulado y en el digitígrado:
+                                # el caballo tiene un solo dedo a partir de aquí y el perro
+                                # cuatro. digits_module cuelga los dedos de este joint.
+                                f"{self.side}_mtp_JNT": self.foot_skin_drivers[0][0] if getattr(self, "foot_skin_drivers", None) else None,
                             })
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -911,7 +916,11 @@ class LegModule(object):
 
         cmds.addAttr(foot_ctl, longName="FETLOCK", niceName="FETLOCK ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{foot_ctl}.FETLOCK", keyable=False, channelBox=True, lock=True)
-        cmds.addAttr(foot_ctl, longName="Fetlock_Load", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+        # Default 0: el muelle es una característica del ÉQUIDO (aparato de estay), no
+        # del cuadrúpedo genérico — un digitígrado no lo tiene. Además, con carga en
+        # reposo la cadena queda en su tope de alcance y el ball-roll se aplasta:
+        # medido, el menudillo sube 7.45u con carga 0 y solo 2.25u con carga 1.
+        cmds.addAttr(foot_ctl, longName="Fetlock_Load", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
         # Recorrido a carga máxima. Por defecto 22° = la excursión MEDIDA del ángulo
         # MCP de paso a galope (~218° -> ~240°), que es el rango que se anima. El ROM
         # total del menudillo es 62°±7°, así que el atributo admite más si hace falta

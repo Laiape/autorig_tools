@@ -384,12 +384,21 @@ class EyebrowModule(object):
             cmds.setAttr(f"{rfm_curr_t}.input", 3)  # translation row
             cmds.connectAttr(f"{mmt_name}.matrixSum", f"{rfm_curr_t}.matrix")
 
-            # Blend: attributesBlender=0 -> manual, =1 -> auto
+            # Auto ADITIVO: en auto la Y del control se SUMA al seguimiento de la
+            # línea In-Out, no se sustituye — si no, con autoTangent=1 (default)
+            # el ty del tangente quedaba muerto y parecía un control roto.
+            pma_auto_sum = cmds.createNode("plusMinusAverage",
+                                            name=f"{self.side}_eyebrow{name}AutoTanSum_PMA", ss=True)
+            cmds.setAttr(f"{pma_auto_sum}.operation", 1)  # Add
+            cmds.connectAttr(f"{pma_local_y}.output1D", f"{pma_auto_sum}.input1D[0]")
+            cmds.connectAttr(f"{rfm_curr_t}.outputY",   f"{pma_auto_sum}.input1D[1]")
+
+            # Blend: attributesBlender=0 -> manual puro, =1 -> línea + offset manual
             bta = cmds.createNode("blendTwoAttr",
                                    name=f"{self.side}_eyebrow{name}AutoTan_BTA", ss=True)
             cmds.connectAttr(f"{self.main_eyebrow_ctl}.autoTangent", f"{bta}.attributesBlender")
             cmds.connectAttr(f"{rfm_curr_t}.outputY",                 f"{bta}.input[0]")
-            cmds.connectAttr(f"{pma_local_y}.output1D",               f"{bta}.input[1]")
+            cmds.connectAttr(f"{pma_auto_sum}.output1D",              f"{bta}.input[1]")
 
             # Recompose with rowFromMatrix + fourByFourMatrix (no decompose/compose):
             # rows 0-2 keep rotation/scale from the CTL, row 3 keeps X/Z and takes
