@@ -260,18 +260,6 @@ class LegModule(object):
              p_up + out_v * 0.16 * thigh_len,
              out_v * 0.95 + up_v * 0.3, push_dv * 0.8)
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-    
     def load_guides(self):
 
         self.leg_chain = guides_manager.get_guides(f"{self.side}_hip_JNT")
@@ -288,7 +276,7 @@ class LegModule(object):
     def create_chains(self):
 
         self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_legSettings", offset=["GRP"])
-        self.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility", "rotateOrder"])
+        curve_tool.lock_attributes(self.settings_ctl, ["translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility", "rotateOrder"])
         cmds.matchTransform(self.settings_node[0], self.settings_loc, pos=True, rot=True)
         cmds.delete(self.settings_loc)
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName= "Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
@@ -328,7 +316,7 @@ class LegModule(object):
 
             if i < len(self.leg_chain) - 1:
                 fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", "Fk"), offset=["GRP", "ANM"]) # create FK controllers
-                self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+                curve_tool.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
 
                 cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix")
 
@@ -388,7 +376,7 @@ class LegModule(object):
         for i, (name, guide) in enumerate(ik_controller_dict.items()):
 
             ik_node, ik_ctl = curve_tool.create_controller(name=f"{self.side}_{name}", offset=["GRP", "SDK"])
-            self.lock_attributes(ik_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+            curve_tool.lock_attributes(ik_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
             if i == 0:
                 pick_matrix = cmds.createNode("pickMatrix", name=f"{self.side}_{name}_PKM", ss=True)
                 cmds.setAttr(f"{pick_matrix}.useRotate", 0)
@@ -412,7 +400,7 @@ class LegModule(object):
         cmds.parent(self.ik_nodes[0], ik_controllers_trn)
 
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.side}_legRootIk", offset=["GRP", "ANM"])
-        self.lock_attributes(self.root_ik_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.root_ik_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.connectAttr(self.guides_matrices[0], f"{self.root_ik_nodes[0]}.offsetParentMatrix")
 
         cmds.xform(self.root_ik_nodes[0], m=om.MMatrix.kIdentity)
@@ -427,7 +415,7 @@ class LegModule(object):
 
         # Create PV controller
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_legPv", offset=["GRP", "ANM"])
-        self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
 
         if self.side == "R": # Mirror the PV controller
@@ -970,7 +958,7 @@ class LegModule(object):
 
         for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
 
-            self.lock_attributes(ctl, ["visibility"])
+            curve_tool.lock_attributes(ctl, ["visibility"])
 
             if i == 0:
                 cmds.addAttr(ctl, longName = "BENDY", niceName="BENDY ------", attributeType="enum", enumName="------", keyable=True)
