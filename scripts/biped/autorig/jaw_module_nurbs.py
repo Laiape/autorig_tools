@@ -1052,9 +1052,10 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_ctl}.mouthHeight", f"{mouth_height_rev}.inputX")
 
         # ----- AUTO STICKY al abrir la jaw -----
-        # Al abrir la mandíbula los labios se quedan pegados y se despegan por los
-        # LATERALES primero, el CENTRO al final. StickyLips = cantidad (0 = off),
-        # StickyRange = grados de apertura para despegar del todo.
+        # Al abrir la mandíbula los labios se quedan pegados y se despegan por el
+        # CENTRO primero; los laterales aguantan hasta el final (ver umbrales por
+        # punto más abajo). StickyLips = cantidad (0 = off), StickyRange = grados
+        # de apertura para despegar del todo.
         cmds.addAttr(self.jaw_ctl, longName="StickyLips", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
         cmds.addAttr(self.jaw_ctl, longName="StickyRange", attributeType="float", min=1, defaultValue=5.0, keyable=True)
         # signo de apertura medido EMPIRICAMENTE (rx que baja el labio inferior)
@@ -1104,8 +1105,6 @@ class JawModule(object):
                 roll_controller = upper_lip_ctl if part == "upper" else lower_lip_ctl
 
                 real_index = i if i <= mid_point else (linear_curve_cvs - 1) - i
-                activate_min = (float(real_index) / float(mid_point)) * 0.95
-                activate_max = activate_min + 0.05 
 
                 side = non_rot_joint.split("_")[0]
 
