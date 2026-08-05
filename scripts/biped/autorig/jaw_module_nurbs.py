@@ -914,8 +914,11 @@ class JawModule(object):
  
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateU", u_param)
                 cmds.setAttr(f"{uv_pin_nurbs}.coordinate[{i}].coordinateV", 0.5)
-                # uv_pin_linear is on a curve (1D), use U param from linear curve and V=0.5
-                cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateU", u_param)
+                # El pin del up va sobre la CURVA offset: usar su propio parámetro
+                # (param_linear), NO el u de la superficie — son espacios distintos
+                # y con u_param el aim apuntaba a un punto desplazado/clampeado,
+                # dejando el eje casi paralelo al secundario (X mundo) -> flips.
+                cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateU", param_linear)
                 cmds.setAttr(f"{uv_pin_up}.coordinate[{i}].coordinateV", 0.5)
 
                 aim_matrix_vector = cmds.createNode("aimMatrix", name=f"{side}_{part}Lip{name_index:02d}Vector_AMX", ss=True)
