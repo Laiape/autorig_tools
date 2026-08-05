@@ -1,5 +1,3 @@
-from turtle import up
-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from importlib import reload
@@ -77,6 +75,12 @@ class ArmModule(object):
         self.auto_clavicle()
         self.corrective_setup()
 
+        # La línea del PV lee el codo de la cadena guía, que se borra justo
+        # debajo: recablear al joint de skinning ANTES del delete (si no, el CV
+        # se congela en la pose de build y la curva no sigue al masterwalk).
+        elbow_skin = f"{self.side}_armLower00_JNT"
+        if cmds.objExists(elbow_skin):
+            cmds.connectAttr(f"{elbow_skin}.worldMatrix[0]", f"{self.side}_armPv_RFM.matrix", force=True)
         cmds.delete(self.arm_chain)
 
     def auto_clavicle(self):
@@ -106,7 +110,28 @@ class ArmModule(object):
             return
 
         fk = self.fk_controllers[0]
-        s = 1.0 if self.side == "L" else -1.0   # signo de elevación / lift por lado
+
+        # Signos MEDIDOS, no asumidos. Con guías espejadas en posición (no en
+        # comportamiento) el FK derecho eleva con rotateZ del MISMO signo que el
+        # izquierdo: asumir s=-1 en R dejaba el raise siempre negativo -> clamp a 0
+        # -> auto-clavícula muerta solo en R (L y R dejaban de actuar igual).
+        # Mismo patrón de medición que axis_sign en shoulder_corrective_setup.
+        def lift_sign(node, pivot, tip):
+            # +1 si rotateZ POSITIVO eleva la punta: derivada (ejeZ_mundo ^ dir)·Y
+            m = cmds.getAttr(f"{node}.worldMatrix[0]")
+            z = om.MVector(m[8], m[9], m[10]).normalize()
+            d = (om.MVector(*cmds.xform(tip, q=True, ws=True, t=True))
+                 - om.MVector(*cmds.xform(pivot, q=True, ws=True, t=True))).normalize()
+            return 1.0 if (z ^ d).y >= 0 else -1.0
+
+        upper = f"{self.side}_armUpper00_JNT"
+        lower = f"{self.side}_armLower00_JNT"
+        clav_jnt = f"{self.side}_clavicleSkinning_JNT"
+        if all(cmds.objExists(n) for n in (upper, lower, clav_jnt)):
+            s_in = lift_sign(fk, upper, lower)        # signo que ELEVA el brazo en el ctl
+            s_out = lift_sign(clavicle_off, clav_jnt, upper)  # signo que ELEVA la clavícula en el OFF
+        else:
+            s_in = s_out = 1.0 if self.side == "L" else -1.0  # fallback: mirror asumido
 
         cmds.addAttr(clavicle_ctl, longName="AUTO_CLAVICLE", niceName="AUTO CLAVICLE ------", attributeType="enum", enumName="------", keyable=False)
         cmds.setAttr(f"{clavicle_ctl}.AUTO_CLAVICLE", channelBox=True, lock=True)
@@ -114,10 +139,10 @@ class ArmModule(object):
         cmds.addAttr(clavicle_ctl, longName="StartAngle", niceName="Start Angle", attributeType="float", defaultValue=45, keyable=True)
         cmds.addAttr(clavicle_ctl, longName="Factor", attributeType="float", min=0, max=1, defaultValue=0.5, keyable=True)
 
-        # raise = shoulderFk.rotateZ * s  (positivo al elevar el brazo en ambos lados)
+        # raise = shoulderFk.rotateZ * s_in  (positivo al elevar el brazo en ambos lados)
         raise_mul = cmds.createNode("multiply", name=f"{self.side}_autoClavicleRaise_MUL", ss=True)
         cmds.connectAttr(f"{fk}.rotateZ", f"{raise_mul}.input[0]")
-        cmds.setAttr(f"{raise_mul}.input[1]", s)
+        cmds.setAttr(f"{raise_mul}.input[1]", s_in)
 
         # excess = raise - StartAngle
         excess = cmds.createNode("subtract", name=f"{self.side}_autoClavicleExcess_SUB", ss=True)
@@ -138,7 +163,7 @@ class ArmModule(object):
 
         sign = cmds.createNode("multiply", name=f"{self.side}_autoClavicleSign_MUL", ss=True)
         cmds.connectAttr(f"{amount}.output", f"{sign}.input[0]")
-        cmds.setAttr(f"{sign}.input[1]", s)
+        cmds.setAttr(f"{sign}.input[1]", s_out)
         cmds.connectAttr(f"{sign}.output", f"{clavicle_off}.rotateZ")
 
     def corrective_setup(self):
@@ -269,11 +294,22 @@ class ArmModule(object):
 
         # Target del deltoides/axila = DIAGONAL fuera-arriba (el deltoides pica a
         # ~90° de abducción — brazo en T+45 —, no con el brazo en vertical).
-        # onset=25: arranca a 25° de elevación DESDE EL REST, sea bind A o T pose
-        # (un half_angle fijo llegaba tarde con bind en A-pose: arco de 135°).
         up_t = (out_v.x * 0.707, 0.707, 0.0)
         fwd_t, bck_t = (0, 0, 1), (0, 0, -1)
-        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, onset=25)
+        # El cono Up arranca EN EL EJE DE LA CLAVÍCULA, no a N° del rest: 0 con el
+        # brazo alineado con la clavícula (estilo Vittorio pero en el eje, no a 60°)
+        # y 1 en el target. half_angle = ángulo bind clavícula->hombro vs target ->
+        # la frontera del cono cae sobre el eje clavicular sea el bind A o T pose.
+        clav = f"{self.side}_clavicleSkinning_JNT"
+        up_half = 45.0  # fallback sin clavícula: eje horizontal vs diagonal T+45
+        if cmds.objExists(clav):
+            clav_axis = p_up - om.MVector(*cmds.xform(clav, q=True, ws=True, t=True))
+            up_tv = om.MVector(*up_t)
+            if clav_axis.length() > 1e-6:
+                clav_axis.normalize()
+                up_tv.normalize()
+                up_half = math.degrees(math.acos(max(-1.0, min(1.0, clav_axis * up_tv))))
+        up_cone = correctives.cone_driver(f"{self.side}_shoulderUp", driver_src, ref, up_t, axis_sign=axis_sign, half_angle=up_half)
         fwd_cone = correctives.cone_driver(f"{self.side}_shoulderFwd", driver_src, ref, fwd_t, axis_sign=axis_sign, onset=30)
         bck_cone = correctives.cone_driver(f"{self.side}_shoulderBck", driver_src, ref, bck_t, axis_sign=axis_sign, onset=30)
 
@@ -318,18 +354,6 @@ class ArmModule(object):
              p_up - fwd_v * 0.15 * upper_len,
              fwd_v * -0.95 + up_v * 0.25, push_dv * 0.7)
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-    
     def load_guides(self):
 
         self.arm_chain = guides_manager.get_guides(f"{self.side}_shoulder_JNT")
@@ -376,7 +400,7 @@ class ArmModule(object):
         for i, joint in enumerate(self.arm_chain):
 
             fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", "Fk"), offset=["GRP", "ANM"]) # create FK controllers
-            self.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+            curve_tool.lock_attributes(fk_ctl, ["translateX", "translateY", "translateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
 
             cmds.connectAttr(self.guides_matrices[i], f"{fk_node[0]}.offsetParentMatrix")
 
@@ -416,13 +440,13 @@ class ArmModule(object):
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_armIkControllers_GRP", ss=True, p=self.controllers_grp)
 
         self.ik_wrist_nodes, self.ik_wrist_ctl = curve_tool.create_controller(name=f"{self.side}_armIkWrist", offset=["GRP", "SPC"])
-        self.lock_attributes(self.ik_wrist_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.ik_wrist_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_wrist_nodes[0], ik_controllers_trn)
         # cmds.matchTransform(self.ik_wrist_nodes[0], self.arm_chain[-1], pos=True, rot=True)
         cmds.connectAttr(self.guides_matrices[-1], f"{self.ik_wrist_nodes[0]}.offsetParentMatrix")
 
         self.pv_nodes, self.pv_ctl = curve_tool.create_controller(name=f"{self.side}_armPv", offset=["GRP", "SPC"])
-        self.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.pv_ctl, ["rx", "ry", "rz", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.pv_nodes[0], ik_controllers_trn)
         cmds.connectAttr(self.guides_matrices[1], f"{self.pv_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.pv_nodes[0], m=om.MMatrix.kIdentity)
@@ -445,7 +469,7 @@ class ArmModule(object):
         cmds.parent(crv_point_pv, self.pv_ctl)
 
         self.ik_root_nodes, self.ik_root_ctl = curve_tool.create_controller(name=f"{self.side}_armIkRoot", offset=["GRP"])
-        self.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.ik_root_ctl, ["rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ", "visibility"])
         cmds.parent(self.ik_root_nodes[0], ik_controllers_trn)
         cmds.connectAttr(self.guides_matrices[0], f"{self.ik_root_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.ik_root_nodes[0], m=om.MMatrix.kIdentity)
@@ -478,7 +502,7 @@ class ArmModule(object):
         else:
             cmds.move(0, 0, 20, relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.poleVectorConstraint(self.pv_ctl, self.ik_handle)
-        self.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.pv_ctl, ["sx", "sy", "sz", "v"])
 
     def fk_stretch(self):
 
@@ -893,7 +917,7 @@ class ArmModule(object):
 
         for i, ctl in enumerate([main_bendy_ctl, up_bendy_ctl, low_bendy_ctl]):
 
-            self.lock_attributes(ctl, ["visibility"])
+            curve_tool.lock_attributes(ctl, ["visibility"])
 
             if i == 0:
                 cmds.addAttr(ctl, longName = "BENDY", niceName="BENDY ------", attributeType="enum", enumName="------", keyable=True)

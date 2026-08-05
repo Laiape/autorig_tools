@@ -27,30 +27,40 @@ class SpineModule(object):
     # unión lumbosacra). Ex vivo: lumbosacra 26.3° frente a 5.4° de un nivel
     # toracolumbar (T17-T18/T18-L1) -> ratio 4.87.
     #
-    # 2.4 está MEDIDO contra ese ratio, no estimado: metiendo 9° totales en la
-    # columna del caballo (4 ctls, 8 joints) el joint caudal se lleva 3.99° y el
-    # resto 0.50-1.46° -> ratio 4.78. Barrido medido del knob:
-    # 1.0 -> 1.00 · 2.0 -> 3.54 · 2.4 -> 4.78 · 2.5 -> 5.11 · 3.0 -> 6.96.
+    # 1.3 está MEDIDO contra ese ratio, no estimado. Medición: respuesta unitaria
+    # (ctl caudal +5u dorsal) y ángulo por segmento entre joints de skinning. Se usa
+    # la respuesta unitaria y no un "arco" repartido a mano porque el gesto libre no
+    # impone la forma: imponerla mediría el gesto, no el rig.
+    # Barrido con la guía ya en la lumbosacra (span 85.8u):
+    #   1.10 -> 3.89 · 1.20 -> 4.35 · 1.25 -> 4.59 · 1.30 -> 4.84 · 1.35 -> 5.09
+    #   1.50 -> 5.87 · 2.00 -> 8.18 · 2.40 -> 8.78 (máximo) · 3.20 -> 6.84 · 4.50 -> 4.92
+    # Reparto por joint con 1.3: [10.52, 6.16, 3.57, 1.95, 0.95, 0.36, 0.07].
     # Este es EL parámetro équido/felino: mismo módulo, distinta ponderación.
     #
-    # No mueve los joints de skinning en reposo (el ribbon los reparte por fracción
-    # de LONGITUD DE ARCO, param_from_length=True en ribbon_setup), así que los
-    # pesos de piel ya exportados siguen valiendo. Verificado: mismas z de reposo
-    # con bias 1.0 y 2.4.
+    # OJO, LA CURVA NO ES MONÓTONA: la concentración sube hasta un máximo en ~2.4 y
+    # luego BAJA, porque con los CVs muy apiñados mover el caudal arrastra a sus
+    # vecinos y el doblez se vuelve a repartir. Hay por tanto DOS valores que dan el
+    # ratio objetivo (~1.3 y ~4.6); se elige el bajo porque deja los controles mejor
+    # separados para el animador.
     #
-    # OJO: la unión lumbosacra real cae ~19u por detrás de la guía C_spine00
-    # (z≈-75 frente a -55.84), o sea FUERA del ribbon. Esto concentra la flexión en
-    # el extremo caudal DEL TRAMO, no en la lumbosacra. Para que caiga en la
-    # lumbosacra hay que llevar la guía C_spine00 del asset a z≈-75 (y reimportar
-    # pesos: eso sí mueve los joints de skinning).
+    # El 2.4 anterior NO es comparable: se calibró con la guía en z=-55.84 (span
+    # 66.6u) y con un gesto de arco repartido entre los 4 controles.
     #
-    # ponytail: flag de clase (idioma del repo, como PV_SIGN/DOUBLE_BEND del leg) ->
-    # es por MÓDULO, no por personaje, y los únicos Rig_Type=1 son horse y giraffe.
-    # Si alguna vez necesitan valores distintos, esto sube al .build; ojo: hay que
-    # añadirlo también a create_rig_settings (hoy solo hace int/enum), porque
-    # get_rig_data reescribe el .build desde los atributos de C_guides_GRP y se
-    # comería una clave suelta.
-    SAGITTAL_BIAS = 2.4
+    # La guía C_spine00 se movió de z=-55.844 a z=-75.0 (y de 108.177 a 108.410 por
+    # extrapolación lineal del eje de la columna, pendiente -0.01221) para que el
+    # extremo caudal del ribbon caiga en la UNIÓN LUMBOSACRA real, deducida de las
+    # guías: cadera en z=-74.93, primera caudal en z=-91.54. Antes la lumbosacra
+    # quedaba ~19u FUERA del tramo y la flexión se concentraba en lumbar medio.
+    # Eso SÍ mueve los joints de skinning (espaciado 9.52 -> 12.26): hay que
+    # REIMPORTAR PESOS.
+    #
+    # ponytail: flag de clase (idioma del repo, como PV_SIGN del leg) -> es por
+    # MÓDULO, no por personaje, y los únicos Rig_Type=1 son horse y giraffe (la
+    # jirafa lo recibe a 1.0 desde rig_manager). Si divergen más, esto sube al
+    # .build; ojo: hay que añadirlo también a create_rig_settings (hoy solo hace
+    # int/enum), porque get_rig_data reescribe el .build desde los atributos de
+    # C_guides_GRP y se comería una clave suelta.
+    SAGITTAL_BIAS = 1.3
 
     def __init__(self):
 
@@ -97,18 +107,6 @@ class SpineModule(object):
                             })
         
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:source_matrices
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-    
     def load_guides(self):
 
         """
@@ -328,7 +326,7 @@ class SpineModule(object):
                 cmds.parent(fk_node[0], self.controllers_grp)
                 cmds.connectAttr(f"{self.body_ctl}.FK_Vis", f"{fk_node[0]}.visibility")
 
-            self.lock_attributes(fk_ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(fk_ctl, ["sx", "sy", "sz", "v"])
             if self.fk_controllers:
                 cmds.parent(fk_node[0], self.fk_controllers[-1])
             self.fk_nodes.append(fk_node)

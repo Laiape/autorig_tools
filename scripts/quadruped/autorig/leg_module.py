@@ -147,15 +147,16 @@ class LegModule(object):
                                 f"{self.side}_ikFkSwitch": self.settings_ctl,
                                 f"{self.side}_bendy_ctls": getattr(self, "bendy_ctls", []),
                                 f"{self.side}_footOffset": getattr(self, "foot_offset_ctl", None),
+                                # Articulación metacarpo/metatarsofalángica (el "menudillo" del
+                                # équido). Es el MISMO hueso en el ungulado y en el digitígrado:
+                                # el caballo tiene un solo dedo a partir de aquí y el perro
+                                # cuatro. digits_module cuelga los dedos de este joint.
+                                f"{self.side}_mtp_JNT": self.foot_skin_drivers[0][0] if getattr(self, "foot_skin_drivers", None) else None,
                             })
 
     # ─────────────────────────────────────────────────────────────────────────
     # Helpers
     # ─────────────────────────────────────────────────────────────────────────
-    def lock_attributes(self, ctl, attrs):
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def _translation_matrix(self, pos):
         return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, pos.x, pos.y, pos.z, 1]
 
@@ -287,7 +288,7 @@ class LegModule(object):
         settings_pos = self.guide_positions[self.plant_index] + om.MVector(offset, 0.0, 0.0)
 
         self.settings_node, self.settings_ctl = curve_tool.create_controller(name=f"{self.module_name}Settings", offset=["GRP"])
-        self.lock_attributes(self.settings_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v", "rotateOrder"])
+        curve_tool.lock_attributes(self.settings_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v", "rotateOrder"])
         cmds.setAttr(f"{self.settings_node[0]}.offsetParentMatrix", self._translation_matrix(settings_pos), type="matrix")
         cmds.addAttr(self.settings_ctl, longName="Ik_Fk", niceName="Switch IK --> FK", attributeType="float", defaultValue=0, minValue=0, maxValue=1, keyable=True)
         cmds.parent(self.settings_node[0], self.controllers_grp)
@@ -318,7 +319,7 @@ class LegModule(object):
         for i, joint in enumerate(self.leg_joints):
 
             fk_node, fk_ctl = curve_tool.create_controller(name=joint.replace("_JNT", "Fk"), offset=["GRP", "ANM"])
-            self.lock_attributes(fk_ctl, ["tx", "ty", "tz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(fk_ctl, ["tx", "ty", "tz", "sx", "sy", "sz", "v"])
 
             if i == 0:
                 cmds.setAttr(f"{fk_node[0]}.offsetParentMatrix", self.guides_matrices[0], type="matrix")
@@ -384,7 +385,7 @@ class LegModule(object):
         previous_rest = None
         for name, rest in rest_matrices.items():
             ik_node, ik_ctl = curve_tool.create_controller(name=f"{self.module_name}{name[0].upper()}{name[1:]}", offset=["GRP", "SDK"])
-            self.lock_attributes(ik_ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ik_ctl, ["sx", "sy", "sz", "v"])
 
             if previous_rest is None:
                 cmds.setAttr(f"{ik_node[0]}.offsetParentMatrix", rest, type="matrix")
@@ -409,7 +410,7 @@ class LegModule(object):
 
         # Root IK
         self.root_ik_nodes, self.root_ik_ctl = curve_tool.create_controller(name=f"{self.module_name}RootIk", offset=["GRP", "ANM"])
-        self.lock_attributes(self.root_ik_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.root_ik_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.setAttr(f"{self.root_ik_nodes[0]}.offsetParentMatrix", self.guides_matrices[0], type="matrix")
         cmds.parent(self.root_ik_nodes[0], ik_controllers_trn)
         cmds.xform(self.root_ik_nodes[0], m=om.MMatrix.kIdentity)
@@ -442,7 +443,7 @@ class LegModule(object):
         ik_setup/_place_pv desde el PV automático del handle.
         """
         pv_nodes, pv_ctl = curve_tool.create_controller(name=name, offset=["GRP", "ANM"])
-        self.lock_attributes(pv_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(pv_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
 
         cmds.addAttr(pv_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{pv_ctl}.extraAttr", channelBox=True, lock=True)
@@ -911,7 +912,11 @@ class LegModule(object):
 
         cmds.addAttr(foot_ctl, longName="FETLOCK", niceName="FETLOCK ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{foot_ctl}.FETLOCK", keyable=False, channelBox=True, lock=True)
-        cmds.addAttr(foot_ctl, longName="Fetlock_Load", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+        # Default 0: el muelle es una característica del ÉQUIDO (aparato de estay), no
+        # del cuadrúpedo genérico — un digitígrado no lo tiene. Además, con carga en
+        # reposo la cadena queda en su tope de alcance y el ball-roll se aplasta:
+        # medido, el menudillo sube 7.45u con carga 0 y solo 2.25u con carga 1.
+        cmds.addAttr(foot_ctl, longName="Fetlock_Load", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
         # Recorrido a carga máxima. Por defecto 22° = la excursión MEDIDA del ángulo
         # MCP de paso a galope (~218° -> ~240°), que es el rango que se anima. El ROM
         # total del menudillo es 62°±7°, así que el atributo admite más si hace falta
@@ -1149,7 +1154,7 @@ class LegModule(object):
 
             bendy_nodes, bendy_ctl = curve_tool.create_controller(name=name, offset=["GRP", "ANM"], parent=bendy_grp)
             cmds.connectAttr(f"{self.settings_ctl}.Bendy_Controllers", f"{bendy_nodes[0]}.visibility")
-            self.lock_attributes(bendy_ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(bendy_ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{mid_blm}.outputMatrix", f"{bendy_nodes[0]}.offsetParentMatrix")
             self.bendy_ctls.append(bendy_ctl)
 
@@ -1260,7 +1265,7 @@ class LegModule(object):
 
         nodes, ctl = curve_tool.create_controller(
             name=f"{self.module_name}FootOffset", offset=["GRP", "ANM"], parent=self.controllers_grp)
-        self.lock_attributes(ctl, ["v"])  # translate + rotate + scale libres (TRS)
+        curve_tool.lock_attributes(ctl, ["v"])  # translate + rotate + scale libres (TRS)
         self.foot_offset_ctl = ctl
 
         # Rotación/escala en WORLD SPACE: el control se coloca en la POSICIÓN del
@@ -1401,12 +1406,12 @@ class FrontLegModule(LegModule):
 
         # Master: en el root de la pierna, orientado a mundo
         master_nodes, self.scapula_master_ctl = curve_tool.create_controller(name=f"{self.module_name}ScapulaMaster", offset=["GRP", "ANM"], parent=self.controllers_grp)
-        self.lock_attributes(self.scapula_master_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.scapula_master_ctl, ["sx", "sy", "sz", "v"])
         cmds.setAttr(f"{master_nodes[0]}.offsetParentMatrix", list(master_rest), type="matrix")
 
         # Escápula: en su guía, siguiendo al master con offset horneado
         scapula_nodes, self.scapula_ctl = curve_tool.create_controller(name=f"{self.module_name}Scapula", offset=["GRP", "ANM"], parent=self.controllers_grp)
-        self.lock_attributes(self.scapula_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.scapula_ctl, ["sx", "sy", "sz", "v"])
         cmds.setAttr(f"{scapula_nodes[0]}.inheritsTransform", 0)
 
         scapula_offset_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}Scapula_MMX", ss=True)
@@ -1416,7 +1421,7 @@ class FrontLegModule(LegModule):
 
         # End: en el root de la pierna, con space switch entre escápula y masterwalk
         end_nodes, self.scapula_end_ctl = curve_tool.create_controller(name=f"{self.module_name}ScapulaEnd", offset=["GRP", "ANM"], parent=self.controllers_grp)
-        self.lock_attributes(self.scapula_end_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.scapula_end_ctl, ["sx", "sy", "sz", "v"])
         cmds.setAttr(f"{end_nodes[0]}.inheritsTransform", 0)
 
         cmds.addAttr(self.scapula_ctl, longName="SpaceSwitchSep", niceName="SPACE SWITCHES ------", attributeType="enum", enumName="------", keyable=True)
@@ -1524,7 +1529,7 @@ class FrontLegModule(LegModule):
         cmds.setAttr(f"{surf_tf}.overrideEnabled", 1)
         cmds.setAttr(f"{surf_tf}.overrideDisplayType", 2)  # reference: visible para esculpir, no seleccionable
         cmds.setAttr(f"{surf_tf}.visibility", 0)
-        self.lock_attributes(surf_tf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(surf_tf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
         self.scapula_floating_surface = surf_tf
         surf_shape = cmds.listRelatives(surf_tf, shapes=True)[0]
 

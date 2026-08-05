@@ -313,10 +313,20 @@ class SkinManager(object):
     # ----------------------------------------------------------------
     # --- IMPORT SKINS (Lógica Referencia: Reorder & Sparse) ---
     # ----------------------------------------------------------------
-    def import_skins(self, in_path=None):
+    def import_skins(self, in_path=None, replace_existing=False):
         """
         Importa los pesos desde un archivo JSON (.skc).
         Si in_path es None, busca automáticamente la versión más reciente.
+
+        replace_existing:
+            False (default, flujo de build): los skinClusters que ya existen en
+                escena con el mismo nombre se SALTAN y quedan los últimos del
+                stack (no se pisan correctivas ni skins apilados).
+            True (Character Manager): los skinClusters existentes con el mismo
+                nombre se SUSTITUYEN por los del archivo — pesos, blend weights,
+                influencias y atributos pasan a ser los del archivo. Los skins
+                de escena que NO están en el archivo (p.ej. correctivas) se
+                conservan y siguen quedando los últimos del stack.
         """
         # 1. Determinar la ruta de importación
         if in_path:
@@ -366,7 +376,7 @@ class SkinManager(object):
                 skin_name = skin_data["name"]
                 target_vtx_count = skin_data["vertex_count"]
 
-                if skin_name in existing_scene_skins:
+                if skin_name in existing_scene_skins and not replace_existing:
                     continue
 
                 # Validación topología
@@ -381,6 +391,15 @@ class SkinManager(object):
                 mf_skin = None
                 
                 if skin_exists:
+                    # Para sustituir, el skin existente debe deformar ESTA malla;
+                    # si el nombre choca con un skin de otra malla, se salta.
+                    skin_geo = cmds.skinCluster(skin_name, q=True, geometry=True) or []
+                    mesh_shape = mesh_path.partialPathName()
+                    if not any(mesh_shape == g or g.endswith(f"|{mesh_shape}")
+                               or mesh_shape.endswith(f"|{g}") for g in skin_geo):
+                        om.MGlobal.displayWarning(
+                            f"{skin_name} existe pero no deforma {mesh_name}; se salta.")
+                        continue
                     sel_s = om.MSelectionList()
                     sel_s.add(skin_name)
                     mf_skin = oma.MFnSkinCluster(sel_s.getDependNode(0))
@@ -453,6 +472,10 @@ class SkinManager(object):
                     for v_idx, val in zip(sparse_blend["ix"], sparse_blend["vw"]):
                         full_blend[v_idx] = val
                     mf_skin.setBlendWeights(mesh_path, vertex_comp, om.MDoubleArray(full_blend))
+                elif skin_exists:
+                    # Sustitución de un skin existente y el archivo no trae blend
+                    # weights: dejarlos a cero para que el estado == archivo.
+                    mf_skin.setBlendWeights(mesh_path, vertex_comp, om.MDoubleArray([0.0] * num_verts))
 
                 processed_skins.append(skin_name)
 
@@ -465,7 +488,10 @@ class SkinManager(object):
                 current_skins = [x for x in current_hist if cmds.nodeType(x) == "skinCluster"]
                 current_skins = list(reversed(current_skins))  # [Inner, ..., Outer]
 
-                pre_existing_here = [s for s in current_skins if s in existing_scene_skins]
+                # Un skin sustituido está en ambos sets: cuenta como importado
+                # (inner), no como pre-existente, para no duplicarlo en el orden.
+                pre_existing_here = [s for s in current_skins
+                                     if s in existing_scene_skins and s not in processed_skins]
                 desired_order = processed_skins + pre_existing_here
 
                 for skin in reversed(desired_order):

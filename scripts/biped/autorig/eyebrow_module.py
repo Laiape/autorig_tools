@@ -71,18 +71,6 @@ class EyebrowModule(object):
         if self.side == "L":
             cmds.delete(self.mid_eyebrow)
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def local(self, ctl):
 
         """
@@ -219,7 +207,7 @@ class EyebrowModule(object):
         cmds.connectAttr(f"{condition_primary}.outColorR", f"{self.main_eyebrow_nodes[0]}.visibility") # Connect visibility
         
         cmds.parent(self.main_eyebrow_nodes[0], self.controllers_grp)
-        self.lock_attributes(self.main_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+        curve_tool.lock_attributes(self.main_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
         main_local_grp, main_local_trn = self.local(self.main_eyebrow_ctl)
 
         if self.side == "L":
@@ -228,7 +216,7 @@ class EyebrowModule(object):
             cmds.connectAttr(f"{condition_primary}.outColorR", f"{mid_eyebrow_nodes[0]}.visibility") # Connect visibility
 
             cmds.parent(mid_eyebrow_nodes[0], self.controllers_grp)
-            self.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
+            curve_tool.lock_attributes(mid_eyebrow_ctl, ["scaleX", "scaleY", "scaleZ", "visibility"])
 
             mid_local_grp, mid_local_trn = self.local(mid_eyebrow_ctl)
             mid_eyebrow_guide = cmds.createNode("transform", name="C_eyebrowMid_GUIDE", ss=True, p=self.module_trn)
@@ -270,14 +258,20 @@ class EyebrowModule(object):
             cmds.setAttr(f"{parent_matrix}.target[1].offsetMatrix", *matrix_manager.get_offset_matrix(mid_eyebrow_guide, f"{main_local_trn}.matrixSum"), type="matrix")
             cmds.delete(mid_eyebrow_guide)
 
-        names = {"In": 0, "InTan": 1, "Mid": len(self.eyebrows) // 2, "OutTan": -2, "Out": -1}
+        # Tangentes proporcionales al número de guías: InTan/OutTan caen al cuarto
+        # y tres cuartos del recorrido en vez de pegadas al vecino de In/Out. Con
+        # 5 guías coincide con el comportamiento anterior (índices 1 y -2).
+        n = len(self.eyebrows)
+        in_tan = max(1, round((n - 1) * 0.25))
+        out_tan = min(n - 2, round((n - 1) * 0.75))
+        names = {"In": 0, "InTan": in_tan, "Mid": n // 2, "OutTan": out_tan, "Out": n - 1}
 
         for name, value in names.items():
 
             eyebrow_nodes, eyebrow_ctl = curve_tool.create_controller(f"{self.side}_eyebrow{name}", offset=["GRP", "OFF"])
             cmds.matchTransform(eyebrow_nodes[0], self.eyebrows[value], pos=True, rot=True)
             cmds.parent(eyebrow_nodes[0], self.main_eyebrow_ctl)
-            self.lock_attributes(eyebrow_ctl, ["visibility"])
+            curve_tool.lock_attributes(eyebrow_ctl, ["visibility"])
 
             local_grp, local_trn = self.local(eyebrow_ctl)
             self.local_parent(local_grp, eyebrow_ctl, main_local_trn, self.main_eyebrow_ctl)
@@ -378,12 +372,21 @@ class EyebrowModule(object):
             cmds.setAttr(f"{rfm_curr_t}.input", 3)  # translation row
             cmds.connectAttr(f"{mmt_name}.matrixSum", f"{rfm_curr_t}.matrix")
 
-            # Blend: attributesBlender=0 -> manual, =1 -> auto
+            # Auto ADITIVO: en auto la Y del control se SUMA al seguimiento de la
+            # línea In-Out, no se sustituye — si no, con autoTangent=1 (default)
+            # el ty del tangente quedaba muerto y parecía un control roto.
+            pma_auto_sum = cmds.createNode("plusMinusAverage",
+                                            name=f"{self.side}_eyebrow{name}AutoTanSum_PMA", ss=True)
+            cmds.setAttr(f"{pma_auto_sum}.operation", 1)  # Add
+            cmds.connectAttr(f"{pma_local_y}.output1D", f"{pma_auto_sum}.input1D[0]")
+            cmds.connectAttr(f"{rfm_curr_t}.outputY",   f"{pma_auto_sum}.input1D[1]")
+
+            # Blend: attributesBlender=0 -> manual puro, =1 -> línea + offset manual
             bta = cmds.createNode("blendTwoAttr",
                                    name=f"{self.side}_eyebrow{name}AutoTan_BTA", ss=True)
             cmds.connectAttr(f"{self.main_eyebrow_ctl}.autoTangent", f"{bta}.attributesBlender")
             cmds.connectAttr(f"{rfm_curr_t}.outputY",                 f"{bta}.input[0]")
-            cmds.connectAttr(f"{pma_local_y}.output1D",               f"{bta}.input[1]")
+            cmds.connectAttr(f"{pma_auto_sum}.output1D",              f"{bta}.input[1]")
 
             # Recompose with rowFromMatrix + fourByFourMatrix (no decompose/compose):
             # rows 0-2 keep rotation/scale from the CTL, row 3 keeps X/Z and takes

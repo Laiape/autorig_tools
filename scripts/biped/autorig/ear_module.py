@@ -69,18 +69,6 @@ class EarModule(object):
         # Clean up
         cmds.delete(self.ear_guides[0])
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def local(self, ctl):
 
         """
@@ -118,7 +106,7 @@ class EarModule(object):
         for i, guide in enumerate(self.ear_guides):
 
             nodes, ctl = curve_tool.create_controller(name=guide.replace("_JNT", ""), offset=["GRP", "ANM"])
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.matchTransform(nodes[0], guide)
             jnt = cmds.createNode("joint", name=guide.replace("_JNT", "Skinning_JNT"), ss=True, p=self.skeleton_grp) # Create skinning joint
             cmds.parent(nodes[0], self.controllers_grp)

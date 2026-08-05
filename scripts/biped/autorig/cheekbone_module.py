@@ -63,17 +63,6 @@ class CheekboneModule(object):
         self.load_guides()
         self.create_controllers()
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): List of attributes to lock and hide.
-        """
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def load_guides(self):
 
         """
@@ -123,12 +112,16 @@ class CheekboneModule(object):
         cmds.setAttr(f"{condition_secondary}.colorIfFalseR", 0)
         cmds.connectAttr(f"{self.face_ctl}.Cheekbones", f"{condition_secondary}.firstTerm")
 
-        socket_off_grp = self.lower_socket_ctl.replace("CTL", "OFF")
-        condition_socket = cmds.createNode("condition", name=f"C_{self.side}_socketMovement_CON", ss=True)
-        cmds.setAttr(f"{condition_socket}.operation", 3)  # Greater Than or Equal
-        cmds.setAttr(f"{condition_socket}.secondTerm", 0)
-        cmds.setAttr(f"{condition_socket}.colorIfFalseR", 0)
-        cmds.connectAttr(f"{condition_socket}.outColorR", f"{socket_off_grp}.translateY")
+        # El eyelid puede haberse construido sin sockets (sin guías): entonces no
+        # hay ctl que empujar y este bloque se omite entero.
+        condition_socket = None
+        if self.lower_socket_ctl and cmds.objExists(self.lower_socket_ctl):
+            socket_off_grp = self.lower_socket_ctl.replace("CTL", "OFF")
+            condition_socket = cmds.createNode("condition", name=f"C_{self.side}_socketMovement_CON", ss=True)
+            cmds.setAttr(f"{condition_socket}.operation", 3)  # Greater Than or Equal
+            cmds.setAttr(f"{condition_socket}.secondTerm", 0)
+            cmds.setAttr(f"{condition_socket}.colorIfFalseR", 0)
+            cmds.connectAttr(f"{condition_socket}.outColorR", f"{socket_off_grp}.translateY")
         
         cheeckbones_ctls = []
         cheeckbones_grps = []
@@ -140,8 +133,9 @@ class CheekboneModule(object):
 
             if i == 0:
                 grp, ctl = curve_tool.create_controller(name=name, parent=self.controllers_grp, offset=["GRP", "OFF"])
-                cmds.connectAttr(f"{ctl}.translateY", f"{condition_socket}.firstTerm")
-                cmds.connectAttr(f"{ctl}.translateY", f"{condition_socket}.colorIfTrueR")
+                if condition_socket:
+                    cmds.connectAttr(f"{ctl}.translateY", f"{condition_socket}.firstTerm")
+                    cmds.connectAttr(f"{ctl}.translateY", f"{condition_socket}.colorIfTrueR")
 
                 cmds.connectAttr(f"{condition_cheekbones}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
@@ -152,7 +146,7 @@ class CheekboneModule(object):
                 cmds.connectAttr(f"{condition_secondary}.outColorR", f"{grp[0]}.visibility")
                 cheeckbones_ctls.append(ctl)
                 cheeckbones_grps.append(grp)
-            self.lock_attributes(ctl, ["v"])
+            curve_tool.lock_attributes(ctl, ["v"])
 
             cmds.matchTransform(grp[0], guide, pos=True)
 
@@ -174,7 +168,7 @@ class CheekboneModule(object):
             
         # Cheek 
         grp, ctl = curve_tool.create_controller(name=self.cheek_guide[0].replace("_JNT", ""), parent=self.controllers_grp, offset=["GRP", "ANM"])
-        self.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
+        curve_tool.lock_attributes(ctl, ["rx", "ry", "rz", "v"])
         
         # Matriz horneada (solo posición) de la guía del cheek, sin transform _GUIDE vivo
         cheek_pos = cmds.xform(self.cheek_guide[0], q=True, ws=True, t=True)

@@ -55,18 +55,6 @@ class TeethModule(object):
         self.load_guides()
         self.create_controllers()
 
-    def _lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-    
     def load_guides(self):
 
         """ 
@@ -102,7 +90,7 @@ class TeethModule(object):
         cmds.connectAttr(upper_jaw_grp_inv_wm, f"{upper_teeth_mmx}.matrixIn[2]")
         cmds.connectAttr(f"{upper_teeth_mmx}.matrixSum", f"{upper_teeth_nodes[0]}.offsetParentMatrix")
         upper_local_mmx = matrix_manager.local_mmx(upper_teeth_ctl, upper_teeth_nodes[0])
-        self._lock_attributes(upper_teeth_ctl, ["v"])
+        curve_tool.lock_attributes(upper_teeth_ctl, ["v"])
 
         upper_bind_wm = om.MMatrix(self.upper_teeth_matrix)
         upper_jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{upper_jaw}.matrixIn[2]"))
@@ -124,7 +112,7 @@ class TeethModule(object):
         cmds.connectAttr(jaw_grp_inv_wm, f"{lower_teeth_mmx}.matrixIn[2]")
         cmds.connectAttr(f"{lower_teeth_mmx}.matrixSum", f"{lower_teeth_nodes[0]}.offsetParentMatrix")
         lower_local_mmx = matrix_manager.local_mmx(lower_teeth_ctl, lower_teeth_nodes[0])
-        self._lock_attributes(lower_teeth_ctl, ["v"])
+        curve_tool.lock_attributes(lower_teeth_ctl, ["v"])
 
         lower_bind_wm = om.MMatrix(self.lower_teeth_matrix)
         jaw_grp_wm_baked = om.MMatrix(cmds.getAttr(f"{jaw}.matrixIn[2]"))

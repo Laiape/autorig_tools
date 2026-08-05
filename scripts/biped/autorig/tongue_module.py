@@ -60,17 +60,6 @@ class TongueModule(object):
         self.load_guides()
         self.create_controllers()
 
-    def _lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): List of attributes to lock and hide.
-        """
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def load_guides(self):
 
         """

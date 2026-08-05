@@ -16,6 +16,53 @@ reload(curve_tool)
 reload(matrix_manager)
 reload(ribbon)
 
+def socket_positions_from_ring(curve, side, socket_names, samples=64):
+
+    """
+    Deriva las posiciones de los sockets desde UNA curva-anillo dibujada
+    alrededor del ojo (como la guía de la ceja: da igual cuántos CVs tenga y
+    por dónde empiece). Cada socket se busca por su dirección alrededor del
+    centro del anillo en el plano XY: up=+Y, in=hacia la nariz (x=0), y las
+    diagonales entre medias. Se muestrea la curva y se toma el punto cuya
+    dirección mejor casa con la del socket.
+
+    Args:
+        curve (str): curva-anillo (shape o transform).
+        side (str): 'L' o 'R', decide hacia dónde cae "in".
+        socket_names (list[str]): nombres de socket a resolver.
+        samples (int): puntos muestreados a lo largo de la curva.
+
+    Returns:
+        dict: {socket_name: posición mundo [x, y, z]}
+    """
+
+    points = [cmds.pointOnCurve(curve, pr=i / samples, top=True, position=True) for i in range(samples)]
+    center = [sum(axis) / len(points) for axis in zip(*points)]
+
+    in_x = -1.0 if side == "L" else 1.0  # "in" mira a la nariz (x=0)
+    directions = {
+        "upperSocket": (0, 1), "lowerSocket": (0, -1),
+        "inSocket": (in_x, 0), "outSocket": (-in_x, 0),
+        "upInSocket": (in_x, 1), "upOutSocket": (-in_x, 1),
+        "downInSocket": (in_x, -1), "downOutSocket": (-in_x, -1),
+    }
+
+    positions = {}
+    for name in socket_names:
+        dir_x, dir_y = directions[name]
+        length = math.sqrt(dir_x * dir_x + dir_y * dir_y)
+        dir_x, dir_y = dir_x / length, dir_y / length
+
+        def alignment(point):
+            off_x, off_y = point[0] - center[0], point[1] - center[1]
+            off_len = math.sqrt(off_x * off_x + off_y * off_y) or 1.0
+            return (off_x * dir_x + off_y * dir_y) / off_len
+
+        positions[name] = max(points, key=alignment)
+
+    return positions
+
+
 class EyelidModule(object):
 
     def __init__(self):
@@ -81,26 +128,13 @@ class EyelidModule(object):
             self.create_eye_surface()
         self.skinning_joints()
 
-        # Sockets: solo en biped (dependen de la ceja y de las guías de socket).
-        # En cuadrúpedo no se crean.
         if sockets:
             socket_main_controllers = self.sockets()
-            data_manager.DataExportBiped().append_data("eyelid_module",
-                                {
-                                    f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
-                                })
-
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
+            if socket_main_controllers:  # sin guías de socket se omiten, no se para el build
+                data_manager.DataExportBiped().append_data("eyelid_module",
+                                    {
+                                        f"{self.side}_lower_socket_ctl": socket_main_controllers[1]
+                                    })
 
     def local(self, ctl):
 
@@ -111,9 +145,6 @@ class EyelidModule(object):
         Returns:
             str: The name of the local transform node.
         """
-        # Local network without transforms: ctl.matrix * baked bind matrix replaces
-        # the old Local_GRP/Local_TRN pair. The joint stays because skinClusters
-        # need a DAG influence, and takes the network through offsetParentMatrix.
         local_mmx = cmds.createNode("multMatrix", name=ctl.replace("_CTL", "Local_MMX"), ss=True)
         cmds.connectAttr(f"{ctl}.matrix", f"{local_mmx}.matrixIn[0]")
         cmds.setAttr(f"{local_mmx}.matrixIn[1]", cmds.getAttr(f"{ctl}.worldMatrix[0]"), type="matrix")
@@ -239,14 +270,7 @@ class EyelidModule(object):
         if self.side == "L":
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
             cmds.parent(self.main_aim_nodes[0], self.head_ctl)
-            self.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
-            # C_eyeMain en el PUNTO MEDIO de los aim de los DOS ojos (cada aim va a 30
-            # DELANTE de su ojo por su mirada = eje Z del ojo). Se leen las matrices
-            # de guía de ambos ojos del archivo (las guías pueden ser asimétricas, p.
-            # ej. el cuadrúpedo), así el medio es correcto aunque no haya simetría.
-            # Orientado a la CABEZA (antes usaba la orientación LATERAL del ojo +
-            # mover por su Z, que en cuadrúpedos mandaba el control de lado). En biped
-            # (ojos al frente, simétricos) equivale al comportamiento anterior.
+            curve_tool.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
             def _eye_aim(eye_matrix):
                 z = om.MVector(eye_matrix[8], eye_matrix[9], eye_matrix[10]).normal()
                 c = om.MVector(eye_matrix[12], eye_matrix[13], eye_matrix[14])
@@ -256,13 +280,12 @@ class EyelidModule(object):
             try:
                 r_chain = guides_manager.get_guides("R_eye_JNT")  # crea R_eye_JNT (+End) temporal
                 aim_r = _eye_aim(cmds.getAttr(f"{r_chain[0]}.worldMatrix[0]"))
-                cmds.delete(r_chain[0])  # borra (con su hijo) -> el build de R la recrea
+                cmds.delete(r_chain[0])
             except Exception:
                 aim_r = None
             if aim_r is not None:
                 mid = (aim_l + aim_r) * 0.5
             else:
-                # fallback: simétrico en X (centro del personaje), altura/profundidad del aim L
                 mid = om.MVector(0.0, aim_l.y, aim_l.z)
             h = self.head_guide_matrix
             main_matrix = [h[0], h[1], h[2], 0, h[4], h[5], h[6], 0, h[8], h[9], h[10], 0, mid.x, mid.y, mid.z, 1]
@@ -273,7 +296,7 @@ class EyelidModule(object):
         cmds.xform(side_aim_nodes[0], ws=True, m=self.eye_guide_matrix)
         cmds.select(side_aim_nodes[0])
         cmds.move(0, 0,30, relative=True, objectSpace=True, worldSpaceDistance=True)
-        self.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
+        curve_tool.lock_attributes(self.side_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
         cmds.parent(side_aim_nodes[0], "C_eyeMain_CTL")
 
 
@@ -295,7 +318,7 @@ class EyelidModule(object):
             suffix = matrix.split("_")[-1]
             node, ctl = curve_tool.create_controller(name=matrix.replace(f"_{suffix}", ""), offset=["GRP", "OFF"])
             local_trn, local_jnt = self.local(ctl)
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             
             # if "eyelidIn_" in matrix or "eyelidOut_" in matrix or "eyelidDown_" in matrix or "eyelidUp_" in matrix:
             #     node_01, ctl_01 = curve_tool.create_controller(name=matrix.replace("_FFX", "01"), offset=["GRP"])
@@ -315,7 +338,7 @@ class EyelidModule(object):
                 self.upper_local_trn.append(local_trn)
                 self.lower_local_trn.append(local_trn)
 
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
 
             cmds.connectAttr(matrix, f"{node[0]}.offsetParentMatrix")
             cmds.parent(node[0], self.controllers_grp)
@@ -337,7 +360,6 @@ class EyelidModule(object):
         self.constraints_callback(guide=self.lower_guides[-2], driven=self.lower_nodes[-2], drivers=[self.lower_controllers[2], self.lower_controllers[-1]], local_jnt=self.lower_local_jnt[-2])
 
         # Re-bake the bind matrix of every local network now that the controllers
-        # are in place (what the old matchTransform on the Local_GRPs did)
         for local_mmx in set(self.upper_local_trn + self.lower_local_trn):
             ctl = local_mmx.replace("Local_MMX", "_CTL")
             cmds.setAttr(f"{local_mmx}.matrixIn[1]", cmds.getAttr(f"{ctl}.worldMatrix[0]"), type="matrix")
@@ -358,10 +380,6 @@ class EyelidModule(object):
 
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
         if self.surface:
-            # Gizmo DELANTE del ojo (a lo largo de la mirada = Z local del control)
-            # para agarrarlo, pero el pivote/transform queda en el CENTRO del ojo, así
-            # rotarlo rota el ojo sobre su centro (no lo orbita). En cuadrúpedos el ojo
-            # mira de lado, así que 'delante' es la Z del ojo, no el frente de la cara.
             cmds.move(0, 0, 2, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
@@ -369,7 +387,7 @@ class EyelidModule(object):
         cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[1]", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
         cmds.connectAttr(f"{mult_matrix_negate_head}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
-        self.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
 
         cmds.addAttr(self.eye_direct_ctl, ln="EYE_ATTRIBUTES", at="enum", en="____", k=True)
         cmds.setAttr(f"{self.eye_direct_ctl}.EYE_ATTRIBUTES", lock=True, keyable=False, channelBox=True)
@@ -430,9 +448,6 @@ class EyelidModule(object):
         """
 
         # Upper Blink
-        # blink_ref_curve weight = Upper_Blink directly (-1..1):
-        #   positive → eyelid closes toward blink height
-        #   negative → extrapolates away (opens wider), no guide curve needed
         upper_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_up_curve, self.eyelid_up_curve_rebuild, name=f"{self.side}_upperEyelidBlink_BLS")[0]
         cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink}.{self.blink_ref_curve}")
         upper_blink_abs = cmds.createNode("condition", name=f"{self.side}_upperBlinkAbs_COND", ss=True)
@@ -480,8 +495,6 @@ class EyelidModule(object):
         cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[5]", tv=[(self.upper_local_jnt[3], 0.5), (self.upper_local_jnt[4], 0.5)])
         cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[6]", tv=[(self.upper_local_jnt[4], 1.0)])
 
-
-
         cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[0]", tv=[(self.lower_local_jnt[0], 1.0)])
         cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[1]", tv=[(self.lower_local_jnt[0], 0.5), (self.lower_local_jnt[1], 0.5)])
         cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[2]", tv=[(self.lower_local_jnt[1], 1.0)])
@@ -528,10 +541,6 @@ class EyelidModule(object):
         compose_matrix_corners = cmds.createNode("composeMatrix", name=f"{self.side}_fleshyCorners_CM", ss=True)
         cmds.connectAttr(f"{blend_colors_corners}.output", f"{compose_matrix_corners}.inputRotate")
 
-
-        # primary_controller = [upper[0], upper[2], upper[-1], lower[2]]: los
-        # índices 0 y 2 son las ESQUINAS de la boca (extremos del labio
-        # superior) y usan el blend de esquinas; el resto, el fleshy normal.
         for i, ctl in enumerate(self.primary_controller):
 
             is_corner = i == 0 or i == 2
@@ -585,15 +594,11 @@ class EyelidModule(object):
         cmds.setAttr(f"{surf}.overrideEnabled", 1)
         cmds.setAttr(f"{surf}.overrideDisplayType", 2)  # reference (visible para ajustar, no seleccionable)
         cmds.setAttr(f"{surf}.visibility", 0)
-        self.lock_attributes(surf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(surf, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
         self.eye_surface = surf
         self.eye_surface_shape = cmds.listRelatives(surf, shapes=True)[0]
 
-        # --- Blink HORIZONTAL (aplanado al proyectar) ---
-        # Al cerrar, la ALTURA (eje up del ojo, Y local) de las joints converge a un
-        # nivel COMÚN -> la línea de cierre queda horizontal en el frame del ojo. El
-        # nivel sigue a Blink_Height (entre el borde inferior y el superior). Se usan
-        # los atributos del blink directamente (no se toca la cadena de blendShapes).
+        # --- Blink HORIZONTAL ---
         self.eye_inv_matrix = list(om.MMatrix(self.eye_guide_matrix).inverse())
         inv = om.MMatrix(self.eye_guide_matrix).inverse()
 
@@ -604,7 +609,6 @@ class EyelidModule(object):
         up_y = _local_y_avg(self.linear_upper_curve)
         dn_y = _local_y_avg(self.linear_lower_curve)
 
-        # flat_Y = dn_y + Blink_Height * (up_y - dn_y)
         fy_mul = cmds.createNode("multiply", name=f"{self.side}_blinkFlatY_MUL", ss=True)
         cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{fy_mul}.input[0]")
         cmds.setAttr(f"{fy_mul}.input[1]", up_y - dn_y)
@@ -613,7 +617,6 @@ class EyelidModule(object):
         cmds.setAttr(f"{fy_sum}.input[1]", dn_y)
         self.blink_flat_y = f"{fy_sum}.output"
 
-        # cantidad de cierre (0..1) por párpado: solo cerrar (Blink>0) aplana
         def _amount(attr, suffix):
             clamp_node = cmds.createNode("clamp", name=f"{self.side}_{suffix}BlinkAmount_CLP", ss=True)
             cmds.setAttr(f"{clamp_node}.minR", 0)
@@ -699,7 +702,7 @@ class EyelidModule(object):
                 node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i}", offset=["GRP", "OFF"])
             if "down" in name:
                 node, ctl = curve_tool.create_controller(name=f"{self.side}_{name}Eyelid0{i - len(upper_cvs)}", offset=["GRP", "OFF"])
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{node[0]}.offsetParentMatrix")
 
             mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_MMT", ss=True)
@@ -720,12 +723,7 @@ class EyelidModule(object):
             cmds.setAttr(f"{aim_matrix_final}.primaryInputAxis", 0, 0, -1)
 
             if self.surface:
-                # BLINK HORIZONTAL + sobre la esfera, todo en espacio LOCAL del ojo:
-                # (a) aplana la ALTURA (Y local) hacia el nivel de cierre según el blink
-                #     del párpado -> la línea de cierre queda horizontal en el frame.
-                # (b) proyecta PRESERVANDO esa Y: lleva (X,Z) al círculo de la esfera a
-                #     esa latitud (radio sqrt(r^2 - Y^2)), así queda sobre el globo Y
-                #     horizontal (el closestPointOnSurface radial deshacía el aplanado).
+                # BLINK HORIZONTAL
                 amount = self.upper_blink_amount if "upper" in name else self.lower_blink_amount
                 to_local = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Local_MMX", ss=True)
                 cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{to_local}.matrixIn[0]")
@@ -833,14 +831,16 @@ class EyelidModule(object):
             "upInSocket", "upOutSocket", "downInSocket", "downOutSocket"
         ]
 
-        # Fuente de las posiciones de los sockets: una CURVA {side}_sockets_CRV (cada
-        # CV = un socket, en el ORDEN de socket_names: upper, lower, in, out, upIn,
-        # upOut, downIn, downOut) o las guías {side}_{name}_JNT (método actual).
+        # Fuente de las posiciones de los sockets: una CURVA-ANILLO {side}_socket_CRV
+        # dibujada alrededor del ojo (como la guía de la ceja: cualquier número de
+        # CVs, cualquier punto de inicio — cada socket se deriva por su ángulo
+        # alrededor del centro), o las guías {side}_{name}_JNT una a una. Si no hay
+        # ninguna de las dos, se omiten los sockets con un warning: el build sigue.
         from_curve = False
         socket_positions = {}
         crv = None
         try:
-            res = guides_manager.get_guides(f"{self.side}_sockets_CRVShape", parent=self.module_trn)
+            res = guides_manager.get_guides(f"{self.side}_socket_CRVShape", parent=self.module_trn)
             if res and isinstance(res, str) and cmds.objExists(res):
                 crv = res
         except Exception:
@@ -848,17 +848,26 @@ class EyelidModule(object):
 
         if crv:
             from_curve = True
-            cv_list = cmds.ls(f"{crv}.cv[*]", flatten=True)
-            for i, name in enumerate(socket_names):
-                if i < len(cv_list):
-                    socket_positions[name] = cmds.pointPosition(cv_list[i], world=True)
+            socket_positions = socket_positions_from_ring(crv, self.side, socket_names)
             crv_tf = cmds.listRelatives(crv, parent=True, fullPath=True)
             cmds.delete(crv_tf[0] if crv_tf else crv)
         else:
+            missing = []
             for name in socket_names:
                 cmds.select(cl=True)
                 guides_manager.get_guides(guide_export=f"{self.side}_{name}_JNT")
-                socket_positions[name] = cmds.xform(f"{self.side}_{name}_JNT", q=True, ws=True, t=True)
+                if cmds.objExists(f"{self.side}_{name}_JNT"):
+                    socket_positions[name] = cmds.xform(f"{self.side}_{name}_JNT", q=True, ws=True, t=True)
+                else:
+                    missing.append(f"{self.side}_{name}_JNT")
+
+            if missing:
+                for name in socket_names:  # limpiar las guías que sí se importaron
+                    if cmds.objExists(f"{self.side}_{name}_JNT"):
+                        cmds.delete(f"{self.side}_{name}_JNT")
+                om.MGlobal.displayWarning(
+                    f"{self.side} eyelid: sin guía {self.side}_socket_CRV y faltan {missing}: se omiten los sockets.")
+                return None
         cmds.select(cl=True)
 
         def socket_matrix(name):

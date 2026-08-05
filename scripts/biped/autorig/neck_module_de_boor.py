@@ -78,18 +78,6 @@ class NeckModule(object):
             #     cmds.delete(self.throat_guide)
    
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:source_matrices
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-    
     def load_guides(self):
 
         """
@@ -115,7 +103,7 @@ class NeckModule(object):
         self.neck_ctls = []
 
         face_nodes, self.face_ctl = curve_tool.create_controller(name=f"{self.side}_face", offset=["GRP", "ANM"])
-        self.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
         
@@ -149,10 +137,10 @@ class NeckModule(object):
 
         cmds.xform(self.neck_chain[0], m=om.MMatrix.kIdentity)
         for i , ctl in enumerate(self.neck_ctls):
-            self.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(ctl, ["sx", "sy", "sz", "v"])
 
         # throat_nodes, throat_ctl = curve_tool.create_controller(name=f"{self.side}_throat", offset=["GRP"], parent=self.neck_ctls[0])
-        # self.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
+        # curve_tool.lock_attributes(throat_ctl, ["sx", "sy", "sz", "v"])
         # cmds.matchTransform(throat_nodes[0], self.throat_guide[0], pos=True, rot=True, scl=False)
         # skin_throat_jnt = cmds.createNode("joint", name=f"{self.side}_throatSkinning_JNT", ss=True, p=self.skeleton_grp)
         # cmds.connectAttr(f"{throat_ctl}.matrix", f"{skin_throat_jnt}.offsetParentMatrix")
@@ -242,7 +230,7 @@ class NeckModule(object):
 
         squash_nodes, squash_ctl = curve_tool.create_controller(name=f"{self.side}_headSquash", offset=["GRP"], parent=self.neck_ctls[-1])
         self.head_squash_ctl = squash_ctl
-        self.lock_attributes(squash_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(squash_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(squash_ctl, longName="Volume", attributeType="double", min=0, max=10, defaultValue=1, keyable=True)
 
         # Colocar el control en la cabeza (hereda del head ctl, que ya está ahí).
@@ -290,7 +278,7 @@ class NeckModule(object):
 
         self.head_ctl = cmds.ls(f"{self.side}_head_CTL")[0]
         face_nodes, self.face_ctl = curve_tool.create_controller(name=f"{self.side}_face", offset=["GRP", "ANM"], parent=self.head_ctl)
-        self.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
         self.head_guide_matrix = cmds.getAttr(f"{self.head_ctl}.worldMatrix[0]")

@@ -66,19 +66,6 @@ class JawModule(object):
                                                  "upper_jaw_ctl": self.upper_jaw_ctl,
                                                 })
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
-    
     def load_guides(self):
 
         """
@@ -107,7 +94,7 @@ class JawModule(object):
         self.jaw_nodes, self.jaw_ctl = curve_tool.create_controller("C_jaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         jaw_skinning = cmds.createNode("joint", name="C_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.setAttr(f"{self.jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
-        self.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
 
         mult_matrix_jaw = cmds.createNode("multMatrix", name="C_jawSkinning_MMX")
         cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{mult_matrix_jaw}.matrixIn[0]")
@@ -119,7 +106,7 @@ class JawModule(object):
         # ---- Upper jaw controller ----
         self.upper_jaw_nodes, self.upper_jaw_ctl = curve_tool.create_controller("C_upperJaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         cmds.setAttr(f"{self.upper_jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
-        self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
         upper_jaw_skinning = cmds.createNode("joint", name="C_upperJawSkinning_JNT", ss=True, p=self.skeleton_grp)
 
@@ -135,7 +122,7 @@ class JawModule(object):
         for side in ["L", "R"]:
             self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP"], parent=self.jaw_ctl)
             cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
-            self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
 
             side_jaw_skinning = cmds.createNode("joint", name=f"{side}_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
 
@@ -285,7 +272,7 @@ class JawModule(object):
         main_lips_controllers = cmds.createNode("transform", name="C_primaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
         # Create upper controller
         upper_lip_nodes, upper_lip_ctl = curve_tool.create_controller("C_upperLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
-        self.lock_attributes(upper_lip_ctl, ["v"])
+        curve_tool.lock_attributes(upper_lip_ctl, ["v"])
         mtp_upper_lip = cmds.createNode("motionPath", name="C_upperLip_MTP", ss=True) 
         cmds.connectAttr(f"{self.upper_linear_lip_curve}.worldSpace[0]", f"{mtp_upper_lip}.geometryPath")
         cmds.setAttr(f"{mtp_upper_lip}.uValue", 0.5)
@@ -313,7 +300,7 @@ class JawModule(object):
 
         # Create lower controller
         lower_lip_nodes, lower_lip_ctl = curve_tool.create_controller("C_lowerLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
-        self.lock_attributes(lower_lip_ctl, ["v"])
+        curve_tool.lock_attributes(lower_lip_ctl, ["v"])
         mtp_lower_lip = cmds.createNode("motionPath", name="C_lowerLip_MTP", ss=True) 
         cmds.connectAttr(f"{self.lower_linear_lip_curve}.worldSpace[0]", f"{mtp_lower_lip}.geometryPath")
         cmds.setAttr(f"{mtp_lower_lip}.uValue", 0.5)      
@@ -353,7 +340,7 @@ class JawModule(object):
             # Create corner controller and place them
 
             corner_nodes, corner_ctl = curve_tool.create_controller(f"{side}_lipCorner", offset=["GRP", "OFF"], parent=main_lips_controllers)
-            self.lock_attributes(corner_ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(corner_ctl, ["sx", "sy", "sz", "v"])
             mtp_corner_lip = cmds.createNode("motionPath", name=f"{side}_lipCorner_MTP", ss=True)
             cmds.connectAttr(f"{self.upper_linear_lip_curve}.worldSpace[0]", f"{mtp_corner_lip}.geometryPath")
             corner_nodes_ctls.append(corner_nodes[0])
@@ -512,7 +499,7 @@ class JawModule(object):
 
             # Create controller for the CV
             cv_ctl_nodes, cv_ctl = curve_tool.create_controller(f"{side}_{name}", offset=["GRP", "OFF"], parent=self.controllers_grp)
-            self.lock_attributes(cv_ctl, ["sy", "sz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(cv_ctl, ["sy", "sz", "sx", "sy", "sz", "v"])
             
             mtp_cv = cmds.createNode("motionPath", name=f"{side}_{name}_MTP", ss=True)
             cmds.connectAttr(f"{self.upper_rebuild_lip_curve}.worldSpace[0]", f"{mtp_cv}.geometryPath")
@@ -606,7 +593,7 @@ class JawModule(object):
 
             # Create controller for the CV
             cv_ctl_nodes, cv_ctl = curve_tool.create_controller(f"{side}_{name}", offset=["GRP", "OFF"], parent=self.controllers_grp)
-            self.lock_attributes(cv_ctl, ["sy", "sz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(cv_ctl, ["sy", "sz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
             
             mtp_cv = cmds.createNode("motionPath", name=f"{side}_{name}_MTP", ss=True)
             cmds.connectAttr(f"{self.lower_rebuild_lip_curve}.worldSpace[0]", f"{mtp_cv}.geometryPath")
@@ -734,7 +721,7 @@ class JawModule(object):
             joint = cmds.createNode("joint", n=f"{side}_{name}0{i}Skinning_JNT", ss=True, parent = self.skeleton_grp)
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
             out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=self.controllers_grp)
-            self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
@@ -819,7 +806,7 @@ class JawModule(object):
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
             out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=secondary_controllers_nodes)
-            self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
@@ -859,7 +846,6 @@ class JawModule(object):
             cmds.connectAttr(f"{zip_ctl}.Roll", f"{multiply}.input[1]")
             cmds.connectAttr(f"{multiply}.output", f"{joint}.rotateX", f=True)  # Assuming roll affects X rotation
             cmds.parent(out_nodes[0], out_controllers)
-
 
 
         # ------ Conditions to control visibility of lip controllers ------
@@ -1053,19 +1039,6 @@ class JawModule(object):
                                                  "upper_jaw_ctl": self.upper_jaw_ctl,
                                                 })
 
-    def lock_attributes(self, ctl, attrs):
-
-        """
-        Lock and hide attributes on a controller.
-        Args:
-            ctl (str): The name of the controller.
-            attrs (list): A list of attributes to lock and hide.
-        """
-        
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
-    
     def load_guides(self):
 
         """
@@ -1094,7 +1067,7 @@ class JawModule(object):
         self.jaw_nodes, self.jaw_ctl = curve_tool.create_controller("C_jaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         jaw_skinning = cmds.createNode("joint", name="C_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.setAttr(f"{self.jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
-        self.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.jaw_ctl, ["sx", "sy", "sz", "v"])
 
         mult_matrix_jaw = cmds.createNode("multMatrix", name="C_jawSkinning_MMX")
         cmds.connectAttr(f"{self.jaw_ctl}.worldMatrix[0]", f"{mult_matrix_jaw}.matrixIn[0]")
@@ -1106,7 +1079,7 @@ class JawModule(object):
         # ---- Upper jaw controller ----
         self.upper_jaw_nodes, self.upper_jaw_ctl = curve_tool.create_controller("C_upperJaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         cmds.setAttr(f"{self.upper_jaw_nodes[0]}.offsetParentMatrix", self.jaw_guide_matrix, type="matrix")
-        self.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.upper_jaw_ctl, ["sx", "sy", "sz", "v"])
 
         upper_jaw_skinning = cmds.createNode("joint", name="C_upperJawSkinning_JNT", ss=True, p=self.skeleton_grp)
 
@@ -1122,7 +1095,7 @@ class JawModule(object):
         for side in ["L", "R"]:
             self.side_jaw_nodes, self.side_jaw_ctl = curve_tool.create_controller(f"{side}_jaw", offset=["GRP"], parent=self.jaw_ctl)
             cmds.matchTransform(self.side_jaw_nodes[0], self.side_jaw_nodes[0].replace(f"{side}_jaw_GRP", f"{side}_jaw_JNT"))
-            self.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(self.side_jaw_ctl, ["sx", "sy", "sz", "v"])
 
             side_jaw_skinning = cmds.createNode("joint", name=f"{side}_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
 
@@ -1272,7 +1245,7 @@ class JawModule(object):
         main_lips_controllers = cmds.createNode("transform", name="C_primaryLipsControllers_GRP", ss=True, p=lips_controllers_grp)
         # Create upper controller
         upper_lip_nodes, upper_lip_ctl = curve_tool.create_controller("C_upperLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
-        self.lock_attributes(upper_lip_ctl, ["v"])
+        curve_tool.lock_attributes(upper_lip_ctl, ["v"])
         mtp_upper_lip = cmds.createNode("motionPath", name="C_upperLip_MTP", ss=True) 
         cmds.connectAttr(f"{self.upper_linear_lip_curve}.worldSpace[0]", f"{mtp_upper_lip}.geometryPath")
         cmds.setAttr(f"{mtp_upper_lip}.uValue", 0.5)
@@ -1300,7 +1273,7 @@ class JawModule(object):
 
         # Create lower controller
         lower_lip_nodes, lower_lip_ctl = curve_tool.create_controller("C_lowerLip", offset=["GRP", "OFF"], parent=main_lips_controllers)
-        self.lock_attributes(lower_lip_ctl, ["v"])
+        curve_tool.lock_attributes(lower_lip_ctl, ["v"])
         mtp_lower_lip = cmds.createNode("motionPath", name="C_lowerLip_MTP", ss=True) 
         cmds.connectAttr(f"{self.lower_linear_lip_curve}.worldSpace[0]", f"{mtp_lower_lip}.geometryPath")
         cmds.setAttr(f"{mtp_lower_lip}.uValue", 0.5)      
@@ -1340,7 +1313,7 @@ class JawModule(object):
             # Create corner controller and place them
 
             corner_nodes, corner_ctl = curve_tool.create_controller(f"{side}_lipCorner", offset=["GRP", "OFF"], parent=main_lips_controllers)
-            self.lock_attributes(corner_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(corner_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             mtp_corner_lip = cmds.createNode("motionPath", name=f"{side}_lipCorner_MTP", ss=True)
             cmds.connectAttr(f"{self.upper_linear_lip_curve}.worldSpace[0]", f"{mtp_corner_lip}.geometryPath")
             corner_nodes_ctls.append(corner_nodes[0])
@@ -1499,7 +1472,7 @@ class JawModule(object):
 
             # Create controller for the CV
             cv_ctl_nodes, cv_ctl = curve_tool.create_controller(f"{side}_{name}", offset=["GRP", "OFF"], parent=self.controllers_grp)
-            self.lock_attributes(cv_ctl, ["sy", "sz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(cv_ctl, ["sy", "sz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
             
             mtp_cv = cmds.createNode("motionPath", name=f"{side}_{name}_MTP", ss=True)
             cmds.connectAttr(f"{self.upper_rebuild_lip_curve}.worldSpace[0]", f"{mtp_cv}.geometryPath")
@@ -1593,7 +1566,7 @@ class JawModule(object):
 
             # Create controller for the CV
             cv_ctl_nodes, cv_ctl = curve_tool.create_controller(f"{side}_{name}", offset=["GRP", "OFF"], parent=self.controllers_grp)
-            self.lock_attributes(cv_ctl, ["sy", "sz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(cv_ctl, ["sy", "sz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
             
             mtp_cv = cmds.createNode("motionPath", name=f"{side}_{name}_MTP", ss=True)
             cmds.connectAttr(f"{self.lower_rebuild_lip_curve}.worldSpace[0]", f"{mtp_cv}.geometryPath")
@@ -1720,7 +1693,7 @@ class JawModule(object):
             joint = cmds.createNode("joint", n=f"{side}_{name}0{i}Skinning_JNT", ss=True, parent = self.skeleton_grp)
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
             out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=self.controllers_grp)
-            self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
@@ -1805,7 +1778,7 @@ class JawModule(object):
             cmds.connectAttr(f"{fourByFourMatrix}.output", f"{joint}.offsetParentMatrix", f=True)
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", self.matrix_get_offset_matrix(f"{fourOrigPos}.output", joint), type="matrix")
             out_nodes, out_ctl = curve_tool.create_controller(f"{side}_{name}0{i}Out", offset=["GRP"], parent=secondary_controllers_nodes)
-            self.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+            curve_tool.lock_attributes(out_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{out_nodes[0]}.offsetParentMatrix", f=True)
             mult_matrix_skinning = cmds.createNode("multMatrix", name=f"{side}_{name}0{i}_Skinning_MMT", ss=True)
             cmds.connectAttr(f"{out_ctl}.matrix", f"{mult_matrix_skinning}.matrixIn[0]", f=True)
@@ -1845,7 +1818,6 @@ class JawModule(object):
             cmds.connectAttr(f"{zip_ctl}.Roll", f"{multiply}.input[1]")
             cmds.connectAttr(f"{multiply}.output", f"{joint}.rotateX", f=True)  # Assuming roll affects X rotation
             cmds.parent(out_nodes[0], out_controllers)
-
 
 
         # ------ Conditions to control visibility of lip controllers ------

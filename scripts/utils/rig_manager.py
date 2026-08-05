@@ -44,7 +44,7 @@ from biped.autorig import neck_module_de_boor as neck_module
 from biped.autorig import fingers_module
 
 from quadruped.autorig import tail_module
-from quadruped.autorig import limb_module
+from quadruped.autorig import leg_module_self
 from quadruped.autorig import leg_module as quad_leg_module
 from quadruped.autorig import spine_module as quad_spine_module
 from quadruped.autorig import neck_module as neck_module_quad
@@ -68,7 +68,7 @@ reload(leg_module)
 reload(neck_module)
 reload(fingers_module)
 reload(tail_module)
-reload(limb_module)
+reload(leg_module_self)
 reload(quad_leg_module)
 reload(quad_spine_module)
 reload(neck_module_quad)
@@ -457,15 +457,19 @@ def build_rig(character_name, on_step=None):
         # Fallback: limb genérico con el naming antiguo
         elif check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
             step("Building front limbs…")
-            reload(limb_module)
+            reload(leg_module_self)
 
             data_manager.DataExportBiped().append_data("limb_module",
                             {
                                 "guides_data" : ["L_frontLeg_JNT", "R_frontLeg_JNT"],
                             })
 
-            limb_module.LimbModule().make("L", leg_skinning_jnts)
-            limb_module.LimbModule().make("R", leg_skinning_jnts)
+            # leg_module_self está EN DESARROLLO (plantilla con stubs): la clase es
+            # LegModule + subclasses Front/BackLegModule, no la antigua LimbModule.
+            # Esta rama solo se dispara con el naming antiguo (L_frontLeg_JNT); el
+            # naming nuevo entra por la rama de arriba con quad_leg_module.
+            leg_module_self.FrontLegModule().make("L", skinning_joints_number=leg_skinning_jnts)
+            leg_module_self.FrontLegModule().make("R", skinning_joints_number=leg_skinning_jnts)
 
         # Patas Traseras (módulo de pierna nuevo)
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
@@ -534,7 +538,7 @@ def build_rig(character_name, on_step=None):
         reload(eyelid_module)
         build_sockets = (rig_type == 0)
 
-        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya", "maui"}
+        EYELID_SURFACE_CHARS = {"thaiz", "mechanic", "freya", "maui", "anne", "edward"}
         eyelid_surface = (rig_type != 0) or (str(character_name).lower() in EYELID_SURFACE_CHARS)
         eyelid_module.EyelidModule().make("L", sockets=build_sockets, surface=eyelid_surface)
         eyelid_module.EyelidModule().make("R", sockets=build_sockets, surface=eyelid_surface)

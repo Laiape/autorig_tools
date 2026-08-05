@@ -21,8 +21,10 @@ signo del eje, y en cadera se incluyen los extremos de kick/splits que se
 usan en los ROM de producción.
 
 Convención de ejes de este autorig (ver arm_module / fingers_module):
-    rotateZ = bend / flexión (elevación de hombro, curl de dedos)
-    rotateY = lateral / spread
+    rotateZ = bend en el plano vertical (elevación de hombro, flexión de
+              muñeca, curl de dedos)
+    rotateY = bend en el plano horizontal (flexión del CODO en T-pose) /
+              lateral / spread
     rotateX = twist
 
 Uso sin UI (Script Editor):
@@ -132,12 +134,12 @@ POSE_LIBRARY = {
     "Elbow": {
         "settings": "{side}_armSettings_CTL",
         "poses": [
-            ("Bend  (rotateZ +/-145)",
-             [_ch("{side}_elbowFk_CTL", "rotateZ", 145, -145)]),
+            ("Bend  (rotateY +/-145)",
+             [_ch("{side}_elbowFk_CTL", "rotateY", 145, -145)]),
             ("Forearm Twist — pron / sup  (rotateX +/-85)",
              [_ch("{side}_elbowFk_CTL", "rotateX", 85, -85)]),
             ("Full ROM (all axes)",
-             [_ch("{side}_elbowFk_CTL", "rotateZ", 145, -145),
+             [_ch("{side}_elbowFk_CTL", "rotateY", 145, -145),
               _ch("{side}_elbowFk_CTL", "rotateX", 85, -85)]),
         ],
     },
