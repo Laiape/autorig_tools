@@ -68,6 +68,12 @@ def create_custom_menu():
     cmds.menuItem(label="Import Corrective Blendshapes", command=lambda x: import_corrective_blendshapes(), image="import.png")
     cmds.setParent('..', menu=True)
 
+    cmds.menuItem(label="Corrective Skin — Setup / Localize",
+                  command=lambda x: setup_corrective_skin(),
+                  annotation="Selecciona la malla + joints correctivas: crea/actualiza el skin apilado "
+                             "(pesos a 0, blendshape-like) y lo localiza. Rig en pose neutra.",
+                  image="paintSkinWeights.png")
+
     # ── SKINNING ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="SKINNING")
 
@@ -288,6 +294,24 @@ def open_corrective_curve_ui():
     from ui import corrective_curve_UI
     reload(corrective_curve_UI)
     corrective_curve_UI.show()
+
+
+def setup_corrective_skin():
+    from utils import correctives
+    reload(correctives)
+    sel = cmds.ls(selection=True) or []
+    meshes = [s for s in sel
+              if (cmds.listRelatives(s, shapes=True, noIntermediate=True) or [])
+              and cmds.nodeType((cmds.listRelatives(s, shapes=True, noIntermediate=True))[0]) == "mesh"]
+    joints = [s for s in sel if cmds.nodeType(s) == "joint"]
+    if not meshes:
+        cmds.inViewMessage(amg="Selecciona la MALLA (+ joints correctivas).", pos='midCenter', fade=True)
+        return
+    result = correctives.corrective_skin_setup(meshes[0], joints)
+    cmds.inViewMessage(
+        amg=f"Corrective skin <hl>{result['skin']}</hl>: {len(result['added'])} nuevas, "
+            f"{result['localized']} localizadas.",
+        pos='midCenter', fade=True)
 
 
 def open_pose_tester():

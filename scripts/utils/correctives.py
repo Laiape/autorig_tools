@@ -588,6 +588,74 @@ def corrective_curve(name, base_curve, targets, num_joints=5, parent_joint=None,
     return {"joints": joints, "blendshape": bls, "curve": base_curve}
 
 
+def corrective_skin_setup(mesh, joints, skin_name="C_corrective_SKC"):
+    """
+    Prepara el skinCluster APILADO de correctivas sobre `mesh` para que las
+    joints correctivas actúen COMO UNA BLENDSHAPE:
+
+      - huella CERO mientras su driver esté a 0, en CUALQUIER pose (el parche
+        sigue deformando exactamente como el skin base: la correctiva no
+        "secuestra" la zona por el mero hecho de tener pesos), y
+      - cuando el driver se activa, SOLO se suma el delta del push encima.
+
+    Eso lo consigue el par skin apilado + localize: cada influencia lleva su
+    `bindPreMatrix` conectada en vivo a la worldInverseMatrix de su joint padre,
+    así que su contribución es identidad salvo el translate propio del push
+    (p.ej. el cornerOut solo aparece cuando el corner va en X hacia fuera;
+    sonreír no arrastra su parche aunque la joint viaje con el corner).
+
+    Hace, de forma idempotente:
+      1. Busca un skinCluster con "corrective" en el nombre en el historial de
+         `mesh`; si no existe lo CREA (apilado con multi=True, normalización
+         none, todos los pesos a 0 -> nace inerte).
+      2. Añade como influencias las `joints` que falten (peso 0, sin tocar la
+         malla), desbloqueadas para pintar.
+      3. Re-ejecuta localize_corrective_skin (cubre también influencias
+         añadidas DESPUÉS del build, que de otro modo doble-transforman).
+
+    Llamar con el rig en POSE NEUTRA (correctivas a 0). Después: pintar los
+    pesos (pico 0.2-0.5, parche local) y exportar el .skc.
+
+    Args:
+        mesh (str): la malla (body/cara) que recibirá el skin de correctivas.
+        joints (list): joints correctivas a asegurar como influencias.
+    Returns:
+        dict: {"skin": nombre, "added": [influencias nuevas], "localized": n}
+    """
+    shapes = cmds.listRelatives(mesh, shapes=True, noIntermediate=True, fullPath=True) or []
+    if not shapes:
+        cmds.error(f"corrective_skin_setup: '{mesh}' no tiene shape")
+    joints = [j for j in (joints or []) if cmds.objExists(j)]
+
+    hist = cmds.listHistory(mesh) or []
+    skcs = [n for n in (cmds.ls(hist, type="skinCluster") or []) if "corrective" in n.lower()]
+    if skcs:
+        skc = skcs[0]
+    else:
+        if not joints:
+            cmds.error("corrective_skin_setup: no hay skin de correctivas y no se pasaron joints para crearlo")
+        skc = cmds.skinCluster(joints[0], mesh, name=skin_name, multi=True,
+                               toSelectedBones=True)[0]
+        cmds.setAttr(f"{skc}.normalizeWeights", 0)  # pesos sueltos, no suman 1
+        # el bind por defecto asigna peso 1: se anula para que el skin nazca inerte
+        cmds.skinPercent(skc, f"{mesh}.vtx[*]", transformValue=[(joints[0], 0.0)])
+
+    existing = set(cmds.skinCluster(skc, query=True, influence=True) or [])
+    added = []
+    for j in joints:
+        if j in existing:
+            continue
+        cmds.skinCluster(skc, edit=True, addInfluence=j, weight=0.0, lockWeights=True)
+        cmds.setAttr(f"{j}.liw", 0)  # desbloquear para poder pintar
+        added.append(j)
+
+    localized = localize_corrective_skin(skc)
+    om.MGlobal.displayInfo(
+        f"corrective_skin_setup: {skc} — {len(added)} influencias nuevas, "
+        f"{len(localized)} localizadas (blendshape-like: sin huella con driver a 0)")
+    return {"skin": skc, "added": added, "localized": len(localized)}
+
+
 def _inf_index(skin_cluster, inf):
     """Índice lógico de la influencia `inf` en el array .matrix del skinCluster."""
     conns = cmds.listConnections(f"{inf}.worldMatrix[0]", source=False, destination=True, plugs=True) or []

@@ -102,6 +102,18 @@ Pipeline: `create_rig.AutoRig.build()` → `basic_structure` → `rig_manager.bu
 
 ## 5. Skinning de la correctiva
 
+**Regla de oro: las correctivas se pintan en el skin APILADO localizado, nunca en el skin
+principal.** Solo así actúan como una blendshape: huella CERO con el driver a 0 en
+cualquier pose (el parche sigue al skin base — sonreír no arrastra el parche del
+cornerOut aunque la joint viaje con el corner) y solo el delta del push al activarse. En
+el skin principal, pintar una correctiva "secuestra" la zona en todas las poses.
+
+Herramienta: menú **CORRECTIVES → Corrective Skin — Setup / Localize** (selecciona malla +
+joints correctivas; `correctives.corrective_skin_setup`): crea el skin apilado si falta
+(multi=True, normalize none, pesos a 0 → nace inerte), añade influencias a peso 0 y
+re-localiza. Idempotente — ejecútalo cada vez que añadas influencias nuevas (una
+influencia añadida post-build sin localizar doble-transforma: la zona se hunde).
+
 1. Skin aparte con `corrective` en el nombre (p.ej. `C_corrective_SKC`) sobre la malla —
    el build lo localiza automáticamente. Añadir influencias con weight 0 + lock.
 2. Pintar CON la pose del defecto activa; volver a rest a menudo para confirmar identidad.
