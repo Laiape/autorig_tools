@@ -521,8 +521,9 @@ class LegModule(object):
         # reposicionamos la cadena IK EXACTAMENTE sobre las guías: las joints del
         # solver reposan en su sitio (nada desplazado) y, como el reposo del solve
         # coincide con las guías, la calibración queda en identidad y el fold sigue
-        # la dirección del DOBLEZ DE LA GUÍA. La delantera NO lo usa porque su guía
-        # casi recta necesita el pre-bend desplazado para doblar bien.
+        # la dirección del DOBLEZ DE LA GUÍA. Lo activan las DOS subclases concretas
+        # (BackLegModule:1314 y FrontLegModule:1336); el False de LegModule es solo
+        # el defecto de la clase base, que ninguna pata construida llega a usar.
         if self.REPOSITION_IK_TO_GUIDES:
             for i, ik_joint in enumerate(self.ik_chain):
                 cmds.xform(ik_joint, ws=True, m=list(self.guides_matrices[i]))

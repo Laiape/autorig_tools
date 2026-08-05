@@ -1010,7 +1010,14 @@ def skeleton_hierarchy():
 
     facial_modules = {"jaw", "eyelid", "eyebrow", "nose", "cheekbone", "ear", "tongue", "teeth", "eye"}
     parent_same_side = {"arm": "clavicle", "fingers": "wrist"}
-    child_to_parent_jnt = {"leg": "localHip", "clavicle": "localChest", "neck": "localChest"}
+    # Cuadrúpedo: la delantera arranca en la escápula y cuelga del tórax (sinsarcosis,
+    # no hay articulación ósea con el esqueleto axial); la trasera cuelga de la pelvis
+    # por la sacroilíaca, y la cola continúa la columna desde el sacro. Sin estas claves
+    # frontLeg/backLeg/tail caían al else y se colgaban del módulo anterior.
+    child_to_parent_jnt = {
+        "leg": "localHip", "clavicle": "localChest", "neck": "localChest",
+        "backLeg": "localHip", "tail": "localHip", "frontLeg": "localChest",
+    }
 
     module_grps = cmds.listRelatives("skel_GRP", type="transform", fullPath=True) or []
     modules = []
@@ -1022,11 +1029,16 @@ def skeleton_hierarchy():
         if jnts:
             modules.append((side, clean, jnts))
 
+    # Un módulo no se puede colgar de un joint que aún no existe, así que el orden de
+    # proceso lo impone la dependencia. La fase se DERIVA de child_to_parent_jnt en vez
+    # de repetir la lista de módulos: antes estaban los nombres de bípedo escritos aquí
+    # otra vez, y añadir un módulo obligaba a acordarse de tocar los dos sitios.
     def phase(clean):
-        if clean == "spine":            return 0
-        if clean in facial_modules:     return 4
-        if clean == "fingers":          return 3
-        if clean == "arm":              return 2
+        if clean == "spine":              return 0   # crea localHip y localChest
+        if clean in child_to_parent_jnt:  return 1   # cuelgan de un punto del spine
+        if clean == "arm":                return 2   # cuelga de la clavícula (fase 1)
+        if clean == "fingers":            return 3   # cuelga de la muñeca (fase 2)
+        if clean in facial_modules:       return 4   # cuelgan de la cabeza (la trae el cuello)
         return 1
     modules.sort(key=lambda m: phase(m[1]))
 

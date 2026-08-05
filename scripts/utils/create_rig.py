@@ -212,15 +212,23 @@ class AutoRig(object):
         Label all the joints in the rig with appropriate names.
         """
         
+        # El lado sale del PREFIJO, no de buscar la letra dentro del nombre: con
+        # `"C" in jnt` cualquier joint con una C en el cuerpo (Carpus, Chest...) se
+        # etiquetaba como central, y al ser tres `if` sin `elif` ganaba el último
+        # que coincidiera. Los joints sin prefijo se saltan: `split("_")[1]` reventaba
+        # con cualquier nombre sin guion bajo.
+        side_ids = {"L": 1, "R": 2, "C": 0}
+
         for jnt in cmds.ls(type="joint"):
-            if "L" in jnt:
-                cmds.setAttr(jnt + ".side", 1)
-            if "R" in jnt:
-                cmds.setAttr(jnt + ".side", 2)
-            if "C" in jnt:
-                cmds.setAttr(jnt + ".side", 0)
-            cmds.setAttr(jnt + ".type", 18)
-            cmds.setAttr(jnt + ".otherType", jnt.split("_")[1], type= "string")
+            parts = jnt.split("|")[-1].split("_")
+            if len(parts) < 2:
+                continue
+            side = side_ids.get(parts[0])
+            if side is None:
+                continue
+            cmds.setAttr(f"{jnt}.side", side)
+            cmds.setAttr(f"{jnt}.type", 18)
+            cmds.setAttr(f"{jnt}.otherType", parts[1], type="string")
 
 
     def delete_unused_nodes(self):

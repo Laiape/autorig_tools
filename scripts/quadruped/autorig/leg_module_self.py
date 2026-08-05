@@ -124,8 +124,12 @@ class LegModule(object):
 
         Guarda aquí también la convención de ejes (primary = aim, secondary = up).
         """
-        pass
 
+        self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
+        self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
+        self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
+
+        
     # ═════════════════════════════════════════════════════════════════════════
     # ORQUESTACIÓN
     # ═════════════════════════════════════════════════════════════════════════
@@ -165,7 +169,36 @@ class LegModule(object):
             skinning_setup
             publish              data_manager, para que otros módulos consuman
         """
-        pass
+
+        self.side = side
+        self.solver = solver
+        self.skinning_joints_number = skinning_joints_number
+        self.bendys = bendys
+        self.config = config or {}
+
+        self.module_name = f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}"
+        self.module_trn = cmds.group(n=f"{self.module_name}_module_GRP", ss=True, r=True, p=self.modules)
+        self.skeleton_grp = cmds.group(n=f"{self.module_name}_skel_GRP", ss=True, r=True, p=self.skel_grp)
+        self.controllers_grp = cmds.group(n=f"{self.module_name}_controllers_GRP", ss=True, r=True, p=self.masterwalk_ctl)
+
+        # Llamar a los métodos
+        self.load_guides()
+        self.orient_guides()
+        self.setup_chain()
+        self.create_chains()
+        self.controllers_creation()
+        self.ik_setup()
+        self.ik_stretch_soft()
+        self.ik_calibration()
+        self.fk_setup()
+        if self.RECIPROCAL_COUPLING:
+            self.reciprocal_coupling()
+        self.foot = self.FOOT_CLASS()
+        self.foot.build(self)
+        if self.bendys:
+            self.bendys_setup()
+        self.skinning_setup()
+        self.publish()
 
     # ═════════════════════════════════════════════════════════════════════════
     # GUÍAS Y CADENA
@@ -178,8 +211,10 @@ class LegModule(object):
         NO busca en la escena. Para comprobar si una guía existe usa
         read_guides_info(character, guide_name), nunca cmds.objExists().
         """
-        pass
 
+        self.guides_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
+        cmds.parent(self.guides_chain[0], self.module_trn)
+        
     def orient_guides(self):
         """
         Construye los frames (matrices) de cada guía a partir de sus POSICIONES.
@@ -198,7 +233,7 @@ class LegModule(object):
         pierna es la punta del casco / la uña, y de ella salen los pivotes del
         pie reverso. Guarda su matriz aunque no genere control FK.
         """
-        pass
+        guides_manager.orient_guides(self.guides_chain, self.side, self.LEG_PREFIX, self.ROOT_JOINT)
 
     def setup_chain(self):
         """
@@ -222,7 +257,9 @@ class LegModule(object):
         al skinning, y acabas con una pose de REPOSO doblada por dentro del
         hueso. Siembra sobre una COPIA que solo alimente al solver.
         """
-        pass
+        for i, guide in enumerate(self.guides_chain):
+            # Aquí va tu código para calcular los índices y matrices
+            pass
 
     def create_chains(self):
         """
