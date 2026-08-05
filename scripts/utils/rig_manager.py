@@ -6,7 +6,6 @@ from importlib import reload
 import re
 import pathlib
 
-from numpy import character
 from utils import matrix_manager
 import maya.api.OpenMaya as om
 
