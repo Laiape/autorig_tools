@@ -114,6 +114,7 @@ class LegModule(object):
                                  # obliga -> False. Delantera: no existe.
 
     FOOT_CLASS = None            # clase de pie compuesta (HoofFoot / PawFoot).
+    STANDARD_JOINT_COUNT = 6
 
     # ─────────────────────────────────────────────────────────────────────────
     def __init__(self):
@@ -212,8 +213,8 @@ class LegModule(object):
         read_guides_info(character, guide_name), nunca cmds.objExists().
         """
 
-        self.guides_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
-        cmds.parent(self.guides_chain[0], self.module_trn)
+        self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
+        cmds.parent(self.leg_chain[0], self.module_trn)
         
     def orient_guides(self):
         """
@@ -233,7 +234,7 @@ class LegModule(object):
         pierna es la punta del casco / la uña, y de ella salen los pivotes del
         pie reverso. Guarda su matriz aunque no genere control FK.
         """
-        guides_manager.orient_guides(self.guides_chain, self.side, self.LEG_PREFIX, self.ROOT_JOINT)
+        guides_manager.orient_guides(self.leg_chain, self.side, self.LEG_PREFIX, self.ROOT_JOINT)
 
     def setup_chain(self):
         """
@@ -257,9 +258,12 @@ class LegModule(object):
         al skinning, y acabas con una pose de REPOSO doblada por dentro del
         hueso. Siembra sobre una COPIA que solo alimente al solver.
         """
-        for i, guide in enumerate(self.guides_chain):
-            # Aquí va tu código para calcular los índices y matrices
-            pass
+        self.leg_joints = self.leg_chain[:-1]  # todo menos el Tip
+        self.tip_joint = self.leg_chain[-1]
+        self.plant_index = len(self.leg_chain) - 2  # Pastern (pisada)
+        self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
+
+        self.world_positions = [cmds.xform(j, q=True, ws=True, t=True) for j in self.leg_chain]   
 
     def create_chains(self):
         """
