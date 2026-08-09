@@ -81,5 +81,14 @@ def init_auto_rig_UI():
     vs_code_ports()
     install_numpy()
     init_proxy_locator()
+    init_mcp_listener()
+
+
+def init_mcp_listener():
+    try:
+        from tools import mcp_listener
+        mcp_listener.start()
+    except Exception as e:
+        cmds.warning(f"No se ha podido iniciar el listener MCP: {e}")
 
 mu.executeDeferred(init_auto_rig_UI)

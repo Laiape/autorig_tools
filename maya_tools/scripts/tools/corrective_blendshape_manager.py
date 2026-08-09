@@ -55,10 +55,8 @@ class CorrectiveBlendshapeManager:
                 return rig_manager.asset_path(self.asset_name, "corrective_blendshapes")
             except Exception:
                 pass
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        root = script_dir
-        for _ in range(3):
-            root = os.path.dirname(root)
+        # assets vive junto a scripts: <...>/maya_tools/scripts -> <...>/maya_tools
+        root = os.path.realpath(__file__).split(os.sep + "scripts")[0]
         return os.path.normpath(
             os.path.join(root, "assets", self.asset_name, "corrective_blendshapes")
         )

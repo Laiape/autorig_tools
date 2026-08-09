@@ -58,12 +58,11 @@ class SkinManager(object):
     def get_path_and_name(self):
         """Calcula la ruta del JSON basándose en la estructura del proyecto."""
         try:
+            # assets vive junto a scripts: <...>/maya_tools/scripts -> <...>/maya_tools
             script_path = os.path.realpath(__file__)
-            root_github = script_path
-            for _ in range(4):
-                root_github = os.path.dirname(root_github)
+            root_github = script_path.split(os.sep + "scripts")[0]
         except NameError:
-            root_github = cmds.workspace(q=True, rd=True) 
+            root_github = cmds.workspace(q=True, rd=True)
 
         char_name = "asset"
         
@@ -82,10 +81,7 @@ class SkinManager(object):
                 if dm_name: char_name = dm_name
             except Exception: pass
 
-        if not root_github:
-            root_github = "C:/GIT/autorig_tools"
-
-        path = os.path.join(root_github, "autorig_tools", "assets", char_name, "skin_clusters")
+        path = os.path.join(root_github, "assets", char_name, "skin_clusters")
         return os.path.normpath(path), char_name
 
     # ----------------------------------------------------------------

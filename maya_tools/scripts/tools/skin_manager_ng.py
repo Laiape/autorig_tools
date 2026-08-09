@@ -29,8 +29,9 @@ class SkinManager(object):
 
     def get_path_and_name(self):
         """Calcula la ruta del JSON basándose en la estructura del proyecto."""
+        # assets vive junto a scripts: <...>/maya_tools/scripts -> <...>/maya_tools
         script_path = os.path.realpath(__file__)
-        root_github = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(script_path))))
+        root_github = script_path.split(os.sep + "scripts")[0]
         
         char_name = "asset"
         if HAS_RIG_UTILS:

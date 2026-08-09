@@ -411,7 +411,9 @@ def switch_rotation_order(new_order_str, bake=True):
 # ═════════════════════════════════════════════════════════════════════════════
 class RigToolsUI(QtWidgets.QWidget):
 
-    def __init__(self, parent=get_maya_main_window()):
+    def __init__(self, parent=None):
+        if parent is None:
+            parent = get_maya_main_window()
         super().__init__(parent)
         self.setWindowFlags(QtCore.Qt.Window)
         self.setWindowTitle("Rig Tools  —  AutoRig Tools")

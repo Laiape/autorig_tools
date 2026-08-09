@@ -466,7 +466,7 @@ def _picker_output_path(char_name):
     """Return the .json output path next to the character's assets folder."""
     try:
         from maya_tools.scripts.utils import rig_manager
-        assets_dir = rig_manager.get_assets_path()
+        assets_dir = rig_manager.asset_path("", "")
         if assets_dir:
             char_dir = os.path.join(assets_dir, char_name)
             picker_dir = os.path.join(char_dir, "picker")
