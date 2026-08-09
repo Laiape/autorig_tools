@@ -1,1 +1,1 @@
-maya/assets/Edward/models/Edward_v002.ma filter=lfs diff=lfs merge=lfs -text
+maya_tools/assets/Edward/models/Edward_v002.ma filter=lfs diff=lfs merge=lfs -text
