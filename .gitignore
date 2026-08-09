@@ -1,2 +1,4 @@
 */.pyc
 **/__pycache__
+# 358MB, supera el limite de 100MB de GitHub (usar LFS si hace falta versionarlo)
+**/chihuahua_v001.ma
