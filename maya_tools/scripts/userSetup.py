@@ -86,9 +86,13 @@ def init_auto_rig_UI():
 
 def init_mcp_listener():
     try:
+        import importlib
+        importlib.invalidate_caches()  # los finders pueden estar frios en pleno arranque
         from tools import mcp_listener
         mcp_listener.start()
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         cmds.warning(f"No se ha podido iniciar el listener MCP: {e}")
 
 mu.executeDeferred(init_auto_rig_UI)
