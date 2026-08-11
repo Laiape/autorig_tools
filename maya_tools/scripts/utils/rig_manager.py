@@ -362,11 +362,13 @@ def get_character_data(character_name):
     return full_data if full_data else {}
 
 
-def build_rig(character_name, on_step=None):
+def build_rig(character_name, on_step=None, leg_impl="self"):
 
     """
     Función principal de construcción del Rig.
     on_step(label, current, total) — optional callback for progress reporting.
+    leg_impl — implementación de pata de cuadrúpedo: "self" (leg_module_self)
+    o "reference" (quadruped/leg_module), para comparar ambas.
     """
     _step = [0]
     _TOTAL = 20
@@ -450,12 +452,17 @@ def build_rig(character_name, on_step=None):
             # plano); aqui se traduce de vuelta al nombre del preset.
             leg_solver = LEG_SOLVER_OPTIONS[leg_solver]
 
-        # Patas Delanteras (leg_module_self — la implementación propia del TFG)
+        # Patas Delanteras — implementación elegida por leg_impl
         if check("L_frontLegShoulder_JNT") and check("R_frontLegShoulder_JNT"):
             step("Building front legs…")
-            reload(leg_module_self)
-            leg_module_self.FrontLegModule().make("L", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
-            leg_module_self.FrontLegModule().make("R", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
+            if leg_impl == "reference":
+                reload(quad_leg_module)
+                quad_leg_module.FrontLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+                quad_leg_module.FrontLegModule().make("R", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+            else:
+                reload(leg_module_self)
+                leg_module_self.FrontLegModule().make("L", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
+                leg_module_self.FrontLegModule().make("R", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
 
         # Fallback: limb genérico con el naming antiguo
         elif check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
@@ -474,12 +481,17 @@ def build_rig(character_name, on_step=None):
             leg_module_self.FrontLegModule().make("L", skinning_joints_number=leg_skinning_jnts)
             leg_module_self.FrontLegModule().make("R", skinning_joints_number=leg_skinning_jnts)
 
-        # Patas Traseras (leg_module_self — la implementación propia del TFG)
+        # Patas Traseras — implementación elegida por leg_impl
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
             step("Building back legs…")
-            reload(leg_module_self)
-            leg_module_self.BackLegModule().make("L", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
-            leg_module_self.BackLegModule().make("R", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
+            if leg_impl == "reference":
+                reload(quad_leg_module)
+                quad_leg_module.BackLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+                quad_leg_module.BackLegModule().make("R", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+            else:
+                reload(leg_module_self)
+                leg_module_self.BackLegModule().make("L", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
+                leg_module_self.BackLegModule().make("R", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
 
     # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
