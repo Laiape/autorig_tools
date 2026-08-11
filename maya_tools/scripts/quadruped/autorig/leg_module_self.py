@@ -1,5 +1,5 @@
 """
-Módulo de pierna de cuadrúpedo — PLANTILLA (rellenar).
+Módulo de pierna de cuadrúpedo — implementación propia (en construcción).
 
 ═══════════════════════════════════════════════════════════════════════════════
 ARQUITECTURA — el porqué antes del qué
@@ -51,6 +51,7 @@ tercer animal se añade con datos.
 """
 
 import maya.cmds as cmds
+import maya.mel as mel
 import maya.api.OpenMaya as om
 from importlib import reload
 import math
@@ -115,6 +116,15 @@ class LegModule(object):
 
     FOOT_CLASS = None            # clase de pie compuesta (HoofFoot / PawFoot).
     STANDARD_JOINT_COUNT = 6
+    IK_CONFIGS = {
+        SOLVER_RP: [
+            (0, 2, "ikRPsolver"),
+            (2, 3, "ikSCsolver"),
+        ],
+        SOLVER_SPRING: [
+            (0, 3, "ikSpringSolver"),
+        ],
+    }
 
     # ─────────────────────────────────────────────────────────────────────────
     def __init__(self):
@@ -130,7 +140,9 @@ class LegModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
-        
+        self.primaryInputAxis = (1, 0, 0)
+        self.secondaryInputAxis = (0, 1, 0)
+
     # ═════════════════════════════════════════════════════════════════════════
     # ORQUESTACIÓN
     # ═════════════════════════════════════════════════════════════════════════
@@ -141,8 +153,9 @@ class LegModule(object):
 
         Args:
             side (str): 'L' | 'R'.
-            solver (str): SOLVER_RP | SOLVER_SPRING | SOLVER_NODES.
-                          Es la variable del experimento del cap. 8.
+            solver (str): clave de IK_CONFIGS ("rp" | "spring"; "nodes" aún sin
+                          integrar en el dispatch). Es la variable del
+                          experimento del cap. 8; llega del .build (leg_solver).
             skinning_joints_number (int): joints de skinning por segmento bendy.
             bendys (bool): ribbons por segmento.
             config (dict|None): parámetros POR ESPECIE leídos del .build
@@ -154,21 +167,23 @@ class LegModule(object):
             skeleton_grp    (bajo skel_GRP)
             controllers_grp (bajo masterwalk_ctl)
 
-        ORDEN DE CONSTRUCCIÓN (importa; el porqué está en cada método):
-            load_guides          las guías definen proporciones; nada hardcodeado
-            orient_guides        frames a partir de las posiciones
-            setup_chain          índices y matrices; genérico por índice
-            create_chains        cadena IK
-            controllers_creation FK + IK + pole vector + settings
-            ik_setup             <- AQUÍ conmuta el solver (el experimento)
-            ik_stretch_soft
-            ik_calibration       el reposo debe quedar en identidad
-            fk_setup
-            reciprocal_coupling  (si el flag lo pide)
+        ORDEN DE CONSTRUCCIÓN (el que ejecuta este método hoy):
+            load_guides          guías de pierna + pivotes del pie + settings
+            orient_guides        frames horneados (world/local) por guía
+            setup_chain          índices, plano y bend_dir; genérico por índice
+            create_chains        cadena de joints IK
+            controllers_creation settings + FK + IK + pivotes del pie reverso
+            ik_setup             <- AQUÍ conmuta el solver (fichas IK_CONFIGS)
+            ik_stretch_soft      stretch + soft del lado IK
+            ik_calibration       (pendiente) el reposo debe quedar en identidad
+            fk_setup             FK stretch por matrices
+            blend_setup          blend FK/IK por joint (salida = plugs)
+            reciprocal_coupling  (pendiente; si el flag lo pide)
             foot.build           el pie COMPUESTO
-            bendys_setup         (si bendys)
-            skinning_setup
-            publish              data_manager, para que otros módulos consuman
+            bendys_setup         (pendiente)
+            skinning_setup       (pendiente)
+            publish              (pendiente)
+
         """
 
         self.side = side
@@ -178,9 +193,9 @@ class LegModule(object):
         self.config = config or {}
 
         self.module_name = f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}"
-        self.module_trn = cmds.group(n=f"{self.module_name}_module_GRP", ss=True, r=True, p=self.modules)
-        self.skeleton_grp = cmds.group(n=f"{self.module_name}_skel_GRP", ss=True, r=True, p=self.skel_grp)
-        self.controllers_grp = cmds.group(n=f"{self.module_name}_controllers_GRP", ss=True, r=True, p=self.masterwalk_ctl)
+        self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
+        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skel_GRP", ss=True, p=self.skel_grp)
+        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         # Llamar a los métodos
         self.load_guides()
@@ -192,6 +207,7 @@ class LegModule(object):
         self.ik_stretch_soft()
         self.ik_calibration()
         self.fk_setup()
+        self.blend_setup()
         if self.RECIPROCAL_COUPLING:
             self.reciprocal_coupling()
         self.foot = self.FOOT_CLASS()
@@ -206,35 +222,87 @@ class LegModule(object):
     # ═════════════════════════════════════════════════════════════════════════
     def load_guides(self):
         """
-        Trae la cadena de guías del .guides del personaje y la parenta al módulo.
+        Carga del .guides del personaje: la cadena de la pierna (parentada al
+        módulo), los locators de pivotes del pie reverso (bankOut/bankIn/heel,
+        en self.reverse_foot_locators) y el locator del settings.
 
         OJO: guides_manager.get_guides() CREA los joints leyendo el fichero JSON;
-        NO busca en la escena. Para comprobar si una guía existe usa
-        read_guides_info(character, guide_name), nunca cmds.objExists().
+        NO busca en la escena, y cuando falla NO lanza excepción — devuelve None
+        (por eso los pivotes se comprueban por valor, no por try/except).
         """
-
+        # Get the joint guides
         self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
         cmds.parent(self.leg_chain[0], self.module_trn)
+
+        # Get guides for the reverse foot pivots
+        reverse_foot_names = ["bankOut", "bankIn", "heel"]
+        
+        self.reverse_foot_locators = []
+        for pivot in reverse_foot_names:
+            guide = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{pivot}_LOCShape")
+            if guide:
+                self.reverse_foot_locators.append(guide)
+
+        # Get the settings guide (opcional: el caballo no lo trae en sus guias)
+        self.settings_guide = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}Settings_LOCShape")
+
         
     def orient_guides(self):
         """
-        Construye los frames (matrices) de cada guía a partir de sus POSICIONES.
+        Frames de cada guía a partir de sus POSICIONES, vía
+        guides_manager.orient_guides: los calcula en Python y los HORNEA en un
+        nodo network (nada de aimMatrix vivos), con el eje primario espejado en
+        el lado R. La última guía conserva la rotación de la anterior con su
+        propia posición — necesaria para los pivotes del pie reverso aunque no
+        genere control FK.
 
-        Patrón del repo que conviene mantener: red de orientación TEMPORAL
-        (transforms + aimMatrix), se hornean los valores porque las guías son
-        estáticas, y se borra. Así el rig no arrastra nodos aimMatrix vivos ni
-        transforms _GUIDE.
+        Deja en self:
+            guides_matrices / guides_world_matrices   plugs world por guía
+            point_matrices                            plugs solo-posición
+            guides_local_matrices                     MMatrix relativas al padre
+                                                      (horneadas: guías estáticas)
+            reverse_foot_world_matrices               matrices de los pivotes
+            settings_world_matrix                     matriz del settings
 
-        Convención de ejes: un eje baja por el hueso (aim, hacia la guía
-        siguiente) y otro se alinea al lateral del personaje. El tercero sale del
-        producto cruzado. Alinear el lateral a una referencia FIJA (y no al
-        siguiente joint) es lo que evita que la cadena se retuerza.
-
-        DIFERENCIA CON EL LIMB: aquí NO puedes descartar la última guía. En la
-        pierna es la punta del casco / la uña, y de ella salen los pivotes del
-        pie reverso. Guarda su matriz aunque no genere control FK.
+        Convención de ejes: el primario baja por el hueso (aim a la guía
+        siguiente), el secundario al lateral FIJO del personaje — referencia
+        fija y no el siguiente joint, que es lo que evita que la cadena se
+        retuerza.
         """
-        guides_manager.orient_guides(self.leg_chain, self.side, self.LEG_PREFIX, self.ROOT_JOINT)
+
+        self.primary_axis = self.primaryInputAxis if self.side == "L" else tuple(-v for v in self.primaryInputAxis)
+        self.secondary_axis = self.secondaryInputAxis
+
+        self.guides_matrices, self.point_matrices = guides_manager.orient_guides(
+            guides=self.leg_chain,
+            primaryInputAxis=self.primary_axis,
+            secondaryInputAxis=self.secondary_axis,
+        )
+
+        # Set the guides matrices for the chain
+        self.guides_world_matrices = self.guides_matrices
+        self.guides_local_matrices = []
+
+        for i, matrix in enumerate(self.guides_matrices):
+
+            w_matrix = om.MMatrix(cmds.getAttr(matrix))
+            if i == 0:
+                local_matrix = w_matrix
+            else:
+                parent_matrix = om.MMatrix(cmds.getAttr(self.guides_matrices[i-1]))
+                local_matrix = w_matrix * parent_matrix.inverse()
+
+            self.guides_local_matrices.append(local_matrix)
+
+        # Set the reverse foot guides
+        self.reverse_foot_world_matrices = []
+
+        for guide in self.reverse_foot_locators:
+            self.reverse_foot_world_matrices.append(cmds.xform(guide, q=True, ws=True, m=True))
+
+        # Set the settings guide matrix (None si el personaje no trae la guia)
+        self.settings_world_matrix = (cmds.xform(self.settings_guide, q=True, ws=True, m=True)
+                                      if self.settings_guide else None)
 
     def setup_chain(self):
         """
@@ -242,7 +310,7 @@ class LegModule(object):
         números de hueso: trasera y delantera tienen distinta longitud, y el
         perro y el caballo también.
 
-        Debe calcular al menos:
+        Calcula:
             leg_joints     la cadena menos la punta
             plant_index    la pisada (cuartilla / falange proximal)
             leg_end_index  fin del IK principal = la articulación MTP
@@ -263,7 +331,26 @@ class LegModule(object):
         self.plant_index = len(self.leg_chain) - 2  # Pastern (pisada)
         self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
 
-        self.world_positions = [cmds.xform(j, q=True, ws=True, t=True) for j in self.leg_chain]   
+        self.world_positions = [om.MVector(cmds.xform(j, q=True, ws=True, t=True)) for j in self.leg_chain]
+        side_vec = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
+        self.lateral_ref = -side_vec
+
+        root_p = self.world_positions[0]
+        mid_p = self.world_positions[1]
+        end_p = self.world_positions[self.leg_end_index]
+        normal = (mid_p - root_p) ^ (end_p - root_p)
+        self.plane_normal = normal.normal() if normal.length() > 1e-4 else om.MVector(self.lateral_ref)
+
+        line = end_p - root_p
+        self.leg_line_len = line.length()
+        line_dir = line.normal() if self.leg_line_len > 1e-6 else om.MVector(0.0, 0.0, 1.0)
+        bend_dir = self.lateral_ref ^ line_dir
+        if bend_dir.length() < 1e-4:
+            bend_dir = self.plane_normal ^ line_dir
+        bend_dir.normalize()
+        if (bend_dir * om.MVector(*self.FORWARD_AXIS)) < 0:
+            bend_dir = -bend_dir
+        self.bend_dir = bend_dir  
 
     def create_chains(self):
         """
@@ -271,98 +358,215 @@ class LegModule(object):
         con las transformaciones congeladas (makeIdentity) para que las
         rotaciones locales arranquen limpias.
         """
-        pass
+        cmds.select(clear=True)
+        self.ik_chain = []
+
+        for i , jnt in enumerate(self.leg_chain):
+
+            jnt_suffix = jnt.split("_")[-1]
+            ik_name = jnt.replace(f"_{jnt_suffix}",f"Ik_{jnt_suffix}")
+            ik_jnt = cmds.joint(name=ik_name)
+
+            cmds.xform(ik_jnt, ws=True, m=cmds.getAttr(self.guides_matrices[i]))
+
+            self.ik_chain.append(ik_jnt)
+            cmds.makeIdentity(ik_jnt, apply=True, rotate=True)
+
+        cmds.parent(self.ik_chain[0], self.module_trn)
+        
 
     # ═════════════════════════════════════════════════════════════════════════
     # CONTROLES
     # ═════════════════════════════════════════════════════════════════════════
     def controllers_creation(self):
         """
-        Controles FK (uno por joint) + controles IK del pie + pole vector +
-        settings (con el switch Ik_Fk y su reverse para la visibilidad).
+        Todos los controles del módulo, por matrices (nada de constraints):
 
-        Convención del repo: rig por MATRICES, no constraints. Grupos offset
-        (create_controller con offset=["GRP","ANM"]) y conexión a
-        offsetParentMatrix. Nada de parentConstraint.
+        - Settings: canales bloqueados + switchIkFk (0 = IK), que conduce la
+          visibilidad de FK directa y la de IK por un reverse.
+        - FK: uno por joint de la pierna (sin el Tip), en cascada, colocados
+          con la matriz LOCAL de su guía en el offsetParentMatrix del grupo.
+          Guarda fk_controllers / fk_grps / fk_offs en paralelo.
+        - IK: Root, Pv, Ankle y Ball sobre las matrices world de las guías,
+          más un control por pivote del pie reverso (ik_pivot_controllers).
 
         Bloquea lo que el animador no debe tocar: escala y visibilidad siempre;
         en FK también la traslación.
         """
-        pass
+        # _____ Settings controller ____________________________________________
+        self.settings_grp, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_{self.LEG_PREFIX}Settings", offset=["GRP"], locked_attrs=["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"], parent=self.controllers_grp, matrix=self.settings_world_matrix)
+
+        cmds.addAttr(self.settings_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.settings_ctl}.extraAttr", ch=True, lock=True)
+        cmds.addAttr(self.settings_ctl, longName="switchIkFk", niceName="Switch IK ------> FK", attributeType="float", defaultValue=0) # Ik default
+        
+        # _____ Fk controllers creation ____________________________________________
+        fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}FkControllers_GRP", ss=True, p=self.controllers_grp)
+
+        cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{fk_controllers_trn}.visibility")
+
+        self.fk_controllers = []
+        self.fk_grps = []
+        self.fk_offs = []
+
+        for i, jnt in enumerate(self.leg_joints):
+
+            fk_controller_name = jnt.replace("_JNT", "Fk")
+            parent = fk_controllers_trn if i == 0 else self.fk_controllers[-1]
+            fk_grp, fk_ctl = curve_tool.create_controller(name=fk_controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"], parent=parent)
+            cmds.setAttr(f"{fk_grp[0]}.offsetParentMatrix", list(self.guides_local_matrices[i]), type="matrix")
+
+            self.fk_controllers.append(fk_ctl)
+            self.fk_grps.append(fk_grp[0])
+            self.fk_offs.append(fk_grp[1])
+
+        # _____ Ik controllers creation ____________________________________________
+        ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}IkControllers_GRP", ss=True, p=self.controllers_grp)
+        reverse_vis_ik = cmds.createNode("reverse", name=f"{self.side}_{self.LEG_PREFIX}Vis_REV")
+        cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{reverse_vis_ik}.inputX")
+        cmds.connectAttr(f"{reverse_vis_ik}.outputX", f"{ik_controllers_trn}.visibility")
+
+        ik_controller_names = ["Root", "Pv", "Ankle", "Ball"]
+        self.ik_controllers = []
+        self.ik_grps = []
+        self.ik_offs = []
+
+        for i, name in enumerate(ik_controller_names):
+
+            # Create controller
+            controller_name = f"{self.side}_{self.LEG_PREFIX}{name.upper()}"
+
+            ik_grp, ik_ctl = curve_tool.create_controller(name=controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"], parent=ik_controllers_trn, matrix=cmds.getAttr(self.guides_world_matrices[i]))
+
+            self.ik_controllers.append(ik_ctl)
+            self.ik_grps.append(ik_grp[0])
+            self.ik_offs.append(ik_grp[1])
+
+        self.ik_leg_controllers = self.ik_controllers
+        self.ik_pivot_controllers = []
+
+        for i, (guide, matrix) in enumerate(zip(self.reverse_foot_locators, self.reverse_foot_world_matrices)):
+
+            # Create controller
+            pivot_controller_name = guide.replace("_LOC", "")
+
+            pivot_grps, pivot_ctl = curve_tool.create_controller(name=pivot_controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["sx","sy","sz", "v"], matrix=matrix, parent=ik_controllers_trn)
+
+            self.ik_controllers.append(pivot_ctl)
+            self.ik_pivot_controllers.append(pivot_ctl)
+            self.ik_grps.append(pivot_grps[0])
+            self.ik_offs.append(pivot_grps[1])
+
+        
 
     def fk_setup(self):
         """
-        Lado FK del blend. En este repo el FK no tiene cadena de joints propia:
-        el blendMatrix lee directamente el worldMatrix del control.
+        FK STRETCH por matrices. La cascada FK en sí ya quedó montada en
+        controllers_creation (el blend lee el worldMatrix del control — no hay
+        cadena FK de joints); aquí cada control recibe un atributo Stretch que
+        reescala la traslación del grupo del SIGUIENTE control, reconstruyendo
+        su offsetParentMatrix con un fourByFourMatrix.
 
-        Cada control cuelga del anterior con un opm RELATIVO (multMatrix del
-        frame por la inversa del padre) y un xform a identidad para dejar los
-        canales limpios.
-
-        SI AÑADES FK STRETCH — la trampa que costó un bug de 175 unidades en el
-        lado R: la longitud de reposo debe salir de LA MISMA CELDA de la matriz
-        que estás reconstruyendo, no recalcularse aparte. Y si te tienta aplicar
-        un signo "porque el lado derecho es espejo", comprueba antes que el eje
-        aim REALMENTE está espejado — puede que el espejo viva solo en los otros
-        dos ejes y estés negando algo que no toca. Sacar el valor de la propia
-        matriz elimina la clase entera de bug.
+        APLICADO AQUÍ (la trampa que costó un bug de 175u en el lado R): la
+        longitud de reposo sale de LA MISMA CELDA de la matriz que se
+        reconstruye (relative[12] -> in30), no se recalcula aparte — así no hay
+        signo "de espejo" que adivinar y esa clase de bug desaparece entera.
         """
-        pass
+
+        # Fk stretch
+        for i, ctl in enumerate(self.fk_controllers[:-1]):
+
+            cmds.addAttr(self.fk_controllers[i], longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+            cmds.setAttr(f"{self.fk_controllers[i]}.extraAttr", ch=True, lock=True)
+            cmds.addAttr(self.fk_controllers[i], longName="Stretch", attributeType="float", defaultValue=1, minValue=1, keyable=True)
+
+            target_node = self.fk_grps[i + 1]
+            relative = cmds.getAttr(f"{target_node}.offsetParentMatrix")
+            rest_length = relative[12]
+            
+            label = ctl.split("_")[1]
+            mult_node = cmds.createNode("multiply", n=f"{self.side}_{self.LEG_PREFIX}{label}Stretch_MUL", ss=True)
+            cmds.connectAttr(f"{ctl}.Stretch", f"{mult_node}.input[0]")
+            cmds.setAttr(f"{mult_node}.input[1]", rest_length)
+
+            fbf = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{self.LEG_PREFIX}{label}Stretch_FBF", ss=True)
+            for row in range(4):
+                for col in range(3):
+                    cmds.setAttr(f"{fbf}.in{row}{col}", relative[row * 4 + col])
+            cmds.connectAttr(f"{mult_node}.output", f"{fbf}.in30", force=True)
+            cmds.connectAttr(f"{fbf}.output", f"{target_node}.offsetParentMatrix", force=True)
 
     # ═════════════════════════════════════════════════════════════════════════
     # IK — el corazón del experimento
     # ═════════════════════════════════════════════════════════════════════════
     def ik_setup(self):
         """
-        Conmuta al solver pedido. Este método es lo que hace que el capítulo 8
-        sea un EXPERIMENTO y no una demo: misma pierna, mismas guías, misma
-        pose, solo cambia esto.
+        Monta el IK según la config pedida. Este método es lo que hace que el
+        capítulo 8 sea un EXPERIMENTO y no una demo: misma pierna, mismas
+        guías, misma pose, solo cambia esto.
 
-        ANTES de crear cualquier handle:
-            cmds.joint(chain[0], e=True, setPreferredAngles=True, children=True)
-        Sin preferred angles el spring no codifica el zigzag de reposo y la
-        cadena SALTA al conmutar a IK. (Medido: drift ~10u -> 0 al ponerlo.)
+        Hace dos cosas:
+        1. IK Handle Manager — el objetivo REAL del IK, común a todas las
+           configs: offset horneado ankle->ball en reposo x worldMatrix vivo
+           del ball (mover ankle O ball mueve el objetivo).
+        2. Despacha por FICHAS: recorre IK_CONFIGS[self.solver] y por cada
+           (start, end, solver) llama a _create_handle. Una combinación nueva
+           es una entrada más en el dict, cero código.
 
-        DESPUÉS de crear los handles: parentarlos al grupo del módulo, ocultarlos
-        y congelar sus canales (un floatConstant a 0 conectado a t/r) para que
-        nada los mueva por accidente.
-
-        Despacha a _ik_rp / _ik_spring / _ik_nodes según self.solver.
+        PENDIENTE:
+        - La config "nodes" (triangle_solver) aún no entra por el dispatch.
         """
-        pass
+        ball_ctl = self.ik_controllers[3]
+        end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.leg_end_index]))
+        ball_wm = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
 
-    def _ik_rp(self):
+        ik_handle_mmx = cmds.createNode("multMatrix", name=f"{self.side}_{self.LEG_PREFIX}IkHandleManager_MMX")
+        cmds.setAttr(f"{ik_handle_mmx}.matrixIn[0]", list(end_rest * ball_wm.inverse()), type="matrix")
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ik_handle_mmx}.matrixIn[1]")
+        self.ik_handle_target = f"{ik_handle_mmx}.matrixSum"
+
+        cmds.joint(self.ik_chain[0], e=True, setPreferredAngles=True, children=True)
+
+        self.ik_handles = []
+
+        # Create the solver based on the argument given. El .build puede traer
+        # presets del enum sin ficha todavia (spring_rp, nodes): caer a spring
+        # con aviso en vez de reventar el boton de build.
+        layers = self.IK_CONFIGS.get(self.solver)
+        if layers is None:
+            cmds.warning(f"[leg_module_self] solver '{self.solver}' sin ficha en IK_CONFIGS; usando 'spring'.")
+            layers = self.IK_CONFIGS[SOLVER_SPRING]
+        for start, end, solver in layers:
+            self._create_handle(start, end, solver, self.ik_handle_target)
+
+        cmds.loadPlugin("lookdevKit", quiet=True)  # floatConstant vive ahi
+        freeze_fcn = cmds.createNode("floatConstant", name=f"{self.module_name}HandleFreeze_FCN", ss=True)
+        cmds.setAttr(f"{freeze_fcn}.inFloat", 0)
+        for handle in self.ik_handles:
+            cmds.parent(handle, self.module_trn)
+            cmds.setAttr(f"{handle}.visibility", 0)
+            for attr in ("translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"):
+                cmds.connectAttr(f"{freeze_fcn}.outFloat", f"{handle}.{attr}")
+
+    def _create_handle(self, start_index, end_index, solver, target_plug):
         """
-        CONFIG A — RP de 2 huesos + SC para el resto. Es el port directo del
-        bípedo, y la solución "ingenua" que quieres tener en la comparativa.
-
-        Hipótesis a contrastar: una cadena de 3 segmentos funcionales no cabe en
-        un solver de 2 huesos, así que el tercer segmento queda fuera del IK y
-        hay que compensarlo en otro sitio. MIDE DÓNDE ACABA EL DOBLEZ.
+        El albañil de las fichas: un ikHandle del joint start al end de la
+        cadena IK, con el objetivo conectado a su offsetParentMatrix. Carga el
+        plugin del spring si la ficha lo pide y acumula en self.ik_handles.
         """
-        pass
+        if solver == "ikSpringSolver":
+            cmds.loadPlugin("ikSpringSolver", quiet=True)
+            if not cmds.objExists("ikSpringSolver"):
+                mel.eval("ikSpringSolver;")
 
-    def _ik_spring(self):
-        """
-        CONFIG B — ikSpringSolver sobre los 3 segmentos (raíz -> MTP), + SC para
-        el pie.
+        start_joint = self.ik_chain[start_index]
+        end_joint = self.ik_chain[end_index]
 
-        Requiere cargar el plugin: cmds.loadPlugin("ikSpringSolver", quiet=True).
-        Con cadena de 2 huesos el spring no aporta nada: cae a RP.
-
-        El reparto del doblez entre las dos articulaciones lo expone el propio
-        solver por springAngleBias. Una cadena de 3 huesos con raíz y pie
-        clavados tiene EXACTAMENTE UN grado de libertad redundante, así que el
-        control correcto es UN escalar (los dos slots del bias, complementarios:
-        b y 1-b). No hace falta ni un control extra ni un joint más.
-
-        LECCIÓN CARA, no la repitas: pinchar la articulación intermedia con un
-        control de 3 GDL SOBRE-RESTRINGE la cadena, y entonces el único sitio
-        donde puede meterse el grado de libertad que falta es DENTRO de un hueso.
-        Eso es lo que produce joints a media diáfisis. El radio y el metacarpo
-        son huesos únicos y sólidos: no flexionan.
-        """
-        pass
+        label = end_joint.split("_")[1].replace("Ik", "")
+        ik_handle = cmds.ikHandle(name=f"{self.side}_{label}Ik_HDL", startJoint=start_joint, endEffector=end_joint, solver=solver)[0]
+        cmds.connectAttr(target_plug, f"{ik_handle}.offsetParentMatrix")
+        self.ik_handles.append(ik_handle)
+        return ik_handle
 
     def _ik_nodes(self):
         """
@@ -387,24 +591,187 @@ class LegModule(object):
 
         Ambos APAGADOS por defecto: son decisión del animador, no del rig.
 
+        Expone en el control del pie: Stretch (0-1), un length mult por
+        segmento, Soft (0-1) y Soft_Start. La distancia va normalizada por el
+        globalScale del masterwalk; el stretch reescala el translateX de cada
+        joint IK; el soft recoloca el PRIMER handle (composeMatrix x aimMatrix,
+        sin DAG).
+
+        Contrato con ik_setup: usa self.ik_handle_target si existe; si no, cae
+        al worldMatrix del control del pie (peor: ignora el pie reverso).
+
         Nota para el cap. 8: el stretch es también el escape cuando la cadena se
         queda sin alcance. Si mides un pivote o un muelle y "no llega",
         comprueba si es ALCANCE antes de culpar al mecanismo.
         """
-        pass
+
+        foot_ctl = self.ik_controllers[2]
+        root_ctl = self.ik_controllers[0]
+        ik_target_plug = getattr(self, "ik_handle_target", f"{foot_ctl}.worldMatrix[0]")
+        segment_count = self.leg_end_index
+        rest_lengths = [
+            (self.world_positions[i + 1] - self.world_positions[i]).length()
+            for i in range(segment_count)
+        ]
+
+        if segment_count == 2:
+            mult_names = ["upperLengthMult", "lowerLengthMult"]
+        elif segment_count == 3:
+            mult_names = ["upperLengthMult", "middleLengthMult", "lowerLengthMult"]
+        else:
+            mult_names = [f"segment0{i}LengthMult" for i in range(segment_count)]
+
+        cmds.addAttr(foot_ctl, longName="STRETCHY", niceName="STRETCHY ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{foot_ctl}.STRETCHY", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(foot_ctl, longName="Stretch", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
+        for name in mult_names:
+            cmds.addAttr(foot_ctl, longName=name, attributeType="float", minValue=0.001, defaultValue=1, keyable=True)
+
+        cmds.addAttr(foot_ctl, longName="SOFT", niceName="SOFT ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{foot_ctl}.SOFT", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(foot_ctl, longName="Soft", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
+        cmds.addAttr(foot_ctl, longName="Soft_Start", attributeType="float", minValue=0.001, maxValue=1, defaultValue=0.8, keyable=True)
+
+        # ----- Distancia actual normalizada por globalScale -----
+        current_dbt = cmds.createNode("distanceBetween", name=f"{self.module_name}CurrentLength_DBT", ss=True)
+        cmds.connectAttr(f"{root_ctl}.worldMatrix[0]", f"{current_dbt}.inMatrix1")
+        cmds.connectAttr(ik_target_plug, f"{current_dbt}.inMatrix2")
+
+        distance_div = cmds.createNode("divide", name=f"{self.module_name}GlobalScale_DIV", ss=True)
+        cmds.connectAttr(f"{current_dbt}.distance", f"{distance_div}.input1")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{distance_div}.input2")
+        distance_plug = f"{distance_div}.output"
+
+        # ----- Longitud total viva (con los length mults) -----
+        length_sum = cmds.createNode("sum", name=f"{self.module_name}TotalLength_SUM", ss=True)
+        for i, (rest, mult_name) in enumerate(zip(rest_lengths, mult_names)):
+            segment_mul = cmds.createNode("multiply", name=f"{self.module_name}Segment0{i}Length_MUL", ss=True)
+            cmds.setAttr(f"{segment_mul}.input[0]", rest)
+            cmds.connectAttr(f"{foot_ctl}.{mult_name}", f"{segment_mul}.input[1]")
+            cmds.connectAttr(f"{segment_mul}.output", f"{length_sum}.input[{i}]")
+        length_plug = f"{length_sum}.output"
+
+        # ----- Stretch: factor = lerp(1, max(1, d/L), Stretch) -----
+        ratio_div = cmds.createNode("divide", name=f"{self.module_name}LengthRatio_DIV", ss=True)
+        cmds.connectAttr(distance_plug, f"{ratio_div}.input1")
+        cmds.connectAttr(length_plug, f"{ratio_div}.input2")
+
+        ratio_max = cmds.createNode("max", name=f"{self.module_name}LengthRatio_MAX", ss=True)
+        cmds.setAttr(f"{ratio_max}.input[0]", 1)
+        cmds.connectAttr(f"{ratio_div}.output", f"{ratio_max}.input[1]")
+
+        stretch_remap = cmds.createNode("remapValue", name=f"{self.module_name}Stretch_RMV", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Stretch", f"{stretch_remap}.inputValue")
+        cmds.setAttr(f"{stretch_remap}.outputMin", 1)
+        cmds.connectAttr(f"{ratio_max}.output", f"{stretch_remap}.outputMax")
+
+        for i in range(1, segment_count + 1):
+            rest_tx = cmds.getAttr(f"{self.ik_chain[i]}.translateX")
+            joint_mul = cmds.createNode("multiply", name=f"{self.module_name}Stretch0{i}_MUL", ss=True)
+            cmds.setAttr(f"{joint_mul}.input[0]", rest_tx)
+            cmds.connectAttr(f"{stretch_remap}.outValue", f"{joint_mul}.input[1]")
+            cmds.connectAttr(f"{foot_ctl}.{mult_names[i - 1]}", f"{joint_mul}.input[2]")
+            cmds.connectAttr(f"{joint_mul}.output", f"{self.ik_chain[i]}.translateX")
+
+        # ----- Soft: d' = dStart + range * (1 - e^(-(d - dStart) / range)) -----
+        soft_start_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftStart_MUL", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Soft_Start", f"{soft_start_mul}.input[0]")
+        cmds.connectAttr(length_plug, f"{soft_start_mul}.input[1]")
+
+        soft_range_sub = cmds.createNode("subtract", name=f"{self.module_name}SoftRange_SUB", ss=True)
+        cmds.connectAttr(length_plug, f"{soft_range_sub}.input1")
+        cmds.connectAttr(f"{soft_start_mul}.output", f"{soft_range_sub}.input2")
+
+        soft_delta_sub = cmds.createNode("subtract", name=f"{self.module_name}SoftDelta_SUB", ss=True)
+        cmds.connectAttr(distance_plug, f"{soft_delta_sub}.input1")
+        cmds.connectAttr(f"{soft_start_mul}.output", f"{soft_delta_sub}.input2")
+
+        soft_exponent_div = cmds.createNode("divide", name=f"{self.module_name}SoftExponent_DIV", ss=True)
+        cmds.connectAttr(f"{soft_delta_sub}.output", f"{soft_exponent_div}.input1")
+        cmds.connectAttr(f"{soft_range_sub}.output", f"{soft_exponent_div}.input2")
+
+        soft_exponent_neg = cmds.createNode("negate", name=f"{self.module_name}SoftExponent_NEG", ss=True)
+        cmds.connectAttr(f"{soft_exponent_div}.output", f"{soft_exponent_neg}.input")
+
+        soft_exp_pow = cmds.createNode("power", name=f"{self.module_name}SoftExp_POW", ss=True)
+        cmds.setAttr(f"{soft_exp_pow}.input", math.e)
+        cmds.connectAttr(f"{soft_exponent_neg}.output", f"{soft_exp_pow}.exponent")
+
+        soft_one_minus = cmds.createNode("subtract", name=f"{self.module_name}SoftOneMinusExp_SUB", ss=True)
+        cmds.setAttr(f"{soft_one_minus}.input1", 1)
+        cmds.connectAttr(f"{soft_exp_pow}.output", f"{soft_one_minus}.input2")
+
+        soft_falloff_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftFalloff_MUL", ss=True)
+        cmds.connectAttr(f"{soft_range_sub}.output", f"{soft_falloff_mul}.input[0]")
+        cmds.connectAttr(f"{soft_one_minus}.output", f"{soft_falloff_mul}.input[1]")
+
+        soft_distance_sum = cmds.createNode("sum", name=f"{self.module_name}SoftDistance_SUM", ss=True)
+        cmds.connectAttr(f"{soft_start_mul}.output", f"{soft_distance_sum}.input[0]")
+        cmds.connectAttr(f"{soft_falloff_mul}.output", f"{soft_distance_sum}.input[1]")
+
+        # Solo amortigua pasado el inicio del soft (condition: d > dStart)
+        soft_condition = cmds.createNode("condition", name=f"{self.module_name}Soft_CON", ss=True)
+        cmds.setAttr(f"{soft_condition}.operation", 2)  # Greater than
+        cmds.connectAttr(distance_plug, f"{soft_condition}.firstTerm")
+        cmds.connectAttr(f"{soft_start_mul}.output", f"{soft_condition}.secondTerm")
+        cmds.connectAttr(f"{soft_distance_sum}.output", f"{soft_condition}.colorIfTrueR")
+        cmds.connectAttr(distance_plug, f"{soft_condition}.colorIfFalseR")
+
+        soft_blend = cmds.createNode("blendTwoAttr", name=f"{self.module_name}Soft_B2A", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Soft", f"{soft_blend}.attributesBlender")
+        cmds.connectAttr(distance_plug, f"{soft_blend}.input[0]")
+        cmds.connectAttr(f"{soft_condition}.outColorR", f"{soft_blend}.input[1]")
+
+        # De vuelta a unidades world (la distancia iba normalizada)
+        soft_world_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftWorld_MUL", ss=True)
+        cmds.connectAttr(f"{soft_blend}.output", f"{soft_world_mul}.input[0]")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{soft_world_mul}.input[1]")
+
+        # Recolocación del handle: composeMatrix(tx) * aimMatrix (sin DAG)
+        absolute_primary = tuple(abs(x) for x in self.primary_axis)
+        soft_aim = cmds.createNode("aimMatrix", name=f"{self.module_name}Soft_AIM", ss=True)
+        cmds.connectAttr(f"{root_ctl}.worldMatrix[0]", f"{soft_aim}.inputMatrix")
+        cmds.connectAttr(ik_target_plug, f"{soft_aim}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{soft_aim}.primaryInputAxis", *absolute_primary, type="double3")
+        cmds.setAttr(f"{soft_aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
+        cmds.setAttr(f"{soft_aim}.primaryMode", 1)
+
+        soft_cmx = cmds.createNode("composeMatrix", name=f"{self.module_name}Soft_CMX", ss=True)
+        cmds.connectAttr(f"{soft_world_mul}.output", f"{soft_cmx}.inputTranslateX")
+
+        soft_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}Soft_MMX", ss=True)
+        cmds.connectAttr(f"{soft_cmx}.outputMatrix", f"{soft_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{soft_aim}.outputMatrix", f"{soft_mmx}.matrixIn[1]")
+
+        cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.ik_handles[0]}.offsetParentMatrix", force=True)
 
     def ik_calibration(self):
         """
-        Hornea la corrección para que la cadena IK repose EXACTAMENTE sobre las
-        guías, sea cual sea el solver.
-
-        Sin esto cada solver da un reposo distinto y la comparación del
-        experimento no es limpia — estarías midiendo la diferencia de reposo, no
-        la del solver.
-
+        (Pendiente) Hornea la corrección para que la cadena IK repose
+        EXACTAMENTE sobre las guías, sea cual sea el solver. Sin esto cada
+        solver da un reposo distinto y la comparación del experimento no es
+        limpia — medirías la diferencia de reposo, no la del solver.
         Criterio de éxito: en reposo, delta IK vs guías = 0 y match FK/IK = 0.
         """
         pass
+
+    def blend_setup(self):
+        """
+        Blend FK/IK por joint. NO dirige ninguna cadena: los outputMatrix de los
+        blendMatrix son la salida del sistema (matrices world), y los consumidores
+        (bendys, skinning, pie) se conectan a esos plugs
+        """
+        self.blend_matrices = []
+        self.blend_plugs = []
+
+        for i, jnt in enumerate(self.leg_joints):
+            blend_matrix = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Blend_BLM"), ss=True)
+            cmds.connectAttr(f"{self.ik_chain[i]}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+            cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+            cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{blend_matrix}.target[0].weight")
+
+            self.blend_matrices.append(blend_matrix)
+            self.blend_plugs.append(f"{blend_matrix}.outputMatrix")
 
     def reciprocal_coupling(self):
         """
@@ -431,6 +798,11 @@ class LegModule(object):
     # ═════════════════════════════════════════════════════════════════════════
     # SALIDA
     # ═════════════════════════════════════════════════════════════════════════
+    def roll_and_non_roll_setup(self):
+        """(Pendiente) Frames non-roll + extracción de twist por swing-twist
+        para alimentar los ribbons sin flips."""
+        pass
+
     def bendys_setup(self):
         """
         Ribbons por segmento para deformación suave (utils/ribbon + de_boor_core).
@@ -505,8 +877,8 @@ class FrontLegModule(LegModule):
     ROOT_JOINT = "Shoulder"
 
     def make(self, side, **kwargs):
-        """Llama al padre y añade la escápula."""
-        pass
+        """Llama al padre; la escápula (scapula_setup) queda pendiente."""
+        super().make(side, **kwargs)
 
     def scapula_setup(self):
         """
@@ -616,9 +988,144 @@ class PawFoot(FootBase):
     borde posterior de la almohadilla.
     """
 
-    def digits_setup(self, leg):
-        """Delega en el módulo de dedos (cadenas FK + curl/spread/twist)."""
+    # I = espolón (no apoya), II-V = dedos de apoyo. Numeración veterinaria.
+    DIGIT_NUMERALS = ["I", "II", "III", "IV", "V"]
+
+    def digits_guides(self, leg):
+        """
+        Carga las cadenas de guías de los dedos: pide la raíz 00 de cada
+        numeral ({side}_{legPrefix}Digit{N}00_JNT) y get_guides trae sus
+        falanges. Las ausentes se omiten sin error — así un personaje de 3
+        dedos funciona sin tocar código. Deja:
+            self.digit_chains[numeral] = {"chain": [falanges...]}
+        """
+        self.finger_base_name = f"{leg.side}_{leg.LEG_PREFIX}Digit"
+        self.digit_chains = {} # Set the dict for all the guides
+
+        for number in self.DIGIT_NUMERALS:
+
+            root = f"{self.finger_base_name}{number}00_JNT" # L_frontLegDigitI00_JNT p.e
+            chain = guides_manager.get_guides(root)
+            if not chain:
+                continue
+            self.digit_chains[number] = {"chain": chain}
+
+    def digits_orient_guides(self, leg):
+        """
+        Frames por dedo con la misma convención de ejes de la pierna. Amplía
+        cada self.digit_chains[numeral] con:
+            "world"  plugs de matriz world (network horneado)
+            "point"  plugs solo-posición
+            "local"  MMatrix relativas a la falange anterior (la 00 queda en
+                     world: su padre real es el MTP y su offset se compone al
+                     colgarla, en digits_fk)
+        """
+        leg.primary_axis = leg.primaryInputAxis if leg.side == "L" else tuple(-v for v in leg.primaryInputAxis)
+        leg.secondary_axis = leg.secondaryInputAxis
+
+        for number, data in self.digit_chains.items():
+
+            world_plugs, point_plugs  = guides_manager.orient_guides(
+                guides=data["chain"],
+                primaryInputAxis=leg.primary_axis,
+                secondaryInputAxis=leg.secondary_axis,
+            )
+
+            local_matrices = []
+            for i, plug in enumerate(world_plugs):
+                w_matrix = om.MMatrix(cmds.getAttr(plug))
+                if i == 0:
+                    local_matrices.append(w_matrix)
+                else:
+                    parent_matrix = om.MMatrix(cmds.getAttr(world_plugs[i - 1]))
+                    local_matrices.append(w_matrix * parent_matrix.inverse())
+
+            data["local"] = local_matrices
+            data["world"] = world_plugs
+            data["point"] = point_plugs
+
+            # self.digit_chains["III"]["chain"][0] ------> primera falange del dedo III
+            # self.digit_chains["III"]["world"][1] ------> WM de la falange III dedo 01
+            # self.digit_chains["III"]["local"][2] ------> LM de la falange III dedo 02
+            
+
+    def digits_fk(self, leg):
+        """
+        Cascada FK por dedo, colgada del MTP SIN DAG (el MTP viene del blend;
+        por DAG heredaría su transform dos veces): el grupo raíz de los dedos
+        recibe el plug del blend del MTP en su offsetParentMatrix con
+        inheritsTransform a 0, la falange 00 lleva su offset estático contra el
+        MTP en reposo, y el resto offsets locales horneados. Los controles
+        llevan nivel SDK para los drivers de digits_attributes. Deja:
+            self.leg_digit_fk_ctls[numeral] = [ctls...]
+        """
+        parent_plug = leg.blend_plugs[leg.leg_end_index] # Get the last joint blend matrix
+        digits_grp = cmds.createNode("transform", name=f"{self.finger_base_name}Fk_GRP") # Create the parent group for all of FK controllers
+        cmds.setAttr(f"{digits_grp}.inheritsTransform", 0)
+        cmds.connectAttr(parent_plug, f"{digits_grp}.offsetParentMatrix")
+        parent_matrix = om.MMatrix(cmds.getAttr(leg.blend_plugs[leg.leg_end_index]))
+
+        self.leg_digit_fk_ctls = {}
+
+        for name, data in self.digit_chains.items():
+
+            fk_ctls = []
+
+            for i, jnt in enumerate(data["chain"]):
+
+                parent = digits_grp if i == 0 else fk_ctls[-1]
+                grp, ctl = curve_tool.create_controller(
+                    name=jnt.replace("_JNT", "Fk"),
+                    offset=["GRP", "SDK", "ANM"],
+                    locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
+                    parent=parent,
+                )
+
+                if i == 0:
+                    local = om.MMatrix(cmds.getAttr(data["world"][0])) * parent_matrix.inverse() # Set the local matrix based on the parent
+                else:
+                    local = data["local"][i]
+                cmds.setAttr(f"{grp[0]}.offsetParentMatrix", list(local), type="matrix")
+                fk_ctls.append(ctl)
+            self.leg_digit_fk_ctls[name] = fk_ctls
+
+    def digits_ik(self, leg):
+        """(Pendiente) IK de dedos, si el plano lo pide."""
         pass
+
+    def digits_attributes(self, leg):
+        """
+        Control de atributos de los dedos con Curl, Spread y Twist (-10..10,
+        default 0, convención de mano del repo).
+
+        PENDIENTE: el cableado SDK a los grupos SDK de las falanges (recorrido
+        decreciente proximal->distal en el curl, spread solo en la proximal,
+        espolón aparte con su propio rango) — ver attributes_setup del
+        digits_module de referencia.
+        """
+        
+        self.paw_attributes_grp, self.paw_attributes_ctl = curve_tool.create_controller(
+            name=f"{self.finger_base_name}sAttributes",
+            offset=["GRP", "OFF", "ANM"],
+            locked_attrs=["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"],
+            parent=leg.controllers_grp,
+        )
+
+        cmds.addAttr(self.paw_attributes_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.paw_attributes_ctl}.extraAttr", ch=True, lock=True)
+
+        def _f_attr(ln):
+            cmds.addAttr(self.paw_attributes_ctl, longName=ln, attributeType="float",
+                        minValue=-10, maxValue=10, defaultValue=0, keyable=True)
+
+        _f_attr("Curl")
+        _f_attr("Spread")
+        _f_attr("Twist")
+
+        
+
+BackLegModule.FOOT_CLASS = HoofFoot
+FrontLegModule.FOOT_CLASS = HoofFoot
 
 
 # ═════════════════════════════════════════════════════════════════════════════

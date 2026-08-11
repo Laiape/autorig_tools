@@ -445,13 +445,17 @@ def build_rig(character_name, on_step=None):
     # --- Legs (Solo Quadruped) ---
     if rig_type == 1:
         leg_solver = rig_settings.get("leg_solver", "spring")
+        if isinstance(leg_solver, int):
+            # get_rig_data exporta los enums al .build como INDICE (getAttr
+            # plano); aqui se traduce de vuelta al nombre del preset.
+            leg_solver = LEG_SOLVER_OPTIONS[leg_solver]
 
-        # Patas Delanteras (módulo de pierna nuevo)
+        # Patas Delanteras (leg_module_self — la implementación propia del TFG)
         if check("L_frontLegShoulder_JNT") and check("R_frontLegShoulder_JNT"):
             step("Building front legs…")
-            reload(quad_leg_module)
-            quad_leg_module.FrontLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
-            quad_leg_module.FrontLegModule().make("R", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+            reload(leg_module_self)
+            leg_module_self.FrontLegModule().make("L", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
+            leg_module_self.FrontLegModule().make("R", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
 
         # Fallback: limb genérico con el naming antiguo
         elif check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
@@ -470,12 +474,12 @@ def build_rig(character_name, on_step=None):
             leg_module_self.FrontLegModule().make("L", skinning_joints_number=leg_skinning_jnts)
             leg_module_self.FrontLegModule().make("R", skinning_joints_number=leg_skinning_jnts)
 
-        # Patas Traseras (módulo de pierna nuevo)
+        # Patas Traseras (leg_module_self — la implementación propia del TFG)
         if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
             step("Building back legs…")
-            reload(quad_leg_module)
-            quad_leg_module.BackLegModule().make("L", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
-            quad_leg_module.BackLegModule().make("R", solver=leg_solver, skinning_jnts=leg_skinning_jnts)
+            reload(leg_module_self)
+            leg_module_self.BackLegModule().make("L", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
+            leg_module_self.BackLegModule().make("R", solver=leg_solver, skinning_joints_number=leg_skinning_jnts)
 
     # --- Arms / Clavicles ---
     if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
@@ -777,6 +781,11 @@ def quadruped_space_switches():
             _ss(fl_pv, [fl_ik, local_chest, body], default_rotate=1, default_translate=1, pv=True)  # Front leg pv
 
 
+# Presets de IK de la pierna de cuadrúpedo (claves de IK_CONFIGS en
+# quadruped/autorig/leg_module_self.py). El PRIMERO es el default del enum.
+LEG_SOLVER_OPTIONS = ("spring", "rp", "spring_rp", "nodes")
+
+
 def create_rig_settings(guides_transform, load=False):
     """
     Crea los atributos de configuración del Rig en el transform de las guías.
@@ -805,6 +814,7 @@ def create_rig_settings(guides_transform, load=False):
         "neck_controllers": defaults["neck_controllers"],
         "arm_skinning_jnts": defaults["arm_skinning_jnts"],
         "leg_skinning_jnts": defaults["leg_skinning_jnts"],
+        "leg_solver": LEG_SOLVER_OPTIONS,
         "tail_skinning_jnts": defaults["tail_skinning_jnts"],
         "tail_controllers": defaults["tail_controllers"],
         "mGear_integration": ("disabled", "enabled")
@@ -855,9 +865,9 @@ def load_rig_settings(guides_transform):
 
     # Lista de atributos que queremos intentar leer
     attrs_to_read = [
-        "Rig_Type", "spine_skinning_jnts", "spine_controllers", 
-        "neck_skinning_jnts", "neck_controllers", "arm_skinning_jnts", 
-        "leg_skinning_jnts", "tail_skinning_jnts", "tail_controllers"
+        "Rig_Type", "spine_skinning_jnts", "spine_controllers",
+        "neck_skinning_jnts", "neck_controllers", "arm_skinning_jnts",
+        "leg_skinning_jnts", "leg_solver", "tail_skinning_jnts", "tail_controllers"
     ]
     
     data = {}

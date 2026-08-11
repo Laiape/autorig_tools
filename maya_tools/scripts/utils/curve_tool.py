@@ -425,7 +425,7 @@ def lock_attributes(ctl, attrs):
         cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
 
 
-def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=None):
+def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=None, matrix=None):
     """
     Creates a controller with a specific name and offset transforms and returns the controller and the groups.
 
@@ -478,9 +478,10 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
 
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])
+        if matrix:
+            target = created_grps[0] if created_grps else ctl[0]
+            cmds.xform(target, ws=True, m=list(matrix))
 
-        
-        
         return created_grps, ctl[0]
     
 

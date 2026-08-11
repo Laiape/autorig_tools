@@ -8,6 +8,7 @@ from utils import curve_tool
 from utils import rig_manager
 from utils import guides_manager
 from utils import create_rig
+from quadruped.autorig import leg_module_self
 
 reload(skin_manager_api)
 reload(curve_tool)
@@ -40,6 +41,7 @@ def create_custom_menu():
     cmds.menuItem(divider=True, dividerLabel="RIGGING")
 
     cmds.menuItem(label="BUILD RIG", command=lambda x: rig(), boldFont=True, image="kinJoint.png")
+    cmds.menuItem(label="BUILD LEG", command=lambda x: leg_rig(), boldFont=True, image="kinJoint.png")
 
     cmds.menuItem(label="Guides Manager", subMenu=True, tearOff=True, image="locator.png")
     cmds.menuItem(label="Create New Guides",  command=lambda x: create_new_guides(), image="confirm.png")
@@ -262,6 +264,13 @@ def rig():
     reload(create_rig)
     rig = create_rig.AutoRig()
     rig.build()
+
+def leg_rig():
+    """Función para crear el rig bipedal"""
+
+    reload(leg_module_self)
+    leg_rig = leg_module_self.LegModule()
+    leg_rig.make() # Hay que poner los argumentos todavia
 
 def open_model_checker():
     from tools import model_checker
