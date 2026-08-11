@@ -53,8 +53,8 @@ for side in ("L", "R"):
         check(f"{base}: handle spring", bool(cmds.ls(f"{side}_*Ik_HDL", type="ikHandle")))
         check(f"{base}: settings ctl", cmds.objExists(f"{base}Settings_CTL"))
         check(f"{base}: ctl FK raiz", cmds.objExists(f"{base}{root}Fk_CTL"))
-        check(f"{base}: ctl IK Ball", cmds.objExists(f"{base}BALL_CTL"))
-        ankle = f"{base}ANKLE_CTL"
+        check(f"{base}: ctl IK Ball", cmds.objExists(f"{base}Ball_CTL"))
+        ankle = f"{base}Ankle_CTL"
         check(f"{base}: attrs stretch/soft", cmds.objExists(ankle)
               and cmds.attributeQuery("Stretch", node=ankle, exists=True)
               and cmds.attributeQuery("Soft", node=ankle, exists=True))

@@ -434,7 +434,7 @@ class LegModule(object):
         for i, name in enumerate(ik_controller_names):
 
             # Create controller
-            controller_name = f"{self.side}_{self.LEG_PREFIX}{name.upper()}"
+            controller_name = f"{self.side}_{self.LEG_PREFIX}{name}"
 
             ik_grp, ik_ctl = curve_tool.create_controller(name=controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"], parent=ik_controllers_trn, matrix=cmds.getAttr(self.guides_world_matrices[i]))
 
@@ -529,9 +529,7 @@ class LegModule(object):
 
         self.ik_handles = []
 
-        # Create the solver based on the argument given. El .build puede traer
-        # presets del enum sin ficha todavia (spring_rp, nodes): caer a spring
-        # con aviso en vez de reventar el boton de build.
+        # Create the solver based on the argument given
         layers = self.IK_CONFIGS.get(self.solver)
         if layers is None:
             cmds.warning(f"[leg_module_self] solver '{self.solver}' sin ficha en IK_CONFIGS; usando 'spring'.")
@@ -539,12 +537,15 @@ class LegModule(object):
         for start, end, solver in layers:
             self._create_handle(start, end, solver, self.ik_handle_target)
 
+        # Call PV setup
+        self.pole_vector_setup()
+
+        # Freeze ik Handles
         cmds.loadPlugin("lookdevKit", quiet=True)  # floatConstant vive ahi
         freeze_fcn = cmds.createNode("floatConstant", name=f"{self.module_name}HandleFreeze_FCN", ss=True)
         cmds.setAttr(f"{freeze_fcn}.inFloat", 0)
         for handle in self.ik_handles:
             cmds.parent(handle, self.module_trn)
-            cmds.setAttr(f"{handle}.visibility", 0)
             for attr in ("translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"):
                 cmds.connectAttr(f"{freeze_fcn}.outFloat", f"{handle}.{attr}")
 
@@ -565,8 +566,25 @@ class LegModule(object):
         label = end_joint.split("_")[1].replace("Ik", "")
         ik_handle = cmds.ikHandle(name=f"{self.side}_{label}Ik_HDL", startJoint=start_joint, endEffector=end_joint, solver=solver)[0]
         cmds.connectAttr(target_plug, f"{ik_handle}.offsetParentMatrix")
+
         self.ik_handles.append(ik_handle)
         return ik_handle
+
+    def pole_vector_setup(self):
+        """
+        Pole vector del handle PRINCIPAL (ik_handles[0]) — solo uno: el SC del
+        pie lo ignora y en RP el segundo handle no lo necesita.
+
+        El control Pv se recoloca geometricamente FUERA del plano (apex +
+        bend_dir * media longitud * PV_SIGN), sobre la direccion automatica del
+        solver: con los preferred angles puestos, el poleVectorConstraint asi
+        colocado no mueve el reposo (patron _place_pv de la referencia). Se
+        mueve el GRUPO del control para dejar los canales limpios.
+        """
+        apex_p = self.world_positions[1]
+        pv_pos = apex_p + self.bend_dir * (self.leg_line_len * 0.5) * self.PV_SIGN
+        cmds.xform(self.ik_grps[1], ws=True, t=list(pv_pos))
+        cmds.poleVectorConstraint(self.ik_controllers[1], self.ik_handles[0])
 
     def _ik_nodes(self):
         """
@@ -801,7 +819,9 @@ class LegModule(object):
     def roll_and_non_roll_setup(self):
         """(Pendiente) Frames non-roll + extracción de twist por swing-twist
         para alimentar los ribbons sin flips."""
-        pass
+
+        # _______ Non roll setup ____________________
+
 
     def bendys_setup(self):
         """
