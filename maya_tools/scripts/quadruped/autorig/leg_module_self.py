@@ -857,13 +857,13 @@ class LegModule(object):
         self.raw_hip_blend (con twist, para el bendy ctl), self.hip_ctl_roll y
         self.segment_names.
         """
-        segment_count = self.leg_end_index
-        if segment_count == 2:
+        self.segment_count = self.leg_end_index
+        if self.segment_count == 2:
             segment_names = ["Upper", "Lower"]
-        elif segment_count == 3:
+        elif self.segment_count == 3:
             segment_names = ["Upper", "Middle", "Lower"]
         else:
-            segment_names = [f"Segment0{i}" for i in range(segment_count)]
+            segment_names = [f"Segment0{i}" for i in range(self.segment_count)]
         self.segment_names = segment_names
 
         # En este modulo los blends ya viven como listas de plugs/nombres
@@ -901,13 +901,10 @@ class LegModule(object):
             cv_nodes[i] = self._roll_cv(blend_wm[i], aim_target, f"{self.module_name}Roll0{i}")
             roll_wm[i] = f"{cv_nodes[i]}.matrixSum"
 
-        # Frame del bendy de cadera: usa el twist REAL del hip (raw), no el
-        # non-roll — el bendy de la raiz SI debe girar con el muslo.
         self.hip_ctl_roll = f"{self._roll_cv(self.raw_hip_blend, blend_wm[1], f'{self.module_name}HipCtl')}.matrixSum"
 
         self.roll_wm = roll_wm
         self.cv_nodes = cv_nodes
-        # El grupo de bendys y sus controles pertenecen a bendys_setup.
 
     def _roll_cv(self, blend_plug, aim_target_plug, name):
             """
@@ -938,16 +935,122 @@ class LegModule(object):
         Ribbons por segmento para deformación suave (utils/ribbon + de_boor_core).
         Ojo al twist: extráelo por swing-twist (cuaternión) para que no flipee.
         """
-        pass
+
+        cmds.addAttr(self.settings_ctl, longName="bendys", niceName="Bendy_Controllers_Visibility", attributeType="bool")
+        cmds.setAttr(f"{self.settings_ctl}.bendys", lock=False, keyable=False, channelBox=True)
+
+        bendy_grp = cmds.createNode("transform", name=f"{self.module_name}BendyControllers_GRP", ss=True, p=self.controllers_grp)
+        cmds.setAttr(f"{bendy_grp}.inheritsTransform", 0)
+
+        self.bendy_ctls = []
+        for i in range(self.segment_count):
+
+            name = f"{self.module_name}{self.segment_names[i]}Bendy"
+
+            mid_blm = cmds.createNode("blendMatrix", name=f"{name}_BLM", ss=True)
+            cmds.connectAttr(self.hip_ctl_roll if i == 0 else self.roll_wm[i], f"{mid_blm}.inputMatrix")
+            cmds.connectAttr(self.roll_wm[i + 1], f"{mid_blm}.target[0].targetMatrix")
+            cmds.setAttr(f"{mid_blm}.target[0].translateWeight", 0.5)
+            cmds.setAttr(f"{mid_blm}.target[0].rotateWeight", 0)
+            cmds.setAttr(f"{mid_blm}.target[0].scaleWeight", 0)
+            cmds.setAttr(f"{mid_blm}.target[0].shearWeight", 0)
+
+            if i == 0:
+                cmds.connectAttr(self.roll_wm[0], f"{mid_blm}.target[1].targetMatrix")
+                cmds.setAttr(f"{mid_blm}.target[1].translateWeight", 0)
+                cmds.setAttr(f"{mid_blm}.target[1].rotateWeight", 0.5)
+                cmds.setAttr(f"{mid_blm}.target[1].scaleWeight", 0)
+                cmds.setAttr(f"{mid_blm}.target[1].shearWeight", 0)
+
+            bendy_nodes, bendy_ctl = curve_tool.create_controller(name=name, offset=["GRP", "ANM"], parent=bendy_grp)
+            cmds.connectAttr(f"{self.settings_ctl}.bendys", f"{bendy_nodes[0]}.visibility")
+            curve_tool.lock_attributes(bendy_ctl, ["sx", "sy", "sz", "v"])
+            cmds.connectAttr(f"{mid_blm}.outputMatrix", f"{bendy_nodes[0]}.offsetParentMatrix")
+            self.bendy_ctls.append(bendy_ctl)
+        
 
     def skinning_setup(self):
         """
         Joints de deformación finales.
 
-        Publica también QUÉ joints deforman el pie y de qué plug sale su world,
-        para que un offset posterior pueda componerse encima sin adivinar nombres.
+        Con bendys: un ribbon de Boor por segmento (frame roll inicio, bendy
+        ctl del segmento, frame roll fin) genera los joints de skinning bajo
+        skeleton_grp; además se añaden LAS QUE FALTAN — el pie: menudillo,
+        cuartilla y casco como hojas hermanas dirigidas por matrices (el casco
+        con offset horneado desde la cuartilla, que no tiene blend propio) — y
+        la cadena guía se oculta como esqueleto interno del módulo.
+
+        Sin bendys: la cadena guía se renombra a *Skinning_JNT bajo
+        skeleton_grp y cada joint se conecta a su blend (relativo al padre
+        vivo, para no doble-transformar la jerarquía).
+
+        Publica self.foot_skin_drivers [(joint, plug)]: qué joints deforman el
+        pie y de qué plug sale su world, para offsets posteriores.
         """
-        pass
+        self.foot_skin_drivers = []
+
+        if self.bendys:
+            # ── ribbons por segmento (consumen los bendy ctls ya creados) ──
+            axis_value = self.primary_axis["xyz".index(self.aim_letter)]
+            signed_aim = self.aim_letter if axis_value > 0 else f"-{self.aim_letter}"
+            up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondary_axis[k]))]
+            up_object_vector = (self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z)
+            params = [i / (self.skinning_joints_number - 1) for i in range(self.skinning_joints_number)]
+            params[-1] = 0.95
+
+            self.skinning_joints = []
+            for i in range(self.segment_count):
+                name = f"{self.module_name}{self.segment_names[i]}Bendy"
+                segment_jnts, temp = ribbon.de_boor_ribbon(
+                    cvs=(self.cv_nodes[i], self.bendy_ctls[i], self.cv_nodes[i + 1]),
+                    aim_axis=signed_aim, up_axis=up_letter, num_joints=self.skinning_joints_number,
+                    skeleton_grp=self.skeleton_grp, name=name, custom_parameter=params,
+                    up_object=self.masterwalk_ctl, up_object_vector=up_object_vector,
+                )
+                for t in temp:
+                    cmds.delete(t)
+                self.skinning_joints.extend(segment_jnts)
+
+            # ── las que faltan: el pie, hojas hermanas bajo skeleton_grp ──
+            cmds.setAttr(f"{self.leg_chain[0]}.visibility", 0)
+
+            for idx in (self.leg_end_index, self.plant_index):
+                jnt = cmds.createNode("joint", name=self.leg_chain[idx].replace("_JNT", "Skinning_JNT"), ss=True, parent=self.skeleton_grp)
+                cmds.connectAttr(self.blend_plugs[idx], f"{jnt}.offsetParentMatrix")
+                self.foot_skin_drivers.append((jnt, self.blend_plugs[idx]))
+
+            # el casco (Tip) no tiene blend: offset horneado desde la cuartilla
+            tip_jnt = cmds.createNode("joint", name=self.tip_joint.replace("_JNT", "Skinning_JNT"), ss=True, parent=self.skeleton_grp)
+            tip_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[-1]))
+            plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
+            tip_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}TipSkinning_MMX", ss=True)
+            cmds.setAttr(f"{tip_mmx}.matrixIn[0]", list(tip_rest * plant_rest.inverse()), type="matrix")
+            cmds.connectAttr(self.blend_plugs[self.plant_index], f"{tip_mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{tip_mmx}.matrixSum", f"{tip_jnt}.offsetParentMatrix")
+            self.foot_skin_drivers.append((tip_jnt, f"{tip_mmx}.matrixSum"))
+            return
+
+        # ── sin bendys: cadena guia renombrada y conectada a los blends ──
+        cmds.parent(self.leg_chain[0], self.skeleton_grp)
+        renamed = [cmds.rename(j, j.replace("_JNT", "Skinning_JNT")) for j in self.leg_chain]
+        self.leg_chain, self.leg_joints, self.tip_joint = renamed, renamed[:-1], renamed[-1]
+
+        for i, jnt in enumerate(renamed[:-1]):
+            if i == 0:
+                cmds.connectAttr(self.blend_plugs[0], f"{jnt}.offsetParentMatrix")
+            else:
+                # relativo al padre VIVO: el opm se aplica encima de la herencia
+                mmx = cmds.createNode("multMatrix", name=jnt.replace("Skinning_JNT", "SkinRel_MMT"), ss=True)
+                cmds.connectAttr(self.blend_plugs[i], f"{mmx}.matrixIn[0]")
+                cmds.connectAttr(f"{renamed[i - 1]}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
+                cmds.connectAttr(f"{mmx}.matrixSum", f"{jnt}.offsetParentMatrix")
+            cmds.xform(jnt, m=om.MMatrix.kIdentity)
+        # el casco cuelga de la cuartilla por DAG y la sigue
+
+        self.foot_skin_drivers = [
+            (renamed[self.leg_end_index], self.blend_plugs[self.leg_end_index]),
+            (renamed[self.plant_index], self.blend_plugs[self.plant_index]),
+        ]
 
     def publish(self):
         """
@@ -959,7 +1062,9 @@ class LegModule(object):
         """
 
         # _______ Delete all unnecesary nodes ___________________
-        cmds.delete(self.settings_guide)
+        # la guia de settings es opcional (el caballo no la trae)
+        if self.settings_guide and cmds.objExists(self.settings_guide):
+            cmds.delete(self.settings_guide)
 
     # ═════════════════════════════════════════════════════════════════════════
     # INSTRUMENTACIÓN — para el capítulo 8
