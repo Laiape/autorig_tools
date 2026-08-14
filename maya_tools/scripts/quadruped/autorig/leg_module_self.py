@@ -234,15 +234,6 @@ class LegModule(object):
         self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
         cmds.parent(self.leg_chain[0], self.module_trn)
 
-        # Get guides for the reverse foot pivots
-        reverse_foot_names = ["bankOut", "bankIn", "heel"]
-        
-        self.reverse_foot_locators = []
-        for pivot in reverse_foot_names:
-            guide = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{pivot}_LOCShape")
-            if guide:
-                self.reverse_foot_locators.append(guide)
-
         # Get the settings guide (opcional: el caballo no lo trae en sus guias)
         self.settings_guide = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}Settings_LOCShape")
 
@@ -294,11 +285,7 @@ class LegModule(object):
 
             self.guides_local_matrices.append(local_matrix)
 
-        # Set the reverse foot guides
-        self.reverse_foot_world_matrices = []
-
-        for guide in self.reverse_foot_locators:
-            self.reverse_foot_world_matrices.append(cmds.xform(guide, q=True, ws=True, m=True))
+        
 
         # Set the settings guide matrix (None si el personaje no trae la guia)
         self.settings_world_matrix = (cmds.xform(self.settings_guide, q=True, ws=True, m=True)
@@ -387,8 +374,10 @@ class LegModule(object):
         - FK: uno por joint de la pierna (sin el Tip), en cascada, colocados
           con la matriz LOCAL de su guía en el offsetParentMatrix del grupo.
           Guarda fk_controllers / fk_grps / fk_offs en paralelo.
-        - IK: Root, Pv, Ankle y Ball sobre las matrices world de las guías,
-          más un control por pivote del pie reverso (ik_pivot_controllers).
+        - IK: roles root/ankle/ball con NOMBRE derivado de su guía (p.ej.
+          L_backLegFetlockIk_CTL) e índices semánticos de setup_chain; el ball
+          cuelga del ankle (jerarquía de pie reverso). Pv aparte (sin guía,
+          nombre sintético). Acceso por ROL: self.ik_ctl["ball"] / ik_grp["pv"].
 
         Bloquea lo que el animador no debe tocar: escala y visibilidad siempre;
         en FK también la traslación.
@@ -426,38 +415,41 @@ class LegModule(object):
         cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{reverse_vis_ik}.inputX")
         cmds.connectAttr(f"{reverse_vis_ik}.outputX", f"{ik_controllers_trn}.visibility")
 
-        ik_controller_names = ["Root", "Pv", "Ankle", "Ball"]
-        self.ik_controllers = []
-        self.ik_grps = []
-        self.ik_offs = []
+        self.ik_controllers_trn = ik_controllers_trn  # el pie cuelga aqui sus pivotes
 
-        for i, name in enumerate(ik_controller_names):
+        # Indices SEMANTICOS (de setup_chain) -> el NOMBRE sale de la guia, asi
+        # se adapta a cualquier cadena. El codigo consume por ROL (dict), nunca
+        # por posicion. El grupo del ball cuelga del CTL del ankle: mover ankle
+        # O ball mueve el pie (jerarquia de pie reverso), sin doble transform.
+        ik_specs = {
+            "root":  0,
+            "ankle": self.leg_end_index - 1,
+            "ball":  self.leg_end_index,
+        }
 
-            # Create controller
-            controller_name = f"{self.side}_{self.LEG_PREFIX}{name}"
+        self.ik_ctl = {}
+        self.ik_grp = {}
+        for role, idx in ik_specs.items():
+            name = self.leg_chain[idx].replace("_JNT", "Ik")
+            parent = self.ik_ctl["ankle"] if role == "ball" else ik_controllers_trn
+            grps, ctl = curve_tool.create_controller(
+                name=name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
+                parent=parent,
+                matrix=cmds.getAttr(self.guides_world_matrices[idx]),
+            )
+            self.ik_ctl[role] = ctl
+            self.ik_grp[role] = grps[0]
 
-            ik_grp, ik_ctl = curve_tool.create_controller(name=controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"], parent=ik_controllers_trn, matrix=cmds.getAttr(self.guides_world_matrices[i]))
+        # Pv — la excepcion: no tiene guia (es un punto calculado, no una
+        # articulacion). Nombre sintetico; pole_vector_setup recoloca su GRUPO.
+        pv_grps, pv_ctl = curve_tool.create_controller(
+            name=f"{self.side}_{self.LEG_PREFIX}Pv",
+            offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
+            parent=ik_controllers_trn,
+        )
+        self.ik_ctl["pv"] = pv_ctl
+        self.ik_grp["pv"] = pv_grps[0]
 
-            self.ik_controllers.append(ik_ctl)
-            self.ik_grps.append(ik_grp[0])
-            self.ik_offs.append(ik_grp[1])
-
-        self.ik_leg_controllers = self.ik_controllers
-        self.ik_pivot_controllers = []
-
-        for i, (guide, matrix) in enumerate(zip(self.reverse_foot_locators, self.reverse_foot_world_matrices)):
-
-            # Create controller
-            pivot_controller_name = guide.replace("_LOC", "")
-
-            pivot_grps, pivot_ctl = curve_tool.create_controller(name=pivot_controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["sx","sy","sz", "v"], matrix=matrix, parent=ik_controllers_trn)
-
-            self.ik_controllers.append(pivot_ctl)
-            self.ik_pivot_controllers.append(pivot_ctl)
-            self.ik_grps.append(pivot_grps[0])
-            self.ik_offs.append(pivot_grps[1])
-
-        
 
     def fk_setup(self):
         """
@@ -516,7 +508,12 @@ class LegModule(object):
         PENDIENTE:
         - La config "nodes" (triangle_solver) aún no entra por el dispatch.
         """
-        ball_ctl = self.ik_controllers[3]
+        ball_ctl = self.ik_ctl["ball"]
+
+        # Objetivo del IK: el FIN del handle principal (leg_end_index) siguiendo
+        # al pie. offset horneado (fin_reposo x ball_reposo^-1) x ball VIVO — y
+        # como el grupo del ball cuelga del CTL del ankle, mover ankle O ball
+        # mueve el objetivo, sin doble transformacion.
         end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.leg_end_index]))
         ball_wm = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
 
@@ -583,8 +580,8 @@ class LegModule(object):
         """
         apex_p = self.world_positions[1]
         pv_pos = apex_p + self.bend_dir * (self.leg_line_len * 0.5) * self.PV_SIGN
-        cmds.xform(self.ik_grps[1], ws=True, t=list(pv_pos))
-        cmds.poleVectorConstraint(self.ik_controllers[1], self.ik_handles[0])
+        cmds.xform(self.ik_grp["pv"], ws=True, t=list(pv_pos))
+        cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
 
     def _ik_nodes(self):
         """
@@ -623,8 +620,8 @@ class LegModule(object):
         comprueba si es ALCANCE antes de culpar al mecanismo.
         """
 
-        foot_ctl = self.ik_controllers[2]
-        root_ctl = self.ik_controllers[0]
+        foot_ctl = self.ik_ctl["ankle"]
+        root_ctl = self.ik_ctl["root"]
         ik_target_plug = getattr(self, "ik_handle_target", f"{foot_ctl}.worldMatrix[0]")
         segment_count = self.leg_end_index
         rest_lengths = [
@@ -943,7 +940,34 @@ class FootBase(object):
         Los pivotes del bípedo (talón y planta) NO aplican tal cual a un
         cuadrúpedo: hay que derivarlos de la anatomía de cada tipo de pisada.
         """
-        pass
+        # Get guides for the reverse foot pivots
+        reverse_foot_names = ["bankOut", "bankIn", "heel"]
+        
+        self.reverse_foot_locators = []
+        for pivot in reverse_foot_names:
+            guide = guides_manager.get_guides(f"{leg.side}_{leg.LEG_PREFIX}{pivot}_LOCShape")
+            if guide:
+                self.reverse_foot_locators.append(guide)
+
+        # Set the reverse foot guides
+        self.reverse_foot_world_matrices = []
+
+        for guide in self.reverse_foot_locators:
+            self.reverse_foot_world_matrices.append(cmds.xform(guide, q=True, ws=True, m=True))
+
+        self.ik_pivot_controllers = []
+
+        for i, (guide, matrix) in enumerate(zip(self.reverse_foot_locators, self.reverse_foot_world_matrices)):
+
+            # Create controller
+            pivot_controller_name = guide.replace("_LOC", "")
+
+            pivot_grps, pivot_ctl = curve_tool.create_controller(name=pivot_controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["sx","sy","sz", "v"], matrix=matrix, parent=leg.ik_controllers_trn)
+
+            leg.ik_controllers.append(pivot_ctl)
+            self.ik_pivot_controllers.append(pivot_ctl)
+            self.ik_grps.append(pivot_grps[0])
+            self.ik_offs.append(pivot_grps[1])
 
     def roll_attributes(self, leg, foot_ctl):
         """
