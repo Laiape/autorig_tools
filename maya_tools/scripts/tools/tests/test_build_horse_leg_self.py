@@ -62,7 +62,7 @@ for side in ("L", "R"):
               and cmds.attributeQuery("Soft", node=ankle, exists=True))
         check(f"{base}: blends", bool(cmds.ls(f"{base}*Blend_BLM", type="blendMatrix")))
         # skinning: 3 segmentos x skinning_joints_number (ribbons) + 3 del pie
-        skel = f"{base}{root}Skel_GRP"
+        skel = f"{base}Skinning_GRP"
         skel_jnts = cmds.listRelatives(skel, allDescendents=True, type="joint") or []
         check(f"{base}: joints de skinning (>=18)", len(skel_jnts) >= 18, f"n={len(skel_jnts)}")
         check(f"{base}: pie skinning", all(cmds.objExists(f"{base}{n}Skinning_JNT") for n in ("Fetlock", "Pastern", "Tip")))

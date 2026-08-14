@@ -211,9 +211,9 @@ class LegModule(object):
         self.config = config or {}
 
         self.module_name = f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}"
-        self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
-        self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skel_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
+        self.module_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Module_GRP", ss=True, p=self.modules)
+        self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Skinning_GRP", ss=True, p=self.skel_grp)
+        self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
         # Llamar a los métodos
         self.load_guides()
@@ -531,6 +531,16 @@ class LegModule(object):
         cmds.setAttr(f"{ik_handle_mmx}.matrixIn[0]", list(end_rest * ball_wm.inverse()), type="matrix")
         cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ik_handle_mmx}.matrixIn[1]")
         self.ik_handle_target = f"{ik_handle_mmx}.matrixSum"
+
+        # El control root dirige la RAIZ de la cadena IK: delta del control
+        # (rest^-1 x vivo) al opm del joint raiz — identidad en reposo, pivota
+        # sobre el control, y no toca canales ni jointOrient.
+        root_ctl = self.ik_ctl["root"]
+        root_rest_inv = om.MMatrix(cmds.getAttr(f"{root_ctl}.worldMatrix[0]")).inverse()
+        root_follow_mmx = cmds.createNode("multMatrix", name=f"{self.side}_{self.LEG_PREFIX}IkRootFollow_MMX", ss=True)
+        cmds.setAttr(f"{root_follow_mmx}.matrixIn[0]", list(root_rest_inv), type="matrix")
+        cmds.connectAttr(f"{root_ctl}.worldMatrix[0]", f"{root_follow_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{root_follow_mmx}.matrixSum", f"{self.ik_chain[0]}.offsetParentMatrix")
 
         cmds.joint(self.ik_chain[0], e=True, setPreferredAngles=True, children=True)
 
@@ -936,7 +946,7 @@ class LegModule(object):
         Ojo al twist: extráelo por swing-twist (cuaternión) para que no flipee.
         """
 
-        cmds.addAttr(self.settings_ctl, longName="bendys", niceName="Bendy_Controllers_Visibility", attributeType="bool")
+        cmds.addAttr(self.settings_ctl, longName="bendys", niceName="Bendy Controllers Visibility", attributeType="bool", dv=1)
         cmds.setAttr(f"{self.settings_ctl}.bendys", lock=False, keyable=False, channelBox=True)
 
         bendy_grp = cmds.createNode("transform", name=f"{self.module_name}BendyControllers_GRP", ss=True, p=self.controllers_grp)
@@ -990,7 +1000,6 @@ class LegModule(object):
         self.foot_skin_drivers = []
 
         if self.bendys:
-            # ── ribbons por segmento (consumen los bendy ctls ya creados) ──
             axis_value = self.primary_axis["xyz".index(self.aim_letter)]
             signed_aim = self.aim_letter if axis_value > 0 else f"-{self.aim_letter}"
             up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondary_axis[k]))]
@@ -1000,7 +1009,8 @@ class LegModule(object):
 
             self.skinning_joints = []
             for i in range(self.segment_count):
-                name = f"{self.module_name}{self.segment_names[i]}Bendy"
+                # sin "Bendy": los joints de skinning llevan solo el segmento
+                name = f"{self.module_name}{self.segment_names[i]}"
                 segment_jnts, temp = ribbon.de_boor_ribbon(
                     cvs=(self.cv_nodes[i], self.bendy_ctls[i], self.cv_nodes[i + 1]),
                     aim_axis=signed_aim, up_axis=up_letter, num_joints=self.skinning_joints_number,
@@ -1011,7 +1021,6 @@ class LegModule(object):
                     cmds.delete(t)
                 self.skinning_joints.extend(segment_jnts)
 
-            # ── las que faltan: el pie, hojas hermanas bajo skeleton_grp ──
             cmds.setAttr(f"{self.leg_chain[0]}.visibility", 0)
 
             for idx in (self.leg_end_index, self.plant_index):
@@ -1019,7 +1028,6 @@ class LegModule(object):
                 cmds.connectAttr(self.blend_plugs[idx], f"{jnt}.offsetParentMatrix")
                 self.foot_skin_drivers.append((jnt, self.blend_plugs[idx]))
 
-            # el casco (Tip) no tiene blend: offset horneado desde la cuartilla
             tip_jnt = cmds.createNode("joint", name=self.tip_joint.replace("_JNT", "Skinning_JNT"), ss=True, parent=self.skeleton_grp)
             tip_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[-1]))
             plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
@@ -1039,13 +1047,11 @@ class LegModule(object):
             if i == 0:
                 cmds.connectAttr(self.blend_plugs[0], f"{jnt}.offsetParentMatrix")
             else:
-                # relativo al padre VIVO: el opm se aplica encima de la herencia
                 mmx = cmds.createNode("multMatrix", name=jnt.replace("Skinning_JNT", "SkinRel_MMT"), ss=True)
                 cmds.connectAttr(self.blend_plugs[i], f"{mmx}.matrixIn[0]")
                 cmds.connectAttr(f"{renamed[i - 1]}.worldInverseMatrix[0]", f"{mmx}.matrixIn[1]")
                 cmds.connectAttr(f"{mmx}.matrixSum", f"{jnt}.offsetParentMatrix")
             cmds.xform(jnt, m=om.MMatrix.kIdentity)
-        # el casco cuelga de la cuartilla por DAG y la sigue
 
         self.foot_skin_drivers = [
             (renamed[self.leg_end_index], self.blend_plugs[self.leg_end_index]),
