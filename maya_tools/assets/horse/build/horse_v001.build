@@ -6,6 +6,7 @@
     "neck_controllers": 3,
     "arm_skinning_jnts": 5,
     "leg_skinning_jnts": 5,
+    "leg_solver": 0,
     "tail_skinning_jnts": 3,
     "tail_controllers": 3,
     "mGear_integration": 0

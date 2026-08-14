@@ -263,8 +263,6 @@ class DigitsModule(object):
             sep("DEWCLAW_ATTRIBUTES")
             flt("Dewclaw_Curl"); flt("Dewclaw_Twist")
 
-        # Curl y Twist por falange: la proximal manda, las distales acompañan con
-        # menos recorrido (el dedo se enrosca, no se parte por igual).
         phalanx_curl = [-70, 18, -55, 14, -45, 12]
 
         for name in support:
@@ -275,8 +273,6 @@ class DigitsModule(object):
                 pos, neg = phalanx_curl[min(i * 2, len(phalanx_curl) - 2):][:2]
                 self._sdk_key(sdk, "rz", "Curl", pos, neg)
                 self._sdk_key(sdk, "rx", "Twist", 15, -15)
-                # El abanico sale de la falange PROXIMAL: abrir desde la punta
-                # separaría las uñas sin mover el dedo.
                 if i == 0:
                     self._sdk_key(sdk, "ry", "Spread", spread_ry, -spread_ry)
 

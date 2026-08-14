@@ -1181,11 +1181,6 @@ class LegModule(object):
         tip_skinning = cmds.createNode("joint", name=f"{self.module_name}TipSkinning_JNT", ss=True, p=self.skeleton_grp)
         cmds.connectAttr(f"{tip_mmx}.matrixSum", f"{tip_skinning}.offsetParentMatrix")
 
-        # Joints de DEFORMACIÓN del pie (menudillo, cuartilla, casco) + el plug de su
-        # world PRE-offset. foot_offset_setup posmultiplica aquí el control del pie.
-        # No hay ribbon EN el pie: los ribbons cubren Hip->Fetlock (la caña); del
-        # menudillo al casco son estos tres joints directos. Son hojas (hermanos bajo
-        # skeleton_grp), así que moverlos no arrastra ni la pierna ni la caña.
         self.foot_skin_drivers = [
             (fetlock_skinning, blend_wm[self.main_end_index]),
             (pastern_skinning, blend_wm[self.plant_index]),
@@ -1214,11 +1209,6 @@ class LegModule(object):
         self.leg_joints = renamed[:-1]
         self.tip_joint = renamed[-1]
 
-        # Pie sin bendys: menudillo y cuartilla llevan el offset del control del pie;
-        # el casco (Tip) cuelga de la cuartilla por DAG y la sigue. foot_offset_setup
-        # los re-drivea a world absoluto (blend * Δ, inheritsTransform=0), así que aquí
-        # basta el plug del blend de cada uno. (El horse se construye con bendys=True;
-        # esta rama queda correcta por construcción pero se valida en viewport.)
         self.foot_skin_drivers = [
             (renamed[self.leg_end_index], f"{self.blend_matrices[self.leg_end_index][0]}.outputMatrix"),
             (renamed[self.plant_index], f"{self.blend_matrices[self.plant_index][0]}.outputMatrix"),
