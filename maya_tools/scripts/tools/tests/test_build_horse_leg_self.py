@@ -66,6 +66,12 @@ for side in ("L", "R"):
         skel_jnts = cmds.listRelatives(skel, allDescendents=True, type="joint") or []
         check(f"{base}: joints de skinning (>=18)", len(skel_jnts) >= 18, f"n={len(skel_jnts)}")
         check(f"{base}: pie skinning", all(cmds.objExists(f"{base}{n}Skinning_JNT") for n in ("Fetlock", "Pastern", "Tip")))
+        # pie reverso: pila de pivotes + atributos de roll en el ctl del tobillo
+        check(f"{base}: pivotes reversos", all(cmds.objExists(f"{base}{p}_CTL")
+              for p in ("BankOut", "BankIn", "Heel", "Toe", "Sole")))
+        check(f"{base}: attrs de roll", cmds.objExists(ankle)
+              and all(cmds.attributeQuery(a, node=ankle, exists=True)
+                      for a in ("Roll", "Bank", "Roll_Break_Angle", "Roll_Straight_Angle")))
 
 # reposo: el blend (peso 0 = IK) debe devolver la pose de guia -> los joints
 # ik reposan sobre las guias originales
@@ -77,6 +83,31 @@ if cmds.objExists(probe) and cmds.objExists(guide):
     p2 = om.MVector(cmds.xform(guide, q=True, ws=True, t=True))
     check("reposo: IK fetlock sobre la guia", (p1 - p2).length() < 1e-3,
           "delta=%.5f" % (p1 - p2).length())
+
+# pie reverso FUNCIONAL, medido en los joints de skinning del pie (lo que
+# deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
+# el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.
+for side in ("L", "R"):
+    ankle = f"{side}_backLegAnkleIk_CTL"
+    tip = f"{side}_backLegTipSkinning_JNT"
+    pastern = f"{side}_backLegPasternSkinning_JNT"
+    if not all(cmds.objExists(n) for n in (ankle, tip, pastern)):
+        check(f"{side}: pie reverso funcional (nodos presentes)", False)
+        continue
+    tip_rest_y = cmds.xform(tip, q=True, ws=True, t=True)[1]
+    pastern_rest_y = cmds.xform(pastern, q=True, ws=True, t=True)[1]
+
+    cmds.setAttr(f"{ankle}.Roll", -20)
+    dy = cmds.xform(tip, q=True, ws=True, t=True)[1] - tip_rest_y
+    check(f"{side}: roll -20 punta sube (talon)", dy > 0.1, "dy=%.3f" % dy)
+
+    cmds.setAttr(f"{ankle}.Roll", 60)
+    dy = cmds.xform(pastern, q=True, ws=True, t=True)[1] - pastern_rest_y
+    check(f"{side}: roll 60 cuartilla sube (punta)", dy > 0.1, "dy=%.3f" % dy)
+
+    cmds.setAttr(f"{ankle}.Roll", 0)
+    dy = cmds.xform(tip, q=True, ws=True, t=True)[1] - tip_rest_y
+    check(f"{side}: roll 0 vuelve al reposo", abs(dy) < 1e-4, "dy=%.5f" % dy)
 
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)

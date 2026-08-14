@@ -107,7 +107,7 @@ class LegModule(object):
                                  # Trasera: caudal (corvejón atrás).
                                  # Delantera: cranial (carpo adelante). ANATOMÍA.
 
-    PV_SIGN = -1                 # lado del pole vector respecto al plano.
+    PV_SIGN = 1                 # lado del pole vector respecto al plano.
 
     PV_APEX_INDEX = 2            # Apex del PV: la articulación MEDIA del zigzag
                                  # (corvejón/carpo), el punto de máxima
@@ -161,6 +161,12 @@ class LegModule(object):
         self.primaryInputAxis = (1, 0, 0)
         self.secondaryInputAxis = (0, 1, 0)
 
+        # Los joints de SALIDA del ribbon NO comparten convención con los de
+        # entrada (su up nace del up_object del ribbon, no del secondary de la
+        # cadena): se declara aparte para que skinning no lo adivine.
+        self.primaryInputAxisRibbon = (1, 0, 0)
+        self.secondaryInputAxisRibbon = (0, 0, 1)
+
     # ═════════════════════════════════════════════════════════════════════════
     # ORQUESTACIÓN
     # ═════════════════════════════════════════════════════════════════════════
@@ -197,9 +203,9 @@ class LegModule(object):
             fk_setup             FK stretch por matrices
             blend_setup          blend FK/IK por joint (salida = plugs)
             reciprocal_coupling  (pendiente; si el flag lo pide)
-            foot.build           el pie COMPUESTO
-            bendys_setup         (pendiente)
-            skinning_setup       (pendiente)
+            foot.build           el pie COMPUESTO: pivotes reversos + roll
+            bendys_setup         bendy ctl por segmento
+            skinning_setup       ribbons + joints del pie
             publish              (pendiente)
 
         """
@@ -230,7 +236,6 @@ class LegModule(object):
             self.reciprocal_coupling()
         self.foot = self.FOOT_CLASS()
         self.foot.build(self)
-        self.roll_and_non_roll_setup
         if self.bendys:
             self.roll_and_non_roll_setup()
             self.bendys_setup()
@@ -283,7 +288,6 @@ class LegModule(object):
 
         self.primary_axis = self.primaryInputAxis if self.side == "L" else tuple(-v for v in self.primaryInputAxis)
         self.secondary_axis = self.secondaryInputAxis
-        # letra del eje aim (para extract_twist y los frames de roll)
         self.aim_letter = "xyz"[max(range(3), key=lambda k: abs(self.primary_axis[k]))]
 
         self.guides_matrices, self.point_matrices = guides_manager.orient_guides(
@@ -1000,9 +1004,14 @@ class LegModule(object):
         self.foot_skin_drivers = []
 
         if self.bendys:
-            axis_value = self.primary_axis["xyz".index(self.aim_letter)]
-            signed_aim = self.aim_letter if axis_value > 0 else f"-{self.aim_letter}"
-            up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondary_axis[k]))]
+            # Convención del RIBBON (no la de la cadena): sus joints de salida
+            # se orientan con primaryInputAxisRibbon/secondaryInputAxisRibbon.
+            ribbon_primary = (self.primaryInputAxisRibbon if self.side == "L"
+                              else tuple(-v for v in self.primaryInputAxisRibbon))
+            aim_idx = max(range(3), key=lambda k: abs(ribbon_primary[k]))
+            aim_letter = "xyz"[aim_idx]
+            signed_aim = aim_letter if ribbon_primary[aim_idx] > 0 else f"-{aim_letter}"
+            up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondaryInputAxisRibbon[k]))]
             up_object_vector = (self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z)
             params = [i / (self.skinning_joints_number - 1) for i in range(self.skinning_joints_number)]
             params[-1] = 0.95
@@ -1159,56 +1168,164 @@ class FootBase(object):
     sus pivotes y expone sus atributos en el control del pie.
     """
 
+    # orden = jerarquía: cada pivote cuelga del anterior, y el GRP del ball se
+    # recuelga bajo el último (sole) — el manager del handle lee el worldMatrix
+    # VIVO del ball, así que girar cualquier pivote mueve la pierna gratis.
+    PIVOT_ORDER = ["bankOut", "bankIn", "heel", "toe", "sole"]
+
     def build(self, leg):
         """leg = el LegModule que compone este pie (para leer índices y matrices)."""
-        pass
+        self.pivots(leg)
+        self.roll_attributes(leg, leg.ik_ctl["ankle"])
 
     def pivots(self, leg):
         """
-        Matrices de reposo de los pivotes del pie reverso.
+        Pila de pivotes del pie reverso bajo el ctl del tobillo:
+            ankle -> bankOut -> bankIn -> heel -> toe -> sole -> [GRP del ball]
 
-        Los pivotes del bípedo (talón y planta) NO aplican tal cual a un
-        cuadrúpedo: hay que derivarlos de la anatomía de cada tipo de pisada.
+        Posiciones: guía locator si el personaje la trae; si no, DERIVADAS de
+        la anatomía. La derivación vale para el CASCO: la cuartilla está
+        elevada, así que proyectarla a la altura de la punta da el talón; los
+        bancos van en los bordes de la suela. El digitígrado debe sobreescribir
+        esto (trampa del talón — ver PawFoot).
+
+        Frames propios, no de guía: x = avance, y = arriba, z = lateral_ref
+        (espejada en R). Así rz = roll, rx = bank, ry = twist, y bank/roll
+        salen espejados entre lados sin tablas de signos por pivote.
         """
-        # Get guides for the reverse foot pivots
-        reverse_foot_names = ["bankOut", "bankIn", "heel"]
-        
-        self.reverse_foot_locators = []
-        for pivot in reverse_foot_names:
-            guide = guides_manager.get_guides(f"{leg.side}_{leg.LEG_PREFIX}{pivot}_LOCShape")
-            if guide:
-                self.reverse_foot_locators.append(guide)
+        up = om.MVector(0, 1, 0)
+        lat = om.MVector(leg.lateral_ref).normal()
+        fwd = (up ^ lat).normal()
 
-        # Set the reverse foot guides
-        self.reverse_foot_world_matrices = []
+        def _pivot_matrix(pos):
+            return om.MMatrix([fwd.x, fwd.y, fwd.z, 0,
+                               up.x, up.y, up.z, 0,
+                               lat.x, lat.y, lat.z, 0,
+                               pos.x, pos.y, pos.z, 1])
 
-        for guide in self.reverse_foot_locators:
-            self.reverse_foot_world_matrices.append(cmds.xform(guide, q=True, ws=True, m=True))
+        tip_p = om.MVector(leg.world_positions[-1])
+        plant_p = leg.world_positions[leg.plant_index]
+        heel_p = om.MVector(plant_p.x, tip_p.y, plant_p.z)  # pisada proyectada al suelo
+        sole_p = (heel_p + tip_p) * 0.5
+        half_w = (tip_p - heel_p).length() * 0.5  # ponytail: casco ~tan ancho como largo
+        out_dir = om.MVector(1, 0, 0) if leg.side == "L" else om.MVector(-1, 0, 0)
+        positions = {
+            "bankOut": sole_p + out_dir * half_w,
+            "bankIn":  sole_p - out_dir * half_w,
+            "heel":    heel_p,
+            "toe":     tip_p,
+            "sole":    sole_p,
+        }
 
-        self.ik_pivot_controllers = []
+        self.pivot_ctl = {}
+        self.pivot_sdk = {}
+        parent = leg.ik_ctl["ankle"]
+        for role in self.PIVOT_ORDER:
+            loc = guides_manager.get_guides(f"{leg.side}_{leg.LEG_PREFIX}{role}_LOCShape")
+            matrix = (cmds.xform(loc, q=True, ws=True, m=True) if loc
+                      else _pivot_matrix(positions[role]))
+            grps, ctl = curve_tool.create_controller(
+                name=f"{leg.side}_{leg.LEG_PREFIX}{role[0].upper()}{role[1:]}",
+                offset=["GRP", "SDK", "ANM"],
+                locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
+                matrix=matrix, parent=parent)
+            self.pivot_ctl[role] = ctl
+            self.pivot_sdk[role] = grps[1]
+            parent = ctl
 
-        for i, (guide, matrix) in enumerate(zip(self.reverse_foot_locators, self.reverse_foot_world_matrices)):
-
-            # Create controller
-            pivot_controller_name = guide.replace("_LOC", "")
-
-            pivot_grps, pivot_ctl = curve_tool.create_controller(name=pivot_controller_name, offset=["GRP", "OFF", "ANM"], locked_attrs=["sx","sy","sz", "v"], matrix=matrix, parent=leg.ik_controllers_trn)
-
-            leg.ik_controllers.append(pivot_ctl)
-            self.ik_pivot_controllers.append(pivot_ctl)
-            self.ik_grps.append(pivot_grps[0])
-            self.ik_offs.append(pivot_grps[1])
+        cmds.parent(leg.ik_grp["ball"], self.pivot_ctl["sole"])
 
     def roll_attributes(self, leg, foot_ctl):
         """
-        Roll y twist. Arquitectura en dos tramos: hasta el break angle levanta la
-        pisada; del break al straight angle rueda la punta.
+        Roll y twist sobre los SDK de los pivotes. Arquitectura en dos tramos:
+        hasta Roll_Break_Angle levanta la pisada (sole); del break al straight
+        angle rueda la punta. Bank con signo (positivo = borde externo).
 
         TRAMPA: si construyes el tramo negativo con un remapValue de inputMin=0,
         el roll negativo CLAMPA A CERO y no hace absolutamente nada. Aísla el
         tramo negativo (un min) antes de darle su propio pivote.
+
+        SIGNO, analítico (no medido): rodar hacia delante es +θ alrededor de
+        W = up ^ FORWARD_AXIS en mundo; los pivotes giran en rz alrededor de su
+        z local (lateral_ref, espejada en R), así que el signo por lado es el
+        de lateral_ref·W. Vale para cualquier FORWARD_AXIS.
         """
-        pass
+        name = f"{leg.side}_{leg.LEG_PREFIX}"
+
+        cmds.addAttr(foot_ctl, longName="FOOT_ATTRIBUTES", niceName="FOOT ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{foot_ctl}.FOOT_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        for attr in ["Roll", "Bank", "Ankle_Twist", "Ball_Twist", "Toe_Twist"]:
+            cmds.addAttr(foot_ctl, longName=attr, attributeType="float", defaultValue=0, keyable=True)
+        cmds.addAttr(foot_ctl, longName="Roll_Break_Angle", attributeType="float", defaultValue=35, keyable=True)
+        cmds.addAttr(foot_ctl, longName="Roll_Straight_Angle", attributeType="float", defaultValue=75, keyable=True)
+
+        cmds.connectAttr(f"{foot_ctl}.Ankle_Twist", f"{self.pivot_sdk['bankOut']}.rotateY")
+        cmds.connectAttr(f"{foot_ctl}.Ball_Twist", f"{self.pivot_sdk['sole']}.rotateY")
+        cmds.connectAttr(f"{foot_ctl}.Toe_Twist", f"{self.pivot_sdk['toe']}.rotateY")
+
+        up = om.MVector(0, 1, 0)
+        w_axis = up ^ om.MVector(*leg.FORWARD_AXIS)
+        roll_sign = 1 if (om.MVector(leg.lateral_ref) * w_axis) > 0 else -1
+
+        # factor 0->1 del break al straight: cuánto peso pasa a la punta
+        straight_rmv = cmds.createNode("remapValue", name=f"{name}RollStraightAngle_RMV", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Roll", f"{straight_rmv}.inputValue")
+        cmds.connectAttr(f"{foot_ctl}.Roll_Break_Angle", f"{straight_rmv}.inputMin")
+        cmds.connectAttr(f"{foot_ctl}.Roll_Straight_Angle", f"{straight_rmv}.inputMax")
+
+        # factor 0->1 de 0 al break: rampa de la pisada (inputMin=0 aquí SÍ,
+        # el tramo negativo va aparte por el min de abajo)
+        break_rmv = cmds.createNode("remapValue", name=f"{name}RollBreakAngle_RMV", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Roll", f"{break_rmv}.inputValue")
+        cmds.connectAttr(f"{foot_ctl}.Roll_Break_Angle", f"{break_rmv}.inputMax")
+
+        reverse = cmds.createNode("reverse", name=f"{name}RollBreakAngle_REV", ss=True)
+        cmds.connectAttr(f"{straight_rmv}.outValue", f"{reverse}.inputX")
+
+        enable_mul = cmds.createNode("multiply", name=f"{name}RollAngleEnable_MUL", ss=True)
+        cmds.connectAttr(f"{reverse}.outputX", f"{enable_mul}.input[0]")
+        cmds.connectAttr(f"{foot_ctl}.Roll", f"{enable_mul}.input[1]")
+
+        lift_mul = cmds.createNode("multiply", name=f"{name}RollLift_MUL", ss=True)
+        cmds.connectAttr(f"{break_rmv}.outValue", f"{lift_mul}.input[0]")
+        cmds.connectAttr(f"{enable_mul}.output", f"{lift_mul}.input[1]")
+        lift_sign = cmds.createNode("multiply", name=f"{name}RollLiftSign_MUL", ss=True)
+        cmds.connectAttr(f"{lift_mul}.output", f"{lift_sign}.input[0]")
+        cmds.setAttr(f"{lift_sign}.input[1]", roll_sign)
+        cmds.connectAttr(f"{lift_sign}.output", f"{self.pivot_sdk['sole']}.rotateZ")
+
+        toe_mul = cmds.createNode("multiply", name=f"{name}RollToe_MUL", ss=True)
+        cmds.connectAttr(f"{straight_rmv}.outValue", f"{toe_mul}.input[0]")
+        cmds.connectAttr(f"{foot_ctl}.Roll", f"{toe_mul}.input[1]")
+        toe_sign = cmds.createNode("multiply", name=f"{name}RollToeSign_MUL", ss=True)
+        cmds.connectAttr(f"{toe_mul}.output", f"{toe_sign}.input[0]")
+        cmds.setAttr(f"{toe_sign}.input[1]", roll_sign)
+        cmds.connectAttr(f"{toe_sign}.output", f"{self.pivot_sdk['toe']}.rotateZ")
+
+        # tramo NEGATIVO aislado con un min (la trampa del docstring)
+        heel_min = cmds.createNode("min", name=f"{name}RollHeel_MIN", ss=True)
+        cmds.setAttr(f"{heel_min}.input[0]", 0)
+        cmds.connectAttr(f"{foot_ctl}.Roll", f"{heel_min}.input[1]")
+        heel_sign = cmds.createNode("multiply", name=f"{name}RollHeelSign_MUL", ss=True)
+        cmds.connectAttr(f"{heel_min}.output", f"{heel_sign}.input[0]")
+        cmds.setAttr(f"{heel_sign}.input[1]", roll_sign)
+        cmds.connectAttr(f"{heel_sign}.output", f"{self.pivot_sdk['heel']}.rotateZ")
+
+        # Bank: rx positivo tumba la copa hacia z local (medial), así que ambos
+        # pivotes reciben -Bank y el condition solo elige CUÁL pivota.
+        bank_neg = cmds.createNode("multiply", name=f"{name}BankNeg_MUL", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Bank", f"{bank_neg}.input[0]")
+        cmds.setAttr(f"{bank_neg}.input[1]", -1)
+
+        bank_cnd = cmds.createNode("condition", name=f"{name}Bank_CND", ss=True)
+        cmds.connectAttr(f"{foot_ctl}.Bank", f"{bank_cnd}.firstTerm")
+        cmds.setAttr(f"{bank_cnd}.operation", 2)  # Bank > 0 -> borde externo
+        cmds.connectAttr(f"{bank_neg}.output", f"{bank_cnd}.colorIfTrueR")
+        cmds.setAttr(f"{bank_cnd}.colorIfFalseR", 0)
+        cmds.setAttr(f"{bank_cnd}.colorIfTrueG", 0)
+        cmds.connectAttr(f"{bank_neg}.output", f"{bank_cnd}.colorIfFalseG")
+        cmds.connectAttr(f"{bank_cnd}.outColorR", f"{self.pivot_sdk['bankOut']}.rotateX")
+        cmds.connectAttr(f"{bank_cnd}.outColorG", f"{self.pivot_sdk['bankIn']}.rotateX")
 
 
 class HoofFoot(FootBase):
@@ -1222,6 +1339,29 @@ class HoofFoot(FootBase):
     del trabajo. Confundirlo con un pivote es el error más fácil al portar un pie
     de bípedo.
     """
+
+    def build(self, leg):
+        super(HoofFoot, self).build(leg)
+        self.hoof_attach(leg)
+
+    def hoof_attach(self, leg):
+        """
+        Pega el CASCO al control del ball por matrices: el lado IK del blend de
+        la pisada (cuartilla) pasa a ser offset horneado × worldMatrix vivo del
+        ball, que ya cuelga de TODA la pila de pivotes — roll, bank y twist
+        llegan al casco gratis. El Tip ya deriva de la pisada en skinning
+        (TipSkinning_MMX), así que sigue solo. Sin handles extra: el joint IK
+        de la cuartilla queda como esqueleto interno sin consumidores.
+        """
+        ball_ctl = leg.ik_ctl["ball"]
+        plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
+        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
+
+        hoof_mmx = cmds.createNode("multMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}HoofFollow_MMX", ss=True)
+        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * ball_rest_inv), type="matrix")
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{hoof_mmx}.matrixSum",
+                         f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 
     def fetlock_spring(self, leg, foot_ctl):
         """
