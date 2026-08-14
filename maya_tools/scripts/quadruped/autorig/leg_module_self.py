@@ -101,6 +101,14 @@ class LegModule(object):
 
     PV_SIGN = -1                 # lado del pole vector respecto al plano.
 
+    PV_APEX_INDEX = 2            # Apex del PV: la articulación MEDIA del zigzag
+                                 # (corvejón/carpo), el punto de máxima
+                                 # separación de la línea raíz->MTP — ahí el PV
+                                 # define el plano sin ambigüedad. En el codo o
+                                 # la babilla el plano cae a mitad del zigzag y
+                                 # el solver reparte peor. setup_chain lo deriva
+                                 # con fallback y clamp para otras cadenas.
+
     REPOSITION_IK_TO_GUIDES = True
                                  # Si la cadena IK reposa EXACTAMENTE sobre las
                                  # guías. Trasera sí (el corvejón ya marca el
@@ -285,8 +293,6 @@ class LegModule(object):
 
             self.guides_local_matrices.append(local_matrix)
 
-        
-
         # Set the settings guide matrix (None si el personaje no trae la guia)
         self.settings_world_matrix = (cmds.xform(self.settings_guide, q=True, ws=True, m=True)
                                       if self.settings_guide else None)
@@ -317,6 +323,11 @@ class LegModule(object):
         self.tip_joint = self.leg_chain[-1]
         self.plant_index = len(self.leg_chain) - 2  # Pastern (pisada)
         self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
+
+        # Apex del PV: el flag vale para la cadena estandar; con otra longitud
+        # cae a 1 y se clampa dentro del tramo del IK (patron de la referencia).
+        self.pv_apex_index = self.PV_APEX_INDEX if len(self.leg_chain) == self.STANDARD_JOINT_COUNT else 1
+        self.pv_apex_index = max(1, min(self.pv_apex_index, self.leg_end_index - 1))
 
         self.world_positions = [om.MVector(cmds.xform(j, q=True, ws=True, t=True)) for j in self.leg_chain]
         side_vec = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
@@ -384,9 +395,6 @@ class LegModule(object):
         """
         # _____ Settings controller ____________________________________________
         self.settings_grp, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_{self.LEG_PREFIX}Settings", offset=["GRP"], locked_attrs=["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"], parent=self.controllers_grp, matrix=self.settings_world_matrix)
-
-        cmds.addAttr(self.settings_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
-        cmds.setAttr(f"{self.settings_ctl}.extraAttr", ch=True, lock=True)
         cmds.addAttr(self.settings_ctl, longName="switchIkFk", niceName="Switch IK ------> FK", attributeType="float", defaultValue=0) # Ik default
         
         # _____ Fk controllers creation ____________________________________________
@@ -415,12 +423,7 @@ class LegModule(object):
         cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{reverse_vis_ik}.inputX")
         cmds.connectAttr(f"{reverse_vis_ik}.outputX", f"{ik_controllers_trn}.visibility")
 
-        self.ik_controllers_trn = ik_controllers_trn  # el pie cuelga aqui sus pivotes
-
-        # Indices SEMANTICOS (de setup_chain) -> el NOMBRE sale de la guia, asi
-        # se adapta a cualquier cadena. El codigo consume por ROL (dict), nunca
-        # por posicion. El grupo del ball cuelga del CTL del ankle: mover ankle
-        # O ball mueve el pie (jerarquia de pie reverso), sin doble transform.
+        self.ik_controllers_trn = ik_controllers_trn
         ik_specs = {
             "root":  0,
             "ankle": self.leg_end_index - 1,
@@ -440,8 +443,6 @@ class LegModule(object):
             self.ik_ctl[role] = ctl
             self.ik_grp[role] = grps[0]
 
-        # Pv — la excepcion: no tiene guia (es un punto calculado, no una
-        # articulacion). Nombre sintetico; pole_vector_setup recoloca su GRUPO.
         pv_grps, pv_ctl = curve_tool.create_controller(
             name=f"{self.side}_{self.LEG_PREFIX}Pv",
             offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
@@ -509,11 +510,6 @@ class LegModule(object):
         - La config "nodes" (triangle_solver) aún no entra por el dispatch.
         """
         ball_ctl = self.ik_ctl["ball"]
-
-        # Objetivo del IK: el FIN del handle principal (leg_end_index) siguiendo
-        # al pie. offset horneado (fin_reposo x ball_reposo^-1) x ball VIVO — y
-        # como el grupo del ball cuelga del CTL del ankle, mover ankle O ball
-        # mueve el objetivo, sin doble transformacion.
         end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.leg_end_index]))
         ball_wm = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
 
@@ -572,16 +568,34 @@ class LegModule(object):
         Pole vector del handle PRINCIPAL (ik_handles[0]) — solo uno: el SC del
         pie lo ignora y en RP el segundo handle no lo necesita.
 
-        El control Pv se recoloca geometricamente FUERA del plano (apex +
-        bend_dir * media longitud * PV_SIGN), sobre la direccion automatica del
-        solver: con los preferred angles puestos, el poleVectorConstraint asi
-        colocado no mueve el reposo (patron _place_pv de la referencia). Se
-        mueve el GRUPO del control para dejar los canales limpios.
+        El control Pv se coloca geometricamente FUERA del plano, en el apex
+        (pv_apex_index: la articulacion media del zigzag) + bend_dir * media
+        longitud * PV_SIGN — sobre la direccion automatica del solver: con los
+        preferred angles puestos, el poleVectorConstraint asi colocado no mueve
+        el reposo (patron _place_pv de la referencia).
+
+        La posicion va al offsetParentMatrix del GRUPO como CONEXION
+        (composeMatrix): canales limpios, y space_switches la lee como base del
+        sistema de espacios. El PV sigue al PIE por defecto (walk cycle sin
+        perseguirlo a mano), con root como alternativa y el masterwalk como
+        espacio maestro del propio switch.
         """
-        apex_p = self.world_positions[1]
+        apex_p = self.world_positions[self.pv_apex_index]
         pv_pos = apex_p + self.bend_dir * (self.leg_line_len * 0.5) * self.PV_SIGN
-        cmds.xform(self.ik_grp["pv"], ws=True, t=list(pv_pos))
+
+        pv_rest_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_{self.LEG_PREFIX}PvRest_CMX", ss=True)
+        cmds.setAttr(f"{pv_rest_cmx}.inputTranslate", pv_pos.x, pv_pos.y, pv_pos.z, type="double3")
+        cmds.connectAttr(f"{pv_rest_cmx}.outputMatrix", f"{self.ik_grp['pv']}.offsetParentMatrix")
+
         cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
+
+        matrix_manager.space_switches(
+            target=self.ik_ctl["pv"],
+            sources=[self.ik_ctl["ankle"], self.ik_ctl["root"]],
+            sources_names=["foot", "root"],
+            default_rotate=1, default_translate=1,
+            pv=True,
+        )
 
     def _ik_nodes(self):
         """
@@ -818,7 +832,7 @@ class LegModule(object):
         para alimentar los ribbons sin flips."""
 
         # _______ Non roll setup ____________________
-
+        pass
 
     def bendys_setup(self):
         """
@@ -844,7 +858,9 @@ class LegModule(object):
 
         Data-driven: los módulos NO se pasan nombres a mano.
         """
-        pass
+
+        # _______ Delete all unnecesary nodes ___________________
+        cmds.delete(self.settings_guide)
 
     # ═════════════════════════════════════════════════════════════════════════
     # INSTRUMENTACIÓN — para el capítulo 8
