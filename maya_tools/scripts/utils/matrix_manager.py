@@ -514,6 +514,12 @@ def extract_twist(source_plug, ref_plug, axis="x", name="twist", return_quat=Fal
     axis = axis.lower()
     comp = {"x": "X", "y": "Y", "z": "Z"}[axis]
 
+    # inverseMatrix (matrixNodes.mll) y los quat* (quatNodes.mll) vienen
+    # cargados en GUI pero NO en standalone; sin ellos createNode fabrica nodos
+    # "unknown" sin atributos y los connectAttr fallan.
+    cmds.loadPlugin("matrixNodes", quiet=True)
+    cmds.loadPlugin("quatNodes", quiet=True)
+
     inv = cmds.createNode("inverseMatrix", name=f"{name}TwistRef_INV", ss=True)
     cmds.connectAttr(ref_plug, f"{inv}.inputMatrix")
 

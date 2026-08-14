@@ -78,7 +78,15 @@ reload(ribbon)
 SOLVER_RP     = "rp"       # RP de 2 huesos + SC para el resto (el port del bípedo)
 SOLVER_SPRING = "spring"   # ikSpringSolver sobre los 3 segmentos funcionales
 SOLVER_NODES  = "nodes"    # IK analítico por nodos (teorema del coseno)
-
+_AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
+    
+def _axis_letter(vec):
+    """Letra del eje ('x'/'y'/'z') de un vector tipo (1,0,0), ignorando el signo."""
+    a = tuple(round(abs(c)) for c in vec)
+    for letter, v in _AXIS_VECTORS.items():
+        if a == tuple(int(c) for c in v):
+            return letter
+    return "x"
 
 class LegModule(object):
 
@@ -133,6 +141,8 @@ class LegModule(object):
             (0, 3, "ikSpringSolver"),
         ],
     }
+
+    
 
     # ─────────────────────────────────────────────────────────────────────────
     def __init__(self):
@@ -220,7 +230,9 @@ class LegModule(object):
             self.reciprocal_coupling()
         self.foot = self.FOOT_CLASS()
         self.foot.build(self)
+        self.roll_and_non_roll_setup
         if self.bendys:
+            self.roll_and_non_roll_setup()
             self.bendys_setup()
         self.skinning_setup()
         self.publish()
@@ -271,6 +283,8 @@ class LegModule(object):
 
         self.primary_axis = self.primaryInputAxis if self.side == "L" else tuple(-v for v in self.primaryInputAxis)
         self.secondary_axis = self.secondaryInputAxis
+        # letra del eje aim (para extract_twist y los frames de roll)
+        self.aim_letter = "xyz"[max(range(3), key=lambda k: abs(self.primary_axis[k]))]
 
         self.guides_matrices, self.point_matrices = guides_manager.orient_guides(
             guides=self.leg_chain,
@@ -828,12 +842,97 @@ class LegModule(object):
     # SALIDA
     # ═════════════════════════════════════════════════════════════════════════
     def roll_and_non_roll_setup(self):
-        """(Pendiente) Frames non-roll + extracción de twist por swing-twist
-        para alimentar los ribbons sin flips."""
+        """
+        Frames anti-flip para alimentar los ribbons. Dos piezas:
 
-        # _______ Non roll setup ____________________
-        pass
+        - Base NON-ROLL en la raíz: espacio estable que sigue al grupo del root
+          IK o al del root FK según el switch (los GRUPOS no twistean con el
+          solve), con la rotación alineada a ese espacio y el aim al siguiente
+          joint con el lateral FIJO del personaje.
+        - Por joint del tramo IK, _roll_cv: aim al siguiente + el twist LIMPIO
+          del joint real extraído por swing-twist (cuaternión, neutralizado a 0
+          en reposo) — el twist se reintroduce controlado, sin flips.
 
+        Deja para bendys_setup: self.roll_wm (plugs por joint), self.cv_nodes,
+        self.raw_hip_blend (con twist, para el bendy ctl), self.hip_ctl_roll y
+        self.segment_names.
+        """
+        segment_count = self.leg_end_index
+        if segment_count == 2:
+            segment_names = ["Upper", "Lower"]
+        elif segment_count == 3:
+            segment_names = ["Upper", "Middle", "Lower"]
+        else:
+            segment_names = [f"Segment0{i}" for i in range(segment_count)]
+        self.segment_names = segment_names
+
+        # En este modulo los blends ya viven como listas de plugs/nombres
+        blend_wm = list(self.blend_plugs)
+        cv_nodes = list(self.blend_matrices)
+
+        non_roll_space = cmds.createNode("blendMatrix", name=f"{self.module_name}NonRollSpace_BLM", ss=True)
+        cmds.connectAttr(f"{self.ik_grp['root']}.worldMatrix[0]", f"{non_roll_space}.inputMatrix")
+        cmds.connectAttr(f"{self.fk_grps[0]}.worldMatrix[0]", f"{non_roll_space}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{non_roll_space}.target[0].weight")
+
+        non_roll_align = cmds.createNode("blendMatrix", name=f"{self.module_name}NonRollAlign_BLM", ss=True)
+        cmds.connectAttr(blend_wm[0], f"{non_roll_align}.inputMatrix")
+        cmds.connectAttr(f"{non_roll_space}.outputMatrix", f"{non_roll_align}.target[0].targetMatrix")
+        cmds.setAttr(f"{non_roll_align}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{non_roll_align}.target[0].scaleWeight", 0)
+        cmds.setAttr(f"{non_roll_align}.target[0].shearWeight", 0)
+
+        non_roll_aim = cmds.createNode("aimMatrix", name=f"{self.module_name}NonRollAim_AMX", ss=True)
+        cmds.connectAttr(f"{non_roll_align}.outputMatrix", f"{non_roll_aim}.inputMatrix")
+        cmds.connectAttr(blend_wm[1], f"{non_roll_aim}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{non_roll_aim}.primaryInputAxis", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{non_roll_aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
+        cmds.setAttr(f"{non_roll_aim}.secondaryMode", 2)
+        cmds.setAttr(f"{non_roll_aim}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
+
+        self.raw_hip_blend = blend_wm[0]  # con twist, para el bendy ctl
+        blend_wm[0] = f"{non_roll_aim}.outputMatrix"
+        cv_nodes[0] = non_roll_aim
+
+        roll_wm = list(blend_wm)
+        roll_wm[0] = f"{non_roll_aim}.outputMatrix"
+        for i in range(1, self.leg_end_index + 1):
+            aim_target = blend_wm[i + 1] if i + 1 < len(blend_wm) else blend_wm[i]
+            cv_nodes[i] = self._roll_cv(blend_wm[i], aim_target, f"{self.module_name}Roll0{i}")
+            roll_wm[i] = f"{cv_nodes[i]}.matrixSum"
+
+        # Frame del bendy de cadera: usa el twist REAL del hip (raw), no el
+        # non-roll — el bendy de la raiz SI debe girar con el muslo.
+        self.hip_ctl_roll = f"{self._roll_cv(self.raw_hip_blend, blend_wm[1], f'{self.module_name}HipCtl')}.matrixSum"
+
+        self.roll_wm = roll_wm
+        self.cv_nodes = cv_nodes
+        # El grupo de bendys y sus controles pertenecen a bendys_setup.
+
+    def _roll_cv(self, blend_plug, aim_target_plug, name):
+            """
+            Frame anti-flip para alimentar el ribbon: aim al siguiente joint con el
+            eje lateral ALINEADO al lado del personaje (estable, no se retuerce) +
+            el twist LIMPIO del joint real extraído por swing-twist (cuaternión, sin
+            flip, neutralizado a 0 en reposo). Devuelve el multMatrix (.matrixSum).
+            """
+            nonroll = cmds.createNode("aimMatrix", name=f"{name}NonRoll_AMX", ss=True)
+            cmds.connectAttr(blend_plug, f"{nonroll}.inputMatrix")
+            cmds.connectAttr(aim_target_plug, f"{nonroll}.primary.primaryTargetMatrix")
+            cmds.setAttr(f"{nonroll}.primaryInputAxis", *self.primary_axis, type="double3")
+            cmds.setAttr(f"{nonroll}.secondaryInputAxis", *self.secondary_axis, type="double3")  # eje lateral local
+            cmds.setAttr(f"{nonroll}.secondaryMode", 2)  # alinear al vector
+            cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
+    
+            twist_qn = matrix_manager.extract_twist(blend_plug, f"{nonroll}.outputMatrix", axis=self.aim_letter, name=name, return_quat=True)
+            cmp = cmds.createNode("composeMatrix", name=f"{name}RollTwist_CMP", ss=True)
+            cmds.setAttr(f"{cmp}.useEulerRotation", 0)
+            cmds.connectAttr(f"{twist_qn}.outputQuat", f"{cmp}.inputQuat")
+            roll = cmds.createNode("multMatrix", name=f"{name}Roll_MMX", ss=True)
+            cmds.connectAttr(f"{cmp}.outputMatrix", f"{roll}.matrixIn[0]")
+            cmds.connectAttr(f"{nonroll}.outputMatrix", f"{roll}.matrixIn[1]")
+            return roll
+    
     def bendys_setup(self):
         """
         Ribbons por segmento para deformación suave (utils/ribbon + de_boor_core).
@@ -932,6 +1031,10 @@ class FrontLegModule(LegModule):
         que un tribunal tumba.
         """
         pass
+
+        # closestPointOnSurface (la referencia ya lo tiene)  →  DÓNDE puede deslizar
+        #aimMatrix(reposo → ik_handle_target) × AutoClavicle →  CUÁNTO protrae con la zancada
+        #distanceBetween(root, ik_handle_target) → remap → ty →  CUÁNTO sube al cargar
 
 
 # ═════════════════════════════════════════════════════════════════════════════
