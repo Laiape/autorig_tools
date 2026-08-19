@@ -748,7 +748,7 @@ class LegModule(object):
             return f"{node}.outputTranslate"
 
         def _f(label, op, in_a, in_b):
-            # floatMath: 0 suma · 1 resta · 2 mult · 3 div · 4 min · 5 max · 6 pow
+            # floatMath
             node = cmds.createNode("floatMath", name=f"{n}{label}_FLM", ss=True)
             cmds.setAttr(f"{node}.operation", op)
             for attr, v in (("floatA", in_a), ("floatB", in_b)):
@@ -792,13 +792,11 @@ class LegModule(object):
             cmds.connectAttr(vb, f"{node}.input2")
             return f"{node}.output"
 
-        # ── puntos vivos: raíz (ctl root), objetivo (manager), pole (Pv) ────
         A = _dcm("NodesRoot", f"{self.ik_ctl['root']}.worldMatrix[0]")
         D = _dcm("NodesTarget", self.ik_handle_target)
         self.nodes_target_dcm = f"{n}NodesTarget_DCM"
         P = _dcm("NodesPole", f"{self.ik_ctl['pv']}.worldMatrix[0]")
 
-        # longitudes como plugs (las conduce ik_stretch_soft)
         def _lenc(label, value):
             node = cmds.createNode("floatConstant", name=f"{n}{label}_FCN", ss=True)
             cmds.setAttr(f"{node}.inFloat", value)
@@ -810,11 +808,8 @@ class LegModule(object):
         self.nodes_length_inputs = [plug.replace(".outFloat", ".inFloat")
                                     for plug in (len_a, len_b, len_c)]
 
-        # plano del solve: û raíz->objetivo, v̂ perpendicular hacia el pole
         d1_raw = _dist("NodesD1", A, D)
 
-        # cuerda viva por tramos: proporcional a d al plegar; al extender
-        # interpola de la cuerda de reposo a tibia+caña hasta el alcance vivo
         bc_sum = _f("NodesLenBC", 0, len_b, len_c)
         bc_hi = _f("NodesChordHi", 1, bc_sum, 1e-3)
         bc_lo = _f("NodesChordLo", 0,
