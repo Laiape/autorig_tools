@@ -212,6 +212,23 @@ worst = max((_pt(i) - om.MVector(cmds.xform(f"{base}{n_}_JNT", q=True, ws=True, 
             for i, n_ in enumerate(("Hip", "Stifle", "Hock", "Fetlock", "Pastern")))
 check("nodes: reposo de la red", worst < 1.7, "worst=%.3f" % worst)
 
+# frames de la red alineados con las guias (X e Y) - en las DOS patas
+for cls2, base2, names2 in ((lm.FrontLegModule, "L_frontLeg", ("Shoulder", "Elbow", "Carpus")),):
+    leg2 = cls2()
+    leg2.make("L", solver="nodes", skinning_joints_number=5)
+    worst_dot = 1.0
+    for i, n_ in enumerate(names2):
+        fm = om.MMatrix(cmds.getAttr(leg2.nodes_ik_world[i]))
+        gm = om.MMatrix(cmds.getAttr(f"{base2}{n_}_JNT.worldMatrix[0]"))
+        worst_dot = min(worst_dot, fm[0]*gm[0]+fm[1]*gm[1]+fm[2]*gm[2], fm[4]*gm[4]+fm[5]*gm[5]+fm[6]*gm[6])
+    check(f"nodes: frames {base2} sobre las guias", worst_dot > 0.98, "dot=%.3f" % worst_dot)
+worst_dot = 1.0
+for i, n_ in enumerate(("Hip", "Stifle", "Hock")):
+    fm = om.MMatrix(cmds.getAttr(leg.nodes_ik_world[i]))
+    gm = om.MMatrix(cmds.getAttr(f"{base}{n_}_JNT.worldMatrix[0]"))
+    worst_dot = min(worst_dot, fm[0]*gm[0]+fm[1]*gm[1]+fm[2]*gm[2], fm[4]*gm[4]+fm[5]*gm[5]+fm[6]*gm[6])
+check(f"nodes: frames {base} sobre las guias", worst_dot > 0.98, "dot=%.3f" % worst_dot)
+
 # reparto tipo spring: al plegar la pata el CORVEJON tambien dobla (con la
 # cuerda fija quedaba congelado = RP+SC)
 a0 = _hock_angle()

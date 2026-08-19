@@ -70,23 +70,14 @@ reload(ribbon)
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# SOLVERS — la variable independiente de tu experimento (cap. 8)
+# SOLVERS
 # ═════════════════════════════════════════════════════════════════════════════
-# Que sea un ARGUMENTO y no un flag de clase ni una subclase es deliberado: el
-# experimento lo varía sobre el MISMO personaje y las MISMAS guías, así que tiene
-# que poder cambiarse en la llamada sin tocar código ni datos.
+
 SOLVER_RP     = "rp"       # RP de 2 huesos + SC para el resto (el port del bípedo)
 SOLVER_SPRING = "spring"   # ikSpringSolver sobre los 3 segmentos funcionales
 SOLVER_NODES  = "nodes"    # IK analítico por nodos (teorema del coseno)
 _AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
     
-def _axis_letter(vec):
-    """Letra del eje ('x'/'y'/'z') de un vector tipo (1,0,0), ignorando el signo."""
-    a = tuple(round(abs(c)) for c in vec)
-    for letter, v in _AXIS_VECTORS.items():
-        if a == tuple(int(c) for c in v):
-            return letter
-    return "x"
 
 class LegModule(object):
 
@@ -846,15 +837,28 @@ class LegModule(object):
             lift = _scale(f"{label}Lift", v_dir, lift_len)
             return _add(f"{label}Point", [root_pt, along, lift])
 
-        # triángulo 1: (fémur, cuerda viva) -> babilla, doblada HACIA el pole
-        B = _bend_point("NodesT1", A, d1, u1, v1, len_a, chord, 1.0)
+        # signo de cada doblez medido en las guías (de qué lado de la línea
+        # cae la articulación en el plano del Pv): trasera = babilla hacia el
+        # Pv y corvejón al contrario; delantera al revés (codo caudal, carpo
+        # cranial con el Pv en el carpo)
+        line_u = (p[end] - p[0]).normal()
+        pv_p = om.MVector(cmds.xform(self.ik_ctl["pv"], q=True, ws=True, t=True))
+        plane_v = (line_u ^ (pv_p - p[0])) ^ line_u
+        plane_v.normalize()
+        sign_1 = 1.0 if ((p[1] - p[0]) * plane_v) >= 0 else -1.0
+        line_u2 = (p[end] - p[1]).normal()
+        plane_v2 = (line_u2 ^ plane_v) ^ line_u2
+        plane_v2.normalize()
+        sign_2 = 1.0 if ((p[2] - p[1]) * plane_v2) >= 0 else -1.0
 
-        # triángulo 2: (tibia, caña) desde la babilla -> corvejón, doblado
-        # al lado CONTRARIO del pole (el zigzag alterna)
+        # triángulo 1
+        B = _bend_point("NodesT1", A, d1, u1, v1, len_a, chord, sign_1)
+        
+        # triángulo 2
         d2_raw = _dist("NodesD2", B, D)
         d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, bc_lo), bc_hi)
         u2 = _scale("NodesU2", _sub("NodesBD", D, B), _f("NodesD2Inv", 3, 1.0, d2_raw))
-        C = _bend_point("NodesT2", B, d2, u2, v1, len_b, len_c, -1.0)
+        C = _bend_point("NodesT2", B, d2, u2, v1, len_b, len_c, sign_2)
 
         # ── frames de salida: aim con la convención del módulo, up al pole ──
         def _cmp(label, vec):
@@ -864,25 +868,30 @@ class LegModule(object):
 
         cmp_a, cmp_b, cmp_c, cmp_d = (_cmp(l, v) for l, v in
                                       (("NodesA", A), ("NodesB", B), ("NodesC", C), ("NodesD", D)))
-        cmp_p = _cmp("NodesP", P)
+        # up de los frames: el VECTOR v̂ del plano del solve (no el punto del
+        # Pv): alinear al vector fija el twist de toda la cadena en el plano;
+        # mirar al Pv como punto retorcía cada frame sobre su eje al mover el
+        # Pv. El signo del secundario se mide contra la Y AUTORADA de la guía
+        # raíz (en R el Pv cae al lado -Y y el frame saldría volteado 180)
+        root_guide = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
+        guide_y = om.MVector(root_guide[4], root_guide[5], root_guide[6])
+        up_sign = 1.0 if (guide_y * plane_v) >= 0 else -1.0
+        sec_axis = tuple(v * up_sign for v in self.secondary_axis)
 
         def _aim(label, base_mtx, target_mtx):
             node = cmds.createNode("aimMatrix", name=f"{n}{label}_AMX", ss=True)
             cmds.connectAttr(base_mtx, f"{node}.inputMatrix")
             cmds.connectAttr(target_mtx, f"{node}.primaryTargetMatrix")
             cmds.setAttr(f"{node}.primaryInputAxis", *self.primary_axis, type="double3")
-            cmds.connectAttr(cmp_p, f"{node}.secondaryTargetMatrix")
-            cmds.setAttr(f"{node}.secondaryInputAxis", *self.secondary_axis, type="double3")
-            cmds.setAttr(f"{node}.secondaryMode", 1)
+            cmds.connectAttr(v1, f"{node}.secondaryTargetVector")
+            cmds.setAttr(f"{node}.secondaryInputAxis", *sec_axis, type="double3")
+            cmds.setAttr(f"{node}.secondaryMode", 2)
             return f"{node}.outputMatrix"
 
         aim_a = _aim("NodesRootFrame", cmp_a, cmp_b)
         aim_b = _aim("NodesMidFrame", cmp_b, cmp_c)
         aim_c = _aim("NodesLowFrame", cmp_c, cmp_d)
 
-        # fetlock: rotación por offset horneado contra el frame del corvejón,
-        # posición con la caña VIVA (bajo stretch el offset de reposo se queda
-        # corto exactamente (k-1)·caña): C + dir(C->objetivo) · caña
         c_rest = om.MMatrix(cmds.getAttr(aim_c))
         d_guide_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[end]))
         d_mmx = cmds.createNode("multMatrix", name=f"{n}NodesEndFrame_MMX", ss=True)
@@ -900,7 +909,6 @@ class LegModule(object):
         cmds.connectAttr(f"{end_rot}.outputMatrix", f"{end_mmx}.matrixIn[0]")
         cmds.connectAttr(_cmp("NodesEnd", end_pt), f"{end_mmx}.matrixIn[1]")
 
-        # pisada rígida bajo el fetlock (el pie la re-cablea a su ctl después)
         plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
         plant_mmx = cmds.createNode("multMatrix", name=f"{n}NodesPlantFrame_MMX", ss=True)
         cmds.setAttr(f"{plant_mmx}.matrixIn[0]", list(plant_rest * d_guide_rest.inverse()), type="matrix")
