@@ -56,6 +56,7 @@ for side in ("L", "R"):
         # nombres de ctl IK derivados de la guia de su indice semantico
         check(f"{base}: ctl IK ball (FetlockIk)", cmds.objExists(f"{base}FetlockIk_CTL"))
         check(f"{base}: ctl Pv", cmds.objExists(f"{base}Pv_CTL"))
+        check(f"{base}: linea del Pv", cmds.objExists(f"{base}Pv_CRV"))
         # el master del pie es el ctl del fetlock; ni AnkleIk ni ctl a
         # mitad de pierna deben existir
         ankle = f"{base}FetlockIk_CTL"
@@ -232,6 +233,7 @@ def _gm(l, i):
 worst = max((_pt(i) - om.MVector(_gm(leg, i)[12], _gm(leg, i)[13], _gm(leg, i)[14])).length()
             for i in range(5))
 check("nodes: reposo de la red", worst < 1.7, "worst=%.3f" % worst)
+check("nodes: linea del Pv", cmds.objExists(f"{base}Pv_CRV"))
 check("nodes: cadenas ik y guia borradas", not cmds.objExists(f"{base}Hip_JNT") and not cmds.objExists(f"{base}HipIk_JNT"))
 
 # frames de la red alineados con las guias (X e Y) - en las DOS patas

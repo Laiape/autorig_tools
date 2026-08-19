@@ -665,6 +665,32 @@ class LegModule(object):
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
         if self.ik_handles:
             cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
+            self.pole_vector_line(f"{self.ik_chain[self.pv_apex_index]}.worldMatrix[0]")
+
+    def pole_vector_line(self, apex_plug):
+        """
+        Línea de dos CVs del apex al Pv (igual que el bípedo): rowFromMatrix
+        de cada extremo a los controlPoints de la curva, template y colgada
+        del ctl del Pv con inheritsTransform a 0.
+        """
+        pv_ctl = self.ik_ctl["pv"]
+        crv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_{self.LEG_PREFIX}Pv_CRV")
+        row_apex = cmds.createNode("rowFromMatrix", name=f"{self.side}_{self.LEG_PREFIX}PvApex_RFM", ss=True)
+        row_ctl = cmds.createNode("rowFromMatrix", name=f"{self.side}_{self.LEG_PREFIX}PvCtl_RFM", ss=True)
+        cmds.setAttr(f"{row_apex}.input", 3)
+        cmds.setAttr(f"{row_ctl}.input", 3)
+        cmds.connectAttr(apex_plug, f"{row_apex}.matrix")
+        cmds.connectAttr(f"{pv_ctl}.worldMatrix[0]", f"{row_ctl}.matrix")
+        for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
+            cmds.connectAttr(f"{row_apex}.output{axis}", f"{crv}.controlPoints[0].{value}")
+            cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv}.controlPoints[1].{value}")
+        cmds.setAttr(f"{crv}.inheritsTransform", 0)
+        cmds.setAttr(f"{crv}.overrideEnabled", 1)
+        cmds.setAttr(f"{crv}.overrideDisplayType", 1)
+        cmds.parent(crv, pv_ctl)
+        cmds.setAttr(f"{crv}.hiddenInOutliner", 1)
+        for shape in cmds.listRelatives(crv, shapes=True) or []:
+            cmds.setAttr(f"{shape}.isHistoricallyInteresting", 0)
 
     def _ik_nodes(self):
         """
@@ -915,6 +941,7 @@ class LegModule(object):
 
         self.nodes_ik_world = [aim_a, aim_b, aim_c,
                                f"{end_mmx}.matrixSum", f"{plant_mmx}.matrixSum"]
+        self.pole_vector_line(self.nodes_ik_world[self.pv_apex_index])
 
     def ik_stretch_soft(self):
         """
