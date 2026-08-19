@@ -56,8 +56,10 @@ for side in ("L", "R"):
         # nombres de ctl IK derivados de la guia de su indice semantico
         check(f"{base}: ctl IK ball (FetlockIk)", cmds.objExists(f"{base}FetlockIk_CTL"))
         check(f"{base}: ctl Pv", cmds.objExists(f"{base}Pv_CTL"))
-        ankle = f"{base}AnkleIk_CTL"
-        # el master es sintetico: NO debe existir ctl en el carpo/corvejon
+        # el master del pie es el ctl del fetlock; ni AnkleIk ni ctl a
+        # mitad de pierna deben existir
+        ankle = f"{base}FetlockIk_CTL"
+        check(f"{base}: sin AnkleIk", not cmds.objExists(f"{base}AnkleIk_CTL"))
         mid = "Hock" if prefix == "backLeg" else "Carpus"
         check(f"{base}: sin ctl IK en el {mid}", not cmds.objExists(f"{base}{mid}Ik_CTL"))
         check(f"{base}: ctl Foot", cmds.objExists(f"{base}Foot_CTL"))
@@ -133,7 +135,7 @@ for side in ("L", "R"):
 # deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
 # el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.
 for side in ("L", "R"):
-    ankle = f"{side}_backLegAnkleIk_CTL"
+    ankle = f"{side}_backLegFetlockIk_CTL"
     tip = f"{side}_backLegTipSkinning_JNT"
     pastern = f"{side}_backLegPasternSkinning_JNT"
     if not all(cmds.objExists(n) for n in (ankle, tip, pastern)):

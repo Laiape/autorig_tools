@@ -400,12 +400,12 @@ class LegModule(object):
         - FK: uno por joint de la pierna (sin el Tip), en cascada, colocados
           con la matriz LOCAL de su guía en el offsetParentMatrix del grupo.
           Guarda fk_controllers / fk_grps / fk_offs en paralelo.
-        - IK: el rol "ankle" es el MASTER del pie — sintético, sin guía ni
-          joint (no hay control en el carpo/corvejón), caja a ras de suelo
-          orientada a mundo; contiene la pila de pivotes del pie reverso y los
-          atributos del pie. root y ball (fetlock, con point matrix = mundo)
-          con NOMBRE derivado de su guía; el ball cuelga del master y es lo
-          que lee el handle manager. Pv y Foot aparte, sintéticos.
+        - IK: el rol "ankle" es el MASTER del pie — el ctl del FETLOCK
+          (point matrix = orientado a mundo): lleva los atributos del pie y
+          contiene la pila de pivotes del pie reverso. No hay control en el
+          carpo/corvejón. El ball (Foot, sintético) vive en el MISMO punto que
+          el fetlock, dentro del master a través de los pivotes: es lo que lee
+          el handle manager y lo que rota el casco. Pv aparte.
           Acceso por ROL: self.ik_ctl["ball"] / ik_grp["pv"].
 
         Bloquea lo que el animador no debe tocar: escala y visibilidad siempre;
@@ -448,38 +448,39 @@ class LegModule(object):
         self.ik_ctl = {}
         self.ik_grp = {}
 
-        # master del pie (AnkleIk): sintetico, sin guia — caja a ras de suelo
-        # bajo el casco, orientada a mundo; contiene la pila de pivotes del
-        # pie reverso y los atributos del pie
-        plant_p = self.world_positions[self.plant_index]
-        tip_p = self.world_positions[-1]
-        ankle_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,
-                        (plant_p.x + tip_p.x) * 0.5, tip_p.y, (plant_p.z + tip_p.z) * 0.5, 1]
+        # root con el frame de su guia
+        root_grps, root_ctl = curve_tool.create_controller(
+            name=self.leg_chain[0].replace("_JNT", "Ik"),
+            offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
+            parent=ik_controllers_trn,
+            matrix=cmds.getAttr(self.guides_world_matrices[0]),
+        )
+        self.ik_ctl["root"] = root_ctl
+        self.ik_grp["root"] = root_grps[0]
+
+        # master del pie: el ctl del FETLOCK (point matrix = orientado a
+        # mundo) lleva los atributos del pie (stretch/soft/roll/bank) y
+        # contiene la pila de pivotes del pie reverso
         ankle_grps, ankle_ctl = curve_tool.create_controller(
-            name=f"{self.side}_{self.LEG_PREFIX}AnkleIk",
+            name=self.leg_chain[self.leg_end_index].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
-            parent=ik_controllers_trn, matrix=ankle_matrix,
+            parent=ik_controllers_trn,
+            matrix=cmds.getAttr(self.point_matrices[self.leg_end_index]),
         )
         self.ik_ctl["ankle"] = ankle_ctl
         self.ik_grp["ankle"] = ankle_grps[0]
 
-        # root con el frame de su guia; ball (fetlock) con point matrix
-        # colgado del master — el manager del handle lee su world vivo
-        ik_specs = {
-            "root": 0,
-            "ball": self.leg_end_index,
-        }
-        for role, idx in ik_specs.items():
-            name = self.leg_chain[idx].replace("_JNT", "Ik")
-            parent = self.ik_ctl["ankle"] if role == "ball" else ik_controllers_trn
-            source = self.point_matrices[idx] if role == "ball" else self.guides_world_matrices[idx]
-            grps, ctl = curve_tool.create_controller(
-                name=name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
-                parent=parent,
-                matrix=cmds.getAttr(source),
-            )
-            self.ik_ctl[role] = ctl
-            self.ik_grp[role] = grps[0]
+        # ball (Foot): en el MISMO punto que el fetlock, dentro del master a
+        # traves de la pila de pivotes; el manager del handle lee su world y
+        # la rotacion del casco sale de el
+        ball_grps, ball_ctl = curve_tool.create_controller(
+            name=f"{self.side}_{self.LEG_PREFIX}Foot",
+            offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
+            parent=ankle_ctl,
+            matrix=cmds.getAttr(self.point_matrices[self.leg_end_index]),
+        )
+        self.ik_ctl["ball"] = ball_ctl
+        self.ik_grp["ball"] = ball_grps[0]
 
         pv_grps, pv_ctl = curve_tool.create_controller(
             name=f"{self.side}_{self.LEG_PREFIX}Pv",
@@ -1419,38 +1420,24 @@ class HoofFoot(FootBase):
 
     def hoof_attach(self, leg):
         """
-        Ctl "Foot" + casco pegado por matrices.
-
-        El Foot cuelga del ball (fetlock) y SOLO rota: gira el casco (del
-        fetlock hacia abajo) sin mover el objetivo del IK — el manager lee el
-        world del ball, no el del Pie. El lado IK del blend de la pisada
-        (cuartilla) pasa a ser offset horneado × worldMatrix vivo del Foot, que
-        hereda ball + toda la pila de pivotes: roll, bank y twist llegan al
-        casco gratis, y la rotacion propia del Foot se suma encima. El Tip ya
-        deriva de la pisada en skinning (TipSkinning_MMX), así que sigue solo.
-        Sin handles extra: el joint IK de la cuartilla queda como esqueleto
-        interno sin consumidores.
+        Casco pegado al ball (Foot) por matrices: el lado IK del blend de la
+        pisada (cuartilla) pasa a ser offset horneado × worldMatrix vivo del
+        Foot. Como el Foot vive en el punto del fetlock dentro de la pila de
+        pivotes, rotarlo gira el casco desde ahí sin mover el objetivo del IK
+        (el manager lee su world, y la posición no cambia al rotar sobre sí
+        mismo); roll, bank y twist del master le llegan por jerarquía. El Tip
+        ya deriva de la pisada en skinning (TipSkinning_MMX). Sin handles
+        extra: el joint IK de la cuartilla queda como esqueleto interno.
         """
         ball_ctl = leg.ik_ctl["ball"]
-
-        # Foot: rotacion pura, colocado en la cuartilla con orientacion a mundo
-        foot_grps, foot_ctl_ws = curve_tool.create_controller(
-            name=f"{leg.side}_{leg.LEG_PREFIX}Foot",
-            offset=["GRP", "OFF", "ANM"],
-            locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
-            parent=ball_ctl,
-            matrix=cmds.getAttr(leg.point_matrices[leg.plant_index]),
-        )
-        self.foot_ctl = foot_ctl_ws
-        leg.ik_ctl["foot"] = foot_ctl_ws
-        leg.ik_grp["foot"] = foot_grps[0]
+        self.foot_ctl = ball_ctl
 
         plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
-        foot_rest_inv = om.MMatrix(cmds.getAttr(f"{foot_ctl_ws}.worldMatrix[0]")).inverse()
+        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
 
         hoof_mmx = cmds.createNode("multMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}HoofFollow_MMX", ss=True)
-        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * foot_rest_inv), type="matrix")
-        cmds.connectAttr(f"{foot_ctl_ws}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
+        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * ball_rest_inv), type="matrix")
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 
