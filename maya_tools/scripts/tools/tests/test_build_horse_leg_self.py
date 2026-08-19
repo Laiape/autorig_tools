@@ -208,9 +208,15 @@ def _hock_angle():
     return math.degrees((_pt(1) - _pt(2)).angle(_pt(3) - _pt(2)))
 
 import math
-worst = max((_pt(i) - om.MVector(cmds.xform(f"{base}{n_}_JNT", q=True, ws=True, t=True))).length()
-            for i, n_ in enumerate(("Hip", "Stifle", "Hock", "Fetlock", "Pastern")))
+# referencia de reposo: los frames horneados de las guias (la cadena guia y la
+# ik se borran en publish en la config de nodos)
+def _gm(l, i):
+    return om.MMatrix(cmds.getAttr(l.guides_matrices[i]))
+
+worst = max((_pt(i) - om.MVector(_gm(leg, i)[12], _gm(leg, i)[13], _gm(leg, i)[14])).length()
+            for i in range(5))
 check("nodes: reposo de la red", worst < 1.7, "worst=%.3f" % worst)
+check("nodes: cadenas ik y guia borradas", not cmds.objExists(f"{base}Hip_JNT") and not cmds.objExists(f"{base}HipIk_JNT"))
 
 # frames de la red alineados con las guias (X e Y) - en las DOS patas
 for cls2, base2, names2 in ((lm.FrontLegModule, "L_frontLeg", ("Shoulder", "Elbow", "Carpus")),):
@@ -219,13 +225,13 @@ for cls2, base2, names2 in ((lm.FrontLegModule, "L_frontLeg", ("Shoulder", "Elbo
     worst_dot = 1.0
     for i, n_ in enumerate(names2):
         fm = om.MMatrix(cmds.getAttr(leg2.nodes_ik_world[i]))
-        gm = om.MMatrix(cmds.getAttr(f"{base2}{n_}_JNT.worldMatrix[0]"))
+        gm = _gm(leg2, i)
         worst_dot = min(worst_dot, fm[0]*gm[0]+fm[1]*gm[1]+fm[2]*gm[2], fm[4]*gm[4]+fm[5]*gm[5]+fm[6]*gm[6])
     check(f"nodes: frames {base2} sobre las guias", worst_dot > 0.98, "dot=%.3f" % worst_dot)
 worst_dot = 1.0
 for i, n_ in enumerate(("Hip", "Stifle", "Hock")):
     fm = om.MMatrix(cmds.getAttr(leg.nodes_ik_world[i]))
-    gm = om.MMatrix(cmds.getAttr(f"{base}{n_}_JNT.worldMatrix[0]"))
+    gm = _gm(leg, i)
     worst_dot = min(worst_dot, fm[0]*gm[0]+fm[1]*gm[1]+fm[2]*gm[2], fm[4]*gm[4]+fm[5]*gm[5]+fm[6]*gm[6])
 check(f"nodes: frames {base} sobre las guias", worst_dot > 0.98, "dot=%.3f" % worst_dot)
 

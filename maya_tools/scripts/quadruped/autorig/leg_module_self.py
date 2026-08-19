@@ -559,10 +559,9 @@ class LegModule(object):
 
         self.ik_handles = []
 
-        # CONFIG C: sin handles — red de nodos (dos triángulos encadenados).
-        # El Pv se crea igual (define el plano del solve); no hay constraint.
+        # config de nodos: sin handles ni constraint
         if self.solver == SOLVER_NODES:
-            cmds.setAttr(f"{self.ik_chain[0]}.visibility", 0)  # vestigial aquí
+            cmds.setAttr(f"{self.ik_chain[0]}.visibility", 0)
             self.pole_vector_setup()
             self._ik_nodes()
             return
@@ -650,9 +649,7 @@ class LegModule(object):
             pv=True,
         )
 
-        # el constraint el ultimo, con el PV ya en su red definitiva: cada
-        # re-cableado del PV re-evalua el spring a medio montar. La config de
-        # nodos no lleva constraint (el plano lo lee la propia red).
+        # el constraint el ultimo, con el PV ya en su red definitiva
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
         if self.ik_handles:
             cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
@@ -760,10 +757,10 @@ class LegModule(object):
         # ── puntos vivos: raíz (ctl root), objetivo (manager), pole (Pv) ────
         A = _dcm("NodesRoot", f"{self.ik_ctl['root']}.worldMatrix[0]")
         D = _dcm("NodesTarget", self.ik_handle_target)
-        self.nodes_target_dcm = f"{n}NodesTarget_DCM"  # el soft recablea su input
+        self.nodes_target_dcm = f"{n}NodesTarget_DCM"
         P = _dcm("NodesPole", f"{self.ik_ctl['pv']}.worldMatrix[0]")
 
-        # longitudes como PLUGS: ik_stretch_soft las conduce (stretch/mults)
+        # longitudes como plugs (las conduce ik_stretch_soft)
         def _lenc(label, value):
             node = cmds.createNode("floatConstant", name=f"{n}{label}_FCN", ss=True)
             cmds.setAttr(f"{node}.inFloat", value)
@@ -775,16 +772,11 @@ class LegModule(object):
         self.nodes_length_inputs = [plug.replace(".outFloat", ".inFloat")
                                     for plug in (len_a, len_b, len_c)]
 
-        # plano del solve: û = dir raíz->objetivo, v̂ = perpendicular en el
-        # plano hacia el pole (Gram-Schmidt vía doble cruz)
+        # plano del solve: û raíz->objetivo, v̂ perpendicular hacia el pole
         d1_raw = _dist("NodesD1", A, D)
 
-        # CUERDA VIVA (reparto tipo spring), por tramos:
-        #   plegando  (d < d_rest): proporcional a d -> ambos dobleces reparten
-        #   extendiendo (d > d_rest): interpola de la cuerda de reposo a
-        #     tibia+caña según lo que quede hasta el alcance máximo VIVO — así
-        #     a alcance máximo la cadena queda RECTA y el stretch (que escala
-        #     las longitudes) llega exacto al objetivo
+        # cuerda viva por tramos: proporcional a d al plegar; al extender
+        # interpola de la cuerda de reposo a tibia+caña hasta el alcance vivo
         bc_sum = _f("NodesLenBC", 0, len_b, len_c)
         bc_hi = _f("NodesChordHi", 1, bc_sum, 1e-3)
         bc_lo = _f("NodesChordLo", 0,
@@ -809,7 +801,7 @@ class LegModule(object):
 
         chord = _f("NodesChordClampHi", 4, _f("NodesChordClampLo", 5, f"{chord_cnd}.outColorR", bc_lo), bc_hi)
 
-        # clamp de alcance del triángulo 1: |a-q| < d < a+q (evita NaN en el sqrt)
+        # alcance del triángulo 1: |a-q| < d < a+q
         aq_hi = _f("NodesD1Hi", 1, _f("NodesLenAQ", 0, len_a, chord), 1e-3)
         aq_lo = _f("NodesD1Lo", 0,
                    _f("NodesLenAQDifAbs", 5, _f("NodesLenAQDif1", 1, len_a, chord),
@@ -837,10 +829,8 @@ class LegModule(object):
             lift = _scale(f"{label}Lift", v_dir, lift_len)
             return _add(f"{label}Point", [root_pt, along, lift])
 
-        # signo de cada doblez medido en las guías (de qué lado de la línea
-        # cae la articulación en el plano del Pv): trasera = babilla hacia el
-        # Pv y corvejón al contrario; delantera al revés (codo caudal, carpo
-        # cranial con el Pv en el carpo)
+        # signo de cada doblez medido en las guías (lado de la línea en el
+        # plano del Pv)
         line_u = (p[end] - p[0]).normal()
         pv_p = om.MVector(cmds.xform(self.ik_ctl["pv"], q=True, ws=True, t=True))
         plane_v = (line_u ^ (pv_p - p[0])) ^ line_u
@@ -868,11 +858,8 @@ class LegModule(object):
 
         cmp_a, cmp_b, cmp_c, cmp_d = (_cmp(l, v) for l, v in
                                       (("NodesA", A), ("NodesB", B), ("NodesC", C), ("NodesD", D)))
-        # up de los frames: el VECTOR v̂ del plano del solve (no el punto del
-        # Pv): alinear al vector fija el twist de toda la cadena en el plano;
-        # mirar al Pv como punto retorcía cada frame sobre su eje al mover el
-        # Pv. El signo del secundario se mide contra la Y AUTORADA de la guía
-        # raíz (en R el Pv cae al lado -Y y el frame saldría volteado 180)
+        # up de los frames: el vector del plano del solve, con el signo del
+        # secundario medido contra la Y autorada de la guía raíz
         root_guide = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
         guide_y = om.MVector(root_guide[4], root_guide[5], root_guide[6])
         up_sign = 1.0 if (guide_y * plane_v) >= 0 else -1.0
@@ -1009,8 +996,7 @@ class LegModule(object):
             cmds.connectAttr(f"{foot_ctl}.{mult_names[i - 1]}", f"{joint_mul}.input[2]")
             cmds.connectAttr(f"{joint_mul}.output", f"{self.ik_chain[i]}.translateX")
 
-        # config de nodos: las longitudes de la red son plugs — el stretch las
-        # conduce (longitud de reposo x factor global x mult por segmento)
+        # config de nodos: el stretch conduce las longitudes de la red
         if getattr(self, "nodes_length_inputs", None):
             for i, len_input in enumerate(self.nodes_length_inputs):
                 len_mul = cmds.createNode("multiply", name=f"{self.module_name}NodesLen0{i}Stretch_MUL", ss=True)
@@ -1092,7 +1078,6 @@ class LegModule(object):
         if self.ik_handles:
             cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.ik_handles[0]}.offsetParentMatrix", force=True)
         else:
-            # nodos: el soft recoloca el OBJETIVO que lee la red
             cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.nodes_target_dcm}.inputMatrix", force=True)
 
     def ik_calibration(self):
@@ -1153,7 +1138,6 @@ class LegModule(object):
 
         for i, jnt in enumerate(self.leg_joints):
             blend_matrix = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Blend_BLM"), ss=True)
-            # la config de nodos publica sus matrices world; el resto usa la cadena ik
             ik_src = getattr(self, "nodes_ik_world", None)
             cmds.connectAttr(ik_src[i] if ik_src else f"{self.ik_chain[i]}.worldMatrix[0]",
                              f"{blend_matrix}.inputMatrix")
@@ -1412,6 +1396,13 @@ class LegModule(object):
         # la guia de settings es opcional (el caballo no la trae)
         if self.settings_guide and cmds.objExists(self.settings_guide):
             cmds.delete(self.settings_guide)
+
+        # config de nodos: la cadena ik y la guia no tienen consumidores
+        # (la red lee los frames horneados) — fuera del modulo
+        if not self.ik_handles:
+            for root in (self.ik_chain[0], self.leg_chain[0]):
+                if cmds.objExists(root):
+                    cmds.delete(root)
 
     # ═════════════════════════════════════════════════════════════════════════
     # INSTRUMENTACIÓN — para el capítulo 8
