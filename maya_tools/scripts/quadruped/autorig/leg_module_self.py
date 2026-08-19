@@ -405,7 +405,7 @@ class LegModule(object):
           orientada a mundo; contiene la pila de pivotes del pie reverso y los
           atributos del pie. root y ball (fetlock, con point matrix = mundo)
           con NOMBRE derivado de su guía; el ball cuelga del master y es lo
-          que lee el handle manager. Pv y Pie (foot) aparte, sintéticos.
+          que lee el handle manager. Pv y Foot aparte, sintéticos.
           Acceso por ROL: self.ik_ctl["ball"] / ik_grp["pv"].
 
         Bloquea lo que el animador no debe tocar: escala y visibilidad siempre;
@@ -1433,38 +1433,38 @@ class HoofFoot(FootBase):
 
     def hoof_attach(self, leg):
         """
-        Ctl "Pie" + casco pegado por matrices.
+        Ctl "Foot" + casco pegado por matrices.
 
-        El Pie cuelga del ball (fetlock) y SOLO rota: gira el casco (del
+        El Foot cuelga del ball (fetlock) y SOLO rota: gira el casco (del
         fetlock hacia abajo) sin mover el objetivo del IK — el manager lee el
         world del ball, no el del Pie. El lado IK del blend de la pisada
-        (cuartilla) pasa a ser offset horneado × worldMatrix vivo del Pie, que
+        (cuartilla) pasa a ser offset horneado × worldMatrix vivo del Foot, que
         hereda ball + toda la pila de pivotes: roll, bank y twist llegan al
-        casco gratis, y la rotacion propia del Pie se suma encima. El Tip ya
+        casco gratis, y la rotacion propia del Foot se suma encima. El Tip ya
         deriva de la pisada en skinning (TipSkinning_MMX), así que sigue solo.
         Sin handles extra: el joint IK de la cuartilla queda como esqueleto
         interno sin consumidores.
         """
         ball_ctl = leg.ik_ctl["ball"]
 
-        # Pie: rotacion pura, colocado en la cuartilla con orientacion a mundo
-        pie_grps, pie_ctl = curve_tool.create_controller(
-            name=f"{leg.side}_{leg.LEG_PREFIX}Pie",
+        # Foot: rotacion pura, colocado en la cuartilla con orientacion a mundo
+        foot_grps, foot_ctl_ws = curve_tool.create_controller(
+            name=f"{leg.side}_{leg.LEG_PREFIX}Foot",
             offset=["GRP", "OFF", "ANM"],
             locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
             parent=ball_ctl,
             matrix=cmds.getAttr(leg.point_matrices[leg.plant_index]),
         )
-        self.pie_ctl = pie_ctl
-        leg.ik_ctl["pie"] = pie_ctl
-        leg.ik_grp["pie"] = pie_grps[0]
+        self.foot_ctl = foot_ctl_ws
+        leg.ik_ctl["foot"] = foot_ctl_ws
+        leg.ik_grp["foot"] = foot_grps[0]
 
         plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
-        pie_rest_inv = om.MMatrix(cmds.getAttr(f"{pie_ctl}.worldMatrix[0]")).inverse()
+        foot_rest_inv = om.MMatrix(cmds.getAttr(f"{foot_ctl_ws}.worldMatrix[0]")).inverse()
 
         hoof_mmx = cmds.createNode("multMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}HoofFollow_MMX", ss=True)
-        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * pie_rest_inv), type="matrix")
-        cmds.connectAttr(f"{pie_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
+        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * foot_rest_inv), type="matrix")
+        cmds.connectAttr(f"{foot_ctl_ws}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 
