@@ -842,29 +842,41 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
 
     for i, guide in enumerate(guides):
 
-        # A partir del ankle (incluido) el eje secundario se invierte
-        if "ankle" in guide.split("_")[1]:
-            sec_axis = tuple(-v for v in sec_axis)
-
         pos = positions[i]
 
-        if i == 0:
-            up_pos = positions[2] if count > 2 else om.MVector(0.0, 0.0, 0.0)
-            matrix = _aim_matrix(pos, positions[1], up_pos, primaryInputAxis, sec_axis)
+        # El aim toma la Y hacia su referencia de up (la guia vecina), que
+        # puede caer a CUALQUIER lado del hueso segun el zigzag (carpo,
+        # corvejon, femur...): la Y computada saldria volteada respecto a la
+        # guia AUTORADA, que es la intencion del artista. Regla: si la Y del
+        # frame no coincide con la de la guia (dot < 0), se recomputa con el
+        # secundario invertido — por joint, sin listas de nombres.
+        # (Sustituye al check historico de "ankle", que ademas nunca disparaba:
+        # comparaba en minuscula contra nombres tipo frontLegAnkle.)
+        def _aim_joint(sec):
+            if i == 0:
+                up_pos = positions[2] if count > 2 else om.MVector(0.0, 0.0, 0.0)
+                return _aim_matrix(pos, positions[1], up_pos, primaryInputAxis, sec)
+            return _aim_matrix(pos, positions[i + 1], positions[i - 1], primaryInputAxis, sec)
 
-        elif i == count - 1:
+        def _match_authored_y(matrix):
+            gm = om.MMatrix(cmds.xform(guide, q=True, ws=True, m=True))
+            if (matrix[4] * gm[4] + matrix[5] * gm[5] + matrix[6] * gm[6]) < 0:
+                return _aim_joint(tuple(-v for v in sec_axis))
+            return matrix
+
+        if i == count - 1:
             if ribbon:
                 matrix = _with_translation(om.MMatrix.kIdentity, pos)
             else:
                 # rotación de la guía anterior con la posición propia
                 matrix = _with_translation(matrices[-1], pos)
 
+        elif ribbon and i > 0:
+            weight = 1.0 - (i / (count - 1))
+            matrix = _with_translation(_scale_rotation(matrices[0], weight), pos)
+
         else:
-            if ribbon:
-                weight = 1.0 - (i / (count - 1))
-                matrix = _with_translation(_scale_rotation(matrices[0], weight), pos)
-            else:
-                matrix = _aim_matrix(pos, positions[i + 1], positions[i - 1], primaryInputAxis, sec_axis)
+            matrix = _match_authored_y(_aim_joint(sec_axis))
 
         cmds.setAttr(f"{net}.orientMatrix[{i}]", list(matrix), type="matrix")
         cmds.setAttr(f"{net}.pointMatrix[{i}]", list(_with_translation(om.MMatrix.kIdentity, pos)), type="matrix")
