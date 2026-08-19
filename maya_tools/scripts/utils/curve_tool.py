@@ -491,6 +491,10 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
             cmds.setAttr(f"{target}.offsetParentMatrix", list(m), type="matrix")
             cmds.xform(target, m=om.MMatrix.kIdentity)
 
+        # las shapes fuera del channel box (seccion SHAPES)
+        for shape in cmds.listRelatives(ctl[0], shapes=True) or []:
+            cmds.setAttr(f"{shape}.isHistoricallyInteresting", 0)
+
         return created_grps, ctl[0]
     
 
