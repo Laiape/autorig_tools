@@ -84,6 +84,29 @@ if cmds.objExists(probe) and cmds.objExists(guide):
     check("reposo: IK fetlock sobre la guia", (p1 - p2).length() < 1e-3,
           "delta=%.5f" % (p1 - p2).length())
 
+# plano del IK: TODA la cadena sobre las guias en reposo, no solo el fetlock
+# (un pole vector en el lado malo gira el plano y el fetlock ni se entera)
+import maya.api.OpenMaya as om
+CHAINS = (("backLeg", ("Hip", "Knee", "Ankle", "Fetlock")),
+          ("frontLeg", ("Shoulder", "Elbow", "Ankle", "Fetlock")))
+
+def _worst(base, fmt, joints):
+    return max((om.MVector(cmds.xform(fmt.format(base=base, n=n), q=True, ws=True, t=True))
+                - om.MVector(cmds.xform(f"{base}{n}_JNT", q=True, ws=True, t=True))).length()
+               for n in joints)
+
+for side in ("L", "R"):
+    for prefix, joints in CHAINS:
+        base = f"{side}_{prefix}"
+        worst = _worst(base, "{base}{n}Ik_JNT", joints)
+        check(f"{base}: cadena IK entera en reposo", worst < 0.2, "worst=%.3f" % worst)
+        # FK en reposo: la cascada debe reproducir las guias exactas
+        sw = f"{base}Settings_CTL.switchIkFk"
+        cmds.setAttr(sw, 1)
+        worst = _worst(base, "{base}{n}Fk_CTL", joints)
+        cmds.setAttr(sw, 0)
+        check(f"{base}: cascada FK sobre las guias", worst < 1e-3, "worst=%.4f" % worst)
+
 # pie reverso FUNCIONAL, medido en los joints de skinning del pie (lo que
 # deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
 # el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.

@@ -410,7 +410,8 @@ class LegModule(object):
         """
         # _____ Settings controller ____________________________________________
         self.settings_grp, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_{self.LEG_PREFIX}Settings", offset=["GRP"], locked_attrs=["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"], parent=self.controllers_grp, matrix=self.settings_world_matrix)
-        cmds.addAttr(self.settings_ctl, longName="switchIkFk", niceName="Switch IK ------> FK", attributeType="float", defaultValue=0) # Ik default
+        cmds.addAttr(self.settings_ctl, longName="switchIkFk", niceName="Switch IK ------> FK", attributeType="float", defaultValue=0, maxValue=1, minValue=0, keyable=True) # Ik default
+        # cmds.setAttr(f"{self.settings_ctl}.switchIkFk", keyable=True, channelBox=True, lock=False)
         
         # _____ Fk controllers creation ____________________________________________
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}FkControllers_GRP", ss=True, p=self.controllers_grp)
@@ -431,6 +432,8 @@ class LegModule(object):
             self.fk_controllers.append(fk_ctl)
             self.fk_grps.append(fk_grp[0])
             self.fk_offs.append(fk_grp[1])
+            # Freeze all controllers
+            cmds.xform(fk_grp[0], m=om.MMatrix.kIdentity)
 
         # _____ Ik controllers creation ____________________________________________
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}IkControllers_GRP", ss=True, p=self.controllers_grp)
@@ -460,7 +463,7 @@ class LegModule(object):
 
         pv_grps, pv_ctl = curve_tool.create_controller(
             name=f"{self.side}_{self.LEG_PREFIX}Pv",
-            offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
+            offset=["GRP", "OFF", "ANM"], locked_attrs=["sx","sy","sz","v"],
             parent=ik_controllers_trn,
         )
         self.ik_ctl["pv"] = pv_ctl
@@ -492,7 +495,7 @@ class LegModule(object):
             relative = cmds.getAttr(f"{target_node}.offsetParentMatrix")
             rest_length = relative[12]
             
-            label = ctl.split("_")[1]
+            label = f"Fk0{i}"  # por indice: sin nombre de hueso y sin duplicar el prefijo
             mult_node = cmds.createNode("multiply", n=f"{self.side}_{self.LEG_PREFIX}{label}Stretch_MUL", ss=True)
             cmds.connectAttr(f"{ctl}.Stretch", f"{mult_node}.input[0]")
             cmds.setAttr(f"{mult_node}.input[1]", rest_length)
@@ -533,9 +536,6 @@ class LegModule(object):
         cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ik_handle_mmx}.matrixIn[1]")
         self.ik_handle_target = f"{ik_handle_mmx}.matrixSum"
 
-        # El control root dirige la RAIZ de la cadena IK: delta del control
-        # (rest^-1 x vivo) al opm del joint raiz — identidad en reposo, pivota
-        # sobre el control, y no toca canales ni jointOrient.
         root_ctl = self.ik_ctl["root"]
         root_rest_inv = om.MMatrix(cmds.getAttr(f"{root_ctl}.worldMatrix[0]")).inverse()
         root_follow_mmx = cmds.createNode("multMatrix", name=f"{self.side}_{self.LEG_PREFIX}IkRootFollow_MMX", ss=True)
@@ -555,15 +555,21 @@ class LegModule(object):
         for start, end, solver in layers:
             self._create_handle(start, end, solver, self.ik_handle_target)
 
-        # Call PV setup
+        # PRIMER SOLVE sin constraint: el ikSpringSolver captura su referencia
+        # de plano en la primera evaluacion. Si esa primera evaluacion ocurre
+        # ya con el poleVectorConstraint conectado, la captura sale girada
+        # (~180: rodilla 12.7u lateral, medido); evaluando aqui la cadena en
+        # reposo la referencia queda bien y el constraint posterior la respeta.
+        for jnt in self.ik_chain:
+            cmds.getAttr(f"{jnt}.worldMatrix[0]")
+
         self.pole_vector_setup()
 
-        # Freeze ik Handles
+        # candado anti-manazas: canales del handle clavados a 0 por conexion
         cmds.loadPlugin("lookdevKit", quiet=True)  # floatConstant vive ahi
         freeze_fcn = cmds.createNode("floatConstant", name=f"{self.module_name}HandleFreeze_FCN", ss=True)
         cmds.setAttr(f"{freeze_fcn}.inFloat", 0)
         for handle in self.ik_handles:
-            cmds.parent(handle, self.module_trn)
             for attr in ("translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"):
                 cmds.connectAttr(f"{freeze_fcn}.outFloat", f"{handle}.{attr}")
 
@@ -572,6 +578,11 @@ class LegModule(object):
         El albañil de las fichas: un ikHandle del joint start al end de la
         cadena IK, con el objetivo conectado a su offsetParentMatrix. Carga el
         plugin del spring si la ficha lo pide y acumula en self.ik_handles.
+
+        ORDEN CRITICO: el handle nace con la traslacion del efector en canales;
+        hay que aparcarlo y ponerlos a 0 ANTES de conectar el objetivo al opm,
+        o el handle queda doblado (canales + opm) y el spring cachea el plano
+        con esa posicion corrupta.
         """
         if solver == "ikSpringSolver":
             cmds.loadPlugin("ikSpringSolver", quiet=True)
@@ -583,6 +594,9 @@ class LegModule(object):
 
         label = end_joint.split("_")[1].replace("Ik", "")
         ik_handle = cmds.ikHandle(name=f"{self.side}_{label}Ik_HDL", startJoint=start_joint, endEffector=end_joint, solver=solver)[0]
+        cmds.parent(ik_handle, self.module_trn)
+        for attr in ("translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"):
+            cmds.setAttr(f"{ik_handle}.{attr}", 0)
         cmds.connectAttr(target_plug, f"{ik_handle}.offsetParentMatrix")
 
         self.ik_handles.append(ik_handle)
@@ -612,8 +626,6 @@ class LegModule(object):
         cmds.setAttr(f"{pv_rest_cmx}.inputTranslate", pv_pos.x, pv_pos.y, pv_pos.z, type="double3")
         cmds.connectAttr(f"{pv_rest_cmx}.outputMatrix", f"{self.ik_grp['pv']}.offsetParentMatrix")
 
-        cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
-
         matrix_manager.space_switches(
             target=self.ik_ctl["pv"],
             sources=[self.ik_ctl["ankle"], self.ik_ctl["root"]],
@@ -621,6 +633,15 @@ class LegModule(object):
             default_rotate=1, default_translate=1,
             pv=True,
         )
+
+        # El constraint EL ULTIMO, con el PV ya en su red definitiva (space
+        # switch incluido) y tras evaluar la cadena: cada re-cableado del PV
+        # re-evalua el spring y puede re-capturar el plano a medio montar.
+        cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
+        cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
+        cmds.dgdirty(self.ik_handles[0])
+        for jnt in self.ik_chain:
+            cmds.getAttr(f"{jnt}.worldMatrix[0]")
 
     def _ik_nodes(self):
         """
@@ -801,13 +822,52 @@ class LegModule(object):
 
     def ik_calibration(self):
         """
-        (Pendiente) Hornea la corrección para que la cadena IK repose
-        EXACTAMENTE sobre las guías, sea cual sea el solver. Sin esto cada
-        solver da un reposo distinto y la comparación del experimento no es
-        limpia — medirías la diferencia de reposo, no la del solver.
+        Hornea la corrección para que la cadena IK repose EXACTAMENTE sobre
+        las guías, sea cual sea el solver. Sin esto cada solver da un reposo
+        distinto y la comparación del experimento no es limpia — medirías la
+        diferencia de reposo, no la del solver.
+
+        CÓMO: calibra el TWIST del handle principal midiendo la deriva de las
+        articulaciones interiores contra sus guías (barrido grueso de 360° +
+        refinado). Es la vía robusta con el ikSpringSolver: su plano nace de
+        una captura interna que el poleVectorConstraint no siempre corrige
+        (en DG puro el residuo lateral medido era 1.28u), pero el twist SÍ lo
+        rota de forma determinista y el valor horneado sobrevive a guardar y
+        reabrir la escena (verificado headless).
+
         Criterio de éxito: en reposo, delta IK vs guías = 0 y match FK/IK = 0.
         """
-        pass
+        if not getattr(self, "ik_handles", None):
+            return
+        hdl = self.ik_handles[0]
+        pairs = [(self.ik_chain[i], self.leg_chain[i]) for i in range(1, self.leg_end_index)]
+        if not pairs:
+            return
+
+        def rest_error():
+            return max((om.MVector(cmds.xform(ik, q=True, ws=True, t=True))
+                        - om.MVector(cmds.xform(g, q=True, ws=True, t=True))).length()
+                       for ik, g in pairs)
+
+        best_t, best_e = 0.0, rest_error()
+        # barrido grueso (el error tiene minimos locales a lo largo de la vuelta)
+        for t in range(-180, 181, 5):
+            cmds.setAttr(f"{hdl}.twist", t)
+            e = rest_error()
+            if e < best_e:
+                best_t, best_e = float(t), e
+        # refinado alrededor del mejor
+        for step in (1.0, 0.2, 0.05):
+            t = best_t - step * 4
+            while t <= best_t + step * 4 + 1e-9:
+                cmds.setAttr(f"{hdl}.twist", t)
+                e = rest_error()
+                if e < best_e:
+                    best_t, best_e = t, e
+                t += step
+        cmds.setAttr(f"{hdl}.twist", best_t)
+        if best_e > 0.2:
+            cmds.warning(f"[leg_module_self] {self.module_name}: reposo IK no calibra a 0 (err={best_e:.3f} con twist={best_t:.2f})")
 
     def blend_setup(self):
         """
