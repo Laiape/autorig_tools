@@ -161,9 +161,6 @@ class LegModule(object):
         self.primaryInputAxis = (1, 0, 0)
         self.secondaryInputAxis = (0, 1, 0)
 
-        # Los joints de SALIDA del ribbon NO comparten convención con los de
-        # entrada (su up nace del up_object del ribbon, no del secondary de la
-        # cadena): se declara aparte para que skinning no lo adivine.
         self.primaryInputAxisRibbon = (1, 0, 0)
         self.secondaryInputAxisRibbon = (0, 0, 1)
 
@@ -216,7 +213,7 @@ class LegModule(object):
         self.bendys = bendys
         self.config = config or {}
 
-        self.module_name = f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}"
+        self.module_name = f"{self.side}_{self.LEG_PREFIX}"
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Module_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
@@ -915,7 +912,7 @@ class LegModule(object):
             cv_nodes[i] = self._roll_cv(blend_wm[i], aim_target, f"{self.module_name}Roll0{i}")
             roll_wm[i] = f"{cv_nodes[i]}.matrixSum"
 
-        self.hip_ctl_roll = f"{self._roll_cv(self.raw_hip_blend, blend_wm[1], f'{self.module_name}HipCtl')}.matrixSum"
+        self.hip_ctl_roll = f"{self._roll_cv(self.raw_hip_blend, blend_wm[1], f'{self.module_name}RootCtl')}.matrixSum"
 
         self.roll_wm = roll_wm
         self.cv_nodes = cv_nodes
@@ -1004,8 +1001,7 @@ class LegModule(object):
         self.foot_skin_drivers = []
 
         if self.bendys:
-            # Convención del RIBBON (no la de la cadena): sus joints de salida
-            # se orientan con primaryInputAxisRibbon/secondaryInputAxisRibbon.
+
             ribbon_primary = (self.primaryInputAxisRibbon if self.side == "L"
                               else tuple(-v for v in self.primaryInputAxisRibbon))
             aim_idx = max(range(3), key=lambda k: abs(ribbon_primary[k]))
@@ -1018,7 +1014,7 @@ class LegModule(object):
 
             self.skinning_joints = []
             for i in range(self.segment_count):
-                # sin "Bendy": los joints de skinning llevan solo el segmento
+
                 name = f"{self.module_name}{self.segment_names[i]}"
                 segment_jnts, temp = ribbon.de_boor_ribbon(
                     cvs=(self.cv_nodes[i], self.bendy_ctls[i], self.cv_nodes[i + 1]),
