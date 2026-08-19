@@ -276,6 +276,9 @@ class LegModule(object):
 
         self.primary_axis = self.primaryInputAxis if self.side == "L" else tuple(-v for v in self.primaryInputAxis)
         self.secondary_axis = self.secondaryInputAxis
+        # tercer eje del frame (ni aim ni up): el que va lateral al personaje
+        lat = om.MVector(*self.primary_axis) ^ om.MVector(*self.secondary_axis)
+        self.lateral_axis = (lat.x, lat.y, lat.z)
         self.aim_letter = "xyz"[max(range(3), key=lambda k: abs(self.primary_axis[k]))]
 
         self.guides_matrices, self.point_matrices = guides_manager.orient_guides(
@@ -338,6 +341,15 @@ class LegModule(object):
         self.world_positions = [om.MVector(cmds.xform(j, q=True, ws=True, t=True)) for j in self.leg_chain]
         side_vec = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
         self.lateral_ref = -side_vec
+
+        # el lateral local de la cadena debe mirar hacia lateral_ref: se mide
+        # en la guia raiz y se corrige el signo del eje
+        root_m = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
+        lat_world = om.MVector(*self.lateral_axis) * om.MMatrix([
+            root_m[0], root_m[1], root_m[2], 0, root_m[4], root_m[5], root_m[6], 0,
+            root_m[8], root_m[9], root_m[10], 0, 0, 0, 0, 1])
+        if (lat_world * self.lateral_ref) < 0:
+            self.lateral_axis = tuple(-v for v in self.lateral_axis)
 
         root_p = self.world_positions[0]
         mid_p = self.world_positions[1]
@@ -1217,7 +1229,7 @@ class LegModule(object):
         cmds.connectAttr(f"{non_roll_align}.outputMatrix", f"{non_roll_aim}.inputMatrix")
         cmds.connectAttr(blend_wm[1], f"{non_roll_aim}.primary.primaryTargetMatrix")
         cmds.setAttr(f"{non_roll_aim}.primaryInputAxis", *self.primary_axis, type="double3")
-        cmds.setAttr(f"{non_roll_aim}.secondaryInputAxis", *self.secondary_axis, type="double3")
+        cmds.setAttr(f"{non_roll_aim}.secondaryInputAxis", *self.lateral_axis, type="double3")
         cmds.setAttr(f"{non_roll_aim}.secondaryMode", 2)
         cmds.setAttr(f"{non_roll_aim}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
 
@@ -1248,8 +1260,8 @@ class LegModule(object):
             cmds.connectAttr(blend_plug, f"{nonroll}.inputMatrix")
             cmds.connectAttr(aim_target_plug, f"{nonroll}.primary.primaryTargetMatrix")
             cmds.setAttr(f"{nonroll}.primaryInputAxis", *self.primary_axis, type="double3")
-            cmds.setAttr(f"{nonroll}.secondaryInputAxis", *self.secondary_axis, type="double3")  # eje lateral local
-            cmds.setAttr(f"{nonroll}.secondaryMode", 2)  # alinear al vector
+            cmds.setAttr(f"{nonroll}.secondaryInputAxis", *self.lateral_axis, type="double3")
+            cmds.setAttr(f"{nonroll}.secondaryMode", 2)
             cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
     
             twist_qn = matrix_manager.extract_twist(blend_plug, f"{nonroll}.outputMatrix", axis=self.aim_letter, name=name, return_quat=True)
@@ -1328,7 +1340,13 @@ class LegModule(object):
             aim_letter = "xyz"[aim_idx]
             signed_aim = aim_letter if ribbon_primary[aim_idx] > 0 else f"-{aim_letter}"
             up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondaryInputAxisRibbon[k]))]
-            up_object_vector = (self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z)
+            # el up del ribbon apunta a donde apunta de verdad ese eje en el
+            # frame de la cadena en reposo (en R sale opuesto a lateral_ref)
+            root_m = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
+            k = 4 * "xyz".index(up_letter)
+            up_world = om.MVector(root_m[k], root_m[k + 1], root_m[k + 2])
+            up_sign = 1.0 if (up_world * self.lateral_ref) >= 0 else -1.0
+            up_object_vector = (self.lateral_ref.x * up_sign, self.lateral_ref.y * up_sign, self.lateral_ref.z * up_sign)
             params = [i / (self.skinning_joints_number - 1) for i in range(self.skinning_joints_number)]
             params[-1] = 0.95
 

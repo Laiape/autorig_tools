@@ -131,6 +131,22 @@ for side in ("L", "R"):
         ws_pos = all(abs(bm[12 + i] - gp[i]) < 1e-3 for i in range(3))
         check(f"{base}: ball IK en world space sobre su guia", ws_rot and ws_pos)
 
+# bendys y joints de skinning del ribbon ORIENTADOS como la cadena original
+def _axes(m):
+    m = om.MMatrix(m)
+    return [om.MVector(m[0], m[1], m[2]), om.MVector(m[4], m[5], m[6]), om.MVector(m[8], m[9], m[10])]
+
+for side in ("L", "R"):
+    for prefix, joints in CHAINS:
+        base = f"{side}_{prefix}"
+        worst = 1.0
+        for i, seg in enumerate(("Upper", "Middle", "Lower")):
+            ga = _axes(cmds.getAttr(f"{base}{joints[i]}Blend_BLM.outputMatrix"))
+            for node in [f"{base}{seg}Bendy_CTL"] + cmds.ls(f"{base}{seg}0?_ENV") + cmds.ls(f"{base}{seg}0?Skinning_JNT"):
+                na = _axes(cmds.getAttr(f"{node}.worldMatrix[0]"))
+                worst = min(worst, na[0] * ga[0], na[1] * ga[1], na[2] * ga[2])
+        check(f"{base}: bendys y ribbon orientados como la cadena", worst > 0.98, "dot=%.3f" % worst)
+
 # pie reverso FUNCIONAL, medido en los joints de skinning del pie (lo que
 # deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
 # el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.
