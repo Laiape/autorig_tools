@@ -479,8 +479,17 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])
         if matrix:
+            # colocacion por offsetParentMatrix: canales congelados a 0 y el
+            # valor en la matriz. `matrix` viene en WORLD: si hay padre, el
+            # opm se compone con su world, asi que hay que llevarla a local
+            # (world x parentWorldInverse) o el control sale doblado.
             target = created_grps[0] if created_grps else ctl[0]
-            cmds.xform(target, ws=True, m=list(matrix))
+            m = om.MMatrix(matrix)
+            target_parent = cmds.listRelatives(target, parent=True)
+            if target_parent:
+                m = m * om.MMatrix(cmds.getAttr(f"{target_parent[0]}.worldInverseMatrix[0]"))
+            cmds.setAttr(f"{target}.offsetParentMatrix", list(m), type="matrix")
+            cmds.xform(target, m=om.MMatrix.kIdentity)
 
         return created_grps, ctl[0]
     

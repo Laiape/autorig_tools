@@ -56,7 +56,7 @@ for side in ("L", "R"):
         # nombres de ctl IK derivados de la guia de su indice semantico
         check(f"{base}: ctl IK ball (FetlockIk)", cmds.objExists(f"{base}FetlockIk_CTL"))
         check(f"{base}: ctl Pv", cmds.objExists(f"{base}Pv_CTL"))
-        ankle = f"{base}AnkleIk_CTL"
+        ankle = f"{base}{'Hock' if prefix == 'backLeg' else 'Carpus'}Ik_CTL"
         check(f"{base}: attrs stretch/soft", cmds.objExists(ankle)
               and cmds.attributeQuery("Stretch", node=ankle, exists=True)
               and cmds.attributeQuery("Soft", node=ankle, exists=True))
@@ -87,8 +87,8 @@ if cmds.objExists(probe) and cmds.objExists(guide):
 # plano del IK: TODA la cadena sobre las guias en reposo, no solo el fetlock
 # (un pole vector en el lado malo gira el plano y el fetlock ni se entera)
 import maya.api.OpenMaya as om
-CHAINS = (("backLeg", ("Hip", "Knee", "Ankle", "Fetlock")),
-          ("frontLeg", ("Shoulder", "Elbow", "Ankle", "Fetlock")))
+CHAINS = (("backLeg", ("Hip", "Stifle", "Hock", "Fetlock")),
+          ("frontLeg", ("Shoulder", "Elbow", "Carpus", "Fetlock")))
 
 def _worst(base, fmt, joints):
     return max((om.MVector(cmds.xform(fmt.format(base=base, n=n), q=True, ws=True, t=True))
@@ -107,11 +107,29 @@ for side in ("L", "R"):
         cmds.setAttr(sw, 0)
         check(f"{base}: cascada FK sobre las guias", worst < 1e-3, "worst=%.4f" % worst)
 
+# controles: canales congelados a 0 (la colocacion vive en el opm) y el ball
+# IK orientado a MUNDO (point matrix)
+for side in ("L", "R"):
+    for prefix, joints in CHAINS:
+        base = f"{side}_{prefix}"
+        dirty = []
+        for t in cmds.ls(f"{base}*_GRP", f"{base}*_OFF", f"{base}*_ANM", f"{base}*_CTL", type="transform"):
+            for at, default in (("translate", (0, 0, 0)), ("rotate", (0, 0, 0)), ("scale", (1, 1, 1))):
+                v = cmds.getAttr(f"{t}.{at}")[0]
+                if any(abs(a - b) > 1e-4 for a, b in zip(v, default)):
+                    dirty.append(f"{t}.{at}")
+        check(f"{base}: canales de controles congelados", not dirty, str(dirty[:3]))
+        bm = om.MMatrix(cmds.getAttr(f"{base}FetlockIk_CTL.worldMatrix[0]"))
+        gp = cmds.xform(f"{base}Fetlock_JNT", q=True, ws=True, t=True)
+        ws_rot = all(abs(bm[k] - 1) < 1e-4 for k in (0, 5, 10))
+        ws_pos = all(abs(bm[12 + i] - gp[i]) < 1e-3 for i in range(3))
+        check(f"{base}: ball IK en world space sobre su guia", ws_rot and ws_pos)
+
 # pie reverso FUNCIONAL, medido en los joints de skinning del pie (lo que
 # deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
 # el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.
 for side in ("L", "R"):
-    ankle = f"{side}_backLegAnkleIk_CTL"
+    ankle = f"{side}_backLegHockIk_CTL"
     tip = f"{side}_backLegTipSkinning_JNT"
     pastern = f"{side}_backLegPasternSkinning_JNT"
     if not all(cmds.objExists(n) for n in (ankle, tip, pastern)):

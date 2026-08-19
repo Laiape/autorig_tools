@@ -453,10 +453,14 @@ class LegModule(object):
         for role, idx in ik_specs.items():
             name = self.leg_chain[idx].replace("_JNT", "Ik")
             parent = self.ik_ctl["ankle"] if role == "ball" else ik_controllers_trn
+            # el ball (fetlock) va ORIENTADO A MUNDO: point matrix (solo
+            # posicion) — el animador maneja el pie en ejes de mundo, no en el
+            # frame del hueso; los offsets de ik_setup/hoof_attach lo absorben.
+            source = self.point_matrices[idx] if role == "ball" else self.guides_world_matrices[idx]
             grps, ctl = curve_tool.create_controller(
                 name=name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
                 parent=parent,
-                matrix=cmds.getAttr(self.guides_world_matrices[idx]),
+                matrix=cmds.getAttr(source),
             )
             self.ik_ctl[role] = ctl
             self.ik_grp[role] = grps[0]
@@ -1289,7 +1293,15 @@ class FootBase(object):
             self.pivot_sdk[role] = grps[1]
             parent = ctl
 
-        cmds.parent(leg.ik_grp["ball"], self.pivot_ctl["sole"])
+        # recolgar el ball bajo el sole SIN dejar el offset en canales: el
+        # parent lo escribe en translate/rotate — se pasa al opm y canales a 0
+        ball_grp = leg.ik_grp["ball"]
+        cmds.parent(ball_grp, self.pivot_ctl["sole"])
+        # .matrix NO incluye el opm: el local completo es canales x opm
+        local = (om.MMatrix(cmds.getAttr(f"{ball_grp}.matrix"))
+                 * om.MMatrix(cmds.getAttr(f"{ball_grp}.offsetParentMatrix")))
+        cmds.setAttr(f"{ball_grp}.offsetParentMatrix", list(local), type="matrix")
+        cmds.xform(ball_grp, m=om.MMatrix.kIdentity)
 
     def roll_attributes(self, leg, foot_ctl):
         """
