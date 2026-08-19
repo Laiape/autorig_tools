@@ -571,6 +571,7 @@ class LegModule(object):
         # CONFIG C: sin handles — red de nodos (dos triángulos encadenados).
         # El Pv se crea igual (define el plano del solve); no hay constraint.
         if self.solver == SOLVER_NODES:
+            cmds.setAttr(f"{self.ik_chain[0]}.visibility", 0)  # vestigial aquí
             self.pole_vector_setup()
             self._ik_nodes()
             return
@@ -677,10 +678,12 @@ class LegModule(object):
         del pole vector):
             1. lados (fémur, CUERDA) desde la raíz  -> coloca la babilla
             2. lados (tibia, caña) desde la babilla -> coloca el corvejón
-        La CUERDA es la babilla->fetlock de REPOSO: con ella los triángulos de
-        reposo son los de las guías por construcción (reposo exacto sin
-        calibración). Es la ley de reparto del doblez — el papel del
-        springAngleBias en el spring nativo.
+        La CUERDA (babilla->objetivo) es la ley de reparto del doblez — el
+        papel del springAngleBias en el spring nativo. Es VIVA: escala con la
+        distancia raíz->objetivo (a distancia de reposo vale la cuerda de
+        reposo -> reposo exacto sin calibración) y se clampa al rango físico
+        de tibia+caña. Con cuerda FIJA el ángulo del corvejón queda congelado
+        y la config se comporta como RP+SC, no como spring.
 
         Salida: self.nodes_ik_world (plugs de matriz world por joint) que el
         blend_setup consume en lugar de la cadena ik.
@@ -690,11 +693,13 @@ class LegModule(object):
         fracaso. Un TFG que reporta un resultado negativo con datos es más
         sólido que uno que solo enseña lo que le salió bien.
 
+        Stretch y soft los conduce ik_stretch_soft: las longitudes de la red
+        son plugs (floatConstant) que el stretch multiplica, y el soft
+        recoloca el objetivo que lee la red.
+
         PENDIENTE:
-        - atributo de BIAS: interpolar la cuerda entre el valor de reposo y
-          tibia+caña (reparto animable, comparable al springAngleBias)
-        - stretch/soft: las longitudes entran horneadas; para stretch deben
-          ser plugs (mults del ctl) y el soft reposicionar el objetivo
+        - atributo de BIAS sobre la escala de la cuerda (reparto animable,
+          comparable al springAngleBias)
         - twist alrededor de la línea raíz->objetivo (atributo en el master)
         - verificar el signo del doblez del corvejón en una pose extrema
         """
@@ -707,7 +712,8 @@ class LegModule(object):
         a_len = (p[1] - p[0]).length()            # fémur / húmero+radio según cadena
         b_len = (p[2] - p[1]).length()            # tibia
         c_len = (p[end] - p[2]).length()          # caña
-        q_len = (p[end] - p[1]).length()          # CUERDA de reposo (ley de reparto)
+        q_len = (p[end] - p[1]).length()          # cuerda de reposo
+        d_rest = (p[end] - p[0]).length()         # distancia raíz->objetivo de reposo
 
         # ── helpers de red ──────────────────────────────────────────────────
         def _dcm(label, matrix_plug):
@@ -763,37 +769,92 @@ class LegModule(object):
         # ── puntos vivos: raíz (ctl root), objetivo (manager), pole (Pv) ────
         A = _dcm("NodesRoot", f"{self.ik_ctl['root']}.worldMatrix[0]")
         D = _dcm("NodesTarget", self.ik_handle_target)
+        self.nodes_target_dcm = f"{n}NodesTarget_DCM"  # el soft recablea su input
         P = _dcm("NodesPole", f"{self.ik_ctl['pv']}.worldMatrix[0]")
+
+        # longitudes como PLUGS: ik_stretch_soft las conduce (stretch/mults)
+        def _lenc(label, value):
+            node = cmds.createNode("floatConstant", name=f"{n}{label}_FCN", ss=True)
+            cmds.setAttr(f"{node}.inFloat", value)
+            return f"{node}.outFloat"
+
+        len_a = _lenc("NodesLenA", a_len)
+        len_b = _lenc("NodesLenB", b_len)
+        len_c = _lenc("NodesLenC", c_len)
+        self.nodes_length_inputs = [plug.replace(".outFloat", ".inFloat")
+                                    for plug in (len_a, len_b, len_c)]
 
         # plano del solve: û = dir raíz->objetivo, v̂ = perpendicular en el
         # plano hacia el pole (Gram-Schmidt vía doble cruz)
         d1_raw = _dist("NodesD1", A, D)
+
+        # CUERDA VIVA (reparto tipo spring), por tramos:
+        #   plegando  (d < d_rest): proporcional a d -> ambos dobleces reparten
+        #   extendiendo (d > d_rest): interpola de la cuerda de reposo a
+        #     tibia+caña según lo que quede hasta el alcance máximo VIVO — así
+        #     a alcance máximo la cadena queda RECTA y el stretch (que escala
+        #     las longitudes) llega exacto al objetivo
+        bc_sum = _f("NodesLenBC", 0, len_b, len_c)
+        bc_hi = _f("NodesChordHi", 1, bc_sum, 1e-3)
+        bc_lo = _f("NodesChordLo", 0,
+                   _f("NodesLenBCDifAbs", 5, _f("NodesLenBCDif1", 1, len_b, len_c),
+                      _f("NodesLenBCDif2", 1, len_c, len_b)), 1e-3)
+
+        chord_fold = _f("NodesChordScale", 2, d1_raw, q_len / d_rest)
+
+        total_live = _f("NodesLenTotal", 0, len_a, bc_sum)
+        ext_den = _f("NodesChordExtDen", 5, _f("NodesChordExtRange", 1, total_live, d_rest), 1e-3)
+        ext_t_raw = _f("NodesChordExtT", 3, _f("NodesChordExtNum", 1, d1_raw, d_rest), ext_den)
+        ext_t = _f("NodesChordExtTHi", 4, _f("NodesChordExtTLo", 5, ext_t_raw, 0.0), 1.0)
+        chord_ext = _f("NodesChordExt", 0, q_len,
+                       _f("NodesChordExtGain", 2, ext_t, _f("NodesChordExtSpan", 1, bc_sum, q_len)))
+
+        chord_cnd = cmds.createNode("condition", name=f"{n}NodesChord_CND", ss=True)
+        cmds.setAttr(f"{chord_cnd}.operation", 2)  # d > d_rest -> tramo de extensión
+        cmds.connectAttr(d1_raw, f"{chord_cnd}.firstTerm")
+        cmds.setAttr(f"{chord_cnd}.secondTerm", d_rest)
+        cmds.connectAttr(chord_ext, f"{chord_cnd}.colorIfTrueR")
+        cmds.connectAttr(chord_fold, f"{chord_cnd}.colorIfFalseR")
+
+        chord = _f("NodesChordClampHi", 4, _f("NodesChordClampLo", 5, f"{chord_cnd}.outColorR", bc_lo), bc_hi)
+
         # clamp de alcance del triángulo 1: |a-q| < d < a+q (evita NaN en el sqrt)
-        d1 = _f("NodesD1Max", 4, _f("NodesD1Min", 5, d1_raw, abs(a_len - q_len) + 1e-4), a_len + q_len - 1e-4)
+        aq_hi = _f("NodesD1Hi", 1, _f("NodesLenAQ", 0, len_a, chord), 1e-3)
+        aq_lo = _f("NodesD1Lo", 0,
+                   _f("NodesLenAQDifAbs", 5, _f("NodesLenAQDif1", 1, len_a, chord),
+                      _f("NodesLenAQDif2", 1, chord, len_a)), 1e-3)
+        d1 = _f("NodesD1Max", 4, _f("NodesD1Min", 5, d1_raw, aq_lo), aq_hi)
         u1 = _scale("NodesU1", _sub("NodesAD", D, A), _f("NodesD1Inv", 3, 1.0, d1_raw))
         v1 = _cross("NodesV1", _cross("NodesN", u1, _sub("NodesAP", P, A)), u1)
 
         def _bend_point(label, root_pt, dist_plug, u_dir, v_dir, side_a, side_b, bend_sign):
-            """Ley de cosenos: punto doblado a side_a del root, en el plano (û,v̂)."""
+            """Ley de cosenos: punto doblado a side_a del root, en el plano (û,v̂).
+            side_a/side_b aceptan valor o plug (las longitudes vienen del stretch)."""
             d2 = _f(f"{label}DistSq", 2, dist_plug, dist_plug)
-            num = _f(f"{label}Num", 0, d2, side_a * side_a - side_b * side_b)
-            cos_raw = _f(f"{label}Cos", 3, num, _f(f"{label}Den", 2, dist_plug, 2.0 * side_a))
+            a2 = _f(f"{label}ASq", 2, side_a, side_a)
+            b2 = _f(f"{label}BSq", 2, side_b, side_b)
+            num = _f(f"{label}Num", 0, d2, _f(f"{label}ASqMinusBSq", 1, a2, b2))
+            den = _f(f"{label}Den", 2, _f(f"{label}DenAD", 2, dist_plug, side_a), 2.0)
+            cos_raw = _f(f"{label}Cos", 3, num, den)
             cos_cl = _f(f"{label}CosMax", 5, _f(f"{label}CosMin", 4, cos_raw, 1.0), -1.0)
             sin_sq = _f(f"{label}SinSq", 5, _f(f"{label}OneMinus", 1, 1.0, _f(f"{label}CosSq", 2, cos_cl, cos_cl)), 0.0)
             sin_v = _f(f"{label}Sin", 6, sin_sq, 0.5)
             along = _scale(f"{label}Along", u_dir, _f(f"{label}AlongLen", 2, cos_cl, side_a))
-            lift = _scale(f"{label}Lift", v_dir, _f(f"{label}LiftLen", 2, sin_v, side_a * bend_sign))
+            lift_len = _f(f"{label}LiftLen", 2, sin_v, side_a)
+            if bend_sign < 0:
+                lift_len = _f(f"{label}LiftNeg", 2, lift_len, -1.0)
+            lift = _scale(f"{label}Lift", v_dir, lift_len)
             return _add(f"{label}Point", [root_pt, along, lift])
 
-        # triángulo 1: (fémur, cuerda) -> babilla, doblada HACIA el pole
-        B = _bend_point("NodesT1", A, d1, u1, v1, a_len, q_len, 1.0)
+        # triángulo 1: (fémur, cuerda viva) -> babilla, doblada HACIA el pole
+        B = _bend_point("NodesT1", A, d1, u1, v1, len_a, chord, 1.0)
 
         # triángulo 2: (tibia, caña) desde la babilla -> corvejón, doblado
         # al lado CONTRARIO del pole (el zigzag alterna)
         d2_raw = _dist("NodesD2", B, D)
-        d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, abs(b_len - c_len) + 1e-4), b_len + c_len - 1e-4)
+        d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, bc_lo), bc_hi)
         u2 = _scale("NodesU2", _sub("NodesBD", D, B), _f("NodesD2Inv", 3, 1.0, d2_raw))
-        C = _bend_point("NodesT2", B, d2, u2, v1, b_len, c_len, -1.0)
+        C = _bend_point("NodesT2", B, d2, u2, v1, len_b, len_c, -1.0)
 
         # ── frames de salida: aim con la convención del módulo, up al pole ──
         def _cmp(label, vec):
@@ -819,22 +880,34 @@ class LegModule(object):
         aim_b = _aim("NodesMidFrame", cmp_b, cmp_c)
         aim_c = _aim("NodesLowFrame", cmp_c, cmp_d)
 
-        # fetlock: offset horneado contra el frame del corvejón (posición D
-        # exacta porque |corvejón->fetlock| = caña por construcción)
+        # fetlock: rotación por offset horneado contra el frame del corvejón,
+        # posición con la caña VIVA (bajo stretch el offset de reposo se queda
+        # corto exactamente (k-1)·caña): C + dir(C->objetivo) · caña
         c_rest = om.MMatrix(cmds.getAttr(aim_c))
-        d_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[end]))
+        d_guide_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[end]))
         d_mmx = cmds.createNode("multMatrix", name=f"{n}NodesEndFrame_MMX", ss=True)
-        cmds.setAttr(f"{d_mmx}.matrixIn[0]", list(d_rest * c_rest.inverse()), type="matrix")
+        cmds.setAttr(f"{d_mmx}.matrixIn[0]", list(d_guide_rest * c_rest.inverse()), type="matrix")
         cmds.connectAttr(aim_c, f"{d_mmx}.matrixIn[1]")
+
+        dcd = _dist("NodesDC", C, D)
+        u_cd = _scale("NodesUCD", _sub("NodesCD", D, C), _f("NodesDCInv", 3, 1.0, dcd))
+        end_pt = _add("NodesEndPoint", [C, _scale("NodesEndOff", u_cd, len_c)])
+        end_rot = cmds.createNode("pickMatrix", name=f"{n}NodesEndRot_PMX", ss=True)
+        for at in ("useTranslate", "useScale", "useShear"):
+            cmds.setAttr(f"{end_rot}.{at}", 0)
+        cmds.connectAttr(f"{d_mmx}.matrixSum", f"{end_rot}.inputMatrix")
+        end_mmx = cmds.createNode("multMatrix", name=f"{n}NodesEndPos_MMX", ss=True)
+        cmds.connectAttr(f"{end_rot}.outputMatrix", f"{end_mmx}.matrixIn[0]")
+        cmds.connectAttr(_cmp("NodesEnd", end_pt), f"{end_mmx}.matrixIn[1]")
 
         # pisada rígida bajo el fetlock (el pie la re-cablea a su ctl después)
         plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
         plant_mmx = cmds.createNode("multMatrix", name=f"{n}NodesPlantFrame_MMX", ss=True)
-        cmds.setAttr(f"{plant_mmx}.matrixIn[0]", list(plant_rest * d_rest.inverse()), type="matrix")
-        cmds.connectAttr(f"{d_mmx}.matrixSum", f"{plant_mmx}.matrixIn[1]")
+        cmds.setAttr(f"{plant_mmx}.matrixIn[0]", list(plant_rest * d_guide_rest.inverse()), type="matrix")
+        cmds.connectAttr(f"{end_mmx}.matrixSum", f"{plant_mmx}.matrixIn[1]")
 
         self.nodes_ik_world = [aim_a, aim_b, aim_c,
-                               f"{d_mmx}.matrixSum", f"{plant_mmx}.matrixSum"]
+                               f"{end_mmx}.matrixSum", f"{plant_mmx}.matrixSum"]
 
     def ik_stretch_soft(self):
         """
@@ -857,13 +930,9 @@ class LegModule(object):
         queda sin alcance. Si mides un pivote o un muelle y "no llega",
         comprueba si es ALCANCE antes de culpar al mecanismo.
 
-        PENDIENTE para la config de nodos: sin handles no aplica tal cual — el
-        stretch debe entrar como plugs de longitud en la red y el soft
-        recolocar el objetivo del manager, no un handle.
+        En la config de nodos no hay handle: el stretch conduce las longitudes
+        de la red (plugs) y el soft recoloca el OBJETIVO que lee la red.
         """
-        if not self.ik_handles:
-            return
-
         foot_ctl = self.ik_ctl["ankle"]
         root_ctl = self.ik_ctl["root"]
         ik_target_plug = getattr(self, "ik_handle_target", f"{foot_ctl}.worldMatrix[0]")
@@ -931,6 +1000,16 @@ class LegModule(object):
             cmds.connectAttr(f"{stretch_remap}.outValue", f"{joint_mul}.input[1]")
             cmds.connectAttr(f"{foot_ctl}.{mult_names[i - 1]}", f"{joint_mul}.input[2]")
             cmds.connectAttr(f"{joint_mul}.output", f"{self.ik_chain[i]}.translateX")
+
+        # config de nodos: las longitudes de la red son plugs — el stretch las
+        # conduce (longitud de reposo x factor global x mult por segmento)
+        if getattr(self, "nodes_length_inputs", None):
+            for i, len_input in enumerate(self.nodes_length_inputs):
+                len_mul = cmds.createNode("multiply", name=f"{self.module_name}NodesLen0{i}Stretch_MUL", ss=True)
+                cmds.setAttr(f"{len_mul}.input[0]", rest_lengths[i])
+                cmds.connectAttr(f"{stretch_remap}.outValue", f"{len_mul}.input[1]")
+                cmds.connectAttr(f"{foot_ctl}.{mult_names[i]}", f"{len_mul}.input[2]")
+                cmds.connectAttr(f"{len_mul}.output", len_input, force=True)
 
         # ----- Soft: d' = dStart + range * (1 - e^(-(d - dStart) / range)) -----
         soft_start_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftStart_MUL", ss=True)
@@ -1002,7 +1081,11 @@ class LegModule(object):
         cmds.connectAttr(f"{soft_cmx}.outputMatrix", f"{soft_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{soft_aim}.outputMatrix", f"{soft_mmx}.matrixIn[1]")
 
-        cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.ik_handles[0]}.offsetParentMatrix", force=True)
+        if self.ik_handles:
+            cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.ik_handles[0]}.offsetParentMatrix", force=True)
+        else:
+            # nodos: el soft recoloca el OBJETIVO que lee la red
+            cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.nodes_target_dcm}.inputMatrix", force=True)
 
     def ik_calibration(self):
         """

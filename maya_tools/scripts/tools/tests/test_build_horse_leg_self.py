@@ -173,6 +173,64 @@ for side in ("L", "R"):
     check(f"{side}: Foot rota el casco", dt > 0.5, "d_tip=%.3f" % dt)
     check(f"{side}: Foot no mueve la pierna IK", df < 1e-3, "d_fet=%.5f" % df)
 
+# ── config de nodos (SELF MATH): reparto tipo spring + stretch/soft ──
+cmds.file(new=True, force=True)
+modules_grp = cmds.createNode("transform", name="modules_GRP")
+skel_grp = cmds.createNode("transform", name="skel_GRP")
+masterwalk = cmds.circle(name="C_masterwalk_CTL", ch=False)[0]
+cmds.addAttr(masterwalk, longName="globalScale", attributeType="float", defaultValue=1, keyable=True)
+dm = data_manager.DataExportBiped()
+dm.new_build()
+dm.append_data("basic_structure", {
+    "modules_GRP": modules_grp,
+    "skel_GRP": skel_grp,
+    "masterwalk_ctl": masterwalk,
+})
+leg = lm.BackLegModule()
+try:
+    leg.make("L", solver="nodes", skinning_joints_number=5)
+    check("nodes: build", True)
+except Exception:
+    traceback.print_exc()
+    check("nodes: build", False, "excepcion")
+
+base = "L_backLeg"
+ankle = f"{base}FetlockIk_CTL"
+check("nodes: sin ikHandles", not cmds.ls(type="ikHandle"))
+check("nodes: attrs stretch/soft", all(cmds.attributeQuery(a, node=ankle, exists=True)
+      for a in ("Stretch", "Soft", "Soft_Start")))
+
+def _pt(i):
+    m = cmds.getAttr(leg.nodes_ik_world[i])
+    return om.MVector(m[12], m[13], m[14])
+
+def _hock_angle():
+    return math.degrees((_pt(1) - _pt(2)).angle(_pt(3) - _pt(2)))
+
+import math
+worst = max((_pt(i) - om.MVector(cmds.xform(f"{base}{n_}_JNT", q=True, ws=True, t=True))).length()
+            for i, n_ in enumerate(("Hip", "Stifle", "Hock", "Fetlock", "Pastern")))
+check("nodes: reposo de la red", worst < 1.7, "worst=%.3f" % worst)
+
+# reparto tipo spring: al plegar la pata el CORVEJON tambien dobla (con la
+# cuerda fija quedaba congelado = RP+SC)
+a0 = _hock_angle()
+cmds.setAttr(f"{ankle}.translateY", 20)
+a1 = _hock_angle()
+cmds.setAttr(f"{ankle}.translateY", 0)
+check("nodes: el corvejon dobla al plegar (spring)", abs(a1 - a0) > 5, "delta=%.1f grados" % (a1 - a0))
+
+# stretch: con Stretch=1 y el objetivo fuera de alcance, el fetlock lo sigue
+cmds.setAttr(f"{ankle}.Stretch", 1)
+cmds.setAttr(f"{ankle}.translateY", -25)
+target = om.MVector(cmds.xform(f"{base}Foot_CTL", q=True, ws=True, t=True))
+d_reach = (_pt(3) - target).length()
+cmds.setAttr(f"{ankle}.Stretch", 0)
+d_noreach = (_pt(3) - target).length()
+cmds.setAttr(f"{ankle}.translateY", 0)
+check("nodes: stretch alcanza el objetivo", d_reach < 0.1, "d=%.3f" % d_reach)
+check("nodes: sin stretch se queda corto", d_noreach > 1.0, "d=%.3f" % d_noreach)
+
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)
 sys.exit(1 if fails else 0)
