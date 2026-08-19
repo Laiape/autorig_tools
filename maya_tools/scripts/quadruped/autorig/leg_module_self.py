@@ -288,22 +288,40 @@ class LegModule(object):
 
         # Set the guides matrices for the chain
         self.guides_world_matrices = self.guides_matrices
+
+        # frames de COLOCACION de controles: en R espejados (ctl_matrix); las
+        # locales FK se calculan entre frames ya espejados
+        self.ctl_world_matrices = [self.ctl_matrix(cmds.getAttr(m)) for m in self.guides_matrices]
         self.guides_local_matrices = []
-
-        for i, matrix in enumerate(self.guides_matrices):
-
-            w_matrix = om.MMatrix(cmds.getAttr(matrix))
+        for i, w_matrix in enumerate(self.ctl_world_matrices):
             if i == 0:
                 local_matrix = w_matrix
             else:
-                parent_matrix = om.MMatrix(cmds.getAttr(self.guides_matrices[i-1]))
-                local_matrix = w_matrix * parent_matrix.inverse()
-
+                local_matrix = w_matrix * self.ctl_world_matrices[i - 1].inverse()
             self.guides_local_matrices.append(local_matrix)
 
         # Set the settings guide matrix (None si el personaje no trae la guia)
         self.settings_world_matrix = (cmds.xform(self.settings_guide, q=True, ws=True, m=True)
                                       if self.settings_guide else None)
+
+    def ctl_matrix(self, matrix, world_frame=False):
+        """
+        Frame de colocación de un control. En R los controles van ESPEJADOS
+        (det -1, eje principal a -1): el mismo valor de canal produce el
+        movimiento espejo del lado L.
+          - frames de GUIA R (vienen autorados como rotación 180 de L): los
+            tres ejes negados.
+          - frames de MUNDO (point matrix, identidad): solo el eje X negado.
+        La traslación no se toca.
+        """
+        m = om.MMatrix(matrix)
+        if self.side != "R":
+            return m
+        if world_frame:
+            return om.MMatrix([-m[0], -m[1], -m[2], 0, m[4], m[5], m[6], 0,
+                               m[8], m[9], m[10], 0, m[12], m[13], m[14], 1])
+        return om.MMatrix([-m[0], -m[1], -m[2], 0, -m[4], -m[5], -m[6], 0,
+                           -m[8], -m[9], -m[10], 0, m[12], m[13], m[14], 1])
 
     def setup_chain(self):
         """
@@ -453,7 +471,7 @@ class LegModule(object):
             name=self.leg_chain[0].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
             parent=ik_controllers_trn,
-            matrix=cmds.getAttr(self.guides_world_matrices[0]),
+            matrix=self.ctl_world_matrices[0],
         )
         self.ik_ctl["root"] = root_ctl
         self.ik_grp["root"] = root_grps[0]
@@ -465,7 +483,7 @@ class LegModule(object):
             name=self.leg_chain[self.leg_end_index].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
             parent=ik_controllers_trn,
-            matrix=cmds.getAttr(self.point_matrices[self.leg_end_index]),
+            matrix=self.ctl_matrix(cmds.getAttr(self.point_matrices[self.leg_end_index]), world_frame=True),
         )
         self.ik_ctl["ankle"] = ankle_ctl
         self.ik_grp["ankle"] = ankle_grps[0]
@@ -477,7 +495,7 @@ class LegModule(object):
             name=f"{self.side}_{self.LEG_PREFIX}Foot",
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
             parent=ankle_ctl,
-            matrix=cmds.getAttr(self.point_matrices[self.leg_end_index]),
+            matrix=self.ctl_matrix(cmds.getAttr(self.point_matrices[self.leg_end_index]), world_frame=True),
         )
         self.ik_ctl["ball"] = ball_ctl
         self.ik_grp["ball"] = ball_grps[0]
@@ -648,6 +666,8 @@ class LegModule(object):
 
         pv_rest_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_{self.LEG_PREFIX}PvRest_CMX", ss=True)
         cmds.setAttr(f"{pv_rest_cmx}.inputTranslate", pv_pos.x, pv_pos.y, pv_pos.z, type="double3")
+        if self.side == "R":
+            cmds.setAttr(f"{pv_rest_cmx}.inputScaleX", -1)
         cmds.connectAttr(f"{pv_rest_cmx}.outputMatrix", f"{self.ik_grp['pv']}.offsetParentMatrix")
 
         matrix_manager.space_switches(

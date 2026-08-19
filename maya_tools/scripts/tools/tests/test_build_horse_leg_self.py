@@ -128,9 +128,45 @@ for side in ("L", "R"):
         check(f"{base}: canales de controles congelados", not dirty, str(dirty[:3]))
         bm = om.MMatrix(cmds.getAttr(f"{base}FetlockIk_CTL.worldMatrix[0]"))
         gp = cmds.xform(f"{base}Fetlock_JNT", q=True, ws=True, t=True)
-        ws_rot = all(abs(bm[k] - 1) < 1e-4 for k in (0, 5, 10))
+        sx = 1 if side == "L" else -1  # en R el ball va espejado (X a -1)
+        ws_rot = abs(bm[0] - sx) < 1e-4 and all(abs(bm[k] - 1) < 1e-4 for k in (5, 10))
         ws_pos = all(abs(bm[12 + i] - gp[i]) < 1e-3 for i in range(3))
         check(f"{base}: ball IK en world space sobre su guia", ws_rot and ws_pos)
+
+# ESPEJO L/R por comportamiento: el mismo valor de canal en L y R produce el
+# movimiento espejo (x opuesta, y/z iguales) en la salida
+def _wpos(n):
+    return om.MVector(cmds.xform(n, q=True, ws=True, t=True))
+
+def _probe(ctl_suffix, attr, value, probe_suffix, prefix="backLeg"):
+    res = {}
+    for side in ("L", "R"):
+        ctl = f"{side}_{prefix}{ctl_suffix}"
+        pr = f"{side}_{prefix}{probe_suffix}"
+        p0 = _wpos(pr)
+        cmds.setAttr(f"{ctl}.{attr}", value)
+        p1 = _wpos(pr)
+        cmds.setAttr(f"{ctl}.{attr}", 0)
+        res[side] = p1 - p0
+    dL, dR = res["L"], res["R"]
+    return abs(dL.x + dR.x) < 0.05 and abs(dL.y - dR.y) < 0.05 and abs(dL.z - dR.z) < 0.05, dL, dR
+
+for label, args in (
+    ("HipFk rz30", ("HipFk_CTL", "rotateZ", 30, "StifleFk_CTL")),
+    ("HipFk ry30", ("HipFk_CTL", "rotateY", 30, "StifleFk_CTL")),
+    ("StifleFk rz-40", ("StifleFk_CTL", "rotateZ", -40, "HockFk_CTL")),
+    ("FetlockIk tz10", ("FetlockIk_CTL", "translateZ", 10, "StifleIk_JNT")),
+    ("FetlockIk tx5", ("FetlockIk_CTL", "translateX", 5, "StifleIk_JNT")),
+    ("FetlockIk ry30", ("FetlockIk_CTL", "rotateY", 30, "TipSkinning_JNT")),
+    ("Foot rx25", ("Foot_CTL", "rotateX", 25, "TipSkinning_JNT")),
+    ("Roll -20", ("FetlockIk_CTL", "Roll", -20, "TipSkinning_JNT")),
+    ("Bank 20", ("FetlockIk_CTL", "Bank", 20, "TipSkinning_JNT")),
+    ("HipIk ty5", ("HipIk_CTL", "translateY", 5, "StifleIk_JNT")),
+    ("ElbowFk rz30 (front)", ("ElbowFk_CTL", "rotateZ", 30, "CarpusFk_CTL", "frontLeg")),
+):
+    ok, dL, dR = _probe(*args)
+    check(f"espejo L/R: {label}", ok, "L=%s R=%s" % ([round(v, 2) for v in dL], [round(v, 2) for v in dR]))
+check("espejo L/R: FetlockIk R con X a -1", abs(cmds.getAttr("R_backLegFetlockIk_CTL.worldMatrix[0]")[0] + 1) < 1e-4)
 
 # bendys y joints de skinning del ribbon ORIENTADOS como la cadena original
 def _axes(m):
