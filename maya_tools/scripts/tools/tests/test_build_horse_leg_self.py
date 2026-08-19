@@ -56,7 +56,11 @@ for side in ("L", "R"):
         # nombres de ctl IK derivados de la guia de su indice semantico
         check(f"{base}: ctl IK ball (FetlockIk)", cmds.objExists(f"{base}FetlockIk_CTL"))
         check(f"{base}: ctl Pv", cmds.objExists(f"{base}Pv_CTL"))
-        ankle = f"{base}{'Hock' if prefix == 'backLeg' else 'Carpus'}Ik_CTL"
+        ankle = f"{base}AnkleIk_CTL"
+        # el master es sintetico: NO debe existir ctl en el carpo/corvejon
+        mid = "Hock" if prefix == "backLeg" else "Carpus"
+        check(f"{base}: sin ctl IK en el {mid}", not cmds.objExists(f"{base}{mid}Ik_CTL"))
+        check(f"{base}: ctl Pie", cmds.objExists(f"{base}Pie_CTL"))
         check(f"{base}: attrs stretch/soft", cmds.objExists(ankle)
               and cmds.attributeQuery("Stretch", node=ankle, exists=True)
               and cmds.attributeQuery("Soft", node=ankle, exists=True))
@@ -129,7 +133,7 @@ for side in ("L", "R"):
 # deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
 # el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.
 for side in ("L", "R"):
-    ankle = f"{side}_backLegHockIk_CTL"
+    ankle = f"{side}_backLegAnkleIk_CTL"
     tip = f"{side}_backLegTipSkinning_JNT"
     pastern = f"{side}_backLegPasternSkinning_JNT"
     if not all(cmds.objExists(n) for n in (ankle, tip, pastern)):
@@ -149,6 +153,23 @@ for side in ("L", "R"):
     cmds.setAttr(f"{ankle}.Roll", 0)
     dy = cmds.xform(tip, q=True, ws=True, t=True)[1] - tip_rest_y
     check(f"{side}: roll 0 vuelve al reposo", abs(dy) < 1e-4, "dy=%.5f" % dy)
+
+# Pie: rota SOLO el casco (fetlock hacia abajo) — el IK de la pierna no se mueve
+for side in ("L", "R"):
+    pie = f"{side}_backLegPie_CTL"
+    tip = f"{side}_backLegTipSkinning_JNT"
+    fet = f"{side}_backLegFetlockIk_JNT"
+    if not all(cmds.objExists(n) for n in (pie, tip, fet)):
+        check(f"{side}: ctl Pie funcional (nodos presentes)", False)
+        continue
+    t0 = om.MVector(cmds.xform(tip, q=True, ws=True, t=True))
+    f0 = om.MVector(cmds.xform(fet, q=True, ws=True, t=True))
+    cmds.setAttr(f"{pie}.rotateX", 25)
+    dt = (om.MVector(cmds.xform(tip, q=True, ws=True, t=True)) - t0).length()
+    df = (om.MVector(cmds.xform(fet, q=True, ws=True, t=True)) - f0).length()
+    cmds.setAttr(f"{pie}.rotateX", 0)
+    check(f"{side}: Pie rota el casco", dt > 0.5, "d_tip=%.3f" % dt)
+    check(f"{side}: Pie no mueve la pierna IK", df < 1e-3, "d_fet=%.5f" % df)
 
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)

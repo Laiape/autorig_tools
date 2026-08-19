@@ -400,10 +400,13 @@ class LegModule(object):
         - FK: uno por joint de la pierna (sin el Tip), en cascada, colocados
           con la matriz LOCAL de su guía en el offsetParentMatrix del grupo.
           Guarda fk_controllers / fk_grps / fk_offs en paralelo.
-        - IK: roles root/ankle/ball con NOMBRE derivado de su guía (p.ej.
-          L_backLegFetlockIk_CTL) e índices semánticos de setup_chain; el ball
-          cuelga del ankle (jerarquía de pie reverso). Pv aparte (sin guía,
-          nombre sintético). Acceso por ROL: self.ik_ctl["ball"] / ik_grp["pv"].
+        - IK: el rol "ankle" es el MASTER del pie — sintético, sin guía ni
+          joint (no hay control en el carpo/corvejón), caja a ras de suelo
+          orientada a mundo; contiene la pila de pivotes del pie reverso y los
+          atributos del pie. root y ball (fetlock, con point matrix = mundo)
+          con NOMBRE derivado de su guía; el ball cuelga del master y es lo
+          que lee el handle manager. Pv y Pie (foot) aparte, sintéticos.
+          Acceso por ROL: self.ik_ctl["ball"] / ik_grp["pv"].
 
         Bloquea lo que el animador no debe tocar: escala y visibilidad siempre;
         en FK también la traslación.
@@ -442,20 +445,36 @@ class LegModule(object):
         cmds.connectAttr(f"{reverse_vis_ik}.outputX", f"{ik_controllers_trn}.visibility")
 
         self.ik_controllers_trn = ik_controllers_trn
-        ik_specs = {
-            "root":  0,
-            "ankle": self.leg_end_index - 1,
-            "ball":  self.leg_end_index,
-        }
-
         self.ik_ctl = {}
         self.ik_grp = {}
+
+        # MASTER del pie (AnkleIk): sintetico, SIN guia ni joint de la cadena
+        # (el control a mitad de pierna en el carpo/corvejon no existe) — caja
+        # a ras de suelo bajo el casco, orientada a MUNDO. De el cuelga toda la
+        # pila de pivotes del pie reverso (foot.pivots) y lleva los atributos
+        # del pie (stretch/soft/roll/bank).
+        plant_p = self.world_positions[self.plant_index]
+        tip_p = self.world_positions[-1]
+        ankle_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,
+                        (plant_p.x + tip_p.x) * 0.5, tip_p.y, (plant_p.z + tip_p.z) * 0.5, 1]
+        ankle_grps, ankle_ctl = curve_tool.create_controller(
+            name=f"{self.side}_{self.LEG_PREFIX}AnkleIk",
+            offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
+            parent=ik_controllers_trn, matrix=ankle_matrix,
+        )
+        self.ik_ctl["ankle"] = ankle_ctl
+        self.ik_grp["ankle"] = ankle_grps[0]
+
+        # root con el frame de su guia; ball (fetlock) con POINT matrix (mundo)
+        # colgado del master — el manager del handle lee su world vivo, asi que
+        # mover el master O el fetlock mueve la pierna.
+        ik_specs = {
+            "root": 0,
+            "ball": self.leg_end_index,
+        }
         for role, idx in ik_specs.items():
             name = self.leg_chain[idx].replace("_JNT", "Ik")
             parent = self.ik_ctl["ankle"] if role == "ball" else ik_controllers_trn
-            # el ball (fetlock) va ORIENTADO A MUNDO: point matrix (solo
-            # posicion) — el animador maneja el pie en ejes de mundo, no en el
-            # frame del hueso; los offsets de ik_setup/hoof_attach lo absorben.
             source = self.point_matrices[idx] if role == "ball" else self.guides_world_matrices[idx]
             grps, ctl = curve_tool.create_controller(
                 name=name, offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
@@ -1414,20 +1433,38 @@ class HoofFoot(FootBase):
 
     def hoof_attach(self, leg):
         """
-        Pega el CASCO al control del ball por matrices: el lado IK del blend de
-        la pisada (cuartilla) pasa a ser offset horneado × worldMatrix vivo del
-        ball, que ya cuelga de TODA la pila de pivotes — roll, bank y twist
-        llegan al casco gratis. El Tip ya deriva de la pisada en skinning
-        (TipSkinning_MMX), así que sigue solo. Sin handles extra: el joint IK
-        de la cuartilla queda como esqueleto interno sin consumidores.
+        Ctl "Pie" + casco pegado por matrices.
+
+        El Pie cuelga del ball (fetlock) y SOLO rota: gira el casco (del
+        fetlock hacia abajo) sin mover el objetivo del IK — el manager lee el
+        world del ball, no el del Pie. El lado IK del blend de la pisada
+        (cuartilla) pasa a ser offset horneado × worldMatrix vivo del Pie, que
+        hereda ball + toda la pila de pivotes: roll, bank y twist llegan al
+        casco gratis, y la rotacion propia del Pie se suma encima. El Tip ya
+        deriva de la pisada en skinning (TipSkinning_MMX), así que sigue solo.
+        Sin handles extra: el joint IK de la cuartilla queda como esqueleto
+        interno sin consumidores.
         """
         ball_ctl = leg.ik_ctl["ball"]
+
+        # Pie: rotacion pura, colocado en la cuartilla con orientacion a mundo
+        pie_grps, pie_ctl = curve_tool.create_controller(
+            name=f"{leg.side}_{leg.LEG_PREFIX}Pie",
+            offset=["GRP", "OFF", "ANM"],
+            locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
+            parent=ball_ctl,
+            matrix=cmds.getAttr(leg.point_matrices[leg.plant_index]),
+        )
+        self.pie_ctl = pie_ctl
+        leg.ik_ctl["pie"] = pie_ctl
+        leg.ik_grp["pie"] = pie_grps[0]
+
         plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
-        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
+        pie_rest_inv = om.MMatrix(cmds.getAttr(f"{pie_ctl}.worldMatrix[0]")).inverse()
 
         hoof_mmx = cmds.createNode("multMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}HoofFollow_MMX", ss=True)
-        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * ball_rest_inv), type="matrix")
-        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
+        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * pie_rest_inv), type="matrix")
+        cmds.connectAttr(f"{pie_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 
