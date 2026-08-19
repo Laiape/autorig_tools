@@ -276,7 +276,6 @@ class LegModule(object):
 
         self.primary_axis = self.primaryInputAxis if self.side == "L" else tuple(-v for v in self.primaryInputAxis)
         self.secondary_axis = self.secondaryInputAxis
-        # tercer eje del frame (ni aim ni up): el que va lateral al personaje
         lat = om.MVector(*self.primary_axis) ^ om.MVector(*self.secondary_axis)
         self.lateral_axis = (lat.x, lat.y, lat.z)
         self.aim_letter = "xyz"[max(range(3), key=lambda k: abs(self.primary_axis[k]))]
@@ -342,8 +341,6 @@ class LegModule(object):
         side_vec = om.MVector(1, 0, 0) if self.side == "L" else om.MVector(-1, 0, 0)
         self.lateral_ref = -side_vec
 
-        # el lateral local de la cadena debe mirar hacia lateral_ref: se mide
-        # en la guia raiz y se corrige el signo del eje
         root_m = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
         lat_world = om.MVector(*self.lateral_axis) * om.MMatrix([
             root_m[0], root_m[1], root_m[2], 0, root_m[4], root_m[5], root_m[6], 0,
@@ -668,11 +665,7 @@ class LegModule(object):
             self.pole_vector_line(f"{self.ik_chain[self.pv_apex_index]}.worldMatrix[0]")
 
     def pole_vector_line(self, apex_plug):
-        """
-        Línea de dos CVs del apex al Pv (igual que el bípedo): rowFromMatrix
-        de cada extremo a los controlPoints de la curva, template y colgada
-        del ctl del Pv con inheritsTransform a 0.
-        """
+        """Línea de dos CVs del apex al Pv."""
         pv_ctl = self.ik_ctl["pv"]
         crv = cmds.curve(d=1, p=[(0, 0, 1), (0, 1, 0)], n=f"{self.side}_{self.LEG_PREFIX}Pv_CRV")
         row_apex = cmds.createNode("rowFromMatrix", name=f"{self.side}_{self.LEG_PREFIX}PvApex_RFM", ss=True)
@@ -1362,8 +1355,6 @@ class LegModule(object):
             aim_letter = "xyz"[aim_idx]
             signed_aim = aim_letter if ribbon_primary[aim_idx] > 0 else f"-{aim_letter}"
             up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondaryInputAxisRibbon[k]))]
-            # el up del ribbon apunta a donde apunta de verdad ese eje en el
-            # frame de la cadena en reposo (en R sale opuesto a lateral_ref)
             root_m = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
             k = 4 * "xyz".index(up_letter)
             up_world = om.MVector(root_m[k], root_m[k + 1], root_m[k + 2])
