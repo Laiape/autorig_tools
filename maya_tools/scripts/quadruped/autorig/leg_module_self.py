@@ -448,11 +448,9 @@ class LegModule(object):
         self.ik_ctl = {}
         self.ik_grp = {}
 
-        # MASTER del pie (AnkleIk): sintetico, SIN guia ni joint de la cadena
-        # (el control a mitad de pierna en el carpo/corvejon no existe) — caja
-        # a ras de suelo bajo el casco, orientada a MUNDO. De el cuelga toda la
-        # pila de pivotes del pie reverso (foot.pivots) y lleva los atributos
-        # del pie (stretch/soft/roll/bank).
+        # master del pie (AnkleIk): sintetico, sin guia — caja a ras de suelo
+        # bajo el casco, orientada a mundo; contiene la pila de pivotes del
+        # pie reverso y los atributos del pie
         plant_p = self.world_positions[self.plant_index]
         tip_p = self.world_positions[-1]
         ankle_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,
@@ -465,9 +463,8 @@ class LegModule(object):
         self.ik_ctl["ankle"] = ankle_ctl
         self.ik_grp["ankle"] = ankle_grps[0]
 
-        # root con el frame de su guia; ball (fetlock) con POINT matrix (mundo)
-        # colgado del master — el manager del handle lee su world vivo, asi que
-        # mover el master O el fetlock mueve la pierna.
+        # root con el frame de su guia; ball (fetlock) con point matrix
+        # colgado del master — el manager del handle lee su world vivo
         ik_specs = {
             "root": 0,
             "ball": self.leg_end_index,
@@ -578,17 +575,14 @@ class LegModule(object):
         for start, end, solver in layers:
             self._create_handle(start, end, solver, self.ik_handle_target)
 
-        # PRIMER SOLVE sin constraint: el ikSpringSolver captura su referencia
-        # de plano en la primera evaluacion. Si esa primera evaluacion ocurre
-        # ya con el poleVectorConstraint conectado, la captura sale girada
-        # (~180: rodilla 12.7u lateral, medido); evaluando aqui la cadena en
-        # reposo la referencia queda bien y el constraint posterior la respeta.
+        # primer solve sin constraint: el spring captura su referencia de
+        # plano en la primera evaluacion, y debe hacerlo en el reposo limpio
         for jnt in self.ik_chain:
             cmds.getAttr(f"{jnt}.worldMatrix[0]")
 
         self.pole_vector_setup()
 
-        # candado anti-manazas: canales del handle clavados a 0 por conexion
+        # canales de los handles clavados a 0 por conexion
         cmds.loadPlugin("lookdevKit", quiet=True)  # floatConstant vive ahi
         freeze_fcn = cmds.createNode("floatConstant", name=f"{self.module_name}HandleFreeze_FCN", ss=True)
         cmds.setAttr(f"{freeze_fcn}.inFloat", 0)
@@ -598,14 +592,13 @@ class LegModule(object):
 
     def _create_handle(self, start_index, end_index, solver, target_plug):
         """
-        El albañil de las fichas: un ikHandle del joint start al end de la
-        cadena IK, con el objetivo conectado a su offsetParentMatrix. Carga el
-        plugin del spring si la ficha lo pide y acumula en self.ik_handles.
+        Un ikHandle del joint start al end de la cadena IK, con el objetivo
+        conectado a su offsetParentMatrix. Carga el plugin del spring si la
+        ficha lo pide y acumula en self.ik_handles.
 
-        ORDEN CRITICO: el handle nace con la traslacion del efector en canales;
-        hay que aparcarlo y ponerlos a 0 ANTES de conectar el objetivo al opm,
-        o el handle queda doblado (canales + opm) y el spring cachea el plano
-        con esa posicion corrupta.
+        El handle nace con la traslacion del efector en canales: se aparca y
+        se ponen a 0 ANTES de conectar el objetivo al opm, o queda doblado y
+        el spring cachea el plano con esa posicion.
         """
         if solver == "ikSpringSolver":
             cmds.loadPlugin("ikSpringSolver", quiet=True)
@@ -657,14 +650,10 @@ class LegModule(object):
             pv=True,
         )
 
-        # El constraint EL ULTIMO, con el PV ya en su red definitiva (space
-        # switch incluido) y tras evaluar la cadena: cada re-cableado del PV
-        # re-evalua el spring y puede re-capturar el plano a medio montar.
+        # el constraint el ultimo, con el PV ya en su red definitiva: cada
+        # re-cableado del PV re-evalua el spring a medio montar
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
         cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
-        cmds.dgdirty(self.ik_handles[0])
-        for jnt in self.ik_chain:
-            cmds.getAttr(f"{jnt}.worldMatrix[0]")
 
     def _ik_nodes(self):
         """
@@ -850,13 +839,11 @@ class LegModule(object):
         distinto y la comparación del experimento no es limpia — medirías la
         diferencia de reposo, no la del solver.
 
-        CÓMO: calibra el TWIST del handle principal midiendo la deriva de las
+        Calibra el TWIST del handle principal midiendo la deriva de las
         articulaciones interiores contra sus guías (barrido grueso de 360° +
-        refinado). Es la vía robusta con el ikSpringSolver: su plano nace de
-        una captura interna que el poleVectorConstraint no siempre corrige
-        (en DG puro el residuo lateral medido era 1.28u), pero el twist SÍ lo
-        rota de forma determinista y el valor horneado sobrevive a guardar y
-        reabrir la escena (verificado headless).
+        refinado). Con el ikSpringSolver el plano nace de una captura interna
+        que el poleVectorConstraint no siempre corrige; el twist sí lo rota de
+        forma determinista y el valor horneado sobrevive a reabrir la escena.
 
         Criterio de éxito: en reposo, delta IK vs guías = 0 y match FK/IK = 0.
         """
@@ -1286,7 +1273,7 @@ class FootBase(object):
         plant_p = leg.world_positions[leg.plant_index]
         heel_p = om.MVector(plant_p.x, tip_p.y, plant_p.z)  # pisada proyectada al suelo
         sole_p = (heel_p + tip_p) * 0.5
-        half_w = (tip_p - heel_p).length() * 0.5  # ponytail: casco ~tan ancho como largo
+        half_w = (tip_p - heel_p).length() * 0.5  # ancho del casco aproximado por su largo
         out_dir = om.MVector(1, 0, 0) if leg.side == "L" else om.MVector(-1, 0, 0)
         positions = {
             "bankOut": sole_p + out_dir * half_w,
@@ -1312,8 +1299,7 @@ class FootBase(object):
             self.pivot_sdk[role] = grps[1]
             parent = ctl
 
-        # recolgar el ball bajo el sole SIN dejar el offset en canales: el
-        # parent lo escribe en translate/rotate — se pasa al opm y canales a 0
+        # recolgar el ball bajo el sole sin dejar el offset en canales
         ball_grp = leg.ik_grp["ball"]
         cmds.parent(ball_grp, self.pivot_ctl["sole"])
         # .matrix NO incluye el opm: el local completo es canales x opm
@@ -1332,7 +1318,7 @@ class FootBase(object):
         el roll negativo CLAMPA A CERO y no hace absolutamente nada. Aísla el
         tramo negativo (un min) antes de darle su propio pivote.
 
-        SIGNO, analítico (no medido): rodar hacia delante es +θ alrededor de
+        SIGNO: rodar hacia delante es +θ alrededor de
         W = up ^ FORWARD_AXIS en mundo; los pivotes giran en rz alrededor de su
         z local (lateral_ref, espejada en R), así que el signo por lado es el
         de lateral_ref·W. Vale para cualquier FORWARD_AXIS.
@@ -1389,7 +1375,7 @@ class FootBase(object):
         cmds.setAttr(f"{toe_sign}.input[1]", roll_sign)
         cmds.connectAttr(f"{toe_sign}.output", f"{self.pivot_sdk['toe']}.rotateZ")
 
-        # tramo NEGATIVO aislado con un min (la trampa del docstring)
+        # tramo negativo aislado con un min
         heel_min = cmds.createNode("min", name=f"{name}RollHeel_MIN", ss=True)
         cmds.setAttr(f"{heel_min}.input[0]", 0)
         cmds.connectAttr(f"{foot_ctl}.Roll", f"{heel_min}.input[1]")

@@ -844,14 +844,10 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
 
         pos = positions[i]
 
-        # El aim toma la Y hacia su referencia de up (la guia vecina), que
-        # puede caer a CUALQUIER lado del hueso segun el zigzag (carpo,
-        # corvejon, femur...): la Y computada saldria volteada respecto a la
-        # guia AUTORADA, que es la intencion del artista. Regla: si la Y del
-        # frame no coincide con la de la guia (dot < 0), se recomputa con el
-        # secundario invertido — por joint, sin listas de nombres.
-        # (Sustituye al check historico de "ankle", que ademas nunca disparaba:
-        # comparaba en minuscula contra nombres tipo frontLegAnkle.)
+        # la Y del frame debe coincidir con la de la guia autorada: la
+        # referencia de up puede caer a cualquier lado del hueso en una cadena
+        # en zigzag y voltear el secundario; si no coinciden (dot < 0) se
+        # recomputa con el secundario invertido
         def _aim_joint(sec):
             if i == 0:
                 up_pos = positions[2] if count > 2 else om.MVector(0.0, 0.0, 0.0)

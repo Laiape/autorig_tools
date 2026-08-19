@@ -479,10 +479,8 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])
         if matrix:
-            # colocacion por offsetParentMatrix: canales congelados a 0 y el
-            # valor en la matriz. `matrix` viene en WORLD: si hay padre, el
-            # opm se compone con su world, asi que hay que llevarla a local
-            # (world x parentWorldInverse) o el control sale doblado.
+            # matrix llega en world: a local del padre y al offsetParentMatrix,
+            # canales a 0
             target = created_grps[0] if created_grps else ctl[0]
             m = om.MMatrix(matrix)
             target_parent = cmds.listRelatives(target, parent=True)
@@ -491,7 +489,7 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
             cmds.setAttr(f"{target}.offsetParentMatrix", list(m), type="matrix")
             cmds.xform(target, m=om.MMatrix.kIdentity)
 
-        # las shapes fuera del channel box (seccion SHAPES)
+        # shapes fuera del channel box
         for shape in cmds.listRelatives(ctl[0], shapes=True) or []:
             cmds.setAttr(f"{shape}.isHistoricallyInteresting", 0)
 
