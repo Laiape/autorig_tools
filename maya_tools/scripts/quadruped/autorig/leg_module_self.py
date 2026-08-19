@@ -568,6 +568,13 @@ class LegModule(object):
 
         self.ik_handles = []
 
+        # CONFIG C: sin handles — red de nodos (dos triángulos encadenados).
+        # El Pv se crea igual (define el plano del solve); no hay constraint.
+        if self.solver == SOLVER_NODES:
+            self.pole_vector_setup()
+            self._ik_nodes()
+            return
+
         # Create the solver based on the argument given
         layers = self.IK_CONFIGS.get(self.solver)
         if layers is None:
@@ -652,9 +659,11 @@ class LegModule(object):
         )
 
         # el constraint el ultimo, con el PV ya en su red definitiva: cada
-        # re-cableado del PV re-evalua el spring a medio montar
+        # re-cableado del PV re-evalua el spring a medio montar. La config de
+        # nodos no lleva constraint (el plano lo lee la propia red).
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
-        cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
+        if self.ik_handles:
+            cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
 
     def _ik_nodes(self):
         """
@@ -664,12 +673,168 @@ class LegModule(object):
         sin plugin. Coste: el polo vector y el up vector hay que resolverlos a
         mano.
 
+        DOS TRIÁNGULOS ENCADENADOS al mismo objetivo, en el mismo plano (el
+        del pole vector):
+            1. lados (fémur, CUERDA) desde la raíz  -> coloca la babilla
+            2. lados (tibia, caña) desde la babilla -> coloca el corvejón
+        La CUERDA es la babilla->fetlock de REPOSO: con ella los triángulos de
+        reposo son los de las guías por construcción (reposo exacto sin
+        calibración). Es la ley de reparto del doblez — el papel del
+        springAngleBias en el spring nativo.
+
+        Salida: self.nodes_ik_world (plugs de matriz world por joint) que el
+        blend_setup consume en lugar de la cadena ik.
+
         Mídelo honestamente. El resultado puede perfectamente ser que el nativo
         ya lo resuelve mejor — y eso, MEDIDO, es un resultado publicable, no un
         fracaso. Un TFG que reporta un resultado negativo con datos es más
         sólido que uno que solo enseña lo que le salió bien.
+
+        PENDIENTE:
+        - atributo de BIAS: interpolar la cuerda entre el valor de reposo y
+          tibia+caña (reparto animable, comparable al springAngleBias)
+        - stretch/soft: las longitudes entran horneadas; para stretch deben
+          ser plugs (mults del ctl) y el soft reposicionar el objetivo
+        - twist alrededor de la línea raíz->objetivo (atributo en el master)
+        - verificar el signo del doblez del corvejón en una pose extrema
         """
-        pass
+        cmds.loadPlugin("matrixNodes", quiet=True)
+        cmds.loadPlugin("lookdevKit", quiet=True)
+
+        n = self.module_name
+        p = self.world_positions
+        end = self.leg_end_index
+        a_len = (p[1] - p[0]).length()            # fémur / húmero+radio según cadena
+        b_len = (p[2] - p[1]).length()            # tibia
+        c_len = (p[end] - p[2]).length()          # caña
+        q_len = (p[end] - p[1]).length()          # CUERDA de reposo (ley de reparto)
+
+        # ── helpers de red ──────────────────────────────────────────────────
+        def _dcm(label, matrix_plug):
+            node = cmds.createNode("decomposeMatrix", name=f"{n}{label}_DCM", ss=True)
+            cmds.connectAttr(matrix_plug, f"{node}.inputMatrix")
+            return f"{node}.outputTranslate"
+
+        def _f(label, op, in_a, in_b):
+            # floatMath: 0 suma · 1 resta · 2 mult · 3 div · 4 min · 5 max · 6 pow
+            node = cmds.createNode("floatMath", name=f"{n}{label}_FLM", ss=True)
+            cmds.setAttr(f"{node}.operation", op)
+            for attr, v in (("floatA", in_a), ("floatB", in_b)):
+                if isinstance(v, str):
+                    cmds.connectAttr(v, f"{node}.{attr}")
+                else:
+                    cmds.setAttr(f"{node}.{attr}", v)
+            return f"{node}.outFloat"
+
+        def _sub(label, va, vb):
+            node = cmds.createNode("plusMinusAverage", name=f"{n}{label}_PMA", ss=True)
+            cmds.setAttr(f"{node}.operation", 2)
+            cmds.connectAttr(va, f"{node}.input3D[0]")
+            cmds.connectAttr(vb, f"{node}.input3D[1]")
+            return f"{node}.output3D"
+
+        def _add(label, vectors):
+            node = cmds.createNode("plusMinusAverage", name=f"{n}{label}_PMA", ss=True)
+            for i, v in enumerate(vectors):
+                cmds.connectAttr(v, f"{node}.input3D[{i}]")
+            return f"{node}.output3D"
+
+        def _dist(label, va, vb):
+            node = cmds.createNode("distanceBetween", name=f"{n}{label}_DBT", ss=True)
+            cmds.connectAttr(va, f"{node}.point1")
+            cmds.connectAttr(vb, f"{node}.point2")
+            return f"{node}.distance"
+
+        def _scale(label, vec, scalar):
+            node = cmds.createNode("multiplyDivide", name=f"{n}{label}_MDV", ss=True)
+            cmds.connectAttr(vec, f"{node}.input1")
+            for ax in "XYZ":
+                cmds.connectAttr(scalar, f"{node}.input2{ax}")
+            return f"{node}.output"
+
+        def _cross(label, va, vb):
+            node = cmds.createNode("vectorProduct", name=f"{n}{label}_VCP", ss=True)
+            cmds.setAttr(f"{node}.operation", 2)
+            cmds.setAttr(f"{node}.normalizeOutput", 1)
+            cmds.connectAttr(va, f"{node}.input1")
+            cmds.connectAttr(vb, f"{node}.input2")
+            return f"{node}.output"
+
+        # ── puntos vivos: raíz (ctl root), objetivo (manager), pole (Pv) ────
+        A = _dcm("NodesRoot", f"{self.ik_ctl['root']}.worldMatrix[0]")
+        D = _dcm("NodesTarget", self.ik_handle_target)
+        P = _dcm("NodesPole", f"{self.ik_ctl['pv']}.worldMatrix[0]")
+
+        # plano del solve: û = dir raíz->objetivo, v̂ = perpendicular en el
+        # plano hacia el pole (Gram-Schmidt vía doble cruz)
+        d1_raw = _dist("NodesD1", A, D)
+        # clamp de alcance del triángulo 1: |a-q| < d < a+q (evita NaN en el sqrt)
+        d1 = _f("NodesD1Max", 4, _f("NodesD1Min", 5, d1_raw, abs(a_len - q_len) + 1e-4), a_len + q_len - 1e-4)
+        u1 = _scale("NodesU1", _sub("NodesAD", D, A), _f("NodesD1Inv", 3, 1.0, d1_raw))
+        v1 = _cross("NodesV1", _cross("NodesN", u1, _sub("NodesAP", P, A)), u1)
+
+        def _bend_point(label, root_pt, dist_plug, u_dir, v_dir, side_a, side_b, bend_sign):
+            """Ley de cosenos: punto doblado a side_a del root, en el plano (û,v̂)."""
+            d2 = _f(f"{label}DistSq", 2, dist_plug, dist_plug)
+            num = _f(f"{label}Num", 0, d2, side_a * side_a - side_b * side_b)
+            cos_raw = _f(f"{label}Cos", 3, num, _f(f"{label}Den", 2, dist_plug, 2.0 * side_a))
+            cos_cl = _f(f"{label}CosMax", 5, _f(f"{label}CosMin", 4, cos_raw, 1.0), -1.0)
+            sin_sq = _f(f"{label}SinSq", 5, _f(f"{label}OneMinus", 1, 1.0, _f(f"{label}CosSq", 2, cos_cl, cos_cl)), 0.0)
+            sin_v = _f(f"{label}Sin", 6, sin_sq, 0.5)
+            along = _scale(f"{label}Along", u_dir, _f(f"{label}AlongLen", 2, cos_cl, side_a))
+            lift = _scale(f"{label}Lift", v_dir, _f(f"{label}LiftLen", 2, sin_v, side_a * bend_sign))
+            return _add(f"{label}Point", [root_pt, along, lift])
+
+        # triángulo 1: (fémur, cuerda) -> babilla, doblada HACIA el pole
+        B = _bend_point("NodesT1", A, d1, u1, v1, a_len, q_len, 1.0)
+
+        # triángulo 2: (tibia, caña) desde la babilla -> corvejón, doblado
+        # al lado CONTRARIO del pole (el zigzag alterna)
+        d2_raw = _dist("NodesD2", B, D)
+        d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, abs(b_len - c_len) + 1e-4), b_len + c_len - 1e-4)
+        u2 = _scale("NodesU2", _sub("NodesBD", D, B), _f("NodesD2Inv", 3, 1.0, d2_raw))
+        C = _bend_point("NodesT2", B, d2, u2, v1, b_len, c_len, -1.0)
+
+        # ── frames de salida: aim con la convención del módulo, up al pole ──
+        def _cmp(label, vec):
+            node = cmds.createNode("composeMatrix", name=f"{n}{label}_CMX", ss=True)
+            cmds.connectAttr(vec, f"{node}.inputTranslate")
+            return f"{node}.outputMatrix"
+
+        cmp_a, cmp_b, cmp_c, cmp_d = (_cmp(l, v) for l, v in
+                                      (("NodesA", A), ("NodesB", B), ("NodesC", C), ("NodesD", D)))
+        cmp_p = _cmp("NodesP", P)
+
+        def _aim(label, base_mtx, target_mtx):
+            node = cmds.createNode("aimMatrix", name=f"{n}{label}_AMX", ss=True)
+            cmds.connectAttr(base_mtx, f"{node}.inputMatrix")
+            cmds.connectAttr(target_mtx, f"{node}.primaryTargetMatrix")
+            cmds.setAttr(f"{node}.primaryInputAxis", *self.primary_axis, type="double3")
+            cmds.connectAttr(cmp_p, f"{node}.secondaryTargetMatrix")
+            cmds.setAttr(f"{node}.secondaryInputAxis", *self.secondary_axis, type="double3")
+            cmds.setAttr(f"{node}.secondaryMode", 1)
+            return f"{node}.outputMatrix"
+
+        aim_a = _aim("NodesRootFrame", cmp_a, cmp_b)
+        aim_b = _aim("NodesMidFrame", cmp_b, cmp_c)
+        aim_c = _aim("NodesLowFrame", cmp_c, cmp_d)
+
+        # fetlock: offset horneado contra el frame del corvejón (posición D
+        # exacta porque |corvejón->fetlock| = caña por construcción)
+        c_rest = om.MMatrix(cmds.getAttr(aim_c))
+        d_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[end]))
+        d_mmx = cmds.createNode("multMatrix", name=f"{n}NodesEndFrame_MMX", ss=True)
+        cmds.setAttr(f"{d_mmx}.matrixIn[0]", list(d_rest * c_rest.inverse()), type="matrix")
+        cmds.connectAttr(aim_c, f"{d_mmx}.matrixIn[1]")
+
+        # pisada rígida bajo el fetlock (el pie la re-cablea a su ctl después)
+        plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
+        plant_mmx = cmds.createNode("multMatrix", name=f"{n}NodesPlantFrame_MMX", ss=True)
+        cmds.setAttr(f"{plant_mmx}.matrixIn[0]", list(plant_rest * d_rest.inverse()), type="matrix")
+        cmds.connectAttr(f"{d_mmx}.matrixSum", f"{plant_mmx}.matrixIn[1]")
+
+        self.nodes_ik_world = [aim_a, aim_b, aim_c,
+                               f"{d_mmx}.matrixSum", f"{plant_mmx}.matrixSum"]
 
     def ik_stretch_soft(self):
         """
@@ -691,7 +856,13 @@ class LegModule(object):
         Nota para el cap. 8: el stretch es también el escape cuando la cadena se
         queda sin alcance. Si mides un pivote o un muelle y "no llega",
         comprueba si es ALCANCE antes de culpar al mecanismo.
+
+        PENDIENTE para la config de nodos: sin handles no aplica tal cual — el
+        stretch debe entrar como plugs de longitud en la red y el soft
+        recolocar el objetivo del manager, no un handle.
         """
+        if not self.ik_handles:
+            return
 
         foot_ctl = self.ik_ctl["ankle"]
         root_ctl = self.ik_ctl["root"]
@@ -891,7 +1062,10 @@ class LegModule(object):
 
         for i, jnt in enumerate(self.leg_joints):
             blend_matrix = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Blend_BLM"), ss=True)
-            cmds.connectAttr(f"{self.ik_chain[i]}.worldMatrix[0]", f"{blend_matrix}.inputMatrix")
+            # la config de nodos publica sus matrices world; el resto usa la cadena ik
+            ik_src = getattr(self, "nodes_ik_world", None)
+            cmds.connectAttr(ik_src[i] if ik_src else f"{self.ik_chain[i]}.worldMatrix[0]",
+                             f"{blend_matrix}.inputMatrix")
             cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
             cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{blend_matrix}.target[0].weight")
 
