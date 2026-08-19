@@ -42,6 +42,7 @@ def create_custom_menu():
 
     cmds.menuItem(label="CREATE RIG", command=lambda x: rig(leg_impl="reference"), boldFont=True, image="kinJoint.png")
     cmds.menuItem(label="CREATE RIG SELF", command=lambda x: rig(leg_impl="self"), boldFont=True, image="kinJoint.png")
+    cmds.menuItem(label="CREATE RIG SELF MATH", command=lambda x: rig(leg_impl="self", leg_solver="nodes"), boldFont=True, image="kinJoint.png")
     cmds.menuItem(label="BUILD LEG", command=lambda x: leg_rig(), boldFont=True, image="kinJoint.png")
 
     cmds.menuItem(label="Guides Manager", subMenu=True, tearOff=True, image="locator.png")
@@ -258,17 +259,18 @@ def export_source_skin_data():
         pos="midCenter", fade=True
     )
     
-def rig(leg_impl="self"):
+def rig(leg_impl="self", leg_solver=None):
     """
     Crea el rig completo. leg_impl elige la implementación de pata de
     cuadrúpedo: "reference" (quadruped/leg_module) o "self"
-    (quadruped/leg_module_self) — para comparar ambas sobre el mismo personaje.
+    (quadruped/leg_module_self). leg_solver fuerza el preset de solver de las
+    patas (SELF MATH -> "nodes"); a None usa el de los rig settings.
     """
     cmds.file(new=True, force=True)
     data_manager.DataExportBiped().new_build()
     reload(create_rig)
     rig = create_rig.AutoRig()
-    rig.build(leg_impl=leg_impl)
+    rig.build(leg_impl=leg_impl, leg_solver=leg_solver)
 
 def leg_rig():
     """Función para crear el rig bipedal"""

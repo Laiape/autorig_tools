@@ -37,11 +37,12 @@ class AutoRig(object):
     AutoRig class to create a custom rig for a character in Maya.
     """
 
-    def build(self, leg_impl="self"):
+    def build(self, leg_impl="self", leg_solver=None):
 
         """
         Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
         leg_impl: "self" | "reference" — implementación de pata de cuadrúpedo.
+        leg_solver: None (usa el de los rig settings) o un preset para forzarlo.
         """
         from maya_tools.scripts.ui import rig_progress
         reload(rig_progress)
@@ -73,7 +74,7 @@ class AutoRig(object):
                 progress._set_pct(label, pct)
 
             progress._set_pct("Building rig modules…", 5)
-            self.make_rig(on_step=on_module_step, leg_impl=leg_impl)
+            self.make_rig(on_step=on_module_step, leg_impl=leg_impl, leg_solver=leg_solver)
 
             progress._set_pct("Labeling joints…", 82)
             self.label_joints()
@@ -191,14 +192,14 @@ class AutoRig(object):
 
         basic_structure.create_basic_structure()
 
-    def make_rig(self, on_step=None, leg_impl="self"):
+    def make_rig(self, on_step=None, leg_impl="self", leg_solver=None):
 
         """
         Create the rig for the character, including joints, skinning, and control curves.
         """
 
         char_name = rig_manager.get_character_name_from_build()
-        rig_manager.build_rig(char_name, on_step=on_step, leg_impl=leg_impl)
+        rig_manager.build_rig(char_name, on_step=on_step, leg_impl=leg_impl, leg_solver=leg_solver)
 
         cmds.inViewMessage(
         amg=f'Completed <hl>{char_name.upper()} RIG</hl> build.',

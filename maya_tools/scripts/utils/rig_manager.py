@@ -362,13 +362,15 @@ def get_character_data(character_name):
     return full_data if full_data else {}
 
 
-def build_rig(character_name, on_step=None, leg_impl="self"):
+def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
 
     """
     Función principal de construcción del Rig.
     on_step(label, current, total) — optional callback for progress reporting.
     leg_impl — implementación de pata de cuadrúpedo: "self" (leg_module_self)
     o "reference" (quadruped/leg_module), para comparar ambas.
+    leg_solver — si se pasa, fuerza el preset de solver de las patas por
+    encima del leg_solver de los rig settings (boton SELF MATH -> "nodes").
     """
     _step = [0]
     _TOTAL = 20
@@ -446,11 +448,12 @@ def build_rig(character_name, on_step=None, leg_impl="self"):
 
     # --- Legs (Solo Quadruped) ---
     if rig_type == 1:
-        leg_solver = rig_settings.get("leg_solver", "spring")
-        if isinstance(leg_solver, int):
-            # get_rig_data exporta los enums al .build como INDICE (getAttr
-            # plano); aqui se traduce de vuelta al nombre del preset.
-            leg_solver = LEG_SOLVER_OPTIONS[leg_solver]
+        if leg_solver is None:
+            leg_solver = rig_settings.get("leg_solver", "spring")
+            if isinstance(leg_solver, int):
+                # get_rig_data exporta los enums al .build como INDICE (getAttr
+                # plano); aqui se traduce de vuelta al nombre del preset.
+                leg_solver = LEG_SOLVER_OPTIONS[leg_solver]
 
         # Patas Delanteras — implementación elegida por leg_impl
         if check("L_frontLegShoulder_JNT") and check("R_frontLegShoulder_JNT"):
