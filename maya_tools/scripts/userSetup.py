@@ -73,7 +73,11 @@ def init_auto_rig_UI():
         from ui import auto_rig_UI
         reload(auto_rig_UI) 
         auto_rig_UI.create_custom_menu()
-        
+
+        from ui import auto_rig_shelf
+        reload(auto_rig_shelf)
+        auto_rig_shelf.create_shelf()
+
     except Exception as e:
         import traceback
         traceback.print_exc()
