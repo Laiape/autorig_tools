@@ -143,6 +143,15 @@ class SpineModule(object):
             pos = root_pos * (1.0 - weight) + end_pos * weight
             self.spine_guides_matrices.append(list(guides_manager._with_translation(base_matrix, pos)))
 
+        # guia OPCIONAL del localHip: da la POSICION del ctl del pelvis (la
+        # orientacion sigue siendo la del spine); sin guia cae al root
+        self.local_hip_matrix = self.spine_guides_matrices[0]
+        hip_guide = guides_manager.get_guides(f"{self.side}_localHip_JNT")
+        if hip_guide:
+            hip_pos = om.MVector(cmds.xform(hip_guide[0], q=True, ws=True, t=True))
+            cmds.delete(hip_guide[0])
+            self.local_hip_matrix = list(guides_manager._with_translation(base_matrix, hip_pos))
+
 
     def controller_creation(self):
 
@@ -155,7 +164,7 @@ class SpineModule(object):
         self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         
         cmds.setAttr(f"{self.body_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
-        cmds.setAttr(f"{self.local_hip_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
+        cmds.setAttr(f"{self.local_hip_nodes[0]}.offsetParentMatrix", self.local_hip_matrix, type="matrix")
 
         # Create the spine controllers
         self.spine_nodes = []
@@ -262,7 +271,13 @@ class SpineModule(object):
         four_by_four = cmds.createNode("fourByFourMatrix", name=f"{self.side}_localHip_FBF")
         row_translation = cmds.createNode("rowFromMatrix", name=f"{self.side}_localHipTranslation_RFM")
         cmds.setAttr(f"{row_translation}.input", 3)
-        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{row_translation}.matrix")
+        # offset horneado guia->spine delante: el joint reposa en la guia del
+        # localHip y sigue viviendo la traslacion del spine (identidad sin guia)
+        hip_offset = om.MMatrix(self.local_hip_matrix) * om.MMatrix(self.spine_guides_matrices[0]).inverse()
+        hip_pos_mmx = cmds.createNode("multMatrix", name=f"{self.side}_localHipPos_MMX")
+        cmds.setAttr(f"{hip_pos_mmx}.matrixIn[0]", list(hip_offset), type="matrix")
+        cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{hip_pos_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{hip_pos_mmx}.matrixSum", f"{row_translation}.matrix")
         for col_index, axis in enumerate("XYZ"):
             cmds.connectAttr(f"{row_translation}.output{axis}", f"{four_by_four}.in3{col_index}")
 
