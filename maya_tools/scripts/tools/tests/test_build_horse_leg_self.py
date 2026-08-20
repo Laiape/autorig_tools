@@ -184,6 +184,26 @@ for side in ("L", "R"):
                 worst = min(worst, na[0] * ga[0], na[1] * ga[1], na[2] * ga[2])
         check(f"{base}: bendys y ribbon orientados como la cadena", worst > 0.98, "dot=%.3f" % worst)
 
+# Bend_Bias (spring): redistribuye el doblez sin mover el pie; 0.5 = reposo
+for side in ("L",):
+    ankle = f"{side}_backLegFetlockIk_CTL"
+    if not cmds.attributeQuery("Bend_Bias", node=ankle, exists=True):
+        check("bias spring: attr Bend_Bias", False)
+    else:
+        # en pose PLEGADA: en reposo cualquier reparto da la misma solucion
+        cmds.setAttr(f"{ankle}.translateY", 15)
+        stifle0 = _wpos(f"{side}_backLegStifleIk_JNT")
+        foot0 = _wpos(f"{side}_backLegFetlockIk_JNT")
+        cmds.setAttr(f"{ankle}.Bend_Bias", 1)
+        d_stifle = (_wpos(f"{side}_backLegStifleIk_JNT") - stifle0).length()
+        d_foot = (_wpos(f"{side}_backLegFetlockIk_JNT") - foot0).length()
+        cmds.setAttr(f"{ankle}.Bend_Bias", 0.5)
+        d_back = (_wpos(f"{side}_backLegStifleIk_JNT") - stifle0).length()
+        cmds.setAttr(f"{ankle}.translateY", 0)
+        check("bias spring: redistribuye (babilla se mueve)", d_stifle > 0.5, "d=%.2f" % d_stifle)
+        check("bias spring: el pie no se mueve", d_foot < 0.05, "d=%.3f" % d_foot)
+        check("bias spring: 0.5 vuelve al reparto natural", d_back < 1e-3, "d=%.4f" % d_back)
+
 # pie reverso FUNCIONAL, medido en los joints de skinning del pie (lo que
 # deforma): roll negativo bascula sobre el talon -> la punta SUBE; roll pasado
 # el break rueda sobre la punta -> la cuartilla SUBE; a 0 vuelve al reposo.
@@ -307,6 +327,23 @@ d_noreach = (_pt(3) - target).length()
 cmds.setAttr(f"{ankle}.translateY", 0)
 check("nodes: stretch alcanza el objetivo", d_reach < 0.1, "d=%.3f" % d_reach)
 check("nodes: sin stretch se queda corto", d_noreach > 1.0, "d=%.3f" % d_noreach)
+
+# Bend_Bias (nodes): mismo dial sobre la cuerda, medido en pose plegada
+if cmds.attributeQuery("Bend_Bias", node=ankle, exists=True):
+    cmds.setAttr(f"{ankle}.translateY", 15)
+    b0 = _pt(1)
+    f0 = _pt(3)
+    cmds.setAttr(f"{ankle}.Bend_Bias", 1)
+    d_stifle = (_pt(1) - b0).length()
+    d_foot = (_pt(3) - f0).length()
+    cmds.setAttr(f"{ankle}.Bend_Bias", 0.5)
+    d_back = (_pt(1) - b0).length()
+    cmds.setAttr(f"{ankle}.translateY", 0)
+    check("bias nodes: redistribuye (babilla se mueve)", d_stifle > 0.5, "d=%.2f" % d_stifle)
+    check("bias nodes: el pie no se mueve", d_foot < 0.05, "d=%.3f" % d_foot)
+    check("bias nodes: 0.5 vuelve al reparto natural", d_back < 1e-3, "d=%.4f" % d_back)
+else:
+    check("bias nodes: attr Bend_Bias", False)
 
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)

@@ -608,6 +608,17 @@ class LegModule(object):
 
         self.pole_vector_setup()
 
+        # bias del doblez: los dos slots del springAngleBias complementarios
+        main_hdl = self.ik_handles[0]
+        if cmds.attributeQuery("springAngleBias", node=main_hdl, exists=True):
+            idx = cmds.getAttr(f"{main_hdl}.springAngleBias", multiIndices=True) or []
+            if len(idx) >= 2:
+                bias_plug = self.bend_bias_attr()
+                bias_rev = cmds.createNode("reverse", name=f"{self.module_name}BendBias_REV", ss=True)
+                cmds.connectAttr(bias_plug, f"{bias_rev}.inputX")
+                cmds.connectAttr(bias_plug, f"{main_hdl}.springAngleBias[{idx[0]}].springAngleBias_FloatValue")
+                cmds.connectAttr(f"{bias_rev}.outputX", f"{main_hdl}.springAngleBias[{idx[-1]}].springAngleBias_FloatValue")
+
         # canales de los handles clavados a 0 por conexion
         cmds.loadPlugin("lookdevKit", quiet=True)  # floatConstant vive ahi
         freeze_fcn = cmds.createNode("floatConstant", name=f"{self.module_name}HandleFreeze_FCN", ss=True)
@@ -615,6 +626,21 @@ class LegModule(object):
         for handle in self.ik_handles:
             for attr in ("translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ"):
                 cmds.connectAttr(f"{freeze_fcn}.outFloat", f"{handle}.{attr}")
+
+    def bend_bias_attr(self):
+        """
+        Reparto del doblez entre las dos articulaciones interiores: una cadena
+        de 3 huesos con raíz y pie clavados tiene UN grado de libertad
+        redundante, y este atributo es ese DOF. 0.5 = reparto natural del
+        solver (el reposo no se mueve); subirlo carga el doblez arriba
+        (babilla/codo), bajarlo abajo (corvejón/carpo). Mismo dial en spring
+        (springAngleBias) y en nodos (la cuerda).
+        """
+        foot_ctl = self.ik_ctl["ankle"]
+        cmds.addAttr(foot_ctl, longName="BEND", niceName="BEND ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{foot_ctl}.BEND", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(foot_ctl, longName="Bend_Bias", attributeType="float", minValue=0, maxValue=1, defaultValue=0.5, keyable=True)
+        return f"{foot_ctl}.Bend_Bias"
 
     def _create_handle(self, start_index, end_index, solver, target_plug):
         """
@@ -847,6 +873,23 @@ class LegModule(object):
 
         chord = _f("NodesChordClampHi", 4, _f("NodesChordClampLo", 5, f"{chord_cnd}.outColorR", bc_lo), bc_hi)
 
+        # bias del doblez sobre la cuerda: >0.5 hacia tibia+caña (carga la
+        # babilla), <0.5 hacia el minimo (carga el corvejon)
+        bias_plug = self.bend_bias_attr()
+        up_t = _f("NodesBiasUpT", 2, _f("NodesBiasUpMax", 5, _f("NodesBiasUp", 1, bias_plug, 0.5), 0.0), 2.0)
+        dn_t = _f("NodesBiasDnT", 2, _f("NodesBiasDnMax", 5, _f("NodesBiasDn", 1, 0.5, bias_plug), 0.0), 2.0)
+        hi_gain = _f("NodesBiasHiGain", 2, up_t, _f("NodesBiasHiSpan", 1, bc_hi, chord))
+        lo_gain = _f("NodesBiasLoGain", 2, dn_t, _f("NodesBiasLoSpan", 1, chord, bc_lo))
+        chord = _f("NodesBiasChord", 1, _f("NodesBiasChordUp", 0, chord, hi_gain), lo_gain)
+
+        # el bias satura donde el triangulo 1 deja de ser resoluble (el pie
+        # nunca se despega del objetivo): |d - a| < cuerda < d + a
+        reach_lo = _f("NodesBiasReachLo", 0,
+                      _f("NodesBiasDAbs", 5, _f("NodesBiasDA1", 1, d1_raw, len_a),
+                         _f("NodesBiasDA2", 1, len_a, d1_raw)), 1e-3)
+        reach_hi = _f("NodesBiasReachHi", 1, _f("NodesBiasDA3", 0, d1_raw, len_a), 1e-3)
+        chord = _f("NodesBiasReachMax", 5, _f("NodesBiasReachMin", 4, chord, reach_hi), reach_lo)
+
         # alcance del triángulo 1: |a-q| < d < a+q
         aq_hi = _f("NodesD1Hi", 1, _f("NodesLenAQ", 0, len_a, chord), 1e-3)
         aq_lo = _f("NodesD1Lo", 0,
@@ -854,7 +897,8 @@ class LegModule(object):
                       _f("NodesLenAQDif2", 1, chord, len_a)), 1e-3)
         d1 = _f("NodesD1Max", 4, _f("NodesD1Min", 5, d1_raw, aq_lo), aq_hi)
         u1 = _scale("NodesU1", _sub("NodesAD", D, A), _f("NodesD1Inv", 3, 1.0, d1_raw))
-        v1 = _cross("NodesV1", _cross("NodesN", u1, _sub("NodesAP", P, A)), u1)
+        n_hat = _cross("NodesN", u1, _sub("NodesAP", P, A))
+        v1 = _cross("NodesV1", n_hat, u1)
 
         def _bend_point(label, root_pt, dist_plug, u_dir, v_dir, side_a, side_b, bend_sign):
             """Ley de cosenos: punto doblado a side_a del root, en el plano (û,v̂).
@@ -894,7 +938,10 @@ class LegModule(object):
         d2_raw = _dist("NodesD2", B, D)
         d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, bc_lo), bc_hi)
         u2 = _scale("NodesU2", _sub("NodesBD", D, B), _f("NodesD2Inv", 3, 1.0, d2_raw))
-        C = _bend_point("NodesT2", B, d2, u2, v1, len_b, len_c, sign_2)
+        # perpendicular EN EL PLANO a u2 (v1 lo es a u1: con base no ortogonal
+        # la ley de cosenos del segundo triangulo no coloca C a distancia cana)
+        v2 = _cross("NodesV2", n_hat, u2)
+        C = _bend_point("NodesT2", B, d2, u2, v2, len_b, len_c, sign_2)
 
         # ── frames de salida: aim con la convención del módulo, up al pole ──
         def _cmp(label, vec):
