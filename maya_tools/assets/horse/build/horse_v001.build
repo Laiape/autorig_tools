@@ -1,12 +1,14 @@
 {
     "Rig_Type": 1,
+    "solver_mode": 0,
+    "solver_front_leg": 0,
+    "solver_back_leg": 0,
     "spine_skinning_jnts": 8,
     "spine_controllers": 4,
     "neck_skinning_jnts": 5,
     "neck_controllers": 3,
     "arm_skinning_jnts": 5,
     "leg_skinning_jnts": 5,
-    "leg_solver": 0,
     "tail_skinning_jnts": 3,
     "tail_controllers": 3,
     "mGear_integration": 0

@@ -1,5 +1,17 @@
 {
     "basic_structure": {
-        "character_name": "chihuahua"
+        "modules_GRP": "modules_GRP",
+        "skel_GRP": "skel_GRP",
+        "masterwalk_ctl": "C_masterwalk_CTL"
+    },
+    "backLeg_module": {
+        "L_legIk": "L_backLegFetlockIk_CTL",
+        "L_rootIk": "L_backLegHipIk_CTL",
+        "L_hipFk": "L_backLegHipFk_CTL"
+    },
+    "frontLeg_module": {
+        "L_legIk": "L_frontLegFetlockIk_CTL",
+        "L_rootIk": "L_frontLegShoulderIk_CTL",
+        "L_hipFk": "L_frontLegShoulderFk_CTL"
     }
 }
