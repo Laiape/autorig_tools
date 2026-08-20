@@ -1495,6 +1495,19 @@ class LegModule(object):
         if self.settings_guide and cmds.objExists(self.settings_guide):
             cmds.delete(self.settings_guide)
 
+        # ---- data para el resto del rig (rig_manager.quadruped_space_switches
+        # conecta con esto las patas al pelvis/chest al final del build) ----
+        # legPv NO se publica: su space switch (foot/root) ya se monta en
+        # pole_vector_setup, y publicarlo montaria un segundo switch encima
+        data_manager.DataExportBiped().append_data(
+            f"{self.LEG_PREFIX}_module",
+            {
+                f"{self.side}_legIk": self.ik_ctl["ankle"],
+                f"{self.side}_rootIk": self.ik_ctl["root"],
+                f"{self.side}_hipFk": self.fk_controllers[0],
+            },
+        )
+
         # config de nodos: la cadena ik y la guia no tienen consumidores
         # (la red lee los frames horneados) — fuera del modulo
         if not self.ik_handles:
