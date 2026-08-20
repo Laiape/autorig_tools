@@ -227,9 +227,14 @@ def _create_display_layers(geo_grp):
             layer_add(term, nodes)
 
 
-def create_basic_structure(character_name=None):
+def create_basic_structure(character_name=None, in_scene=False):
 
-    character_name, scene_assemblies = rig_manager.prepare_rig_scene()
+    # in_scene: construye SOBRE la escena actual (guias + modelo ya presentes),
+    # sin file new ni abrir el modelo
+    if in_scene:
+        character_name = character_name or cmds.optionVar(q="currentAssetRigName")
+    else:
+        character_name, scene_assemblies = rig_manager.prepare_rig_scene()
     data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
     mgear = data_manager.DataExportBiped().get_data("rig_settings", "mGear_integration")
 

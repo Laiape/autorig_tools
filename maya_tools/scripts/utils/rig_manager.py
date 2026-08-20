@@ -796,6 +796,121 @@ def quadruped_space_switches():
             _ss(fl_pv, [fl_ik, local_chest, body], default_rotate=1, default_translate=1, pv=True)  # Front leg pv
 
 
+def test_rig_by_guide():
+    """
+    Construye SOLO el módulo de la guía raíz seleccionada, sobre la escena de
+    guías actual (el modelo ya está: no se reimporta nada). Para iterar guías:
+    colocar -> Test Rig by Guide -> ver el rig -> ajustar -> repetir.
+
+    Flujo: exporta el estado ACTUAL de las guías a un temporal (la escena
+    manda, no el .guides versionado), borra C_guides_GRP (los módulos crean
+    joints con esos mismos nombres), construye basic structure si falta + el
+    módulo, y reimporta las guías del temporal.
+    """
+    sel = cmds.ls(selection=True) or []
+    if not sel or not cmds.objExists("C_guides_GRP"):
+        om.MGlobal.displayError("Selecciona la guía RAÍZ de un módulo (p.ej. L_backLegHip_JNT).")
+        return
+
+    # subir hasta la raíz de la cadena (hijo directo de C_guides_GRP)
+    node = sel[0]
+    while True:
+        parent = (cmds.listRelatives(node, parent=True) or [None])[0]
+        if parent is None:
+            om.MGlobal.displayError(f"'{sel[0]}' no cuelga de C_guides_GRP.")
+            return
+        if parent == "C_guides_GRP":
+            break
+        node = parent
+
+    parts = node.split("_")
+    if len(parts) < 3:
+        om.MGlobal.displayError(f"Nombre de guía no reconocido: {node}")
+        return
+    side, core = parts[0], "_".join(parts[1:-1])
+
+    character_name = cmds.optionVar(q="currentAssetRigName")
+
+    # settings del .build (contando lo que haya en los attrs de las guías)
+    get_rig_data(character_name, "C_guides_GRP")
+    settings = build_rig_from_data(character_name) or {}
+    leg_solver = settings.get("leg_solver", "spring")
+    if isinstance(leg_solver, int):
+        leg_solver = LEG_SOLVER_OPTIONS[leg_solver]
+    leg_jnts = settings.get("leg_skinning_jnts", 5)
+
+    from maya_tools.scripts.quadruped.autorig import leg_module_self
+    reload(leg_module_self)
+
+    # guía raíz -> (constructor, prefijo de los grupos del módulo)
+    builders = {
+        "backLegHip": (lambda s_: leg_module_self.BackLegModule().make(
+            s_, solver=leg_solver, skinning_joints_number=leg_jnts), "backLeg"),
+        "frontLegShoulder": (lambda s_: leg_module_self.FrontLegModule().make(
+            s_, solver=leg_solver, skinning_joints_number=leg_jnts), "frontLeg"),
+        "spine00": (lambda s_: quad_spine_module.SpineModule().make(
+            "C", settings.get("spine_skinning_jnts", 8), settings.get("spine_controllers", 5)), "spine"),
+        "tail00": (lambda s_: tail_module.TailModule().make(
+            "C", settings.get("tail_skinning_jnts", 5), settings.get("tail_controllers", 5)), "tail"),
+        "neck00": (lambda s_: neck_module_quad.NeckModule().make(
+            "C", settings.get("neck_skinning_jnts", 5), settings.get("neck_controllers", 2)), "neck"),
+    }
+    if core not in builders:
+        om.MGlobal.displayError(f"Sin constructor para la guía '{core}'. Soportadas: {sorted(builders)}")
+        return
+    builder, grp_prefix = builders[core]
+
+    # 1. exportar el estado actual de las guías a un temporal y usarlo de
+    # fuente. Vive en assets/<char>/guides porque los loaders derivan el
+    # personaje de la ruta; se BORRA al final (get_latest_version va por mtime
+    # y lo secuestraría todo si quedara).
+    tmp = os.path.join(asset_path(character_name, "guides"), f"{character_name}_v0test.guides")
+    guides_manager.get_guides_info(path=tmp)
+    with open(tmp, "r") as f:
+        guides_data = json.load(f)
+    guides_manager._GUIDES_CACHE[character_name] = (tmp, guides_data)
+    guide_names = set(guides_data.get(character_name, {}))
+
+    # 2. fuera las guías de la escena (clash de nombres con el módulo)
+    cmds.delete("C_guides_GRP")
+
+    # 3. basic structure sobre la escena (una sola vez)
+    if not cmds.objExists("C_masterwalk_CTL"):
+        data_manager.DataExportBiped().new_build()
+        from maya_tools.scripts.utils import basic_structure
+        reload(basic_structure)
+        basic_structure.create_basic_structure(character_name, in_scene=True)
+
+    # 4. limpiar un test anterior del mismo módulo
+    grp_side = "C" if grp_prefix in ("spine", "tail", "neck") else side
+    for suffix in ("Module_GRP", "Skinning_GRP", "Controllers_GRP"):
+        node_name = f"{grp_side}_{grp_prefix}{suffix}"
+        if cmds.objExists(node_name):
+            cmds.delete(node_name)
+
+    # 5. construir el módulo
+    try:
+        builder(side)
+        # el módulo puede quedarse joints con el MISMO nombre que las guías
+        # (cadena guía interna, skinning de la spine...): renombrarlos para
+        # que la reimportación no choque
+        for suffix in ("Module_GRP", "Skinning_GRP", "Controllers_GRP"):
+            grp = f"{grp_side}_{grp_prefix}{suffix}"
+            if not cmds.objExists(grp):
+                continue
+            for jnt in cmds.listRelatives(grp, allDescendents=True, type="joint") or []:
+                if jnt in guide_names:
+                    cmds.rename(jnt, f"gTest_{jnt}")
+    finally:
+        # 6. devolver las guías a la escena desde el temporal y limpiarlo
+        guides_manager.load_guides_info(filePath=tmp, new_scene=False, load_settings=True)
+        guides_manager.clear_guides_cache()
+        if os.path.exists(tmp):
+            os.remove(tmp)
+
+    om.MGlobal.displayInfo(f"Test rig: módulo '{core}' ({side}) construido desde las guías de la escena.")
+
+
 # Presets de IK de la pierna de cuadrúpedo (claves de IK_CONFIGS en
 # quadruped/autorig/leg_module_self.py). El PRIMERO es el default del enum.
 LEG_SOLVER_OPTIONS = ("spring", "rp", "spring_rp", "nodes")

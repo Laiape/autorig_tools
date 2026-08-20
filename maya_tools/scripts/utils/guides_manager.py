@@ -88,8 +88,12 @@ def get_guides_info(path=None):
     # --- 3. Recolección de datos de Maya (con guardas para evitar None) ---
     joint_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="joint") or []
     locator_guides = cmds.listRelatives(guides_transform, allDescendents=True, type="locator") or []
-    curves_in_scene = cmds.ls("*_CRV", type="transform", long=True) or []
-    nurbs_surfaces = cmds.ls("*_NURB", type="transform", long=True) or []
+    # solo curvas/superficies de GUIA: lo que cuelga del rig (linea del Pv,
+    # ribbons...) no es una guia aunque acabe en _CRV/_NURB
+    def _is_rig_node(path):
+        return "controls_GRP" in path or "rig_GRP" in path
+    curves_in_scene = [c for c in (cmds.ls("*_CRV", type="transform", long=True) or []) if not _is_rig_node(c)]
+    nurbs_surfaces = [n for n in (cmds.ls("*_NURB", type="transform", long=True) or []) if not _is_rig_node(n)]
 
     # --- 4. Procesamiento de NURBS Surfaces ---
     if nurbs_surfaces:
@@ -234,12 +238,13 @@ def get_guides_info(path=None):
     rig_manager.get_rig_data(character_name=CHARACTER_NAME, guides_transform=guides_node)
     return TEMPLATE_FILE
 
-def load_guides_info(filePath=None):
+def load_guides_info(filePath=None, new_scene=True, load_settings=False):
 
     """ Load guides information from a JSON file and create the guides in the scene."""
     
     guides_node = "C_guides_GRP"
-    rig_manager.create_new_scene()
+    if new_scene:
+        rig_manager.create_new_scene()
     character_name = rig_manager.get_character_name_from_build()
 
     if not filePath:
@@ -276,7 +281,7 @@ def load_guides_info(filePath=None):
     
     if not cmds.objExists("C_guides_GRP"):
         guides_node = cmds.createNode("transform", name="C_guides_GRP", ss=True)
-        rig_manager.create_rig_settings(guides_node, load=False) 
+        rig_manager.create_rig_settings(guides_node, load=load_settings) 
 
         rig_data = rig_manager.build_rig_from_data(character_name)
 
@@ -417,7 +422,11 @@ def load_guides_info(filePath=None):
                     shape_fn = om.MFnDagNode(shape_obj)
                     shape_fn.setName(surface_name)
 
-        if character_name:
+        # el modelo solo se importa al abrir guias en escena nueva: si ya hay
+        # mallas en escena (test rig by guide, reimportaciones) no se duplica
+        if cmds.ls(type="mesh"):
+            pass
+        elif character_name:
             rig_manager.import_meshes_for_guides(character_name=character_name)
 
         else:

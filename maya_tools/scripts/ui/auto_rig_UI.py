@@ -50,6 +50,7 @@ def create_custom_menu():
     cmds.menuItem(label="Import Guides",      command=lambda x: import_guides(),     image="move_M.png")
     cmds.menuItem(label="Export Guides",      command=lambda x: export_guides(),     image="copySelected.png")
     cmds.menuItem(label="Mirror Guides",      command=lambda x: mirror_guides(),     image="polyMirror.png")
+    cmds.menuItem(label="Test Rig by Guide",  command=lambda x: test_rig_by_guide(), image="kinJoint.png")
     cmds.setParent('..', menu=True)
 
     cmds.menuItem(label="Controllers Manager", subMenu=True, tearOff=True, image="circle.png")
@@ -259,6 +260,12 @@ def export_source_skin_data():
         pos="midCenter", fade=True
     )
     
+def test_rig_by_guide():
+    """Construye solo el módulo de la guía raíz seleccionada (test de guías)."""
+    reload(rig_manager)
+    rig_manager.test_rig_by_guide()
+
+
 def rig(leg_impl="self", leg_solver=None):
     """
     Crea el rig completo. leg_impl elige la implementación de pata de
