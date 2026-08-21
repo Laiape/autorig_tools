@@ -194,6 +194,9 @@ def _create_display_layers(geo_grp):
         if color_index is not None:
             try: cmds.setAttr(f"{lyr}.color", color_index)
             except Exception: pass
+        # default: ocultas y en modo Reference (no seleccionables)
+        cmds.setAttr(f"{lyr}.visibility", 0)
+        cmds.setAttr(f"{lyr}.displayType", 2)
         return lyr
 
     RED = 13  # índice de color rojo de Maya
