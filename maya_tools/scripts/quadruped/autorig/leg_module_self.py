@@ -1721,13 +1721,21 @@ class FootBase(object):
 
         cmds.addAttr(foot_ctl, longName="FOOT_ATTRIBUTES", niceName="FOOT ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{foot_ctl}.FOOT_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
-        for attr in ["Roll", "Bank", "Ankle_Twist", "Ball_Twist", "Toe_Twist"]:
+        for attr in ["Roll", "Bank", "Ankle_Twist", "Ball_Twist", "Heel_Twist", "Toe_Twist"]:
             cmds.addAttr(foot_ctl, longName=attr, attributeType="float", defaultValue=0, keyable=True)
         cmds.addAttr(foot_ctl, longName="Roll_Break_Angle", attributeType="float", defaultValue=35, keyable=True)
         cmds.addAttr(foot_ctl, longName="Roll_Straight_Angle", attributeType="float", defaultValue=75, keyable=True)
 
+        # visibilidad de los pivotes (shapes, no grupos: el Foot cuelga debajo)
+        cmds.addAttr(foot_ctl, longName="Pivot_Controllers", attributeType="bool", defaultValue=0, keyable=False)
+        cmds.setAttr(f"{foot_ctl}.Pivot_Controllers", channelBox=True)
+        for role in self.PIVOT_ORDER:
+            for shape in cmds.listRelatives(self.pivot_ctl[role], shapes=True) or []:
+                cmds.connectAttr(f"{foot_ctl}.Pivot_Controllers", f"{shape}.visibility")
+
         cmds.connectAttr(f"{foot_ctl}.Ankle_Twist", f"{self.pivot_sdk['bankOut']}.rotateY")
         cmds.connectAttr(f"{foot_ctl}.Ball_Twist", f"{self.pivot_sdk['sole']}.rotateY")
+        cmds.connectAttr(f"{foot_ctl}.Heel_Twist", f"{self.pivot_sdk['heel']}.rotateY")
         cmds.connectAttr(f"{foot_ctl}.Toe_Twist", f"{self.pivot_sdk['toe']}.rotateY")
 
         up = om.MVector(0, 1, 0)

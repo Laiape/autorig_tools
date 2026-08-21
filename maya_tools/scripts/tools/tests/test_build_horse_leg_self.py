@@ -79,7 +79,14 @@ for side in ("L", "R"):
               for p in ("BankOut", "BankIn", "Heel", "Toe", "Sole")))
         check(f"{base}: attrs de roll", cmds.objExists(ankle)
               and all(cmds.attributeQuery(a, node=ankle, exists=True)
-                      for a in ("Roll", "Bank", "Roll_Break_Angle", "Roll_Straight_Angle")))
+                      for a in ("Roll", "Bank", "Heel_Twist", "Roll_Break_Angle", "Roll_Straight_Angle", "Pivot_Controllers")))
+        # pivotes ocultos por defecto, visibles con el bool
+        toe_shape = (cmds.listRelatives(f"{base}Toe_CTL", shapes=True) or [None])[0]
+        check(f"{base}: pivotes ocultos por defecto", toe_shape and not cmds.getAttr(f"{toe_shape}.visibility"))
+        cmds.setAttr(f"{ankle}.Pivot_Controllers", 1)
+        vis_on = cmds.getAttr(f"{toe_shape}.visibility")
+        cmds.setAttr(f"{ankle}.Pivot_Controllers", 0)
+        check(f"{base}: Pivot_Controllers los enciende", bool(vis_on))
 
 # reposo: el blend (peso 0 = IK) debe devolver la pose de guia -> los joints
 # ik reposan sobre las guias originales
