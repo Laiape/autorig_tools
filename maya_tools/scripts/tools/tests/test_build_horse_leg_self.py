@@ -247,18 +247,20 @@ for side in ("L", "R"):
     check(f"{side}: Foot rota el casco", dt > 0.5, "d_tip=%.3f" % dt)
     check(f"{side}: Foot no mueve la pierna IK", df < 1e-3, "d_fet=%.5f" % df)
 
-    # PasternIk: gira el casco desde la cuartilla, sin mover pierna ni fetlock
+    # PasternIk: PIVOTE del IK en la cuartilla — rotarlo pivota el fetlock
+    # (la pierna sigue) y el casco, con la cuartilla quieta
     pastern = f"{side}_backLegPasternIk_CTL"
     t0 = om.MVector(cmds.xform(tip, q=True, ws=True, t=True))
     f0 = om.MVector(cmds.xform(fet, q=True, ws=True, t=True))
-    fsk0 = om.MVector(cmds.xform(f"{side}_backLegFetlockSkinning_JNT", q=True, ws=True, t=True))
+    p0 = om.MVector(cmds.xform(pastern, q=True, ws=True, t=True))
     cmds.setAttr(f"{pastern}.rotateX", 25)
     dt = (om.MVector(cmds.xform(tip, q=True, ws=True, t=True)) - t0).length()
     df = (om.MVector(cmds.xform(fet, q=True, ws=True, t=True)) - f0).length()
-    dfsk = (om.MVector(cmds.xform(f"{side}_backLegFetlockSkinning_JNT", q=True, ws=True, t=True)) - fsk0).length()
+    dp = (om.MVector(cmds.xform(pastern, q=True, ws=True, t=True)) - p0).length()
     cmds.setAttr(f"{pastern}.rotateX", 0)
     check(f"{side}: PasternIk rota el casco", dt > 0.5, "d_tip=%.3f" % dt)
-    check(f"{side}: PasternIk no mueve pierna ni fetlock", df < 1e-3 and dfsk < 1e-3, "d=%.5f/%.5f" % (df, dfsk))
+    check(f"{side}: PasternIk pivota la pierna (fetlock orbita)", df > 0.5, "d_fet=%.3f" % df)
+    check(f"{side}: PasternIk pivota sobre si mismo", dp < 1e-3, "d=%.5f" % dp)
 
 # ── config de nodos (SELF MATH): reparto tipo spring + stretch/soft ──
 cmds.file(new=True, force=True)

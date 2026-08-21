@@ -1833,25 +1833,35 @@ class HoofFoot(FootBase):
         ball_ctl = leg.ik_ctl["ball"]
         self.foot_ctl = ball_ctl
 
-        # ctl de la CUARTILLA (PasternIk): hijo del Foot, en la cuartilla,
-        # solo rotación — gira el casco desde ahí (el Foot lo hace desde el
-        # fetlock); el manager no lo lee, así que no mueve la pierna
+        # ctl de la CUARTILLA (PasternIk): un pivote MAS de la pila del pie
+        # reverso, entre el sole y el Foot — rotarlo pivota el fetlock (y la
+        # pierna entera, via el manager que lee el Foot) alrededor de la
+        # cuartilla. Solo rotación, orientado a mundo.
         pastern_grps, pastern_ctl = curve_tool.create_controller(
             name=leg.leg_chain[leg.plant_index].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"],
             locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
-            parent=ball_ctl,
+            parent=self.pivot_ctl["sole"],
             matrix=leg.ctl_matrix(cmds.getAttr(leg.point_matrices[leg.plant_index]), world_frame=True),
         )
         leg.ik_ctl["pastern"] = pastern_ctl
         leg.ik_grp["pastern"] = pastern_grps[0]
 
+        # el ball (Foot) pasa a colgar de la cuartilla, sin offset en canales
+        ball_grp = leg.ik_grp["ball"]
+        cmds.parent(ball_grp, pastern_ctl)
+        local = (om.MMatrix(cmds.getAttr(f"{ball_grp}.matrix"))
+                 * om.MMatrix(cmds.getAttr(f"{ball_grp}.offsetParentMatrix")))
+        cmds.setAttr(f"{ball_grp}.offsetParentMatrix", list(local), type="matrix")
+        cmds.xform(ball_grp, m=om.MMatrix.kIdentity)
+
+        # casco pegado al Foot (hereda la cuartilla por jerarquía)
         plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
-        pastern_rest_inv = om.MMatrix(cmds.getAttr(f"{pastern_ctl}.worldMatrix[0]")).inverse()
+        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
 
         hoof_mmx = cmds.createNode("multMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}HoofFollow_MMX", ss=True)
-        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * pastern_rest_inv), type="matrix")
-        cmds.connectAttr(f"{pastern_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
+        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * ball_rest_inv), type="matrix")
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 
