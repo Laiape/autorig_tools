@@ -951,20 +951,28 @@ class LegModule(object):
 
         cmp_a, cmp_b, cmp_c, cmp_d = (_cmp(l, v) for l, v in
                                       (("NodesA", A), ("NodesB", B), ("NodesC", C), ("NodesD", D)))
-        # up de los frames: el vector del plano del solve, con el signo del
-        # secundario medido contra la Y autorada de la guía raíz
+        # up de los frames: el eje LATERAL alineado al NORMAL del plano vivo —
+        # los huesos viven en el plano y nunca son paralelos a su normal, así
+        # que el aim no degenera en ninguna pose (alinear la Y al vector del
+        # plano giraba los frames ~80 con la pata cruzada hacia delante).
+        # Signo medido contra el lateral autorado de la guía raíz.
         root_guide = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
-        guide_y = om.MVector(root_guide[4], root_guide[5], root_guide[6])
-        up_sign = 1.0 if (guide_y * plane_v) >= 0 else -1.0
-        sec_axis = tuple(v * up_sign for v in self.secondary_axis)
+        lat_local = om.MVector(*self.lateral_axis)
+        guide_lat = om.MVector(
+            lat_local.x * root_guide[0] + lat_local.y * root_guide[4] + lat_local.z * root_guide[8],
+            lat_local.x * root_guide[1] + lat_local.y * root_guide[5] + lat_local.z * root_guide[9],
+            lat_local.x * root_guide[2] + lat_local.y * root_guide[6] + lat_local.z * root_guide[10])
+        n_rest = (line_u ^ (pv_p - p[0])).normal()
+        lat_sign = 1.0 if (guide_lat * n_rest) >= 0 else -1.0
+        sec_axis_lat = tuple(v * lat_sign for v in self.lateral_axis)
 
         def _aim(label, base_mtx, target_mtx):
             node = cmds.createNode("aimMatrix", name=f"{n}{label}_AMX", ss=True)
             cmds.connectAttr(base_mtx, f"{node}.inputMatrix")
             cmds.connectAttr(target_mtx, f"{node}.primaryTargetMatrix")
             cmds.setAttr(f"{node}.primaryInputAxis", *self.primary_axis, type="double3")
-            cmds.connectAttr(v1, f"{node}.secondaryTargetVector")
-            cmds.setAttr(f"{node}.secondaryInputAxis", *sec_axis, type="double3")
+            cmds.connectAttr(n_hat, f"{node}.secondaryTargetVector")
+            cmds.setAttr(f"{node}.secondaryInputAxis", *sec_axis_lat, type="double3")
             cmds.setAttr(f"{node}.secondaryMode", 2)
             return f"{node}.outputMatrix"
 
@@ -1321,22 +1329,31 @@ class LegModule(object):
 
         roll_wm = list(blend_wm)
         roll_wm[0] = f"{non_roll_aim}.outputMatrix"
+        # referencia encadenada: el lateral del frame anterior (el fijo de
+        # mundo degeneraba con la pata cruzada hacia delante)
+        up_plug = self._lateral_row_plug(f"{non_roll_aim}.outputMatrix", f"{self.module_name}NonRollAimLat")
         for i in range(1, self.leg_end_index + 1):
             aim_target = blend_wm[i + 1] if i + 1 < len(blend_wm) else blend_wm[i]
-            cv_nodes[i] = self._roll_cv(blend_wm[i], aim_target, f"{self.module_name}Roll0{i}")
+            cv_nodes[i] = self._roll_cv(blend_wm[i], aim_target, f"{self.module_name}Roll0{i}", up_plug=up_plug)
             roll_wm[i] = f"{cv_nodes[i]}.matrixSum"
+            up_plug = self.last_nonroll_lateral
 
         self.hip_ctl_roll = f"{self._roll_cv(self.raw_hip_blend, blend_wm[1], f'{self.module_name}RootCtl')}.matrixSum"
 
         self.roll_wm = roll_wm
         self.cv_nodes = cv_nodes
 
-    def _roll_cv(self, blend_plug, aim_target_plug, name):
+    def _roll_cv(self, blend_plug, aim_target_plug, name, up_plug=None):
             """
-            Frame anti-flip para alimentar el ribbon: aim al siguiente joint con el
-            eje lateral ALINEADO al lado del personaje (estable, no se retuerce) +
-            el twist LIMPIO del joint real extraído por swing-twist (cuaternión, sin
-            flip, neutralizado a 0 en reposo). Devuelve el multMatrix (.matrixSum).
+            Frame anti-flip para alimentar el ribbon: aim al siguiente joint con
+            el eje lateral alineado a una referencia estable + el twist LIMPIO
+            del joint real extraído por swing-twist (cuaternión, sin flip,
+            neutralizado a 0 en reposo). Devuelve el multMatrix (.matrixSum).
+
+            up_plug: fila lateral del frame ANTERIOR (encadenado). Con una
+            referencia fija de mundo, un hueso que apunte hacia ella degenera
+            el aim y el frame gira sobre el hueso (medido: dots 0.15 entre
+            frames consecutivos con la pata cruzada hacia delante).
             """
             nonroll = cmds.createNode("aimMatrix", name=f"{name}NonRoll_AMX", ss=True)
             cmds.connectAttr(blend_plug, f"{nonroll}.inputMatrix")
@@ -1344,8 +1361,12 @@ class LegModule(object):
             cmds.setAttr(f"{nonroll}.primaryInputAxis", *self.primary_axis, type="double3")
             cmds.setAttr(f"{nonroll}.secondaryInputAxis", *self.lateral_axis, type="double3")
             cmds.setAttr(f"{nonroll}.secondaryMode", 2)
-            cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
-    
+            if up_plug:
+                cmds.connectAttr(up_plug, f"{nonroll}.secondaryTargetVector")
+            else:
+                cmds.setAttr(f"{nonroll}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
+            self.last_nonroll_lateral = self._lateral_row_plug(f"{nonroll}.outputMatrix", f"{name}NonRollLat")
+
             twist_qn = matrix_manager.extract_twist(blend_plug, f"{nonroll}.outputMatrix", axis=self.aim_letter, name=name, return_quat=True)
             cmp = cmds.createNode("composeMatrix", name=f"{name}RollTwist_CMP", ss=True)
             cmds.setAttr(f"{cmp}.useEulerRotation", 0)
@@ -1355,6 +1376,19 @@ class LegModule(object):
             cmds.connectAttr(f"{nonroll}.outputMatrix", f"{roll}.matrixIn[1]")
             return roll
     
+    def _lateral_row_plug(self, matrix_plug, name):
+            """Fila del eje lateral (con su signo) de un frame, como plug double3."""
+            row_index = max(range(3), key=lambda k: abs(self.lateral_axis[k]))
+            sign = self.lateral_axis[row_index]
+            row = cmds.createNode("rowFromMatrix", name=f"{name}_RFM", ss=True)
+            cmds.setAttr(f"{row}.input", row_index)
+            cmds.connectAttr(matrix_plug, f"{row}.matrix")
+            vec = cmds.createNode("multiplyDivide", name=f"{name}_MDV", ss=True)
+            for axis in "XYZ":
+                cmds.connectAttr(f"{row}.output{axis}", f"{vec}.input1{axis}")
+            cmds.setAttr(f"{vec}.input2", sign, sign, sign)
+            return f"{vec}.output"
+
     def bendys_setup(self):
         """
         Ribbons por segmento para deformación suave (utils/ribbon + de_boor_core).
