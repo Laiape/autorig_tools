@@ -262,6 +262,20 @@ for side in ("L", "R"):
     check(f"{side}: PasternIk pivota la pierna (fetlock orbita)", df > 0.5, "d_fet=%.3f" % df)
     check(f"{side}: PasternIk pivota sobre si mismo", dp < 1e-3, "d=%.5f" % dp)
 
+    # SC fetlock->pastern: al girar el Foot, la ORIENTACION del fetlock skin
+    # sigue (aima a la cuartilla) sin moverse de sitio
+    fsk = f"{side}_backLegFetlockSkinning_JNT"
+    m0 = om.MMatrix(cmds.getAttr(f"{fsk}.worldMatrix[0]"))
+    x0 = om.MVector(m0[0], m0[1], m0[2])
+    p0f = om.MVector(m0[12], m0[13], m0[14])
+    cmds.setAttr(f"{side}_backLegFoot_CTL.rotateX", 30)
+    m1 = om.MMatrix(cmds.getAttr(f"{fsk}.worldMatrix[0]"))
+    x1 = om.MVector(m1[0], m1[1], m1[2])
+    p1f = om.MVector(m1[12], m1[13], m1[14])
+    cmds.setAttr(f"{side}_backLegFoot_CTL.rotateX", 0)
+    check(f"{side}: fetlock aima a la cuartilla (SC)", (x0 * x1) < 0.98, "dot=%.3f" % (x0 * x1))
+    check(f"{side}: el fetlock no se mueve al girar el Foot", (p1f - p0f).length() < 1e-3, "d=%.5f" % (p1f - p0f).length())
+
 # ── config de nodos (SELF MATH): reparto tipo spring + stretch/soft ──
 cmds.file(new=True, force=True)
 modules_grp = cmds.createNode("transform", name="modules_GRP")

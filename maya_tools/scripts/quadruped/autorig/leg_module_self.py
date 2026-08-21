@@ -289,8 +289,6 @@ class LegModule(object):
         # Set the guides matrices for the chain
         self.guides_world_matrices = self.guides_matrices
 
-        # frames de COLOCACION de controles: en R espejados (ctl_matrix); las
-        # locales FK se calculan entre frames ya espejados
         self.ctl_world_matrices = [self.ctl_matrix(cmds.getAttr(m)) for m in self.guides_matrices]
         self.guides_local_matrices = []
         for i, w_matrix in enumerate(self.ctl_world_matrices):
@@ -350,8 +348,6 @@ class LegModule(object):
         self.plant_index = len(self.leg_chain) - 2  # Pastern (pisada)
         self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
 
-        # Apex del PV: el flag vale para la cadena estandar; con otra longitud
-        # cae a 1 y se clampa dentro del tramo del IK (patron de la referencia).
         self.pv_apex_index = self.PV_APEX_INDEX if len(self.leg_chain) == self.STANDARD_JOINT_COUNT else 1
         self.pv_apex_index = max(1, min(self.pv_apex_index, self.leg_end_index - 1))
 
@@ -466,7 +462,7 @@ class LegModule(object):
         self.ik_ctl = {}
         self.ik_grp = {}
 
-        # root con el frame de su guia
+        # root
         root_grps, root_ctl = curve_tool.create_controller(
             name=self.leg_chain[0].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
@@ -476,9 +472,7 @@ class LegModule(object):
         self.ik_ctl["root"] = root_ctl
         self.ik_grp["root"] = root_grps[0]
 
-        # master del pie: el ctl del FETLOCK (point matrix = orientado a
-        # mundo) lleva los atributos del pie (stretch/soft/roll/bank) y
-        # contiene la pila de pivotes del pie reverso
+        # ankle
         ankle_grps, ankle_ctl = curve_tool.create_controller(
             name=self.leg_chain[self.leg_end_index].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
@@ -488,9 +482,7 @@ class LegModule(object):
         self.ik_ctl["ankle"] = ankle_ctl
         self.ik_grp["ankle"] = ankle_grps[0]
 
-        # ball (Foot): en el MISMO punto que el fetlock, dentro del master a
-        # traves de la pila de pivotes; el manager del handle lee su world y
-        # la rotacion del casco sale de el
+        # ball
         ball_grps, ball_ctl = curve_tool.create_controller(
             name=f"{self.side}_{self.LEG_PREFIX}Foot",
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
@@ -1833,10 +1825,6 @@ class HoofFoot(FootBase):
         ball_ctl = leg.ik_ctl["ball"]
         self.foot_ctl = ball_ctl
 
-        # ctl de la CUARTILLA (PasternIk): un pivote MAS de la pila del pie
-        # reverso, entre el sole y el Foot — rotarlo pivota el fetlock (y la
-        # pierna entera, via el manager que lee el Foot) alrededor de la
-        # cuartilla. Solo rotación, orientado a mundo.
         pastern_grps, pastern_ctl = curve_tool.create_controller(
             name=leg.leg_chain[leg.plant_index].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"],
@@ -1864,6 +1852,21 @@ class HoofFoot(FootBase):
         cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
+
+        # "single chain" fetlock->pastern en matrices (el papel del ikSCsolver
+        # de la referencia): el fetlock AIMA a la cuartilla viva, asi su
+        # orientacion sigue al pie en roll y pivotes. En reposo el frame de la
+        # guia ya apunta a la cuartilla: no mueve nada.
+        if getattr(leg, "nodes_ik_world", None):
+            end_src = leg.nodes_ik_world[leg.leg_end_index]
+        else:
+            end_src = f"{leg.ik_chain[leg.leg_end_index]}.worldMatrix[0]"
+        fet_aim = cmds.createNode("aimMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}FetlockAim_AMX", ss=True)
+        cmds.connectAttr(end_src, f"{fet_aim}.inputMatrix")
+        cmds.connectAttr(f"{hoof_mmx}.matrixSum", f"{fet_aim}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{fet_aim}.primaryInputAxis", *leg.primary_axis, type="double3")
+        cmds.connectAttr(f"{fet_aim}.outputMatrix",
+                         f"{leg.blend_matrices[leg.leg_end_index]}.inputMatrix", force=True)
 
     def fetlock_spring(self, leg, foot_ctl):
         """
