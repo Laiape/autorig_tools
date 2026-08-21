@@ -472,10 +472,6 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
                                 "guides_data" : ["L_frontLeg_JNT", "R_frontLeg_JNT"],
                             })
 
-            # leg_module_self está EN DESARROLLO (plantilla con stubs): la clase es
-            # LegModule + subclasses Front/BackLegModule, no la antigua LimbModule.
-            # Esta rama solo se dispara con el naming antiguo (L_frontLeg_JNT); el
-            # naming nuevo entra por la rama de arriba con quad_leg_module.
             leg_module_self.FrontLegModule().make("L", skinning_joints_number=leg_skinning_jnts)
             leg_module_self.FrontLegModule().make("R", skinning_joints_number=leg_skinning_jnts)
 
@@ -864,6 +860,9 @@ def test_rig_by_guide():
         "backLegHip": (lambda s_: leg_module_self.BackLegModule().make(
             s_, solver=back_leg_solver, skinning_joints_number=leg_jnts), "backLeg"),
         "frontLegShoulder": (lambda s_: leg_module_self.FrontLegModule().make(
+            s_, solver=front_leg_solver, skinning_joints_number=leg_jnts), "frontLeg"),
+        # la escapula es el padre de la cadena delantera en las guias
+        "scapula": (lambda s_: leg_module_self.FrontLegModule().make(
             s_, solver=front_leg_solver, skinning_joints_number=leg_jnts), "frontLeg"),
         "spine00": (lambda s_: quad_spine_module.SpineModule().make(
             "C", settings.get("spine_skinning_jnts", 8), settings.get("spine_controllers", 5)), "spine"),
