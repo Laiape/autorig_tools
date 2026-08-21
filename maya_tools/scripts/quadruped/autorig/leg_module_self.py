@@ -1799,12 +1799,25 @@ class HoofFoot(FootBase):
         ball_ctl = leg.ik_ctl["ball"]
         self.foot_ctl = ball_ctl
 
+        # ctl de la CUARTILLA (PasternIk): hijo del Foot, en la cuartilla,
+        # solo rotación — gira el casco desde ahí (el Foot lo hace desde el
+        # fetlock); el manager no lo lee, así que no mueve la pierna
+        pastern_grps, pastern_ctl = curve_tool.create_controller(
+            name=leg.leg_chain[leg.plant_index].replace("_JNT", "Ik"),
+            offset=["GRP", "OFF", "ANM"],
+            locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"],
+            parent=ball_ctl,
+            matrix=leg.ctl_matrix(cmds.getAttr(leg.point_matrices[leg.plant_index]), world_frame=True),
+        )
+        leg.ik_ctl["pastern"] = pastern_ctl
+        leg.ik_grp["pastern"] = pastern_grps[0]
+
         plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
-        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
+        pastern_rest_inv = om.MMatrix(cmds.getAttr(f"{pastern_ctl}.worldMatrix[0]")).inverse()
 
         hoof_mmx = cmds.createNode("multMatrix", name=f"{leg.side}_{leg.LEG_PREFIX}HoofFollow_MMX", ss=True)
-        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * ball_rest_inv), type="matrix")
-        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
+        cmds.setAttr(f"{hoof_mmx}.matrixIn[0]", list(plant_rest * pastern_rest_inv), type="matrix")
+        cmds.connectAttr(f"{pastern_ctl}.worldMatrix[0]", f"{hoof_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 

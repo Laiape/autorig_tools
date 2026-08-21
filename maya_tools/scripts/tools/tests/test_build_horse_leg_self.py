@@ -64,6 +64,7 @@ for side in ("L", "R"):
         mid = "Hock" if prefix == "backLeg" else "Carpus"
         check(f"{base}: sin ctl IK en el {mid}", not cmds.objExists(f"{base}{mid}Ik_CTL"))
         check(f"{base}: ctl Foot", cmds.objExists(f"{base}Foot_CTL"))
+        check(f"{base}: ctl PasternIk", cmds.objExists(f"{base}PasternIk_CTL"))
         check(f"{base}: attrs stretch/soft", cmds.objExists(ankle)
               and cmds.attributeQuery("Stretch", node=ankle, exists=True)
               and cmds.attributeQuery("Soft", node=ankle, exists=True))
@@ -245,6 +246,19 @@ for side in ("L", "R"):
     cmds.setAttr(f"{foot}.rotateX", 0)
     check(f"{side}: Foot rota el casco", dt > 0.5, "d_tip=%.3f" % dt)
     check(f"{side}: Foot no mueve la pierna IK", df < 1e-3, "d_fet=%.5f" % df)
+
+    # PasternIk: gira el casco desde la cuartilla, sin mover pierna ni fetlock
+    pastern = f"{side}_backLegPasternIk_CTL"
+    t0 = om.MVector(cmds.xform(tip, q=True, ws=True, t=True))
+    f0 = om.MVector(cmds.xform(fet, q=True, ws=True, t=True))
+    fsk0 = om.MVector(cmds.xform(f"{side}_backLegFetlockSkinning_JNT", q=True, ws=True, t=True))
+    cmds.setAttr(f"{pastern}.rotateX", 25)
+    dt = (om.MVector(cmds.xform(tip, q=True, ws=True, t=True)) - t0).length()
+    df = (om.MVector(cmds.xform(fet, q=True, ws=True, t=True)) - f0).length()
+    dfsk = (om.MVector(cmds.xform(f"{side}_backLegFetlockSkinning_JNT", q=True, ws=True, t=True)) - fsk0).length()
+    cmds.setAttr(f"{pastern}.rotateX", 0)
+    check(f"{side}: PasternIk rota el casco", dt > 0.5, "d_tip=%.3f" % dt)
+    check(f"{side}: PasternIk no mueve pierna ni fetlock", df < 1e-3 and dfsk < 1e-3, "d=%.5f/%.5f" % (df, dfsk))
 
 # ── config de nodos (SELF MATH): reparto tipo spring + stretch/soft ──
 cmds.file(new=True, force=True)
