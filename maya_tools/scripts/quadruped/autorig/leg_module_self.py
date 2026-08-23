@@ -76,6 +76,7 @@ reload(ribbon)
 SOLVER_RP     = "rp"       # RP de 2 huesos + SC para el resto (el port del bípedo)
 SOLVER_SPRING = "spring"   # ikSpringSolver sobre los 3 segmentos funcionales
 SOLVER_NODES  = "nodes"    # IK analítico por nodos (teorema del coseno)
+SOLVER_SC_RP_SC = "sc_rp_sc"  # SC húmero->codo + RP codo->fetlock + SC fetlock->cuartilla
 _AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
     
 
@@ -130,6 +131,11 @@ class LegModule(object):
         ],
         SOLVER_SPRING: [
             (0, 3, "ikSpringSolver"),
+        ],
+        SOLVER_SC_RP_SC: [
+            (0, 1, "ikSCsolver"),
+            (1, 3, "ikRPsolver"),
+            (3, 4, "ikSCsolver"),
         ],
     }
 
@@ -566,6 +572,7 @@ class LegModule(object):
         cmds.setAttr(f"{ik_handle_mmx}.matrixIn[0]", list(end_rest * ball_wm.inverse()), type="matrix")
         cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ik_handle_mmx}.matrixIn[1]")
         self.ik_handle_target = f"{ik_handle_mmx}.matrixSum"
+        self._end_targets = {self.leg_end_index: self.ik_handle_target}
 
         root_ctl = self.ik_ctl["root"]
         root_rest_inv = om.MMatrix(cmds.getAttr(f"{root_ctl}.worldMatrix[0]")).inverse()
@@ -590,8 +597,13 @@ class LegModule(object):
         if layers is None:
             cmds.warning(f"[leg_module_self] solver '{self.solver}' sin ficha en IK_CONFIGS; usando 'spring'.")
             layers = self.IK_CONFIGS[SOLVER_SPRING]
+        self.ik_handle_solvers = []
         for start, end, solver in layers:
-            self._create_handle(start, end, solver, self.ik_handle_target)
+            self._create_handle(start, end, solver, self._end_target(end))
+            self.ik_handle_solvers.append(solver)
+        # handle PRINCIPAL (PV, twist, soft, bias): el primero que no sea SC
+        self.main_handle = next((h for h, sol in zip(self.ik_handles, self.ik_handle_solvers)
+                                 if sol != "ikSCsolver"), self.ik_handles[0])
 
         # primer solve sin constraint: el spring captura su referencia de
         # plano en la primera evaluacion, y debe hacerlo en el reposo limpio
@@ -601,7 +613,7 @@ class LegModule(object):
         self.pole_vector_setup()
 
         # bias del doblez: los dos slots del springAngleBias complementarios
-        main_hdl = self.ik_handles[0]
+        main_hdl = self.main_handle
         if cmds.attributeQuery("springAngleBias", node=main_hdl, exists=True):
             idx = cmds.getAttr(f"{main_hdl}.springAngleBias", multiIndices=True) or []
             if len(idx) >= 2:
@@ -633,6 +645,25 @@ class LegModule(object):
         cmds.setAttr(f"{foot_ctl}.BEND", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(foot_ctl, longName="Bend_Bias", attributeType="float", minValue=0, maxValue=1, defaultValue=0.5, keyable=True)
         return f"{foot_ctl}.Bend_Bias"
+
+    def _end_target(self, end_index):
+        """
+        Objetivo de un handle cuya articulacion final NO es el fetlock: el
+        mismo patron del manager (reposo de esa articulacion x ball_rest^-1 x
+        ball vivo) — sigue rigido al pie y en reposo es exacto, asi cualquier
+        ficha reposa sobre las guias.
+        """
+        if end_index in self._end_targets:
+            return self._end_targets[end_index]
+        ball_ctl = self.ik_ctl["ball"]
+        end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[end_index]))
+        ball_rest = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
+        label = self.leg_chain[end_index].split("_")[1].replace(self.LEG_PREFIX, "")
+        mmx = cmds.createNode("multMatrix", name=f"{self.module_name}{label}Target_MMX", ss=True)
+        cmds.setAttr(f"{mmx}.matrixIn[0]", list(end_rest * ball_rest.inverse()), type="matrix")
+        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{mmx}.matrixIn[1]")
+        self._end_targets[end_index] = f"{mmx}.matrixSum"
+        return self._end_targets[end_index]
 
     def _create_handle(self, start_index, end_index, solver, target_plug):
         """
@@ -699,7 +730,7 @@ class LegModule(object):
         # el constraint el ultimo, con el PV ya en su red definitiva
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
         if self.ik_handles:
-            cmds.poleVectorConstraint(self.ik_ctl["pv"], self.ik_handles[0])
+            cmds.poleVectorConstraint(self.ik_ctl["pv"], self.main_handle)
             self.pole_vector_line(f"{self.ik_chain[self.pv_apex_index]}.worldMatrix[0]")
 
     def pole_vector_line(self, apex_plug):
@@ -1170,7 +1201,7 @@ class LegModule(object):
         cmds.connectAttr(f"{soft_aim}.outputMatrix", f"{soft_mmx}.matrixIn[1]")
 
         if self.ik_handles:
-            cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.ik_handles[0]}.offsetParentMatrix", force=True)
+            cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.main_handle}.offsetParentMatrix", force=True)
         else:
             cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.nodes_target_dcm}.inputMatrix", force=True)
 
@@ -1191,7 +1222,7 @@ class LegModule(object):
         """
         if not getattr(self, "ik_handles", None):
             return
-        hdl = self.ik_handles[0]
+        hdl = self.main_handle
         pairs = [(self.ik_chain[i], self.leg_chain[i]) for i in range(1, self.leg_end_index)]
         if not pairs:
             return

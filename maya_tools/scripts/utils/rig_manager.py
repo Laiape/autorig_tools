@@ -929,7 +929,7 @@ def test_rig_by_guide():
 
 # Presets de IK de la pierna de cuadrúpedo (claves de IK_CONFIGS en
 # quadruped/autorig/leg_module_self.py). El PRIMERO es el default del enum.
-LEG_SOLVER_OPTIONS = ("spring", "rp", "spring_rp", "nodes")
+LEG_SOLVER_OPTIONS = ("spring", "rp", "spring_rp", "nodes", "sc_rp_sc")
 
 
 def create_rig_settings(guides_transform, load=False):
@@ -984,8 +984,10 @@ def create_rig_settings(guides_transform, load=False):
     for key, value in rig_settings_config.items():
         attr_path = f"{guides_transform}.{key}"
         
-        # Evitar duplicados
+        # Evitar duplicados (los enums se refrescan por si hay presets nuevos)
         if cmds.objExists(attr_path):
+            if isinstance(value, tuple):
+                cmds.addAttr(attr_path, edit=True, enumName=":".join(value))
             continue
 
         # Crear separadores visuales (Header) si es necesario

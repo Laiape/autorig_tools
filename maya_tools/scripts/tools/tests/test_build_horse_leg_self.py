@@ -382,6 +382,55 @@ if cmds.attributeQuery("Bend_Bias", node=ankle, exists=True):
 else:
     check("bias nodes: attr Bend_Bias", False)
 
+# ── preset sc_rp_sc en la DELANTERA: SC humero->codo + RP codo->fetlock + SC fetlock->cuartilla ──
+cmds.file(new=True, force=True)
+modules_grp = cmds.createNode("transform", name="modules_GRP")
+skel_grp = cmds.createNode("transform", name="skel_GRP")
+masterwalk = cmds.circle(name="C_masterwalk_CTL", ch=False)[0]
+cmds.addAttr(masterwalk, longName="globalScale", attributeType="float", defaultValue=1, keyable=True)
+dm = data_manager.DataExportBiped()
+dm.new_build()
+dm.append_data("basic_structure", {"modules_GRP": modules_grp, "skel_GRP": skel_grp, "masterwalk_ctl": masterwalk})
+try:
+    lm.FrontLegModule().make("L", solver="sc_rp_sc", skinning_joints_number=5)
+    check("sc_rp_sc: build delantera", True)
+except Exception:
+    traceback.print_exc()
+    check("sc_rp_sc: build delantera", False, "excepcion")
+
+base = "L_frontLeg"
+hdls = cmds.ls(f"{base}*_HDL", type="ikHandle")
+solvers = sorted(cmds.ikHandle(h, q=True, solver=True) for h in hdls)
+check("sc_rp_sc: tres handles SC/RP/SC", solvers == ["ikRPsolver", "ikSCsolver", "ikSCsolver"], str(solvers))
+check("sc_rp_sc: el PV va al RP", bool(cmds.listConnections(f"{base}FetlockIk_HDL.poleVectorX", s=True, d=False)))
+worst = max((om.MVector(cmds.xform(f"{base}{n}Ik_JNT", q=True, ws=True, t=True))
+             - om.MVector(cmds.xform(f"{base}{n}_JNT", q=True, ws=True, t=True))).length()
+            for n in ("Shoulder", "Elbow", "Carpus", "Fetlock", "Pastern"))
+check("sc_rp_sc: cadena entera en reposo", worst < 0.2, "worst=%.3f" % worst)
+ankle = f"{base}FetlockIk_CTL"
+sw = f"{base}Settings_CTL.switchIkFk"
+p0 = _wpos(f"{base}FetlockSkinning_JNT")
+cmds.setAttr(sw, 1)
+d_sw = (_wpos(f"{base}FetlockSkinning_JNT") - p0).length()
+cmds.setAttr(sw, 0)
+check("sc_rp_sc: switch sin salto", d_sw < 1e-3, "d=%.4f" % d_sw)
+# levantar el pie: doblez sagital y el codo se mueve (sigue al pie via su objetivo)
+e0 = _wpos(f"{base}ElbowIk_JNT")
+c0 = _wpos(f"{base}CarpusIk_JNT")
+cmds.setAttr(f"{ankle}.translateY", 15)
+de = _wpos(f"{base}ElbowIk_JNT") - e0
+dc = _wpos(f"{base}CarpusIk_JNT") - c0
+cmds.setAttr(f"{ankle}.translateY", 0)
+check("sc_rp_sc: doblez sagital (carpo)", abs(dc.x) < 1.0 and (abs(dc.z) > 1.0 or abs(dc.y) > 1.0), "dc=%s" % [round(v, 2) for v in dc])
+check("sc_rp_sc: el codo sigue al pie", de.length() > 1.0, "de=%.2f" % de.length())
+# roll del pie sigue funcionando
+tip = f"{base}TipSkinning_JNT"
+y0 = _wpos(tip).y
+cmds.setAttr(f"{ankle}.Roll", -20)
+dy = _wpos(tip).y - y0
+cmds.setAttr(f"{ankle}.Roll", 0)
+check("sc_rp_sc: roll", dy > 0.1, "dy=%.3f" % dy)
+
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)
 sys.exit(1 if fails else 0)
