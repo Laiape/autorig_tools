@@ -77,6 +77,7 @@ SOLVER_RP     = "rp"       # RP de 2 huesos + SC para el resto (el port del bíp
 SOLVER_SPRING = "spring"   # ikSpringSolver sobre los 3 segmentos funcionales
 SOLVER_NODES  = "nodes"    # IK analítico por nodos (teorema del coseno)
 SOLVER_SC_RP_SC = "sc_rp_sc"  # SC húmero->codo + RP codo->fetlock + SC fetlock->cuartilla
+SOLVER_SC_RP_SC_CARPUS = "sc_rp_sc_carpus"  # como sc_rp_sc pero el SC alto ANCLA a la raiz: el carpo dobla
 _AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
     
 
@@ -134,6 +135,14 @@ class LegModule(object):
         ],
         SOLVER_SC_RP_SC: [
             (0, 1, "ikSCsolver"),
+            (1, 3, "ikRPsolver"),
+            (3, 4, "ikSCsolver"),
+        ],
+        # como sc_rp_sc pero el SC alto ancla a la RAIZ ("root"): el codo no
+        # sigue al pie, asi que al recoger la mano el tramo codo->fetlock se
+        # comprime y el CARPO (medio del RP) dobla de verdad.
+        SOLVER_SC_RP_SC_CARPUS: [
+            (0, 1, "ikSCsolver", "root"),
             (1, 3, "ikRPsolver"),
             (3, 4, "ikSCsolver"),
         ],
@@ -572,7 +581,7 @@ class LegModule(object):
         cmds.setAttr(f"{ik_handle_mmx}.matrixIn[0]", list(end_rest * ball_wm.inverse()), type="matrix")
         cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{ik_handle_mmx}.matrixIn[1]")
         self.ik_handle_target = f"{ik_handle_mmx}.matrixSum"
-        self._end_targets = {self.leg_end_index: self.ik_handle_target}
+        self._end_targets = {(self.leg_end_index, "foot"): self.ik_handle_target}
 
         root_ctl = self.ik_ctl["root"]
         root_rest_inv = om.MMatrix(cmds.getAttr(f"{root_ctl}.worldMatrix[0]")).inverse()
@@ -598,8 +607,10 @@ class LegModule(object):
             cmds.warning(f"[leg_module_self] solver '{self.solver}' sin ficha en IK_CONFIGS; usando 'spring'.")
             layers = self.IK_CONFIGS[SOLVER_SPRING]
         self.ik_handle_solvers = []
-        for start, end, solver in layers:
-            self._create_handle(start, end, solver, self._end_target(end))
+        for layer in layers:
+            start, end, solver = layer[0], layer[1], layer[2]
+            anchor = layer[3] if len(layer) > 3 else "foot"
+            self._create_handle(start, end, solver, self._end_target(end, anchor))
             self.ik_handle_solvers.append(solver)
         # handle PRINCIPAL (PV, twist, soft, bias): el primero que no sea SC
         self.main_handle = next((h for h, sol in zip(self.ik_handles, self.ik_handle_solvers)
@@ -646,24 +657,29 @@ class LegModule(object):
         cmds.addAttr(foot_ctl, longName="Bend_Bias", attributeType="float", minValue=0, maxValue=1, defaultValue=0.5, keyable=True)
         return f"{foot_ctl}.Bend_Bias"
 
-    def _end_target(self, end_index):
+    def _end_target(self, end_index, anchor="foot"):
         """
-        Objetivo de un handle cuya articulacion final NO es el fetlock: el
-        mismo patron del manager (reposo de esa articulacion x ball_rest^-1 x
-        ball vivo) — sigue rigido al pie y en reposo es exacto, asi cualquier
-        ficha reposa sobre las guias.
+        Objetivo de un handle segun de que cuelga su articulacion final:
+          - "foot": reposo x ball_rest^-1 x ball vivo (sigue al pie). Para el
+            handle principal y los SC del pie.
+          - "root": reposo x root_rest^-1 x root vivo (sigue a la raiz de la
+            pierna). Para un SC intermedio que debe quedar RIGIDO al cuerpo (no
+            arrastrarse con el pie): asi el tramo de abajo puede comprimirse y
+            doblar la articulacion del RP.
+        En reposo ambos son exactos (los offsets se hornean sobre las guias).
         """
-        if end_index in self._end_targets:
-            return self._end_targets[end_index]
-        ball_ctl = self.ik_ctl["ball"]
+        key = (end_index, anchor)
+        if key in self._end_targets:
+            return self._end_targets[key]
         end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[end_index]))
-        ball_rest = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
+        drive_ctl = self.ik_ctl["root"] if anchor == "root" else self.ik_ctl["ball"]
+        drive_rest = om.MMatrix(cmds.getAttr(f"{drive_ctl}.worldMatrix[0]"))
         label = self.leg_chain[end_index].split("_")[1].replace(self.LEG_PREFIX, "")
-        mmx = cmds.createNode("multMatrix", name=f"{self.module_name}{label}Target_MMX", ss=True)
-        cmds.setAttr(f"{mmx}.matrixIn[0]", list(end_rest * ball_rest.inverse()), type="matrix")
-        cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{mmx}.matrixIn[1]")
-        self._end_targets[end_index] = f"{mmx}.matrixSum"
-        return self._end_targets[end_index]
+        mmx = cmds.createNode("multMatrix", name=f"{self.module_name}{label}{anchor.capitalize()}Target_MMX", ss=True)
+        cmds.setAttr(f"{mmx}.matrixIn[0]", list(end_rest * drive_rest.inverse()), type="matrix")
+        cmds.connectAttr(f"{drive_ctl}.worldMatrix[0]", f"{mmx}.matrixIn[1]")
+        self._end_targets[key] = f"{mmx}.matrixSum"
+        return self._end_targets[key]
 
     def _create_handle(self, start_index, end_index, solver, target_plug):
         """

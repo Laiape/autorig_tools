@@ -431,6 +431,37 @@ dy = _wpos(tip).y - y0
 cmds.setAttr(f"{ankle}.Roll", 0)
 check("sc_rp_sc: roll", dy > 0.1, "dy=%.3f" % dy)
 
+# variante sc_rp_sc_carpus: el CARPO dobla de verdad al recoger la mano
+cmds.file(new=True, force=True)
+modules_grp = cmds.createNode("transform", name="modules_GRP")
+skel_grp = cmds.createNode("transform", name="skel_GRP")
+masterwalk = cmds.circle(name="C_masterwalk_CTL", ch=False)[0]
+cmds.addAttr(masterwalk, longName="globalScale", attributeType="float", defaultValue=1, keyable=True)
+dm = data_manager.DataExportBiped()
+dm.new_build()
+dm.append_data("basic_structure", {"modules_GRP": modules_grp, "skel_GRP": skel_grp, "masterwalk_ctl": masterwalk})
+import math
+try:
+    lm.FrontLegModule().make("L", solver="sc_rp_sc_carpus", skinning_joints_number=5)
+    check("sc_rp_sc_carpus: build", True)
+except Exception:
+    traceback.print_exc(); check("sc_rp_sc_carpus: build", False, "excepcion")
+
+b = "L_frontLeg"
+j = {n: f"{b}{n}Ik_JNT" for n in ("Shoulder", "Elbow", "Carpus", "Fetlock")}
+def _ang(a, bb, c):
+    return math.degrees((_wpos(a) - _wpos(bb)).angle(_wpos(c) - _wpos(bb)))
+worst = max((_wpos(f"{b}{n}Ik_JNT") - _wpos(f"{b}{n}_JNT")).length()
+            for n in ("Shoulder", "Elbow", "Carpus", "Fetlock"))
+check("sc_rp_sc_carpus: reposo", worst < 0.2, "worst=%.3f" % worst)
+carpo0 = _ang(j["Elbow"], j["Carpus"], j["Fetlock"])
+for ax, v in zip("XYZ", (0, 25, -8)):
+    cmds.setAttr(f"{b}FetlockIk_CTL.translate{ax}", v)
+carpo1 = _ang(j["Elbow"], j["Carpus"], j["Fetlock"])
+for ax in "XYZ":
+    cmds.setAttr(f"{b}FetlockIk_CTL.translate{ax}", 0)
+check("sc_rp_sc_carpus: el carpo dobla en flexion", carpo1 < 120, "carpo=%.1f (reposo %.1f)" % (carpo1, carpo0))
+
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)
 sys.exit(1 if fails else 0)
