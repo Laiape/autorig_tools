@@ -1,7 +1,7 @@
 {
     "Rig_Type": 1,
     "solver_mode": 0,
-    "solver_front_leg": 4,
+    "solver_front_leg": 0,
     "solver_back_leg": 0,
     "spine_skinning_jnts": 8,
     "spine_controllers": 4,
