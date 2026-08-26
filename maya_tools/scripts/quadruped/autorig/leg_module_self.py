@@ -1773,7 +1773,6 @@ class FrontLegModule(LegModule):
         y_s = p_local * om.MVector(sphere_aim_m[4], sphere_aim_m[5], sphere_aim_m[6])
         z_s = p_local * om.MVector(sphere_aim_m[8], sphere_aim_m[9], sphere_aim_m[10])
         if abs(x_s) >= R_ventral * 0.999:
-            # clavícula casi alineada con el eje chest->root: elipse degenerada
             cmds.warning("Guía de clavícula degenerada respecto al chest: esfera simple.")
             r = p_local.length()
             sx = 1.0
@@ -1870,11 +1869,11 @@ class FrontLegModule(LegModule):
                 f"{self.side}_scapula_master_ctl": self.scapula_master_ctl
             },
         )
-        
-
-        # closestPointOnSurface (la referencia ya lo tiene)  →  DÓNDE puede deslizar
-        #aimMatrix(reposo → ik_handle_target) × AutoClavicle →  CUÁNTO protrae con la zancada
-        #distanceBetween(root, ik_handle_target) → remap → ty →  CUÁNTO sube al cargar
+        # _______ Delete guides ___________________
+        # la lista scapula_chain guarda rutas de antes del reparent: se borra
+        # la raiz (el subarbol cae con ella)
+        if cmds.objExists(self.scapula_guide):
+            cmds.delete(self.scapula_guide)
 
 
 # ═════════════════════════════════════════════════════════════════════════════

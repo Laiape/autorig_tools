@@ -1217,6 +1217,14 @@ def skeleton_hierarchy():
         # detección plano/jerárquico de la cadena principal.
         correctives = [j for j in jnts if _is_corrective(j)]
         main = [j for j in jnts if j not in set(correctives)]
+        # la escapula es la raiz anatomica de la delantera (sinsarcosis): va
+        # PRIMERA para que el encadenado plano la deje como padre de la cadena
+        # (el orden de allDescendents es accidental y la dejaba al final)
+        main.sort(key=lambda j: 0 if "scapulaSkinning" in j.split("|")[-1] else 1)
+        # el localChest cierra la cadena del spine: queda como hijo de la
+        # ultima joint de la columna, y de el cuelgan neck y escapulas (las
+        # reglas neck/frontLeg -> localChest ya lo buscan por nombre)
+        main.sort(key=lambda j: 1 if "localChestSkinning" in j.split("|")[-1] else 0)
 
         if clean == "spine":
             parent = freeze_jnt

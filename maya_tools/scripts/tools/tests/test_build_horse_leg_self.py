@@ -283,6 +283,46 @@ for side in ("L", "R"):
     check(f"{side}: fetlock aima a la cuartilla (SC)", (x0 * x1) < 0.98, "dot=%.3f" % (x0 * x1))
     check(f"{side}: el fetlock no se mueve al girar el Foot", (p1f - p0f).length() < 1e-3, "d=%.5f" % (p1f - p0f).length())
 
+# ── escápula automática: superficie de guías, hueso rígido, auto por compresión ──
+from maya_tools.scripts.utils import guides_manager as _gmv
+_, _gd = _gmv._load_guides_file("horse")
+for side in ("L", "R"):
+    b = f"{side}_scapula"
+    master = f"{b}Master_CTL"
+    ctl = f"{b}_CTL"
+    jnt = f"{b}Skinning_JNT"
+    check(f"{side} escapula: nodos", all(cmds.objExists(n) for n in (master, ctl, jnt, f"{b}Surface_NURB")))
+    check(f"{side} escapula: attrs", all(cmds.attributeQuery(a, node=ctl, exists=True)
+          for a in ("Auto_Scapula", "Multiply_Amount", "TranslateValue", "RotateValue")))
+    gm = _gd["horse"][f"{side}_scapula_JNT"]["joint_matrix"]
+    guide_p = om.MVector(gm[12], gm[13], gm[14])
+    d_rest = (_wpos(jnt) - guide_p).length()
+    check(f"{side} escapula: reposo sobre la guia", d_rest < 1e-3, "d=%.4f" % d_rest)
+    L = (_wpos(jnt) - _wpos(master)).length()
+    ball = f"{side}_frontLegFetlockIk_CTL"
+    m0 = _wpos(master)
+    cmds.setAttr(f"{ball}.translateY", 25); cmds.setAttr(f"{ball}.translateZ", -8)
+    lift = (_wpos(master) - m0).y
+    bone = (_wpos(jnt) - _wpos(master)).length()
+    axis = cmds.getAttr(f"{side}_scapulaJnt_AMX.primaryInputAxis")[0]
+    idx = max(range(3), key=lambda k: abs(axis[k]))
+    sign = 1 if axis[idx] > 0 else -1
+    jm = om.MMatrix(cmds.getAttr(f"{jnt}.worldMatrix[0]"))
+    prim = om.MVector(jm[idx * 4], jm[idx * 4 + 1], jm[idx * 4 + 2]) * sign
+    to_master = (_wpos(master) - _wpos(jnt)).normalize()
+    check(f"{side} escapula: sube al comprimir", lift > 1.0, "dy=%.2f" % lift)
+    check(f"{side} escapula: hueso rigido en pose", abs(bone - L) < 1e-3, "d=%.4f" % abs(bone - L))
+    check(f"{side} escapula: aim al master", prim * to_master > 0.9999, "dot=%.4f" % (prim * to_master))
+    cmds.setAttr(f"{ball}.translateY", 0); cmds.setAttr(f"{ball}.translateZ", 0)
+    cmds.setAttr(f"{ctl}.Auto_Scapula", 0)
+    cmds.setAttr(f"{ball}.translateY", 25)
+    check(f"{side} escapula: Auto=0 no sube", abs((_wpos(master) - m0).y) < 1e-3)
+    cmds.setAttr(f"{ball}.translateY", 0)
+    cmds.setAttr(f"{ctl}.Auto_Scapula", 1)
+    check(f"{side} escapula: canales congelados", all(abs(v) < 1e-4
+          for c in (master, ctl) for v in cmds.getAttr(f"{c}.translate")[0] + cmds.getAttr(f"{c}.rotate")[0]))
+check("escapula: publish key", data_manager.DataExportBiped().get_data("frontLeg_module", "L_scapula_master_ctl") == "L_scapulaMaster_CTL")
+
 # ── config de nodos (SELF MATH): reparto tipo spring + stretch/soft ──
 cmds.file(new=True, force=True)
 modules_grp = cmds.createNode("transform", name="modules_GRP")
