@@ -283,6 +283,31 @@ for side in ("L", "R"):
     check(f"{side}: fetlock aima a la cuartilla (SC)", (x0 * x1) < 0.98, "dot=%.3f" % (x0 * x1))
     check(f"{side}: el fetlock no se mueve al girar el Foot", (p1f - p0f).length() < 1e-3, "d=%.5f" % (p1f - p0f).length())
 
+# ── reciprocal_coupling: babilla y corvejón acoplados en FK ──
+import math as _math
+def _iang(a, b, c):
+    return _math.degrees((_wpos(a) - _wpos(b)).angle(_wpos(c) - _wpos(b)))
+for side in ("L", "R"):
+    b = f"{side}_backLeg"
+    sti = f"{b}StifleFk_CTL"
+    check(f"{side} coupling: attr en el conductor", cmds.attributeQuery("Coupling", node=sti, exists=True))
+    cmds.setAttr(f"{b}Settings_CTL.switchIkFk", 1)
+    hip, hock, fet = f"{b}HipFk_CTL", f"{b}HockFk_CTL", f"{b}FetlockFk_CTL"
+    bab0, cor0 = _iang(hip, sti, hock), _iang(sti, hock, fet)
+    cmds.setAttr(f"{sti}.rotateZ", -25)
+    d_bab = _iang(hip, sti, hock) - bab0
+    d_cor = _iang(sti, hock, fet) - cor0
+    check(f"{side} coupling: flexionan JUNTOS", d_bab < -20 and d_cor < -20,
+          "bab=%.1f cor=%.1f" % (d_bab, d_cor))
+    check(f"{side} coupling: ratio del solver (1.06)", abs(d_cor / d_bab - 1.062) < 0.02,
+          "ratio=%.3f" % (d_cor / d_bab))
+    cmds.setAttr(f"{sti}.Coupling", 0)
+    d_cor_off = _iang(sti, hock, fet) - cor0
+    check(f"{side} coupling: apagable", abs(d_cor_off) < 1e-3, "d=%.3f" % d_cor_off)
+    cmds.setAttr(f"{sti}.rotateZ", 0)
+    cmds.setAttr(f"{sti}.Coupling", 1)
+    cmds.setAttr(f"{b}Settings_CTL.switchIkFk", 0)
+
 # ── fetlock_spring: hundimiento por carga (aparato de estay) ──
 for side in ("L", "R"):
     foot = f"{side}_frontLegFetlockIk_CTL"

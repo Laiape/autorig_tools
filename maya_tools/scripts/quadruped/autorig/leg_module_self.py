@@ -1295,7 +1295,24 @@ class LegModule(object):
         Expón un atributo (0-1) para poder apagarlo, y ponlo en el control
         CONDUCTOR, nunca en el conducido (sería un ciclo de dependencia).
         """
-        pass
+        driver = self.fk_controllers[1]
+        driven_anm = self.fk_controllers[2].replace("_CTL", "_ANM")
+        lat_letter = "xyz"[max(range(3), key=lambda k: abs(self.lateral_axis[k]))].upper()
+
+        cmds.addAttr(driver, longName="Coupling", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+
+        # ratio MEDIDO del propio solver (barrido del galope recogido, cap. 8):
+        # la babilla recorre 51.8° y el corvejón 55.0° -> 1.062 de conducido por
+        # grado de conductor. El signo se mide por comportamiento: ambos ángulos
+        # interiores deben CERRAR juntos (en la cadena zigzag con lateral fijo
+        # la flexión alterna el sentido local por articulación)
+        HOCK_PER_STIFLE = -1.062
+
+        mul = cmds.createNode("multiply", name=f"{self.module_name}Coupling_MUL", ss=True)
+        cmds.connectAttr(f"{driver}.rotate{lat_letter}", f"{mul}.input[0]")
+        cmds.setAttr(f"{mul}.input[1]", HOCK_PER_STIFLE)
+        cmds.connectAttr(f"{driver}.Coupling", f"{mul}.input[2]")
+        cmds.connectAttr(f"{mul}.output", f"{driven_anm}.rotate{lat_letter}")
 
     # ═════════════════════════════════════════════════════════════════════════
     # SALIDA
@@ -1602,8 +1619,10 @@ class BackLegModule(LegModule):
     """
     LEG_PREFIX = "backLeg"
     ROOT_JOINT = "Hip"
+    # peroneo tercero TENDINOSO en el équido: el acoplamiento es obligatorio
+    RECIPROCAL_COUPLING = True
     # Sobrescribe aquí: FORWARD_AXIS · PV_SIGN · REPOSITION_IK_TO_GUIDES ·
-    # RECIPROCAL_COUPLING · FOOT_CLASS
+    # FOOT_CLASS
 
 
 class FrontLegModule(LegModule):
