@@ -912,8 +912,7 @@ class LegModule(object):
 
         chord = _f("NodesChordClampHi", 4, _f("NodesChordClampLo", 5, f"{chord_cnd}.outColorR", bc_lo), bc_hi)
 
-        # bias del doblez sobre la cuerda: >0.5 hacia tibia+caña (carga la
-        # babilla), <0.5 hacia el minimo (carga el corvejon)
+        # bias
         bias_plug = self.bend_bias_attr()
         up_t = _f("NodesBiasUpT", 2, _f("NodesBiasUpMax", 5, _f("NodesBiasUp", 1, bias_plug, 0.5), 0.0), 2.0)
         dn_t = _f("NodesBiasDnT", 2, _f("NodesBiasDnMax", 5, _f("NodesBiasDn", 1, 0.5, bias_plug), 0.0), 2.0)
@@ -921,8 +920,6 @@ class LegModule(object):
         lo_gain = _f("NodesBiasLoGain", 2, dn_t, _f("NodesBiasLoSpan", 1, chord, bc_lo))
         chord = _f("NodesBiasChord", 1, _f("NodesBiasChordUp", 0, chord, hi_gain), lo_gain)
 
-        # el bias satura donde el triangulo 1 deja de ser resoluble (el pie
-        # nunca se despega del objetivo): |d - a| < cuerda < d + a
         reach_lo = _f("NodesBiasReachLo", 0,
                       _f("NodesBiasDAbs", 5, _f("NodesBiasDA1", 1, d1_raw, len_a),
                          _f("NodesBiasDA2", 1, len_a, d1_raw)), 1e-3)
@@ -977,12 +974,9 @@ class LegModule(object):
         d2_raw = _dist("NodesD2", B, D)
         d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, bc_lo), bc_hi)
         u2 = _scale("NodesU2", _sub("NodesBD", D, B), _f("NodesD2Inv", 3, 1.0, d2_raw))
-        # perpendicular EN EL PLANO a u2 (v1 lo es a u1: con base no ortogonal
-        # la ley de cosenos del segundo triangulo no coloca C a distancia cana)
         v2 = _cross("NodesV2", n_hat, u2)
         C = _bend_point("NodesT2", B, d2, u2, v2, len_b, len_c, sign_2)
 
-        # ── frames de salida: aim con la convención del módulo, up al pole ──
         def _cmp(label, vec):
             node = cmds.createNode("composeMatrix", name=f"{n}{label}_CMX", ss=True)
             cmds.connectAttr(vec, f"{node}.inputTranslate")
@@ -990,11 +984,6 @@ class LegModule(object):
 
         cmp_a, cmp_b, cmp_c, cmp_d = (_cmp(l, v) for l, v in
                                       (("NodesA", A), ("NodesB", B), ("NodesC", C), ("NodesD", D)))
-        # up de los frames: el eje LATERAL alineado al NORMAL del plano vivo —
-        # los huesos viven en el plano y nunca son paralelos a su normal, así
-        # que el aim no degenera en ninguna pose (alinear la Y al vector del
-        # plano giraba los frames ~80 con la pata cruzada hacia delante).
-        # Signo medido contra el lateral autorado de la guía raíz.
         root_guide = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
         lat_local = om.MVector(*self.lateral_axis)
         guide_lat = om.MVector(
@@ -1096,7 +1085,7 @@ class LegModule(object):
         cmds.addAttr(foot_ctl, longName="Soft", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
         cmds.addAttr(foot_ctl, longName="Soft_Start", attributeType="float", minValue=0.001, maxValue=1, defaultValue=0.8, keyable=True)
 
-        # ----- Distancia actual normalizada por globalScale -----
+        # ----- Distancia normalizada por globalScale -----
         current_dbt = cmds.createNode("distanceBetween", name=f"{self.module_name}CurrentLength_DBT", ss=True)
         cmds.connectAttr(f"{root_ctl}.worldMatrix[0]", f"{current_dbt}.inMatrix1")
         cmds.connectAttr(ik_target_plug, f"{current_dbt}.inMatrix2")
@@ -1106,7 +1095,7 @@ class LegModule(object):
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{distance_div}.input2")
         distance_plug = f"{distance_div}.output"
 
-        # ----- Longitud total viva (con los length mults) -----
+        # ----- Longitud total -----
         length_sum = cmds.createNode("sum", name=f"{self.module_name}TotalLength_SUM", ss=True)
         for i, (rest, mult_name) in enumerate(zip(rest_lengths, mult_names)):
             segment_mul = cmds.createNode("multiply", name=f"{self.module_name}Segment0{i}Length_MUL", ss=True)
@@ -1115,7 +1104,7 @@ class LegModule(object):
             cmds.connectAttr(f"{segment_mul}.output", f"{length_sum}.input[{i}]")
         length_plug = f"{length_sum}.output"
 
-        # ----- Stretch: factor = lerp(1, max(1, d/L), Stretch) -----
+        # ----- Stretch -----
         ratio_div = cmds.createNode("divide", name=f"{self.module_name}LengthRatio_DIV", ss=True)
         cmds.connectAttr(distance_plug, f"{ratio_div}.input1")
         cmds.connectAttr(length_plug, f"{ratio_div}.input2")
@@ -1137,7 +1126,6 @@ class LegModule(object):
             cmds.connectAttr(f"{foot_ctl}.{mult_names[i - 1]}", f"{joint_mul}.input[2]")
             cmds.connectAttr(f"{joint_mul}.output", f"{self.ik_chain[i]}.translateX")
 
-        # config de nodos: el stretch conduce las longitudes de la red
         if getattr(self, "nodes_length_inputs", None):
             for i, len_input in enumerate(self.nodes_length_inputs):
                 len_mul = cmds.createNode("multiply", name=f"{self.module_name}NodesLen0{i}Stretch_MUL", ss=True)
@@ -1146,7 +1134,7 @@ class LegModule(object):
                 cmds.connectAttr(f"{foot_ctl}.{mult_names[i]}", f"{len_mul}.input[2]")
                 cmds.connectAttr(f"{len_mul}.output", len_input, force=True)
 
-        # ----- Soft: d' = dStart + range * (1 - e^(-(d - dStart) / range)) -----
+        # ----- Soft -----
         soft_start_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftStart_MUL", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Soft_Start", f"{soft_start_mul}.input[0]")
         cmds.connectAttr(length_plug, f"{soft_start_mul}.input[1]")
@@ -1182,7 +1170,6 @@ class LegModule(object):
         cmds.connectAttr(f"{soft_start_mul}.output", f"{soft_distance_sum}.input[0]")
         cmds.connectAttr(f"{soft_falloff_mul}.output", f"{soft_distance_sum}.input[1]")
 
-        # Solo amortigua pasado el inicio del soft (condition: d > dStart)
         soft_condition = cmds.createNode("condition", name=f"{self.module_name}Soft_CON", ss=True)
         cmds.setAttr(f"{soft_condition}.operation", 2)  # Greater than
         cmds.connectAttr(distance_plug, f"{soft_condition}.firstTerm")
@@ -1195,12 +1182,10 @@ class LegModule(object):
         cmds.connectAttr(distance_plug, f"{soft_blend}.input[0]")
         cmds.connectAttr(f"{soft_condition}.outColorR", f"{soft_blend}.input[1]")
 
-        # De vuelta a unidades world (la distancia iba normalizada)
         soft_world_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftWorld_MUL", ss=True)
         cmds.connectAttr(f"{soft_blend}.output", f"{soft_world_mul}.input[0]")
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{soft_world_mul}.input[1]")
 
-        # Recolocación del handle: composeMatrix(tx) * aimMatrix (sin DAG)
         absolute_primary = tuple(abs(x) for x in self.primary_axis)
         soft_aim = cmds.createNode("aimMatrix", name=f"{self.module_name}Soft_AIM", ss=True)
         cmds.connectAttr(f"{root_ctl}.worldMatrix[0]", f"{soft_aim}.inputMatrix")
@@ -1249,13 +1234,13 @@ class LegModule(object):
                        for ik, g in pairs)
 
         best_t, best_e = 0.0, rest_error()
-        # barrido grueso (el error tiene minimos locales a lo largo de la vuelta)
+
         for t in range(-180, 181, 5):
             cmds.setAttr(f"{hdl}.twist", t)
             e = rest_error()
             if e < best_e:
                 best_t, best_e = float(t), e
-        # refinado alrededor del mejor
+
         for step in (1.0, 0.2, 0.05):
             t = best_t - step * 4
             while t <= best_t + step * 4 + 1e-9:
@@ -1338,7 +1323,6 @@ class LegModule(object):
             segment_names = [f"Segment0{i}" for i in range(self.segment_count)]
         self.segment_names = segment_names
 
-        # En este modulo los blends ya viven como listas de plugs/nombres
         blend_wm = list(self.blend_plugs)
         cv_nodes = list(self.blend_matrices)
 
@@ -1368,8 +1352,7 @@ class LegModule(object):
 
         roll_wm = list(blend_wm)
         roll_wm[0] = f"{non_roll_aim}.outputMatrix"
-        # referencia encadenada: el lateral del frame anterior (el fijo de
-        # mundo degeneraba con la pata cruzada hacia delante)
+
         up_plug = self._lateral_row_plug(f"{non_roll_aim}.outputMatrix", f"{self.module_name}NonRollAimLat")
         for i in range(1, self.leg_end_index + 1):
             aim_target = blend_wm[i + 1] if i + 1 < len(blend_wm) else blend_wm[i]
@@ -1564,14 +1547,10 @@ class LegModule(object):
         """
 
         # _______ Delete all unnecesary nodes ___________________
-        # la guia de settings es opcional (el caballo no la trae)
         if self.settings_guide and cmds.objExists(self.settings_guide):
             cmds.delete(self.settings_guide)
 
-        # ---- data para el resto del rig (rig_manager.quadruped_space_switches
-        # conecta con esto las patas al pelvis/chest al final del build) ----
-        # legPv NO se publica: su space switch (foot/root) ya se monta en
-        # pole_vector_setup, y publicarlo montaria un segundo switch encima
+        # _______ Write data ___________________
         data_manager.DataExportBiped().append_data(
             f"{self.LEG_PREFIX}_module",
             {
@@ -1581,8 +1560,7 @@ class LegModule(object):
             },
         )
 
-        # config de nodos: la cadena ik y la guia no tienen consumidores
-        # (la red lee los frames horneados) — fuera del modulo
+        # _______ Delete chains if the handle is matematical ___________________
         if not self.ik_handles:
             for root in (self.ik_chain[0], self.leg_chain[0]):
                 if cmds.objExists(root):
@@ -1636,8 +1614,10 @@ class FrontLegModule(LegModule):
     ROOT_JOINT = "Shoulder"
 
     def make(self, side, **kwargs):
-        """Llama al padre; la escápula (scapula_setup) queda pendiente."""
+        """Llama al padre y monta la escápula encima (necesita orient_guides)."""
+        self.side = side
         super().make(side, **kwargs)
+        self.scapula_setup()
 
     def scapula_setup(self):
         """
@@ -1657,7 +1637,114 @@ class FrontLegModule(LegModule):
         medido. Nombrar el hueco es una aportación; fingir que no existe es lo
         que un tribunal tumba.
         """
-        pass
+        # ___________________ Load guides ___________________
+        scapula_chain = guides_manager.get_guides(f"{self.side}_scapula_JNT")
+        if not scapula_chain:
+            cmds.warning(f"{self.side}_scapula_JNT no existe: se omite la escápula.")
+            return
+        self.scapula_guide = scapula_chain[0]
+        cmds.parent(self.scapula_guide, self.module_trn)
+
+        # ___________________ Set static matrix ___________________
+        scapula_matrices, scapula_point_matrices = guides_manager.orient_guides(
+            guides=scapula_chain,
+            primaryInputAxis=self.primary_axis,
+            secondaryInputAxis=self.secondary_axis,
+        )
+        self.scapula_wm = scapula_matrices[0]
+        self.scapula_point_wm = scapula_point_matrices
+        self.scapula_rest = om.MMatrix(cmds.getAttr(self.scapula_wm))
+        self.scapula_end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
+        if len(scapula_chain) > 1:
+            cmds.delete(scapula_chain[1])
+
+        # ___________________ Create scapula controls ___________________
+        end_pos = om.MVector(self.scapula_end_rest[12], self.scapula_end_rest[13], self.scapula_end_rest[14])
+        master_matrix = self.ctl_matrix(guides_manager._with_translation(om.MMatrix.kIdentity, end_pos), world_frame=True)
+        scapula_master_grp, scapula_master_ctl = curve_tool.create_controller(
+            name=f"{self.side}_scapulaMaster",
+            offset=["GRP", "OFF", "ANM"],
+            locked_attrs=["v"],
+            matrix=master_matrix,
+            parent=self.controllers_grp
+        )
+        self.scapula_master_ctl = scapula_master_ctl
+        # Auto scapula
+        scapula_auto_grp, scapula_auto_ctl = curve_tool.create_controller(
+            name=f"{self.side}_scapula",
+            offset=["GRP", "OFF", "ANM"],
+            locked_attrs=["v"],
+            matrix=self.ctl_matrix(self.scapula_rest),
+            parent=scapula_master_ctl
+        )
+        self.scapula_ctl = scapula_auto_ctl
+        # ___________________ Add attributes to the controls ___________________
+        cmds.addAttr(scapula_auto_ctl, longName="SCAPULA_ATTRIBUTES", niceName="SCAPULA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{scapula_auto_ctl}.SCAPULA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(scapula_auto_ctl, longName="Auto_Scapula", attributeType="float", defaultValue=1, maxValue=1, minValue=0, keyable=True)
+        cmds.addAttr(scapula_auto_ctl, longName="Multiply_Amount", attributeType="float", defaultValue=1, minValue=0.001, keyable=True)
+
+        # ___________________ Auto clavicle setup ___________________
+        # Distance mesurement
+        leg_distance = cmds.createNode("distanceBetween", name=f"{self.side}_scapulaLegLength_DBT", ss=True)
+        cmds.connectAttr(f"{scapula_master_grp[0]}.worldMatrix[0]", f"{leg_distance}.inMatrix1")
+        cmds.connectAttr(self.ik_handle_target, f"{leg_distance}.inMatrix2")
+
+        leg_distance_norm = cmds.createNode("floatMath", name=f"{self.side}_scapulaLegLengthNorm_FLM", ss=True)
+        cmds.setAttr(f"{leg_distance_norm}.operation", 3)
+        cmds.connectAttr(f"{leg_distance}.distance", f"{leg_distance_norm}.floatA")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{leg_distance_norm}.floatB")
+        self.scapula_leg_length_plug = f"{leg_distance_norm}.outFloat"
+
+        target = self._end_target(0)
+        scapula_aimMatrix = cmds.createNode("aimMatrix", name=f"{self.side}_scapulaAim_AMX", ss=True)
+        cmds.setAttr(f"{scapula_aimMatrix}.inputMatrix", list(self.scapula_rest), type="matrix")
+        cmds.connectAttr(target, f"{scapula_aimMatrix}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{scapula_aimMatrix}.primaryInputAxis", *self.primary_axis, type="double3")
+
+        lat_idx = max(range(3), key=lambda k: abs(self.lateral_axis[k]))
+        lat_sign = 1.0 if self.lateral_axis[lat_idx] >= 0 else -1.0
+        lat_world = [self.scapula_rest[lat_idx * 4 + k] * lat_sign for k in range(3)]
+        cmds.setAttr(f"{scapula_aimMatrix}.secondaryInputAxis", *self.lateral_axis, type="double3")
+        cmds.setAttr(f"{scapula_aimMatrix}.secondaryTargetVector", *lat_world, type="double3")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{scapula_aimMatrix}.secondary.secondaryTargetMatrix")
+        cmds.setAttr(f"{scapula_aimMatrix}.secondaryMode", 2)
+
+        scapula_delta_mmx = cmds.createNode("multMatrix", name=f"{self.side}_scapulaDelta_MMX", ss=True)
+        cmds.connectAttr(f"{scapula_aimMatrix}.outputMatrix", f"{scapula_delta_mmx}.matrixIn[0]")
+        cmds.setAttr(f"{scapula_delta_mmx}.matrixIn[1]", *self.scapula_rest.inverse(), type="matrix")
+
+        # Attribute activation
+        scapula_blm = cmds.createNode("blendMatrix", name=f"{self.side}_autoScapula_BLM", ss=True)
+        cmds.connectAttr(f"{scapula_delta_mmx}.matrixSum", f"{scapula_blm}.target[0].targetMatrix")
+        cmds.connectAttr(f"{scapula_auto_ctl}.Auto_Scapula", f"{scapula_blm}.target[0].weight")
+        cmds.connectAttr(f"{scapula_blm}.outputMatrix", f"{scapula_auto_grp[-1]}.offsetParentMatrix")
+
+        # Movement setup (gate de compresión + elevación del master)
+        scapula_pos = om.MVector(self.scapula_rest[12], self.scapula_rest[13], self.scapula_rest[14])
+        EXCURSION_MAX = (end_pos - scapula_pos).length() * 0.5 * math.sin(math.radians(20.0))
+
+        # GATE
+        GALLOP_COMPRESSION = 0.73  # medido: dist/reposo = 0.732 en la pose (pie +25 arriba, -8 atras)
+        rest_len = cmds.getAttr(self.scapula_leg_length_plug)
+        remap_compress = cmds.createNode("remapValue", n=f"{self.side}_scapulaCompress_RMV", ss=True)
+        cmds.connectAttr(self.scapula_leg_length_plug, f"{remap_compress}.inputValue")
+        cmds.setAttr(f"{remap_compress}.inputMin", rest_len * GALLOP_COMPRESSION)
+        cmds.setAttr(f"{remap_compress}.inputMax", rest_len)
+        cmds.setAttr(f"{remap_compress}.outputMin", 1)
+        cmds.setAttr(f"{remap_compress}.outputMax", 0)
+
+        multiply_compress = cmds.createNode("multiply", n=f"{self.side}_scapulaCompress_MUL", ss=True)
+        cmds.connectAttr(f"{remap_compress}.outValue", f"{multiply_compress}.input[0]")
+        cmds.setAttr(f"{multiply_compress}.input[1]", EXCURSION_MAX)
+
+        multiply_amount = cmds.createNode("multiply", n=f"{self.side}_scapulaCompressAmount_MUL", ss=True)
+        cmds.connectAttr(f"{multiply_compress}.output", f"{multiply_amount}.input[0]")
+        cmds.connectAttr(f"{self.scapula_ctl}.Multiply_Amount", f"{multiply_amount}.input[1]")
+        cmds.connectAttr(f"{self.scapula_ctl}.Auto_Scapula", f"{multiply_amount}.input[2]")
+        compose_m_compress = cmds.createNode("composeMatrix", n=f"{self.side}_scapulaLift_CPM", ss=True)
+        cmds.connectAttr(f"{multiply_amount}.output", f"{compose_m_compress}.inputTranslateY")
+        cmds.connectAttr(f"{compose_m_compress}.outputMatrix", f"{scapula_master_grp[-1]}.offsetParentMatrix")
 
         # closestPointOnSurface (la referencia ya lo tiene)  →  DÓNDE puede deslizar
         #aimMatrix(reposo → ik_handle_target) × AutoClavicle →  CUÁNTO protrae con la zancada
@@ -1675,9 +1762,6 @@ class FootBase(object):
     sus pivotes y expone sus atributos en el control del pie.
     """
 
-    # orden = jerarquía: cada pivote cuelga del anterior, y el GRP del ball se
-    # recuelga bajo el último (sole) — el manager del handle lee el worldMatrix
-    # VIVO del ball, así que girar cualquier pivote mueve la pierna gratis.
     PIVOT_ORDER = ["bankOut", "bankIn", "heel", "toe", "sole"]
 
     def build(self, leg):
@@ -1740,10 +1824,9 @@ class FootBase(object):
             self.pivot_sdk[role] = grps[1]
             parent = ctl
 
-        # recolgar el ball bajo el sole sin dejar el offset en canales
         ball_grp = leg.ik_grp["ball"]
         cmds.parent(ball_grp, self.pivot_ctl["sole"])
-        # .matrix NO incluye el opm: el local completo es canales x opm
+
         local = (om.MMatrix(cmds.getAttr(f"{ball_grp}.matrix"))
                  * om.MMatrix(cmds.getAttr(f"{ball_grp}.offsetParentMatrix")))
         cmds.setAttr(f"{ball_grp}.offsetParentMatrix", list(local), type="matrix")
@@ -1773,7 +1856,7 @@ class FootBase(object):
         cmds.addAttr(foot_ctl, longName="Roll_Break_Angle", attributeType="float", defaultValue=35, keyable=True)
         cmds.addAttr(foot_ctl, longName="Roll_Straight_Angle", attributeType="float", defaultValue=75, keyable=True)
 
-        # visibilidad de los pivotes (shapes, no grupos: el Foot cuelga debajo)
+        # visibilidad de los pivotes
         cmds.addAttr(foot_ctl, longName="Pivot_Controllers", attributeType="bool", defaultValue=0, keyable=False)
         cmds.setAttr(f"{foot_ctl}.Pivot_Controllers", channelBox=True)
         for role in self.PIVOT_ORDER:
@@ -1788,15 +1871,11 @@ class FootBase(object):
         up = om.MVector(0, 1, 0)
         w_axis = up ^ om.MVector(*leg.FORWARD_AXIS)
         roll_sign = 1 if (om.MVector(leg.lateral_ref) * w_axis) > 0 else -1
-
-        # factor 0->1 del break al straight: cuánto peso pasa a la punta
         straight_rmv = cmds.createNode("remapValue", name=f"{name}RollStraightAngle_RMV", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Roll", f"{straight_rmv}.inputValue")
         cmds.connectAttr(f"{foot_ctl}.Roll_Break_Angle", f"{straight_rmv}.inputMin")
         cmds.connectAttr(f"{foot_ctl}.Roll_Straight_Angle", f"{straight_rmv}.inputMax")
 
-        # factor 0->1 de 0 al break: rampa de la pisada (inputMin=0 aquí SÍ,
-        # el tramo negativo va aparte por el min de abajo)
         break_rmv = cmds.createNode("remapValue", name=f"{name}RollBreakAngle_RMV", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Roll", f"{break_rmv}.inputValue")
         cmds.connectAttr(f"{foot_ctl}.Roll_Break_Angle", f"{break_rmv}.inputMax")
@@ -1833,8 +1912,7 @@ class FootBase(object):
         cmds.setAttr(f"{heel_sign}.input[1]", roll_sign)
         cmds.connectAttr(f"{heel_sign}.output", f"{self.pivot_sdk['heel']}.rotateZ")
 
-        # Bank: rx positivo tumba la copa hacia z local (medial), así que ambos
-        # pivotes reciben -Bank y el condition solo elige CUÁL pivota.
+
         bank_neg = cmds.createNode("multiply", name=f"{name}BankNeg_MUL", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Bank", f"{bank_neg}.input[0]")
         cmds.setAttr(f"{bank_neg}.input[1]", -1)
@@ -1908,10 +1986,7 @@ class HoofFoot(FootBase):
         cmds.connectAttr(f"{hoof_mmx}.matrixSum",
                          f"{leg.blend_matrices[leg.plant_index]}.inputMatrix", force=True)
 
-        # "single chain" fetlock->pastern en matrices (el papel del ikSCsolver
-        # de la referencia): el fetlock AIMA a la cuartilla viva, asi su
-        # orientacion sigue al pie en roll y pivotes. En reposo el frame de la
-        # guia ya apunta a la cuartilla: no mueve nada.
+
         if getattr(leg, "nodes_ik_world", None):
             end_src = leg.nodes_ik_world[leg.leg_end_index]
         else:
