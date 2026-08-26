@@ -1597,15 +1597,60 @@ class LegModule(object):
         el doblez cae en articulaciones REALES o dentro de un hueso. Úsala para
         comparar las tres configuraciones de solver sobre la MISMA pose extrema
         (el plegado recogido del galope).
+
+        Mide sobre los blend_plugs (la salida real del sistema): vale para
+        cualquier solver y respeta el modo IK/FK activo. pose = dict
+        {atributo: valor}; default, el plegado recogido del cap. 8. Restaura
+        la pose al terminar.
         """
-        pass
+        ankle = self.ik_ctl["ankle"]
+        if pose is None:
+            pose = {f"{ankle}.translateY": 25.0, f"{ankle}.translateZ": -8.0}
+        prev = {attr: cmds.getAttr(attr) for attr in pose}
+        for attr, value in pose.items():
+            cmds.setAttr(attr, value)
+
+        def _pos(i):
+            m = cmds.getAttr(self.blend_plugs[i])
+            return om.MVector(m[12], m[13], m[14])
+
+        angles = {}
+        last = min(self.leg_end_index + 1, len(self.blend_plugs) - 1)
+        for i in range(1, last):
+            a, b, c = _pos(i - 1), _pos(i), _pos(i + 1)
+            label = self.leg_chain[i].split("_")[1].replace(self.LEG_PREFIX, "")
+            angles[label] = round(math.degrees((a - b).angle(c - b)), 2)
+
+        for attr, value in prev.items():
+            cmds.setAttr(attr, value)
+        return angles
 
     def measure_fk_ik_drift(self):
         """
         Distancia que salta cada joint al conmutar el switch en reposo.
         Criterio: 0.0. Cualquier otra cosa es un bug, no una tolerancia.
+
+        Lee los blend_plugs en IK y en FK y devuelve {joint: salto}. Restaura
+        el switch al terminar.
         """
-        pass
+        switch = f"{self.settings_ctl}.switchIkFk"
+        prev = cmds.getAttr(switch)
+
+        def _snapshot():
+            points = []
+            for plug in self.blend_plugs:
+                m = cmds.getAttr(plug)
+                points.append(om.MVector(m[12], m[13], m[14]))
+            return points
+
+        cmds.setAttr(switch, 0)
+        ik_points = _snapshot()
+        cmds.setAttr(switch, 1)
+        fk_points = _snapshot()
+        cmds.setAttr(switch, prev)
+
+        return {self.leg_chain[i].split("_")[1]: round((ik_points[i] - fk_points[i]).length(), 5)
+                for i in range(len(ik_points))}
 
 
 # ═════════════════════════════════════════════════════════════════════════════

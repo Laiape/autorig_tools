@@ -474,7 +474,8 @@ dm = data_manager.DataExportBiped()
 dm.new_build()
 dm.append_data("basic_structure", {"modules_GRP": modules_grp, "skel_GRP": skel_grp, "masterwalk_ctl": masterwalk})
 try:
-    lm.FrontLegModule().make("L", solver="sc_rp_sc", skinning_joints_number=5)
+    leg_scrpsc = lm.FrontLegModule()
+    leg_scrpsc.make("L", solver="sc_rp_sc", skinning_joints_number=5)
     check("sc_rp_sc: build delantera", True)
 except Exception:
     traceback.print_exc()
@@ -512,6 +513,12 @@ cmds.setAttr(f"{ankle}.Roll", -20)
 dy = _wpos(tip).y - y0
 cmds.setAttr(f"{ankle}.Roll", 0)
 check("sc_rp_sc: roll", dy > 0.1, "dy=%.3f" % dy)
+
+# instrumentación del módulo (cap. 8): drift y reparto medibles desde la instancia
+drift = leg_scrpsc.measure_fk_ik_drift()
+check("instrumentacion: drift IK/FK ~0", max(drift.values()) < 0.01, str(max(drift.values())))
+bend = leg_scrpsc.measure_bend_distribution()
+check("instrumentacion: reparto por articulacion", "Elbow" in bend and "Carpus" in bend, str(bend))
 
 # variante sc_rp_sc_carpus: el CARPO dobla de verdad al recoger la mano
 cmds.file(new=True, force=True)
