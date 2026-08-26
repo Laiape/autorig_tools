@@ -204,14 +204,14 @@ class LegModule(object):
             controllers_creation settings + FK + IK + pivotes del pie reverso
             ik_setup             <- AQUÍ conmuta el solver (fichas IK_CONFIGS)
             ik_stretch_soft      stretch + soft del lado IK
-            ik_calibration       (pendiente) el reposo debe quedar en identidad
+            ik_calibration       barrido de twist del spring: reposo < 0.002
             fk_setup             FK stretch por matrices
             blend_setup          blend FK/IK por joint (salida = plugs)
-            reciprocal_coupling  (pendiente; si el flag lo pide)
+            reciprocal_coupling  babilla->corvejón en FK (si el flag lo pide)
             foot.build           el pie COMPUESTO: pivotes reversos + roll
             bendys_setup         bendy ctl por segmento
             skinning_setup       ribbons + joints del pie
-            publish              (pendiente)
+            publish              claves para space switches + limpieza
 
         """
 
@@ -572,8 +572,8 @@ class LegModule(object):
            (start, end, solver) llama a _create_handle. Una combinación nueva
            es una entrada más en el dict, cero código.
 
-        PENDIENTE:
-        - La config "nodes" (triangle_solver) aún no entra por el dispatch.
+        La config "nodes" NO pasa por el dispatch: entra por su rama previa
+        (_ik_nodes) porque no crea handles — es una red de matrices pura.
         """
         ball_ctl = self.ik_ctl["ball"]
         end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.leg_end_index]))
@@ -803,11 +803,10 @@ class LegModule(object):
         son plugs (floatConstant) que el stretch multiplica, y el soft
         recoloca el objetivo que lee la red.
 
-        PENDIENTE:
-        - atributo de BIAS sobre la escala de la cuerda (reparto animable,
-          comparable al springAngleBias)
-        - twist alrededor de la línea raíz->objetivo (atributo en el master)
-        - verificar el signo del doblez del corvejón en una pose extrema
+        Bend_Bias empuja la cuerda (reparto animable, análogo del
+        springAngleBias); Twist (attr en el master) gira el plano del solve
+        alrededor de la línea raíz->objetivo; los signos del doblez se miden
+        de las guías (verificados en pose extrema por la suite).
         """
         cmds.loadPlugin("matrixNodes", quiet=True)
         cmds.loadPlugin("lookdevKit", quiet=True)
@@ -935,7 +934,24 @@ class LegModule(object):
                       _f("NodesLenAQDif2", 1, chord, len_a)), 1e-3)
         d1 = _f("NodesD1Max", 4, _f("NodesD1Min", 5, d1_raw, aq_lo), aq_hi)
         u1 = _scale("NodesU1", _sub("NodesAD", D, A), _f("NodesD1Inv", 3, 1.0, d1_raw))
-        n_hat = _cross("NodesN", u1, _sub("NodesAP", P, A))
+        # Twist: gira el plano del solve alrededor de la línea raíz->objetivo
+        # (el equivalente del .twist del ikHandle). Rota el vector hacia el PV
+        # con un quaternion eje-ángulo (eje = û1 vivo) antes de armar el plano.
+        cmds.loadPlugin("quatNodes", quiet=True)
+        twist_ctl = self.ik_ctl["ankle"]
+        cmds.addAttr(twist_ctl, longName="Twist", attributeType="doubleAngle", defaultValue=0, keyable=True)
+        twist_quat = cmds.createNode("axisAngleToQuat", name=f"{self.module_name}NodesTwist_AAQ", ss=True)
+        cmds.connectAttr(u1, f"{twist_quat}.inputAxis")
+        cmds.connectAttr(f"{twist_ctl}.Twist", f"{twist_quat}.inputAngle")
+        twist_cmx = cmds.createNode("composeMatrix", name=f"{self.module_name}NodesTwist_CMX", ss=True)
+        cmds.setAttr(f"{twist_cmx}.useEulerRotation", 0)
+        cmds.connectAttr(f"{twist_quat}.outputQuat", f"{twist_cmx}.inputQuat")
+        ap_rot = cmds.createNode("vectorProduct", name=f"{self.module_name}NodesTwistAP_VCP", ss=True)
+        cmds.setAttr(f"{ap_rot}.operation", 3)
+        cmds.connectAttr(_sub("NodesAP", P, A), f"{ap_rot}.input1")
+        cmds.connectAttr(f"{twist_cmx}.outputMatrix", f"{ap_rot}.matrix")
+
+        n_hat = _cross("NodesN", u1, f"{ap_rot}.output")
         v1 = _cross("NodesV1", n_hat, u1)
 
         def _bend_point(label, root_pt, dist_plug, u_dir, v_dir, side_a, side_b, bend_sign):
@@ -2215,15 +2231,10 @@ class HoofFoot(FootBase):
         cmds.setAttr(f"{foot_ctl}.SPRING", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(foot_ctl, longName="Load", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
 
-        # rango: ~22 grados de excursión del ángulo MCP entre paso y galope
-        # (datos de marcha, cap. 8); signo NEGATIVO = hundir (medido por
-        # comportamiento: con +22 el fetlock subía; con −22 baja)
         MCP_SINK_DEG = -22.0
 
         n = f"{leg.side}_{leg.LEG_PREFIX}"
-        # muelle que ENDURECE: theta = R·(1 − (1−L)²). Pendiente 2R(1−L):
-        # máxima en vacío, nula al tope — incrementos de carga iguales hunden
-        # cada vez menos, la forma del aparato suspensor
+        # muelle que ENDURECE
         u_sub = cmds.createNode("subtract", name=f"{n}FetlockSpringU_SUB", ss=True)
         cmds.setAttr(f"{u_sub}.input1", 1)
         cmds.connectAttr(f"{foot_ctl}.Load", f"{u_sub}.input2")
@@ -2240,8 +2251,7 @@ class HoofFoot(FootBase):
         spring_cmx = cmds.createNode("composeMatrix", name=f"{n}FetlockSpring_CMX", ss=True)
         cmds.connectAttr(f"{theta}.output", f"{spring_cmx}.inputRotateX")
 
-        # cuartilla en espacio del ball (constante — es su hijo): la rotación
-        # se conjuga T(−p)·R·T(p) para pivotar sobre ella
+        # cuartilla en espacio del ball 
         ball_ctl = leg.ik_ctl["ball"]
         ball_rest = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
         pastern_w = om.MVector(cmds.xform(leg.ik_ctl["pastern"], q=True, ws=True, t=True))
@@ -2249,7 +2259,7 @@ class HoofFoot(FootBase):
         t_neg = om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -p_l.x, -p_l.y, -p_l.z, 1])
         t_pos = om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, p_l.x, p_l.y, p_l.z, 1])
 
-        # reinsertar en el manager: offset × T(−p) × R × T(p) × ball_world
+        # reinsertar en el manager
         manager = leg.ik_handle_target.split(".")[0]
         ball_conn = cmds.listConnections(f"{manager}.matrixIn[1]", plugs=True, source=True, destination=False)[0]
         cmds.disconnectAttr(ball_conn, f"{manager}.matrixIn[1]")

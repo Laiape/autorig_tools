@@ -322,9 +322,12 @@ def build_curves_from_template(target_transform_name=None):
     path = os.path.join(relative_path, "assets")
     character_path = os.path.join(path, CHARACTER_NAME)
     TEMPLATE_PATH = os.path.join(character_path, "curves")
+    # la version mas reciente de la carpeta (por mtime); _v001 solo de fallback
     last_version = rig_manager.get_latest_version(TEMPLATE_PATH)
-
-    TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}_v001.curves")
+    if last_version and str(last_version).endswith(".curves"):
+        TEMPLATE_FILE = str(last_version)
+    else:
+        TEMPLATE_FILE = os.path.join(TEMPLATE_PATH, f"{CHARACTER_NAME}_v001.curves")
 
 
     if not os.path.exists(TEMPLATE_FILE):
