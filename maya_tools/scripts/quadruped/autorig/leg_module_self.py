@@ -2068,6 +2068,7 @@ class HoofFoot(FootBase):
     def build(self, leg):
         super(HoofFoot, self).build(leg)
         self.hoof_attach(leg)
+        self.fetlock_spring(leg, leg.ik_ctl["ankle"])
 
     def hoof_attach(self, leg):
         """
@@ -2136,10 +2137,62 @@ class HoofFoot(FootBase):
         y el menudillo baja girando alrededor de ella.
 
         Default 0. Con carga en reposo la cadena queda en su tope de alcance y el
-        ball-roll se aplasta (medido: el menudillo sube 7.45u con carga 0 y solo
-        2.25u con carga 1).
+        ball-roll se aplasta (medido en esta config: Roll −20 mueve el fetlock
+        1.42u sin carga y 1.13u con carga 1).
+
+        DÓNDE se inyecta: en el MANAGER del ik (entre el offset horneado y el
+        world vivo del ball), no en el ball — rotar el ball movería también el
+        casco (HoofFollow lee su world) y el casco debe quedarse PLANTADO. La
+        rotación actúa sobre el punto de la cuartilla expresado en espacio del
+        ball (constante: el ball es hijo del PasternIk), así el pivote es
+        correcto en cualquier pose.
         """
-        pass
+        cmds.addAttr(foot_ctl, longName="SPRING", niceName="SPRING ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{foot_ctl}.SPRING", keyable=False, channelBox=True, lock=True)
+        cmds.addAttr(foot_ctl, longName="Load", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
+
+        # rango: ~22 grados de excursión del ángulo MCP entre paso y galope
+        # (datos de marcha, cap. 8); signo NEGATIVO = hundir (medido por
+        # comportamiento: con +22 el fetlock subía; con −22 baja)
+        MCP_SINK_DEG = -22.0
+
+        n = f"{leg.side}_{leg.LEG_PREFIX}"
+        # muelle que ENDURECE: theta = R·(1 − (1−L)²). Pendiente 2R(1−L):
+        # máxima en vacío, nula al tope — incrementos de carga iguales hunden
+        # cada vez menos, la forma del aparato suspensor
+        u_sub = cmds.createNode("subtract", name=f"{n}FetlockSpringU_SUB", ss=True)
+        cmds.setAttr(f"{u_sub}.input1", 1)
+        cmds.connectAttr(f"{foot_ctl}.Load", f"{u_sub}.input2")
+        u2_mul = cmds.createNode("multiply", name=f"{n}FetlockSpringU2_MUL", ss=True)
+        cmds.connectAttr(f"{u_sub}.output", f"{u2_mul}.input[0]")
+        cmds.connectAttr(f"{u_sub}.output", f"{u2_mul}.input[1]")
+        s_sub = cmds.createNode("subtract", name=f"{n}FetlockSpringS_SUB", ss=True)
+        cmds.setAttr(f"{s_sub}.input1", 1)
+        cmds.connectAttr(f"{u2_mul}.output", f"{s_sub}.input2")
+        theta = cmds.createNode("multiply", name=f"{n}FetlockSpringTheta_MUL", ss=True)
+        cmds.connectAttr(f"{s_sub}.output", f"{theta}.input[0]")
+        cmds.setAttr(f"{theta}.input[1]", MCP_SINK_DEG)
+
+        spring_cmx = cmds.createNode("composeMatrix", name=f"{n}FetlockSpring_CMX", ss=True)
+        cmds.connectAttr(f"{theta}.output", f"{spring_cmx}.inputRotateX")
+
+        # cuartilla en espacio del ball (constante — es su hijo): la rotación
+        # se conjuga T(−p)·R·T(p) para pivotar sobre ella
+        ball_ctl = leg.ik_ctl["ball"]
+        ball_rest = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
+        pastern_w = om.MVector(cmds.xform(leg.ik_ctl["pastern"], q=True, ws=True, t=True))
+        p_l = om.MPoint(pastern_w) * ball_rest.inverse()
+        t_neg = om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -p_l.x, -p_l.y, -p_l.z, 1])
+        t_pos = om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, p_l.x, p_l.y, p_l.z, 1])
+
+        # reinsertar en el manager: offset × T(−p) × R × T(p) × ball_world
+        manager = leg.ik_handle_target.split(".")[0]
+        ball_conn = cmds.listConnections(f"{manager}.matrixIn[1]", plugs=True, source=True, destination=False)[0]
+        cmds.disconnectAttr(ball_conn, f"{manager}.matrixIn[1]")
+        cmds.setAttr(f"{manager}.matrixIn[1]", list(t_neg), type="matrix")
+        cmds.connectAttr(f"{spring_cmx}.outputMatrix", f"{manager}.matrixIn[2]")
+        cmds.setAttr(f"{manager}.matrixIn[3]", list(t_pos), type="matrix")
+        cmds.connectAttr(ball_conn, f"{manager}.matrixIn[4]")
 
 
 class PawFoot(FootBase):

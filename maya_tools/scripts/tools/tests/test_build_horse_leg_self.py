@@ -283,6 +283,23 @@ for side in ("L", "R"):
     check(f"{side}: fetlock aima a la cuartilla (SC)", (x0 * x1) < 0.98, "dot=%.3f" % (x0 * x1))
     check(f"{side}: el fetlock no se mueve al girar el Foot", (p1f - p0f).length() < 1e-3, "d=%.5f" % (p1f - p0f).length())
 
+# ── fetlock_spring: hundimiento por carga (aparato de estay) ──
+for side in ("L", "R"):
+    foot = f"{side}_frontLegFetlockIk_CTL"
+    fet = f"{side}_frontLegFetlockSkinning_JNT"
+    tip = f"{side}_frontLegTipSkinning_JNT"
+    check(f"{side} spring: attr Load", cmds.attributeQuery("Load", node=foot, exists=True))
+    f0, t0 = _wpos(fet), _wpos(tip)
+    cmds.setAttr(f"{foot}.Load", 1)
+    d1 = _wpos(fet) - f0
+    check(f"{side} spring: el fetlock se hunde", d1.y < -1.0, "dy=%.2f" % d1.y)
+    check(f"{side} spring: el casco queda plantado", (_wpos(tip) - t0).length() < 1e-3)
+    cmds.setAttr(f"{foot}.Load", 0.5)
+    ratio = (_wpos(fet) - f0).length() / max(d1.length(), 1e-6)
+    check(f"{side} spring: muelle endurecido (no lineal)", ratio > 0.6, "ratio=%.2f" % ratio)
+    cmds.setAttr(f"{foot}.Load", 0)
+    check(f"{side} spring: vuelve a reposo", (_wpos(fet) - f0).length() < 1e-3)
+
 # ── escápula automática: superficie de guías, hueso rígido, auto por compresión ──
 from maya_tools.scripts.utils import guides_manager as _gmv
 _, _gd = _gmv._load_guides_file("horse")
