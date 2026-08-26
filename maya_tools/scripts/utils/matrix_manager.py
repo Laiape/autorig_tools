@@ -106,20 +106,23 @@ def ik_constraint(source, target):
         om.MGlobal.displayError("Source or target does not exist.")
         return
 
-def space_switches(target, sources=[], default_rotate=1, default_translate=1, sources_names=[], pv=False):
+def space_switches(target, sources=[], default_rotate=1, default_translate=1, sources_names=[], pv=False, base_ctl=None):
     """
     Versión optimizada de space_switches siguiendo la lógica de fk_switch.
     """
     target_grp = target.replace("CTL", "GRP")
     if not cmds.objExists(target):
         target_grp = target
-        
+
+    
+
     if not cmds.objExists(target_grp):
         om.MGlobal.displayError(f"El grupo objetivo '{target_grp}' no existe.")
         return
 
-    cmds.setAttr(f"{target_grp}.inheritsTransform", 0)
 
+    
+        
     conn = cmds.listConnections(f"{target_grp}.offsetParentMatrix", plugs=True, source=True, destination=False)
     input_connection = conn[0] if conn else None
 
@@ -143,13 +146,15 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
 
     data_exporter = data_manager.DataExportBiped()
     masterwalk_ctl = data_exporter.get_data("basic_structure", "masterwalk_ctl")
+    if base_ctl is None:
+            base_ctl = masterwalk_ctl
 
     if input_connection:
         cmds.connectAttr(input_connection, f"{pm_master}.inputMatrix")
         cmds.connectAttr(input_connection, f"{pm_sources}.inputMatrix")
         
-    offset_master = get_offset_matrix(target_grp, masterwalk_ctl)
-    cmds.connectAttr(f"{masterwalk_ctl}.worldMatrix[0]", f"{pm_master}.target[0].targetMatrix")
+    offset_master = get_offset_matrix(target_grp, base_ctl)
+    cmds.connectAttr(f"{base_ctl}.worldMatrix[0]", f"{pm_master}.target[0].targetMatrix")
     cmds.setAttr(f"{pm_master}.target[0].offsetMatrix", offset_master, type="matrix")
 
     for i, driver in enumerate(sources):
@@ -175,7 +180,6 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
             off_mat = get_offset_matrix(target_grp, driver)
             cmds.setAttr(f"{pm_sources}.target[{i}].offsetMatrix", off_mat, type="matrix")
 
-
     cmds.connectAttr(f"{pm_master}.outputMatrix", f"{bmx_final}.inputMatrix")
     cmds.connectAttr(f"{pm_sources}.outputMatrix", f"{bmx_final}.target[0].targetMatrix")
 
@@ -185,6 +189,9 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
     cmds.setAttr(f"{bmx_final}.target[0].scaleWeight", 0)
     cmds.setAttr(f"{bmx_final}.target[0].shearWeight", 0)
 
+    # la herencia se apaga AL FINAL: los offsets se hornean con el world real
+    # del grp (con un padre no-identidad, apagarla antes corrompe la captura)
+    cmds.setAttr(f"{target_grp}.inheritsTransform", 0)
     cmds.connectAttr(f"{bmx_final}.outputMatrix", f"{target_grp}.offsetParentMatrix", force=True)
 
     # om.MGlobal.displayInfo(f"Space Switch creado con éxito para: {target}")

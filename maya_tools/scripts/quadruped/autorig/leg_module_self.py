@@ -60,12 +60,14 @@ from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
+from maya_tools.scripts.utils import rig_manager
 from maya_tools.scripts.utils import ribbon
 
 reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 reload(matrix_manager)
+reload(rig_manager)
 reload(ribbon)
 
 
@@ -1696,10 +1698,9 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{leg_distance_norm}.floatB")
         self.scapula_leg_length_plug = f"{leg_distance_norm}.outFloat"
 
-        target = self._end_target(0)
         scapula_aimMatrix = cmds.createNode("aimMatrix", name=f"{self.side}_scapulaAim_AMX", ss=True)
         cmds.setAttr(f"{scapula_aimMatrix}.inputMatrix", list(self.scapula_rest), type="matrix")
-        cmds.connectAttr(target, f"{scapula_aimMatrix}.primary.primaryTargetMatrix")
+        cmds.connectAttr(f"{scapula_master_ctl}.worldMatrix[0]", f"{scapula_aimMatrix}.primary.primaryTargetMatrix")
         cmds.setAttr(f"{scapula_aimMatrix}.primaryInputAxis", *self.primary_axis, type="double3")
 
         lat_idx = max(range(3), key=lambda k: abs(self.lateral_axis[k]))
@@ -1745,6 +1746,131 @@ class FrontLegModule(LegModule):
         compose_m_compress = cmds.createNode("composeMatrix", n=f"{self.side}_scapulaLift_CPM", ss=True)
         cmds.connectAttr(f"{multiply_amount}.output", f"{compose_m_compress}.inputTranslateY")
         cmds.connectAttr(f"{compose_m_compress}.outputMatrix", f"{scapula_master_grp[-1]}.offsetParentMatrix")
+
+        # ___________________ NURBS Surface (superficie del tórax) ___________________
+        # Derivada de guías
+        character = guides_manager.rig_manager.get_character_name_from_build()
+        _, all_guides = guides_manager._load_guides_file(character)
+        char_guides = all_guides.get(character, {}) if all_guides else {}
+        chest_info = char_guides.get("C_localChest_JNT")
+        if not chest_info:
+            spines = sorted(k for k in char_guides
+                            if k.startswith("C_spine") and k.endswith("_JNT"))
+            chest_info = char_guides.get(spines[-1]) if spines else None
+        if not chest_info:
+            cmds.warning("Sin guía de chest ni de spine: la escápula queda sin superficie.")
+            return
+        chest_wm = om.MMatrix(chest_info["joint_matrix"])
+        chest_pos = om.MVector(chest_wm[12], chest_wm[13], chest_wm[14])
+
+        # Frame del aim: x hacia el root de la pierna, up hacia la clavícula
+        sphere_aim_m = guides_manager._aim_matrix(chest_pos, end_pos, scapula_pos, (1, 0, 0), (0, 1, 0))
+
+        # Radio y escala en cerrado para pasar por las DOS guías:
+        R_ventral = (end_pos - chest_pos).length()
+        p_local = scapula_pos - chest_pos
+        x_s = p_local * om.MVector(sphere_aim_m[0], sphere_aim_m[1], sphere_aim_m[2])
+        y_s = p_local * om.MVector(sphere_aim_m[4], sphere_aim_m[5], sphere_aim_m[6])
+        z_s = p_local * om.MVector(sphere_aim_m[8], sphere_aim_m[9], sphere_aim_m[10])
+        if abs(x_s) >= R_ventral * 0.999:
+            # clavícula casi alineada con el eje chest->root: elipse degenerada
+            cmds.warning("Guía de clavícula degenerada respecto al chest: esfera simple.")
+            r = p_local.length()
+            sx = 1.0
+        else:
+            r = math.sqrt((y_s ** 2 + z_s ** 2) / (1.0 - x_s ** 2 / R_ventral ** 2))
+            sx = R_ventral / r
+
+        scapula_surface = cmds.sphere(n=f"{self.side}_scapulaSurface_NURB", r=r, ch=False)[0]
+        cmds.parent(scapula_surface, self.module_trn)
+        cmds.setAttr(f"{scapula_surface}.visibility", 0)
+        cmds.setAttr(f"{scapula_surface}.scaleX", sx)
+
+        # Sigue al chest por matrices
+        chest_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
+        if not chest_ctl or not cmds.objExists(chest_ctl):
+            chest_ctl = self.masterwalk_ctl
+        chest_ctl_wm = om.MMatrix(cmds.getAttr(f"{chest_ctl}.worldMatrix[0]"))
+        mmx_scapula = cmds.createNode("multMatrix", n=f"{self.side}_scapulaSurface_MMX", ss=True)
+        cmds.setAttr(f"{mmx_scapula}.matrixIn[0]", list(sphere_aim_m * chest_ctl_wm.inverse()), type="matrix")
+        cmds.connectAttr(f"{chest_ctl}.worldMatrix[0]", f"{mmx_scapula}.matrixIn[1]")
+        cmds.connectAttr(f"{mmx_scapula}.matrixSum", f"{scapula_surface}.offsetParentMatrix")
+        self.scapula_surface = scapula_surface
+
+        # Joint de skinning proyectada a la superficie
+        scapula_skinning_jnt = cmds.createNode("joint", n=f"{self.side}_scapulaSkinning_JNT", ss=True, p=self.skeleton_grp)
+        surface_shape = cmds.listRelatives(scapula_surface, shapes=True)[0]
+        cps_scapula = cmds.createNode("closestPointOnSurface", n=f"{self.side}_scapulaProjected_CPS", ss=True)
+        cmds.connectAttr(f"{surface_shape}.worldSpace[0]", f"{cps_scapula}.inputSurface")
+        cmds.setAttr(f"{cps_scapula}.inPositionX", scapula_pos[0])
+        cmds.setAttr(f"{cps_scapula}.inPositionY", scapula_pos[1])
+        cmds.setAttr(f"{cps_scapula}.inPositionZ", scapula_pos[2])
+
+        cps_rest = om.MVector(cmds.getAttr(f"{cps_scapula}.positionX"),
+                              cmds.getAttr(f"{cps_scapula}.positionY"),
+                              cmds.getAttr(f"{cps_scapula}.positionZ"))
+        residual = scapula_pos - cps_rest
+        cps_delta = cmds.createNode("plusMinusAverage", n=f"{self.side}_scapulaProjectedDelta_PMA", ss=True)
+        cmds.connectAttr(f"{cps_scapula}.position", f"{cps_delta}.input3D[0]")
+        cmds.setAttr(f"{cps_delta}.input3D[1]", residual.x, residual.y, residual.z, type="double3")
+        fbf_scapula = cmds.createNode("fourByFourMatrix", n=f"{self.side}_scapula_FBF", ss=True)
+        cmds.connectAttr(f"{cps_delta}.output3Dx", f"{fbf_scapula}.in30")
+        cmds.connectAttr(f"{cps_delta}.output3Dy", f"{fbf_scapula}.in31")
+        cmds.connectAttr(f"{cps_delta}.output3Dz", f"{fbf_scapula}.in32")
+        jnt_amx = cmds.createNode("aimMatrix", n=f"{self.side}_scapulaJnt_AMX", ss=True)
+        cmds.connectAttr(f"{fbf_scapula}.output", f"{jnt_amx}.inputMatrix")
+        cmds.connectAttr(f"{scapula_master_ctl}.worldMatrix[0]", f"{jnt_amx}.primary.primaryTargetMatrix")
+        cmds.setAttr(f"{jnt_amx}.primaryInputAxis", *self.primary_axis, type="double3")
+        cmds.setAttr(f"{jnt_amx}.secondaryInputAxis", *self.lateral_axis, type="double3")
+        cmds.setAttr(f"{jnt_amx}.secondaryTargetVector", *lat_world, type="double3")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{jnt_amx}.secondary.secondaryTargetMatrix")
+        cmds.setAttr(f"{jnt_amx}.secondaryMode", 2)
+        cmds.connectAttr(f"{jnt_amx}.outputMatrix", f"{scapula_skinning_jnt}.offsetParentMatrix", force=True)
+        self.scapula_skinning_jnt = scapula_skinning_jnt
+
+        # Crear space switch de chest a clavicula
+        matrix_manager.space_switches(
+            target=self.scapula_ctl,
+            sources=[chest_ctl, self.masterwalk_ctl],
+            sources_names=["chest", "world"],
+            default_translate=0.5,
+            default_rotate=0.5,
+            base_ctl=self.scapula_master_ctl,
+        )
+        ctl_dcm = cmds.createNode("decomposeMatrix", n=f"{self.side}_scapulaCtlPos_DCM", ss=True)
+        cmds.connectAttr(f"{self.scapula_ctl}.worldMatrix[0]", f"{ctl_dcm}.inputMatrix")
+        cmds.connectAttr(f"{ctl_dcm}.outputTranslate", f"{cps_scapula}.inPosition")
+
+        # Renormalización a la longitud del hueso
+        bone_len = (end_pos - scapula_pos).length()
+        local_mpm = cmds.createNode("multiplyPointByMatrix", n=f"{self.side}_scapulaLocal_MPM", ss=True)
+        cmds.connectAttr(f"{cps_delta}.output3D", f"{local_mpm}.input")
+        cmds.connectAttr(f"{self.scapula_master_ctl}.worldInverseMatrix[0]", f"{local_mpm}.matrix")
+
+        dir_nrm = cmds.createNode("normalize", n=f"{self.side}_scapulaDir_NRM", ss=True)
+        cmds.connectAttr(f"{local_mpm}.output", f"{dir_nrm}.input")
+
+        len_mmx = cmds.createNode("multMatrix", n=f"{self.side}_scapulaBoneLen_MMX", ss=True)
+        cmds.setAttr(f"{len_mmx}.matrixIn[0]",
+                     [bone_len, 0, 0, 0, 0, bone_len, 0, 0, 0, 0, bone_len, 0, 0, 0, 0, 1],
+                     type="matrix")
+        cmds.connectAttr(f"{self.scapula_master_ctl}.worldMatrix[0]", f"{len_mmx}.matrixIn[1]")
+
+        final_mpm = cmds.createNode("multiplyPointByMatrix", n=f"{self.side}_scapulaFinal_MPM", ss=True)
+        cmds.connectAttr(f"{dir_nrm}.output", f"{final_mpm}.input")
+        cmds.connectAttr(f"{len_mmx}.matrixSum", f"{final_mpm}.matrix")
+
+        for axis, plug in (("X", "in30"), ("Y", "in31"), ("Z", "in32")):
+            cmds.connectAttr(f"{final_mpm}.output{axis}", f"{fbf_scapula}.{plug}", force=True)
+        self.scapula_master_ctl = scapula_master_ctl
+        # _______ Write data ___________________
+        data_manager.DataExportBiped().append_data(
+            f"{self.LEG_PREFIX}_module",
+            {
+                f"{self.side}_scapula_master_ctl": self.scapula_master_ctl
+            },
+        )
+        
 
         # closestPointOnSurface (la referencia ya lo tiene)  →  DÓNDE puede deslizar
         #aimMatrix(reposo → ik_handle_target) × AutoClavicle →  CUÁNTO protrae con la zancada
