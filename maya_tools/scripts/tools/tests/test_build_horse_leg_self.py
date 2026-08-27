@@ -551,6 +551,52 @@ for ax in "XYZ":
     cmds.setAttr(f"{b}FetlockIk_CTL.translate{ax}", 0)
 check("sc_rp_sc_carpus: el carpo dobla en flexion", carpo1 < 120, "carpo=%.1f (reposo %.1f)" % (carpo1, carpo0))
 
+# ── thoracic sling: bajar el chest NO pliega las patas (columna lockeada) ──
+cmds.file(new=True, force=True)
+cmds.loadPlugin("matrixNodes", quiet=True)
+cmds.loadPlugin("lookdevKit", quiet=True)
+rig_grp = cmds.createNode("transform", name="rig_GRP")
+modules_grp = cmds.createNode("transform", name="modules_GRP", p=rig_grp)
+skel_grp = cmds.createNode("transform", name="skel_GRP", p=rig_grp)
+masterwalk = cmds.circle(name="C_masterwalk_CTL", ch=False)[0]
+cmds.addAttr(masterwalk, longName="globalScale", attributeType="float", defaultValue=1, keyable=True)
+dm = data_manager.DataExportBiped()
+dm.new_build()
+dm.append_data("basic_structure", {"modules_GRP": modules_grp, "skel_GRP": skel_grp,
+                                   "masterwalk_ctl": masterwalk, "rig_GRP": rig_grp})
+from maya_tools.scripts.quadruped.autorig import spine_module as _spm
+from maya_tools.scripts.utils import rig_manager as _rmv
+try:
+    _spm.SpineModule().make("C", 5, 3)
+    lm.FrontLegModule().make("L", solver="spring", skinning_joints_number=5)
+    _rmv.quadruped_space_switches()
+    check("sling: build spine + delantera + switches", True)
+except Exception:
+    traceback.print_exc()
+    check("sling: build spine + delantera + switches", False, "excepcion")
+
+chest = "C_localChest_CTL"
+master = "L_scapulaMaster_CTL"
+tip = "L_frontLegTipSkinning_JNT"
+def _codo():
+    return _math.degrees((_wpos("L_frontLegShoulderIk_JNT") - _wpos("L_frontLegElbowIk_JNT"))
+                         .angle(_wpos("L_frontLegCarpusIk_JNT") - _wpos("L_frontLegElbowIk_JNT")))
+m0y = _wpos(master).y
+t0 = _wpos(tip)
+codo0 = _codo()
+cmds.setAttr(f"{chest}.translateY", -6)
+check("sling: pie plantado al bajar el chest", (_wpos(tip) - t0).length() < 1e-2)
+check("sling: el master no baja (absorbe)", abs(_wpos(master).y - m0y) < 1.0,
+      "dy=%.2f" % (_wpos(master).y - m0y))
+d_on = _codo() - codo0
+cmds.setAttr("L_scapula_CTL.Sling", 0)
+d_off = _codo() - codo0
+cmds.setAttr("L_scapula_CTL.Sling", 1)
+check("sling: columna lockeada (codo casi quieto; sin sling se pliega)",
+      abs(d_on) < 4 and d_off < -10, "on=%.1f off=%.1f" % (d_on, d_off))
+cmds.setAttr(f"{chest}.translateY", 0)
+check("sling: vuelve a reposo", abs(_wpos(master).y - m0y) < 1e-3)
+
 maya.standalone.uninitialize()
 print("RESULTADO:", "OK" if not fails else "FALLO %s" % fails)
 sys.exit(1 if fails else 0)

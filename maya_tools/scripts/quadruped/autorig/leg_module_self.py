@@ -1765,11 +1765,23 @@ class FrontLegModule(LegModule):
         cmds.setAttr(f"{scapula_auto_ctl}.SCAPULA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(scapula_auto_ctl, longName="Auto_Scapula", attributeType="float", defaultValue=1, maxValue=1, minValue=0, keyable=True)
         cmds.addAttr(scapula_auto_ctl, longName="Multiply_Amount", attributeType="float", defaultValue=1, minValue=0.001, keyable=True)
+        # Sling: absorción vertical del tórax entre las escápulas (sinsarcosis,
+        # serrato ventral como muelle — Payne 2005). 0-1, apagable: automatismo
+        # en grupo, la mano del animador siempre puede desactivarlo.
+        cmds.addAttr(scapula_auto_ctl, longName="Sling", attributeType="float", defaultValue=1, minValue=0, maxValue=1, keyable=True)
+
+        # Chest: señal del sling y padre de la superficie NURBS. En la suite
+        # (sin spine_module) cae a masterwalk -> delta del sling = 0 por construcción.
+        chest_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
+        if not chest_ctl or not cmds.objExists(chest_ctl):
+            chest_ctl = self.masterwalk_ctl
 
         # ___________________ Auto clavicle setup ___________________
         # Distance mesurement
         leg_distance = cmds.createNode("distanceBetween", name=f"{self.side}_scapulaLegLength_DBT", ss=True)
-        cmds.connectAttr(f"{scapula_master_grp[0]}.worldMatrix[0]", f"{leg_distance}.inMatrix1")
+        # inMatrix1 se conecta más abajo desde la posición VIRTUAL del master ya
+        # slung (scapulaSlingDist_MMX): bajar el chest dentro de la excursión no
+        # debe disparar el gate de compresión (doble disparo).
         cmds.connectAttr(self.ik_handle_target, f"{leg_distance}.inMatrix2")
 
         leg_distance_norm = cmds.createNode("floatMath", name=f"{self.side}_scapulaLegLengthNorm_FLM", ss=True)
@@ -1805,6 +1817,48 @@ class FrontLegModule(LegModule):
         scapula_pos = om.MVector(self.scapula_rest[12], self.scapula_rest[13], self.scapula_rest[14])
         EXCURSION_MAX = (end_pos - scapula_pos).length() * 0.5 * math.sin(math.radians(20.0))
 
+        # SLING (feed-forward): el tórax cuelga entre las escápulas por
+        # sinsarcosis — unión solo muscular (serrato ventral), elástica en Y
+        # (~42 mm de excursión al galope, Payne 2005; sternum lift +5.3/+6.2 cm,
+        # Hartpury 2023) y restringida en X/Z por los pectorales. Al bajar el
+        # chest con el pie plantado la columna de la pata NO se pliega (stay
+        # apparatus): el descenso lo absorbe el sling. Aquí: el ANM del master
+        # contrarresta SOLO el delta Y del chest (medido en frame masterwalk,
+        # acíclico), saturando en ±EXCURSION_MAX — reutilizada, (L/2)*sin(20°)
+        # ~5.1 cm a escala real, coherente con Hartpury/Payne. Agotado el sling,
+        # la compresión residual reactiva el gate (cascada anatómica).
+        sling_mmx = cmds.createNode("multMatrix", n=f"{self.side}_scapulaChestLocal_MMX", ss=True)
+        cmds.connectAttr(f"{chest_ctl}.worldMatrix[0]", f"{sling_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{self.masterwalk_ctl}.worldInverseMatrix[0]", f"{sling_mmx}.matrixIn[1]")
+        sling_dcm = cmds.createNode("decomposeMatrix", n=f"{self.side}_scapulaChestLocal_DCM", ss=True)
+        cmds.connectAttr(f"{sling_mmx}.matrixSum", f"{sling_dcm}.inputMatrix")
+        # restY horneado en build (reposo exacto por construcción: counter=0);
+        # el frame masterwalk ya absorbe globalScale vía su inversa.
+        rest_y = cmds.getAttr(f"{sling_dcm}.outputTranslateY")
+        sling_delta = cmds.createNode("floatMath", n=f"{self.side}_scapulaSlingDelta_FLM", ss=True)
+        cmds.setAttr(f"{sling_delta}.operation", 1)  # subtract: rest - live -> chest baja = counter positivo
+        cmds.setAttr(f"{sling_delta}.floatA", rest_y)
+        cmds.connectAttr(f"{sling_dcm}.outputTranslateY", f"{sling_delta}.floatB")
+        sling_clamp = cmds.createNode("clamp", n=f"{self.side}_scapulaSlingClamp_CLP", ss=True)
+        cmds.setAttr(f"{sling_clamp}.minR", -EXCURSION_MAX)
+        cmds.setAttr(f"{sling_clamp}.maxR", EXCURSION_MAX)
+        cmds.connectAttr(f"{sling_delta}.outFloat", f"{sling_clamp}.inputR")
+        sling_mul = cmds.createNode("multiply", n=f"{self.side}_scapulaSling_MUL", ss=True)
+        cmds.connectAttr(f"{sling_clamp}.outputR", f"{sling_mul}.input[0]")
+        cmds.connectAttr(f"{scapula_auto_ctl}.Sling", f"{sling_mul}.input[1]")
+        cmds.connectAttr(f"{scapula_auto_ctl}.Auto_Scapula", f"{sling_mul}.input[2]")
+        sling_cpm = cmds.createNode("composeMatrix", n=f"{self.side}_scapulaSling_CPM", ss=True)
+        cmds.connectAttr(f"{sling_mul}.output", f"{sling_cpm}.inputTranslateY")
+
+        # El gate mide desde la posición virtual del master ya slung: bajar el
+        # chest dentro de la excursión deja la distancia ~reposo (sin lift
+        # espurio); mover el pie sigue comprimiendo como hoy. Acíclico: lee
+        # chest/masterwalk/GRP y escribe en el ANM (hijo del GRP).
+        sling_dist_mmx = cmds.createNode("multMatrix", n=f"{self.side}_scapulaSlingDist_MMX", ss=True)
+        cmds.connectAttr(f"{sling_cpm}.outputMatrix", f"{sling_dist_mmx}.matrixIn[0]")
+        cmds.connectAttr(f"{scapula_master_grp[0]}.worldMatrix[0]", f"{sling_dist_mmx}.matrixIn[1]")
+        cmds.connectAttr(f"{sling_dist_mmx}.matrixSum", f"{leg_distance}.inMatrix1")
+
         # GATE
         GALLOP_COMPRESSION = 0.73  # medido: dist/reposo = 0.732 en la pose (pie +25 arriba, -8 atras)
         rest_len = cmds.getAttr(self.scapula_leg_length_plug)
@@ -1823,8 +1877,14 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{multiply_compress}.output", f"{multiply_amount}.input[0]")
         cmds.connectAttr(f"{self.scapula_ctl}.Multiply_Amount", f"{multiply_amount}.input[1]")
         cmds.connectAttr(f"{self.scapula_ctl}.Auto_Scapula", f"{multiply_amount}.input[2]")
+        # Counter del sling + lift del gate entran juntos por el ANM del master
+        # (único punto de escritura del automatismo; el space switch de
+        # rig_manager captura GRP.offsetParentMatrix y no toca el ANM).
+        lift_sum = cmds.createNode("floatMath", n=f"{self.side}_scapulaLiftSum_FLM", ss=True)
+        cmds.connectAttr(f"{multiply_amount}.output", f"{lift_sum}.floatA")
+        cmds.connectAttr(f"{sling_mul}.output", f"{lift_sum}.floatB")
         compose_m_compress = cmds.createNode("composeMatrix", n=f"{self.side}_scapulaLift_CPM", ss=True)
-        cmds.connectAttr(f"{multiply_amount}.output", f"{compose_m_compress}.inputTranslateY")
+        cmds.connectAttr(f"{lift_sum}.outFloat", f"{compose_m_compress}.inputTranslateY")
         cmds.connectAttr(f"{compose_m_compress}.outputMatrix", f"{scapula_master_grp[-1]}.offsetParentMatrix")
 
         # ___________________ NURBS Surface (superficie del tórax) ___________________
@@ -1865,10 +1925,7 @@ class FrontLegModule(LegModule):
         cmds.setAttr(f"{scapula_surface}.visibility", 0)
         cmds.setAttr(f"{scapula_surface}.scaleX", sx)
 
-        # Sigue al chest por matrices
-        chest_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
-        if not chest_ctl or not cmds.objExists(chest_ctl):
-            chest_ctl = self.masterwalk_ctl
+        # Sigue al chest por matrices (chest_ctl resuelto arriba, junto al sling)
         chest_ctl_wm = om.MMatrix(cmds.getAttr(f"{chest_ctl}.worldMatrix[0]"))
         mmx_scapula = cmds.createNode("multMatrix", n=f"{self.side}_scapulaSurface_MMX", ss=True)
         cmds.setAttr(f"{mmx_scapula}.matrixIn[0]", list(sphere_aim_m * chest_ctl_wm.inverse()), type="matrix")
