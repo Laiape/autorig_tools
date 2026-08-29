@@ -126,6 +126,19 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
     conn = cmds.listConnections(f"{target_grp}.offsetParentMatrix", plugs=True, source=True, destination=False)
     input_connection = conn[0] if conn else None
 
+    # Estado FINAL antes de hornear offsets. La herencia se apaga AQUI y, si la
+    # colocacion era estatica (opm sin conexion), se REBASA a mundo para que
+    # apagarla no la mueva (canales congelados por convencion del repo). Un opm
+    # con conexion viva ya esta autorado para herencia apagada: se deja tal
+    # cual y apagar la herencia le devuelve su mundo correcto. Hornear con el
+    # estado a medias corrompia un caso u otro: con herencia ON el opm vivo se
+    # doblaba (tobillo del bipedo custom); apagandola sin rebasar, la
+    # colocacion local colapsaba (master de la escapula).
+    world_grp = cmds.getAttr(f"{target_grp}.worldMatrix[0]")
+    cmds.setAttr(f"{target_grp}.inheritsTransform", 0)
+    if not input_connection:
+        cmds.setAttr(f"{target_grp}.offsetParentMatrix", world_grp, type="matrix")
+
     pm_master = cmds.createNode("parentMatrix", name=target.replace("_CTL", "_MasterSpace_PMT"), ss=True)
     pm_sources = cmds.createNode("parentMatrix", name=target.replace("_CTL", "_SourcesSpace_PMT"), ss=True)
     bmx_final = cmds.createNode("blendMatrix", name=target.replace("_CTL", "_Space_BMX"), ss=True)
@@ -189,9 +202,6 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
     cmds.setAttr(f"{bmx_final}.target[0].scaleWeight", 0)
     cmds.setAttr(f"{bmx_final}.target[0].shearWeight", 0)
 
-    # la herencia se apaga AL FINAL: los offsets se hornean con el world real
-    # del grp (con un padre no-identidad, apagarla antes corrompe la captura)
-    cmds.setAttr(f"{target_grp}.inheritsTransform", 0)
     cmds.connectAttr(f"{bmx_final}.outputMatrix", f"{target_grp}.offsetParentMatrix", force=True)
 
     # om.MGlobal.displayInfo(f"Space Switch creado con éxito para: {target}")
