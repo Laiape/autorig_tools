@@ -805,7 +805,10 @@ class LegModule(object):
         cmds.connectAttr(f"{lower_distance}.distance", f"{lower_blend}.input[1]")
         if self.side == "L":
             cmds.connectAttr(f"{upper_blend}.output", f"{self.ik_chain[1]}.translateX", force=True)
-            cmds.connectAttr(f"{lower_blend}.output", f"{self.ik_chain[-1]}.translateX", force=True)
+            # el tramo inferior acaba en el TOBILLO (indice 2): con el pie en la
+            # cadena (ball, tip), [-1] es la punta y el stretch le inyectaba la
+            # longitud de la tibia (la punta salia disparada ~44u de su guia)
+            cmds.connectAttr(f"{lower_blend}.output", f"{self.ik_chain[2]}.translateX", force=True)
         else:
             negate_upper = cmds.createNode("multiply", name=f"{self.side}_legElbowPinUpperNegate_MUL", ss=True)
             negate_lower = cmds.createNode("multiply", name=f"{self.side}_legElbowPinLowerNegate_MUL", ss=True)
@@ -814,7 +817,7 @@ class LegModule(object):
             cmds.connectAttr(f"{upper_blend}.output", f"{negate_upper}.input[0]")
             cmds.connectAttr(f"{lower_blend}.output", f"{negate_lower}.input[0]")
             cmds.connectAttr(f"{negate_upper}.output", f"{self.ik_chain[1]}.translateX", force=True)
-            cmds.connectAttr(f"{negate_lower}.output", f"{self.ik_chain[-1]}.translateX", force=True)
+            cmds.connectAttr(f"{negate_lower}.output", f"{self.ik_chain[2]}.translateX", force=True)
 
     def de_boor_ribbon(self, skinning_joint_numbers):
 
