@@ -943,7 +943,8 @@ def create_rig_settings(guides_transform, load=False):
         "neck_skinning_jnts": 5, "neck_controllers": 2,
         "arm_skinning_jnts": 5, "leg_skinning_jnts": 5,
         "tail_skinning_jnts": 5, "tail_controllers": 5,
-        "mGear_integration": 0
+        "mGear_integration": 0,
+        "reciprocal_coupling": 1,  # default ungulado (caballo); canidos -> off
     }
 
     # Si load es True, intentamos obtener los valores existentes
@@ -957,6 +958,7 @@ def create_rig_settings(guides_transform, load=False):
         "solver_mode": ("maya solvers", "custom solvers"),
         "solver_front_leg": LEG_SOLVER_OPTIONS,
         "solver_back_leg": LEG_SOLVER_OPTIONS,
+        "reciprocal_coupling": ("off", "on"),
         "spine_skinning_jnts": defaults["spine_skinning_jnts"],
         "spine_controllers": defaults["spine_controllers"],
         "neck_skinning_jnts": defaults["neck_skinning_jnts"],
@@ -1000,7 +1002,8 @@ def create_rig_settings(guides_transform, load=False):
         # Crear Atributos
         if isinstance(value, tuple): # Enums
             enum_options = ":".join(value)
-            cmds.addAttr(guides_transform, longName=key, attributeType='enum', enumName=enum_options, keyable=True)
+            cmds.addAttr(guides_transform, longName=key, attributeType='enum', enumName=enum_options,
+                         defaultValue=defaults.get(key, 0), keyable=True)
         elif isinstance(value, int): # Integers
             cmds.addAttr(guides_transform, longName=key, attributeType='long', defaultValue=value, minValue=1, maxValue=20, keyable=True)
 
@@ -1018,7 +1021,8 @@ def load_rig_settings(guides_transform):
         "Rig_Type", "spine_skinning_jnts", "spine_controllers",
         "neck_skinning_jnts", "neck_controllers", "arm_skinning_jnts",
         "leg_skinning_jnts", "leg_solver", "tail_skinning_jnts", "tail_controllers",
-        "solver_mode", "solver_front_leg", "solver_back_leg"
+        "solver_mode", "solver_front_leg", "solver_back_leg",
+        "reciprocal_coupling"
     ]
     
     data = {}

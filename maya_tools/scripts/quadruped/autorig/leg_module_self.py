@@ -245,7 +245,13 @@ class LegModule(object):
         self.ik_calibration()
         self.fk_setup()
         self.blend_setup()
-        if self.RECIPROCAL_COUPLING:
+        # el acoplamiento es un VALOR por especie (peroneo tercero tendinoso o
+        # muscular): manda el .build; el flag de clase queda como default
+        # anatomico del tren (ungulado True)
+        settings = guides_manager.rig_manager.build_rig_from_data(
+            guides_manager.rig_manager.get_character_name_from_build()) or {}
+        coupling = settings.get("reciprocal_coupling")
+        if self.RECIPROCAL_COUPLING if coupling is None else bool(coupling):
             self.reciprocal_coupling()
         self.foot = self.FOOT_CLASS()
         self.foot.build(self)
