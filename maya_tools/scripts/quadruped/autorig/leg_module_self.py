@@ -2147,6 +2147,8 @@ class FootBase(object):
             loc = guides_manager.get_guides(f"{leg.side}_{leg.LEG_PREFIX}{role}_LOCShape")
             matrix = (cmds.xform(loc, q=True, ws=True, m=True) if loc
                       else _pivot_matrix(positions[role]))
+            if loc:
+                cmds.delete(loc)  # guia consumida: la matriz ya esta leida
             grps, ctl = curve_tool.create_controller(
                 name=f"{leg.side}_{leg.LEG_PREFIX}{role[0].upper()}{role[1:]}",
                 offset=["GRP", "SDK", "ANM"],
@@ -2480,6 +2482,11 @@ class PawFoot(FootBase):
             data["world"] = world_plugs
             data["point"] = point_plugs
 
+            # guias consumidas: los frames estan horneados en el network y
+            # fk/ik solo usan los NOMBRES (strings) y los plugs
+            if cmds.objExists(data["chain"][0]):
+                cmds.delete(data["chain"][0])
+
             # self.digit_chains["III"]["chain"][0] ------> primera falange del dedo III
             # self.digit_chains["III"]["world"][1] ------> WM de la falange III dedo 01
             # self.digit_chains["III"]["local"][2] ------> LM de la falange III dedo 02
@@ -2496,7 +2503,8 @@ class PawFoot(FootBase):
             self.leg_digit_fk_ctls[numeral] = [ctls...]
         """
         parent_plug = leg.blend_plugs[leg.leg_end_index] # Get the last joint blend matrix
-        digits_grp = cmds.createNode("transform", name=f"{self.finger_base_name}Fk_GRP") # Create the parent group for all of FK controllers
+        digits_grp = cmds.createNode("transform", name=f"{self.finger_base_name}Fk_GRP",
+                                     parent=leg.controllers_grp) # Create the parent group for all of FK controllers
         cmds.setAttr(f"{digits_grp}.inheritsTransform", 0)
         cmds.connectAttr(parent_plug, f"{digits_grp}.offsetParentMatrix")
         parent_matrix = om.MMatrix(cmds.getAttr(leg.blend_plugs[leg.leg_end_index]))
