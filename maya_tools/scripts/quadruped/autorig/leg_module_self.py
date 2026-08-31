@@ -79,7 +79,8 @@ SOLVER_RP     = "rp"       # RP de 2 huesos + SC para el resto (el port del bíp
 SOLVER_SPRING = "spring"   # ikSpringSolver sobre los 3 segmentos funcionales
 SOLVER_NODES  = "nodes"    # IK analítico por nodos (teorema del coseno)
 SOLVER_SC_RP_SC = "sc_rp_sc"  # SC húmero->codo + RP codo->fetlock + SC fetlock->cuartilla
-SOLVER_SC_RP_SC_CARPUS = "sc_rp_sc_carpus"  # como sc_rp_sc pero el SC alto ANCLA a la raiz: el carpo dobla
+SOLVER_SC_RP_SC_CARPUS = "sc_rp_sc_carpus"
+SOLVER_RP_RP = "rp_rp"  # dos RP encadenados: codo y menudillo como bisagras, el carpo articula en la union  # como sc_rp_sc pero el SC alto ANCLA a la raiz: el carpo dobla
 _AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
     
 
@@ -147,6 +148,13 @@ class LegModule(object):
             (0, 1, "ikSCsolver", "root"),
             (1, 3, "ikRPsolver"),
             (3, 4, "ikSCsolver"),
+        ],
+        # dos planos rotatorios que comparten el PV (el sagital del animal):
+        # RP1 dobla el codo, RP2 el menudillo, y el carpo articula como la
+        # union de ambas cadenas
+        SOLVER_RP_RP: [
+            (0, 2, "ikRPsolver"),
+            (2, 4, "ikRPsolver"),
         ],
     }
 
@@ -748,7 +756,11 @@ class LegModule(object):
         # el constraint el ultimo, con el PV ya en su red definitiva
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
         if self.ik_handles:
-            cmds.poleVectorConstraint(self.ik_ctl["pv"], self.main_handle)
+            # todos los handles con plano rotatorio comparten el PV: el plano
+            # sagital es uno solo (fichas con varios RP, p. ej. rp_rp)
+            for hdl, sol in zip(self.ik_handles, self.ik_handle_solvers):
+                if sol != "ikSCsolver":
+                    cmds.poleVectorConstraint(self.ik_ctl["pv"], hdl)
             self.pole_vector_line(f"{self.ik_chain[self.pv_apex_index]}.worldMatrix[0]")
 
     def pole_vector_line(self, apex_plug):
