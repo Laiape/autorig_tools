@@ -2423,11 +2423,50 @@ class PawFoot(FootBase):
 
     def build(self, leg):
         super(PawFoot, self).build(leg)
+        self.paw_attach(leg)
         self.digits_guides(leg)
         self.digits_orient_guides(leg)
         self.digits_fk(leg)
         self.digits_attributes(leg)
         self.digits_ik(leg)
+
+    def paw_attach(self, leg):
+        """
+        El pie digitígrado lleva DOS eslabones orientados tras el ik
+        principal: fetlock->pastern y pastern->tip, ambos como SC de matrices
+        (aimMatrix) con objetivos RÍGIDOS al Foot (patrón del manager). Es el
+        equivalente del hoof_attach con un eslabón más: la pata apoya
+        almohadilla y dedos, no un casco rígido, y sin esto todo el pie queda
+        congelado a la orientación que deje el solver principal.
+        """
+        ball_ctl = leg.ik_ctl["ball"]
+        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
+        n = f"{leg.side}_{leg.LEG_PREFIX}"
+
+        follow = {}
+        for label, idx in (("Plant", leg.plant_index), ("Tip", leg.plant_index + 1)):
+            rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[idx]))
+            mmx = cmds.createNode("multMatrix", name=f"{n}Paw{label}Follow_MMX", ss=True)
+            cmds.setAttr(f"{mmx}.matrixIn[0]", list(rest * ball_rest_inv), type="matrix")
+            cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{mmx}.matrixIn[1]")
+            follow[label] = f"{mmx}.matrixSum"
+
+        if getattr(leg, "nodes_ik_world", None):
+            end_src = leg.nodes_ik_world[leg.leg_end_index]
+        else:
+            end_src = f"{leg.ik_chain[leg.leg_end_index]}.worldMatrix[0]"
+
+        def _sc(label, input_plug, target_plug, blend_index):
+            amx = cmds.createNode("aimMatrix", name=f"{n}{label}Aim_AMX", ss=True)
+            cmds.connectAttr(input_plug, f"{amx}.inputMatrix")
+            cmds.connectAttr(target_plug, f"{amx}.primary.primaryTargetMatrix")
+            cmds.setAttr(f"{amx}.primaryInputAxis", *leg.primary_axis, type="double3")
+            cmds.connectAttr(f"{amx}.outputMatrix",
+                             f"{leg.blend_matrices[blend_index]}.inputMatrix", force=True)
+            return amx
+
+        _sc("Fetlock", end_src, follow["Plant"], leg.leg_end_index)
+        _sc("Pastern", follow["Plant"], follow["Tip"], leg.plant_index)
 
     def digits_guides(self, leg):
         """
