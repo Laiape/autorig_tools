@@ -2425,6 +2425,7 @@ class PawFoot(FootBase):
         self.digits_orient_guides(leg)
         self.digits_fk(leg)
         self.digits_attributes(leg)
+        self.digits_ik(leg)
 
     def digits_guides(self, leg):
         """
@@ -2529,18 +2530,160 @@ class PawFoot(FootBase):
             self.leg_digit_fk_ctls[name] = fk_ctls
 
     def digits_ik(self, leg):
-        """(Pendiente) IK de dedos, si el plano lo pide."""
-        pass
+        """
+        IK de dedos por triangulo de ley de cosenos, resuelto en el ESPACIO
+        LOCAL de la falange raiz: ahi el plano sagital del dedo es z=0, asi que
+        el plano del solve es FIJO y no hace falta pole vector (el solver de
+        nodos del cap. 6 reutilizado a escala de dedo). El objetivo de la punta
+        sigue RIGIDO al ball (patron del manager): con Toes_IK=1 el dedo queda
+        plantado mientras el pie se mueve. En dedos de 4 falanges el tramo
+        distal va rigido en IK (el FK blended pone el detalle). Cada falange
+        saca su joint de skinning del blend FK/IK; el espolon es FK puro.
+        """
+        cmds.addAttr(self.paw_attributes_ctl, longName="Toes_IK", attributeType="float",
+                     minValue=0, maxValue=1, defaultValue=0, keyable=True)
+        toes_ik = f"{self.paw_attributes_ctl}.Toes_IK"
+        ball_ctl = leg.ik_ctl["ball"]
+        ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
+
+        for numeral, data in self.digit_chains.items():
+            fk_list = self.leg_digit_fk_ctls[numeral]
+            base = f"{self.finger_base_name}{numeral}"
+            world_rest = [om.MMatrix(cmds.getAttr(pl)) for pl in data["world"]]
+            P = [om.MVector(m[12], m[13], m[14]) for m in world_rest]
+
+            ik_srcs = None
+            if numeral != "I" and len(fk_list) >= 3:
+                a_len = (P[1] - P[0]).length()
+                b_len = (P[-1] - P[1]).length()
+                grp0 = fk_list[0].replace("_CTL", "_GRP")
+
+                # signo del doblez, medido del reposo en el frame local de la raiz
+                r0 = world_rest[0]
+                row_x = om.MVector(r0[0], r0[1], r0[2])
+                row_y = om.MVector(r0[4], r0[5], r0[6])
+                vg = P[-1] - P[0]
+                gx_r, gy_r = vg * row_x, vg * row_y
+                d_r = math.hypot(gx_r, gy_r)
+                cos_r = max(-1.0, min(1.0, (a_len * a_len + d_r * d_r - b_len * b_len) / (2 * a_len * d_r)))
+                alpha_r = math.acos(cos_r)
+                theta_g_r = math.atan2(gy_r, gx_r)
+                v1 = P[1] - P[0]
+                theta1_r = math.atan2(v1 * row_y, v1 * row_x)
+                sign = 1.0 if abs((theta_g_r - alpha_r) - theta1_r) <= abs((theta_g_r + alpha_r) - theta1_r) else -1.0
+
+                # objetivo plantado: punta_rest x ball_rest^-1 x ball vivo
+                goal = cmds.createNode("multMatrix", name=f"{base}IkGoal_MMX", ss=True)
+                cmds.setAttr(f"{goal}.matrixIn[0]", list(world_rest[-1] * ball_rest_inv), type="matrix")
+                cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{goal}.matrixIn[1]")
+
+                g_pos = cmds.createNode("translationFromMatrix", name=f"{base}IkGoalPos_TFM", ss=True)
+                cmds.connectAttr(f"{goal}.matrixSum", f"{g_pos}.input")
+                g_local = cmds.createNode("multiplyPointByMatrix", name=f"{base}IkGoalLocal_MPM", ss=True)
+                cmds.connectAttr(f"{g_pos}.output", f"{g_local}.input")
+                cmds.connectAttr(f"{grp0}.worldInverseMatrix[0]", f"{g_local}.matrix")
+
+                def _mul2(label, in_a, in_b):
+                    nd = cmds.createNode("multiply", name=f"{base}{label}_MUL", ss=True)
+                    for k, v in enumerate((in_a, in_b)):
+                        if isinstance(v, str):
+                            cmds.connectAttr(v, f"{nd}.input[{k}]")
+                        else:
+                            cmds.setAttr(f"{nd}.input[{k}]", v)
+                    return f"{nd}.output"
+
+                gx2 = _mul2("IkGx2", f"{g_local}.outputX", f"{g_local}.outputX")
+                gy2 = _mul2("IkGy2", f"{g_local}.outputY", f"{g_local}.outputY")
+                d2 = cmds.createNode("sum", name=f"{base}IkD2_SUM", ss=True)
+                cmds.connectAttr(gx2, f"{d2}.input[0]")
+                cmds.connectAttr(gy2, f"{d2}.input[1]")
+                d_node = cmds.createNode("power", name=f"{base}IkD_POW", ss=True)
+                cmds.connectAttr(f"{d2}.output", f"{d_node}.input")
+                cmds.setAttr(f"{d_node}.exponent", 0.5)
+
+                num = cmds.createNode("sum", name=f"{base}IkCosNum_SUM", ss=True)
+                cmds.connectAttr(f"{d2}.output", f"{num}.input[0]")
+                cmds.setAttr(f"{num}.input[1]", a_len * a_len - b_len * b_len)
+                den = _mul2("IkCosDen", f"{d_node}.output", 2.0 * a_len)
+                cos_div = cmds.createNode("divide", name=f"{base}IkCos_DIV", ss=True)
+                cmds.connectAttr(f"{num}.output", f"{cos_div}.input1")
+                cmds.connectAttr(den, f"{cos_div}.input2")
+                cos_clamp = cmds.createNode("clampRange", name=f"{base}IkCosClamp_CLM", ss=True)
+                cmds.connectAttr(f"{cos_div}.output", f"{cos_clamp}.input")
+                cmds.setAttr(f"{cos_clamp}.minimum", -1.0)
+                cmds.setAttr(f"{cos_clamp}.maximum", 1.0)
+                alpha = cmds.createNode("acos", name=f"{base}IkAlpha_ACOS", ss=True)
+                cmds.connectAttr(f"{cos_clamp}.output", f"{alpha}.input")
+                theta_g = cmds.createNode("atan2", name=f"{base}IkThetaG_ATAN", ss=True)
+                cmds.connectAttr(f"{g_local}.outputY", f"{theta_g}.input1")
+                cmds.connectAttr(f"{g_local}.outputX", f"{theta_g}.input2")
+                alpha_signed = _mul2("IkAlphaSign", f"{alpha}.output", -sign)
+                theta1 = cmds.createNode("sum", name=f"{base}IkTheta1_SUM", ss=True)
+                cmds.connectAttr(f"{theta_g}.output", f"{theta1}.input[0]")
+                cmds.connectAttr(alpha_signed, f"{theta1}.input[1]")
+
+                cos1 = cmds.createNode("cos", name=f"{base}IkCos1_COS", ss=True)
+                cmds.connectAttr(f"{theta1}.output", f"{cos1}.input")
+                sin1 = cmds.createNode("sin", name=f"{base}IkSin1_SIN", ss=True)
+                cmds.connectAttr(f"{theta1}.output", f"{sin1}.input")
+                p1x = _mul2("IkP1x", f"{cos1}.output", a_len)
+                p1y = _mul2("IkP1y", f"{sin1}.output", a_len)
+                p1_fbf = cmds.createNode("fourByFourMatrix", name=f"{base}IkP1_FBF", ss=True)
+                cmds.connectAttr(p1x, f"{p1_fbf}.in30")
+                cmds.connectAttr(p1y, f"{p1_fbf}.in31")
+                p1_world = cmds.createNode("multMatrix", name=f"{base}IkP1World_MMX", ss=True)
+                cmds.connectAttr(f"{p1_fbf}.output", f"{p1_world}.matrixIn[0]")
+                cmds.connectAttr(f"{grp0}.worldMatrix[0]", f"{p1_world}.matrixIn[1]")
+
+                # secundario: el lateral del dedo alineado al lateral VIVO de
+                # la raiz -> sin roll libre, y los tramos rigidos distales
+                # reposan exactos
+                def _aim(label, input_plug, target_plug):
+                    amx = cmds.createNode("aimMatrix", name=f"{base}{label}_AMX", ss=True)
+                    cmds.connectAttr(input_plug, f"{amx}.inputMatrix")
+                    cmds.connectAttr(target_plug, f"{amx}.primary.primaryTargetMatrix")
+                    cmds.setAttr(f"{amx}.primaryInputAxis", *leg.primary_axis, type="double3")
+                    cmds.setAttr(f"{amx}.secondaryInputAxis", *leg.lateral_axis, type="double3")
+                    cmds.setAttr(f"{amx}.secondaryTargetVector", *leg.lateral_axis, type="double3")
+                    cmds.connectAttr(f"{grp0}.worldMatrix[0]", f"{amx}.secondary.secondaryTargetMatrix")
+                    cmds.setAttr(f"{amx}.secondaryMode", 2)
+                    return amx
+
+                aim0 = _aim("Ik00", f"{grp0}.worldMatrix[0]", f"{p1_world}.matrixSum")
+                aim1 = _aim("Ik01", f"{p1_world}.matrixSum", f"{goal}.matrixSum")
+
+                ik_srcs = [f"{aim0}.outputMatrix", f"{aim1}.outputMatrix"]
+                # offsets rigidos contra lo que el aim DA en reposo (la cuerda
+                # P1->punta, no el hueso): en dedos de 4 falanges difieren y
+                # hornear contra el hueso descolocaba los tramos distales
+                aim1_rest_inv = om.MMatrix(cmds.getAttr(f"{aim1}.outputMatrix")).inverse()
+                for i in range(2, len(fk_list)):
+                    rig = cmds.createNode("multMatrix", name=f"{base}Ik{i:02d}Rigid_MMX", ss=True)
+                    cmds.setAttr(f"{rig}.matrixIn[0]", list(world_rest[i] * aim1_rest_inv), type="matrix")
+                    cmds.connectAttr(f"{aim1}.outputMatrix", f"{rig}.matrixIn[1]")
+                    ik_srcs.append(f"{rig}.matrixSum")
+
+            # skinning por falange: blend FK/IK (o FK puro en el espolon)
+            for i, fk in enumerate(fk_list):
+                jnt = cmds.createNode("joint", name=f"{base}{i:02d}Skinning_JNT", ss=True, parent=leg.skeleton_grp)
+                if ik_srcs:
+                    blm = cmds.createNode("blendMatrix", name=f"{base}{i:02d}Blend_BLM", ss=True)
+                    cmds.connectAttr(f"{fk}.worldMatrix[0]", f"{blm}.inputMatrix")
+                    cmds.connectAttr(ik_srcs[i], f"{blm}.target[0].targetMatrix")
+                    cmds.connectAttr(toes_ik, f"{blm}.target[0].weight")
+                    cmds.connectAttr(f"{blm}.outputMatrix", f"{jnt}.offsetParentMatrix")
+                else:
+                    cmds.connectAttr(f"{fk}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
 
     def digits_attributes(self, leg):
         """
         Control de atributos de los dedos con Curl, Spread y Twist (-10..10,
         default 0, convención de mano del repo).
 
-        PENDIENTE: el cableado SDK a los grupos SDK de las falanges (recorrido
-        decreciente proximal->distal en el curl, spread solo en la proximal,
-        espolón aparte con su propio rango) — ver attributes_setup del
-        digits_module de referencia.
+        El cableado SDK porta el reparto de la referencia (digits_module):
+        curl decreciente proximal->distal, spread solo en la proximal con
+        abanico simétrico respecto al eje funcional III-IV, y el espolón
+        aparte con su propio rango.
         """
         
         self.paw_attributes_grp, self.paw_attributes_ctl = curve_tool.create_controller(
@@ -2560,6 +2703,38 @@ class PawFoot(FootBase):
         _f_attr("Curl")
         _f_attr("Spread")
         _f_attr("Twist")
+        if "I" in self.digit_chains:
+            _f_attr("Dewclaw_Curl")
+            _f_attr("Dewclaw_Twist")
+
+        # ---- SDK (reparto de la referencia digits_module) ----
+        # El eje funcional de la pata digitigrada cae ENTRE los dedos III y IV:
+        # el abanico del Spread es simetrico respecto a ese eje (externos a
+        # tope, centrales apenas). Curl decreciente proximal->distal. El
+        # espolon aparte: no apoya y su rango es otro.
+        SPREAD_W = {"II": -1.0, "III": -0.33, "IV": 0.33, "V": 1.0}
+        SPREAD_MAX = 12.0
+        PHALANX_CURL = [(-70, 18), (-55, 14), (-45, 12)]
+        attrs_ctl = self.paw_attributes_ctl
+
+        def _sdk_key(node, attr, driver, pos, neg):
+            cmds.setDrivenKeyframe(node, at=attr, dv=0, cd=f"{attrs_ctl}.{driver}", v=0)
+            cmds.setDrivenKeyframe(node, at=attr, dv=10, cd=f"{attrs_ctl}.{driver}", v=pos)
+            cmds.setDrivenKeyframe(node, at=attr, dv=-10, cd=f"{attrs_ctl}.{driver}", v=neg)
+
+        for numeral, fk_list in self.leg_digit_fk_ctls.items():
+            for i, fk in enumerate(fk_list):
+                sdk = fk.replace("_CTL", "_SDK")
+                if numeral == "I":
+                    _sdk_key(sdk, "rotateZ", "Dewclaw_Curl", -60, 15)
+                    _sdk_key(sdk, "rotateX", "Dewclaw_Twist", 15, -15)
+                    continue
+                pos, neg = PHALANX_CURL[min(i, len(PHALANX_CURL) - 1)]
+                _sdk_key(sdk, "rotateZ", "Curl", pos, neg)
+                _sdk_key(sdk, "rotateX", "Twist", 15, -15)
+                if i == 0:
+                    w = SPREAD_MAX * SPREAD_W.get(numeral, 0.0)
+                    _sdk_key(sdk, "rotateY", "Spread", w, -w)
 
         
 
