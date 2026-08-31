@@ -737,7 +737,11 @@ class LegModule(object):
         espacio maestro del propio switch.
         """
         apex_p = self.world_positions[self.pv_apex_index]
-        pv_pos = apex_p + self.bend_dir * (self.leg_line_len * 0.5) * self.PV_SIGN
+        # en rp_rp el PV va DETRAS (caudal): la bisagra del primer plano es el
+        # codo, que dobla hacia atras — con el PV craneal ese plano nace
+        # invertido. Los demas presets conservan su lado calibrado.
+        pv_sign = -self.PV_SIGN if self.solver == SOLVER_RP_RP else self.PV_SIGN
+        pv_pos = apex_p + self.bend_dir * (self.leg_line_len * 0.5) * pv_sign
 
         pv_rest_cmx = cmds.createNode("composeMatrix", name=f"{self.side}_{self.LEG_PREFIX}PvRest_CMX", ss=True)
         cmds.setAttr(f"{pv_rest_cmx}.inputTranslate", pv_pos.x, pv_pos.y, pv_pos.z, type="double3")
