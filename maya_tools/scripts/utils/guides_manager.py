@@ -480,6 +480,11 @@ def get_guides(guide_export, parent=None):
             if guides_data[name][guide_export]["isJoint"] == True:
                 chain = []
 
+                # cmds.joint crea bajo la SELECCION actual: sin limpiar, la
+                # cadena nace dentro de lo ultimo que tocara el build anterior
+                # (p. ej. la NURBS escalada de la escapula -> transform de
+                # compensacion y posiciones basura al re-parentar)
+                cmds.select(clear=True)
                 joint_exported = cmds.joint(name=guide_export, r=5)
                 cmds.xform(joint_exported, ws=True, m=guides_data[name][guide_export]["joint_matrix"])
                 cmds.makeIdentity(joint_exported, apply=True, r=True)

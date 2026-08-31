@@ -275,7 +275,41 @@ class LegModule(object):
         (por eso los pivotes se comprueban por valor, no por try/except).
         """
         # Get the joint guides
-        self.leg_chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
+        chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
+
+        # Las guias de DEDOS cuelgan de la cuartilla (colocacion natural), pero
+        # el export aplana la jerarquia y get_guides recrea TODO encadenado
+        # linealmente: los dedos quedan insertados en mitad de la cadena y el
+        # Tip colgando de la ultima falange. La cadena de la pierna es la
+        # columna SIN dedos: se re-encadena limpia (parent conserva el mundo),
+        # se borran los duplicados de dedos (PawFoot los trae por su cuenta
+        # desde el fichero) y los indices del modulo quedan como siempre.
+        if any("Digit" in j for j in chain):
+            # el orden plano del fichero no es fiable (los dedos se exportan en
+            # orden de creacion): la columna se ordena con el campo `parent`
+            # REAL del fichero, se recuelga fisicamente (parent conserva el
+            # mundo) y los duplicados de dedos se borran
+            character = guides_manager.rig_manager.get_character_name_from_build()
+            _, all_guides = guides_manager._load_guides_file(character)
+            gdata = all_guides.get(character, {})
+            childmap = {}
+            for j in chain:
+                childmap.setdefault(gdata.get(j, {}).get("parent"), []).append(j)
+            ordered = [chain[0]]
+            while True:
+                nxt = [c for c in childmap.get(ordered[-1], []) if "Digit" not in c]
+                if not nxt:
+                    break
+                ordered.append(nxt[0])
+            for prev, cur in zip(ordered, ordered[1:]):
+                par = cmds.listRelatives(cur, parent=True)
+                if not par or par[0] != prev:
+                    cmds.parent(cur, prev)
+            for j in chain:
+                if "Digit" in j and cmds.objExists(j):
+                    cmds.delete(j)
+            chain = ordered
+        self.leg_chain = chain
         cmds.parent(self.leg_chain[0], self.module_trn)
 
         # Get the settings guide (opcional: el caballo no lo trae en sus guias)
