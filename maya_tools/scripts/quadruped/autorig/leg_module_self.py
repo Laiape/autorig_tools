@@ -1694,6 +1694,11 @@ class BackLegModule(LegModule):
     ROOT_JOINT = "Hip"
     # peroneo tercero TENDINOSO en el équido: el acoplamiento es obligatorio
     RECIPROCAL_COUPLING = True
+    # PV DETRAS (caudal): el corvejón dobla hacia atrás. Matriz 6x2 en
+    # chihuahua y caballo: ángulos idénticos por lado y la fuga lateral
+    # baja o iguala en todo (nodes 1.29->0.18 chihuahua, 0.74->0.27
+    # caballo; spring y sc_rp_sc mejoran leve; nada empeora).
+    PV_SIGN = -1
     # Sobrescribe aquí: FORWARD_AXIS · PV_SIGN · REPOSITION_IK_TO_GUIDES ·
     # FOOT_CLASS
 
