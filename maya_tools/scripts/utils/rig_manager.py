@@ -945,6 +945,7 @@ def create_rig_settings(guides_transform, load=False):
         "tail_skinning_jnts": 5, "tail_controllers": 5,
         "mGear_integration": 0,
         "reciprocal_coupling": 1,  # default ungulado (caballo); canidos -> off
+        "foot_type": 0,            # 0 = hoof (casco), 1 = paw (digitigrado)
     }
 
     # Si load es True, intentamos obtener los valores existentes
@@ -959,6 +960,7 @@ def create_rig_settings(guides_transform, load=False):
         "solver_front_leg": LEG_SOLVER_OPTIONS,
         "solver_back_leg": LEG_SOLVER_OPTIONS,
         "reciprocal_coupling": ("off", "on"),
+        "foot_type": ("hoof", "paw"),
         "spine_skinning_jnts": defaults["spine_skinning_jnts"],
         "spine_controllers": defaults["spine_controllers"],
         "neck_skinning_jnts": defaults["neck_skinning_jnts"],
@@ -1022,7 +1024,7 @@ def load_rig_settings(guides_transform):
         "neck_skinning_jnts", "neck_controllers", "arm_skinning_jnts",
         "leg_skinning_jnts", "leg_solver", "tail_skinning_jnts", "tail_controllers",
         "solver_mode", "solver_front_leg", "solver_back_leg",
-        "reciprocal_coupling"
+        "reciprocal_coupling", "foot_type"
     ]
     
     data = {}

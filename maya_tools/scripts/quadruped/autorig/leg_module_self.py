@@ -253,7 +253,14 @@ class LegModule(object):
         coupling = settings.get("reciprocal_coupling")
         if self.RECIPROCAL_COUPLING if coupling is None else bool(coupling):
             self.reciprocal_coupling()
-        self.foot = self.FOOT_CLASS()
+        # el tipo de pie tambien es VALOR por especie: casco (ungulado) o
+        # pata digitigrada (canido); manda el .build, fallback al de la clase
+        foot_type = settings.get("foot_type")
+        if foot_type is None:
+            foot_cls = self.FOOT_CLASS
+        else:
+            foot_cls = PawFoot if int(foot_type) == 1 else HoofFoot
+        self.foot = foot_cls()
         self.foot.build(self)
         if self.bendys:
             self.roll_and_non_roll_setup()
@@ -2412,6 +2419,13 @@ class PawFoot(FootBase):
     # I = espolón (no apoya), II-V = dedos de apoyo. Numeración veterinaria.
     DIGIT_NUMERALS = ["I", "II", "III", "IV", "V"]
 
+    def build(self, leg):
+        super(PawFoot, self).build(leg)
+        self.digits_guides(leg)
+        self.digits_orient_guides(leg)
+        self.digits_fk(leg)
+        self.digits_attributes(leg)
+
     def digits_guides(self, leg):
         """
         Carga las cadenas de guías de los dedos: pide la raíz 00 de cada
@@ -2502,6 +2516,10 @@ class PawFoot(FootBase):
                     parent=parent,
                 )
 
+                # create_controller sin matrix parenta grupos nacidos en el
+                # origen y cmds.parent COMPENSA en los canales: hay que
+                # limpiarlos antes de poner la colocacion en el opm
+                cmds.xform(grp[0], m=om.MMatrix.kIdentity)
                 if i == 0:
                     local = om.MMatrix(cmds.getAttr(data["world"][0])) * parent_matrix.inverse() # Set the local matrix based on the parent
                 else:
