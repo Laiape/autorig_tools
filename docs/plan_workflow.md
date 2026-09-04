@@ -208,7 +208,7 @@ Crear:
    "Which folder to read", tabla resumen. Plantilla en seccion 5.
 
 Dedupe en la misma sesion: en `rigging-studio-standards/references/convenciones-repo.md`,
-`corrective-joints/references/repo-y-qa.md` ?4 y `custom-deformers/references/repo-deformers.md` ?7
+`corrective-joints/references/repo-y-qa.md` seccion 4 y `custom-deformers/references/repo-deformers.md` seccion 7
 sustituir la tabla de naming por una linea "Naming y nodos: `.claude/rules/convenciones-rig.md`".
 Las skills conservan lo que es SUYO (API de correctivas, catalogo de zonas...).
 
@@ -223,7 +223,7 @@ Las skills conservan lo que es SUYO (API de correctivas, catalogo de zonas...).
 | 5 | `maya_tools/assets/como_funciona.md` | Contrato de carpeta por personaje. Tabla personaje -> `Rig_Type` -> que tiene (solo guias / skin / correctivas / picker) -> notas (`jamal` con formatos legacy `.weights`/`.shp`, `source` = origen de transfers, `spot` solo guias). Claves del `.build` con defaults. `character_extras` con ejemplo. | listado de assets, `rig_manager.create_rig_settings` |
 | 6 | `maya_tools/como_funciona.md` | `self_module.mod`, `userSetup.py` (menu, shelf, puertos VS Code 4434/7001/7002, numpy, proxy_locator, MCP 9877), `icons/`, `plugin/` C++ (estado), `cache/`. | `userSetup.py`, `.mod` |
 | 7 | `maya_tools/scripts/ui/como_funciona.md` | Secciones del menu (PIPELINE / MODELING / RIGGING / ANIMATION / CORRECTIVES / SKINNING / SIMULATION) -> funcion. Como anadir un boton al shelf (ya comentado en `auto_rig_shelf.py`). | `auto_rig_UI.py` |
-| 8 | `maya_tools/scripts/adonis/como_funciona.md` | `copyWeightsAdonis`: tipos Adn*, 4 pestanas, sin fichero versionado propio. | `repo-deformers.md` ?4 |
+| 8 | `maya_tools/scripts/adonis/como_funciona.md` | `copyWeightsAdonis`: tipos Adn*, 4 pestanas, sin fichero versionado propio. | `repo-deformers.md` seccion 4 |
 | 9 | `ue_tools/como_funciona.md` | Que hay (solo docs; `scripts/_init_.py` vacio y mal nombrado), contrato de export (`_ENV` + morphs), puntero a las notas de Unreal Fest, donde ira el codigo UE. | `ue_tools/docs/` |
 
 Cada hoja lleva la cabecera de la plantilla (seccion 5) y una seccion final
