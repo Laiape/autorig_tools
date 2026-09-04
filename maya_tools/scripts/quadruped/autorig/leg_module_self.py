@@ -1344,7 +1344,20 @@ class LegModule(object):
             ik_src = getattr(self, "nodes_ik_world", None)
             cmds.connectAttr(ik_src[i] if ik_src else f"{self.ik_chain[i]}.worldMatrix[0]",
                              f"{blend_matrix}.inputMatrix")
-            cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{blend_matrix}.target[0].targetMatrix")
+            # El FK entra por un offset relativo al reposo (guia x ctl_reposo^-1),
+            # igual que el casco en IK. En L es la identidad; en R los controles
+            # van ESPEJADOS (ctl_matrix, det -1) y sin este offset la reflexion
+            # se colaba en los joints al conmutar a FK: la punta del casco
+            # derecho se iba 25 u y las cuartillas salian con det -1. Con el
+            # offset el joint reposa en la guia y sigue al control rigidamente,
+            # sin rama por lado ni signo que adivinar.
+            fk_wm = f"{self.fk_controllers[i]}.worldMatrix[0]"
+            fk_rest = om.MMatrix(cmds.getAttr(fk_wm))
+            guide_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[i]))
+            fk_frame_mmx = cmds.createNode("multMatrix", name=jnt.replace("_JNT", "FkFrame_MMX"), ss=True)
+            cmds.setAttr(f"{fk_frame_mmx}.matrixIn[0]", list(guide_rest * fk_rest.inverse()), type="matrix")
+            cmds.connectAttr(fk_wm, f"{fk_frame_mmx}.matrixIn[1]")
+            cmds.connectAttr(f"{fk_frame_mmx}.matrixSum", f"{blend_matrix}.target[0].targetMatrix")
             cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{blend_matrix}.target[0].weight")
 
             self.blend_matrices.append(blend_matrix)
