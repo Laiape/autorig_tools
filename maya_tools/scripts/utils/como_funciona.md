@@ -3,6 +3,7 @@
 Parent: `maya_tools/como_funciona.md`.
 Reglas: `.claude/rules/convenciones-rig.md`, `.claude/rules/datos-y-versionado.md`, `.claude/rules/deformacion-y-skin.md`.
 Modulos que lo usan: `maya_tools/scripts/biped/autorig/como_funciona.md`, `maya_tools/scripts/quadruped/autorig/como_funciona.md`.
+Orden del build y por que, checklist de QA y poses: `maya_tools/scripts/utils/criterios_build.md`.
 API detallada en skills: `.claude/skills/corrective-joints/references/repo-y-qa.md` (`correctives.py`),
 `.claude/skills/custom-deformers/references/repo-deformers.md` (`ribbon.py`, `de_boor_core.py`, `skincluster_*`).
 

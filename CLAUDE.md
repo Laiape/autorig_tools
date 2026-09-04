@@ -32,13 +32,16 @@ Punteros a ficheros siempre desde la raiz del repo, en backticks:
 | Build, `rig_manager`, guias, matrices, ribbons, picker | `maya_tools/scripts/utils/como_funciona.md` |
 | Un modulo biped o facial | `maya_tools/scripts/biped/autorig/como_funciona.md` |
 | Un modulo quadruped, un solver, el pie | `maya_tools/scripts/quadruped/autorig/como_funciona.md` |
+| Un valor medido del cuadrupedo (solver, PV, acoplamiento, bias) | `maya_tools/scripts/quadruped/autorig/criterios_solvers.md` |
+| Orden del build, por que, QA y poses ROM | `maya_tools/scripts/utils/criterios_build.md` |
+| Donde vive un dato (y donde no) | `maya_tools/mapa_datos.md` |
 | Una tool, un test, el `.skc` | `maya_tools/scripts/tools/como_funciona.md` |
 | Menu, shelf, Asset Manager, ventanas | `maya_tools/scripts/ui/como_funciona.md` |
 | AdonisFX | `maya_tools/scripts/adonis/como_funciona.md` |
 | Un personaje, sus carpetas, claves del `.build` | `maya_tools/assets/como_funciona.md` |
 | Export a Unreal | `ue_tools/como_funciona.md` |
 | API de correctivas y QA | `.claude/skills/corrective-joints/references/repo-y-qa.md` |
-| Plan del workflow (fases 3 y 4 pendientes) | `docs/plan_workflow.md` |
+| Plan del workflow (fase 4 pendiente) | `docs/plan_workflow.md` |
 
 ## Validacion
 - Maya carga el repo por `maya_tools/self_module.mod` (ruta absoluta de

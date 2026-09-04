@@ -123,11 +123,20 @@ Reglas de versionado: `.claude/rules/datos-y-versionado.md`.
 ### Lee `maya_tools/scripts/utils/como_funciona.md` si necesitas...
 - La secuencia exacta del build, `rig_manager`, `guides_manager`, `data_manager`, matrices, ribbons, picker.
 
+### Lee `maya_tools/scripts/utils/criterios_build.md` si necesitas...
+- Por que el build va en ese orden, la checklist de QA y las poses ROM canonicas.
+
+### Lee `maya_tools/mapa_datos.md` si necesitas...
+- Donde se guarda y se lee cada dato (guias, build, curvas, skin, extras, cache) y donde NO.
+
 ### Lee `maya_tools/scripts/biped/autorig/como_funciona.md` si necesitas...
 - Que guias activan cada modulo biped o facial, que joints y controles crea, que publica en cache.
 
 ### Lee `maya_tools/scripts/quadruped/autorig/como_funciona.md` si necesitas...
 - Patas `leg_module_self` frente a referencia, solvers, pie hoof/paw, spine y cuello quad.
+
+### Lee `maya_tools/scripts/quadruped/autorig/criterios_solvers.md` si necesitas...
+- Los numeros medidos: solvers comparados, pole vector caudal, acoplamiento, pie, escapula, `SAGITTAL_BIAS`.
 
 ### Lee `maya_tools/scripts/tools/como_funciona.md` si necesitas...
 - Que hace cada tool, su entrada de menu, su estado y como lanzar los tests.
@@ -161,10 +170,10 @@ Reglas de versionado: `.claude/rules/datos-y-versionado.md`.
 |---|---|---|
 | `.claude/rules/` | Como trabajar y las convenciones no negociables | cada regla |
 | `.claude/skills/` | Conocimiento de rigging aterrizado en este repo | `.claude/skills/como_funciona.md` |
-| `maya_tools/` | Arranque, `.mod`, cache, plugin | `maya_tools/como_funciona.md` |
-| `maya_tools/scripts/utils/` | Motor del build | `maya_tools/scripts/utils/como_funciona.md` |
+| `maya_tools/` | Arranque, `.mod`, cache, plugin; mapa de datos | `maya_tools/como_funciona.md`, `maya_tools/mapa_datos.md` |
+| `maya_tools/scripts/utils/` | Motor del build; criterios de orden y QA | `maya_tools/scripts/utils/como_funciona.md`, `maya_tools/scripts/utils/criterios_build.md` |
 | `maya_tools/scripts/biped/autorig/` | Modulos biped y cara | `maya_tools/scripts/biped/autorig/como_funciona.md` |
-| `maya_tools/scripts/quadruped/autorig/` | Modulos quadruped | `maya_tools/scripts/quadruped/autorig/como_funciona.md` |
+| `maya_tools/scripts/quadruped/autorig/` | Modulos quadruped; valores medidos | `maya_tools/scripts/quadruped/autorig/como_funciona.md`, `maya_tools/scripts/quadruped/autorig/criterios_solvers.md` |
 | `maya_tools/scripts/tools/` | Herramientas y tests | `maya_tools/scripts/tools/como_funciona.md` |
 | `maya_tools/scripts/ui/` | Menu, shelf, ventanas | `maya_tools/scripts/ui/como_funciona.md` |
 | `maya_tools/scripts/adonis/` | AdonisFX | `maya_tools/scripts/adonis/como_funciona.md` |

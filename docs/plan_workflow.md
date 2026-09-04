@@ -11,8 +11,9 @@
 > dedupe de naming en tres skills. Fase 2 HECHA el 2026-09-04: nueve hojas
 > `como_funciona.md` (quadruped, utils, tools, biped, assets, maya_tools, ui,
 > adonis, ue_tools) escritas desde el codigo, con indice raiz, `CLAUDE.md` y
-> skills apuntando a ellas. Siguiente: Fase 3 (`mapa_datos.md`,
-> `criterios_solvers.md`, `criterios_build.md`).
+> skills apuntando a ellas. Fase 3 HECHA el 2026-09-04: `maya_tools/mapa_datos.md`,
+> `maya_tools/scripts/quadruped/autorig/criterios_solvers.md` y
+> `maya_tools/scripts/utils/criterios_build.md`. Siguiente: Fase 4 (higiene).
 
 ---
 

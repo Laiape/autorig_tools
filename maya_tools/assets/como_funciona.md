@@ -2,6 +2,7 @@
 
 Parent: `como_funciona.md` (raiz).
 Regla unica de versiones y layout: `.claude/rules/datos-y-versionado.md`.
+Donde vive cada dato (y donde no): `maya_tools/mapa_datos.md`.
 Quien escribe y lee cada fichero: `maya_tools/scripts/utils/como_funciona.md`
 (`rig_manager`, `guides_manager`, `curve_tool`, `skin_manager_api`, `corrective_blendshape_manager`, `picker`).
 UI: Asset Manager (`maya_tools/scripts/utils/character_manager.py`).
@@ -97,4 +98,4 @@ fija el optionVar; BUILD RIG abre escena nueva y construye).
 - No guardar `.bak`, swatches ni escenas sueltas dentro de `assets/`.
 - No subir un `.ma` grande sin LFS.
 - No inventar carpetas nuevas por personaje: si hace falta un dato nuevo,
-  primero fila en `maya_tools/mapa_datos.md` (Fase 3).
+  primero fila en `maya_tools/mapa_datos.md`.

@@ -5,6 +5,7 @@ Hijos: `maya_tools/scripts/utils/como_funciona.md`, `maya_tools/scripts/biped/au
 `maya_tools/scripts/quadruped/autorig/como_funciona.md`, `maya_tools/scripts/tools/como_funciona.md`,
 `maya_tools/scripts/ui/como_funciona.md`, `maya_tools/scripts/adonis/como_funciona.md`,
 `maya_tools/assets/como_funciona.md`. Naming: `maya_tools/scripts/criterios_naming.md`.
+Donde vive cada dato: `maya_tools/mapa_datos.md`.
 
 ## 1. Que es y para que existe
 

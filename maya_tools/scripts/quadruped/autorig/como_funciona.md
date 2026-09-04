@@ -4,7 +4,7 @@ Parent: `como_funciona.md` (raiz).
 Reglas: `.claude/rules/convenciones-rig.md`, `.claude/rules/deformacion-y-skin.md`.
 Skill relacionada: `.claude/skills/skinning-deformation/SKILL.md` (zonas quadruped).
 Dispatch: `maya_tools/scripts/utils/rig_manager.py` (`build_rig`, rama `Rig_Type == 1`).
-Criterios medidos de solver y pole vector: `maya_tools/scripts/quadruped/autorig/criterios_solvers.md` (Fase 3, pendiente; hoy los numeros viven en los docstrings de las clases y en los commits).
+Criterios medidos de solver, pole vector, acoplamiento, pie, escapula y spine: `maya_tools/scripts/quadruped/autorig/criterios_solvers.md`.
 Test: `maya_tools/scripts/tools/tests/test_build_horse_leg_self.py`.
 
 ## 1. Que es y para que existe
@@ -117,8 +117,8 @@ dedos con el reparto de Spread de `digits_module`.
 - `leg_module_self` es lo activo y donde esta el churn (10 de los ultimos 10
   commits tocan `quadruped/`). `leg_module` se mantiene como referencia
   comparable (menu CREATE RIG).
-- Resultados medidos que ya son decision (numeros en los docstrings de
-  `BackLegModule`, `FrontLegModule` y `SpineModule`, a pasar a `criterios_solvers.md`): pole vector caudal en ambos trenes; `rp_rp` con
+- Resultados medidos que ya son decision (numeros y razones en
+  `criterios_solvers.md`): pole vector caudal en ambos trenes; `rp_rp` con
   resultado negativo; `reciprocal_coupling` por especie desde el `.build`;
   `foot_type` hoof/paw por datos; `SAGITTAL_BIAS = 1.3`.
 - `digits_module.py` no lo llama nadie: candidato a borrar cuando `PawFoot`
@@ -146,7 +146,7 @@ dedos con el reparto de Spread de `digits_module`.
 - No anadir un flag de clase sin escribir al lado el hecho anatomico que lo
   justifica (regla de oro de la cabecera del fichero).
 - No cambiar `PV_SIGN`, `SAGITTAL_BIAS` ni un solver "a ojo": se mide con el
-  test y se anota en el docstring (y en `criterios_solvers.md` cuando exista).
+  test y se anota en `criterios_solvers.md` y en el docstring.
 - No pasar nombres de nodo a mano entre pata, spine y switches: `publish` y
   `get_data`.
 - No leer `rotate` local de los joints de la cadena: todo va por matrices y
