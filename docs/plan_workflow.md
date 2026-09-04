@@ -8,7 +8,11 @@
 > `.cursor`, gate de git; `cache/` en git se decide en Fase 4). Fase 1 HECHA el
 > 2026-09-04: `CLAUDE.md`, `como_funciona.md` raiz, `.claude/rules/` (5 reglas),
 > `.claude/skills/como_funciona.md`, `maya_tools/scripts/criterios_naming.md` y
-> dedupe de naming en tres skills. Siguiente: Fase 2, fila 1 (quadruped).
+> dedupe de naming en tres skills. Fase 2 HECHA el 2026-09-04: nueve hojas
+> `como_funciona.md` (quadruped, utils, tools, biped, assets, maya_tools, ui,
+> adonis, ue_tools) escritas desde el codigo, con indice raiz, `CLAUDE.md` y
+> skills apuntando a ellas. Siguiente: Fase 3 (`mapa_datos.md`,
+> `criterios_solvers.md`, `criterios_build.md`).
 
 ---
 

@@ -18,9 +18,10 @@ stack, datos) viven en `.claude/rules/` y en
 | Como riggear una prenda, alternativas al copy skin, sim frente a rig | `.claude/skills/rigging-clothing-methods/SKILL.md` |
 | Revisar o empezar un modulo o tool "como lo haria un estudio", estandares, QC | `.claude/skills/rigging-studio-standards/SKILL.md` |
 
-## Referencias de repo dentro de las skills (interinas)
-Describen el repo y pasaran a los `como_funciona.md` por area en la Fase 2
-(`docs/plan_workflow.md`). Hasta entonces son la fuente de ese tema.
+## Referencias de repo dentro de las skills
+La descripcion canonica de cada area esta en su `como_funciona.md` (indice en
+`CLAUDE.md`). Estas referencias conservan el detalle de API y de QA de cada tema;
+si contradicen a un `como_funciona.md`, manda el codigo y se corrige la referencia.
 
 | Tema | Fichero |
 |---|---|

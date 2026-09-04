@@ -1,9 +1,9 @@
 # autorig_tools: indice de documentacion
 
 > Punto de entrada. Reglas de trabajo: `CLAUDE.md` y `.claude/rules/`.
-> Hijos: `maya_tools/`, `ue_tools/`, `.claude/skills/como_funciona.md`, `docs/`.
-> Las hojas por carpeta de `maya_tools/scripts` se crean en la Fase 2
-> (`docs/plan_workflow.md`); mientras, las referencias de las skills.
+> Hijos: `maya_tools/como_funciona.md`, `ue_tools/como_funciona.md`,
+> `.claude/skills/como_funciona.md`, `docs/`. Cada carpeta de codigo o datos
+> tiene su propia hoja `como_funciona.md` (tabla al final).
 
 ---
 
@@ -85,7 +85,7 @@ flowchart TD
 | Personaje | Rig_Type | Que hay en `maya_tools/assets/<p>/` |
 |---|---|---|
 | Edward | 0 biped | build, guides, curves, skin_clusters, picker, modelo (LFS) |
-| anne | 0 biped | build, guides, curves, skin_clusters, modelo; ejemplo de `character_extras` |
+| anne | 0 biped | build, guides, curves, skin_clusters, modelo |
 | freya | 0 biped | build, guides, curves, skin_clusters, modelos |
 | maui | 0 biped | build, guides, curves, skin_clusters, modelo |
 | mechanic | 0 biped | build, guides, curves, skin_clusters, modelo |
@@ -98,7 +98,8 @@ flowchart TD
 | spot | sin build | solo guides y curves |
 | source | sin build | origen de transfers de skin (`.skc` + `.skinmap`) |
 
-Reglas de versionado y claves del `.build`: `.claude/rules/datos-y-versionado.md`.
+Detalle por personaje y claves del `.build`: `maya_tools/assets/como_funciona.md`.
+Reglas de versionado: `.claude/rules/datos-y-versionado.md`.
 
 ---
 
@@ -116,6 +117,33 @@ Reglas de versionado y claves del `.build`: `.claude/rules/datos-y-versionado.md
 ### Lee `.claude/rules/deformacion-y-skin.md` si necesitas...
 - Orden del stack, skin apilado localizado, `.skc`, deformers permitidos, QA.
 
+### Lee `maya_tools/como_funciona.md` si necesitas...
+- Arranque de Maya, `self_module.mod`, `userSetup`, cache, iconos, plugin C++.
+
+### Lee `maya_tools/scripts/utils/como_funciona.md` si necesitas...
+- La secuencia exacta del build, `rig_manager`, `guides_manager`, `data_manager`, matrices, ribbons, picker.
+
+### Lee `maya_tools/scripts/biped/autorig/como_funciona.md` si necesitas...
+- Que guias activan cada modulo biped o facial, que joints y controles crea, que publica en cache.
+
+### Lee `maya_tools/scripts/quadruped/autorig/como_funciona.md` si necesitas...
+- Patas `leg_module_self` frente a referencia, solvers, pie hoof/paw, spine y cuello quad.
+
+### Lee `maya_tools/scripts/tools/como_funciona.md` si necesitas...
+- Que hace cada tool, su entrada de menu, su estado y como lanzar los tests.
+
+### Lee `maya_tools/scripts/ui/como_funciona.md` si necesitas...
+- El menu item a item, el shelf, el Asset Manager y las ventanas PySide.
+
+### Lee `maya_tools/scripts/adonis/como_funciona.md` si necesitas...
+- El tooling de AdonisFX (`copyWeightsAdonis`).
+
+### Lee `maya_tools/assets/como_funciona.md` si necesitas...
+- El contrato de carpeta por personaje, la tabla de personajes, las claves del `.build`.
+
+### Lee `ue_tools/como_funciona.md` si necesitas...
+- Que hay de Unreal (solo notas) y el contrato de export.
+
 ### Lee `.claude/skills/como_funciona.md` si necesitas...
 - Que skill abrir para skinning, correctivas, deformers, ropa o estandares.
 
@@ -129,11 +157,17 @@ Reglas de versionado y claves del `.build`: `.claude/rules/datos-y-versionado.md
 
 ## Resumen
 
-| Carpeta | Que es |
-|---|---|
-| `.claude/rules/` | Como trabajar y las convenciones no negociables |
-| `.claude/skills/` | Conocimiento de rigging aterrizado en este repo |
-| `maya_tools/scripts/` | El autorig (utils, modulos, tools, ui, adonis) |
-| `maya_tools/assets/` | Datos por personaje, versionados |
-| `ue_tools/` | Export a Unreal (solo docs hoy) |
-| `docs/` | Plan de workflow |
+| Carpeta | Que es | Hoja |
+|---|---|---|
+| `.claude/rules/` | Como trabajar y las convenciones no negociables | cada regla |
+| `.claude/skills/` | Conocimiento de rigging aterrizado en este repo | `.claude/skills/como_funciona.md` |
+| `maya_tools/` | Arranque, `.mod`, cache, plugin | `maya_tools/como_funciona.md` |
+| `maya_tools/scripts/utils/` | Motor del build | `maya_tools/scripts/utils/como_funciona.md` |
+| `maya_tools/scripts/biped/autorig/` | Modulos biped y cara | `maya_tools/scripts/biped/autorig/como_funciona.md` |
+| `maya_tools/scripts/quadruped/autorig/` | Modulos quadruped | `maya_tools/scripts/quadruped/autorig/como_funciona.md` |
+| `maya_tools/scripts/tools/` | Herramientas y tests | `maya_tools/scripts/tools/como_funciona.md` |
+| `maya_tools/scripts/ui/` | Menu, shelf, ventanas | `maya_tools/scripts/ui/como_funciona.md` |
+| `maya_tools/scripts/adonis/` | AdonisFX | `maya_tools/scripts/adonis/como_funciona.md` |
+| `maya_tools/assets/` | Datos por personaje, versionados | `maya_tools/assets/como_funciona.md` |
+| `ue_tools/` | Export a Unreal (solo docs hoy) | `ue_tools/como_funciona.md` |
+| `docs/` | Plan de workflow | `docs/plan_workflow.md` |

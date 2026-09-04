@@ -1,5 +1,10 @@
 # Esqueleto de deformación — inventario exacto por módulo
 
+Inventario canonico derivado del codigo (guias que activan cada modulo, joints,
+controles, claves de cache): `maya_tools/scripts/biped/autorig/como_funciona.md` y
+`maya_tools/scripts/quadruped/autorig/como_funciona.md`. Este fichero conserva el
+detalle orientado a skinning; si difieren, manda el codigo.
+
 Qué joints de skin genera cada módulo de este repo, con naming real. Lado `L` en los
 ejemplos; `R` es idéntico. Índices con defaults del `.build`.
 

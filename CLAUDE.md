@@ -28,10 +28,17 @@ Punteros a ficheros siempre desde la raiz del repo, en backticks:
 | Assets, versiones `_vNNN`, claves del `.build`, cache | `.claude/rules/datos-y-versionado.md` |
 | Stack de deformacion, skin apilado, `.skc`, QA de skin | `.claude/rules/deformacion-y-skin.md` |
 | Skinning, correctivas, deformers, ropa, estandares (conocimiento) | `.claude/skills/como_funciona.md` |
-| Joints que genera cada modulo (biped y quadruped), interino | `.claude/skills/skinning-deformation/references/esqueleto-deformacion.md` |
-| Orden del build y persistencia por tipo de deformer, interino | `.claude/skills/custom-deformers/references/repo-deformers.md` |
-| API de correctivas, `character_extras`, interino | `.claude/skills/corrective-joints/references/repo-y-qa.md` |
-| Plan de las hojas por area que faltan | `docs/plan_workflow.md` |
+| Arranque de Maya, `.mod`, `userSetup`, cache, plugin | `maya_tools/como_funciona.md` |
+| Build, `rig_manager`, guias, matrices, ribbons, picker | `maya_tools/scripts/utils/como_funciona.md` |
+| Un modulo biped o facial | `maya_tools/scripts/biped/autorig/como_funciona.md` |
+| Un modulo quadruped, un solver, el pie | `maya_tools/scripts/quadruped/autorig/como_funciona.md` |
+| Una tool, un test, el `.skc` | `maya_tools/scripts/tools/como_funciona.md` |
+| Menu, shelf, Asset Manager, ventanas | `maya_tools/scripts/ui/como_funciona.md` |
+| AdonisFX | `maya_tools/scripts/adonis/como_funciona.md` |
+| Un personaje, sus carpetas, claves del `.build` | `maya_tools/assets/como_funciona.md` |
+| Export a Unreal | `ue_tools/como_funciona.md` |
+| API de correctivas y QA | `.claude/skills/corrective-joints/references/repo-y-qa.md` |
+| Plan del workflow (fases 3 y 4 pendientes) | `docs/plan_workflow.md` |
 
 ## Validacion
 - Maya carga el repo por `maya_tools/self_module.mod` (ruta absoluta de

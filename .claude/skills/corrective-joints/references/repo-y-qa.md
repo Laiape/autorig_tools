@@ -142,7 +142,7 @@ revienta), y los nombres de attr son los reales de `arc_attrs` — `BicepsPushFo
 }
 ```
 
-(`assets/anne/build/anne_v001.build` tiene un ejemplo real.) `add_attrs` usa dicts
+(Hoy ningun `.build` del repo lleva este bloque; el formato de arriba es el que acepta `apply_character_extras`. Ojo: `get_rig_data` reescribe el `.build` al exportar guias y pierde el bloque, ver `maya_tools/assets/como_funciona.md`.) `add_attrs` usa dicts
 análogos (`node`/`name`/`type`/`min`/`max`/`default`). La clave `node` acepta también
 `"modulo/clave"` del data manager. Flujo: tunear en vivo → volcar los attrs bajo
 `CORRECTIVES_SEP` al `.build` → el build los reaplica. (Un helper
