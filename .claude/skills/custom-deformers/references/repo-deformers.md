@@ -140,14 +140,9 @@ Mecanismos concretos:
 
 ## 7. Convenciones para deformación nueva
 
-- **Sufijos**: skinCluster `_SKIN` (módulos) / `_SC` (skin_manager_ng) / `C_corrective_SKC`
-  (correctivas); blendShape `_BLS` (curvas) / `_BS`; deltaMush `_DMH`; uvPin `_UVP`;
-  ficheros de pesos `.skc`. Prefijos de lado `L_/R_/C_` obligatorios.
-- **`ss=True`** en todo `createNode` utilitario; los deformers nativos van por su comando
-  (`cmds.skinCluster`, `cmds.blendShape`, `cmds.deltaMush`) o `cmds.deformer(type=...)`.
-- **Math/matrix nodes Maya 2024+** (`multiply`, `sum`, `subtract`, `power`, `multMatrix`,
-  `pickMatrix`, `blendMatrix`, `aimMatrix`, `wtAddMatrix`…). `plusMinusAverage`/
-  `multiplyDivide` solo sobreviven en legacy (auto_collision) — no en código nuevo.
+- **Naming, `ss=True` y nodos math/matrix 2024+**: `.claude/rules/convenciones-rig.md`;
+  sufijos de deformers (`_SKIN`, `_SC`, `C_corrective_SKC`, `_BLS`, `_DMH`, `_UVP`) en
+  `maya_tools/scripts/criterios_naming.md` seccion 3. No se repiten aqui.
 - **Escala global**: todo deformer con parámetros en unidades de mundo debe leer el
   masterwalk (patrón `C_deltaMushScale_DCM`; `segment_volume` en matrix_manager).
 - **Skin apilado** → SIEMPRE `localize_corrective_skin` (o bindPreMatrix equivalente).

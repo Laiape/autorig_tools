@@ -55,22 +55,22 @@ El repo rige con matrices, no con constraints clásicos:
 
 ## Naming
 
-- **Lado**: prefijos `C_` (centro), `L_`, `R_`.
-- **Tipo de nodo**: sufijos `_GRP` (grupo), `_JNT` (joint), `_CTL` (control), `_MMT` (multMatrix), y
-  variantes de rol (`Fk_JNT`, `Ik_JNT`).
-- **Guías**: nomenclatura de `guide`/`Guide`.
-- Los nombres se derivan por reemplazo (`joint.replace("_JNT", "_CTL")`), así que **dependen de que el
-  sufijo sea idéntico en todo el repo**.
+La politica unica de naming, sufijos y nodos vive en
+`.claude/rules/convenciones-rig.md`; la tabla canonica de sufijos por tipo de nodo,
+con los legacy y su recuento, en `maya_tools/scripts/criterios_naming.md`. Aqui no se
+repite: si hay que cambiar un sufijo, se cambia alli y se migra entero.
 
 ## Inconsistencias detectadas (candidatas a unificar)
 
 Señálalas cuando toque, con criterio (no como ataque): unificar sube el nivel y evita bugs.
 
-1. **Mayúsculas vs minúsculas en sufijos.** Conviven `_JNT/_CTL/_GRP` y `_jnt/_ctl/_grp` en el repo
-   (≈17 ficheros usan `_JNT`, ≈14 usan `_jnt`). Como los nombres se derivan por `replace("_JNT",
-   "_CTL")`, mezclar casos es un **riesgo real de bug** (un `replace` que no encuentra el sufijo deja
-   el nombre mal). Recomendación: elegir **un** caso y migrar todo (idealmente con un helper central de
-   naming que construya nombres en vez de hacer `replace` disperso).
+1. **Sufijos de nodos utilitarios divergentes.** El caso de los sufijos DAG ya esta
+   resuelto (`_JNT` 429 usos frente a 1 `_jnt`; restos en minusculas solo en 4 ficheros,
+   listados en `maya_tools/scripts/criterios_naming.md`). Lo que SI diverge son los
+   sufijos de nodos utilitarios: multMatrix `_MMX`/`_MMT`/`_MM`, blendMatrix
+   `_BLM`/`_BMT`/`_BMX`, aimMatrix `_AMX`/`_AIM`/`_AMT`, y `_PMX` usado a la vez para
+   parentMatrix y pickMatrix. El canonico de cada tipo esta fijado en
+   `criterios_naming.md`; la migracion se hace entera por sufijo, no a parches.
 2. **Rutas dependientes de plataforma.** En `data_manager` la ruta se calcula con
    `split("\\scripts")` (separador de Windows y con `\s` que además es una secuencia de escape
    frágil). Un estándar de estudio usa `pathlib`/`os.path` para que el build corra en Windows y Linux

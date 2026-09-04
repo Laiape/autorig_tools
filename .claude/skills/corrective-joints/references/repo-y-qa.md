@@ -88,14 +88,9 @@ Pipeline: `create_rig.AutoRig.build()` → `basic_structure` → `rig_manager.bu
 
 - Joints: `{L|R|C}_nombreCorrective_JNT`, anillos `{L|R|C}_nombreRing##_JNT`. El prefijo
   de lado es obligatorio (label_joints y mirrors dependen de él).
-- Nodos: sufijos del repo — `_MUL` multiply, `_SUM` sum, `_SUB` subtract, `_DIV`, `_POW`,
-  `_RMV` remapValue, `_CLM` clamp, `_COND`, `_MM/_MMX/_MMT` multMatrix, `_DEC/_DCM`
-  decomposeMatrix, `_RFM` rowFromMatrix, `_FBF` fourByFourMatrix, `_BMX` blendMatrix,
-  `_PMT` parentMatrix, `_DOT/_VPR` vectorProduct, `_DBT` distanceBetween, `_NRM`
-  normalize, `_QTE` quatToEuler… Siempre `ss=True`.
-- Nodos math: familia Maya 2024 (`multiply` con `input[0..n]`, `sum.input[i]`,
-  `subtract.input1/input2`). El repo asume **Maya 2025+** (usa `parentMatrix`). NO usar
-  `multiplyDivide`/`multDoubleLinear` en código nuevo.
+- Sufijos de nodos utilitarios, `ss=True` y familia math/matrix de Maya 2024+ (nada de
+  `multiplyDivide`/`multDoubleLinear` en codigo nuevo): `.claude/rules/convenciones-rig.md`
+  y `maya_tools/scripts/criterios_naming.md`. No se repite aqui.
 - Attrs: separador enum lockeado (`CORRECTIVES_SEP`, niceName "CORRECTIVES"), luego
   `{Prefix}Enable` (bool dv 1) + `{Prefix}Push*`/`{Prefix}Amount` (float, dv proporcional
   al hueso).

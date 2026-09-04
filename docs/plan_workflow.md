@@ -3,6 +3,12 @@
 > Analisis de `weelko_factory_hub` (carpeta `.cursor` + `como_funciona.md` por
 > area) y plan por fases para llevar ese mismo patron a `autorig_tools`.
 > Fecha: 2026-09-04. Texto ASCII (sin acentos) a proposito: ver Fase 0.
+>
+> Estado: Fase 0 decidida con las recomendaciones (castellano ASCII, sin espejo
+> `.cursor`, gate de git; `cache/` en git se decide en Fase 4). Fase 1 HECHA el
+> 2026-09-04: `CLAUDE.md`, `como_funciona.md` raiz, `.claude/rules/` (5 reglas),
+> `.claude/skills/como_funciona.md`, `maya_tools/scripts/criterios_naming.md` y
+> dedupe de naming en tres skills. Siguiente: Fase 2, fila 1 (quadruped).
 
 ---
 
