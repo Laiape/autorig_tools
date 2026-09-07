@@ -32,8 +32,8 @@ de cada fichero se documenta en su area (Fase 2) o en la skill que lo usa.
 - Nada de `.bak`, copias sueltas ni `.mayaSwatches/` en assets. El historial es git.
 - Modelos `.ma` grandes van por LFS (`.gitattributes`).
 - `maya_tools/cache/*.cache` es el estado del ultimo build (`data_manager`):
-  se regenera en cada build; no se edita a mano ni es configuracion.
+  se regenera en cada build; no se edita a mano ni es configuracion. Esta
+  fuera de git (`.gitignore`); `data_manager` crea la carpeta si falta.
 - Sin bind por defecto: sin `.skc`, el build deja las mallas sin piel. Primer
   skin = manual o transferido, y export inmediato.
-- Rutas con `os.path` o `pathlib`; nunca separadores de Windows a mano
-  (`data_manager` aun tiene un `split("\\scripts")` pendiente).
+- Rutas con `os.path` o `pathlib`; nunca separadores de Windows a mano.

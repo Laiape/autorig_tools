@@ -1,4 +1,30 @@
-*/.pyc
-**/__pycache__
+# -- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+
+# -- Maya ------------------------------------------------------------------
+.mayaSwatches/
+*.swatches
+*.bak
+*.bak[0-9]
+
+# -- Cache del build (estado del ultimo build; se regenera en cada build) --
+maya_tools/cache/*.cache
+
+# -- Modelos fuera de git --------------------------------------------------
 # 358MB, supera el limite de 100MB de GitHub (usar LFS si hace falta versionarlo)
 **/chihuahua_v001.ma
+
+# -- Local y secretos ------------------------------------------------------
+CLAUDE.local.md
+.env
+*.key
+*.pem
+
+# -- Editor y OS -----------------------------------------------------------
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini

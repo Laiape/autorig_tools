@@ -4,8 +4,8 @@ Draws a mesh patch on each controller showing the nearest skin region.
 Color is inherited from the controller's override color.
 
 LOAD:
-    import maya.cmds as cmds
-    cmds.loadPlugin(r"C:/GIT/autorig_tools/maya_tools/scripts/tools/proxy_locator.py")
+    lo carga userSetup.init_proxy_locator() buscando este fichero en sys.path.
+    A mano: import maya.cmds as cmds; cmds.loadPlugin(<ruta a este proxy_locator.py>)
 
 ASSIGN after rig build (Auto-detectando el body):
     from tools.proxy_locator import assign_all_proxy_locators

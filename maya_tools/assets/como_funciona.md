@@ -66,15 +66,15 @@ pierde el bloque a mano si no se vuelve a anadir (pendiente de resolver).
 | Personaje | Rig_Type | Carpetas | Notas |
 |---|---|---|---|
 | Edward | 0 biped | build, guides, curves, models (LFS), picker, skin_clusters | |
-| anne | 0 biped | build, guides, curves, models, skin_clusters | `.mayaSwatches/` colado en models |
-| freya | 0 biped | build, guides, curves, models, skin_clusters | dos modelos (`CHAR_freya_v0001.ma`, `freya_v002.ma`); `.mayaSwatches/` |
+| anne | 0 biped | build, guides, curves, models, skin_clusters | |
+| freya | 0 biped | build, guides, curves, models, skin_clusters | dos modelos (`CHAR_freya_v0001.ma`, `freya_v002.ma`) |
 | maui | 0 biped | build, guides, curves, models, skin_clusters | |
-| mechanic | 0 biped | build, guides, curves, models, skin_clusters | swatches de `CHAR_yin` colados |
+| mechanic | 0 biped | build, guides, curves, models, skin_clusters | |
 | moana | 0 biped | build, guides, curves, models, skin_clusters | |
 | thaiz | 0 biped | build, guides, curves, models, skin_clusters, corrective_blendshapes | el unico con CBS versionados |
 | jamal | 0 biped | build, guides, curves, models, `scenes/` | pesos en formatos legacy (`jamal_v001.weights`, `facial_blendshapes.shp`) que el build NO importa |
 | chihuahua | 0 en el build | build, guides | modelo excluido de git por tamano (`.gitignore`); Rig_Type 0 aunque los commits lo usan como canido |
-| horse | 1 quadruped | build, guides, curves, models, picker, skin_clusters | `guides/` tiene `.bak`, `.bak2`, `.bak3` a borrar (Fase 4) |
+| horse | 1 quadruped | build, guides, curves, models, picker, skin_clusters | |
 | giraffe | 1 quadruped | build, guides, curves, models | spine uniforme (`UNIFORM_SPINE_CHARS`); sin skin |
 | spot | sin build | guides, curves | no construye |
 | source | sin build | models, skin_clusters (`.skc` + `THAIZ_BODY_PLY.skinmap`) | origen de transfers (`mesh_data_exporter`) |
@@ -82,9 +82,9 @@ pierde el bloque a mano si no se vuelve a anadir (pendiente de resolver).
 Cambiar de personaje = seleccionarlo en el Asset Manager (LOAD SETTINGS solo
 fija el optionVar; BUILD RIG abre escena nueva y construye).
 
-## 5. Estado hoy y limpieza pendiente (Fase 4)
+## 5. Estado hoy y pendientes
 
-- Borrar `horse/guides/*.bak*` y todas las `models/.mayaSwatches/`.
+- Hecho en la Fase 4: `.bak` de horse y `.mayaSwatches/` borrados y en `.gitignore`.
 - Decidir `jamal`: migrar sus pesos a `.skc` o marcar el personaje como legacy.
 - `chihuahua`: `Rig_Type` 0 en el `.build` no cuadra con su uso como
   cuadrupedo en los commits; comprobar antes de construirlo.

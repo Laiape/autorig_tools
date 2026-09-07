@@ -13,7 +13,12 @@
 > adonis, ue_tools) escritas desde el codigo, con indice raiz, `CLAUDE.md` y
 > skills apuntando a ellas. Fase 3 HECHA el 2026-09-04: `maya_tools/mapa_datos.md`,
 > `maya_tools/scripts/quadruped/autorig/criterios_solvers.md` y
-> `maya_tools/scripts/utils/criterios_build.md`. Siguiente: Fase 4 (higiene).
+> `maya_tools/scripts/utils/criterios_build.md`. Fase 4 HECHA el 2026-09-04:
+> `.gitignore` por secciones, `.bak` y `.mayaSwatches/` fuera, `cache/*.cache`
+> fuera de git (carpeta conservada por su hoja), `ue_tools/scripts/__init__.py`,
+> `README.md`, `CLAUDE.md` por carpeta (utils, biped, quadruped, tools),
+> `data_manager` con `pathlib`. La migracion `_jnt`/`_JNT` no hacia falta: los
+> hits eran nombres de variable. Queda la Fase 5 (mantenimiento continuo).
 
 ---
 

@@ -7,14 +7,14 @@ Esqueleto de export: `rig_manager.skeleton_hierarchy` en `maya_tools/scripts/uti
 ## 1. Que es y para que existe
 
 Sitio reservado para el codigo y las notas de la parte de Unreal del
-pipeline. Hoy solo hay documentacion.
+pipeline. Hoy solo hay documentacion y el paquete vacio.
 
 ## 2. Como esta montado
 
 | Fichero | Que es |
 |---|---|
 | `ue_tools/docs/unreal_fest_chicago_2026_rigging_produccion.md` | notas de la charla de Stephane Biava (Epic) en Unreal Fest Chicago 2026: precision de pesos (8 influencias, High Precision Skin Weights, lock por joint en 5.8), optimizacion de asset y de Control Rig (Execution Stack, Preview Nodes, profiling, Construction Event), inline bones, switch IK/FK en Sequencer, Deformer Graph desde Control Rig, Spherical Pose (RBF), modularidad en 3 capas (funciones + variants, Modular Control Rig, data-driven por Data Asset), Control Rig Dynamics, groom, y una seccion final "Ideas aplicables a nuestro pipeline" |
-| `ue_tools/scripts/_init_.py` | vacio y MAL NOMBRADO (`_init_` con un guion bajo): Python no lo reconoce como paquete. Renombrar a `__init__.py` en la Fase 4 |
+| `ue_tools/scripts/__init__.py` | vacio; marca la carpeta como paquete (renombrado desde `_init_.py` en la Fase 4) |
 
 ## 3. Datos que lee y escribe
 

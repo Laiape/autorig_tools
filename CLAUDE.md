@@ -41,7 +41,7 @@ Punteros a ficheros siempre desde la raiz del repo, en backticks:
 | Un personaje, sus carpetas, claves del `.build` | `maya_tools/assets/como_funciona.md` |
 | Export a Unreal | `ue_tools/como_funciona.md` |
 | API de correctivas y QA | `.claude/skills/corrective-joints/references/repo-y-qa.md` |
-| Plan del workflow (fase 4 pendiente) | `docs/plan_workflow.md` |
+| Plan del workflow (fases 0-4 hechas; Fase 5 = mantenimiento) | `docs/plan_workflow.md` |
 
 ## Validacion
 - Maya carga el repo por `maya_tools/self_module.mod` (ruta absoluta de

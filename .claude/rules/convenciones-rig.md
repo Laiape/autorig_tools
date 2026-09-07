@@ -15,8 +15,8 @@ nodo, con los legacy: `maya_tools/scripts/criterios_naming.md`.
   (ribbon). `corrective` o `ring` en el nombre = joint correctiva: es lo que la
   cuelga del `_ENV` de su padre en el export.
 - Los nombres derivados se construyen por `replace("_JNT", "_CTL")`: el sufijo
-  tiene que ser identico en todo el repo. Restos en minusculas (`_jnt`, `_ctl`,
-  `_grp`, 4 ficheros) son legacy: migrar al tocar, nunca extender.
+  tiene que ser identico en todo el repo. No hay sufijos en minusculas en el
+  codigo (verificado 2026-09-04): no introducir ninguno.
 
 ## Construccion
 - Rig por matrices: `offsetParentMatrix`, `multMatrix`, `blendMatrix`,

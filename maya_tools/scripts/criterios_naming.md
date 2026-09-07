@@ -14,22 +14,23 @@ sufijo basico, actualizar `.claude/rules/convenciones-rig.md`.
 
 | Que | Sufijo | Usos | Notas |
 |---|---|---|---|
-| transform de grupo | `_GRP` | 329 | `_grp` 3 (legacy) |
+| transform de grupo | `_GRP` | 329 | |
 | grupo offset de control (animable) | `_ANM` | 2 | `curve_tool.create_controller(name, offset=["GRP", "ANM"])`; lo usan los controles base (`C_character`, `C_masterwalk`) |
 | grupo offset de control (estatico) | `_OFF` | 2 | `curve_tool.create_controller(name, ["GRP", "OFF"])` |
 | transform de settings | `_TRN` | 10 | ej. `C_spineSettings_TRN` |
-| joint | `_JNT` | 429 | `_jnt` 1 (legacy) |
+| joint | `_JNT` | 429 | |
 | joint de export | `_ENV` | 32 | los crea `rig_manager.skeleton_hierarchy` |
-| control | `_CTL` | 300 | `_ctl` 10 (legacy) |
+| control | `_CTL` | 300 | |
 | guia | `_GUIDE` | 46 | `_Guide` 2 (legacy) |
 | curva | `_CRV` | 45 | |
 | NURBS surface | `_NRB` | 4 | |
 | locator | `_LOC` | 7 | |
 | atributo separador (enum lockeado) | `_SEP` | 26 | niceName `--- NOMBRE ---` o `NOMBRE ------` |
 
-Ficheros con restos en minusculas: `quadruped/autorig/digits_module.py`,
-`biped/autorig/fingers_module.py`, `utils/basic_structure.py`,
-`tools/auto_skin_transfer.py`.
+No hay sufijos DAG en minusculas en el codigo (verificado 2026-09-04): los
+`_ctl`, `_grp` y `_jnt` que devuelve un grep son nombres de variable (`self._ctl`
+en fingers y digits) o listas de variantes aceptadas a proposito
+(`_STRIP_SUFFIXES` de `auto_skin_transfer`, `_CLOTHES_SUFFIXES` de `basic_structure`).
 
 ## 2. Sufijos por tipo de nodo utilitario
 

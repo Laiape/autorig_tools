@@ -65,8 +65,8 @@ repite: si hay que cambiar un sufijo, se cambia alli y se migra entero.
 Señálalas cuando toque, con criterio (no como ataque): unificar sube el nivel y evita bugs.
 
 1. **Sufijos de nodos utilitarios divergentes.** El caso de los sufijos DAG ya esta
-   resuelto (`_JNT` 429 usos frente a 1 `_jnt`; restos en minusculas solo en 4 ficheros,
-   listados en `maya_tools/scripts/criterios_naming.md`). Lo que SI diverge son los
+   resuelto (`_JNT` 429 usos; los `_jnt`/`_ctl`/`_grp` que devuelve un grep son nombres
+   de variable o listas de variantes, ver `maya_tools/scripts/criterios_naming.md`). Lo que SI diverge son los
    sufijos de nodos utilitarios: multMatrix `_MMX`/`_MMT`/`_MM`, blendMatrix
    `_BLM`/`_BMT`/`_BMX`, aimMatrix `_AMX`/`_AIM`/`_AMT`, y `_PMX` usado a la vez para
    parentMatrix y pickMatrix. El canonico de cada tipo esta fijado en

@@ -4,7 +4,7 @@ Parent: `como_funciona.md` (raiz).
 Hijos: `maya_tools/scripts/utils/como_funciona.md`, `maya_tools/scripts/biped/autorig/como_funciona.md`,
 `maya_tools/scripts/quadruped/autorig/como_funciona.md`, `maya_tools/scripts/tools/como_funciona.md`,
 `maya_tools/scripts/ui/como_funciona.md`, `maya_tools/scripts/adonis/como_funciona.md`,
-`maya_tools/assets/como_funciona.md`. Naming: `maya_tools/scripts/criterios_naming.md`.
+`maya_tools/assets/como_funciona.md`, `maya_tools/cache/como_funciona.md`. Naming: `maya_tools/scripts/criterios_naming.md`.
 Donde vive cada dato: `maya_tools/mapa_datos.md`.
 
 ## 1. Que es y para que existe
@@ -68,7 +68,7 @@ se corta.
 `cache/`: `DataExportBiped` escribe `biped.cache`; `DataExportQuadruped`
 apunta a `quadruped.cache` pero el build usa siempre `DataExportBiped`
 (tambien en cuadrupedos). Se regenera con `new_build()` al empezar cada build;
-no es configuracion ni se edita a mano.
+no es configuracion ni se edita a mano. Fuera de git (`.gitignore`).
 
 ## 3. Datos que lee y escribe
 
@@ -81,8 +81,8 @@ no es configuracion ni se edita a mano.
 
 - `plugin/` es codigo muerto documentado: no se compila ni se carga.
 - `install_numpy` depende de `mayapy.exe` y de permisos de `pip --user`.
-- `cache/*.cache` esta commiteado aunque es estado del ultimo build (decision
-  pendiente en `docs/plan_workflow.md`, Fase 4).
+- `cache/*.cache` esta fuera de git desde la Fase 4; la carpeta se conserva por
+  `maya_tools/cache/como_funciona.md` y `data_manager` la crea si falta.
 
 ## 5. Como probarlo
 

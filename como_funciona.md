@@ -24,6 +24,7 @@ Autorig modular para Maya 2025+ en Python. Cuatro ideas lo definen:
 
 ```
 autorig_tools/
+|-- README.md                     puntero para GitHub
 |-- CLAUDE.md                     flujo obligatorio + indice de entrada
 |-- como_funciona.md              este fichero
 |-- .claude/rules/                reglas cortas, una por tema
@@ -44,7 +45,7 @@ autorig_tools/
 |   |   |-- adonis/               copyWeightsAdonis (AdonisFX)
 |   |   |-- criterios_naming.md   tabla canonica de sufijos por tipo de nodo
 |   |-- assets/<personaje>/       build, guides, curves, models, skin_clusters, corrective_blendshapes, picker
-|   |-- cache/                    biped.cache / quadruped.cache: estado del ultimo build (efimero)
+|   |-- cache/                    biped.cache / quadruped.cache: estado del ultimo build (fuera de git)
 |   |-- icons/                    iconos del shelf
 |   |-- plugin/                   C++ collisionCommands (no lo usa el build)
 |-- ue_tools/                     docs de UE (Unreal Fest 2026); scripts vacio

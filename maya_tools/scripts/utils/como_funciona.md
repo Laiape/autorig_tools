@@ -116,8 +116,8 @@ por `C_deltaMushScale_DCM`), `_auto_transfer_from_source` (transfer desde
 ### 2.5 `data_manager.py` y `basic_structure.py`
 
 - `DataExportBiped`: `new_build()`, `clear_build()`, `append_data(modulo,
-  dict)`, `get_data(modulo, clave)`. Ruta `maya_tools/cache/biped.cache`
-  calculada con `split("\\scripts")` (solo Windows; pendiente `pathlib`).
+  dict)`, `get_data(modulo, clave)`. Ruta `maya_tools/cache/<CACHE_FILE>`
+  resuelta con `pathlib` desde el propio modulo; crea la carpeta si falta.
   `DataExportQuadruped` existe y no la usa nadie: el build de cuadrupedo
   escribe en `biped.cache`.
 - `create_basic_structure(character_name=None, in_scene=False)`: jerarquia
@@ -173,8 +173,7 @@ por `C_deltaMushScale_DCM`), `_auto_transfer_from_source` (transfer desde
 
 ## 4. Estado hoy
 
-- Bugs conocidos: `data_manager` con `split("\\scripts")`;
-  `get_next_version_name` rota; `rig_manager` se importa a si mismo y
+- Bugs conocidos: `get_next_version_name` rota; `rig_manager` se importa a si mismo y
   depende de `auto_rig_UI`; `blendshape.py` usa el import corto
   (`from utils import`).
 - Sin uso: `DataExportQuadruped`, `rig_manager.corrective_joints`,

@@ -1,5 +1,6 @@
 import os
 import json
+import pathlib
 
 class DataExportBiped:
     """
@@ -7,15 +8,17 @@ class DataExportBiped:
     Each module can append its own data for rig construction purposes.
     """
 
+    CACHE_FILE = "biped.cache"
+
     def __init__(self):
         """
-        Initializes the export path for the build cache.
-        Uses the user's home directory to ensure write permissions.
+        Ruta del cache del build: maya_tools/cache/<CACHE_FILE>, resuelta con
+        pathlib desde este fichero (utils -> scripts -> maya_tools) para que
+        funcione igual en Windows y Linux. Crea la carpeta cache si falta.
         """
-        complete_path = os.path.realpath(__file__)
-        relative_path = complete_path.split("\scripts")[0]
-        final_path = os.path.join(relative_path, "cache")   
-        self.build_path = os.path.join(final_path, "biped.cache")
+        cache_dir = pathlib.Path(__file__).resolve().parents[2] / "cache"
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        self.build_path = str(cache_dir / self.CACHE_FILE)
 
 
     def new_build(self):
@@ -88,11 +91,6 @@ class DataExportQuadruped(DataExportBiped):
     
     """
     Inherits from DataExportBiped to handle quadruped-specific data management.
+    Hoy no la usa nadie: el build de cuadrupedo escribe en biped.cache.
     """
-    def __init__(self):
-
-        super().__init__()
-        complete_path = os.path.realpath(__file__)
-        relative_path = complete_path.split("\scripts")[0]
-        final_path = os.path.join(relative_path, "cache")   
-        self.build_path = os.path.join(final_path, "quadruped.cache")
+    CACHE_FILE = "quadruped.cache"
