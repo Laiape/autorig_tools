@@ -1585,11 +1585,6 @@ class LegModule(object):
             aim_letter = "xyz"[aim_idx]
             signed_aim = aim_letter if ribbon_primary[aim_idx] > 0 else f"-{aim_letter}"
             up_letter = "xyz"[max(range(3), key=lambda k: abs(self.secondaryInputAxisRibbon[k]))]
-            root_m = om.MMatrix(cmds.getAttr(self.guides_matrices[0]))
-            k = 4 * "xyz".index(up_letter)
-            up_world = om.MVector(root_m[k], root_m[k + 1], root_m[k + 2])
-            up_sign = 1.0 if (up_world * self.lateral_ref) >= 0 else -1.0
-            up_object_vector = (self.lateral_ref.x * up_sign, self.lateral_ref.y * up_sign, self.lateral_ref.z * up_sign)
             params = [i / (self.skinning_joints_number - 1) for i in range(self.skinning_joints_number)]
             params[-1] = 0.95
 
@@ -1597,11 +1592,15 @@ class LegModule(object):
             for i in range(self.segment_count):
 
                 name = f"{self.module_name}{self.segment_names[i]}"
+                # up_slerp: el up de cada joint interpola por cuaternión entre el
+                # frame roll de inicio y el de fin del tramo, así el twist que
+                # extrae _roll_cv SE REPARTE por el segmento (con up fijo al
+                # masterwalk los cinco joints compartían up y el twist no viajaba).
                 segment_jnts, temp = ribbon.de_boor_ribbon(
                     cvs=(self.cv_nodes[i], self.bendy_ctls[i], self.cv_nodes[i + 1]),
                     aim_axis=signed_aim, up_axis=up_letter, num_joints=self.skinning_joints_number,
                     skeleton_grp=self.skeleton_grp, name=name, custom_parameter=params,
-                    up_object=self.masterwalk_ctl, up_object_vector=up_object_vector,
+                    up_slerp=True,
                 )
                 for t in temp:
                     cmds.delete(t)
