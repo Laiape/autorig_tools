@@ -1213,8 +1213,12 @@ def skeleton_hierarchy():
         return f[0] if f else None
 
     def _is_corrective(j):
-        n = j.split("|")[-1].lower()
-        return "corrective" in n or "ring" in n
+        # "Ring" con mayuscula: los anillos correctivos se llaman <zona>Ring00_JNT
+        # (L_elbowRing00_JNT). En minusculas tambien casaba L_ring00Skinning_JNT,
+        # asi que el anular entero se salia de la cadena y no llegaba a crearse
+        # ningun _ENV suyo (su padre es el GRP del dedo, no un joint).
+        n = j.split("|")[-1]
+        return "corrective" in n.lower() or "Ring" in n
 
     last_module_end = None
     for side, clean, jnts in modules:

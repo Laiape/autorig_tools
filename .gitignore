@@ -2,3 +2,5 @@
 **/__pycache__
 # 358MB, supera el limite de 100MB de GitHub (usar LFS si hace falta versionarlo)
 **/chihuahua_v001.ma
+# configuracion local de Claude Code (skills, settings): solo en local
+.claude/

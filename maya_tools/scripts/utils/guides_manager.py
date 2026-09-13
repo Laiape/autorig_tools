@@ -491,10 +491,19 @@ def get_guides(guide_export, parent=None):
                 chain.append(joint_exported)
 
                 if "children" in guides_data[name][guide_export]:
+                    # Cada hijo nace bajo SU padre guardado, no bajo el ultimo
+                    # creado: una cadena que se bifurca (un dedo con dos falanges
+                    # terminales) se reconstruia recta y perdia la rama. La lista
+                    # viene en orden padres-antes-que-hijos, asi que el padre ya
+                    # existe cuando toca colgar al hijo.
+                    created = {guide_export: joint_exported}
                     for child in guides_data[name][guide_export]["children"]:
+                        parent_name = guides_data[name].get(child, {}).get("parent")
+                        cmds.select(created.get(parent_name, chain[-1]))
                         child_joint = cmds.joint(name=child, r=5)
                         cmds.xform(child_joint, ws=True, m=guides_data[name][child]["joint_matrix"])
                         cmds.makeIdentity(child_joint, apply=True, r=True)
+                        created[child] = child_joint
                         chain.append(child_joint)
 
                 if parent:

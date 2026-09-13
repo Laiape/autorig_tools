@@ -22,6 +22,36 @@ _CUP_WEIGHTS = {
 }
 _CUP_MAX_RZ = -45  # degrees at Cup=10 for pinky
 
+# Fila de SDK por joint del dedo:
+# [Curl+, Curl-, Spread+, Spread-, Twist+, Twist-, Fan+, Fan-].
+# La fila 0 es el metacarpiano (en los dedos largos solo lo mueve Cup, de ahi el
+# None). Si un dedo trae menos guias las filas se toman desde la primera falange,
+# asi un dedo de una sola guia se anima como el 01; si trae mas, las de sobra
+# repiten la fila de la ultima falange.
+_MID_PHALANX = [-80, 18, 0, 0, 10, -10, 0, 0]
+_TIP_PHALANX = [-80, 15, 0, 0,  5,  -5, 0, 0]
+_SDK_ROWS = {
+    "thumb":  [[0, 0, 0, 0, 0, 0, 10, -10],
+               [-90, 20, -20,  20, 20, -20,   0,   0], _MID_PHALANX],
+    "index":  [None, [-90, 20, -25,  15, 20, -20,  30, -30], _MID_PHALANX, _TIP_PHALANX],
+    "middle": [None, [-90, 20,   2,  -2, 20, -20,  -2,   2], _MID_PHALANX, _TIP_PHALANX],
+    "ring":   [None, [-90, 20,  15, -10, 20, -20, -20,  20], _MID_PHALANX, _TIP_PHALANX],
+    "pinky":  [None, [-90, 20,  30, -15, 20, -20, -50,  50], _MID_PHALANX, _TIP_PHALANX],
+}
+
+
+def _fit_rows(rows, n):
+    """Ajusta la tabla de filas SDK a los niveles de falange que trae el dedo."""
+    extra = n - len(rows)
+    return rows + [rows[-1]] * extra if extra >= 0 else rows[1:1 + n]
+
+
+def _rows_for_depths(rows, depths):
+    """Fila SDK para cada joint segun su profundidad en el dedo. Las ramas
+    comparten fila: un 03 y un 13 cuelgan los dos del 02 y son falange 3."""
+    fitted = _fit_rows(rows, max(depths) + 1)
+    return [fitted[d] for d in depths]
+
 
 class FingersModule(object):
 
@@ -69,6 +99,7 @@ class FingersModule(object):
         self._ctl   = {n: [] for n in self.FINGER_NAMES}
         self._nodes = {n: [] for n in self.FINGER_NAMES}
         self._sdk   = {n: [] for n in self.FINGER_NAMES}
+        self._depth = {n: [] for n in self.FINGER_NAMES}
         self.skinning_joints = {n: [] for n in self.FINGER_NAMES}
 
         skin_trns = {
@@ -90,23 +121,35 @@ class FingersModule(object):
                 cmds.delete(end_joints)
             cmds.parent(chain[0], skin_trns[fname])
 
-            for i, joint in enumerate(chain):
+            # El dedo puede bifurcarse (dos falanges terminales sobre el mismo
+            # padre), asi que cada control cuelga del control de SU padre en la
+            # guia, no del anterior de la lista.
+            ctl_of, depth_of = {}, {}
+
+            for joint in chain:
                 cmds.select(clear=True)
+
+                parent = (cmds.listRelatives(joint, parent=True) or [None])[0]
+                if parent not in ctl_of:   # la raiz cuelga del grupo de skinning
+                    parent = None
 
                 fk_node, fk_ctl = curve_tool.create_controller(
                     name=joint.replace("_JNT", ""), offset=["GRP", "SDK"]
                 )
                 cmds.matchTransform(fk_node[0], joint, pos=True, rot=True)
 
-                if ctl_list:
-                    cmds.parent(fk_node[0], ctl_list[-1])
+                if parent:
+                    cmds.parent(fk_node[0], ctl_of[parent])
+
+                ctl_of[joint]   = fk_ctl
+                depth_of[joint] = 0 if parent is None else depth_of[parent] + 1
 
                 ctl_list.append(fk_ctl)
                 nodes_list.append(fk_node[0])
                 sdk_list.append(fk_node[1])
+                self._depth[fname].append(depth_of[joint])
 
-                prev = chain[i - 1] if i > 0 else None
-                matrix_manager.fk_constraint(joint, prev, False, None)
+                matrix_manager.fk_constraint(joint, parent, False, None)
 
                 self._lock(fk_ctl, ["sx", "sy", "sz", "v"])
                 cmds.xform(joint, m=om.MMatrix.kIdentity)
@@ -132,8 +175,7 @@ class FingersModule(object):
         )
         cmds.parent(self.finger_attributes_nodes[0], self.controllers_grp)
         temp = cmds.pointConstraint(
-            self._ctl["middle"][0], self._ctl["middle"][1],
-            self.finger_attributes_nodes[0], mo=False
+            *self._ctl["middle"][:2], self.finger_attributes_nodes[0], mo=False
         )
         cmds.delete(temp)
         self._lock(self.finger_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
@@ -173,61 +215,34 @@ class FingersModule(object):
         sep("THUMB_ATTRIBUTES")
         flt("Thumb_Curl"); flt("Thumb_Spread"); flt("Thumb_Twist"); flt("Thumb_Fan")
 
-        # ── Thumb ─────────────────────────────────────────────────────────────
-        self._sdk_cb(sdk["thumb"][0], thumb=[0, 0,   0,  0,  0,   0, 10, -10])
-        self._sdk_cb(sdk["thumb"][1], thumb=[-90, 20, -20, 20, 20, -20,  0,   0])
-        self._sdk_cb(sdk["thumb"][2], thumb=[-80, 18,   0,  0, 10, -10,  0,   0])
+        for fname in self.FINGER_NAMES:
+            prefix = "Thumb_" if fname == "thumb" else ""
+            rows   = _rows_for_depths(_SDK_ROWS[fname], self._depth[fname])
+            for node, row in zip(self._sdk[fname], rows):
+                if row is not None:
+                    self._sdk_cb(node, row, prefix)
 
-        # ── Index ─────────────────────────────────────────────────────────────
-        self._sdk_cb(sdk["index"][1], values=[-90, 20, -25,  15, 20, -20,  30, -30])
-        self._sdk_cb(sdk["index"][2], values=[-80, 18,   0,   0, 10, -10,   0,   0])
-        self._sdk_cb(sdk["index"][3], values=[-80, 15,   0,   0,  5,  -5,   0,   0])
-
-        # ── Middle ────────────────────────────────────────────────────────────
-        self._sdk_cb(sdk["middle"][1], values=[-90, 20,   2,  -2, 20, -20,  -2,   2])
-        self._sdk_cb(sdk["middle"][2], values=[-80, 18,   0,   0, 10, -10,   0,   0])
-        self._sdk_cb(sdk["middle"][3], values=[-80, 15,   0,   0,  5,  -5,   0,   0])
-
-        # ── Ring ──────────────────────────────────────────────────────────────
-        self._sdk_cb(sdk["ring"][1], values=[-90, 20,  15, -10, 20, -20, -20,  20])
-        self._sdk_cb(sdk["ring"][2], values=[-80, 18,   0,   0, 10, -10,   0,   0])
-        self._sdk_cb(sdk["ring"][3], values=[-80, 15,   0,   0,  5,  -5,   0,   0])
-
-        # ── Pinky ─────────────────────────────────────────────────────────────
-        self._sdk_cb(sdk["pinky"][1], values=[-90, 20,  30, -15, 20, -20, -50,  50])
-        self._sdk_cb(sdk["pinky"][2], values=[-80, 18,   0,   0, 10, -10,   0,   0])
-        self._sdk_cb(sdk["pinky"][3], values=[-80, 15,   0,   0,  5,  -5,   0,   0])
-
-        # ── Cup — metacarpal (sdk[0]) of each non-thumb finger ────────────────
+        # Cup - metacarpiano (sdk[0]) de los dedos que lo conserven. Un dedo con
+        # menos falanges no tiene metacarpiano que abarquillar.
         for fname, weight in _CUP_WEIGHTS.items():
+            if max(self._depth[fname]) + 1 < len(_SDK_ROWS[fname]):
+                continue
             rz_max = _CUP_MAX_RZ * weight
             cmds.select(sdk[fname][0])
             cmds.setDrivenKeyframe(at="rz", dv=0,   cd=f"{ctl}.Cup", v=0)
             cmds.setDrivenKeyframe(at="rz", dv=10,  cd=f"{ctl}.Cup", v=rz_max)
             cmds.setDrivenKeyframe(at="rz", dv=-10, cd=f"{ctl}.Cup", v=-rz_max)
 
-    def _sdk_cb(self, node, values=None, thumb=None):
+    def _sdk_cb(self, node, values, prefix=""):
         fa = self.finger_attributes_ctl
         cmds.select(node)
 
-        if values is not None:
-            for attr, cd, pos, neg in [
-                ("rz", "Curl",   values[0], values[1]),
-                ("ry", "Spread", values[2], values[3]),
-                ("rx", "Twist",  values[4], values[5]),
-                ("rz", "Fan",    values[6], values[7]),
-            ]:
-                cmds.setDrivenKeyframe(at=attr, dv=0,   cd=f"{fa}.{cd}", v=0)
-                cmds.setDrivenKeyframe(at=attr, dv=10,  cd=f"{fa}.{cd}", v=pos)
-                cmds.setDrivenKeyframe(at=attr, dv=-10, cd=f"{fa}.{cd}", v=neg)
-
-        if thumb is not None:
-            for attr, cd, pos, neg in [
-                ("rz", "Thumb_Curl",   thumb[0], thumb[1]),
-                ("ry", "Thumb_Spread", thumb[2], thumb[3]),
-                ("rx", "Thumb_Twist",  thumb[4], thumb[5]),
-                ("rz", "Thumb_Fan",    thumb[6], thumb[7]),
-            ]:
-                cmds.setDrivenKeyframe(at=attr, dv=0,   cd=f"{fa}.{cd}", v=0)
-                cmds.setDrivenKeyframe(at=attr, dv=10,  cd=f"{fa}.{cd}", v=pos)
-                cmds.setDrivenKeyframe(at=attr, dv=-10, cd=f"{fa}.{cd}", v=neg)
+        for attr, cd, pos, neg in [
+            ("rz", "Curl",   values[0], values[1]),
+            ("ry", "Spread", values[2], values[3]),
+            ("rx", "Twist",  values[4], values[5]),
+            ("rz", "Fan",    values[6], values[7]),
+        ]:
+            cmds.setDrivenKeyframe(at=attr, dv=0,   cd=f"{fa}.{prefix}{cd}", v=0)
+            cmds.setDrivenKeyframe(at=attr, dv=10,  cd=f"{fa}.{prefix}{cd}", v=pos)
+            cmds.setDrivenKeyframe(at=attr, dv=-10, cd=f"{fa}.{prefix}{cd}", v=neg)

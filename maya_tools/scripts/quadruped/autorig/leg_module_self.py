@@ -1,54 +1,4 @@
-"""
-Módulo de pierna de cuadrúpedo — implementación propia (en construcción).
-
-═══════════════════════════════════════════════════════════════════════════════
-ARQUITECTURA — el porqué antes del qué
-═══════════════════════════════════════════════════════════════════════════════
-Tres niveles, y cada cosa vive en el que le toca:
-
-  1. SUPERCLASE (LegModule)  Todo lo que es igual en cualquier cuadrúpedo:
-                             guías, cadena IK, controles, blend FK/IK, stretch,
-                             skinning.
-  2. SUBCLASES               SOLO cuando cambia la TOPOLOGÍA o el ALGORITMO.
-                             Aquí eso es el rol anatómico: delantera (escápula,
-                             sin cadera) vs trasera (cadera, doblez caudal).
-                             NO subclases por animal.
-  3. CONFIGURACIÓN (datos)   Cuando solo cambia el VALOR. Los parámetros por
-                             especie salen del .build, no de una clase.
-
-Por qué NO subclase por animal:
-  · Explosión combinatoria — front/back existe siempre, así que por animal daría
-    HorseFront, HorseBack, DogFront, DogBack. Cuatro clases para dos animales,
-    seis para tres, y la mitad duplicada.
-  · Estarías subclasificando VALORES. La diferencia real caballo/perro en la
-    pierna son números, no comportamiento. Para valores, datos.
-  · Esconde tu comparación. El TFG defiende que la anatomía determina los
-    parámetros: te interesa verlos JUNTOS en una tabla, no repartidos en clases.
-
-───────────────────────────────────────────────────────────────────────────────
-REGLA DE ORO DE LOS FLAGS
-───────────────────────────────────────────────────────────────────────────────
-    Un flag codifica un HECHO ANATÓMICO, no una preferencia de implementación.
-
-    BIEN  RECIPROCAL_COUPLING = True
-          -> el peroneo tercero équido es tendinoso, el acoplamiento
-             corvejón-babilla es obligatorio. Citable.
-    MAL   USE_LAYERED_IK = True
-          -> "cómo prefiero construirlo". Ese flag ya se probó y era peor que
-             el nativo.
-
-Si cada flag se remonta a una afirmación anatómica citable, la clase no se pudre
-Y la tabla "dato anatómico -> parámetro -> valor" del TFG sale sola del código.
-
-───────────────────────────────────────────────────────────────────────────────
-EL PIE VA COMPUESTO, NO HEREDADO
-───────────────────────────────────────────────────────────────────────────────
-Casco (un dedo, cadena lineal) y pata (varios dedos, se bifurca) son estructuras
-distintas -> clases distintas. Pero si las metes como eje de HERENCIA de la
-pierna vuelves a la explosión (FrontHoof, BackHoof, FrontPaw, BackPaw). El pie es
-una PIEZA que la pierna COMPONE. Dos subclases de pierna x dos de pie, y un
-tercer animal se añade con datos.
-"""
+"""Módulo de la extremidad del cuadrúpedo: superclase LegModule, subclases por tren (BackLegModule, FrontLegModule) y clases de pie (FootBase, HoofFoot, PawFoot)."""
 
 import maya.cmds as cmds
 import maya.mel as mel
@@ -71,62 +21,31 @@ reload(rig_manager)
 reload(ribbon)
 
 
-# ═════════════════════════════════════════════════════════════════════════════
-# SOLVERS
-# ═════════════════════════════════════════════════════════════════════════════
-
-SOLVER_RP     = "rp"       # RP de 2 huesos + SC para el resto (el port del bípedo)
-SOLVER_SPRING = "spring"   # ikSpringSolver sobre los 3 segmentos funcionales
-SOLVER_NODES  = "nodes"    # IK analítico por nodos (teorema del coseno)
-SOLVER_SC_RP_SC = "sc_rp_sc"  # SC húmero->codo + RP codo->fetlock + SC fetlock->cuartilla
+SOLVER_RP     = "rp"
+SOLVER_SPRING = "spring"
+SOLVER_NODES  = "nodes"
+SOLVER_SC_RP_SC = "sc_rp_sc"
 SOLVER_SC_RP_SC_CARPUS = "sc_rp_sc_carpus"
-SOLVER_RP_RP = "rp_rp"  # dos RP encadenados: codo y menudillo como bisagras, el carpo articula en la union  # como sc_rp_sc pero el SC alto ANCLA a la raiz: el carpo dobla
+SOLVER_RP_RP = "rp_rp"
 _AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
-    
+
 
 class LegModule(object):
+    """Sistema base de pierna: no se instancia directamente, se usan las subclases."""
+    LEG_PREFIX = "backLeg"
+    ROOT_JOINT = "Hip"
 
-    """
-    Sistema base de pierna. No se instancia directa: se usan las subclases.
-    """
+    FORWARD_AXIS = (0, 0, 1)
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # FLAGS DE CLASE — rol anatómico (topología), NO especie
-    # ─────────────────────────────────────────────────────────────────────────
-    # Cada flag lleva al lado el hecho anatómico que lo justifica. Si no puedes
-    # escribir ese comentario, el flag probablemente no debería existir.
+    PV_SIGN = 1
 
-    LEG_PREFIX = "backLeg"       # prefijo de las guías: backLeg / frontLeg
-    ROOT_JOINT = "Hip"           # primera guía de la cadena (Hip / Shoulder)
-
-    FORWARD_AXIS = (0, 0, 1)     # hacia dónde dobla la articulación intermedia.
-                                 # Trasera: caudal (corvejón atrás).
-                                 # Delantera: cranial (carpo adelante). ANATOMÍA.
-
-    PV_SIGN = 1                 # lado del pole vector respecto al plano.
-
-    PV_APEX_INDEX = 2            # Apex del PV: la articulación MEDIA del zigzag
-                                 # (corvejón/carpo), el punto de máxima
-                                 # separación de la línea raíz->MTP — ahí el PV
-                                 # define el plano sin ambigüedad. En el codo o
-                                 # la babilla el plano cae a mitad del zigzag y
-                                 # el solver reparte peor. setup_chain lo deriva
-                                 # con fallback y clamp para otras cadenas.
+    PV_APEX_INDEX = 2
 
     REPOSITION_IK_TO_GUIDES = True
-                                 # Si la cadena IK reposa EXACTAMENTE sobre las
-                                 # guías. Trasera sí (el corvejón ya marca el
-                                 # doblez). Delantera NO: su guía es casi recta y
-                                 # necesita el pre-bend desplazado para doblar
-                                 # en el sentido correcto.
 
-    RECIPROCAL_COUPLING = False  # Aparato recíproco: peroneo tercero + flexor
-                                 # digital superficial acoplan corvejón y babilla
-                                 # obligatoriamente. Trasera de ungulado: True.
-                                 # Cánido: el peroneo tercero es MUSCULAR, no
-                                 # obliga -> False. Delantera: no existe.
+    RECIPROCAL_COUPLING = False
 
-    FOOT_CLASS = None            # clase de pie compuesta (HoofFoot / PawFoot).
+    FOOT_CLASS = None
     STANDARD_JOINT_COUNT = 6
     IK_CONFIGS = {
         SOLVER_RP: [
@@ -141,35 +60,20 @@ class LegModule(object):
             (1, 3, "ikRPsolver"),
             (3, 4, "ikSCsolver"),
         ],
-        # como sc_rp_sc pero el SC alto ancla a la RAIZ ("root"): el codo no
-        # sigue al pie, asi que al recoger la mano el tramo codo->fetlock se
-        # comprime y el CARPO (medio del RP) dobla de verdad.
         SOLVER_SC_RP_SC_CARPUS: [
             (0, 1, "ikSCsolver", "root"),
             (1, 3, "ikRPsolver"),
             (3, 4, "ikSCsolver"),
         ],
-        # dos planos rotatorios que comparten el PV (el sagital del animal):
-        # RP1 dobla el codo, RP2 el menudillo, y el carpo articula como la
-        # union de ambas cadenas
         SOLVER_RP_RP: [
             (0, 2, "ikRPsolver"),
             (2, 4, "ikRPsolver"),
         ],
     }
 
-    
 
-    # ─────────────────────────────────────────────────────────────────────────
     def __init__(self):
-        """
-        Lee del build lo que necesita del resto del rig. NO hardcodees nombres:
-        todo por data_manager, que es el estándar del repo.
-            modules_GRP · skel_GRP · masterwalk_ctl
-
-        Guarda aquí también la convención de ejes (primary = aim, secondary = up).
-        """
-
+        """Lee del build lo que necesita del resto del rig."""
         self.modules = data_manager.DataExportBiped().get_data("basic_structure", "modules_GRP")
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
@@ -180,49 +84,9 @@ class LegModule(object):
         self.primaryInputAxisRibbon = (1, 0, 0)
         self.secondaryInputAxisRibbon = (0, 0, 1)
 
-    # ═════════════════════════════════════════════════════════════════════════
-    # ORQUESTACIÓN
-    # ═════════════════════════════════════════════════════════════════════════
     def make(self, side, solver=SOLVER_SPRING, skinning_joints_number=5,
              bendys=True, config=None):
-        """
-        Punto de entrada. Construye la pierna entera.
-
-        Args:
-            side (str): 'L' | 'R'.
-            solver (str): clave de IK_CONFIGS ("rp" | "spring"; "nodes" aún sin
-                          integrar en el dispatch). Es la variable del
-                          experimento del cap. 8; llega del .build (leg_solver).
-            skinning_joints_number (int): joints de skinning por segmento bendy.
-            bendys (bool): ribbons por segmento.
-            config (dict|None): parámetros POR ESPECIE leídos del .build
-                          (muelle sí/no, acoplamiento, calibración…).
-                          None -> defaults de clase.
-
-        Crea los tres grupos del módulo como el resto del repo:
-            module_trn      (bajo modules_GRP)
-            skeleton_grp    (bajo skel_GRP)
-            controllers_grp (bajo masterwalk_ctl)
-
-        ORDEN DE CONSTRUCCIÓN (el que ejecuta este método hoy):
-            load_guides          guías de pierna + pivotes del pie + settings
-            orient_guides        frames horneados (world/local) por guía
-            setup_chain          índices, plano y bend_dir; genérico por índice
-            create_chains        cadena de joints IK
-            controllers_creation settings + FK + IK + pivotes del pie reverso
-            ik_setup             <- AQUÍ conmuta el solver (fichas IK_CONFIGS)
-            ik_stretch_soft      stretch + soft del lado IK
-            ik_calibration       barrido de twist del spring: reposo < 0.002
-            fk_setup             FK stretch por matrices
-            blend_setup          blend FK/IK por joint (salida = plugs)
-            reciprocal_coupling  babilla->corvejón en FK (si el flag lo pide)
-            foot.build           el pie COMPUESTO: pivotes reversos + roll
-            bendys_setup         bendy ctl por segmento
-            skinning_setup       ribbons + joints del pie
-            publish              claves para space switches + limpieza
-
-        """
-
+        """Punto de entrada. Construye la pierna entera."""
         self.side = side
         self.solver = solver
         self.skinning_joints_number = skinning_joints_number
@@ -234,7 +98,6 @@ class LegModule(object):
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Skinning_GRP", ss=True, p=self.skel_grp)
         self.controllers_grp = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}Controllers_GRP", ss=True, p=self.masterwalk_ctl)
 
-        # Llamar a los métodos
         self.load_guides()
         self.orient_guides()
         self.setup_chain()
@@ -245,16 +108,11 @@ class LegModule(object):
         self.ik_calibration()
         self.fk_setup()
         self.blend_setup()
-        # el acoplamiento es un VALOR por especie (peroneo tercero tendinoso o
-        # muscular): manda el .build; el flag de clase queda como default
-        # anatomico del tren (ungulado True)
         settings = guides_manager.rig_manager.build_rig_from_data(
             guides_manager.rig_manager.get_character_name_from_build()) or {}
         coupling = settings.get("reciprocal_coupling")
         if self.RECIPROCAL_COUPLING if coupling is None else bool(coupling):
             self.reciprocal_coupling()
-        # el tipo de pie tambien es VALOR por especie: casco (ungulado) o
-        # pata digitigrada (canido); manda el .build, fallback al de la clase
         foot_type = settings.get("foot_type")
         if foot_type is None:
             foot_cls = self.FOOT_CLASS
@@ -268,34 +126,11 @@ class LegModule(object):
         self.skinning_setup()
         self.publish()
 
-    # ═════════════════════════════════════════════════════════════════════════
-    # GUÍAS Y CADENA
-    # ═════════════════════════════════════════════════════════════════════════
     def load_guides(self):
-        """
-        Carga del .guides del personaje: la cadena de la pierna (parentada al
-        módulo), los locators de pivotes del pie reverso (bankOut/bankIn/heel,
-        en self.reverse_foot_locators) y el locator del settings.
-
-        OJO: guides_manager.get_guides() CREA los joints leyendo el fichero JSON;
-        NO busca en la escena, y cuando falla NO lanza excepción — devuelve None
-        (por eso los pivotes se comprueban por valor, no por try/except).
-        """
-        # Get the joint guides
+        """Carga las guías del personaje: la cadena de la pierna y los pivotes del pie."""
         chain = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}{self.ROOT_JOINT}_JNT")
 
-        # Las guias de DEDOS cuelgan de la cuartilla (colocacion natural), pero
-        # el export aplana la jerarquia y get_guides recrea TODO encadenado
-        # linealmente: los dedos quedan insertados en mitad de la cadena y el
-        # Tip colgando de la ultima falange. La cadena de la pierna es la
-        # columna SIN dedos: se re-encadena limpia (parent conserva el mundo),
-        # se borran los duplicados de dedos (PawFoot los trae por su cuenta
-        # desde el fichero) y los indices del modulo quedan como siempre.
         if any("Digit" in j for j in chain):
-            # el orden plano del fichero no es fiable (los dedos se exportan en
-            # orden de creacion): la columna se ordena con el campo `parent`
-            # REAL del fichero, se recuelga fisicamente (parent conserva el
-            # mundo) y los duplicados de dedos se borran
             character = guides_manager.rig_manager.get_character_name_from_build()
             _, all_guides = guides_manager._load_guides_file(character)
             gdata = all_guides.get(character, {})
@@ -319,33 +154,11 @@ class LegModule(object):
         self.leg_chain = chain
         cmds.parent(self.leg_chain[0], self.module_trn)
 
-        # Get the settings guide (opcional: el caballo no lo trae en sus guias)
         self.settings_guide = guides_manager.get_guides(f"{self.side}_{self.LEG_PREFIX}Settings_LOCShape")
 
-        
+
     def orient_guides(self):
-        """
-        Frames de cada guía a partir de sus POSICIONES, vía
-        guides_manager.orient_guides: los calcula en Python y los HORNEA en un
-        nodo network (nada de aimMatrix vivos), con el eje primario espejado en
-        el lado R. La última guía conserva la rotación de la anterior con su
-        propia posición — necesaria para los pivotes del pie reverso aunque no
-        genere control FK.
-
-        Deja en self:
-            guides_matrices / guides_world_matrices   plugs world por guía
-            point_matrices                            plugs solo-posición
-            guides_local_matrices                     MMatrix relativas al padre
-                                                      (horneadas: guías estáticas)
-            reverse_foot_world_matrices               matrices de los pivotes
-            settings_world_matrix                     matriz del settings
-
-        Convención de ejes: el primario baja por el hueso (aim a la guía
-        siguiente), el secundario al lateral FIJO del personaje — referencia
-        fija y no el siguiente joint, que es lo que evita que la cadena se
-        retuerza.
-        """
-
+        """Frames de cada guía a partir de sus posiciones, vía guides_manager.orient_guides."""
         self.primary_axis = self.primaryInputAxis if self.side == "L" else tuple(-v for v in self.primaryInputAxis)
         self.secondary_axis = self.secondaryInputAxis
         lat = om.MVector(*self.primary_axis) ^ om.MVector(*self.secondary_axis)
@@ -358,7 +171,6 @@ class LegModule(object):
             secondaryInputAxis=self.secondary_axis,
         )
 
-        # Set the guides matrices for the chain
         self.guides_world_matrices = self.guides_matrices
 
         self.ctl_world_matrices = [self.ctl_matrix(cmds.getAttr(m)) for m in self.guides_matrices]
@@ -370,20 +182,11 @@ class LegModule(object):
                 local_matrix = w_matrix * self.ctl_world_matrices[i - 1].inverse()
             self.guides_local_matrices.append(local_matrix)
 
-        # Set the settings guide matrix (None si el personaje no trae la guia)
         self.settings_world_matrix = (cmds.xform(self.settings_guide, q=True, ws=True, m=True)
                                       if self.settings_guide else None)
 
     def ctl_matrix(self, matrix, world_frame=False):
-        """
-        Frame de colocación de un control. En R los controles van ESPEJADOS
-        (det -1, eje principal a -1): el mismo valor de canal produce el
-        movimiento espejo del lado L.
-          - frames de GUIA R (vienen autorados como rotación 180 de L): los
-            tres ejes negados.
-          - frames de MUNDO (point matrix, identidad): solo el eje X negado.
-        La traslación no se toca.
-        """
+        """Frame de colocación de un control; en el lado R los controles van espejados."""
         m = om.MMatrix(matrix)
         if self.side != "R":
             return m
@@ -394,31 +197,11 @@ class LegModule(object):
                            -m[8], -m[9], -m[10], 0, m[12], m[13], m[14], 1])
 
     def setup_chain(self):
-        """
-        Índices y matrices de la cadena. GENÉRICO POR ÍNDICE — no hardcodees
-        números de hueso: trasera y delantera tienen distinta longitud, y el
-        perro y el caballo también.
-
-        Calcula:
-            leg_joints     la cadena menos la punta
-            plant_index    la pisada (cuartilla / falange proximal)
-            leg_end_index  fin del IK principal = la articulación MTP
-                           (metacarpo/metatarsofalángica). ES EL MISMO HUESO en
-                           el ungulado y en el digitígrado — lo que el équido
-                           llama menudillo. A partir de ahí el caballo tiene un
-                           dedo y el perro cuatro.
-            plane_normal   plano real de la cadena (para el pole vector)
-            bend_dir       sentido del doblez, derivado de FORWARD_AXIS
-
-        TRAMPA MEDIDA: el pre-bend que siembra el doblez NO debe mutar las
-        posiciones de guía. Si lo hace, se propaga a los FK, a la calibración y
-        al skinning, y acabas con una pose de REPOSO doblada por dentro del
-        hueso. Siembra sobre una COPIA que solo alimente al solver.
-        """
-        self.leg_joints = self.leg_chain[:-1]  # todo menos el Tip
+        """Índices y matrices de la cadena, genéricos por índice."""
+        self.leg_joints = self.leg_chain[:-1]
         self.tip_joint = self.leg_chain[-1]
-        self.plant_index = len(self.leg_chain) - 2  # Pastern (pisada)
-        self.leg_end_index = max(2, len(self.leg_chain) - 3)  # Fetlock (fin del IK principal)
+        self.plant_index = len(self.leg_chain) - 2
+        self.leg_end_index = max(2, len(self.leg_chain) - 3)
 
         self.pv_apex_index = self.PV_APEX_INDEX if len(self.leg_chain) == self.STANDARD_JOINT_COUNT else 1
         self.pv_apex_index = max(1, min(self.pv_apex_index, self.leg_end_index - 1))
@@ -449,14 +232,10 @@ class LegModule(object):
         bend_dir.normalize()
         if (bend_dir * om.MVector(*self.FORWARD_AXIS)) < 0:
             bend_dir = -bend_dir
-        self.bend_dir = bend_dir  
+        self.bend_dir = bend_dir
 
     def create_chains(self):
-        """
-        Cadena de joints IK a partir de los frames, encadenada por parentesco y
-        con las transformaciones congeladas (makeIdentity) para que las
-        rotaciones locales arranquen limpias.
-        """
+        """Cadena de joints IK a partir de los frames, con las transformaciones congeladas."""
         cmds.select(clear=True)
         self.ik_chain = []
 
@@ -472,37 +251,13 @@ class LegModule(object):
             cmds.makeIdentity(ik_jnt, apply=True, rotate=True)
 
         cmds.parent(self.ik_chain[0], self.module_trn)
-        
 
-    # ═════════════════════════════════════════════════════════════════════════
-    # CONTROLES
-    # ═════════════════════════════════════════════════════════════════════════
+
     def controllers_creation(self):
-        """
-        Todos los controles del módulo, por matrices (nada de constraints):
-
-        - Settings: canales bloqueados + switchIkFk (0 = IK), que conduce la
-          visibilidad de FK directa y la de IK por un reverse.
-        - FK: uno por joint de la pierna (sin el Tip), en cascada, colocados
-          con la matriz LOCAL de su guía en el offsetParentMatrix del grupo.
-          Guarda fk_controllers / fk_grps / fk_offs en paralelo.
-        - IK: el rol "ankle" es el MASTER del pie — el ctl del FETLOCK
-          (point matrix = orientado a mundo): lleva los atributos del pie y
-          contiene la pila de pivotes del pie reverso. No hay control en el
-          carpo/corvejón. El ball (Foot, sintético) vive en el MISMO punto que
-          el fetlock, dentro del master a través de los pivotes: es lo que lee
-          el handle manager y lo que rota el casco. Pv aparte.
-          Acceso por ROL: self.ik_ctl["ball"] / ik_grp["pv"].
-
-        Bloquea lo que el animador no debe tocar: escala y visibilidad siempre;
-        en FK también la traslación.
-        """
-        # _____ Settings controller ____________________________________________
+        """Todos los controles del módulo, colocados por matrices."""
         self.settings_grp, self.settings_ctl = curve_tool.create_controller(name=f"{self.side}_{self.LEG_PREFIX}Settings", offset=["GRP"], locked_attrs=["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"], parent=self.controllers_grp, matrix=self.settings_world_matrix)
-        cmds.addAttr(self.settings_ctl, longName="switchIkFk", niceName="Switch IK ------> FK", attributeType="float", defaultValue=0, maxValue=1, minValue=0, keyable=True) # Ik default
-        # cmds.setAttr(f"{self.settings_ctl}.switchIkFk", keyable=True, channelBox=True, lock=False)
-        
-        # _____ Fk controllers creation ____________________________________________
+        cmds.addAttr(self.settings_ctl, longName="switchIkFk", niceName="Switch IK ------> FK", attributeType="float", defaultValue=0, maxValue=1, minValue=0, keyable=True)
+
         fk_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}FkControllers_GRP", ss=True, p=self.controllers_grp)
 
         cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{fk_controllers_trn}.visibility")
@@ -521,10 +276,8 @@ class LegModule(object):
             self.fk_controllers.append(fk_ctl)
             self.fk_grps.append(fk_grp[0])
             self.fk_offs.append(fk_grp[1])
-            # Freeze all controllers
             cmds.xform(fk_grp[0], m=om.MMatrix.kIdentity)
 
-        # _____ Ik controllers creation ____________________________________________
         ik_controllers_trn = cmds.createNode("transform", name=f"{self.side}_{self.LEG_PREFIX}IkControllers_GRP", ss=True, p=self.controllers_grp)
         reverse_vis_ik = cmds.createNode("reverse", name=f"{self.side}_{self.LEG_PREFIX}Vis_REV")
         cmds.connectAttr(f"{self.settings_ctl}.switchIkFk", f"{reverse_vis_ik}.inputX")
@@ -534,7 +287,6 @@ class LegModule(object):
         self.ik_ctl = {}
         self.ik_grp = {}
 
-        # root
         root_grps, root_ctl = curve_tool.create_controller(
             name=self.leg_chain[0].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["v"],
@@ -544,7 +296,6 @@ class LegModule(object):
         self.ik_ctl["root"] = root_ctl
         self.ik_grp["root"] = root_grps[0]
 
-        # ankle
         ankle_grps, ankle_ctl = curve_tool.create_controller(
             name=self.leg_chain[self.leg_end_index].replace("_JNT", "Ik"),
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
@@ -554,7 +305,6 @@ class LegModule(object):
         self.ik_ctl["ankle"] = ankle_ctl
         self.ik_grp["ankle"] = ankle_grps[0]
 
-        # ball
         ball_grps, ball_ctl = curve_tool.create_controller(
             name=f"{self.side}_{self.LEG_PREFIX}Foot",
             offset=["GRP", "OFF", "ANM"], locked_attrs=["sx", "sy", "sz", "v"],
@@ -574,20 +324,7 @@ class LegModule(object):
 
 
     def fk_setup(self):
-        """
-        FK STRETCH por matrices. La cascada FK en sí ya quedó montada en
-        controllers_creation (el blend lee el worldMatrix del control — no hay
-        cadena FK de joints); aquí cada control recibe un atributo Stretch que
-        reescala la traslación del grupo del SIGUIENTE control, reconstruyendo
-        su offsetParentMatrix con un fourByFourMatrix.
-
-        APLICADO AQUÍ (la trampa que costó un bug de 175u en el lado R): la
-        longitud de reposo sale de LA MISMA CELDA de la matriz que se
-        reconstruye (relative[12] -> in30), no se recalcula aparte — así no hay
-        signo "de espejo" que adivinar y esa clase de bug desaparece entera.
-        """
-
-        # Fk stretch
+        """Stretch del FK por matrices."""
         for i, ctl in enumerate(self.fk_controllers[:-1]):
 
             cmds.addAttr(self.fk_controllers[i], longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
@@ -597,8 +334,8 @@ class LegModule(object):
             target_node = self.fk_grps[i + 1]
             relative = cmds.getAttr(f"{target_node}.offsetParentMatrix")
             rest_length = relative[12]
-            
-            label = f"Fk0{i}"  # por indice: sin nombre de hueso y sin duplicar el prefijo
+
+            label = f"Fk0{i}"
             mult_node = cmds.createNode("multiply", n=f"{self.side}_{self.LEG_PREFIX}{label}Stretch_MUL", ss=True)
             cmds.connectAttr(f"{ctl}.Stretch", f"{mult_node}.input[0]")
             cmds.setAttr(f"{mult_node}.input[1]", rest_length)
@@ -610,26 +347,8 @@ class LegModule(object):
             cmds.connectAttr(f"{mult_node}.output", f"{fbf}.in30", force=True)
             cmds.connectAttr(f"{fbf}.output", f"{target_node}.offsetParentMatrix", force=True)
 
-    # ═════════════════════════════════════════════════════════════════════════
-    # IK — el corazón del experimento
-    # ═════════════════════════════════════════════════════════════════════════
     def ik_setup(self):
-        """
-        Monta el IK según la config pedida. Este método es lo que hace que el
-        capítulo 8 sea un EXPERIMENTO y no una demo: misma pierna, mismas
-        guías, misma pose, solo cambia esto.
-
-        Hace dos cosas:
-        1. IK Handle Manager — el objetivo REAL del IK, común a todas las
-           configs: offset horneado ankle->ball en reposo x worldMatrix vivo
-           del ball (mover ankle O ball mueve el objetivo).
-        2. Despacha por FICHAS: recorre IK_CONFIGS[self.solver] y por cada
-           (start, end, solver) llama a _create_handle. Una combinación nueva
-           es una entrada más en el dict, cero código.
-
-        La config "nodes" NO pasa por el dispatch: entra por su rama previa
-        (_ik_nodes) porque no crea handles — es una red de matrices pura.
-        """
+        """Monta el IK según la configuración de IK_CONFIGS pedida."""
         ball_ctl = self.ik_ctl["ball"]
         end_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.leg_end_index]))
         ball_wm = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
@@ -651,14 +370,12 @@ class LegModule(object):
 
         self.ik_handles = []
 
-        # config de nodos: sin handles ni constraint
         if self.solver == SOLVER_NODES:
             cmds.setAttr(f"{self.ik_chain[0]}.visibility", 0)
             self.pole_vector_setup()
             self._ik_nodes()
             return
 
-        # Create the solver based on the argument given
         layers = self.IK_CONFIGS.get(self.solver)
         if layers is None:
             cmds.warning(f"[leg_module_self] solver '{self.solver}' sin ficha en IK_CONFIGS; usando 'spring'.")
@@ -669,18 +386,14 @@ class LegModule(object):
             anchor = layer[3] if len(layer) > 3 else "foot"
             self._create_handle(start, end, solver, self._end_target(end, anchor))
             self.ik_handle_solvers.append(solver)
-        # handle PRINCIPAL (PV, twist, soft, bias): el primero que no sea SC
         self.main_handle = next((h for h, sol in zip(self.ik_handles, self.ik_handle_solvers)
                                  if sol != "ikSCsolver"), self.ik_handles[0])
 
-        # primer solve sin constraint: el spring captura su referencia de
-        # plano en la primera evaluacion, y debe hacerlo en el reposo limpio
         for jnt in self.ik_chain:
             cmds.getAttr(f"{jnt}.worldMatrix[0]")
 
         self.pole_vector_setup()
 
-        # bias del doblez: los dos slots del springAngleBias complementarios
         main_hdl = self.main_handle
         if cmds.attributeQuery("springAngleBias", node=main_hdl, exists=True):
             idx = cmds.getAttr(f"{main_hdl}.springAngleBias", multiIndices=True) or []
@@ -691,8 +404,7 @@ class LegModule(object):
                 cmds.connectAttr(bias_plug, f"{main_hdl}.springAngleBias[{idx[0]}].springAngleBias_FloatValue")
                 cmds.connectAttr(f"{bias_rev}.outputX", f"{main_hdl}.springAngleBias[{idx[-1]}].springAngleBias_FloatValue")
 
-        # canales de los handles clavados a 0 por conexion
-        cmds.loadPlugin("lookdevKit", quiet=True)  # floatConstant vive ahi
+        cmds.loadPlugin("lookdevKit", quiet=True)
         freeze_fcn = cmds.createNode("floatConstant", name=f"{self.module_name}HandleFreeze_FCN", ss=True)
         cmds.setAttr(f"{freeze_fcn}.inFloat", 0)
         for handle in self.ik_handles:
@@ -700,14 +412,7 @@ class LegModule(object):
                 cmds.connectAttr(f"{freeze_fcn}.outFloat", f"{handle}.{attr}")
 
     def bend_bias_attr(self):
-        """
-        Reparto del doblez entre las dos articulaciones interiores: una cadena
-        de 3 huesos con raíz y pie clavados tiene UN grado de libertad
-        redundante, y este atributo es ese DOF. 0.5 = reparto natural del
-        solver (el reposo no se mueve); subirlo carga el doblez arriba
-        (babilla/codo), bajarlo abajo (corvejón/carpo). Mismo dial en spring
-        (springAngleBias) y en nodos (la cuerda).
-        """
+        """Reparto del doblez entre las dos articulaciones interiores."""
         foot_ctl = self.ik_ctl["ankle"]
         cmds.addAttr(foot_ctl, longName="BEND", niceName="BEND ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{foot_ctl}.BEND", keyable=False, channelBox=True, lock=True)
@@ -715,16 +420,7 @@ class LegModule(object):
         return f"{foot_ctl}.Bend_Bias"
 
     def _end_target(self, end_index, anchor="foot"):
-        """
-        Objetivo de un handle segun de que cuelga su articulacion final:
-          - "foot": reposo x ball_rest^-1 x ball vivo (sigue al pie). Para el
-            handle principal y los SC del pie.
-          - "root": reposo x root_rest^-1 x root vivo (sigue a la raiz de la
-            pierna). Para un SC intermedio que debe quedar RIGIDO al cuerpo (no
-            arrastrarse con el pie): asi el tramo de abajo puede comprimirse y
-            doblar la articulacion del RP.
-        En reposo ambos son exactos (los offsets se hornean sobre las guias).
-        """
+        """Objetivo de un handle según de qué cuelga su articulación final."""
         key = (end_index, anchor)
         if key in self._end_targets:
             return self._end_targets[key]
@@ -739,15 +435,7 @@ class LegModule(object):
         return self._end_targets[key]
 
     def _create_handle(self, start_index, end_index, solver, target_plug):
-        """
-        Un ikHandle del joint start al end de la cadena IK, con el objetivo
-        conectado a su offsetParentMatrix. Carga el plugin del spring si la
-        ficha lo pide y acumula en self.ik_handles.
-
-        El handle nace con la traslacion del efector en canales: se aparca y
-        se ponen a 0 ANTES de conectar el objetivo al opm, o queda doblado y
-        el spring cachea el plano con esa posicion.
-        """
+        """Un ikHandle del joint start al end de la cadena IK, con el objetivo conectado a su offsetParentMatrix."""
         if solver == "ikSpringSolver":
             cmds.loadPlugin("ikSpringSolver", quiet=True)
             if not cmds.objExists("ikSpringSolver"):
@@ -767,22 +455,7 @@ class LegModule(object):
         return ik_handle
 
     def pole_vector_setup(self):
-        """
-        Pole vector del handle PRINCIPAL (ik_handles[0]) — solo uno: el SC del
-        pie lo ignora y en RP el segundo handle no lo necesita.
-
-        El control Pv se coloca geometricamente FUERA del plano, en el apex
-        (pv_apex_index: la articulacion media del zigzag) + bend_dir * media
-        longitud * PV_SIGN — sobre la direccion automatica del solver: con los
-        preferred angles puestos, el poleVectorConstraint asi colocado no mueve
-        el reposo (patron _place_pv de la referencia).
-
-        La posicion va al offsetParentMatrix del GRUPO como CONEXION
-        (composeMatrix): canales limpios, y space_switches la lee como base del
-        sistema de espacios. El PV sigue al PIE por defecto (walk cycle sin
-        perseguirlo a mano), con root como alternativa y el masterwalk como
-        espacio maestro del propio switch.
-        """
+        """Pole vector del handle principal."""
         apex_p = self.world_positions[self.pv_apex_index]
         pv_pos = apex_p + self.bend_dir * (self.leg_line_len * 0.5) * self.PV_SIGN
 
@@ -800,11 +473,8 @@ class LegModule(object):
             pv=True,
         )
 
-        # el constraint el ultimo, con el PV ya en su red definitiva
         cmds.getAttr(f"{self.ik_ctl['pv']}.worldMatrix[0]")
         if self.ik_handles:
-            # todos los handles con plano rotatorio comparten el PV: el plano
-            # sagital es uno solo (fichas con varios RP, p. ej. rp_rp)
             for hdl, sol in zip(self.ik_handles, self.ik_handle_solvers):
                 if sol != "ikSCsolver":
                     cmds.poleVectorConstraint(self.ik_ctl["pv"], hdl)
@@ -832,61 +502,25 @@ class LegModule(object):
             cmds.setAttr(f"{shape}.isHistoricallyInteresting", 0)
 
     def _ik_nodes(self):
-        """
-        CONFIG C — IK analítico por nodos (teorema del coseno).
-
-        Es tu aportación del cap. 6.2. Ventaja teórica: cacheable, paralelizable,
-        sin plugin. Coste: el polo vector y el up vector hay que resolverlos a
-        mano.
-
-        DOS TRIÁNGULOS ENCADENADOS al mismo objetivo, en el mismo plano (el
-        del pole vector):
-            1. lados (fémur, CUERDA) desde la raíz  -> coloca la babilla
-            2. lados (tibia, caña) desde la babilla -> coloca el corvejón
-        La CUERDA (babilla->objetivo) es la ley de reparto del doblez — el
-        papel del springAngleBias en el spring nativo. Es VIVA: escala con la
-        distancia raíz->objetivo (a distancia de reposo vale la cuerda de
-        reposo -> reposo exacto sin calibración) y se clampa al rango físico
-        de tibia+caña. Con cuerda FIJA el ángulo del corvejón queda congelado
-        y la config se comporta como RP+SC, no como spring.
-
-        Salida: self.nodes_ik_world (plugs de matriz world por joint) que el
-        blend_setup consume en lugar de la cadena ik.
-
-        Mídelo honestamente. El resultado puede perfectamente ser que el nativo
-        ya lo resuelve mejor — y eso, MEDIDO, es un resultado publicable, no un
-        fracaso. Un TFG que reporta un resultado negativo con datos es más
-        sólido que uno que solo enseña lo que le salió bien.
-
-        Stretch y soft los conduce ik_stretch_soft: las longitudes de la red
-        son plugs (floatConstant) que el stretch multiplica, y el soft
-        recoloca el objetivo que lee la red.
-
-        Bend_Bias empuja la cuerda (reparto animable, análogo del
-        springAngleBias); Twist (attr en el master) gira el plano del solve
-        alrededor de la línea raíz->objetivo; los signos del doblez se miden
-        de las guías (verificados en pose extrema por la suite).
-        """
+        """IK analítico por nodos (teorema del coseno)."""
         cmds.loadPlugin("matrixNodes", quiet=True)
         cmds.loadPlugin("lookdevKit", quiet=True)
 
         n = self.module_name
         p = self.world_positions
         end = self.leg_end_index
-        a_len = (p[1] - p[0]).length()            # fémur / húmero+radio según cadena
-        b_len = (p[2] - p[1]).length()            # tibia
-        c_len = (p[end] - p[2]).length()          # caña
-        q_len = (p[end] - p[1]).length()          # cuerda de reposo
-        d_rest = (p[end] - p[0]).length()         # distancia raíz->objetivo de reposo
+        a_len = (p[1] - p[0]).length()
+        b_len = (p[2] - p[1]).length()
+        c_len = (p[end] - p[2]).length()
+        q_len = (p[end] - p[1]).length()
+        d_rest = (p[end] - p[0]).length()
 
-        # ── helpers de red ──────────────────────────────────────────────────
         def _dcm(label, matrix_plug):
             node = cmds.createNode("decomposeMatrix", name=f"{n}{label}_DCM", ss=True)
             cmds.connectAttr(matrix_plug, f"{node}.inputMatrix")
             return f"{node}.outputTranslate"
 
         def _f(label, op, in_a, in_b):
-            # floatMath
             node = cmds.createNode("floatMath", name=f"{n}{label}_FLM", ss=True)
             cmds.setAttr(f"{node}.operation", op)
             for attr, v in (("floatA", in_a), ("floatB", in_b)):
@@ -964,7 +598,7 @@ class LegModule(object):
                        _f("NodesChordExtGain", 2, ext_t, _f("NodesChordExtSpan", 1, bc_sum, q_len)))
 
         chord_cnd = cmds.createNode("condition", name=f"{n}NodesChord_CND", ss=True)
-        cmds.setAttr(f"{chord_cnd}.operation", 2)  # d > d_rest -> tramo de extensión
+        cmds.setAttr(f"{chord_cnd}.operation", 2)
         cmds.connectAttr(d1_raw, f"{chord_cnd}.firstTerm")
         cmds.setAttr(f"{chord_cnd}.secondTerm", d_rest)
         cmds.connectAttr(chord_ext, f"{chord_cnd}.colorIfTrueR")
@@ -972,7 +606,6 @@ class LegModule(object):
 
         chord = _f("NodesChordClampHi", 4, _f("NodesChordClampLo", 5, f"{chord_cnd}.outColorR", bc_lo), bc_hi)
 
-        # bias
         bias_plug = self.bend_bias_attr()
         up_t = _f("NodesBiasUpT", 2, _f("NodesBiasUpMax", 5, _f("NodesBiasUp", 1, bias_plug, 0.5), 0.0), 2.0)
         dn_t = _f("NodesBiasDnT", 2, _f("NodesBiasDnMax", 5, _f("NodesBiasDn", 1, 0.5, bias_plug), 0.0), 2.0)
@@ -986,16 +619,12 @@ class LegModule(object):
         reach_hi = _f("NodesBiasReachHi", 1, _f("NodesBiasDA3", 0, d1_raw, len_a), 1e-3)
         chord = _f("NodesBiasReachMax", 5, _f("NodesBiasReachMin", 4, chord, reach_hi), reach_lo)
 
-        # alcance del triángulo 1: |a-q| < d < a+q
         aq_hi = _f("NodesD1Hi", 1, _f("NodesLenAQ", 0, len_a, chord), 1e-3)
         aq_lo = _f("NodesD1Lo", 0,
                    _f("NodesLenAQDifAbs", 5, _f("NodesLenAQDif1", 1, len_a, chord),
                       _f("NodesLenAQDif2", 1, chord, len_a)), 1e-3)
         d1 = _f("NodesD1Max", 4, _f("NodesD1Min", 5, d1_raw, aq_lo), aq_hi)
         u1 = _scale("NodesU1", _sub("NodesAD", D, A), _f("NodesD1Inv", 3, 1.0, d1_raw))
-        # Twist: gira el plano del solve alrededor de la línea raíz->objetivo
-        # (el equivalente del .twist del ikHandle). Rota el vector hacia el PV
-        # con un quaternion eje-ángulo (eje = û1 vivo) antes de armar el plano.
         cmds.loadPlugin("quatNodes", quiet=True)
         twist_ctl = self.ik_ctl["ankle"]
         cmds.addAttr(twist_ctl, longName="Twist", attributeType="doubleAngle", defaultValue=0, keyable=True)
@@ -1014,8 +643,7 @@ class LegModule(object):
         v1 = _cross("NodesV1", n_hat, u1)
 
         def _bend_point(label, root_pt, dist_plug, u_dir, v_dir, side_a, side_b, bend_sign):
-            """Ley de cosenos: punto doblado a side_a del root, en el plano (û,v̂).
-            side_a/side_b aceptan valor o plug (las longitudes vienen del stretch)."""
+            """Ley de cosenos: punto doblado a side_a del root, en el plano (û,v̂)."""
             d2 = _f(f"{label}DistSq", 2, dist_plug, dist_plug)
             a2 = _f(f"{label}ASq", 2, side_a, side_a)
             b2 = _f(f"{label}BSq", 2, side_b, side_b)
@@ -1032,8 +660,6 @@ class LegModule(object):
             lift = _scale(f"{label}Lift", v_dir, lift_len)
             return _add(f"{label}Point", [root_pt, along, lift])
 
-        # signo de cada doblez medido en las guías (lado de la línea en el
-        # plano del Pv)
         line_u = (p[end] - p[0]).normal()
         pv_p = om.MVector(cmds.xform(self.ik_ctl["pv"], q=True, ws=True, t=True))
         plane_v = (line_u ^ (pv_p - p[0])) ^ line_u
@@ -1044,10 +670,8 @@ class LegModule(object):
         plane_v2.normalize()
         sign_2 = 1.0 if ((p[2] - p[1]) * plane_v2) >= 0 else -1.0
 
-        # triángulo 1
         B = _bend_point("NodesT1", A, d1, u1, v1, len_a, chord, sign_1)
-        
-        # triángulo 2
+
         d2_raw = _dist("NodesD2", B, D)
         d2 = _f("NodesD2Max", 4, _f("NodesD2Min", 5, d2_raw, bc_lo), bc_hi)
         u2 = _scale("NodesU2", _sub("NodesBD", D, B), _f("NodesD2Inv", 3, 1.0, d2_raw))
@@ -1112,29 +736,7 @@ class LegModule(object):
         self.pole_vector_line(self.nodes_ik_world[self.pv_apex_index])
 
     def ik_stretch_soft(self):
-        """
-        Stretch (escala del segmento por ratio distancia/longitud, normalizado
-        por globalScale) y soft IK (amortiguación exponencial al acercarse a la
-        extensión máxima).
-
-        Ambos APAGADOS por defecto: son decisión del animador, no del rig.
-
-        Expone en el control del pie: Stretch (0-1), un length mult por
-        segmento, Soft (0-1) y Soft_Start. La distancia va normalizada por el
-        globalScale del masterwalk; el stretch reescala el translateX de cada
-        joint IK; el soft recoloca el PRIMER handle (composeMatrix x aimMatrix,
-        sin DAG).
-
-        Contrato con ik_setup: usa self.ik_handle_target si existe; si no, cae
-        al worldMatrix del control del pie (peor: ignora el pie reverso).
-
-        Nota para el cap. 8: el stretch es también el escape cuando la cadena se
-        queda sin alcance. Si mides un pivote o un muelle y "no llega",
-        comprueba si es ALCANCE antes de culpar al mecanismo.
-
-        En la config de nodos no hay handle: el stretch conduce las longitudes
-        de la red (plugs) y el soft recoloca el OBJETIVO que lee la red.
-        """
+        """Stretch y soft IK del sistema IK."""
         foot_ctl = self.ik_ctl["ankle"]
         root_ctl = self.ik_ctl["root"]
         ik_target_plug = getattr(self, "ik_handle_target", f"{foot_ctl}.worldMatrix[0]")
@@ -1162,7 +764,6 @@ class LegModule(object):
         cmds.addAttr(foot_ctl, longName="Soft", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
         cmds.addAttr(foot_ctl, longName="Soft_Start", attributeType="float", minValue=0.001, maxValue=1, defaultValue=0.8, keyable=True)
 
-        # ----- Distancia normalizada por globalScale -----
         current_dbt = cmds.createNode("distanceBetween", name=f"{self.module_name}CurrentLength_DBT", ss=True)
         cmds.connectAttr(f"{root_ctl}.worldMatrix[0]", f"{current_dbt}.inMatrix1")
         cmds.connectAttr(ik_target_plug, f"{current_dbt}.inMatrix2")
@@ -1172,7 +773,6 @@ class LegModule(object):
         cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{distance_div}.input2")
         distance_plug = f"{distance_div}.output"
 
-        # ----- Longitud total -----
         length_sum = cmds.createNode("sum", name=f"{self.module_name}TotalLength_SUM", ss=True)
         for i, (rest, mult_name) in enumerate(zip(rest_lengths, mult_names)):
             segment_mul = cmds.createNode("multiply", name=f"{self.module_name}Segment0{i}Length_MUL", ss=True)
@@ -1181,7 +781,6 @@ class LegModule(object):
             cmds.connectAttr(f"{segment_mul}.output", f"{length_sum}.input[{i}]")
         length_plug = f"{length_sum}.output"
 
-        # ----- Stretch -----
         ratio_div = cmds.createNode("divide", name=f"{self.module_name}LengthRatio_DIV", ss=True)
         cmds.connectAttr(distance_plug, f"{ratio_div}.input1")
         cmds.connectAttr(length_plug, f"{ratio_div}.input2")
@@ -1211,7 +810,6 @@ class LegModule(object):
                 cmds.connectAttr(f"{foot_ctl}.{mult_names[i]}", f"{len_mul}.input[2]")
                 cmds.connectAttr(f"{len_mul}.output", len_input, force=True)
 
-        # ----- Soft -----
         soft_start_mul = cmds.createNode("multiply", name=f"{self.module_name}SoftStart_MUL", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Soft_Start", f"{soft_start_mul}.input[0]")
         cmds.connectAttr(length_plug, f"{soft_start_mul}.input[1]")
@@ -1248,7 +846,7 @@ class LegModule(object):
         cmds.connectAttr(f"{soft_falloff_mul}.output", f"{soft_distance_sum}.input[1]")
 
         soft_condition = cmds.createNode("condition", name=f"{self.module_name}Soft_CON", ss=True)
-        cmds.setAttr(f"{soft_condition}.operation", 2)  # Greater than
+        cmds.setAttr(f"{soft_condition}.operation", 2)
         cmds.connectAttr(distance_plug, f"{soft_condition}.firstTerm")
         cmds.connectAttr(f"{soft_start_mul}.output", f"{soft_condition}.secondTerm")
         cmds.connectAttr(f"{soft_distance_sum}.output", f"{soft_condition}.colorIfTrueR")
@@ -1284,20 +882,7 @@ class LegModule(object):
             cmds.connectAttr(f"{soft_mmx}.matrixSum", f"{self.nodes_target_dcm}.inputMatrix", force=True)
 
     def ik_calibration(self):
-        """
-        Hornea la corrección para que la cadena IK repose EXACTAMENTE sobre
-        las guías, sea cual sea el solver. Sin esto cada solver da un reposo
-        distinto y la comparación del experimento no es limpia — medirías la
-        diferencia de reposo, no la del solver.
-
-        Calibra el TWIST del handle principal midiendo la deriva de las
-        articulaciones interiores contra sus guías (barrido grueso de 360° +
-        refinado). Con el ikSpringSolver el plano nace de una captura interna
-        que el poleVectorConstraint no siempre corrige; el twist sí lo rota de
-        forma determinista y el valor horneado sobrevive a reabrir la escena.
-
-        Criterio de éxito: en reposo, delta IK vs guías = 0 y match FK/IK = 0.
-        """
+        """Hornea la corrección para que la cadena IK repose exactamente sobre las guías, sea cual sea el solver."""
         if not getattr(self, "ik_handles", None):
             return
         hdl = self.main_handle
@@ -1331,11 +916,7 @@ class LegModule(object):
             cmds.warning(f"[leg_module_self] {self.module_name}: reposo IK no calibra a 0 (err={best_e:.3f} con twist={best_t:.2f})")
 
     def blend_setup(self):
-        """
-        Blend FK/IK por joint. NO dirige ninguna cadena: los outputMatrix de los
-        blendMatrix son la salida del sistema (matrices world), y los consumidores
-        (bendys, skinning, pie) se conectan a esos plugs
-        """
+        """Blend FK/IK por joint."""
         self.blend_matrices = []
         self.blend_plugs = []
 
@@ -1344,13 +925,6 @@ class LegModule(object):
             ik_src = getattr(self, "nodes_ik_world", None)
             cmds.connectAttr(ik_src[i] if ik_src else f"{self.ik_chain[i]}.worldMatrix[0]",
                              f"{blend_matrix}.inputMatrix")
-            # El FK entra por un offset relativo al reposo (guia x ctl_reposo^-1),
-            # igual que el casco en IK. En L es la identidad; en R los controles
-            # van ESPEJADOS (ctl_matrix, det -1) y sin este offset la reflexion
-            # se colaba en los joints al conmutar a FK: la punta del casco
-            # derecho se iba 25 u y las cuartillas salian con det -1. Con el
-            # offset el joint reposa en la guia y sigue al control rigidamente,
-            # sin rama por lado ni signo que adivinar.
             fk_wm = f"{self.fk_controllers[i]}.worldMatrix[0]"
             fk_rest = om.MMatrix(cmds.getAttr(fk_wm))
             guide_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[i]))
@@ -1364,36 +938,13 @@ class LegModule(object):
             self.blend_plugs.append(f"{blend_matrix}.outputMatrix")
 
     def reciprocal_coupling(self):
-        """
-        Solo si RECIPROCAL_COUPLING. Acopla la articulación intermedia a la
-        anterior EN EL LADO FK.
-
-        Por qué hace falta explícitamente: en IK el acoplamiento sale GRATIS —
-        un spring de 3 huesos reparte el doblez entre las dos articulaciones y
-        ningún control puede desacoplarlas. Pero al conmutar a FK cada control
-        recupera rotación libre y se pueden posar combinaciones mecánicamente
-        imposibles (babilla flexionada con corvejón extendido).
-
-        EL RATIO NO TE LO INVENTES: mídelo del propio solver barriendo el pie y
-        leyendo cómo se reparten los ángulos. Si sale constante, el acoplamiento
-        lineal REPRODUCE lo que el IK ya hace en vez de aproximarlo — y eso es
-        defendible ante un tribunal, que es más de lo que puede decirse de un
-        número elegido a ojo.
-
-        Expón un atributo (0-1) para poder apagarlo, y ponlo en el control
-        CONDUCTOR, nunca en el conducido (sería un ciclo de dependencia).
-        """
+        """Acoplamiento recíproco en el lado FK, solo si RECIPROCAL_COUPLING."""
         driver = self.fk_controllers[1]
         driven_anm = self.fk_controllers[2].replace("_CTL", "_ANM")
         lat_letter = "xyz"[max(range(3), key=lambda k: abs(self.lateral_axis[k]))].upper()
 
         cmds.addAttr(driver, longName="Coupling", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
 
-        # ratio MEDIDO del propio solver (barrido del galope recogido, cap. 8):
-        # la babilla recorre 51.8° y el corvejón 55.0° -> 1.062 de conducido por
-        # grado de conductor. El signo se mide por comportamiento: ambos ángulos
-        # interiores deben CERRAR juntos (en la cadena zigzag con lateral fijo
-        # la flexión alterna el sentido local por articulación)
         HOCK_PER_STIFLE = -1.062
 
         mul = cmds.createNode("multiply", name=f"{self.module_name}Coupling_MUL", ss=True)
@@ -1402,25 +953,8 @@ class LegModule(object):
         cmds.connectAttr(f"{driver}.Coupling", f"{mul}.input[2]")
         cmds.connectAttr(f"{mul}.output", f"{driven_anm}.rotate{lat_letter}")
 
-    # ═════════════════════════════════════════════════════════════════════════
-    # SALIDA
-    # ═════════════════════════════════════════════════════════════════════════
     def roll_and_non_roll_setup(self):
-        """
-        Frames anti-flip para alimentar los ribbons. Dos piezas:
-
-        - Base NON-ROLL en la raíz: espacio estable que sigue al grupo del root
-          IK o al del root FK según el switch (los GRUPOS no twistean con el
-          solve), con la rotación alineada a ese espacio y el aim al siguiente
-          joint con el lateral FIJO del personaje.
-        - Por joint del tramo IK, _roll_cv: aim al siguiente + el twist LIMPIO
-          del joint real extraído por swing-twist (cuaternión, neutralizado a 0
-          en reposo) — el twist se reintroduce controlado, sin flips.
-
-        Deja para bendys_setup: self.roll_wm (plugs por joint), self.cv_nodes,
-        self.raw_hip_blend (con twist, para el bendy ctl), self.hip_ctl_roll y
-        self.segment_names.
-        """
+        """Frames anti-flip para alimentar los ribbons."""
         self.segment_count = self.leg_end_index
         if self.segment_count == 2:
             segment_names = ["Upper", "Lower"]
@@ -1453,7 +987,7 @@ class LegModule(object):
         cmds.setAttr(f"{non_roll_aim}.secondaryMode", 2)
         cmds.setAttr(f"{non_roll_aim}.secondaryTargetVector", self.lateral_ref.x, self.lateral_ref.y, self.lateral_ref.z, type="double3")
 
-        self.raw_hip_blend = blend_wm[0]  # con twist, para el bendy ctl
+        self.raw_hip_blend = blend_wm[0]
         blend_wm[0] = f"{non_roll_aim}.outputMatrix"
         cv_nodes[0] = non_roll_aim
 
@@ -1473,17 +1007,7 @@ class LegModule(object):
         self.cv_nodes = cv_nodes
 
     def _roll_cv(self, blend_plug, aim_target_plug, name, up_plug=None):
-            """
-            Frame anti-flip para alimentar el ribbon: aim al siguiente joint con
-            el eje lateral alineado a una referencia estable + el twist LIMPIO
-            del joint real extraído por swing-twist (cuaternión, sin flip,
-            neutralizado a 0 en reposo). Devuelve el multMatrix (.matrixSum).
-
-            up_plug: fila lateral del frame ANTERIOR (encadenado). Con una
-            referencia fija de mundo, un hueso que apunte hacia ella degenera
-            el aim y el frame gira sobre el hueso (medido: dots 0.15 entre
-            frames consecutivos con la pata cruzada hacia delante).
-            """
+            """Frame anti-flip para alimentar el ribbon."""
             nonroll = cmds.createNode("aimMatrix", name=f"{name}NonRoll_AMX", ss=True)
             cmds.connectAttr(blend_plug, f"{nonroll}.inputMatrix")
             cmds.connectAttr(aim_target_plug, f"{nonroll}.primary.primaryTargetMatrix")
@@ -1504,7 +1028,7 @@ class LegModule(object):
             cmds.connectAttr(f"{cmp}.outputMatrix", f"{roll}.matrixIn[0]")
             cmds.connectAttr(f"{nonroll}.outputMatrix", f"{roll}.matrixIn[1]")
             return roll
-    
+
     def _lateral_row_plug(self, matrix_plug, name):
             """Fila del eje lateral (con su signo) de un frame, como plug double3."""
             row_index = max(range(3), key=lambda k: abs(self.lateral_axis[k]))
@@ -1519,11 +1043,7 @@ class LegModule(object):
             return f"{vec}.output"
 
     def bendys_setup(self):
-        """
-        Ribbons por segmento para deformación suave (utils/ribbon + de_boor_core).
-        Ojo al twist: extráelo por swing-twist (cuaternión) para que no flipee.
-        """
-
+        """Ribbons por segmento para deformación suave (utils/ribbon + de_boor_core)."""
         cmds.addAttr(self.settings_ctl, longName="bendys", niceName="Bendy Controllers Visibility", attributeType="bool", dv=1)
         cmds.setAttr(f"{self.settings_ctl}.bendys", lock=False, keyable=False, channelBox=True)
 
@@ -1555,26 +1075,10 @@ class LegModule(object):
             curve_tool.lock_attributes(bendy_ctl, ["sx", "sy", "sz", "v"])
             cmds.connectAttr(f"{mid_blm}.outputMatrix", f"{bendy_nodes[0]}.offsetParentMatrix")
             self.bendy_ctls.append(bendy_ctl)
-        
+
 
     def skinning_setup(self):
-        """
-        Joints de deformación finales.
-
-        Con bendys: un ribbon de Boor por segmento (frame roll inicio, bendy
-        ctl del segmento, frame roll fin) genera los joints de skinning bajo
-        skeleton_grp; además se añaden LAS QUE FALTAN — el pie: menudillo,
-        cuartilla y casco como hojas hermanas dirigidas por matrices (el casco
-        con offset horneado desde la cuartilla, que no tiene blend propio) — y
-        la cadena guía se oculta como esqueleto interno del módulo.
-
-        Sin bendys: la cadena guía se renombra a *Skinning_JNT bajo
-        skeleton_grp y cada joint se conecta a su blend (relativo al padre
-        vivo, para no doble-transformar la jerarquía).
-
-        Publica self.foot_skin_drivers [(joint, plug)]: qué joints deforman el
-        pie y de qué plug sale su world, para offsets posteriores.
-        """
+        """Joints de deformación finales."""
         self.foot_skin_drivers = []
 
         if self.bendys:
@@ -1592,10 +1096,6 @@ class LegModule(object):
             for i in range(self.segment_count):
 
                 name = f"{self.module_name}{self.segment_names[i]}"
-                # up_slerp: el up de cada joint interpola por cuaternión entre el
-                # frame roll de inicio y el de fin del tramo, así el twist que
-                # extrae _roll_cv SE REPARTE por el segmento (con up fijo al
-                # masterwalk los cinco joints compartían up y el twist no viajaba).
                 segment_jnts, temp = ribbon.de_boor_ribbon(
                     cvs=(self.cv_nodes[i], self.bendy_ctls[i], self.cv_nodes[i + 1]),
                     aim_axis=signed_aim, up_axis=up_letter, num_joints=self.skinning_joints_number,
@@ -1623,7 +1123,6 @@ class LegModule(object):
             self.foot_skin_drivers.append((tip_jnt, f"{tip_mmx}.matrixSum"))
             return
 
-        # ── sin bendys: cadena guia renombrada y conectada a los blends ──
         cmds.parent(self.leg_chain[0], self.skeleton_grp)
         renamed = [cmds.rename(j, j.replace("_JNT", "Skinning_JNT")) for j in self.leg_chain]
         self.leg_chain, self.leg_joints, self.tip_joint = renamed, renamed[:-1], renamed[-1]
@@ -1644,19 +1143,10 @@ class LegModule(object):
         ]
 
     def publish(self):
-        """
-        data_manager.append_data(). Todo lo que otro módulo pueda necesitar:
-        controles principales, switch IK/FK, pole vector, y el joint MTP (del que
-        cuelgan los dedos en una pata digitígrada).
-
-        Data-driven: los módulos NO se pasan nombres a mano.
-        """
-
-        # _______ Delete all unnecesary nodes ___________________
+        """Publica en data_manager todo lo que otro módulo pueda necesitar."""
         if self.settings_guide and cmds.objExists(self.settings_guide):
             cmds.delete(self.settings_guide)
 
-        # _______ Write data ___________________
         data_manager.DataExportBiped().append_data(
             f"{self.LEG_PREFIX}_module",
             {
@@ -1666,30 +1156,13 @@ class LegModule(object):
             },
         )
 
-        # _______ Delete chains if the handle is matematical ___________________
         if not self.ik_handles:
             for root in (self.ik_chain[0], self.leg_chain[0]):
                 if cmds.objExists(root):
                     cmds.delete(root)
 
-    # ═════════════════════════════════════════════════════════════════════════
-    # INSTRUMENTACIÓN — para el capítulo 8
-    # ═════════════════════════════════════════════════════════════════════════
     def measure_bend_distribution(self, pose=None):
-        """
-        Devuelve cuántos grados se lleva CADA articulación en una pose dada,
-        p. ej. {joint: angulo_interior}.
-
-        Es tu métrica estrella y ningún framework comercial la publica: dice si
-        el doblez cae en articulaciones REALES o dentro de un hueso. Úsala para
-        comparar las tres configuraciones de solver sobre la MISMA pose extrema
-        (el plegado recogido del galope).
-
-        Mide sobre los blend_plugs (la salida real del sistema): vale para
-        cualquier solver y respeta el modo IK/FK activo. pose = dict
-        {atributo: valor}; default, el plegado recogido del cap. 8. Restaura
-        la pose al terminar.
-        """
+        """Devuelve cuántos grados se lleva cada articulación en una pose dada."""
         ankle = self.ik_ctl["ankle"]
         if pose is None:
             pose = {f"{ankle}.translateY": 25.0, f"{ankle}.translateZ": -8.0}
@@ -1713,13 +1186,7 @@ class LegModule(object):
         return angles
 
     def measure_fk_ik_drift(self):
-        """
-        Distancia que salta cada joint al conmutar el switch en reposo.
-        Criterio: 0.0. Cualquier otra cosa es un bug, no una tolerancia.
-
-        Lee los blend_plugs en IK y en FK y devuelve {joint: salto}. Restaura
-        el switch al terminar.
-        """
+        """Distancia que salta cada joint al conmutar el switch en reposo."""
         switch = f"{self.settings_ctl}.switchIkFk"
         prev = cmds.getAttr(switch)
 
@@ -1740,41 +1207,18 @@ class LegModule(object):
                 for i in range(len(ik_points))}
 
 
-# ═════════════════════════════════════════════════════════════════════════════
-# SUBCLASES POR ROL ANATÓMICO (topología distinta -> clase distinta)
-# ═════════════════════════════════════════════════════════════════════════════
 class BackLegModule(LegModule):
-    """
-    Tren trasero: cadera -> babilla -> corvejón -> MTP -> pisada -> punta.
-    El corvejón dobla CAUDAL. Es donde vive el aparato recíproco (si la especie
-    lo tiene).
-    """
+    """Tren trasero: cadera -> babilla -> corvejón -> MTP -> pisada -> punta."""
     LEG_PREFIX = "backLeg"
     ROOT_JOINT = "Hip"
-    # peroneo tercero TENDINOSO en el équido: el acoplamiento es obligatorio
     RECIPROCAL_COUPLING = True
-    # PV DETRAS (caudal): el corvejón dobla hacia atrás. Matriz 6x2 en
-    # chihuahua y caballo: ángulos idénticos por lado y la fuga lateral
-    # baja o iguala en todo (nodes 1.29->0.18 chihuahua, 0.74->0.27
-    # caballo; spring y sc_rp_sc mejoran leve; nada empeora).
     PV_SIGN = -1
-    # Sobrescribe aquí: FORWARD_AXIS · PV_SIGN · REPOSITION_IK_TO_GUIDES ·
-    # FOOT_CLASS
 
 
 class FrontLegModule(LegModule):
-    """
-    Tren delantero: escápula -> hombro -> codo -> carpo -> MTP -> …
-    El carpo dobla CRANIAL. No hay cadera: hay escápula, y eso es una diferencia
-    de TOPOLOGÍA, no de valor -> por eso es subclase y no un flag.
-    """
+    """Tren delantero: escápula -> hombro -> codo -> carpo -> MTP -> pisada -> punta."""
     LEG_PREFIX = "frontLeg"
     ROOT_JOINT = "Shoulder"
-    # PV DETRAS (caudal): la bisagra real de la delantera es el codo, que
-    # dobla hacia atras. Medido en la matriz 6 solvers x 2 lados (chihuahua):
-    # el lateral del pliegue profundo cae con los angulos identicos —
-    # spring 2.36->0.55, nodes 1.45->0.11, rp 2.29->0.51. El craneal
-    # (derivado del apex del carpo) era el origen de la fuga lateral.
     PV_SIGN = -1
 
     def make(self, side, **kwargs):
@@ -1784,24 +1228,7 @@ class FrontLegModule(LegModule):
         self.scapula_setup()
 
     def scapula_setup(self):
-        """
-        Escápula flotante. El cuadrúpedo no tiene clavícula articulada
-        (sinsarcosis: el omóplato se une al tronco solo por músculo) y su centro
-        instantáneo de rotación CAMBIA durante la zancada.
-
-        Un joint con pivote fijo no puede representar eso. La solución es que la
-        escápula DESLICE sobre una superficie que aproxime el tórax, con el
-        pivote emergiendo del contacto (closestPointOnSurface + frame de
-        superficie).
-
-        HONESTIDAD METODOLÓGICA (esto va tal cual en la memoria): no existe
-        ningún valor publicado de excursión escapular — todas las fuentes son
-        cualitativas. Así que la superficie está calibrada A OJO contra
-        referencia, y hay que DECIRLO, no presentarlo como si reprodujera un dato
-        medido. Nombrar el hueco es una aportación; fingir que no existe es lo
-        que un tribunal tumba.
-        """
-        # ___________________ Load guides ___________________
+        """Escápula flotante: el cuadrúpedo no tiene clavícula articulada."""
         scapula_chain = guides_manager.get_guides(f"{self.side}_scapula_JNT")
         if not scapula_chain:
             cmds.warning(f"{self.side}_scapula_JNT no existe: se omite la escápula.")
@@ -1809,7 +1236,6 @@ class FrontLegModule(LegModule):
         self.scapula_guide = scapula_chain[0]
         cmds.parent(self.scapula_guide, self.module_trn)
 
-        # ___________________ Set static matrix ___________________
         scapula_matrices, scapula_point_matrices = guides_manager.orient_guides(
             guides=scapula_chain,
             primaryInputAxis=self.primary_axis,
@@ -1822,7 +1248,6 @@ class FrontLegModule(LegModule):
         if len(scapula_chain) > 1:
             cmds.delete(scapula_chain[1])
 
-        # ___________________ Create scapula controls ___________________
         end_pos = om.MVector(self.scapula_end_rest[12], self.scapula_end_rest[13], self.scapula_end_rest[14])
         master_matrix = self.ctl_matrix(guides_manager._with_translation(om.MMatrix.kIdentity, end_pos), world_frame=True)
         scapula_master_grp, scapula_master_ctl = curve_tool.create_controller(
@@ -1833,7 +1258,6 @@ class FrontLegModule(LegModule):
             parent=self.controllers_grp
         )
         self.scapula_master_ctl = scapula_master_ctl
-        # Auto scapula
         scapula_auto_grp, scapula_auto_ctl = curve_tool.create_controller(
             name=f"{self.side}_scapula",
             offset=["GRP", "OFF", "ANM"],
@@ -1842,28 +1266,17 @@ class FrontLegModule(LegModule):
             parent=scapula_master_ctl
         )
         self.scapula_ctl = scapula_auto_ctl
-        # ___________________ Add attributes to the controls ___________________
         cmds.addAttr(scapula_auto_ctl, longName="SCAPULA_ATTRIBUTES", niceName="SCAPULA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{scapula_auto_ctl}.SCAPULA_ATTRIBUTES", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(scapula_auto_ctl, longName="Auto_Scapula", attributeType="float", defaultValue=1, maxValue=1, minValue=0, keyable=True)
         cmds.addAttr(scapula_auto_ctl, longName="Multiply_Amount", attributeType="float", defaultValue=1, minValue=0.001, keyable=True)
-        # Sling: absorción vertical del tórax entre las escápulas (sinsarcosis,
-        # serrato ventral como muelle — Payne 2005). 0-1, apagable: automatismo
-        # en grupo, la mano del animador siempre puede desactivarlo.
         cmds.addAttr(scapula_auto_ctl, longName="Sling", attributeType="float", defaultValue=1, minValue=0, maxValue=1, keyable=True)
 
-        # Chest: señal del sling y padre de la superficie NURBS. En la suite
-        # (sin spine_module) cae a masterwalk -> delta del sling = 0 por construcción.
         chest_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
         if not chest_ctl or not cmds.objExists(chest_ctl):
             chest_ctl = self.masterwalk_ctl
 
-        # ___________________ Auto clavicle setup ___________________
-        # Distance mesurement
         leg_distance = cmds.createNode("distanceBetween", name=f"{self.side}_scapulaLegLength_DBT", ss=True)
-        # inMatrix1 se conecta más abajo desde la posición VIRTUAL del master ya
-        # slung (scapulaSlingDist_MMX): bajar el chest dentro de la excursión no
-        # debe disparar el gate de compresión (doble disparo).
         cmds.connectAttr(self.ik_handle_target, f"{leg_distance}.inMatrix2")
 
         leg_distance_norm = cmds.createNode("floatMath", name=f"{self.side}_scapulaLegLengthNorm_FLM", ss=True)
@@ -1889,36 +1302,22 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{scapula_aimMatrix}.outputMatrix", f"{scapula_delta_mmx}.matrixIn[0]")
         cmds.setAttr(f"{scapula_delta_mmx}.matrixIn[1]", *self.scapula_rest.inverse(), type="matrix")
 
-        # Attribute activation
         scapula_blm = cmds.createNode("blendMatrix", name=f"{self.side}_autoScapula_BLM", ss=True)
         cmds.connectAttr(f"{scapula_delta_mmx}.matrixSum", f"{scapula_blm}.target[0].targetMatrix")
         cmds.connectAttr(f"{scapula_auto_ctl}.Auto_Scapula", f"{scapula_blm}.target[0].weight")
         cmds.connectAttr(f"{scapula_blm}.outputMatrix", f"{scapula_auto_grp[-1]}.offsetParentMatrix")
 
-        # Movement setup (gate de compresión + elevación del master)
         scapula_pos = om.MVector(self.scapula_rest[12], self.scapula_rest[13], self.scapula_rest[14])
         EXCURSION_MAX = (end_pos - scapula_pos).length() * 0.5 * math.sin(math.radians(20.0))
 
-        # SLING (feed-forward): el tórax cuelga entre las escápulas por
-        # sinsarcosis — unión solo muscular (serrato ventral), elástica en Y
-        # (~42 mm de excursión al galope, Payne 2005; sternum lift +5.3/+6.2 cm,
-        # Hartpury 2023) y restringida en X/Z por los pectorales. Al bajar el
-        # chest con el pie plantado la columna de la pata NO se pliega (stay
-        # apparatus): el descenso lo absorbe el sling. Aquí: el ANM del master
-        # contrarresta SOLO el delta Y del chest (medido en frame masterwalk,
-        # acíclico), saturando en ±EXCURSION_MAX — reutilizada, (L/2)*sin(20°)
-        # ~5.1 cm a escala real, coherente con Hartpury/Payne. Agotado el sling,
-        # la compresión residual reactiva el gate (cascada anatómica).
         sling_mmx = cmds.createNode("multMatrix", n=f"{self.side}_scapulaChestLocal_MMX", ss=True)
         cmds.connectAttr(f"{chest_ctl}.worldMatrix[0]", f"{sling_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{self.masterwalk_ctl}.worldInverseMatrix[0]", f"{sling_mmx}.matrixIn[1]")
         sling_dcm = cmds.createNode("decomposeMatrix", n=f"{self.side}_scapulaChestLocal_DCM", ss=True)
         cmds.connectAttr(f"{sling_mmx}.matrixSum", f"{sling_dcm}.inputMatrix")
-        # restY horneado en build (reposo exacto por construcción: counter=0);
-        # el frame masterwalk ya absorbe globalScale vía su inversa.
         rest_y = cmds.getAttr(f"{sling_dcm}.outputTranslateY")
         sling_delta = cmds.createNode("floatMath", n=f"{self.side}_scapulaSlingDelta_FLM", ss=True)
-        cmds.setAttr(f"{sling_delta}.operation", 1)  # subtract: rest - live -> chest baja = counter positivo
+        cmds.setAttr(f"{sling_delta}.operation", 1)
         cmds.setAttr(f"{sling_delta}.floatA", rest_y)
         cmds.connectAttr(f"{sling_dcm}.outputTranslateY", f"{sling_delta}.floatB")
         sling_clamp = cmds.createNode("clamp", n=f"{self.side}_scapulaSlingClamp_CLP", ss=True)
@@ -1932,17 +1331,12 @@ class FrontLegModule(LegModule):
         sling_cpm = cmds.createNode("composeMatrix", n=f"{self.side}_scapulaSling_CPM", ss=True)
         cmds.connectAttr(f"{sling_mul}.output", f"{sling_cpm}.inputTranslateY")
 
-        # El gate mide desde la posición virtual del master ya slung: bajar el
-        # chest dentro de la excursión deja la distancia ~reposo (sin lift
-        # espurio); mover el pie sigue comprimiendo como hoy. Acíclico: lee
-        # chest/masterwalk/GRP y escribe en el ANM (hijo del GRP).
         sling_dist_mmx = cmds.createNode("multMatrix", n=f"{self.side}_scapulaSlingDist_MMX", ss=True)
         cmds.connectAttr(f"{sling_cpm}.outputMatrix", f"{sling_dist_mmx}.matrixIn[0]")
         cmds.connectAttr(f"{scapula_master_grp[0]}.worldMatrix[0]", f"{sling_dist_mmx}.matrixIn[1]")
         cmds.connectAttr(f"{sling_dist_mmx}.matrixSum", f"{leg_distance}.inMatrix1")
 
-        # GATE
-        GALLOP_COMPRESSION = 0.73  # medido: dist/reposo = 0.732 en la pose (pie +25 arriba, -8 atras)
+        GALLOP_COMPRESSION = 0.73
         rest_len = cmds.getAttr(self.scapula_leg_length_plug)
         remap_compress = cmds.createNode("remapValue", n=f"{self.side}_scapulaCompress_RMV", ss=True)
         cmds.connectAttr(self.scapula_leg_length_plug, f"{remap_compress}.inputValue")
@@ -1959,9 +1353,6 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{multiply_compress}.output", f"{multiply_amount}.input[0]")
         cmds.connectAttr(f"{self.scapula_ctl}.Multiply_Amount", f"{multiply_amount}.input[1]")
         cmds.connectAttr(f"{self.scapula_ctl}.Auto_Scapula", f"{multiply_amount}.input[2]")
-        # Counter del sling + lift del gate entran juntos por el ANM del master
-        # (único punto de escritura del automatismo; el space switch de
-        # rig_manager captura GRP.offsetParentMatrix y no toca el ANM).
         lift_sum = cmds.createNode("floatMath", n=f"{self.side}_scapulaLiftSum_FLM", ss=True)
         cmds.connectAttr(f"{multiply_amount}.output", f"{lift_sum}.floatA")
         cmds.connectAttr(f"{sling_mul}.output", f"{lift_sum}.floatB")
@@ -1969,8 +1360,6 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{lift_sum}.outFloat", f"{compose_m_compress}.inputTranslateY")
         cmds.connectAttr(f"{compose_m_compress}.outputMatrix", f"{scapula_master_grp[-1]}.offsetParentMatrix")
 
-        # ___________________ NURBS Surface (superficie del tórax) ___________________
-        # Derivada de guías
         character = guides_manager.rig_manager.get_character_name_from_build()
         _, all_guides = guides_manager._load_guides_file(character)
         char_guides = all_guides.get(character, {}) if all_guides else {}
@@ -1985,10 +1374,8 @@ class FrontLegModule(LegModule):
         chest_wm = om.MMatrix(chest_info["joint_matrix"])
         chest_pos = om.MVector(chest_wm[12], chest_wm[13], chest_wm[14])
 
-        # Frame del aim: x hacia el root de la pierna, up hacia la clavícula
         sphere_aim_m = guides_manager._aim_matrix(chest_pos, end_pos, scapula_pos, (1, 0, 0), (0, 1, 0))
 
-        # Radio y escala en cerrado para pasar por las DOS guías:
         R_ventral = (end_pos - chest_pos).length()
         p_local = scapula_pos - chest_pos
         x_s = p_local * om.MVector(sphere_aim_m[0], sphere_aim_m[1], sphere_aim_m[2])
@@ -2007,7 +1394,6 @@ class FrontLegModule(LegModule):
         cmds.setAttr(f"{scapula_surface}.visibility", 0)
         cmds.setAttr(f"{scapula_surface}.scaleX", sx)
 
-        # Sigue al chest por matrices (chest_ctl resuelto arriba, junto al sling)
         chest_ctl_wm = om.MMatrix(cmds.getAttr(f"{chest_ctl}.worldMatrix[0]"))
         mmx_scapula = cmds.createNode("multMatrix", n=f"{self.side}_scapulaSurface_MMX", ss=True)
         cmds.setAttr(f"{mmx_scapula}.matrixIn[0]", list(sphere_aim_m * chest_ctl_wm.inverse()), type="matrix")
@@ -2015,7 +1401,6 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{mmx_scapula}.matrixSum", f"{scapula_surface}.offsetParentMatrix")
         self.scapula_surface = scapula_surface
 
-        # Joint de skinning proyectada a la superficie
         scapula_skinning_jnt = cmds.createNode("joint", n=f"{self.side}_scapulaSkinning_JNT", ss=True, p=self.skeleton_grp)
         surface_shape = cmds.listRelatives(scapula_surface, shapes=True)[0]
         cps_scapula = cmds.createNode("closestPointOnSurface", n=f"{self.side}_scapulaProjected_CPS", ss=True)
@@ -2046,7 +1431,6 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{jnt_amx}.outputMatrix", f"{scapula_skinning_jnt}.offsetParentMatrix", force=True)
         self.scapula_skinning_jnt = scapula_skinning_jnt
 
-        # Crear space switch de chest a clavicula
         matrix_manager.space_switches(
             target=self.scapula_ctl,
             sources=[chest_ctl, self.masterwalk_ctl],
@@ -2059,7 +1443,6 @@ class FrontLegModule(LegModule):
         cmds.connectAttr(f"{self.scapula_ctl}.worldMatrix[0]", f"{ctl_dcm}.inputMatrix")
         cmds.connectAttr(f"{ctl_dcm}.outputTranslate", f"{cps_scapula}.inPosition")
 
-        # Renormalización a la longitud del hueso
         bone_len = (end_pos - scapula_pos).length()
         local_mpm = cmds.createNode("multiplyPointByMatrix", n=f"{self.side}_scapulaLocal_MPM", ss=True)
         cmds.connectAttr(f"{cps_delta}.output3D", f"{local_mpm}.input")
@@ -2081,53 +1464,27 @@ class FrontLegModule(LegModule):
         for axis, plug in (("X", "in30"), ("Y", "in31"), ("Z", "in32")):
             cmds.connectAttr(f"{final_mpm}.output{axis}", f"{fbf_scapula}.{plug}", force=True)
         self.scapula_master_ctl = scapula_master_ctl
-        # _______ Write data ___________________
         data_manager.DataExportBiped().append_data(
             f"{self.LEG_PREFIX}_module",
             {
                 f"{self.side}_scapula_master_ctl": self.scapula_master_ctl
             },
         )
-        # _______ Delete guides ___________________
-        # la lista scapula_chain guarda rutas de antes del reparent: se borra
-        # la raiz (el subarbol cae con ella)
         if cmds.objExists(self.scapula_guide):
             cmds.delete(self.scapula_guide)
 
 
-# ═════════════════════════════════════════════════════════════════════════════
-# PIE — COMPUESTO, no heredado
-# ═════════════════════════════════════════════════════════════════════════════
 class FootBase(object):
-    """
-    Interfaz común del pie. La pierna COMPONE una de estas, no hereda de ellas.
-
-    Contrato: la pierna entrega el MTP y las matrices de reposo; el pie construye
-    sus pivotes y expone sus atributos en el control del pie.
-    """
-
+    """Interfaz común del pie. La pierna compone una de estas, no hereda de ellas."""
     PIVOT_ORDER = ["bankOut", "bankIn", "heel", "toe", "sole"]
 
     def build(self, leg):
-        """leg = el LegModule que compone este pie (para leer índices y matrices)."""
+        """Construye el pie sobre la pata que lo compone."""
         self.pivots(leg)
         self.roll_attributes(leg, leg.ik_ctl["ankle"])
 
     def pivots(self, leg):
-        """
-        Pila de pivotes del pie reverso bajo el ctl del tobillo:
-            ankle -> bankOut -> bankIn -> heel -> toe -> sole -> [GRP del ball]
-
-        Posiciones: guía locator si el personaje la trae; si no, DERIVADAS de
-        la anatomía. La derivación vale para el CASCO: la cuartilla está
-        elevada, así que proyectarla a la altura de la punta da el talón; los
-        bancos van en los bordes de la suela. El digitígrado debe sobreescribir
-        esto (trampa del talón — ver PawFoot).
-
-        Frames propios, no de guía: x = avance, y = arriba, z = lateral_ref
-        (espejada en R). Así rz = roll, rx = bank, ry = twist, y bank/roll
-        salen espejados entre lados sin tablas de signos por pivote.
-        """
+        """Pila de pivotes del pie reverso bajo el ctl del tobillo."""
         up = om.MVector(0, 1, 0)
         lat = om.MVector(leg.lateral_ref).normal()
         fwd = (up ^ lat).normal()
@@ -2140,9 +1497,9 @@ class FootBase(object):
 
         tip_p = om.MVector(leg.world_positions[-1])
         plant_p = leg.world_positions[leg.plant_index]
-        heel_p = om.MVector(plant_p.x, tip_p.y, plant_p.z)  # pisada proyectada al suelo
+        heel_p = om.MVector(plant_p.x, tip_p.y, plant_p.z)
         sole_p = (heel_p + tip_p) * 0.5
-        half_w = (tip_p - heel_p).length() * 0.5  # ancho del casco aproximado por su largo
+        half_w = (tip_p - heel_p).length() * 0.5
         out_dir = om.MVector(1, 0, 0) if leg.side == "L" else om.MVector(-1, 0, 0)
         positions = {
             "bankOut": sole_p + out_dir * half_w,
@@ -2160,7 +1517,7 @@ class FootBase(object):
             matrix = (cmds.xform(loc, q=True, ws=True, m=True) if loc
                       else _pivot_matrix(positions[role]))
             if loc:
-                cmds.delete(loc)  # guia consumida: la matriz ya esta leida
+                cmds.delete(loc)
             grps, ctl = curve_tool.create_controller(
                 name=f"{leg.side}_{leg.LEG_PREFIX}{role[0].upper()}{role[1:]}",
                 offset=["GRP", "SDK", "ANM"],
@@ -2179,20 +1536,7 @@ class FootBase(object):
         cmds.xform(ball_grp, m=om.MMatrix.kIdentity)
 
     def roll_attributes(self, leg, foot_ctl):
-        """
-        Roll y twist sobre los SDK de los pivotes. Arquitectura en dos tramos:
-        hasta Roll_Break_Angle levanta la pisada (sole); del break al straight
-        angle rueda la punta. Bank con signo (positivo = borde externo).
-
-        TRAMPA: si construyes el tramo negativo con un remapValue de inputMin=0,
-        el roll negativo CLAMPA A CERO y no hace absolutamente nada. Aísla el
-        tramo negativo (un min) antes de darle su propio pivote.
-
-        SIGNO: rodar hacia delante es +θ alrededor de
-        W = up ^ FORWARD_AXIS en mundo; los pivotes giran en rz alrededor de su
-        z local (lateral_ref, espejada en R), así que el signo por lado es el
-        de lateral_ref·W. Vale para cualquier FORWARD_AXIS.
-        """
+        """Roll y twist sobre los SDK de los pivotes."""
         name = f"{leg.side}_{leg.LEG_PREFIX}"
 
         cmds.addAttr(foot_ctl, longName="FOOT_ATTRIBUTES", niceName="FOOT ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
@@ -2202,7 +1546,6 @@ class FootBase(object):
         cmds.addAttr(foot_ctl, longName="Roll_Break_Angle", attributeType="float", defaultValue=35, keyable=True)
         cmds.addAttr(foot_ctl, longName="Roll_Straight_Angle", attributeType="float", defaultValue=75, keyable=True)
 
-        # visibilidad de los pivotes
         cmds.addAttr(foot_ctl, longName="Pivot_Controllers", attributeType="bool", defaultValue=0, keyable=False)
         cmds.setAttr(f"{foot_ctl}.Pivot_Controllers", channelBox=True)
         for role in self.PIVOT_ORDER:
@@ -2249,7 +1592,6 @@ class FootBase(object):
         cmds.setAttr(f"{toe_sign}.input[1]", roll_sign)
         cmds.connectAttr(f"{toe_sign}.output", f"{self.pivot_sdk['toe']}.rotateZ")
 
-        # tramo negativo aislado con un min
         heel_min = cmds.createNode("min", name=f"{name}RollHeel_MIN", ss=True)
         cmds.setAttr(f"{heel_min}.input[0]", 0)
         cmds.connectAttr(f"{foot_ctl}.Roll", f"{heel_min}.input[1]")
@@ -2265,7 +1607,7 @@ class FootBase(object):
 
         bank_cnd = cmds.createNode("condition", name=f"{name}Bank_CND", ss=True)
         cmds.connectAttr(f"{foot_ctl}.Bank", f"{bank_cnd}.firstTerm")
-        cmds.setAttr(f"{bank_cnd}.operation", 2)  # Bank > 0 -> borde externo
+        cmds.setAttr(f"{bank_cnd}.operation", 2)
         cmds.connectAttr(f"{bank_neg}.output", f"{bank_cnd}.colorIfTrueR")
         cmds.setAttr(f"{bank_cnd}.colorIfFalseR", 0)
         cmds.setAttr(f"{bank_cnd}.colorIfTrueG", 0)
@@ -2275,33 +1617,14 @@ class FootBase(object):
 
 
 class HoofFoot(FootBase):
-    """
-    UNGULADO. Apoya solo el casco (un dedo, el III, con el metacarpo fusionado
-    en la caña).
-
-    Pivotes válidos: punta del casco (breakover), talón del casco, y bordes
-    lateral/medial. El MTP (menudillo) NO es un pivote: es el MUELLE — se hunde
-    por CARGA contra el ligamento suspensor, y el tendón flexor devuelve el 93%
-    del trabajo. Confundirlo con un pivote es el error más fácil al portar un pie
-    de bípedo.
-    """
-
+    """Ungulado. Apoya solo el casco (un dedo, el III, con el metacarpo fusionado en la caña)."""
     def build(self, leg):
         super(HoofFoot, self).build(leg)
         self.hoof_attach(leg)
         self.fetlock_spring(leg, leg.ik_ctl["ankle"])
 
     def hoof_attach(self, leg):
-        """
-        Casco pegado al ball (Foot) por matrices: el lado IK del blend de la
-        pisada (cuartilla) pasa a ser offset horneado × worldMatrix vivo del
-        Foot. Como el Foot vive en el punto del fetlock dentro de la pila de
-        pivotes, rotarlo gira el casco desde ahí sin mover el objetivo del IK
-        (el manager lee su world, y la posición no cambia al rotar sobre sí
-        mismo); roll, bank y twist del master le llegan por jerarquía. El Tip
-        ya deriva de la pisada en skinning (TipSkinning_MMX). Sin handles
-        extra: el joint IK de la cuartilla queda como esqueleto interno.
-        """
+        """Casco pegado al ball (Foot) por matrices."""
         ball_ctl = leg.ik_ctl["ball"]
         self.foot_ctl = ball_ctl
 
@@ -2315,7 +1638,6 @@ class HoofFoot(FootBase):
         leg.ik_ctl["pastern"] = pastern_ctl
         leg.ik_grp["pastern"] = pastern_grps[0]
 
-        # el ball (Foot) pasa a colgar de la cuartilla, sin offset en canales
         ball_grp = leg.ik_grp["ball"]
         cmds.parent(ball_grp, pastern_ctl)
         local = (om.MMatrix(cmds.getAttr(f"{ball_grp}.matrix"))
@@ -2323,7 +1645,6 @@ class HoofFoot(FootBase):
         cmds.setAttr(f"{ball_grp}.offsetParentMatrix", list(local), type="matrix")
         cmds.xform(ball_grp, m=om.MMatrix.kIdentity)
 
-        # casco pegado al Foot (hereda la cuartilla por jerarquía)
         plant_rest = om.MMatrix(cmds.getAttr(leg.guides_matrices[leg.plant_index]))
         ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
 
@@ -2346,28 +1667,7 @@ class HoofFoot(FootBase):
                          f"{leg.blend_matrices[leg.leg_end_index]}.inputMatrix", force=True)
 
     def fetlock_spring(self, leg, foot_ctl):
-        """
-        Hundimiento del menudillo por carga. Característica de ESTA clase, no del
-        cuadrúpedo genérico: viene del aparato de estay équido (dormir de pie).
-
-        Curva NO lineal: el aparato suspensor ENDURECE al cargarse. Los datos de
-        marcha calibran el RANGO (~22° de excursión del ángulo MCP de paso a
-        galope); la FORMA la pone el muelle.
-
-        El pivote va en la CUARTILLA, no en el menudillo: el casco está plantado
-        y el menudillo baja girando alrededor de ella.
-
-        Default 0. Con carga en reposo la cadena queda en su tope de alcance y el
-        ball-roll se aplasta (medido en esta config: Roll −20 mueve el fetlock
-        1.42u sin carga y 1.13u con carga 1).
-
-        DÓNDE se inyecta: en el MANAGER del ik (entre el offset horneado y el
-        world vivo del ball), no en el ball — rotar el ball movería también el
-        casco (HoofFollow lee su world) y el casco debe quedarse PLANTADO. La
-        rotación actúa sobre el punto de la cuartilla expresado en espacio del
-        ball (constante: el ball es hijo del PasternIk), así el pivote es
-        correcto en cualquier pose.
-        """
+        """Hundimiento del menudillo por carga."""
         cmds.addAttr(foot_ctl, longName="SPRING", niceName="SPRING ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{foot_ctl}.SPRING", keyable=False, channelBox=True, lock=True)
         cmds.addAttr(foot_ctl, longName="Load", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
@@ -2375,7 +1675,6 @@ class HoofFoot(FootBase):
         MCP_SINK_DEG = -22.0
 
         n = f"{leg.side}_{leg.LEG_PREFIX}"
-        # muelle que ENDURECE
         u_sub = cmds.createNode("subtract", name=f"{n}FetlockSpringU_SUB", ss=True)
         cmds.setAttr(f"{u_sub}.input1", 1)
         cmds.connectAttr(f"{foot_ctl}.Load", f"{u_sub}.input2")
@@ -2392,7 +1691,6 @@ class HoofFoot(FootBase):
         spring_cmx = cmds.createNode("composeMatrix", name=f"{n}FetlockSpring_CMX", ss=True)
         cmds.connectAttr(f"{theta}.output", f"{spring_cmx}.inputRotateX")
 
-        # cuartilla en espacio del ball 
         ball_ctl = leg.ik_ctl["ball"]
         ball_rest = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]"))
         pastern_w = om.MVector(cmds.xform(leg.ik_ctl["pastern"], q=True, ws=True, t=True))
@@ -2400,7 +1698,6 @@ class HoofFoot(FootBase):
         t_neg = om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -p_l.x, -p_l.y, -p_l.z, 1])
         t_pos = om.MMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, p_l.x, p_l.y, p_l.z, 1])
 
-        # reinsertar en el manager
         manager = leg.ik_handle_target.split(".")[0]
         ball_conn = cmds.listConnections(f"{manager}.matrixIn[1]", plugs=True, source=True, destination=False)[0]
         cmds.disconnectAttr(ball_conn, f"{manager}.matrixIn[1]")
@@ -2411,26 +1708,7 @@ class HoofFoot(FootBase):
 
 
 class PawFoot(FootBase):
-    """
-    DIGITÍGRADO. Apoya varios dedos (II-V) con almohadilla; el I queda elevado
-    como espolón. Sin aparato de estay -> SIN muelle de menudillo.
-
-    DIFERENCIA ESTRUCTURAL (y la razón de que esto sea una clase y no un flag):
-    a partir del MTP la cadena se BIFURCA. La pierna es lineal e indexa por
-    posición; los dedos son N cadenas. Van en su propio módulo, colgados del MTP
-    por parentMatrix — NO por DAG: el MTP ya viene dirigido por el blend, así que
-    colgar por DAG heredaría su transform dos veces.
-
-    TRAMPA DEL TALÓN, verifícala: derivar el talón proyectando la PISADA a la
-    altura de la punta funciona en el casco porque la cuartilla está ELEVADA
-    sobre el suelo. En una pata digitígrada la almohadilla YA está en el suelo,
-    así que la proyección no mueve nada y el talón COINCIDE con el pivote de la
-    almohadilla: pivote degenerado. Además el calcáneo del digitígrado está
-    arriba, en el corvejón — no es un contacto. El contacto trasero real es el
-    borde posterior de la almohadilla.
-    """
-
-    # I = espolón (no apoya), II-V = dedos de apoyo. Numeración veterinaria.
+    """Digitígrado. Apoya varios dedos (II-V) con almohadilla; el I queda elevado como espolón."""
     DIGIT_NUMERALS = ["I", "II", "III", "IV", "V"]
 
     def build(self, leg):
@@ -2443,14 +1721,7 @@ class PawFoot(FootBase):
         self.digits_ik(leg)
 
     def paw_attach(self, leg):
-        """
-        El pie digitígrado lleva DOS eslabones orientados tras el ik
-        principal: fetlock->pastern y pastern->tip, ambos como SC de matrices
-        (aimMatrix) con objetivos RÍGIDOS al Foot (patrón del manager). Es el
-        equivalente del hoof_attach con un eslabón más: la pata apoya
-        almohadilla y dedos, no un casco rígido, y sin esto todo el pie queda
-        congelado a la orientación que deje el solver principal.
-        """
+        """El pie digitígrado lleva dos eslabones orientados tras el ik principal."""
         ball_ctl = leg.ik_ctl["ball"]
         ball_rest_inv = om.MMatrix(cmds.getAttr(f"{ball_ctl}.worldMatrix[0]")).inverse()
         n = f"{leg.side}_{leg.LEG_PREFIX}"
@@ -2481,34 +1752,20 @@ class PawFoot(FootBase):
         _sc("Pastern", follow["Plant"], follow["Tip"], leg.plant_index)
 
     def digits_guides(self, leg):
-        """
-        Carga las cadenas de guías de los dedos: pide la raíz 00 de cada
-        numeral ({side}_{legPrefix}Digit{N}00_JNT) y get_guides trae sus
-        falanges. Las ausentes se omiten sin error — así un personaje de 3
-        dedos funciona sin tocar código. Deja:
-            self.digit_chains[numeral] = {"chain": [falanges...]}
-        """
+        """Carga las cadenas de guías de los dedos."""
         self.finger_base_name = f"{leg.side}_{leg.LEG_PREFIX}Digit"
-        self.digit_chains = {} # Set the dict for all the guides
+        self.digit_chains = {}
 
         for number in self.DIGIT_NUMERALS:
 
-            root = f"{self.finger_base_name}{number}00_JNT" # L_frontLegDigitI00_JNT p.e
+            root = f"{self.finger_base_name}{number}00_JNT"
             chain = guides_manager.get_guides(root)
             if not chain:
                 continue
             self.digit_chains[number] = {"chain": chain}
 
     def digits_orient_guides(self, leg):
-        """
-        Frames por dedo con la misma convención de ejes de la pierna. Amplía
-        cada self.digit_chains[numeral] con:
-            "world"  plugs de matriz world (network horneado)
-            "point"  plugs solo-posición
-            "local"  MMatrix relativas a la falange anterior (la 00 queda en
-                     world: su padre real es el MTP y su offset se compone al
-                     colgarla, en digits_fk)
-        """
+        """Frames por dedo con la misma convención de ejes de la pierna."""
         leg.primary_axis = leg.primaryInputAxis if leg.side == "L" else tuple(-v for v in leg.primaryInputAxis)
         leg.secondary_axis = leg.secondaryInputAxis
 
@@ -2533,29 +1790,15 @@ class PawFoot(FootBase):
             data["world"] = world_plugs
             data["point"] = point_plugs
 
-            # guias consumidas: los frames estan horneados en el network y
-            # fk/ik solo usan los NOMBRES (strings) y los plugs
             if cmds.objExists(data["chain"][0]):
                 cmds.delete(data["chain"][0])
 
-            # self.digit_chains["III"]["chain"][0] ------> primera falange del dedo III
-            # self.digit_chains["III"]["world"][1] ------> WM de la falange III dedo 01
-            # self.digit_chains["III"]["local"][2] ------> LM de la falange III dedo 02
-            
 
     def digits_fk(self, leg):
-        """
-        Cascada FK por dedo, colgada del MTP SIN DAG (el MTP viene del blend;
-        por DAG heredaría su transform dos veces): el grupo raíz de los dedos
-        recibe el plug del blend del MTP en su offsetParentMatrix con
-        inheritsTransform a 0, la falange 00 lleva su offset estático contra el
-        MTP en reposo, y el resto offsets locales horneados. Los controles
-        llevan nivel SDK para los drivers de digits_attributes. Deja:
-            self.leg_digit_fk_ctls[numeral] = [ctls...]
-        """
-        parent_plug = leg.blend_plugs[leg.leg_end_index] # Get the last joint blend matrix
+        """Cascada FK por dedo, colgada del MTP por matriz y no por jerarquía."""
+        parent_plug = leg.blend_plugs[leg.leg_end_index]
         digits_grp = cmds.createNode("transform", name=f"{self.finger_base_name}Fk_GRP",
-                                     parent=leg.controllers_grp) # Create the parent group for all of FK controllers
+                                     parent=leg.controllers_grp)
         cmds.setAttr(f"{digits_grp}.inheritsTransform", 0)
         cmds.connectAttr(parent_plug, f"{digits_grp}.offsetParentMatrix")
         parent_matrix = om.MMatrix(cmds.getAttr(leg.blend_plugs[leg.leg_end_index]))
@@ -2576,12 +1819,9 @@ class PawFoot(FootBase):
                     parent=parent,
                 )
 
-                # create_controller sin matrix parenta grupos nacidos en el
-                # origen y cmds.parent COMPENSA en los canales: hay que
-                # limpiarlos antes de poner la colocacion en el opm
                 cmds.xform(grp[0], m=om.MMatrix.kIdentity)
                 if i == 0:
-                    local = om.MMatrix(cmds.getAttr(data["world"][0])) * parent_matrix.inverse() # Set the local matrix based on the parent
+                    local = om.MMatrix(cmds.getAttr(data["world"][0])) * parent_matrix.inverse()
                 else:
                     local = data["local"][i]
                 cmds.setAttr(f"{grp[0]}.offsetParentMatrix", list(local), type="matrix")
@@ -2589,16 +1829,7 @@ class PawFoot(FootBase):
             self.leg_digit_fk_ctls[name] = fk_ctls
 
     def digits_ik(self, leg):
-        """
-        IK de dedos por triangulo de ley de cosenos, resuelto en el ESPACIO
-        LOCAL de la falange raiz: ahi el plano sagital del dedo es z=0, asi que
-        el plano del solve es FIJO y no hace falta pole vector (el solver de
-        nodos del cap. 6 reutilizado a escala de dedo). El objetivo de la punta
-        sigue RIGIDO al ball (patron del manager): con Toes_IK=1 el dedo queda
-        plantado mientras el pie se mueve. En dedos de 4 falanges el tramo
-        distal va rigido en IK (el FK blended pone el detalle). Cada falange
-        saca su joint de skinning del blend FK/IK; el espolon es FK puro.
-        """
+        """IK de dedos por triángulo de la ley de cosenos, resuelto en el espacio local de la falange raíz."""
         cmds.addAttr(self.paw_attributes_ctl, longName="Toes_IK", attributeType="float",
                      minValue=0, maxValue=1, defaultValue=0, keyable=True)
         toes_ik = f"{self.paw_attributes_ctl}.Toes_IK"
@@ -2617,7 +1848,6 @@ class PawFoot(FootBase):
                 b_len = (P[-1] - P[1]).length()
                 grp0 = fk_list[0].replace("_CTL", "_GRP")
 
-                # signo del doblez, medido del reposo en el frame local de la raiz
                 r0 = world_rest[0]
                 row_x = om.MVector(r0[0], r0[1], r0[2])
                 row_y = om.MVector(r0[4], r0[5], r0[6])
@@ -2631,7 +1861,6 @@ class PawFoot(FootBase):
                 theta1_r = math.atan2(v1 * row_y, v1 * row_x)
                 sign = 1.0 if abs((theta_g_r - alpha_r) - theta1_r) <= abs((theta_g_r + alpha_r) - theta1_r) else -1.0
 
-                # objetivo plantado: punta_rest x ball_rest^-1 x ball vivo
                 goal = cmds.createNode("multMatrix", name=f"{base}IkGoal_MMX", ss=True)
                 cmds.setAttr(f"{goal}.matrixIn[0]", list(world_rest[-1] * ball_rest_inv), type="matrix")
                 cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{goal}.matrixIn[1]")
@@ -2694,9 +1923,6 @@ class PawFoot(FootBase):
                 cmds.connectAttr(f"{p1_fbf}.output", f"{p1_world}.matrixIn[0]")
                 cmds.connectAttr(f"{grp0}.worldMatrix[0]", f"{p1_world}.matrixIn[1]")
 
-                # secundario: el lateral del dedo alineado al lateral VIVO de
-                # la raiz -> sin roll libre, y los tramos rigidos distales
-                # reposan exactos
                 def _aim(label, input_plug, target_plug):
                     amx = cmds.createNode("aimMatrix", name=f"{base}{label}_AMX", ss=True)
                     cmds.connectAttr(input_plug, f"{amx}.inputMatrix")
@@ -2712,9 +1938,6 @@ class PawFoot(FootBase):
                 aim1 = _aim("Ik01", f"{p1_world}.matrixSum", f"{goal}.matrixSum")
 
                 ik_srcs = [f"{aim0}.outputMatrix", f"{aim1}.outputMatrix"]
-                # offsets rigidos contra lo que el aim DA en reposo (la cuerda
-                # P1->punta, no el hueso): en dedos de 4 falanges difieren y
-                # hornear contra el hueso descolocaba los tramos distales
                 aim1_rest_inv = om.MMatrix(cmds.getAttr(f"{aim1}.outputMatrix")).inverse()
                 for i in range(2, len(fk_list)):
                     rig = cmds.createNode("multMatrix", name=f"{base}Ik{i:02d}Rigid_MMX", ss=True)
@@ -2722,7 +1945,6 @@ class PawFoot(FootBase):
                     cmds.connectAttr(f"{aim1}.outputMatrix", f"{rig}.matrixIn[1]")
                     ik_srcs.append(f"{rig}.matrixSum")
 
-            # skinning por falange: blend FK/IK (o FK puro en el espolon)
             for i, fk in enumerate(fk_list):
                 jnt = cmds.createNode("joint", name=f"{base}{i:02d}Skinning_JNT", ss=True, parent=leg.skeleton_grp)
                 if ik_srcs:
@@ -2735,16 +1957,7 @@ class PawFoot(FootBase):
                     cmds.connectAttr(f"{fk}.worldMatrix[0]", f"{jnt}.offsetParentMatrix")
 
     def digits_attributes(self, leg):
-        """
-        Control de atributos de los dedos con Curl, Spread y Twist (-10..10,
-        default 0, convención de mano del repo).
-
-        El cableado SDK porta el reparto de la referencia (digits_module):
-        curl decreciente proximal->distal, spread solo en la proximal con
-        abanico simétrico respecto al eje funcional III-IV, y el espolón
-        aparte con su propio rango.
-        """
-        
+        """Control de atributos de los dedos con Curl, Spread y Twist."""
         self.paw_attributes_grp, self.paw_attributes_ctl = curve_tool.create_controller(
             name=f"{self.finger_base_name}sAttributes",
             offset=["GRP", "OFF", "ANM"],
@@ -2766,11 +1979,6 @@ class PawFoot(FootBase):
             _f_attr("Dewclaw_Curl")
             _f_attr("Dewclaw_Twist")
 
-        # ---- SDK (reparto de la referencia digits_module) ----
-        # El eje funcional de la pata digitigrada cae ENTRE los dedos III y IV:
-        # el abanico del Spread es simetrico respecto a ese eje (externos a
-        # tope, centrales apenas). Curl decreciente proximal->distal. El
-        # espolon aparte: no apoya y su rango es otro.
         SPREAD_W = {"II": -1.0, "III": -0.33, "IV": 0.33, "V": 1.0}
         SPREAD_MAX = 12.0
         PHALANX_CURL = [(-70, 18), (-55, 14), (-45, 12)]
@@ -2795,36 +2003,6 @@ class PawFoot(FootBase):
                     w = SPREAD_MAX * SPREAD_W.get(numeral, 0.0)
                     _sdk_key(sdk, "rotateY", "Spread", w, -w)
 
-        
 
 BackLegModule.FOOT_CLASS = HoofFoot
 FrontLegModule.FOOT_CLASS = HoofFoot
-
-
-# ═════════════════════════════════════════════════════════════════════════════
-# CONFIGURACIÓN POR ESPECIE — datos, no clases
-# ═════════════════════════════════════════════════════════════════════════════
-# Esto es la TABLA de tu TFG hecha código: dato anatómico -> parámetro -> valor.
-# Su sitio definitivo es el .build de cada personaje (junto al resto de
-# rig_settings), NO un dict aquí. Se deja como referencia de qué forma tiene.
-#
-# OJO al meterlo en el .build: get_rig_data() reescribe el fichero desde los
-# atributos de C_guides_GRP, así que una clave suelta se la come. Hay que
-# añadirla también a create_rig_settings.
-#
-# SPECIES_CONFIG = {
-#     "horse": {
-#         "solver":              SOLVER_SPRING,
-#         "foot":                HoofFoot,
-#         "reciprocal_coupling": True,   # peroneo tercero tendinoso -> obligatorio
-#         "fetlock_spring":      True,   # aparato de estay
-#         "sagittal_bias":       2.4,    # flexión concentrada en la lumbosacra
-#     },
-#     "chihuahua": {
-#         "solver":              SOLVER_SPRING,
-#         "foot":                PawFoot,
-#         "reciprocal_coupling": False,  # peroneo tercero muscular -> no obliga
-#         "fetlock_spring":      False,  # sin aparato de estay
-#         "sagittal_bias":       1.3,    # flexión más repartida
-#     },
-# }

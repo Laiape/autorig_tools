@@ -522,6 +522,11 @@ def de_boor_ribbon(cvs, ctls_grp=None, aim_axis='x', up_axis='y', num_joints=5, 
         if up_object is not None:
             # Qué eje del objeto de referencia alinear con el up del joint
             cmds.setAttr(f'{aim}.secondaryTargetVector', *up_object_vector)
+        elif up_slerp:
+            # El up del joint se alinea con el MISMO eje up del frame
+            # interpolado (blendMatrix). Sin esto el vector queda a cero, el
+            # align no hace nada y el twist de los CV no llega al joint.
+            cmds.setAttr(f'{aim}.secondaryTargetVector', *AXIS_VECTOR[up_axis])
 
         if use_scale:
             scale_wam = create_wt_add_matrix(sca_off_plugs, wts, f'{name}_scale_{i}_WAM', tol=tol)

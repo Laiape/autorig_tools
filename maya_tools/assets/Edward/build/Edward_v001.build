@@ -1,5 +1,10 @@
 {
     "Rig_Type": 0,
+    "solver_mode": 0,
+    "solver_front_leg": 0,
+    "solver_back_leg": 0,
+    "reciprocal_coupling": 1,
+    "foot_type": 0,
     "spine_skinning_jnts": 8,
     "spine_controllers": 5,
     "neck_skinning_jnts": 5,
