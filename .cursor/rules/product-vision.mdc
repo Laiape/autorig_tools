@@ -1,0 +1,23 @@
+---
+description: Autorig Tools product vision. Apply on every product or module change.
+alwaysApply: true
+---
+
+# Autorig Tools product vision
+
+Read `modulos/vision/how_it_works.md` before changing Maya or Unreal tools.
+Do not invent a different product story.
+
+When the user points at a file type or says "this information is here",
+read `modulos/vision/mapa_datos.md` and put the data on the mapped menu
+or path. Do not invent a new window. After wiring, fill the Sources
+column there.
+
+Short reminders:
+
+- The repo exists so a rigger can autorig and maintain a character in Maya.
+- Maya home is the AutoRig Tools menu and AutoRig shelf.
+- Unreal is notes under `ue_tools/docs/` until scripts exist. Not a Maya menu.
+- It is not a web app. Do not add Docker, FastAPI, or hub tiles.
+
+Do not duplicate the full vision here. This rule points at the source doc.

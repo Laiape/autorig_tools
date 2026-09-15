@@ -1,6 +1,30 @@
-*/.pyc
-**/__pycache__
-# 358MB, supera el limite de 100MB de GitHub (usar LFS si hace falta versionarlo)
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.egg-info/
+.venv/
+venv/
+
+# Maya
+.mayaSwatches/
+incrementalSave/
+*.ma.bak
+*.mb.bak
+*.swatches
+
+# Autorig build cache (regenerated on CREATE RIG)
+maya_tools/cache/*.cache
+
+# Oversized scene (GitHub 100MB limit; use LFS if you must version it)
 **/chihuahua_v001.ma
-# configuracion local de Claude Code (skills, settings): solo en local
+
+# Local agent config (not this repo's .cursor/rules)
 .claude/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.iml

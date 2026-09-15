@@ -1,0 +1,13 @@
+---
+description: Park items the user wants done only at the end
+alwaysApply: true
+---
+
+# Parked for delivery
+
+When the user asks to save something for later / the end / delivery,
+add a row to `modulos/vision/pendiente_final.md` in the same turn.
+Do not start that work. Do not invent extra parked items.
+
+When they ask what is left, or to close the list, read that file and
+remind them of every open row.

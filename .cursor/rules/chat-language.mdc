@@ -1,0 +1,17 @@
+---
+description: Chat with the user is Spanish
+alwaysApply: true
+---
+
+# Chat language: Spanish
+
+Always reply to the user in Spanish in this chat.
+
+- Chat messages, explanations, questions, and summaries: Spanish.
+- Accents in chat: follow `ascii-acentos.mdc` (chat is a required exception).
+- Do not switch to English unless the user explicitly asks for English in that turn.
+- The product stays English (new Maya UI, docs, logs, `how_it_works.md`).
+  See `language.mdc`.
+- Code, comments, commits, and terminal output stay English ASCII.
+
+Wrong: answering the user in English by default because the tools are English-only.

@@ -1,0 +1,19 @@
+---
+description: Product language is English ASCII
+alwaysApply: true
+---
+
+# Language: English
+
+Autorig Tools product surface is English-only unless the user explicitly
+asks for i18n. Chat replies to the user are Spanish. See `chat-language.mdc`.
+This file is only for the product (Maya UI, docs, logs), not for Cursor chat.
+
+- New Maya menu labels, window titles, placeholders, empty states: English
+- `how_it_works.md`, comments, agent/terminal output: English, ASCII (no accents, no emoji)
+- Do not bulk-rewrite existing Spanish `inViewMessage` strings unless asked
+
+Do not add Spanish (or other languages) to new UI unless the user
+explicitly asks for i18n.
+
+Technical identifiers stay as they are: module names, menu ids, env keys.

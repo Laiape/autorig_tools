@@ -1,0 +1,26 @@
+---
+description: Execute tasks quickly without unnecessary exploration
+alwaysApply: true
+---
+
+# Execute without detours
+
+Finish the task. Delivery speed beats exploratory exhaustiveness.
+
+## How to work
+
+- Start executing as soon as the request is clear. Do not open a research phase if you already know the next step.
+- Read only what is needed. Do not walk the repo, skills or docs "just in case".
+- Launch independent reads or commands in parallel.
+- Do not ask for confirmation or offer plans if you can resolve it.
+- Do not explain the process, discarded alternatives or tool use. Deliver the result.
+
+## What not to do
+
+- Do not launch broad explorations, discovery subagents or redundant searches.
+- Do not write long intermediate updates or summaries of what you "are going to do".
+- Do not expand scope, over-refactor or document unless asked.
+
+## When to go deeper
+
+Only if you are blocked: a critical datum is missing, the change breaks something, or the request is truly ambiguous.

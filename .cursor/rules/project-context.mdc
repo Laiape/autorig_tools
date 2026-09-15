@@ -1,0 +1,42 @@
+---
+description: "Autorig Tools: read context before changing"
+alwaysApply: true
+---
+
+# autorig_tools: context before changing
+
+Language: English. See `.cursor/rules/language.mdc`.
+
+## Required flow
+
+1. Identify the area and read its primary `how_it_works.md`, and the parent index if it exists, only if they have not already been read in this conversation with enough context.
+2. Follow the dependencies in that document, then inspect the code.
+3. Docs guide; live code and config are the source of truth.
+4. After changing behavior, menu, tool, plugin, module path or deploy, update the affected `how_it_works.md` files and their parent indexes in the same task. New text is ASCII English (no accents).
+5. Read **only** the area `how_it_works.md`. Then execute without detours.
+
+## Paths in docs and rules
+
+File/folder pointers (in backticks) always from the `autorig_tools` root: `maya_tools/scripts/userSetup.py`.
+Do not use `../`, `C:\`, or a leading slash.
+
+## Entry index
+
+| Area or change | Read first |
+|---|---|
+| Repo overview | `how_it_works.md` (root) |
+| Product vision | `modulos/vision/how_it_works.md` |
+| Parked for delivery | `modulos/vision/pendiente_final.md` |
+| Where a data source is shown | `modulos/vision/mapa_datos.md` |
+| Maya tools | `maya_tools/how_it_works.md` |
+| Maya menu, shelf, Qt | `maya_tools/criterios-ui.md` |
+| Unreal tools | `ue_tools/how_it_works.md` |
+| Cursor skills index | `.cursor/skills/how_it_works.md` |
+
+Keep this table in sync with the root `how_it_works.md`.
+
+## Validation
+
+- Maya loads `maya_tools/self_module.mod`. Menu `AutoRig Tools` and shelf `AutoRig` appear.
+- The `.mod` path must match this clone. Do not invent a second module file.
+- Wait for explicit user approval before `git add`, commit, push or deploy.

@@ -1,0 +1,30 @@
+---
+description: Where accents and non-ASCII are allowed
+alwaysApply: true
+---
+
+# ASCII vs accents
+
+This file is the only accent policy. Do not repeat it in other rules.
+
+## Default (program, docs)
+
+- No accents or non-ASCII in the program: new code, comments, logs, docs,
+  `how_it_works.md`, terminal output.
+- No emojis.
+- Reason: PowerShell/Windows (`charmap`) fails on non-ASCII.
+- Existing Maya strings may already contain Spanish. Leave them until asked.
+
+## Required exception: chat with the user
+
+Cursor chat replies are Spanish with correct accents. See `chat-language.mdc`.
+This exception is only for the message shown to the user. It does not apply
+to code, docs, logs, or `how_it_works.md`.
+
+## Summary
+
+| Scope | Accents / non-ASCII |
+|---|---|
+| Chat with the user (Spanish) | YES, required |
+| New code, comments, logs, docs | NO |
+| Existing Maya UI strings | leave until asked |

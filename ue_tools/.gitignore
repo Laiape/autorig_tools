@@ -1,0 +1,3 @@
+# Placeholder scripts. Ignore bytecode if Python is added later.
+__pycache__/
+*.pyc

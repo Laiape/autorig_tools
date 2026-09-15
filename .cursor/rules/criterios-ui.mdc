@@ -1,0 +1,19 @@
+---
+description: Autorig Tools Maya UI criteria. Apply on every Maya UI change.
+alwaysApply: true
+---
+
+# Autorig Tools UI criteria
+
+Before changing any Maya menu, shelf, or Qt window, read
+`maya_tools/criterios-ui.md` and follow it. Do not invent a parallel layout.
+
+Short reminders:
+
+- Menu `AutoRig Tools` groups in this order: Reload UI, PIPELINE,
+  MODELING, RIGGING, ANIMATION, CORRECTIVES, SKINNING, SIMULATION.
+- Shelf `AutoRig` is the short cut (AssetMgr today). Icons in `maya_tools/icons`.
+- Character Manager Qt palette lives in `character_manager.py`. Reuse it.
+- New labels: English. See `.cursor/rules/language.mdc`.
+
+Wrong: a second Maya menu, web chrome, or a dump window not on the data map.
