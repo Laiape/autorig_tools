@@ -83,9 +83,9 @@ def init_auto_rig_UI():
         traceback.print_exc()
         cmds.warning(f"No se ha podido cargar auto_rig_UI: {e}")
     vs_code_ports()
-    install_numpy()
-    init_proxy_locator()
-    init_mcp_listener()
+    #install_numpy()
+    #init_proxy_locator()
+    #init_mcp_listener()
 
 
 def init_mcp_listener():

@@ -1,0 +1,214 @@
+{
+ "landmarks": {
+  "hip": [
+   7.80215473733251,
+   60.90942921001815,
+   -3.0443238198729343
+  ],
+  "knee": [
+   8.22388345003128,
+   37.70539855957031,
+   1.844249576330185
+  ],
+  "ankle": [
+   7.690010900997857,
+   10.074847943271124,
+   -3.321897769820442
+  ],
+  "shoulder": [
+   14.391207609603654,
+   96.86648514021688,
+   -3.659343452595953
+  ],
+  "elbow": [
+   24.814515250069753,
+   85.14476367405483,
+   -4.819158698831286
+  ],
+  "wrist": [
+   40.738196580306344,
+   69.6280867535135,
+   0.45174562758293707
+  ]
+ },
+ "plane": {
+  "leg": {
+   "sao": "xup",
+   "orient": [
+    -0.45,
+    22.48,
+    -2.2
+   ],
+   "orient_clean": [
+    0.0,
+    22.48,
+    0.0
+   ],
+   "bend_axis": "Y",
+   "residual": [
+    0.45,
+    2.2
+   ],
+   "drift": [
+    1.0,
+    -0.0,
+    0.0
+   ],
+   "drift_len": 1.0,
+   "end_radius": 2.3,
+   "prebend_deg": 22.6,
+   "pole_dir": [
+    0.09,
+    -0.01,
+    1.0
+   ],
+   "pole_len": 5.04,
+   "plane_normal": [
+    0.996,
+    -0.002,
+    -0.094
+   ],
+   "verdict": "PASS, small deviation"
+  },
+  "arm": {
+   "sao": "zdown",
+   "orient": [
+    0.95,
+    -3.99,
+    -17.6
+   ],
+   "orient_clean": [
+    0.0,
+    0.0,
+    -17.6
+   ],
+   "bend_axis": "Z",
+   "residual": [
+    0.95,
+    3.99
+   ],
+   "drift": [
+    -1.15,
+    -1.1,
+    0.01
+   ],
+   "drift_len": 1.59,
+   "end_radius": 1.2,
+   "prebend_deg": 18.0,
+   "pole_dir": [
+    -0.09,
+    -0.23,
+    -0.97
+   ],
+   "pole_len": 2.92,
+   "plane_normal": [
+    -0.717,
+    -0.66,
+    0.224
+   ],
+   "verdict": "FAIL"
+  }
+ },
+ "blockers": [
+  [
+   "N-gons on deforming meshes",
+   "c_body_GEO: 12 n-gons near [[0.6, 110.8, 11.0], [0.7, 113.8, -6.7], [0.4, 112.1, 11.0]]; c_hood_GEO1: 2 n-gons near [[2.5, 122.8, -11.5], [0.0, 122.8, -11.9]]; c_pants_GEO: 2 n-gons near [[0.9, 64.6, -11.4], [-0.0, 64.6, -11.3]]. Rebuild as quads."
+  ],
+  [
+   "Vertices in the same position (unmerged seams)",
+   "c_body_GEO: 5 pairs near [[0.0, 113.851, -6.701], [0.0, 110.322, 10.458], [0.0, 112.019, 11.032]]; c_button_GEO: 2 pairs near [[-1.57, 105.4, 7.841], [0.916, 105.056, 7.37]]; c_pants_GEO: 1 pairs near [[-0.0, 66.845, -10.62]]. Merge the vertices (usually the mirror seam)."
+  ],
+  [
+   "Transforms not frozen, pivots not at the origin",
+   "Unfrozen: R_specular_GEO t=[-0.3, 0.01, -0.07] r=[0.0, 0.0, 0.0] s=[1.0, 1.0, 1.0]; c_eyelashes_GEO t=[-1.82, -49.78, -6.91] r=[5.25, -13.05, -1.52] s=[0.419, 0.419, 0.419]; c_furBalls_GEO t=[0.0, -0.87, 1.97] r=[0.0, 0.0, 0.0] s=[1.0, 1.0, 1.0]; c_placeholder_bootBase t=[31.85, 0.07, 0.0] r=[0.0, 0.0, 0.0] s=[1.0, 1.125, 1.0]; nini_GRP (group) t=[0.0, 0.0, 2.0] r=[0.0, 0.0, 0.0] s=[1.0, 1.0, 1.0]; c_hair_GEO (group) t=[0.0, 0.0, -2.0] r=[0.0, 0.0, 0.0] s=[1.0, 1.0, 1.0]; c_eyes_GRP (group) t=[4.88, 119.78, 4.84] r=[-5.03, 13.13, 0.34] s=[2.386, 2.386, 2.386]; teeth_top (group) t=[0.0, 0.22, -0.5] r=[0.0, 0.0, 0.0] s=[1.163, 1.102, 1.102]; teeth_low (group) t=[-0.0, -1.33, -0.77] r=[175.63, 180.34, -0.45] s=[1.163, 1.317, 1.102]. Pivot not at the origin: 58 meshes (e.g. C_tongue_GEO, L_lowCanine_GEO, L_lowFront_GEO, L_lowIncisor_GEO). Freeze translate, rotate and scale and put every pivot at (0, 0, 0)."
+  ],
+  [
+   "Naming convention",
+   "Not matching side_name_GEO / side_name_GRP: c_hood_GEO1, c_placeholder_bootBase, c_hair_GEO, teeth_top, teeth_low. Mixed-case side prefixes (C, L, R, c, l, nini, r, teeth): pick one case for the whole asset."
+  ],
+  [
+   "Locked vertex normals",
+   "58 of 58 meshes (C_tongue_GEO, L_lowCanine_GEO, L_lowFront_GEO, L_lowIncisor_GEO, L_lowMolar1_GEO...). Locked normals do not update on deformation. Unlock them (Mesh Display > Unlock Normals). FBX export locks normals; deliver a Maya scene."
+  ],
+  [
+   "Delivery format",
+   "Only an FBX was delivered. Deliver a Maya ASCII (.ma) scene."
+  ],
+  [
+   "Limb plane: arm",
+   "Middle joint keeps [0.95, 3.99] deg on the minor axes; end guide drifts 1.59 cm (limb radius 1.2 cm). Realign the arm so the bend happens in one plane."
+  ]
+ ],
+ "recommended": [
+  [
+   "Meshes under 2000 vertices",
+   "54 of 58 meshes. Deformers on these run on the CPU. Combine meshes that deform together (e.g. C_tongue_GEO, L_lowCanine_GEO, L_lowFront_GEO, L_lowIncisor_GEO, L_lowMolar1_GEO)."
+  ],
+  [
+   "Per-face material assignment",
+   "L_pupil_GEO: 3 shading groups; R_pupil_GEO: 3 shading groups; 6 groupId nodes. One material per mesh unless lookdev needs the split."
+  ],
+  [
+   "Poles near deformation areas",
+   "elbow: 4 poles within 7 cm (valence, x, y, z: [[5, 22.4, 84.3, -4.9], [5, 25.8, 87.6, -5.4]]); shoulder: 7 poles within 7 cm (valence, x, y, z: [[3, 11.6, 102.1, -5.8], [5, 13.9, 98.5, -7.1]]); wrist: 71 poles within 7 cm (valence, x, y, z: [[5, 42.3, 69.0, -1.5], [5, 42.5, 68.9, 0.0]]). Keep poles off the fold loops."
+  ],
+  [
+   "Limb plane alignment: leg",
+   "Passes with a small deviation: [0.45, 2.2] deg on the minor axes, end guide drifts 1.00 cm (limb radius 2.3 cm). Optional: move the leg so the three landmarks share one plane."
+  ],
+  [
+   "Pre-bend: leg",
+   "22.6 degrees. 5 to 10 degrees is enough for the IK solver."
+  ],
+  [
+   "Pre-bend: arm",
+   "18.0 degrees. 5 to 10 degrees is enough for the IK solver."
+  ]
+ ],
+ "passed": [
+  [
+   "Non-manifold, lamina faces",
+   "None on any mesh."
+  ],
+  [
+   "Construction history",
+   "None."
+  ],
+  [
+   "Vertex tweaks (pnts)",
+   "All zero."
+  ],
+  [
+   "Duplicate names",
+   "None."
+  ],
+  [
+   "Namespaces, unknown nodes",
+   "None."
+  ],
+  [
+   "One shape per transform, no mesh under a mesh",
+   "OK."
+  ],
+  [
+   "Body symmetry",
+   "5870 vertices per side, 222 on the center line, max deviation 0.000 cm."
+  ],
+  [
+   "Triangles",
+   "None on deforming meshes."
+  ],
+  [
+   "Ground contact",
+   "Lowest point at Y = 0.054."
+  ],
+  [
+   "Unused shaders, extra cameras, layers, sets",
+   "None (37 shading groups, all assigned)."
+  ],
+  [
+   "Neutral expression, feet direction, cloth/body elbow match",
+   "Visual check by the reviewer. See screenshots."
+  ]
+ ]
+}

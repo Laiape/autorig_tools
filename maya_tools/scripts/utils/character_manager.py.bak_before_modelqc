@@ -13,7 +13,6 @@ from maya_tools.scripts.utils import create_rig, curve_tool
 from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import ui_utils
-from maya_tools.scripts.utils import model_qc
 
 try:
     from PySide6 import QtWidgets, QtCore, QtGui
@@ -214,18 +213,6 @@ class VersionTab(QtWidgets.QWidget):
         row.addWidget(self.btn_imp)
         lay.addLayout(row)
 
-        if self.sub_folder == "models":
-            qrow = QtWidgets.QHBoxLayout()
-            self.btn_qc_setup = _btn("QC SETUP", C_BG1, C_TEXT, bold=True, letter_spacing=1)
-            self.btn_qc_run   = _btn("QC RUN", C_BLUE2, "#0d0d10", bold=True, letter_spacing=1, accent=True)
-            self.btn_qc_setup.setToolTip("Import a model (.ma/.mb/.fbx) in a new scene and place the 6 limb landmark locators")
-            self.btn_qc_run.setToolTip("Run the modeling QC, write the PDF to models/feedback and save a new model version")
-            self.btn_qc_setup.clicked.connect(self.qc_setup)
-            self.btn_qc_run.clicked.connect(self.qc_run)
-            qrow.addWidget(self.btn_qc_setup)
-            qrow.addWidget(self.btn_qc_run)
-            lay.addLayout(qrow)
-
     def refresh(self):
         self.table.setRowCount(0)
         if not os.path.exists(self.full_path):
@@ -274,50 +261,6 @@ class VersionTab(QtWidgets.QWidget):
                 h.setAlignment(QtCore.Qt.AlignCenter)
                 h.addWidget(b)
                 self.table.setCellWidget(row, col, w)
-
-    # -- MODEL QC --------------------------------------------------------------
-    def qc_setup(self):
-        """Model QC setup on the latest model version of the selected asset."""
-        files = sorted(f for f in os.listdir(self.full_path) if f.lower().endswith((".ma", ".mb")))
-        path = os.path.join(self.full_path, files[-1]).replace("\\", "/") if files else None
-        if not path:
-            path, _ = QtWidgets.QFileDialog.getOpenFileName(
-                self, "No model version found. Pick a model to check", self.asset_path,
-                "Model files (*.ma *.mb *.fbx)")
-            if not path:
-                return
-        else:
-            reply = QtWidgets.QMessageBox.question(
-                self, "Model QC", f"Set up the QC on the latest version?\n\n{os.path.basename(path)}",
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-            if reply != QtWidgets.QMessageBox.Yes:
-                return
-        try:
-            reload(model_qc)
-            model_qc.setup_qc(path)
-        except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Model QC", str(e))
-
-    def qc_run(self):
-        asset = os.path.basename(self.asset_path)
-        reply = QtWidgets.QMessageBox.question(
-            self, "Model QC",
-            f"Run the modeling QC on '{asset}'?\n\nThis writes the PDF to models/feedback, "
-            f"removes the QC locators and saves a new model version.",
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        if reply != QtWidgets.QMessageBox.Yes:
-            return
-        try:
-            reload(model_qc)
-            res = model_qc.run_qc(self.asset_path)
-            self.refresh()
-            msg = f"{os.path.basename(res['pdf'])}\n{len(res['blockers'])} blockers, {len(res['recommended'])} recommendations.\n\nOpen the PDF?"
-            reply = QtWidgets.QMessageBox.question(self, "Model QC done", msg,
-                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-            if reply == QtWidgets.QMessageBox.Yes:
-                os.startfile(res["pdf"])
-        except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "Model QC error", str(e))
 
     def _next_version_path(self):
         ext   = self.EXT_MAP.get(self.sub_folder, ".ma")
