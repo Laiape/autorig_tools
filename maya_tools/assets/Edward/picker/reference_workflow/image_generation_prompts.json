@@ -1,0 +1,38 @@
+{
+  "mode": "built-in image_gen",
+  "character_removal": {
+    "status": "succeeded",
+    "input": "reference_original.png",
+    "output": "01_reference_without_character.png",
+    "prompt": "Use case: precise-object-edit. Edit target: attached full two-panel animation rig picker screenshot. Remove ONLY the rendered human character in BOTH panels: full body, hair, clothes, shoes, skin, eyes and every pixel of the character, and large face and shoulders on right. Replace the erased character with pure solid black (#000000), matching existing background. Preserve EVERY overlaid colorful controller and ALL buttons, labels, black outlines, strokes, their exact positions, dimensions, colors, wording, spacing, frame, and two-panel composition. Restore the tiny control shapes unobscured on pure black. Do not remove any red, blue, yellow, green, cyan, pink or orange controller; preserve small finger, brow, lip, eye, nose controls too. No new character, no redesign, no extra text. Same full landscape screenshot aspect ratio and framing, all edges visible. This is the control-only reference plate for a Maya picker."
+  },
+  "frontal_repose": {
+    "status": "rejected_by_generation_safety_filter",
+    "input": "maya_tools/assets/Edward/Edward.png",
+    "output": null,
+    "prompt": "Use case: identity-preserve. Asset: BODY ONLY background plate for an editable animation rig picker. Use the input Edward Scissorhands stylized 3D model as strict character identity reference. Preserve his exact stylized face, large worried eyes, pale skin, tangled curling black hair, dark leather buckled suit with the exact belts, metal rings and brass buckles, long scissor hands, trousers and boots. Re-pose him into a symmetric orthographic frontal A pose, looking straight at camera, spine upright, feet apart and parallel, arms down and angled outward about 25 degrees, both scissor hands clearly separated from torso, blades spread and downward. Anatomical right on viewer LEFT. Do not add normal human fingers or lose scissors. Full body on completely flat pure black background, no shadows on floor, no scenery, no text, no UI, no controller graphics. Portrait 700:1000 aspect ratio. Center body at 50% width; top of hair at 7% height; bottom boots at 93%; shoulders at 26%; elbows at 38%; wrists at 49%; pelvis at 53%; knees at 72%; ankles at 88%. Keep both hands and blades entirely visible within 12%-88% of width. Crisp premium studio 3D render with soft neutral frontal light and subtle highlights on dark leather, matching the supplied model. This is a REPOSED illustration derived from the supplied photograph, not a new design."
+  },
+  "final_picker": {
+    "mode": "native Maya Qt picker with DWPicker JSON export",
+    "photo": {
+      "body": "edward_reference_sheet.png",
+      "face": "edward_face_front_hd.png"
+    },
+    "controller_source": "maya_tools/assets/Edward/curves/Edward_v001.curves",
+    "note": "The frontal facial image was restored with the built-in image generation tool. Controls remain separate and the facial secondary palette is preserved."
+  },
+  "facial_upscale": {
+    "mode": "built-in image_gen",
+    "input": "edward_face_front.png",
+    "output": "edward_face_front_hd.png",
+    "original_size": [
+      224,
+      185
+    ],
+    "output_size": [
+      1380,
+      1140
+    ],
+    "prompt": "Use case: identity-preserve. Edit target: the supplied 224 by 185 pixel frontal stylized 3D character portrait. Upscale and restore this SAME image at approximately 8x linear resolution (around 1792 by 1480 pixels), preserving original aspect ratio, original framing and margins, exact face proportions, frontal pose, worried expression, positions and size of both eyes, eyebrow shapes, nose, lips, chin, neck, all black curly hair silhouettes and individual curls, the buckled leather collar, shoulders, colors, lighting, and flat gray background. Sharpen edges and reconstruct subtle 3D hair strands, eye iris detail, skin shading, leather grain and buckle detail without changing the original design. It must overlay the original after proportional downscaling: no reframing, no zoom, no pose changes, no expression changes, no new objects, no text, no controls, no background replacement. This is a high-resolution background photo for a Maya facial animation picker, requiring pixel-aligned anatomical landmarks. Preserve the image, only improve resolution and clarity."
+  }
+}

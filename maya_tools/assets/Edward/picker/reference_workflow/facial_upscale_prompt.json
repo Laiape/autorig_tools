@@ -1,0 +1,14 @@
+{
+  "mode": "built-in image_gen",
+  "input": "edward_face_front.png",
+  "output": "edward_face_front_hd.png",
+  "original_size": [
+    224,
+    185
+  ],
+  "output_size": [
+    1380,
+    1140
+  ],
+  "prompt": "Use case: identity-preserve. Edit target: the supplied 224 by 185 pixel frontal stylized 3D character portrait. Upscale and restore this SAME image at approximately 8x linear resolution (around 1792 by 1480 pixels), preserving original aspect ratio, original framing and margins, exact face proportions, frontal pose, worried expression, positions and size of both eyes, eyebrow shapes, nose, lips, chin, neck, all black curly hair silhouettes and individual curls, the buckled leather collar, shoulders, colors, lighting, and flat gray background. Sharpen edges and reconstruct subtle 3D hair strands, eye iris detail, skin shading, leather grain and buckle detail without changing the original design. It must overlay the original after proportional downscaling: no reframing, no zoom, no pose changes, no expression changes, no new objects, no text, no controls, no background replacement. This is a high-resolution background photo for a Maya facial animation picker, requiring pixel-aligned anatomical landmarks. Preserve the image, only improve resolution and clarity."
+}

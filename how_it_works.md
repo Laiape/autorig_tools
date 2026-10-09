@@ -58,6 +58,7 @@ flowchart TD
 
 ### Read `maya_tools/how_it_works.md` if you need...
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
+- Edward's native Maya 2024+ photo picker, installer and controller exports.
 
 ### Read `maya_tools/criterios-ui.md` if you need...
 - Menu, shelf, Qt windows. Do not invent a parallel Maya chrome.

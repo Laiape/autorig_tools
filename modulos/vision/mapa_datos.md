@@ -41,6 +41,7 @@ Read this map, pick the row that matches the meaning, and put it there.
 | Corrective blendshape export/import | Correctives submenu | Maya rigger | `maya_tools/scripts/tools/corrective_blendshape_manager.py` |
 | Cloth / auto skin transfer | Auto Skin Transfer (Clothes) window | Maya rigger | `maya_tools/scripts/ui/skin_transfer_UI.py` |
 | Pose test of the built rig | Test Rig (pose tester) | Maya rigger | `maya_tools/scripts/ui/pose_tester_UI.py` |
+| Edward animation control picker | Edward Picker (ANIMATION menu / shelf) | Maya animator/rigger | `maya_tools/assets/Edward/picker/reference_workflow/Edward_reference_picker.json`; native Qt entry `maya_tools/scripts/tools/edward_picker.py` |
 | Model sanity before rig | Model Checker | Maya rigger | `maya_tools/scripts/tools/model_checker.py` |
 | Unreal production rigging notes | `ue_tools/docs/` | Unreal rigger | `ue_tools/docs/unreal_fest_chicago_2026_rigging_produccion.md` |
 

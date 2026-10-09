@@ -27,7 +27,7 @@ Do not reorder groups unless the user asks.
 | 2 | PIPELINE | Character Manager |
 | 3 | MODELING | Model Checker |
 | 4 | RIGGING | CREATE RIG, CREATE RIG SELF, CREATE RIG SELF MATH, BUILD LEG, Guides Manager, Controllers Manager |
-| 5 | ANIMATION | Test Rig |
+| 5 | ANIMATION | Test Rig, Edward Picker |
 | 6 | CORRECTIVES | Corrective Blendshapes, Corrective Skin |
 | 7 | SKINNING | Skin Cluster Manager, Corrective Curve, Auto Skin Transfer (Clothes) |
 | 8 | SIMULATION | AdonisFX Copy Weights |
@@ -40,8 +40,8 @@ Controllers Manager children: Export All Controllers, Mirror Controllers.
 Skin Cluster Manager children: Export Skin Cluster, Import Skin Cluster,
 Proxy Skinning.
 
-Shelf `AutoRig` (`maya_tools/scripts/ui/auto_rig_shelf.py`): one button
-AssetMgr that opens Character Manager. Add shelf buttons only in
+Shelf `AutoRig` (`maya_tools/scripts/ui/auto_rig_shelf.py`): AssetMgr opens
+Character Manager; EdwardPicker opens the native body/face picker. Add shelf buttons only in
 `SHELF_BUTTONS`. Icons live in `maya_tools/icons`.
 
 Menu id: `autorig_menu`. Label: `AutoRig Tools`. Parent: `MayaWindow`.
@@ -53,6 +53,8 @@ Menu id: `autorig_menu`. Label: `AutoRig Tools`. Parent: `MayaWindow`.
   tools. Do not invent a second grey/blue set.
 - Other tools: `skin_transfer_UI.py`, `pose_tester_UI.py`,
   `deboor_tools_UI.py`, `corrective_curve_UI.py`, `rig_progress.py`.
+- Edward picker: `maya_tools/assets/Edward/picker/reference_workflow/edward_maya_picker.py`,
+  launched by `maya_tools/scripts/tools/edward_picker.py`.
 - PySide6 with PySide2 fallback, same as Character Manager.
 
 ## 4. Wrong

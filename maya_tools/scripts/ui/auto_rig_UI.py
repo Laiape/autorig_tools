@@ -17,6 +17,11 @@ reload(guides_manager)
 reload(create_rig)
 reload(data_manager)
 
+def open_edward_picker():
+    from tools import edward_picker
+    return edward_picker.show()
+
+
 def create_custom_menu():
     menu_id = "autorig_menu"
 
@@ -66,6 +71,7 @@ def create_custom_menu():
     cmds.menuItem(divider=True, dividerLabel="ANIMATION")
 
     cmds.menuItem(label="Test Rig", command=lambda x: open_pose_tester(), boldFont=True, image="setKeyframe.png")
+    cmds.menuItem(label="Edward Picker", command=lambda x: open_edward_picker(), image="pickWalkUp.png")
 
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")

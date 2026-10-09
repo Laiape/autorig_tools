@@ -10,6 +10,9 @@ SHELF_BUTTONS = [
     ("AssetMgr", "myLogo.png", "Character / Asset Manager",
      "from maya_tools.scripts.ui import auto_rig_UI\n"
      "auto_rig_UI.show_character_manager_ui()"),
+    ("EdwardPicker", "pickWalkUp.png", "Edward body and face picker",
+     "from tools import edward_picker\n"
+     "edward_picker.show()"),
 ]
 
 

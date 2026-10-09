@@ -37,7 +37,8 @@ Restart Maya.
 On a successful load you get:
 
 - Menu **AutoRig Tools** (Maya menu bar)
-- Shelf **AutoRig** (AssetMgr opens Character Manager)
+- Shelf **AutoRig** (AssetMgr opens Character Manager; EdwardPicker opens the
+  body/face animation picker)
 
 If the menu is missing, the `.mod` path does not match this clone, or Maya did not see the module folder. Script Editor will show `userSetup.py` warnings.
 
