@@ -76,13 +76,6 @@ class FingersModule(object):
         self.attributes_setup()
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Helpers
-    # ─────────────────────────────────────────────────────────────────────────
-    def _lock(self, ctl, attrs):
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
-    # ─────────────────────────────────────────────────────────────────────────
     # Build
     # ─────────────────────────────────────────────────────────────────────────
     def load_guides(self):
@@ -151,7 +144,7 @@ class FingersModule(object):
 
                 matrix_manager.fk_constraint(joint, parent, False, None)
 
-                self._lock(fk_ctl, ["sx", "sy", "sz", "v"])
+                curve_tool.lock_attributes(fk_ctl, ["sx", "sy", "sz", "v"])
                 cmds.xform(joint, m=om.MMatrix.kIdentity)
 
             # Tag the guides with the "Skinning" suffix once the constraints
@@ -178,7 +171,7 @@ class FingersModule(object):
             *self._ctl["middle"][:2], self.finger_attributes_nodes[0], mo=False
         )
         cmds.delete(temp)
-        self._lock(self.finger_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.finger_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
 
     def parent_fingers_to_wrist(self):
         targets = [self._nodes[n][0] for n in self.FINGER_NAMES] + [self.finger_attributes_nodes[0]]

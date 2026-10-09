@@ -121,7 +121,7 @@ class NeckModule(object):
         self.neck_ctls = []
 
         face_nodes, self.face_ctl = curve_tool.create_controller(name=f"{self.side}_face", offset=["GRP", "ANM"])
-        curve_tool.lock_attributes(self.face_ctl, ["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.face_ctl, ["tx", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
         cmds.addAttr(self.face_ctl, longName="FACE_VIS", niceName="FACE VISIBILITY ------", attributeType="enum", enumName="------")
         cmds.setAttr(f"{self.face_ctl}.FACE_VIS", lock=True, keyable=False, channelBox=True)
         

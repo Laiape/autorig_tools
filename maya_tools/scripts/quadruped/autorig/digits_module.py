@@ -106,10 +106,6 @@ class DigitsModule(object):
     # ─────────────────────────────────────────────────────────────────────────
     # Helpers
     # ─────────────────────────────────────────────────────────────────────────
-    def _lock(self, ctl, attrs):
-        for attr in attrs:
-            cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
-
     def _guide_root(self, name):
         return f"{self.module_name}{name[0].upper()}{name[1:]}00_JNT"
 
@@ -193,7 +189,7 @@ class DigitsModule(object):
                 prev = chain[i - 1] if i > 0 else None
                 matrix_manager.fk_constraint(joint, prev, False, None)
 
-                self._lock(fk_ctl, ["sx", "sy", "sz", "v"])
+                curve_tool.lock_attributes(fk_ctl, ["sx", "sy", "sz", "v"])
                 cmds.xform(joint, m=om.MMatrix.kIdentity)
 
             self.skinning_joints[name] = [
@@ -210,7 +206,7 @@ class DigitsModule(object):
         )
         cmds.parent(self.digit_attributes_nodes[0], self.controllers_grp)
         cmds.matchTransform(self.digit_attributes_nodes[0], self._ctl[anchor][0], pos=True, rot=True)
-        self._lock(self.digit_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        curve_tool.lock_attributes(self.digit_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
 
     def parent_digits_to_mtp(self):
 

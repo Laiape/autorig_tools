@@ -28,3 +28,6 @@ maya_tools/cache/*.cache
 Thumbs.db
 .idea/
 *.iml
+
+# Local Edward model
+/maya_tools/assets/Edward/models/Edward_v003.ma

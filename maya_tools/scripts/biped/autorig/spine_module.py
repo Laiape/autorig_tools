@@ -209,8 +209,8 @@ class SpineModule(object):
         # ----- Local chest setup ------
         blend_matrix_node = cmds.createNode("blendMatrix", name=f"{self.side}_localChest_BLM")
         if self.has_chest_guide:
-            # localChest en la posición de C_chest_JNT, pero SIGUIENDO a la última
-            # joint del spine (offset estático * worldMatrix viva).
+            # Preserve the original offset and follow the solved spine tip.
+            # Curve inputs below use only local chest channels, never this result.
             chest_off = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")).inverse()
             chest_follow = cmds.createNode("multMatrix", name=f"{self.side}_localChestFollow_MMX", ss=True)
             cmds.setAttr(f"{chest_follow}.matrixIn[0]", list(chest_off), type="matrix")
@@ -219,7 +219,18 @@ class SpineModule(object):
         else:
             cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
-        cmds.connectAttr(f"{blend_matrix_node}.outputMatrix", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+        # The solved tip already includes chest translation. Remove it from the
+        # parent frame so the chest control does not apply it a second time.
+        chest_untranslate = cmds.createNode("composeMatrix", name=f"{self.side}_localChestUntranslate_CMX", ss=True)
+        for axis in "XYZ":
+            negate = cmds.createNode("multiply", name=f"{self.side}_localChestUntranslate{axis}_MUL", ss=True)
+            cmds.connectAttr(f"{self.local_chest_ctl}.translate{axis}", f"{negate}.input[0]")
+            cmds.setAttr(f"{negate}.input[1]", -1)
+            cmds.connectAttr(f"{negate}.output", f"{chest_untranslate}.inputTranslate{axis}")
+        chest_parent = cmds.createNode("multMatrix", name=f"{self.side}_localChestParent_MMX", ss=True)
+        cmds.connectAttr(f"{chest_untranslate}.outputMatrix", f"{chest_parent}.matrixIn[0]")
+        cmds.connectAttr(f"{blend_matrix_node}.outputMatrix", f"{chest_parent}.matrixIn[1]")
+        cmds.connectAttr(f"{chest_parent}.matrixSum", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
         cmds.setAttr(f"{blend_matrix_node}.target[0].translateWeight", 0)
         cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
         cmds.xform(self.local_chest_nodes[0], m=om.MMatrix.kIdentity)
@@ -249,6 +260,46 @@ class SpineModule(object):
         cmds.setAttr(f"{self.spine_nodes[-1]}.inheritsTransform", 0)
         cmds.xform(self.spine_nodes[-1], m=om.MMatrix.kIdentity)
 
+    def chest_spine_curve_drivers(self):
+        """Add chest translation/scale to the upper IK points without feedback.
+
+        Scale the upper tangent and endpoint about the middle spine controller
+        in the chest's parent axes. This lets chest scaleY change spine length
+        even on a straight spine, while neutral chest channels preserve the
+        existing last-controller motion. Chest rotation remains local to chest.
+        """
+        cmds.loadPlugin("matrixNodes", quiet=True)
+        chest_frame = cmds.createNode("pickMatrix", name=f"{self.side}_spineChestFrame_PMX", ss=True)
+        # Chest parent axes come from the last control. Its solved follow matrix
+        # must never feed the IK curve, or that would create a dependency cycle.
+        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{chest_frame}.inputMatrix")
+        cmds.setAttr(f"{chest_frame}.useTranslate", 0)
+        pivot_row = cmds.createNode("rowFromMatrix", name=f"{self.side}_spineChestPivot_RFM", ss=True)
+        cmds.setAttr(f"{pivot_row}.input", 3)
+        cmds.connectAttr(f"{self.spine_ctls[len(self.spine_ctls) // 2]}.worldMatrix[0]", f"{pivot_row}.matrix")
+        pivot = cmds.createNode("fourByFourMatrix", name=f"{self.side}_spineChestPivot_FBF", ss=True)
+        for col, axis in enumerate("XYZ"):
+            cmds.connectAttr(f"{pivot_row}.output{axis}", f"{pivot}.in3{col}")
+        frame = cmds.createNode("multMatrix", name=f"{self.side}_spineChestFrame_MMX", ss=True)
+        cmds.connectAttr(f"{chest_frame}.outputMatrix", f"{frame}.matrixIn[0]")
+        cmds.connectAttr(f"{pivot}.output", f"{frame}.matrixIn[1]")
+        inverse = cmds.createNode("inverseMatrix", name=f"{self.side}_spineChestFrame_IMX", ss=True)
+        cmds.connectAttr(f"{frame}.matrixSum", f"{inverse}.inputMatrix")
+        delta = cmds.createNode("pickMatrix", name=f"{self.side}_spineChestDelta_PMX", ss=True)
+        cmds.connectAttr(f"{self.local_chest_ctl}.matrix", f"{delta}.inputMatrix")
+        cmds.setAttr(f"{delta}.useRotate", 0)
+        cmds.setAttr(f"{delta}.useShear", 0)
+
+        drivers = [f"{ctl}.worldMatrix[0]" for ctl in self.spine_ctls]
+        for index in range(len(drivers) - 2, len(drivers)):
+            driver = cmds.createNode("multMatrix", name=f"{self.side}_spineChestPoint{index:02d}_MMX", ss=True)
+            cmds.connectAttr(drivers[index], f"{driver}.matrixIn[0]")
+            cmds.connectAttr(f"{inverse}.outputMatrix", f"{driver}.matrixIn[1]")
+            cmds.connectAttr(f"{delta}.outputMatrix", f"{driver}.matrixIn[2]")
+            cmds.connectAttr(f"{frame}.matrixSum", f"{driver}.matrixIn[3]")
+            drivers[index] = f"{driver}.matrixSum"
+        return drivers
+
     def ik_spine(self):
 
         """
@@ -274,11 +325,12 @@ class SpineModule(object):
         cmds.connectAttr(f"{self.spine_ctls[0]}.worldMatrix[0]", f"{ik_handle}.dWorldUpMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{ik_handle}.dWorldUpMatrixEnd")
 
-        for i, ctl in enumerate(self.spine_ctls):
+        curve_drivers = self.chest_spine_curve_drivers()
+        for i, matrix in enumerate(curve_drivers):
             
             row_from_matrix = cmds.createNode("rowFromMatrix", name=f"{self.side}_spine0{i}Translation_RFM")
             cmds.setAttr(f"{row_from_matrix}.input", 3) #Translate
-            cmds.connectAttr(f"{ctl}.worldMatrix[0]", f"{row_from_matrix}.matrix")
+            cmds.connectAttr(matrix, f"{row_from_matrix}.matrix")
             cmds.connectAttr(f"{row_from_matrix}.outputX", f"{ik_curve}.controlPoints[{i}].xValue")
             cmds.connectAttr(f"{row_from_matrix}.outputY", f"{ik_curve}.controlPoints[{i}].yValue")
             cmds.connectAttr(f"{row_from_matrix}.outputZ", f"{ik_curve}.controlPoints[{i}].zValue")
@@ -300,7 +352,7 @@ class SpineModule(object):
         # ------ Create stretch attributes ------
         cmds.addAttr(self.body_ctl, longName="spineStretchSep", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.spineStretchSep", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.body_ctl, longName="spineStretch", niceName="Auto Stretch", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+        cmds.addAttr(self.body_ctl, longName="spineStretch", niceName="Auto Stretch", attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineStretchMin", niceName="Stretch Min", attributeType="float", min=0, max=1, defaultValue=0.8, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineStretchMax", niceName="Stretch Max", attributeType="float", min=0, defaultValue=1.2, keyable=True)
         cmds.addAttr(self.body_ctl, longName="spineOffset", niceName="Offset", attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
@@ -597,8 +649,19 @@ class SpineModule(object):
             cmds.connectAttr(f"{floatConstant}.outFloat", f"{blendTwoAttr}.input[0]")
             cmds.connectAttr(f"{self.body_ctl}.volumePreservation", f"{blendTwoAttr}.attributesBlender")
 
-            cmds.connectAttr(f"{blendTwoAttr}.output",f"{joint}.scaleX")   
-            cmds.connectAttr(f"{blendTwoAttr}.output",f"{joint}.scaleZ")   
+            # Chest width/depth scale combines with automatic volume, fading
+            # from the middle of the spine to full influence at its upper end.
+            middle = (len(output_joints) - 1) / 2.0
+            chest_weight = max(0.0, (i - middle) / middle) if middle else 1.0
+            for axis in "XZ":
+                chest_scale = cmds.createNode("blendTwoAttr", name=f"{joint.replace('_JNT', '')}ChestScale{axis}_BTA", ss=True)
+                cmds.setAttr(f"{chest_scale}.input[0]", 1)
+                cmds.connectAttr(f"{self.local_chest_ctl}.scale{axis}", f"{chest_scale}.input[1]")
+                cmds.setAttr(f"{chest_scale}.attributesBlender", chest_weight)
+                combined_scale = cmds.createNode("multiply", name=f"{joint.replace('_JNT', '')}ChestVolume{axis}_MUL", ss=True)
+                cmds.connectAttr(f"{blendTwoAttr}.output", f"{combined_scale}.input[0]")
+                cmds.connectAttr(f"{chest_scale}.output", f"{combined_scale}.input[1]")
+                cmds.connectAttr(f"{combined_scale}.output", f"{joint}.scale{axis}")
 
 
             values = [-1, 1, 1, -1]

@@ -8,6 +8,7 @@ from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
+from maya_tools.scripts.utils import ik_fk_match
 from maya_tools.scripts.utils import ribbon
 from maya_tools.scripts.utils import correctives
 
@@ -15,6 +16,7 @@ reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 reload(matrix_manager)
+reload(ik_fk_match)
 reload(ribbon)
 reload(correctives)
 
@@ -78,6 +80,10 @@ class LegModule(object):
         self.knee_pin_setup()
         self.foot_attributes()
         self.de_boor_ribbon(self.skinning_joint_numbers)
+        ik_fk_match.setup(self.settings_ctl, self.fk_controllers, self.blend_matrices,
+                          ik_root=self.root_ik_ctl, ik_end=self.ik_controllers[0], pv=self.pv_ctl,
+                          foot_controls=self.ik_controllers, guides=self.guides_matrices,
+                          master=self.masterwalk_ctl, custom_foot=False)
         self.corrective_setup()
 
         data_manager.DataExportBiped().append_data("leg_module",
@@ -554,6 +560,13 @@ class LegModule(object):
         negate_roll_lift = cmds.createNode("negate", name=f"{self.side}_legRollLift_NEG", ss=True)
         cmds.connectAttr(f"{roll_lift_angle_mul}.output", f"{negate_roll_lift}.input")
         cmds.connectAttr(f"{negate_roll_lift}.output", f"{self.ik_sdk_nodes[-1]}.rotateZ")
+
+        # Negative roll pivots on the world-oriented heel guide: rotateX lifts
+        # the toes, while positive roll leaves the heel rotation at zero.
+        roll_heel_min = cmds.createNode("min", name=f"{self.side}_legRollHeel_MIN", ss=True)
+        cmds.setAttr(f"{roll_heel_min}.input[0]", 0)
+        cmds.connectAttr(f"{self.ik_controllers[0]}.Roll", f"{roll_heel_min}.input[1]")
+        cmds.connectAttr(f"{roll_heel_min}.output", f"{self.ik_sdk_nodes[-3]}.rotateX")
 
     def fk_stretch(self):
 

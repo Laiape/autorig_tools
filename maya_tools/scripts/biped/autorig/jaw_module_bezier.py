@@ -29,6 +29,7 @@ class JawModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
+        self.face_controls_parent = (data_manager.DataExportBiped().get_data("neck_module", "face_controls_parent") or self.face_ctl)
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
@@ -55,7 +56,7 @@ class JawModule(object):
         self.collision_setup()
         self.create_lips_setup()
 
-        cmds.parent(self.controllers_grp, self.face_ctl)
+        cmds.parent(self.controllers_grp, self.face_controls_parent)
 
         # Clean up
         cmds.delete("L_jaw_JNT", "R_jaw_JNT")
@@ -1002,6 +1003,7 @@ class JawModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
+        self.face_controls_parent = (data_manager.DataExportBiped().get_data("neck_module", "face_controls_parent") or self.face_ctl)
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
@@ -1028,7 +1030,7 @@ class JawModule(object):
         self.collision_setup()
         self.create_lips_setup()
 
-        cmds.parent(self.controllers_grp, self.face_ctl)
+        cmds.parent(self.controllers_grp, self.face_controls_parent)
 
         # Clean up
         cmds.delete("L_jaw_JNT", "R_jaw_JNT")

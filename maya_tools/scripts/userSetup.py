@@ -68,21 +68,32 @@ def init_proxy_locator():
         cmds.warning(f"No se ha podido cargar proxy_locator: {e}")
 
 
-def init_auto_rig_UI():
+def init_auto_rig_UI(_open_ports=vs_code_ports):
+    # Maya ejecuta todos los userSetup en __main__; imports locales evitan
+    # que otro script de arranque cambie nuestras referencias diferidas.
+    from importlib import reload
+    import maya.cmds as cmds
+    import traceback
+
+    if cmds.about(batch=True):
+        return
+
     try:
-        from ui import auto_rig_UI
+        from maya_tools.scripts.ui import auto_rig_UI
         reload(auto_rig_UI) 
         auto_rig_UI.create_custom_menu()
+    except Exception as e:
+        traceback.print_exc()
+        cmds.warning(f"No se ha podido cargar el menú AutoRig: {e}")
 
-        from ui import auto_rig_shelf
+    try:
+        from maya_tools.scripts.ui import auto_rig_shelf
         reload(auto_rig_shelf)
         auto_rig_shelf.create_shelf()
-
     except Exception as e:
-        import traceback
         traceback.print_exc()
-        cmds.warning(f"No se ha podido cargar auto_rig_UI: {e}")
-    vs_code_ports()
+        cmds.warning(f"No se ha podido cargar el shelf AutoRig: {e}")
+    _open_ports()
     #install_numpy()
     #init_proxy_locator()
     #init_mcp_listener()
@@ -99,4 +110,11 @@ def init_mcp_listener():
         traceback.print_exc()
         cmds.warning(f"No se ha podido iniciar el listener MCP: {e}")
 
-mu.executeDeferred(init_auto_rig_UI)
+def _schedule_auto_rig_ui(_initialize=init_auto_rig_UI):
+    import maya.cmds as cmds
+    if not cmds.about(batch=True):
+        # Esperar también a la construcción del menú principal y los shelves.
+        cmds.evalDeferred(_initialize, lowestPriority=True)
+
+
+mu.executeDeferred(_schedule_auto_rig_ui)

@@ -41,8 +41,6 @@ def create_custom_menu():
     cmds.menuItem(divider=True, dividerLabel="RIGGING")
 
     cmds.menuItem(label="CREATE RIG", command=lambda x: rig(leg_impl="reference"), boldFont=True, image="kinJoint.png")
-    cmds.menuItem(label="CREATE RIG SELF", command=lambda x: rig(leg_impl="self"), boldFont=True, image="kinJoint.png")
-    cmds.menuItem(label="CREATE RIG SELF MATH", command=lambda x: rig(leg_impl="self", leg_solver="nodes"), boldFont=True, image="kinJoint.png")
     cmds.menuItem(label="BUILD LEG", command=lambda x: leg_rig(), boldFont=True, image="kinJoint.png")
 
     cmds.menuItem(label="Guides Manager", subMenu=True, tearOff=True, image="locator.png")
@@ -56,6 +54,12 @@ def create_custom_menu():
     cmds.menuItem(label="Controllers Manager", subMenu=True, tearOff=True, image="circle.png")
     cmds.menuItem(label="Export All Controllers", command=lambda x: export_all_controllers(), image="save.png")
     cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
+    cmds.setParent('..', menu=True)
+
+    cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
+    cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
+    cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
+    cmds.menuItem(label="Proxy Skinning", command=lambda x: proxy_skinning(), image="paintSkinWeights.png")
     cmds.setParent('..', menu=True)
 
     # ── ANIMATION ─────────────────────────────────────────────────────────────
@@ -80,16 +84,15 @@ def create_custom_menu():
     # ── SKINNING ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="SKINNING")
 
-    cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
-    cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
-    cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
-    cmds.menuItem(label="Proxy Skinning", command=lambda x: proxy_skinning(), image="paintSkinWeights.png")
-    cmds.setParent('..', menu=True)
-
     cmds.menuItem(label="Corrective Curve (Pose → Curve → Joints)",
                   command=lambda x: open_corrective_curve_ui(), image="kinJoint.png")
     cmds.menuItem(label="Auto Skin Transfer (Clothes)",
                   command=lambda x: open_skin_transfer_ui(), image="paintSkinWeights.png")
+
+    cmds.menuItem(label="Proximity Wrap (Multiple Drivers)",
+                  command=lambda x: open_proximity_wrap_ui(), image="wrap.png")
+    cmds.menuItem(label="Bake Proximity Wrap to Skin",
+                  command=lambda x: open_proximity_bake_ui(), image="paintSkinWeights.png")
 
     # ── SIMULATION / ADONIS ───────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="SIMULATION")
@@ -181,10 +184,10 @@ def export_skin_cluster():
     cmds.inViewMessage(amg='Skins Exportadas.', pos='midCenter', fade=True)
 
 def import_skin_cluster():
-    skinner = skin_manager_api.SkinManager()
     reload(skin_manager_api)
+    skinner = skin_manager_api.SkinManager()
     skinner.import_skins()
-    cmds.inViewMessage(amg='Skins Importadas y Reordenadas.', pos='midCenter', fade=True)
+    cmds.inViewMessage(amg='Skins y Deformadores Importados.', pos='midCenter', fade=True)
 
 def copy_skin_cluster():
     skinner = skin_manager_api.SkinManager()
@@ -343,3 +346,15 @@ def open_pose_tester():
     from ui import pose_tester_UI
     reload(pose_tester_UI)
     pose_tester_UI.show()
+
+
+def open_proximity_wrap_ui():
+    from tools import proximity_wrap
+    reload(proximity_wrap)
+    proximity_wrap.show_window()
+
+
+def open_proximity_bake_ui():
+    from ui import proximity_bake_UI
+    reload(proximity_bake_UI)
+    proximity_bake_UI.show()

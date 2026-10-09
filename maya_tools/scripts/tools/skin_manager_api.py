@@ -4,6 +4,7 @@ import maya.api.OpenMaya as om
 import maya.api.OpenMayaAnim as oma
 import os
 import json
+import re
 
 try:
     from maya_tools.scripts.utils import data_manager
@@ -12,6 +13,8 @@ except ImportError:
     HAS_RIG_UTILS = False
 
 class SkinManager(object):
+    SCENE_DEFORMERS_KEY = "__scene_deformers__"
+
     def __init__(self):
         self.ext = ".skc"
         self.folder_path, self.asset_name = self.get_path_and_name()
@@ -91,7 +94,18 @@ class SkinManager(object):
         sel = om.MSelectionList()
         try:
             sel.add(node_name)
-            return sel.getDagPath(0)
+            path = sel.getDagPath(0)
+            if path.node().hasFn(om.MFn.kTransform):
+                # A transform can contain original/intermediate shapes before
+                # its visible output. Bake exports use stable transform names.
+                shapes = cmds.listRelatives(path.fullPathName(), shapes=True,
+                                            noIntermediate=True, fullPath=True,
+                                            type="mesh") or []
+                if len(shapes) == 1:
+                    selection = om.MSelectionList()
+                    selection.add(shapes[0])
+                    return selection.getDagPath(0)
+            return path
         except:
             return None
 
@@ -151,6 +165,477 @@ class SkinManager(object):
     # ----------------------------------------------------------------
     # --- EXPORT SKINS (Lógica Referencia: Sparse & Stack) ---
     # ----------------------------------------------------------------
+    def _export_geometry(self, mesh_fn):
+        """Snapshot en espacio local; exportar/importar en la misma pose de referencia."""
+        counts, connects = mesh_fn.getVertices()
+        return {
+            "points": [[p.x, p.y, p.z] for p in mesh_fn.getPoints(om.MSpace.kObject)],
+            "polygon_counts": list(counts),
+            "polygon_connects": list(connects),
+        }
+
+    def _same_topology(self, mesh_fn, geometry):
+        counts, connects = mesh_fn.getVertices()
+        return (mesh_fn.numVertices == len(geometry["points"])
+                and list(counts) == geometry["polygon_counts"]
+                and list(connects) == geometry["polygon_connects"])
+
+    def _closest_surface_map(self, geometry, target_points):
+        """Una correspondencia baricéntrica por vértice, reutilizable para todo el stack."""
+        # MMeshData mantiene la superficie en memoria sin crear nodos en escena.
+        mesh_data = om.MFnMeshData().create()
+        source_fn = om.MFnMesh()
+        source_mesh = source_fn.create(
+            [om.MPoint(*p) for p in geometry["points"]],
+            geometry["polygon_counts"], geometry["polygon_connects"],
+            parent=mesh_data)
+        intersector = om.MMeshIntersector()
+        intersector.create(source_mesh, om.MMatrix())
+        mapping = []
+        for point in target_points:
+            hit = intersector.getClosestPoint(point)
+            if hit is None:
+                raise ValueError("No se encontró un punto en la superficie original")
+            vertices = source_fn.getPolygonTriangleVertices(hit.face, hit.triangle)
+            u, v = hit.barycentricCoords
+            coefficients = [max(0.0, c) for c in (u, v, 1.0 - u - v)]
+            total = sum(coefficients)
+            mapping.append(tuple((int(vertex), c / total)
+                                 for vertex, c in zip(vertices, coefficients)))
+        return mapping
+
+    @staticmethod
+    def _remap_weights(source_weights, stride, mapping):
+        """Interpola pesos y blend weights sobre los triángulos originales."""
+        result = [0.0] * (len(mapping) * stride)
+        for target_index, samples in enumerate(mapping):
+            target_offset = target_index * stride
+            for source_index, coefficient in samples:
+                source_offset = source_index * stride
+                for influence in range(stride):
+                    result[target_offset + influence] += (
+                        source_weights[source_offset + influence] * coefficient)
+        return result
+
+    def _export_scene_deformers(self):
+        """Snapshot geometry filters, settings, membership and connections.
+
+        Captures sparse storable arrays and reports unsupported geometry/plugin
+        values. Skin weights stay in the existing per-mesh skin section. This
+        External geometry/plugin payloads are not included in the snapshot.
+        """
+        def export_attributes(fn):
+            attributes = {}
+            skipped = []
+            errors = []
+
+            def read_plug(plug):
+                attr_fn = om.MFnAttribute(plug.attribute())
+                if not attr_fn.storable or not attr_fn.readable:
+                    return
+                path = plug.partialName(
+                    includeNonMandatoryIndices=True, includeInstancedIndices=True,
+                    useAlias=False, useFullAttributePath=True, useLongNames=True)
+                if path == "deformerData":
+                    return  # Nonlinear handle output is derived from its settings.
+                if fn.typeName == "skinCluster" and path.split("[", 1)[0] in (
+                        "weightList", "blendWeights"):
+                    return
+                if plug.isArray:
+                    for i in range(plug.numElements()):
+                        read_plug(plug.elementByPhysicalIndex(i))
+                    return
+                if plug.isCompound:
+                    for i in range(plug.numChildren()):
+                        read_plug(plug.child(i))
+                    return
+                try:
+                    data_type = cmds.getAttr(plug.name(), type=True)
+                    # Opaque getAttr values print errors even when caught in Python.
+                    if data_type not in (
+                            "bool", "byte", "char", "short", "long", "enum",
+                            "float", "double", "doubleAngle", "doubleLinear", "time",
+                            "string", "matrix", "pointArray", "vectorArray",
+                            "doubleArray", "Int32Array", "stringArray", "componentList"):
+                        skipped.append({"attribute": path, "type": data_type})
+                        return
+                    value = cmds.getAttr(plug.name())
+                    # Convert Maya tuples to JSON lists and reject plugin objects.
+                    value = json.loads(json.dumps(value, allow_nan=False))
+                    attributes[path] = {
+                        "type": data_type, "value": value, "locked": plug.isLocked
+                    }
+                except Exception as exc:
+                    errors.append({"attribute": path, "reason": str(exc)})
+
+            for i in range(fn.attributeCount()):
+                attr = fn.attribute(i)
+                attr_fn = om.MFnAttribute(attr)
+                if attr_fn.parent.isNull():
+                    read_plug(fn.findPlug(attr, False))
+            return attributes, skipped, errors
+
+        nodes = []
+        stacks = {}
+        auxiliary_nodes = {}
+        iterator = om.MItDependencyNodes(om.MFn.kGeometryFilt)
+        while not iterator.isDone():
+            obj = iterator.thisNode()
+            fn = om.MFnDependencyNode(obj)
+            name = fn.name()
+            attributes, skipped, errors = export_attributes(fn)
+            connections = []
+            for plug in fn.getConnections():
+                for source in plug.connectedTo(True, False):
+                    connections.append({"source": source.name(), "destination": plug.name()})
+                    # Nonlinear settings live on the handle shape, not the filter.
+                    # Also keep handle transforms connected through matrix inputs.
+                    if (plug.partialName(useLongNames=True) in ("deformerData", "matrix")
+                            or om.MFnDependencyNode(source.node()).typeName == "clusterHandle"):
+                        source_fn = om.MFnDependencyNode(source.node())
+                        source_name = source_fn.name()
+                        if source_name not in auxiliary_nodes:
+                            values, unsupported, failures = export_attributes(source_fn)
+                            auxiliary_nodes[source_name] = {
+                                "name": source_name, "type": source_fn.typeName,
+                                "attributes": values, "unsupported_attributes": unsupported,
+                                "attribute_errors": failures,
+                                "parent": (cmds.listRelatives(source_name, parent=True,
+                                                              fullPath=True) or [None])[0],
+                            }
+
+            geometry_filter = oma.MFnGeometryFilter(obj)
+            geometries = []
+            for i in range(geometry_filter.numOutputConnections()):
+                index = geometry_filter.indexForOutputConnection(i)
+                path = geometry_filter.getPathAtIndex(index)
+                shape = path.fullPathName()
+                geometries.append({"index": index, "shape": shape})
+                if shape not in stacks:
+                    # Maya history is listed downstream to upstream; reverse it.
+                    history = cmds.listHistory(shape, pruneDagObjects=True) or []
+                    stack = []
+                    for history_node in reversed(history):
+                        selection = om.MSelectionList()
+                        selection.add(history_node)
+                        history_obj = selection.getDependNode(0)
+                        if not history_obj.hasFn(om.MFn.kGeometryFilt):
+                            continue
+                        history_fn = oma.MFnGeometryFilter(history_obj)
+                        outputs = [history_fn.getPathAtIndex(
+                            history_fn.indexForOutputConnection(j)).fullPathName()
+                            for j in range(history_fn.numOutputConnections())]
+                        if shape in outputs and history_node not in stack:
+                            stack.append(history_node)
+                    stacks[shape] = stack
+            members = []
+            membership_mode = "component_tags"
+            try:
+                # Modern Maya deformers can use component tags without a set.
+                deformer_set = geometry_filter.deformerSet
+                if not deformer_set.isNull():
+                    members = om.MFnSet(deformer_set).getMembers(False).getSelectionStrings()
+                    membership_mode = "object_set"
+            except RuntimeError:
+                pass
+            entry = {
+                "name": name, "type": fn.typeName, "attributes": attributes,
+                "connections": sorted(connections, key=lambda item: item["destination"]),
+                "geometries": geometries, "members": list(members),
+                "membership_mode": membership_mode,
+                "unsupported_attributes": skipped, "attribute_errors": errors,
+                "aliases": cmds.aliasAttr(name, query=True) or [],
+            }
+            if fn.typeName == "skinCluster":
+                entry["weights_storage"] = "per_mesh_skin_section_if_in_export_scope"
+            nodes.append(entry)
+            iterator.next()
+        return {"version": 1, "nodes": sorted(nodes, key=lambda item: item["name"]),
+                "geometry_stacks": stacks,
+                "auxiliary_nodes": sorted(auxiliary_nodes.values(), key=lambda item: item["name"])}
+
+    @staticmethod
+    def _resolve_deformer_node(name, geometry=False):
+        """Resolve exact or unique short names; allow renamed output shapes."""
+        matches = cmds.ls(name, long=True) or []
+        if not matches:
+            matches = cmds.ls(name.rsplit("|", 1)[-1], long=True) or []
+        if len(matches) == 1:
+            node = matches[0]
+            if not geometry:
+                return node
+            if cmds.nodeType(node) == "transform":
+                parent = node
+            elif cmds.objectType(node, isAType="shape"):
+                if not cmds.getAttr(node + ".intermediateObject"):
+                    return node
+                parent = (cmds.listRelatives(node, parent=True, fullPath=True) or [None])[0]
+            else:
+                return None
+        elif not matches and "|" in name:
+            parent = SkinManager._resolve_deformer_node(name.rsplit("|", 1)[0])
+        else:
+            return None
+        if geometry and parent and cmds.nodeType(parent) == "transform":
+            shapes = cmds.listRelatives(parent, shapes=True, noIntermediate=True,
+                                        fullPath=True) or []
+            if len(shapes) == 1:
+                return shapes[0]
+        return None
+
+    @staticmethod
+    def _set_deformer_value(plug, data):
+        value = data.get("value")
+        if value is None:
+            return
+        data_type = data["type"]
+        if data_type == "string":
+            cmds.setAttr(plug, value, type="string")
+        elif data_type == "matrix":
+            cmds.setAttr(plug, *value, type="matrix")
+        elif data_type in ("pointArray", "vectorArray", "doubleArray", "Int32Array",
+                           "stringArray", "componentList"):
+            cmds.setAttr(plug, len(value), *value, type=data_type)
+        elif isinstance(value, (bool, int, float)):
+            cmds.setAttr(plug, value)
+        else:
+            raise ValueError("Tipo no restaurable: " + data_type)
+
+    def _import_scene_deformers(self, snapshot, replace_existing=False):
+        """Recreate missing filters; let Maya build the geometry history wiring.
+
+        Never reconnect exported input/original/output plugs: their intermediate
+        shapes belong to the old history. Proximity drivers are bound with Maya's
+        command, then saved driver parameters and external connections restored.
+        """
+        if not snapshot:
+            return
+        node_map = {}
+        geometry_map = {}
+        pending = []
+        warnings = []
+        created_count = 0
+        auxiliary = {entry["name"]: entry for entry in snapshot.get("auxiliary_nodes", [])}
+
+        def restore_auxiliary(name):
+            existing = self._resolve_deformer_node(name)
+            if existing:
+                node_map[name] = existing
+                return existing
+            entry = auxiliary.get(name)
+            if not entry:
+                return None
+            parent = entry.get("parent")
+            if not parent and entry["type"].startswith("deform"):
+                parent = name.rsplit("Shape", 1)[0]
+            resolved_parent = restore_auxiliary(parent) if parent else None
+            kwargs = {"name": name.rsplit("|", 1)[-1]}
+            if resolved_parent:
+                kwargs["parent"] = resolved_parent
+            node = cmds.createNode(entry["type"], **kwargs)
+            node_map[name] = node
+            for attr, data in entry.get("attributes", {}).items():
+                plug = node + "." + attr
+                try:
+                    if cmds.objExists(plug) and cmds.getAttr(plug, settable=True):
+                        self._set_deformer_value(plug, data)
+                except Exception as exc:
+                    warnings.append("{}: {}".format(plug, exc))
+            return node
+
+        # Create all filters first, so inter-filter connections can resolve.
+        for entry in snapshot.get("nodes", []):
+            name, node_type = entry["name"], entry["type"]
+            if node_type == "skinCluster":
+                existing = self._resolve_deformer_node(name)
+                if existing:
+                    node_map[name] = existing
+                continue  # Managed exclusively by the skin weights importer.
+            existing = self._resolve_deformer_node(name)
+            if existing:
+                if cmds.nodeType(existing) != node_type:
+                    warnings.append("{}: nombre ocupado por otro tipo; se salta.".format(name))
+                    continue
+                node_map[name] = existing
+                if not replace_existing:
+                    continue
+            geometries = []
+            index_map = {}
+            for geometry in sorted(entry.get("geometries", []), key=lambda item: item["index"]):
+                resolved = self._resolve_deformer_node(geometry["shape"], geometry=True)
+                if not resolved:
+                    break
+                geometry_map[geometry["shape"]] = resolved
+                geometries.append(resolved)
+            if not geometries or len(geometries) != len(entry.get("geometries", [])):
+                warnings.append("{}: falta geometria afectada; se salta.".format(name))
+                continue
+            driver_sources = []
+            for connection in entry.get("connections", []):
+                destination = connection["destination"].split(".", 1)[1]
+                match = re.fullmatch(r"drivers\[(\d+)\]\.driverGeometry", destination)
+                if match:
+                    source_name = connection["source"].split(".", 1)[0]
+                    resolved = self._resolve_deformer_node(source_name, geometry=True)
+                    if resolved:
+                        driver_sources.append((int(match.group(1)), resolved))
+                    else:
+                        warnings.append("{}: falta driver {}.".format(name, source_name))
+            required_driver_count = sum(
+                connection["destination"].endswith(".driverGeometry")
+                for connection in entry.get("connections", []))
+            if node_type == "proximityWrap" and (
+                    not driver_sources or len(driver_sources) != required_driver_count):
+                warnings.append("{}: drivers incompletos; se salta.".format(name))
+                continue
+            if any(driver in geometries for _, driver in driver_sources):
+                warnings.append("{}: driver coincide con target; se salta.".format(name))
+                continue
+            try:
+                if existing:
+                    node = existing
+                    current = cmds.deformer(node, query=True, geometry=True) or []
+                    current_shapes = [self._resolve_deformer_node(g, geometry=True) for g in current]
+                    if set(current_shapes) != set(geometries):
+                        warnings.append("{}: deforma otras geometrías; se salta.".format(name))
+                        continue
+                else:
+                    generated_handle = None
+                    if node_type == "cluster":
+                        node, generated_handle = cmds.cluster(geometries, name=name)
+                    elif node_type == "nonLinear":
+                        handle_sources = [connection["source"].split(".", 1)[0]
+                                          for connection in entry.get("connections", [])
+                                          if connection["destination"].endswith(".deformerData")]
+                        handle_type = auxiliary.get(handle_sources[0], {}).get("type", "") if handle_sources else ""
+                        subtype = {"deformBend": "bend", "deformFlare": "flare",
+                                   "deformSine": "sine", "deformSquash": "squash",
+                                   "deformTwist": "twist", "deformWave": "wave"}.get(handle_type)
+                        if not subtype:
+                            raise RuntimeError("Falta el tipo del handle nonlinear.")
+                        node, generated_handle = cmds.nonLinear(geometries, type=subtype, name=name)
+                    elif node_type == "blendShape":
+                        node = cmds.blendShape(geometries, name=name, after=True)[0]
+                    else:
+                        node = cmds.deformer(geometries, type=node_type, name=name, after=True)[0]
+                    if generated_handle:
+                        handle_shape = (cmds.listRelatives(generated_handle, shapes=True,
+                                                          fullPath=True) or [None])[0]
+                        for connection in entry.get("connections", []):
+                            source_name = connection["source"].split(".", 1)[0]
+                            auxiliary_entry = auxiliary.get(source_name)
+                            if not auxiliary_entry:
+                                continue
+                            generated = generated_handle if auxiliary_entry["type"] == "transform" else handle_shape
+                            if not generated:
+                                continue
+                            node_map[source_name] = generated
+                            for attr, data in auxiliary_entry.get("attributes", {}).items():
+                                if attr == "deformerData":
+                                    continue
+                                plug = generated + "." + attr
+                                if cmds.objExists(plug) and cmds.getAttr(plug, settable=True):
+                                    self._set_deformer_value(plug, data)
+                    created_count += 1
+                node_map[name] = node
+                actual_geometries = cmds.deformer(node, query=True, geometry=True) or []
+                actual_indices = cmds.deformer(node, query=True, geometryIndices=True) or []
+                for original in entry["geometries"]:
+                    resolved = geometry_map[original["shape"]]
+                    for actual, index in zip(actual_geometries, actual_indices):
+                        if self._resolve_deformer_node(actual, geometry=True) == resolved:
+                            index_map[original["index"]] = index
+                driver_map = {}
+                if node_type == "proximityWrap":
+                    for index in cmds.proximityWrap(node, query=True, driverIndices=True) or []:
+                        sources = cmds.listConnections(
+                            "{}.drivers[{}].driverGeometry".format(node, index),
+                            source=True, destination=False) or []
+                        if sources:
+                            cmds.proximityWrap(node, edit=True, removeDrivers=sources)
+                    for old_index, driver in sorted(driver_sources):
+                        new_index = cmds.proximityWrap(node, query=True, freeDriverIndex=True)
+                        cmds.proximityWrap(node, edit=True, addDrivers=[driver], applyUserDefaults=False)
+                        driver_map[old_index] = new_index
+                pending.append((entry, node, index_map, driver_map))
+            except Exception as exc:
+                warnings.append("{}: {}".format(name, exc))
+
+        def remap_attribute(attr, index_map, driver_map):
+            def replace_index(match):
+                field, index = match.group(1), int(match.group(2))
+                mapping = driver_map if field == "drivers" else index_map
+                return "{}[{}]".format(field, mapping.get(index, index))
+            return re.sub(r"^(drivers|input|weightList|inputTarget)\[(\d+)\]",
+                          replace_index, attr)
+
+        for entry, node, index_map, driver_map in pending:
+            aliases = entry.get("aliases", [])
+            for alias, attr in zip(aliases[0::2], aliases[1::2]):
+                try:
+                    cmds.aliasAttr(alias, node + "." + attr)
+                except Exception as exc:
+                    warnings.append("{} alias {}: {}".format(node, alias, exc))
+            connected = {connection["destination"].split(".", 1)[1]
+                         for connection in entry.get("connections", [])}
+            # Allocating blendShape target groups can reset their weights.
+            attribute_items = sorted(entry.get("attributes", {}).items(),
+                                     key=lambda item: item[0].startswith("weight["))
+            for attr, data in attribute_items:
+                if attr in connected or data.get("value") is None:
+                    continue
+                plug = node + "." + remap_attribute(attr, index_map, driver_map)
+                try:
+                    root_attr = attr.split(".", 1)[0].split("[", 1)[0]
+                    if ((cmds.objExists(plug) or cmds.attributeQuery(root_attr, node=node, exists=True))
+                            and not cmds.connectionInfo(plug, isDestination=True)):
+                        cmds.setAttr(plug, lock=False)
+                        self._set_deformer_value(plug, data)
+                        cmds.setAttr(plug, lock=data.get("locked", False))
+                except Exception as exc:
+                    warnings.append("{}: {}".format(plug, exc))
+            for connection in entry.get("connections", []):
+                attr = connection["destination"].split(".", 1)[1]
+                if (attr.startswith(("input[", "originalGeometry["))
+                        or re.fullmatch(r"drivers\[\d+\]\.(driverGeometry|driverBindGeometry)", attr)):
+                    continue  # These are reconstructed by Maya, not copied.
+                source_name, source_attr = connection["source"].split(".", 1)
+                source_node = node_map.get(source_name) or restore_auxiliary(source_name)
+                if not source_node:
+                    warnings.append("{}: falta conexion externa {}.".format(node, connection["source"]))
+                    continue
+                source = source_node + "." + source_attr
+                destination = node + "." + remap_attribute(attr, index_map, driver_map)
+                try:
+                    if not cmds.isConnected(source, destination):
+                        was_locked = cmds.getAttr(destination, lock=True)
+                        cmds.setAttr(destination, lock=False)
+                        try:
+                            cmds.connectAttr(source, destination, force=True)
+                        finally:
+                            cmds.setAttr(destination, lock=was_locked)
+                except Exception as exc:
+                    warnings.append("{} -> {}: {}".format(source, destination, exc))
+
+        managed = {entry["name"] for entry, _, _, _ in pending}
+        for shape, stack in snapshot.get("geometry_stacks", {}).items():
+            if not managed.intersection(stack):
+                continue
+            geometry = geometry_map.get(shape) or self._resolve_deformer_node(shape, geometry=True)
+            if not geometry:
+                continue
+            resolved_stack = [node_map[name] for name in stack if name in node_map]
+            for inner, outer in reversed(list(zip(resolved_stack, resolved_stack[1:]))):
+                try:
+                    cmds.reorderDeformers(outer, inner, geometry)
+                except Exception as exc:
+                    warnings.append("Orden {} / {}: {}".format(inner, outer, exc))
+        for warning in dict.fromkeys(warnings):
+            om.MGlobal.displayWarning(warning)
+        om.MGlobal.displayInfo(
+            "Deformadores: {} creados, {} restaurados, {} incidencias.".format(
+                created_count, len(pending), len(set(warnings))))
+
     def export_skins(self, in_path=None):
         """
         Exporta los pesos. Si in_path es None, genera una NUEVA versión 
@@ -214,8 +699,9 @@ class SkinManager(object):
                 for p in paths: meshes_map[p.fullPathName()] = p
                 it_dep.next()
 
-        if not meshes_map:
-            om.MGlobal.displayWarning("No se encontraron mallas con skin.")
+        scene_deformers = self._export_scene_deformers()
+        if not meshes_map and not scene_deformers["nodes"]:
+            om.MGlobal.displayWarning("No se encontraron skins ni deformadores.")
             return
 
         # 2. Extracción de Datos
@@ -299,20 +785,36 @@ class SkinManager(object):
                 }
                 mesh_skins_data.append(skin_entry)
 
+            # Una copia por malla evita duplicar geometría con skins apilados.
+            mesh_skins_data[0]["geometry"] = self._export_geometry(mf_mesh)
             full_data[mesh_name] = mesh_skins_data
 
+        full_data[self.SCENE_DEFORMERS_KEY] = scene_deformers
         with open(self.json_path, 'w') as f:
             json.dump(full_data, f, separators=(',', ':')) # Separators comprime el JSON
             
-        om.MGlobal.displayInfo(f"Export completado: {self.json_path}")
+        om.MGlobal.displayInfo(
+            f"Export completado: {self.json_path} | "
+            f"Deformadores: {len(scene_deformers['nodes'])}")
 
     # ----------------------------------------------------------------
     # --- IMPORT SKINS (Lógica Referencia: Reorder & Sparse) ---
     # ----------------------------------------------------------------
-    def import_skins(self, in_path=None, replace_existing=False):
+    def import_skins(self, in_path=None, replace_existing=False, import_method="auto"):
         """
         Importa los pesos desde un archivo JSON (.skc).
         Si in_path es None, busca automáticamente la versión más reciente.
+        También reconstruye los deformadores ausentes de __scene_deformers__.
+        Los existentes se conservan, salvo replace_existing=True. Las meshes y
+        los drivers deben existir; las dependencias ausentes se notifican.
+
+        import_method:
+            "auto" (default): por índice si coincide la topología; en caso
+                contrario, closest point on surface con interpolación baricéntrica.
+            "index": exige la misma topología.
+            "closestPoint": fuerza la proyección incluso con igual topología.
+        La proyección requiere un .skc exportado con geometría. Usa el espacio
+        local de ambas mallas y requiere la misma pose de referencia.
 
         replace_existing:
             False (default, flujo de build): los skinClusters que ya existen en
@@ -324,6 +826,9 @@ class SkinManager(object):
                 de escena que NO están en el archivo (p.ej. correctivas) se
                 conservan y siguen quedando los últimos del stack.
         """
+        if import_method not in ("auto", "index", "closestPoint"):
+            raise ValueError("import_method debe ser 'auto', 'index' o 'closestPoint'")
+
         # 1. Determinar la ruta de importación
         if in_path:
             self.json_path = os.path.normpath(in_path)
@@ -350,10 +855,9 @@ class SkinManager(object):
         # Estos no se importarán y siempre quedarán los últimos en el stack.
         existing_scene_skins = self._get_scene_skin_clusters()
 
-        with open(self.json_path, 'r') as f:
-            data = json.load(f)
-
-        for mesh_name, skins_list in data.items():
+        for mesh_name, skins_list in full_data.items():
+            if mesh_name == self.SCENE_DEFORMERS_KEY:
+                continue
             # Buscar Mesh en escena
             mesh_path = self._get_dag_path(mesh_name)
             if not mesh_path:
@@ -367,6 +871,11 @@ class SkinManager(object):
             mesh_path.extendToShape()
             mf_mesh = om.MFnMesh(mesh_path)
             processed_skins = []
+            geometry = next((s["geometry"] for s in skins_list if "geometry" in s), None)
+            same_topology = self._same_topology(mf_mesh, geometry) if geometry else None
+            surface_mapping = None
+            # Capturar antes de crear skins o cambiar pesos en el stack.
+            target_points = mf_mesh.getPoints(om.MSpace.kObject)
 
             for skin_data in skins_list:
                 skin_name = skin_data["name"]
@@ -375,10 +884,29 @@ class SkinManager(object):
                 if skin_name in existing_scene_skins and not replace_existing:
                     continue
 
-                # Validación topología
-                if mf_mesh.numVertices != target_vtx_count:
-                    om.MGlobal.displayError(f"Topología incorrecta para {skin_name}. Mesh: {mf_mesh.numVertices} vs Data: {target_vtx_count}")
-                    continue 
+                topology_matches = (mf_mesh.numVertices == target_vtx_count
+                                    and same_topology is not False)
+                use_surface = (import_method == "closestPoint"
+                               or (import_method == "auto" and not topology_matches))
+                if use_surface:
+                    if not geometry:
+                        om.MGlobal.displayWarning(
+                            f"{skin_name}: el .skc antiguo no contiene geometría para "
+                            "closest point. Reexporta desde la malla original; se salta este skin.")
+                        continue
+                    if len(geometry["points"]) != target_vtx_count:
+                        om.MGlobal.displayWarning(f"Geometría incompatible con {skin_name}; se salta.")
+                        continue
+                    if surface_mapping is None:
+                        try:
+                            surface_mapping = self._closest_surface_map(geometry, target_points)
+                        except Exception as e:
+                            om.MGlobal.displayWarning(f"No se pudo proyectar {mesh_name}: {e}")
+                            break
+                    om.MGlobal.displayInfo(f"{skin_name}: importando por closest point on surface.")
+                elif not topology_matches:
+                    om.MGlobal.displayWarning(f"Topología incorrecta para {skin_name}; se salta (modo index).")
+                    continue
 
                 json_influences = skin_data["influences"]
                 
@@ -429,9 +957,9 @@ class SkinManager(object):
                 scene_inf_names = [p.partialPathName() for p in scene_inf_paths]
                 scene_inf_map = {name: i for i, name in enumerate(scene_inf_names)}
 
-                num_verts = target_vtx_count
+                num_verts = mf_mesh.numVertices
                 num_scene_infs = len(scene_inf_names)
-                full_weight_list = [0.0] * (num_verts * num_scene_infs)
+                full_weight_list = [0.0] * (target_vtx_count * num_scene_infs)
                 
                 # --- Reconstruir Pesos SPARSE ---
                 sparse_data = skin_data.get("sparse_weights", {})
@@ -444,6 +972,10 @@ class SkinManager(object):
                     for v_idx, weight_val in zip(indices, values):
                         flat_index = (v_idx * num_scene_infs) + scene_inf_idx
                         full_weight_list[flat_index] = weight_val
+
+                if use_surface:
+                    full_weight_list = self._remap_weights(
+                        full_weight_list, num_scene_infs, surface_mapping)
                 
                 # Aplicar Pesos
                 m_influence_indices = om.MIntArray(list(range(num_scene_infs)))
@@ -464,9 +996,11 @@ class SkinManager(object):
                 # Aplicar Blend Weights
                 sparse_blend = skin_data.get("sparse_blend", {})
                 if sparse_blend:
-                    full_blend = [0.0] * num_verts
+                    full_blend = [0.0] * target_vtx_count
                     for v_idx, val in zip(sparse_blend["ix"], sparse_blend["vw"]):
                         full_blend[v_idx] = val
+                    if use_surface:
+                        full_blend = self._remap_weights(full_blend, 1, surface_mapping)
                     mf_skin.setBlendWeights(mesh_path, vertex_comp, om.MDoubleArray(full_blend))
                 elif skin_exists:
                     # Sustitución de un skin existente y el archivo no trae blend
@@ -480,7 +1014,7 @@ class SkinManager(object):
             #   1. imported skins (del archivo)
             #   2. pre-existing skins (los que ya estaban en escena, siempre los últimos)
             if processed_skins:
-                current_hist = cmds.listHistory(mesh_path.fullPathName(), pruneDagObjects=True, interestLevel=1)
+                current_hist = cmds.listHistory(mesh_path.fullPathName(), pruneDagObjects=True, interestLevel=1) or []
                 current_skins = [x for x in current_hist if cmds.nodeType(x) == "skinCluster"]
                 current_skins = list(reversed(current_skins))  # [Inner, ..., Outer]
 
@@ -490,11 +1024,16 @@ class SkinManager(object):
                                      if s in existing_scene_skins and s not in processed_skins]
                 desired_order = processed_skins + pre_existing_here
 
-                for skin in reversed(desired_order):
-                    try: cmds.reorderDeformers(skin, mesh_path.fullPathName(), back=True)
-                    except: pass
+                # reorderDeformers inserta el segundo deformer ANTES del primero.
+                for inner, outer in reversed(list(zip(desired_order, desired_order[1:]))):
+                    try:
+                        cmds.reorderDeformers(outer, inner, mesh_path.fullPathName())
+                    except Exception as e:
+                        om.MGlobal.displayWarning(f"No se pudo ordenar {inner} antes de {outer}: {e}")
         
-        om.MGlobal.displayInfo("Skin weights imported.")
+        self._import_scene_deformers(
+            full_data.get(self.SCENE_DEFORMERS_KEY), replace_existing=replace_existing)
+        om.MGlobal.displayInfo("Skin weights and scene deformers imported.")
 
     def find_mesh_in_scene(self, name):
         """Helper para fallback de búsqueda."""

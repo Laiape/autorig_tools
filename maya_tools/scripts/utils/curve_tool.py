@@ -419,13 +419,31 @@ def build_curves_from_template(target_transform_name=None):
 
 def lock_attributes(ctl, attrs):
     """
-    Lock and hide attributes on a controller.
+    Lock and hide attributes, updating rotateOrder to match visible rotations.
     Args:
         ctl (str): The name of the controller.
         attrs (list): A list of attributes to lock and hide.
     """
+    transform_channels = {
+        "translate": ("tx", "ty", "tz"), "t": ("tx", "ty", "tz"),
+        "rotate": ("rx", "ry", "rz"), "r": ("rx", "ry", "rz"),
+        "scale": ("sx", "sy", "sz"), "s": ("sx", "sy", "sz"),
+    }
     for attr in attrs:
-        cmds.setAttr(f"{ctl}.{attr}", lock=True, keyable=False, channelBox=False)
+        for channel in transform_channels.get(attr, (attr,)):
+            cmds.setAttr(f"{ctl}.{channel}", lock=True, keyable=False, channelBox=False)
+
+    # Read the final channel state: modules can lock rotations after creation,
+    # in several calls, and with either short or long attribute names.
+    rotation_visible = any(
+        cmds.getAttr(f"{ctl}.{attr}", keyable=True)
+        or cmds.getAttr(f"{ctl}.{attr}", channelBox=True)
+        for attr in ("rx", "ry", "rz")
+    )
+    cmds.setAttr(
+        f"{ctl}.rotateOrder", keyable=False,
+        channelBox=rotation_visible and not cmds.getAttr(f"{ctl}.rotateOrder", lock=True)
+    )
 
 
 def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=None, matrix=None):
@@ -468,16 +486,7 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
         else:
             ctl = [ctl[0]]  # make sure ctl is a list with one element for consistency
         
-        if locked_attrs:
-            for attr in locked_attrs:
-                cmds.setAttr(f"{ctl[0]}.{attr}", lock=True, keyable=False)
-
-        rotate_attrs_long = {"rotateX", "rotateY", "rotateZ"}
-        rotate_attrs_short = {"rx", "ry", "rz"}
-        locked_set = set(locked_attrs or [])
-
-        if not (rotate_attrs_long.issubset(locked_set) or rotate_attrs_short.issubset(locked_set)):
-            cmds.setAttr(f"{ctl[0]}.rotateOrder", keyable=False, channelBox=True)
+        lock_attributes(ctl[0], locked_attrs or [])
 
         if created_grps:
             cmds.parent(ctl[0], created_grps[-1])

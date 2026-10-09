@@ -76,10 +76,13 @@ class EyelidModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
+        self.head_skinning_jnt = data_manager.DataExportBiped().get_data("neck_module", "head_skinning_jnt")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
+        self.face_controls_parent = (data_manager.DataExportBiped().get_data("neck_module", "face_controls_parent") or self.face_ctl)
         self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
-    def make(self, side, sockets=True, surface=False):
+    def make(self, side, sockets=True, surface=False, iris_radius=None,
+             iris_rings=(0.1, 0.2, 0.3, 0.4, 0.5)):
 
         """
         Create the eyelid module structure and controllers. Call this method with the side ('L' or 'R') to create the respective eyelid module.
@@ -93,6 +96,10 @@ class EyelidModule(object):
                 tamaño del ojo), así siempre van por encima del globo ocular y el
                 blink no se rompe (no se hunden dentro al cerrar). Flag por
                 personaje.
+            iris_radius (float or None): radio del globo para el iris; None lo
+                estima desde las guías del párpado. Ajustar antes del bind.
+            iris_rings (tuple[float]): radios de los anillos como fracciones
+                del radio del globo, en orden creciente, de 0.0001 a <0.999.
 
         """
         self.side = side
@@ -108,7 +115,7 @@ class EyelidModule(object):
             self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
             cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
             self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
+            self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_controls_parent)
             self.local_jnts_grp = cmds.createNode("transform", name=f"{self.module_name}Local_GRP", ss=True, p=self.module_trn)
             self.curves_grp = cmds.createNode("transform", name=f"{self.module_name}Curves_GRP", ss=True, p=self.module_trn)
             cmds.addAttr(self.face_ctl, longName="Eyes", attributeType="long", defaultValue=2, max=3, min=0, keyable=True)
@@ -122,6 +129,7 @@ class EyelidModule(object):
         self.create_main_eye_setup()
         self.create_controllers()
         self.eye_direct()
+        self.create_iris_setup(radius=iris_radius, ring_radii=iris_rings)
         self.create_blink_setup()
         self.fleshy_setup()
         if self.surface:
@@ -269,7 +277,8 @@ class EyelidModule(object):
 
         if self.side == "L":
             self.main_aim_nodes, self.main_aim_ctl = curve_tool.create_controller(name=f"C_eyeMain", offset=["GRP"])
-            cmds.parent(self.main_aim_nodes[0], self.head_ctl)
+            aim_parent = self.face_controls_parent if self.head_skinning_jnt else self.head_ctl
+            cmds.parent(self.main_aim_nodes[0], aim_parent)
             curve_tool.lock_attributes(self.main_aim_ctl, ["sx", "sy", "sz", "v", "rx", "ry", "rz"])
             def _eye_aim(eye_matrix):
                 z = om.MVector(eye_matrix[8], eye_matrix[9], eye_matrix[10]).normal()
@@ -382,9 +391,14 @@ class EyelidModule(object):
         if self.surface:
             cmds.move(0, 0, 2, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
+        # Use the final head frame: bounded neck endpoint + head squash + global
+        # scale. Legacy/mGear builds keep using their original head controller.
+        head_driver = self.head_skinning_jnt or self.head_ctl
+        eye_local_matrix = om.MMatrix(self.eye_guide_matrix) * om.MMatrix(self.head_guide_matrix).inverse()
         mult_matrix_negate_head = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectNegateHead_MMX", ss=True)
-        cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", self.eye_guide_matrix, type="matrix")
-        cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[1]", list(om.MMatrix(self.head_guide_matrix).inverse()), type="matrix")
+        cmds.setAttr(f"{mult_matrix_negate_head}.matrixIn[0]", list(eye_local_matrix), type="matrix")
+        cmds.connectAttr(f"{head_driver}.worldMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[1]")
+        cmds.connectAttr(f"{self.head_ctl}.worldInverseMatrix[0]", f"{mult_matrix_negate_head}.matrixIn[2]")
         cmds.connectAttr(f"{mult_matrix_negate_head}.matrixSum", f"{self.eye_direct_nodes[0]}.offsetParentMatrix")
         cmds.xform(self.eye_direct_nodes[0], m=om.MMatrix.kIdentity)
         curve_tool.lock_attributes(self.eye_direct_ctl, ["sx", "sy", "sz", "v"])
@@ -424,22 +438,139 @@ class EyelidModule(object):
         cmds.connectAttr(f"{self.face_ctl}.Eyes", f"{condition_all}.firstTerm")
         cmds.connectAttr(f"{condition_all}.outColorR", f"{self.extra_controllers_grp}.visibility", f=True)
 
-        # Connect the aim matrix to the eye direct controller and orient constrain the eye joint to it
+        # Solve aim in head-local space BEFORE applying non-uniform squash.
+        # Applying world-space aim to an already scaled frame rotates the squash
+        # axes and makes the eye drift/aim incorrectly when the head deforms.
         aim_eye_matrix = cmds.createNode("aimMatrix", name=f"{self.side}_eyeDirectEye_AIM", ss=True)
-        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldMatrix[0]", f"{aim_eye_matrix}.inputMatrix")
-        cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{aim_eye_matrix}.primaryTargetMatrix")
+        cmds.setAttr(f"{aim_eye_matrix}.inputMatrix", list(eye_local_matrix), type="matrix")
+        target_local = cmds.createNode("multMatrix", name=f"{self.side}_eyeAimHeadLocal_MMX", ss=True)
+        cmds.connectAttr(f"{self.side_aim_ctl}.worldMatrix[0]", f"{target_local}.matrixIn[0]")
+        cmds.connectAttr(f"{head_driver}.worldInverseMatrix[0]", f"{target_local}.matrixIn[1]")
+        cmds.connectAttr(f"{target_local}.matrixSum", f"{aim_eye_matrix}.primaryTargetMatrix")
         cmds.setAttr(f"{aim_eye_matrix}.primaryInputAxis", 0, 0, 1)
         cmds.setAttr(f"{aim_eye_matrix}.secondaryMode", 2)
         cmds.setAttr(f"{aim_eye_matrix}.secondaryInputAxis", 0, 1, 0)
         cmds.setAttr(f"{aim_eye_matrix}.secondaryTargetVector", 0, 1, 0)
-        cmds.connectAttr(f"{self.head_ctl}.worldMatrix[0]", f"{aim_eye_matrix}.secondaryTargetMatrix")
 
 
         mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEye_MMX", ss=True)
         cmds.connectAttr(f"{aim_eye_matrix}.outputMatrix", f"{mult_matrix}.matrixIn[0]")
-        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{head_driver}.worldMatrix[0]", f"{mult_matrix}.matrixIn[1]")
+        cmds.connectAttr(f"{self.eye_direct_nodes[0]}.worldInverseMatrix[0]", f"{mult_matrix}.matrixIn[2]")
         cmds.connectAttr(f"{mult_matrix}.matrixSum", f"{self.eye_direct_nodes[1]}.offsetParentMatrix", force=True)
+        # offsetParentMatrix receives a WORLD matrix; do not apply the skeleton
+        # group's transform a second time.
+        cmds.setAttr(f"{self.eye_skinning_jnt}.inheritsTransform", 0)
         cmds.connectAttr(f"{self.eye_direct_ctl}.worldMatrix[0]", f"{self.eye_skinning_jnt}.offsetParentMatrix", force=True)
+
+        # Visual aim indicator, using the same setup as the pole vector line.
+        eye_aim_curve = cmds.curve(d=1, p=[(0, 0, 0), (0, 0, 1)], n=f"{self.side}_eyeAim_CRV")
+        for index, (driver, name) in enumerate((
+            (self.eye_skinning_jnt, f"{self.side}_eyeAim_RFM"),
+            (self.side_aim_ctl, f"{self.side}_eyeAimCtl_RFM"),
+        )):
+            row = cmds.createNode("rowFromMatrix", name=name, ss=True)
+            cmds.setAttr(f"{row}.input", 3)  # World-space translation row.
+            cmds.connectAttr(f"{driver}.worldMatrix[0]", f"{row}.matrix")
+            for axis, value in zip("XYZ", ("xValue", "yValue", "zValue")):
+                cmds.connectAttr(f"{row}.output{axis}", f"{eye_aim_curve}.controlPoints[{index}].{value}")
+        cmds.setAttr(f"{eye_aim_curve}.inheritsTransform", 0)
+        cmds.setAttr(f"{eye_aim_curve}.overrideEnabled", 1)
+        cmds.setAttr(f"{eye_aim_curve}.overrideDisplayType", 1)  # Template.
+        cmds.parent(eye_aim_curve, self.side_aim_ctl, relative=True)
+        cmds.setAttr(f"{eye_aim_curve}.hiddenInOutliner", 1)
+
+    def create_iris_setup(self, radius=None, ring_radii=(0.1, 0.2, 0.3, 0.4, 0.5)):
+        """Create mesh-independent iris influences for an upstream skinCluster.
+
+        Each sibling joint controls one circular loop in the eye's local XY
+        plane. Scale XY changes its radius; translateZ keeps it on the sphere.
+        Bind at Iris_Scale=1, with each loop weighted to its matching joint.
+        Use irisBaseSkinning_JNT for unaffected vertices (including the pole).
+        The iris skinCluster must evaluate BEFORE the eye/body skinCluster.
+        Eye_Radius and Ring_Radius are rest settings: edit only before binding.
+        No mesh is bound or existing skin weights modified by this method.
+        """
+        ring_radii = tuple(float(value) for value in ring_radii)
+        if (not ring_radii or any(not math.isfinite(value) or not 0.0001 <= value < 0.999
+                                  for value in ring_radii)
+                or any(a >= b for a, b in zip(ring_radii, ring_radii[1:]))):
+            raise ValueError("iris_rings must be increasing radius fractions from 0.0001 to <0.999")
+        if radius is None:
+            center = om.MVector(*self.eye_guide_matrix[12:15])
+            cvs = (cmds.ls(f"{self.linear_upper_curve}.cv[*]", fl=True) or [])
+            cvs += cmds.ls(f"{self.linear_lower_curve}.cv[*]", fl=True) or []
+            if not cvs:
+                raise ValueError("Cannot estimate iris eye radius without eyelid guide CVs")
+            radius = sum((om.MVector(*cmds.pointPosition(cv, w=True)) - center).length()
+                         for cv in cvs) / len(cvs)
+        radius = float(radius)
+        if not math.isfinite(radius) or radius <= 0:
+            raise ValueError("iris_radius must be a positive finite globe radius")
+
+        # Static rest frame: never inherit the head, eye aim or global scale.
+        self.iris_grp = cmds.createNode("transform", name=f"{self.side}_irisSetup_GRP",
+                                       ss=True, p=self.skel_grp)
+        cmds.setAttr(f"{self.iris_grp}.inheritsTransform", 0)
+        rest_matrix = list(self.eye_guide_matrix)
+        for start in (0, 4, 8):
+            axis = om.MVector(*rest_matrix[start:start + 3]).normal()
+            rest_matrix[start:start + 3] = [axis.x, axis.y, axis.z]
+        cmds.xform(self.iris_grp, ws=True, m=rest_matrix)
+        cmds.addAttr(self.iris_grp, ln="Eye_Radius", at="double", min=0.0001, dv=radius)
+        cmds.setAttr(f"{self.iris_grp}.Eye_Radius", channelBox=True)
+        curve_tool.lock_attributes(self.iris_grp, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz"])
+        cmds.addAttr(self.eye_direct_ctl, ln="Iris_Scale", at="double",
+                     min=0.01, max=0.999 / ring_radii[-1], dv=1, k=True)
+        self.iris_base_jnt = cmds.createNode("joint", name=f"{self.side}_irisBaseSkinning_JNT",
+                                            ss=True, p=self.iris_grp)
+        self.iris_jnts = []
+        for index, fraction in enumerate(ring_radii):
+            name = f"{self.side}_iris{index:02d}"
+            joint = cmds.createNode("joint", name=f"{name}Skinning_JNT", ss=True, p=self.iris_grp)
+            cmds.setAttr(f"{joint}.segmentScaleCompensate", 0)
+            cmds.addAttr(joint, ln="Ring_Radius", at="double", min=0.0001, max=0.999, dv=fraction)
+            cmds.setAttr(f"{joint}.Ring_Radius", channelBox=True)
+
+            # Clamp the radius fraction to prevent sqrt of a negative number.
+            scaled = cmds.createNode("multiplyDivide", name=f"{name}Radius_MD", ss=True)
+            cmds.connectAttr(f"{joint}.Ring_Radius", f"{scaled}.input1X")
+            cmds.connectAttr(f"{self.eye_direct_ctl}.Iris_Scale", f"{scaled}.input2X")
+            limit = cmds.createNode("clamp", name=f"{name}Radius_CLAMP", ss=True)
+            cmds.setAttr(f"{limit}.minR", 0.000001)
+            cmds.setAttr(f"{limit}.maxR", 0.999)
+            cmds.connectAttr(f"{scaled}.outputX", f"{limit}.inputR")
+
+            scale = cmds.createNode("multiplyDivide", name=f"{name}Scale_MD", ss=True)
+            cmds.setAttr(f"{scale}.operation", 2)  # r / rest radius.
+            cmds.connectAttr(f"{limit}.outputR", f"{scale}.input1X")
+            cmds.connectAttr(f"{joint}.Ring_Radius", f"{scale}.input2X")
+            cmds.connectAttr(f"{scale}.outputX", f"{joint}.scaleX")
+            cmds.connectAttr(f"{scale}.outputX", f"{joint}.scaleY")
+
+            square = cmds.createNode("multiplyDivide", name=f"{name}RadiusSquared_MD", ss=True)
+            cmds.connectAttr(f"{limit}.outputR", f"{square}.input1X")
+            cmds.connectAttr(f"{limit}.outputR", f"{square}.input2X")
+            remaining = cmds.createNode("plusMinusAverage", name=f"{name}DepthSquared_PMA", ss=True)
+            cmds.setAttr(f"{remaining}.operation", 2)
+            cmds.setAttr(f"{remaining}.input1D[0]", 1)
+            cmds.connectAttr(f"{square}.outputX", f"{remaining}.input1D[1]")
+            root = cmds.createNode("multiplyDivide", name=f"{name}DepthRoot_MD", ss=True)
+            cmds.setAttr(f"{root}.operation", 3)
+            cmds.connectAttr(f"{remaining}.output1D", f"{root}.input1X")
+            cmds.setAttr(f"{root}.input2X", 0.5)
+            depth = cmds.createNode("multiplyDivide", name=f"{name}Depth_MD", ss=True)
+            cmds.connectAttr(f"{root}.outputX", f"{depth}.input1X")
+            cmds.connectAttr(f"{self.iris_grp}.Eye_Radius", f"{depth}.input2X")
+            cmds.connectAttr(f"{depth}.outputX", f"{joint}.translateZ")
+            self.iris_jnts.append(joint)
+
+        data_manager.DataExportBiped().append_data("eyelid_module", {
+            f"{self.side}_iris_setup_grp": self.iris_grp,
+            f"{self.side}_iris_base_jnt": self.iris_base_jnt,
+            f"{self.side}_iris_jnts": self.iris_jnts,
+        })
+        return [self.iris_base_jnt] + self.iris_jnts
 
     def create_blink_setup(self):
 

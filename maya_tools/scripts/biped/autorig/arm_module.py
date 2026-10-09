@@ -8,6 +8,7 @@ from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
+from maya_tools.scripts.utils import ik_fk_match
 from maya_tools.scripts.utils import ribbon
 from maya_tools.scripts.utils import correctives
 
@@ -15,6 +16,7 @@ reload(data_manager)
 reload(guides_manager)
 reload(curve_tool)
 reload(matrix_manager)
+reload(ik_fk_match)
 reload(ribbon)
 reload(correctives)
 
@@ -59,6 +61,9 @@ class ArmModule(object):
         self.soft_ik()
         self.elbow_pin_setup()
         skel_env = self.de_boor_ribbon(self.skinning_joint_numbers)
+        ik_fk_match.setup(self.settings_ctl, self.fk_controllers, self.blend_matrices,
+                          ik_root=self.ik_root_ctl, ik_end=self.ik_wrist_ctl, pv=self.pv_ctl,
+                          guides=self.guides_matrices, master=self.masterwalk_ctl)
         
         data_manager.DataExportBiped().append_data("arm_module",
                             {

@@ -1222,6 +1222,16 @@ def skeleton_hierarchy():
 
     last_module_end = None
     for side, clean, jnts in modules:
+        # Iris deformation runs before body skinning and must remain in its
+        # static rest frame. Export its rings as siblings under a static base,
+        # rather than chaining them into the face or inheriting eye/head motion.
+        if clean == "irisSetup":
+            base = next((j for j in jnts if j.split("|")[-1] == f"{side}_irisBaseSkinning_JNT"), None)
+            if base:
+                iris_root = parented_chain([base], freeze_jnt)[0]
+                for ring in sorted(j for j in jnts if j != base):
+                    parented_chain([ring], iris_root)
+            continue
         # Las joints correctivas (pushers/anillos) NO entran en el encadenado del
         # módulo: se preservan aparte como hijas de su joint padre, así no rompen la
         # detección plano/jerárquico de la cadena principal.

@@ -26,6 +26,7 @@ class TeethModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.settings_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
         self.face_ctl = data_manager.DataExportBiped().get_data("neck_module", "face_ctl")
+        self.face_controls_parent = (data_manager.DataExportBiped().get_data("neck_module", "face_controls_parent") or self.face_ctl)
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
@@ -42,7 +43,7 @@ class TeethModule(object):
         self.module_trn = cmds.createNode("transform", name=f"{self.module_name}Module_GRP", ss=True, p=self.modules)
         cmds.setAttr(f"{self.module_trn}.inheritsTransform", 0)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.module_name}Skinning_GRP", ss=True, p=self.skel_grp)
-        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_ctl)
+        self.controllers_grp = cmds.createNode("transform", name=f"{self.module_name}Controllers_GRP", ss=True, p=self.face_controls_parent)
         cmds.addAttr(self.face_ctl, longName="Teeth", attributeType="long", defaultValue=0, max=1, min=0, keyable=True)
         condition_teeth = cmds.createNode("condition", name=f"{self.module_name}Controllers_COND", ss=True)
         cmds.setAttr(f"{condition_teeth}.operation", 0)  # Equal
