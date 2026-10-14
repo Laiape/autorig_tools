@@ -53,7 +53,7 @@ def _find_icon(icon_name):
 
 def _main_window():
     ptr = omui.MQtUtil.mainWindow()
-    return wrapInstance(int(ptr), QtWidgets.QWidget)
+    return wrapInstance(int(ptr), QtWidgets.QWidget) if ptr else None
 
 
 class RigProgressDialog(QtWidgets.QDialog):

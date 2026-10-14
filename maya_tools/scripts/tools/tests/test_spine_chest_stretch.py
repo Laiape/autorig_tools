@@ -72,15 +72,28 @@ def run():
             squash = lambda: cmds.getAttr("C_spineSquashFactor_DIV.output")
             baseline = factor()
             assert math.isclose(baseline, 1, abs_tol=1e-5), baseline
+            skin_joints = [f"C_spine{i:02d}Skinning_JNT" for i in range(1, 6)]
             for attr, value, direction in (("translateY", 1, 1), ("translateY", -1, -1),
                                            ("scaleY", 1.2, 1), ("scaleY", 0.8, -1)):
                 cmds.setAttr(module.local_chest_ctl + "." + attr, value)
                 measured = factor()
                 assert (measured - baseline) * direction > 0.01, (attr, value, measured)
                 assert (squash() - 1) * direction > 0.01, (attr, value, squash())
+                # Shorter spine must get wider/deeper; longer must get thinner.
+                for joint in skin_joints:
+                    for axis in "XZ":
+                        volume = cmds.getAttr(joint + ".scale" + axis)
+                        assert (volume - 1) * direction < -0.001, (attr, value, joint, axis, volume)
+                cmds.setAttr(module.body_ctl + ".volumePreservation", 0)
+                for joint in skin_joints:
+                    for axis in "XZ":
+                        assert math.isclose(cmds.getAttr(joint + ".scale" + axis), 1, abs_tol=1e-5)
+                cmds.setAttr(module.body_ctl + ".volumePreservation", 1)
                 cmds.setAttr(module.local_chest_ctl + "." + attr, 1 if attr.startswith("scale") else 0)
                 assert math.isclose(factor(), baseline, abs_tol=1e-5)
-            skin_joints = [f"C_spine{i:02d}Skinning_JNT" for i in range(1, 6)]
+                for joint in skin_joints:
+                    for axis in "XZ":
+                        assert math.isclose(cmds.getAttr(joint + ".scale" + axis), 1, abs_tol=1e-5)
             for axis in "XZ":
                 baseline_scales = [cmds.getAttr(joint + ".scale" + axis) for joint in skin_joints]
                 cmds.setAttr(module.local_chest_ctl + ".scale" + axis, 1.5)
@@ -101,6 +114,10 @@ def run():
                 for scale in (0.5, 2):
                     cmds.setAttr(module.masterwalk_ctl + ".globalScale", scale)
                     assert math.isclose(factor(), baseline, abs_tol=1e-5), (follow, scale, factor())
+                    assert math.isclose(squash(), 1, abs_tol=1e-5), (follow, scale, squash())
+                    for joint in skin_joints:
+                        for axis in "XZ":
+                            assert math.isclose(cmds.getAttr(joint + ".scale" + axis), 1, abs_tol=1e-5)
                     cmds.setAttr(module.local_chest_ctl + ".translateY", 1)
                     assert factor() > baseline
                     cmds.setAttr(module.local_chest_ctl + ".translateY", 0)

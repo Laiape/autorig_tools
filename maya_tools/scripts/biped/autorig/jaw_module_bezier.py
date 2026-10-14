@@ -33,6 +33,7 @@ class JawModule(object):
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
+    @organize_module_nurbs
     def make(self, side):
 
         """ 
@@ -982,6 +983,7 @@ from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 from maya_tools.scripts.utils import ribbon
 
 reload(data_manager)
@@ -1007,6 +1009,7 @@ class JawModule(object):
         self.head_ctl = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
 
     
+    @organize_module_nurbs
     def make(self, side):
 
         """ 

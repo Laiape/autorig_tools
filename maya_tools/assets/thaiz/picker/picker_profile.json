@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "panels": {
+    "body": {
+      "size": [
+        750,
+        1000
+      ]
+    },
+    "face": {
+      "size": [
+        750,
+        1000
+      ]
+    }
+  },
+  "controls": {}
+}

@@ -4,6 +4,7 @@ import math
 import os
 import sys
 import tempfile
+import runpy
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -81,6 +82,8 @@ def check_module_inverse(filename, side):
     scope = {"cmds": cmds, "om": om, "math": math, "matrix_manager": matrix_manager,
              "custom_ik_solver": custom_ik_solver,
              "curve_tool": SimpleNamespace(create_controller=controller, lock_attributes=lock)}
+    scope['organize_module_nurbs'] = runpy.run_path(
+        str(Path(__file__).resolve().parents[2] / 'utils/module_nurbs.py'))['organize_module_nurbs']
     path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "biped", "autorig", filename)
     with open(path, encoding="utf-8") as source:
         tree = ast.parse(source.read())

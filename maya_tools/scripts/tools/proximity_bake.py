@@ -1,4 +1,4 @@
-"""Fit linear skin weights to sampled Proximity Wrap poses without editing sources."""
+"""Fit skin/wrap/blendshape/Delta Mush stacks to LBS with held-out validation."""
 import json
 import math
 import os
@@ -11,6 +11,12 @@ import numpy as np
 
 from tools import proximity_wrap
 
+SUPPORTED_STACK = ("skinCluster", "proximityWrap", "blendShape", "deltaMush")
+
+
+def direct_deformers(shape):
+    return proximity_wrap.direct_deformers(shape, SUPPORTED_STACK)
+
 
 def points(shape):
     selection = om.MSelectionList()
@@ -22,22 +28,22 @@ def selected_targets():
     targets = []
     for node in cmds.ls(selection=True, long=True) or []:
         geometries = (cmds.deformer(node, query=True, geometry=True) or []
-                      if cmds.nodeType(node) == "proximityWrap" else [node])
+                      if cmds.nodeType(node) in SUPPORTED_STACK else [node])
         targets.extend(proximity_wrap.mesh_shape(item) for item in geometries)
     targets = list(dict.fromkeys(targets))
     if not targets:
-        raise RuntimeError("Selecciona meshes con Proximity Wrap o sus nodos _PRX.")
+        raise RuntimeError("Select polygon meshes with skin, wrap, corrective or Delta Mush deformation.")
     for shape in targets:
-        if not any(cmds.nodeType(node) == "proximityWrap"
-                   for node, _ in proximity_wrap.direct_deformers(shape)):
-            raise RuntimeError("La mesh no tiene Proximity Wrap: " + shape)
+        types = [cmds.nodeType(n) for n,_ in direct_deformers(shape)]
+        if not types or any(t not in SUPPORTED_STACK for t in types):
+            raise RuntimeError("Supported stacks: skinCluster, proximityWrap, blendShape and deltaMush: " + shape)
     return targets
 
 
 def candidate_joints(shape):
     """Use driver skin weights near the target to limit the fit's joint count."""
-    drivers = []
-    for wrap, _ in proximity_wrap.direct_deformers(shape):
+    drivers = [shape] if any(cmds.nodeType(n) == "skinCluster" for n,_ in direct_deformers(shape)) else []
+    for wrap, _ in direct_deformers(shape):
         if cmds.nodeType(wrap) != "proximityWrap":
             continue
         for index in cmds.proximityWrap(wrap, query=True, driverIndices=True) or []:
@@ -50,7 +56,9 @@ def candidate_joints(shape):
         driver = proximity_wrap.mesh_shape(driver)
         positions = points(driver)
         nearest = []
-        for start in range(0, len(target), 128):
+        if driver == shape:
+            nearest = list(range(len(positions)))
+        for start in range(0, 0 if nearest else len(target), 128):
             batch = target[start:start + 128]
             distances = (np.sum(batch ** 2, axis=1)[:, None]
                          + np.sum(positions ** 2, axis=1)[None, :]
@@ -63,7 +71,7 @@ def candidate_joints(shape):
         component_fn = om.MFnSingleIndexedComponent()
         component = component_fn.create(om.MFn.kMeshVertComponent)
         component_fn.addElements(sorted(set(int(i) for i in nearest)))
-        for skin, _ in proximity_wrap.direct_deformers(driver):
+        for skin, _ in direct_deformers(driver):
             if cmds.nodeType(skin) != "skinCluster":
                 continue
             selection = om.MSelectionList()
@@ -190,13 +198,16 @@ def export_baked_snapshot(manager, snapshot, records, output):
                 continue
             if source in (cmds.ls(name, long=True) or []):
                 snapshot.pop(name)
-        removed.update(node for node, _ in proximity_wrap.direct_deformers(source))
+        removed.update(node for node, _ in direct_deformers(source))
         copy_shape = proximity_wrap.mesh_shape(record["destination"])
         copy_key = next(name for name in baked if name != key
                         and copy_shape in (cmds.ls(name, long=True) or []))
         snapshot[transform] = baked[copy_key]
         metadata["geometry_stacks"][source] = [record["skin"]]
     metadata["nodes"] = [node for node in metadata["nodes"] if node["name"] not in removed]
+    metadata["pose_targets"] = [pose for pose in metadata.get("pose_targets", [])
+                                if pose["blendShape"] not in removed]
+    metadata["bake_validation"] = records
     for stack in metadata["geometry_stacks"].values():
         stack[:] = [node for node in stack if node not in removed]
     # Exclusive creation ensures an existing version is never overwritten.
@@ -204,24 +215,52 @@ def export_baked_snapshot(manager, snapshot, records, output):
         json.dump(snapshot, stream, separators=(",", ":"))
 
 
-def bake_selected(start, end, step=1, bind_frame=None, max_influences=8, export_path=None):
+def error_colors(mesh, per_vertex, limit=None):
+    """Color the baked copy only; originals and their color sets are untouched."""
+    shape = proximity_wrap.mesh_shape(mesh)
+    name = "bakeError"
+    if name not in (cmds.polyColorSet(shape, query=True, allColorSets=True) or []):
+        cmds.polyColorSet(shape, create=True, colorSet=name)
+    cmds.polyColorSet(shape, currentColorSet=True, colorSet=name)
+    selection = om.MSelectionList(); selection.add(shape)
+    fn = om.MFnMesh(selection.getDagPath(0))
+    scale = limit or max(float(max(per_vertex, default=0)), 1e-8)
+    colors = [om.MColor((min(1., float(e) / scale), 1. - min(1., float(e) / scale), .1, 1.)) for e in per_vertex]
+    fn.setVertexColors(om.MColorArray(colors), om.MIntArray(range(len(colors))))
+    cmds.setAttr(proximity_wrap.mesh_shape(mesh) + ".displayColors", True)
+
+
+def bake_selected(start, end, step=1, bind_frame=None, max_influences=8, export_path=None,
+                  validation_frames=None, error_limit=None, color_error=False):
     targets = selected_targets()
     if end <= start or step <= 0 or max_influences < 1:
         raise RuntimeError("Usa un rango de varias poses, paso positivo e influencias >= 1.")
+    if not all(math.isfinite(v) for v in (start,end,step)):
+        raise RuntimeError("Frame range and step must be finite.")
+    if error_limit is not None and (not math.isfinite(error_limit) or error_limit <= 0):
+        raise RuntimeError("Maximum accepted error must be positive and finite.")
     if export_path and os.path.exists(export_path):
         raise RuntimeError("El archivo ya existe. Elige una nueva version: " + export_path)
     if not cmds.undoInfo(query=True, state=True):
         raise RuntimeError("Activa Undo antes del bake.")
     bind_frame = start if bind_frame is None else bind_frame
+    if not math.isfinite(bind_frame):
+        raise RuntimeError("Bind frame must be finite.")
     frames = list(dict.fromkeys([float(bind_frame)] + np.arange(start, end, step).tolist() + [float(end)]))
+    ordered = sorted(set(frames))
+    held_out = [(a+b)*.5 for a,b in zip(ordered,ordered[1:])] if validation_frames is None else list(validation_frames)
+    if any(not math.isfinite(f) or f in frames for f in held_out):
+        raise RuntimeError("Validation frames must be finite and excluded from the fit frames.")
+    held_out = list(dict.fromkeys(float(f) for f in held_out))
+    all_frames = frames + held_out
     original_time = cmds.currentTime(query=True)
     selection = cmds.ls(selection=True, long=True) or []
     records = []
     error = None
     progress_open = False
-    cmds.undoInfo(openChunk=True, chunkName="Bake_ProximityWrap_To_Skin")
+    cmds.undoInfo(openChunk=True, chunkName="Bake_Deformation_To_Skin")
     try:
-        cmds.progressWindow(title="Bake Proximity Wrap", progress=0, maxValue=len(frames) + len(targets),
+        cmds.progressWindow(title="Bake Deformation to Skin", progress=0, maxValue=len(all_frames) + len(targets),
                             status="Preparando...", isInterruptable=True)
         progress_open = True
         cmds.currentTime(bind_frame)
@@ -237,46 +276,64 @@ def bake_selected(start, end, step=1, bind_frame=None, max_influences=8, export_
                     snapshot = json.load(stream)
             # Shared target deformers cannot be removed from a rebuild independently.
             for shape in targets:
-                if any(members != {shape} for _, members in proximity_wrap.direct_deformers(shape)):
+                if any(members != {shape} for _, members in direct_deformers(shape)):
                     raise RuntimeError("Export no admite deformers compartidos: " + shape)
                 stack = snapshot[manager.SCENE_DEFORMERS_KEY]["geometry_stacks"].get(shape, [])
                 types = {node["name"]: node["type"]
                          for node in snapshot[manager.SCENE_DEFORMERS_KEY]["nodes"]}
-                if any(types.get(node) not in ("skinCluster", "proximityWrap") for node in stack):
-                    raise RuntimeError("Para exportar el bake, la mesh debe tener solo skins y wraps: " + shape)
+                if any(types.get(node) not in SUPPORTED_STACK for node in stack):
+                    raise RuntimeError("Export supports skin, wrap, blendshape and Delta Mush stacks: " + shape)
         candidates = {shape: candidate_joints(shape) for shape in targets}
         joints = list(dict.fromkeys(joint for group in candidates.values() for joint in group))
         world = {joint: [] for joint in joints}
         samples = {shape: [] for shape in targets}
-        for index, frame in enumerate(frames):
+        for index, frame in enumerate(all_frames):
             check_cancel()
             cmds.currentTime(frame)
             for joint in joints:
                 world[joint].append(cmds.xform(joint, query=True, worldSpace=True, matrix=True))
             for shape in targets:
                 samples[shape].append(points(shape))
-            cmds.progressWindow(edit=True, progress=index + 1, status="Pose {}/{}".format(index + 1, len(frames)))
+            cmds.progressWindow(edit=True, progress=index + 1, status="Pose {}/{}".format(index + 1, len(all_frames)))
         for index, shape in enumerate(targets):
             check_cancel()
             cmds.progressWindow(edit=True, status="Ajustando " + shape.rsplit("|", 1)[-1])
-            matrices = np.asarray([world[joint] for joint in candidates[shape]]).reshape(-1, len(frames), 4, 4)
-            weights = fit_weights(np.asarray(samples[shape]), matrices, max_influences)
+            matrices = np.asarray([world[joint][:len(frames)] for joint in candidates[shape]]).reshape(-1, len(frames), 4, 4)
+            weights = fit_weights(np.asarray(samples[shape][:len(frames)]), matrices, max_influences)
             cmds.currentTime(bind_frame)
             destination, skin = bind_copy(shape, candidates[shape], weights, max_influences)
             metrics = []
-            for frame, expected in zip(frames, samples[shape]):
+            vertex_error = np.zeros(len(weights))
+            for frame, expected in zip(all_frames, samples[shape]):
                 check_cancel()
                 cmds.currentTime(frame)
                 distances = np.linalg.norm(points(destination) - expected, axis=1)
-                metrics.append({"frame": frame, "rms": float(np.sqrt(np.mean(distances ** 2))),
+                if not np.isfinite(distances).all():
+                    raise RuntimeError("Non-finite baked geometry: " + shape)
+                vertex_error = np.maximum(vertex_error, distances)
+                metrics.append({"frame": frame, "set": "fit" if frame in frames else "held_out",
+                                "rms": float(np.sqrt(np.mean(distances ** 2))),
                                 "max": float(distances.max())})
             record = {"source": shape, "destination": destination, "skin": skin,
                       "validation": metrics, "worst_rms": max(item["rms"] for item in metrics),
-                      "worst_max": max(item["max"] for item in metrics)}
+                      "worst_max": max(item["max"] for item in metrics),
+                      "vertex_error": vertex_error.tolist(), "units": cmds.currentUnit(query=True, linear=True),
+                      "held_out_max": max((m["max"] for m in metrics if m["set"] == "held_out"), default=None)}
+            if error_limit is not None and record["worst_max"] > error_limit:
+                raise RuntimeError("Bake error %.6g exceeds limit %.6g %s; originals preserved." % (
+                    record["worst_max"], error_limit, record["units"]))
+            if color_error:
+                error_colors(destination, vertex_error, error_limit)
+            metadata = cmds.createNode("network", name=skin + "_validation")
+            cmds.addAttr(metadata, longName="bakeValidation", dataType="string")
+            cmds.setAttr(metadata + ".bakeValidation", json.dumps(record), type="string")
+            cmds.addAttr(metadata, longName="destination", attributeType="message")
+            cmds.connectAttr(destination + ".message", metadata + ".destination")
+            record["metadata"] = metadata
             records.append(record)
             print("Bake {}: RMS {:.6f}, max {:.6f} ({})".format(
                 shape, record["worst_rms"], record["worst_max"], cmds.currentUnit(query=True, linear=True)))
-            cmds.progressWindow(edit=True, progress=len(frames) + index + 1)
+            cmds.progressWindow(edit=True, progress=len(all_frames) + index + 1)
         cmds.currentTime(bind_frame)
         if export_path:
             export_baked_snapshot(manager, snapshot, records, export_path)
@@ -292,4 +349,5 @@ def bake_selected(start, end, step=1, bind_frame=None, max_influences=8, export_
         cmds.undo()
         cmds.select(selection, replace=True)
         raise RuntimeError(str(error))
-    return {"records": records, "frames": frames, "bind_frame": bind_frame, "export_path": export_path}
+    return {"records": records, "frames": frames, "validation_frames": held_out,
+            "bind_frame": bind_frame, "export_path": export_path}

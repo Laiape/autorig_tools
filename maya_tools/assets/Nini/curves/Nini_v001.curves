@@ -1,5 +1,5 @@
 {
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL": {
         "transform": {
             "name": "C_baseNose_CTL",
             "overrideEnabled": true,
@@ -309,7 +309,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyeMain_GRP|C_eyeMain_CTL": {
         "transform": {
             "name": "C_eyeMain_CTL",
             "overrideEnabled": true,
@@ -401,7 +401,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|C_eyebrowMid_GRP|C_eyebrowMid_OFF|C_eyebrowMid_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|C_eyebrowMid_GRP|C_eyebrowMid_OFF|C_eyebrowMid_CTL": {
         "transform": {
             "name": "C_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -613,98 +613,6 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_headSquash_GRP|C_headSquash_CTL": {
-        "transform": {
-            "name": "C_headSquash_CTL",
-            "overrideEnabled": false,
-            "overrideColor": null
-        },
-        "shapes": [
-            {
-                "name": "C_headSquash_CTLShape",
-                "overrideEnabled": false,
-                "overrideColor": 0,
-                "alwaysDrawOnTop": false,
-                "lineWidth": -1.0,
-                "curve": {
-                    "cvs": [
-                        [
-                            1.2751775768421558,
-                            1.275177576842156,
-                            0.0
-                        ],
-                        [
-                            1.1042477454421643e-16,
-                            1.8033734236042354,
-                            0.0
-                        ],
-                        [
-                            -1.2751775768421558,
-                            1.2751775768421558,
-                            0.0
-                        ],
-                        [
-                            -1.8033734236042362,
-                            9.348719673152607e-17,
-                            0.0
-                        ],
-                        [
-                            -1.2751775768421558,
-                            -1.2751775768421558,
-                            0.0
-                        ],
-                        [
-                            -1.8064514922599527e-16,
-                            -1.8033734236042367,
-                            0.0
-                        ],
-                        [
-                            1.2751775768421558,
-                            -1.2751775768421558,
-                            0.0
-                        ],
-                        [
-                            1.8033734236042362,
-                            -2.4592539704573925e-16,
-                            0.0
-                        ],
-                        [
-                            1.2751775768421558,
-                            1.275177576842156,
-                            0.0
-                        ],
-                        [
-                            1.1042477454421643e-16,
-                            1.8033734236042354,
-                            0.0
-                        ],
-                        [
-                            -1.2751775768421558,
-                            1.2751775768421558,
-                            0.0
-                        ]
-                    ],
-                    "form": "periodic",
-                    "knots": [
-                        -2.0,
-                        -1.0,
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                    ],
-                    "degree": 3
-                }
-            }
-        ]
-    },
     "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL": {
         "transform": {
             "name": "C_head_CTL",
@@ -797,7 +705,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL": {
         "transform": {
             "name": "C_jaw_CTL",
             "overrideEnabled": true,
@@ -1095,7 +1003,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_lowerLip00_GRP|C_lowerLip00_OFF|C_lowerLip00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_lowerLip00_GRP|C_lowerLip00_OFF|C_lowerLip00_CTL": {
         "transform": {
             "name": "C_lowerLip00_CTL",
             "overrideEnabled": true,
@@ -1187,7 +1095,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|C_lowerLip_GRP|C_lowerLip_OFF|C_lowerLip_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|C_lowerLip_GRP|C_lowerLip_OFF|C_lowerLip_CTL": {
         "transform": {
             "name": "C_lowerLip_CTL",
             "overrideEnabled": true,
@@ -1279,7 +1187,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_teethControllers_GRP|C_lowerTeeth_GRP|C_lowerTeeth_ANM|C_lowerTeeth_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_lowerTeeth_GRP|C_lowerTeeth_ANM|C_lowerTeeth_CTL": {
         "transform": {
             "name": "C_lowerTeeth_CTL",
             "overrideEnabled": false,
@@ -1371,7 +1279,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_mainMouth_GRP|C_mainMouth_OFF|C_mainMouth_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_mainMouth_GRP|C_mainMouth_OFF|C_mainMouth_CTL": {
         "transform": {
             "name": "C_mainMouth_CTL",
             "overrideEnabled": true,
@@ -1681,7 +1589,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_noseMain_GRP|C_noseMain_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_noseMain_GRP|C_noseMain_CTL": {
         "transform": {
             "name": "C_noseMain_CTL",
             "overrideEnabled": true,
@@ -1773,7 +1681,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|C_noseTip_GRP|C_noseTip_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|C_noseTip_GRP|C_noseTip_CTL": {
         "transform": {
             "name": "C_noseTip_CTL",
             "overrideEnabled": true,
@@ -1865,7 +1773,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_settings_GRP|C_settings_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_settings_GRP|C_settings_CTL": {
         "transform": {
             "name": "C_settings_CTL",
             "overrideEnabled": true,
@@ -1881,59 +1789,59 @@
                 "curve": {
                     "cvs": [
                         [
-                            -3.9443815900227492,
-                            146.0920386777292,
-                            3.8342819421140104e-06
+                            -3.6086003456435085,
+                            142.81116970178223,
+                            3.4651827170088347e-06
                         ],
                         [
-                            -1.9761611973516764,
-                            146.09204078877843,
-                            9.78705093706563e-07
+                            -1.8298466244953808,
+                            142.81116970180472,
+                            8.844920768534524e-07
                         ],
                         [
-                            -1.9761652945033064,
-                            149.57214610398142,
-                            2.1416827180184623e-06
+                            -1.8298503272431708,
+                            147.26657086867212,
+                            1.9355180618293703e-06
                         ],
                         [
-                            0.9761693916549318,
-                            146.09204395535227,
-                            -3.304660178904893e-06
+                            0.8382839572268095,
+                            142.8111697018384,
+                            -2.98654388337988e-06
                         ],
                         [
-                            3.031961675260566,
-                            146.09204606640148,
-                            -6.160237027313194e-06
+                            3.0752007694254635,
+                            142.81116970186088,
+                            -5.567234523536033e-06
                         ],
                         [
-                            3.031953480957306,
-                            154.0465688821322,
-                            -3.834281778688898e-06
+                            3.0752007693514085,
+                            152.02853924204217,
+                            -3.465182553583751e-06
                         ],
                         [
-                            0.9761611973516717,
-                            154.04656677108295,
-                            -9.78704930282302e-07
+                            0.838276551731231,
+                            152.02853924201972,
+                            -8.84491913429137e-07
                         ],
                         [
-                            0.9761663187912093,
-                            149.57214610391367,
-                            -2.4324269606707025e-06
+                            0.8382811801659675,
+                            147.26657086860004,
+                            -2.1982743946477014e-06
                         ],
                         [
-                            -1.9761693916549363,
-                            154.04656360450912,
-                            3.304660342329297e-06
+                            -1.8298540299909603,
+                            152.028539241986,
+                            2.9865440468043243e-06
                         ],
                         [
-                            -3.944389784326009,
-                            154.0465614934599,
-                            6.1602371907380235e-06
+                            -3.6086077511390875,
+                            152.02853924196356,
+                            5.5672346869608645e-06
                         ],
                         [
-                            -3.9443815900227492,
-                            146.0920386777292,
-                            3.8342819421140104e-06
+                            -3.6086003456435085,
+                            142.81116970178223,
+                            3.4651827170088347e-06
                         ]
                     ],
                     "form": "open",
@@ -3151,7 +3059,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL": {
         "transform": {
             "name": "C_tongue00_CTL",
             "overrideEnabled": false,
@@ -3243,7 +3151,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL": {
         "transform": {
             "name": "C_tongue01_CTL",
             "overrideEnabled": false,
@@ -3335,7 +3243,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL": {
         "transform": {
             "name": "C_tongue02_CTL",
             "overrideEnabled": false,
@@ -3427,7 +3335,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL": {
         "transform": {
             "name": "C_tongue03_CTL",
             "overrideEnabled": false,
@@ -3519,7 +3427,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL": {
         "transform": {
             "name": "C_tongue04_CTL",
             "overrideEnabled": false,
@@ -3611,7 +3519,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL": {
         "transform": {
             "name": "C_tongue05_CTL",
             "overrideEnabled": false,
@@ -3703,7 +3611,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_upperJaw_GRP|C_upperJaw_OFF|C_upperJaw_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_upperJaw_GRP|C_upperJaw_OFF|C_upperJaw_CTL": {
         "transform": {
             "name": "C_upperJaw_CTL",
             "overrideEnabled": true,
@@ -3829,7 +3737,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_upperLip00_GRP|C_upperLip00_OFF|C_upperLip00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|C_upperLip00_GRP|C_upperLip00_OFF|C_upperLip00_CTL": {
         "transform": {
             "name": "C_upperLip00_CTL",
             "overrideEnabled": true,
@@ -3921,7 +3829,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|C_upperLip_GRP|C_upperLip_OFF|C_upperLip_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|C_upperLip_GRP|C_upperLip_OFF|C_upperLip_CTL": {
         "transform": {
             "name": "C_upperLip_CTL",
             "overrideEnabled": true,
@@ -4013,7 +3921,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_teethControllers_GRP|C_upperTeeth_GRP|C_upperTeeth_ANM|C_upperTeeth_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_upperTeeth_GRP|C_upperTeeth_ANM|C_upperTeeth_CTL": {
         "transform": {
             "name": "C_upperTeeth_CTL",
             "overrideEnabled": false,
@@ -5975,7 +5883,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|L_cheek_GRP|L_cheek_ANM|L_cheek_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheek_GRP|L_cheek_ANM|L_cheek_CTL": {
         "transform": {
             "name": "L_cheek_CTL",
             "overrideEnabled": true,
@@ -6233,7 +6141,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL|L_cheekbone00_GRP|L_cheekbone00_OFF|L_cheekbone00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL|L_cheekbone00_GRP|L_cheekbone00_OFF|L_cheekbone00_CTL": {
         "transform": {
             "name": "L_cheekbone00_CTL",
             "overrideEnabled": true,
@@ -6325,7 +6233,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL|L_cheekbone01_GRP|L_cheekbone01_OFF|L_cheekbone01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL|L_cheekbone01_GRP|L_cheekbone01_OFF|L_cheekbone01_CTL": {
         "transform": {
             "name": "L_cheekbone01_CTL",
             "overrideEnabled": true,
@@ -6417,7 +6325,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL|L_cheekbone02_GRP|L_cheekbone02_OFF|L_cheekbone02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL|L_cheekbone02_GRP|L_cheekbone02_OFF|L_cheekbone02_CTL": {
         "transform": {
             "name": "L_cheekbone02_CTL",
             "overrideEnabled": true,
@@ -6509,7 +6417,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheekbone_GRP|L_cheekbone_OFF|L_cheekbone_CTL": {
         "transform": {
             "name": "L_cheekbone_CTL",
             "overrideEnabled": true,
@@ -6693,7 +6601,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid00_GRP|L_downEyelid00_OFF|L_downEyelid00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid00_GRP|L_downEyelid00_OFF|L_downEyelid00_CTL": {
         "transform": {
             "name": "L_downEyelid00_CTL",
             "overrideEnabled": true,
@@ -6951,7 +6859,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid01_GRP|L_downEyelid01_OFF|L_downEyelid01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid01_GRP|L_downEyelid01_OFF|L_downEyelid01_CTL": {
         "transform": {
             "name": "L_downEyelid01_CTL",
             "overrideEnabled": true,
@@ -7209,7 +7117,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid02_GRP|L_downEyelid02_OFF|L_downEyelid02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid02_GRP|L_downEyelid02_OFF|L_downEyelid02_CTL": {
         "transform": {
             "name": "L_downEyelid02_CTL",
             "overrideEnabled": true,
@@ -7467,7 +7375,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid03_GRP|L_downEyelid03_OFF|L_downEyelid03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid03_GRP|L_downEyelid03_OFF|L_downEyelid03_CTL": {
         "transform": {
             "name": "L_downEyelid03_CTL",
             "overrideEnabled": true,
@@ -7725,7 +7633,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid04_GRP|L_downEyelid04_OFF|L_downEyelid04_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid04_GRP|L_downEyelid04_OFF|L_downEyelid04_CTL": {
         "transform": {
             "name": "L_downEyelid04_CTL",
             "overrideEnabled": true,
@@ -7983,7 +7891,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid05_GRP|L_downEyelid05_OFF|L_downEyelid05_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid05_GRP|L_downEyelid05_OFF|L_downEyelid05_CTL": {
         "transform": {
             "name": "L_downEyelid05_CTL",
             "overrideEnabled": true,
@@ -8241,7 +8149,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid06_GRP|L_downEyelid06_OFF|L_downEyelid06_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid06_GRP|L_downEyelid06_OFF|L_downEyelid06_CTL": {
         "transform": {
             "name": "L_downEyelid06_CTL",
             "overrideEnabled": true,
@@ -8499,7 +8407,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid07_GRP|L_downEyelid07_OFF|L_downEyelid07_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid07_GRP|L_downEyelid07_OFF|L_downEyelid07_CTL": {
         "transform": {
             "name": "L_downEyelid07_CTL",
             "overrideEnabled": true,
@@ -8757,7 +8665,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid08_GRP|L_downEyelid08_OFF|L_downEyelid08_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_downEyelid08_GRP|L_downEyelid08_OFF|L_downEyelid08_CTL": {
         "transform": {
             "name": "L_downEyelid08_CTL",
             "overrideEnabled": true,
@@ -9015,7 +8923,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL": {
         "transform": {
             "name": "L_ear00_CTL",
             "overrideEnabled": true,
@@ -9107,7 +9015,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL|L_ear01_GRP|L_ear01_ANM|L_ear01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL|L_ear01_GRP|L_ear01_ANM|L_ear01_CTL": {
         "transform": {
             "name": "L_ear01_CTL",
             "overrideEnabled": true,
@@ -9199,7 +9107,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL|L_ear01_GRP|L_ear01_ANM|L_ear01_CTL|L_ear02_GRP|L_ear02_ANM|L_ear02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL|L_ear01_GRP|L_ear01_ANM|L_ear01_CTL|L_ear02_GRP|L_ear02_ANM|L_ear02_CTL": {
         "transform": {
             "name": "L_ear02_CTL",
             "overrideEnabled": true,
@@ -9475,7 +9383,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL|L_eye_GRP|L_eye_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyeMain_GRP|C_eyeMain_CTL|L_eye_GRP|L_eye_CTL": {
         "transform": {
             "name": "L_eye_CTL",
             "overrideEnabled": true,
@@ -9567,7 +9475,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL|L_eyebrowInTan_OFF|L_eyebrowInTan_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL|L_eyebrowInTan_OFF|L_eyebrowInTan_CTL": {
         "transform": {
             "name": "L_eyebrowInTan_CTL",
             "overrideEnabled": true,
@@ -9659,7 +9567,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL": {
         "transform": {
             "name": "L_eyebrowIn_CTL",
             "overrideEnabled": true,
@@ -9751,7 +9659,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL": {
         "transform": {
             "name": "L_eyebrowMain_CTL",
             "overrideEnabled": true,
@@ -9843,7 +9751,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_OFF|L_eyebrowMid_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_OFF|L_eyebrowMid_CTL": {
         "transform": {
             "name": "L_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -9935,7 +9843,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL|L_eyebrowOutTan_OFF|L_eyebrowOutTan_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL|L_eyebrowOutTan_OFF|L_eyebrowOutTan_CTL": {
         "transform": {
             "name": "L_eyebrowOutTan_CTL",
             "overrideEnabled": true,
@@ -10027,7 +9935,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL": {
         "transform": {
             "name": "L_eyebrowOut_CTL",
             "overrideEnabled": true,
@@ -10119,7 +10027,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL": {
         "transform": {
             "name": "L_eyelidDown_CTL",
             "overrideEnabled": true,
@@ -10211,7 +10119,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidInDown_GRP|L_eyelidInDown_OFF|L_eyelidInDown_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidInDown_GRP|L_eyelidInDown_OFF|L_eyelidInDown_CTL": {
         "transform": {
             "name": "L_eyelidInDown_CTL",
             "overrideEnabled": true,
@@ -10303,7 +10211,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidInUp_GRP|L_eyelidInUp_OFF|L_eyelidInUp_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidInUp_GRP|L_eyelidInUp_OFF|L_eyelidInUp_CTL": {
         "transform": {
             "name": "L_eyelidInUp_CTL",
             "overrideEnabled": true,
@@ -10395,7 +10303,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidIn_GRP|L_eyelidIn_OFF|L_eyelidIn_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidIn_GRP|L_eyelidIn_OFF|L_eyelidIn_CTL": {
         "transform": {
             "name": "L_eyelidIn_CTL",
             "overrideEnabled": true,
@@ -10487,7 +10395,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidOutDown_GRP|L_eyelidOutDown_OFF|L_eyelidOutDown_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidOutDown_GRP|L_eyelidOutDown_OFF|L_eyelidOutDown_CTL": {
         "transform": {
             "name": "L_eyelidOutDown_CTL",
             "overrideEnabled": true,
@@ -10579,7 +10487,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidOutUp_GRP|L_eyelidOutUp_OFF|L_eyelidOutUp_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidOutUp_GRP|L_eyelidOutUp_OFF|L_eyelidOutUp_CTL": {
         "transform": {
             "name": "L_eyelidOutUp_CTL",
             "overrideEnabled": true,
@@ -10671,7 +10579,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_OFF|L_eyelidOut_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_OFF|L_eyelidOut_CTL": {
         "transform": {
             "name": "L_eyelidOut_CTL",
             "overrideEnabled": true,
@@ -10763,7 +10671,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL": {
         "transform": {
             "name": "L_eyelidUp_CTL",
             "overrideEnabled": true,
@@ -12733,7 +12641,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL": {
         "transform": {
             "name": "L_lipCorner_CTL",
             "overrideEnabled": true,
@@ -12825,7 +12733,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip00_GRP|L_lowerLip00_OFF|L_lowerLip00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip00_GRP|L_lowerLip00_OFF|L_lowerLip00_CTL": {
         "transform": {
             "name": "L_lowerLip00_CTL",
             "overrideEnabled": true,
@@ -12917,7 +12825,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip01_GRP|L_lowerLip01_OFF|L_lowerLip01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip01_GRP|L_lowerLip01_OFF|L_lowerLip01_CTL": {
         "transform": {
             "name": "L_lowerLip01_CTL",
             "overrideEnabled": true,
@@ -13009,7 +12917,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip02_GRP|L_lowerLip02_OFF|L_lowerLip02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip02_GRP|L_lowerLip02_OFF|L_lowerLip02_CTL": {
         "transform": {
             "name": "L_lowerLip02_CTL",
             "overrideEnabled": true,
@@ -13101,7 +13009,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip03_GRP|L_lowerLip03_OFF|L_lowerLip03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_lowerLip03_GRP|L_lowerLip03_OFF|L_lowerLip03_CTL": {
         "transform": {
             "name": "L_lowerLip03_CTL",
             "overrideEnabled": true,
@@ -13561,7 +13469,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL|L_nose_GRP|L_nose_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL|L_nose_GRP|L_nose_CTL": {
         "transform": {
             "name": "L_nose_CTL",
             "overrideEnabled": true,
@@ -13653,7 +13561,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL": {
         "transform": {
             "name": "L_nosetril_CTL",
             "overrideEnabled": true,
@@ -15273,7 +15181,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid00_GRP|L_upperEyelid00_OFF|L_upperEyelid00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid00_GRP|L_upperEyelid00_OFF|L_upperEyelid00_CTL": {
         "transform": {
             "name": "L_upperEyelid00_CTL",
             "overrideEnabled": true,
@@ -15531,7 +15439,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid01_GRP|L_upperEyelid01_OFF|L_upperEyelid01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid01_GRP|L_upperEyelid01_OFF|L_upperEyelid01_CTL": {
         "transform": {
             "name": "L_upperEyelid01_CTL",
             "overrideEnabled": true,
@@ -15789,7 +15697,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid02_GRP|L_upperEyelid02_OFF|L_upperEyelid02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid02_GRP|L_upperEyelid02_OFF|L_upperEyelid02_CTL": {
         "transform": {
             "name": "L_upperEyelid02_CTL",
             "overrideEnabled": true,
@@ -16047,7 +15955,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid03_GRP|L_upperEyelid03_OFF|L_upperEyelid03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid03_GRP|L_upperEyelid03_OFF|L_upperEyelid03_CTL": {
         "transform": {
             "name": "L_upperEyelid03_CTL",
             "overrideEnabled": true,
@@ -16305,7 +16213,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid04_GRP|L_upperEyelid04_OFF|L_upperEyelid04_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid04_GRP|L_upperEyelid04_OFF|L_upperEyelid04_CTL": {
         "transform": {
             "name": "L_upperEyelid04_CTL",
             "overrideEnabled": true,
@@ -16563,7 +16471,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid05_GRP|L_upperEyelid05_OFF|L_upperEyelid05_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid05_GRP|L_upperEyelid05_OFF|L_upperEyelid05_CTL": {
         "transform": {
             "name": "L_upperEyelid05_CTL",
             "overrideEnabled": true,
@@ -16821,7 +16729,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid06_GRP|L_upperEyelid06_OFF|L_upperEyelid06_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid06_GRP|L_upperEyelid06_OFF|L_upperEyelid06_CTL": {
         "transform": {
             "name": "L_upperEyelid06_CTL",
             "overrideEnabled": true,
@@ -17079,7 +16987,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid07_GRP|L_upperEyelid07_OFF|L_upperEyelid07_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid07_GRP|L_upperEyelid07_OFF|L_upperEyelid07_CTL": {
         "transform": {
             "name": "L_upperEyelid07_CTL",
             "overrideEnabled": true,
@@ -17337,7 +17245,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid08_GRP|L_upperEyelid08_OFF|L_upperEyelid08_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidExtraControllers_GRP|L_upperEyelid08_GRP|L_upperEyelid08_OFF|L_upperEyelid08_CTL": {
         "transform": {
             "name": "L_upperEyelid08_CTL",
             "overrideEnabled": true,
@@ -17595,7 +17503,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip00_GRP|L_upperLip00_OFF|L_upperLip00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip00_GRP|L_upperLip00_OFF|L_upperLip00_CTL": {
         "transform": {
             "name": "L_upperLip00_CTL",
             "overrideEnabled": true,
@@ -17687,7 +17595,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip01_GRP|L_upperLip01_OFF|L_upperLip01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip01_GRP|L_upperLip01_OFF|L_upperLip01_CTL": {
         "transform": {
             "name": "L_upperLip01_CTL",
             "overrideEnabled": true,
@@ -17779,7 +17687,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip02_GRP|L_upperLip02_OFF|L_upperLip02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip02_GRP|L_upperLip02_OFF|L_upperLip02_CTL": {
         "transform": {
             "name": "L_upperLip02_CTL",
             "overrideEnabled": true,
@@ -17871,7 +17779,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip03_GRP|L_upperLip03_OFF|L_upperLip03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|L_upperLip03_GRP|L_upperLip03_OFF|L_upperLip03_CTL": {
         "transform": {
             "name": "L_upperLip03_CTL",
             "overrideEnabled": true,
@@ -19925,7 +19833,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|R_cheek_GRP|R_cheek_ANM|R_cheek_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheek_GRP|R_cheek_ANM|R_cheek_CTL": {
         "transform": {
             "name": "R_cheek_CTL",
             "overrideEnabled": true,
@@ -20183,7 +20091,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL|R_cheekbone00_GRP|R_cheekbone00_OFF|R_cheekbone00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL|R_cheekbone00_GRP|R_cheekbone00_OFF|R_cheekbone00_CTL": {
         "transform": {
             "name": "R_cheekbone00_CTL",
             "overrideEnabled": true,
@@ -20275,7 +20183,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL|R_cheekbone01_GRP|R_cheekbone01_OFF|R_cheekbone01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL|R_cheekbone01_GRP|R_cheekbone01_OFF|R_cheekbone01_CTL": {
         "transform": {
             "name": "R_cheekbone01_CTL",
             "overrideEnabled": true,
@@ -20367,7 +20275,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL|R_cheekbone02_GRP|R_cheekbone02_OFF|R_cheekbone02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL|R_cheekbone02_GRP|R_cheekbone02_OFF|R_cheekbone02_CTL": {
         "transform": {
             "name": "R_cheekbone02_CTL",
             "overrideEnabled": true,
@@ -20459,7 +20367,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheekbone_GRP|R_cheekbone_OFF|R_cheekbone_CTL": {
         "transform": {
             "name": "R_cheekbone_CTL",
             "overrideEnabled": true,
@@ -20643,7 +20551,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid00_GRP|R_downEyelid00_OFF|R_downEyelid00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid00_GRP|R_downEyelid00_OFF|R_downEyelid00_CTL": {
         "transform": {
             "name": "R_downEyelid00_CTL",
             "overrideEnabled": true,
@@ -20901,7 +20809,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid01_GRP|R_downEyelid01_OFF|R_downEyelid01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid01_GRP|R_downEyelid01_OFF|R_downEyelid01_CTL": {
         "transform": {
             "name": "R_downEyelid01_CTL",
             "overrideEnabled": true,
@@ -21159,7 +21067,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid02_GRP|R_downEyelid02_OFF|R_downEyelid02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid02_GRP|R_downEyelid02_OFF|R_downEyelid02_CTL": {
         "transform": {
             "name": "R_downEyelid02_CTL",
             "overrideEnabled": true,
@@ -21417,7 +21325,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid03_GRP|R_downEyelid03_OFF|R_downEyelid03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid03_GRP|R_downEyelid03_OFF|R_downEyelid03_CTL": {
         "transform": {
             "name": "R_downEyelid03_CTL",
             "overrideEnabled": true,
@@ -21675,7 +21583,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid04_GRP|R_downEyelid04_OFF|R_downEyelid04_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid04_GRP|R_downEyelid04_OFF|R_downEyelid04_CTL": {
         "transform": {
             "name": "R_downEyelid04_CTL",
             "overrideEnabled": true,
@@ -21933,7 +21841,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid05_GRP|R_downEyelid05_OFF|R_downEyelid05_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid05_GRP|R_downEyelid05_OFF|R_downEyelid05_CTL": {
         "transform": {
             "name": "R_downEyelid05_CTL",
             "overrideEnabled": true,
@@ -22191,7 +22099,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid06_GRP|R_downEyelid06_OFF|R_downEyelid06_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid06_GRP|R_downEyelid06_OFF|R_downEyelid06_CTL": {
         "transform": {
             "name": "R_downEyelid06_CTL",
             "overrideEnabled": true,
@@ -22449,7 +22357,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid07_GRP|R_downEyelid07_OFF|R_downEyelid07_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid07_GRP|R_downEyelid07_OFF|R_downEyelid07_CTL": {
         "transform": {
             "name": "R_downEyelid07_CTL",
             "overrideEnabled": true,
@@ -22707,7 +22615,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid08_GRP|R_downEyelid08_OFF|R_downEyelid08_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_downEyelid08_GRP|R_downEyelid08_OFF|R_downEyelid08_CTL": {
         "transform": {
             "name": "R_downEyelid08_CTL",
             "overrideEnabled": true,
@@ -22965,7 +22873,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL": {
         "transform": {
             "name": "R_ear00_CTL",
             "overrideEnabled": true,
@@ -23057,7 +22965,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL|R_ear01_GRP|R_ear01_ANM|R_ear01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL|R_ear01_GRP|R_ear01_ANM|R_ear01_CTL": {
         "transform": {
             "name": "R_ear01_CTL",
             "overrideEnabled": true,
@@ -23149,7 +23057,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL|R_ear01_GRP|R_ear01_ANM|R_ear01_CTL|R_ear02_GRP|R_ear02_ANM|R_ear02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL|R_ear01_GRP|R_ear01_ANM|R_ear01_CTL|R_ear02_GRP|R_ear02_ANM|R_ear02_CTL": {
         "transform": {
             "name": "R_ear02_CTL",
             "overrideEnabled": true,
@@ -23425,7 +23333,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL|R_eye_GRP|R_eye_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyeMain_GRP|C_eyeMain_CTL|R_eye_GRP|R_eye_CTL": {
         "transform": {
             "name": "R_eye_CTL",
             "overrideEnabled": true,
@@ -23517,7 +23425,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL|R_eyebrowInTan_OFF|R_eyebrowInTan_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL|R_eyebrowInTan_OFF|R_eyebrowInTan_CTL": {
         "transform": {
             "name": "R_eyebrowInTan_CTL",
             "overrideEnabled": true,
@@ -23609,7 +23517,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL": {
         "transform": {
             "name": "R_eyebrowIn_CTL",
             "overrideEnabled": true,
@@ -23701,7 +23609,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL": {
         "transform": {
             "name": "R_eyebrowMain_CTL",
             "overrideEnabled": true,
@@ -23793,7 +23701,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_OFF|R_eyebrowMid_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_OFF|R_eyebrowMid_CTL": {
         "transform": {
             "name": "R_eyebrowMid_CTL",
             "overrideEnabled": true,
@@ -23885,7 +23793,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL|R_eyebrowOutTan_OFF|R_eyebrowOutTan_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL|R_eyebrowOutTan_OFF|R_eyebrowOutTan_CTL": {
         "transform": {
             "name": "R_eyebrowOutTan_CTL",
             "overrideEnabled": true,
@@ -23977,7 +23885,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL": {
         "transform": {
             "name": "R_eyebrowOut_CTL",
             "overrideEnabled": true,
@@ -24069,7 +23977,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_OFF|R_eyelidDown_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_OFF|R_eyelidDown_CTL": {
         "transform": {
             "name": "R_eyelidDown_CTL",
             "overrideEnabled": true,
@@ -24161,7 +24069,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidInDown_GRP|R_eyelidInDown_OFF|R_eyelidInDown_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidInDown_GRP|R_eyelidInDown_OFF|R_eyelidInDown_CTL": {
         "transform": {
             "name": "R_eyelidInDown_CTL",
             "overrideEnabled": true,
@@ -24253,7 +24161,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidInUp_GRP|R_eyelidInUp_OFF|R_eyelidInUp_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidInUp_GRP|R_eyelidInUp_OFF|R_eyelidInUp_CTL": {
         "transform": {
             "name": "R_eyelidInUp_CTL",
             "overrideEnabled": true,
@@ -24345,7 +24253,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidIn_GRP|R_eyelidIn_OFF|R_eyelidIn_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidIn_GRP|R_eyelidIn_OFF|R_eyelidIn_CTL": {
         "transform": {
             "name": "R_eyelidIn_CTL",
             "overrideEnabled": true,
@@ -24437,7 +24345,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidOutDown_GRP|R_eyelidOutDown_OFF|R_eyelidOutDown_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidOutDown_GRP|R_eyelidOutDown_OFF|R_eyelidOutDown_CTL": {
         "transform": {
             "name": "R_eyelidOutDown_CTL",
             "overrideEnabled": true,
@@ -24529,7 +24437,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidOutUp_GRP|R_eyelidOutUp_OFF|R_eyelidOutUp_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidOutUp_GRP|R_eyelidOutUp_OFF|R_eyelidOutUp_CTL": {
         "transform": {
             "name": "R_eyelidOutUp_CTL",
             "overrideEnabled": true,
@@ -24621,7 +24529,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_OFF|R_eyelidOut_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_OFF|R_eyelidOut_CTL": {
         "transform": {
             "name": "R_eyelidOut_CTL",
             "overrideEnabled": true,
@@ -24713,7 +24621,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_OFF|R_eyelidUp_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_OFF|R_eyelidUp_CTL": {
         "transform": {
             "name": "R_eyelidUp_CTL",
             "overrideEnabled": true,
@@ -26683,7 +26591,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL": {
         "transform": {
             "name": "R_lipCorner_CTL",
             "overrideEnabled": true,
@@ -26775,7 +26683,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip00_GRP|R_lowerLip00_OFF|R_lowerLip00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip00_GRP|R_lowerLip00_OFF|R_lowerLip00_CTL": {
         "transform": {
             "name": "R_lowerLip00_CTL",
             "overrideEnabled": true,
@@ -26867,7 +26775,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip01_GRP|R_lowerLip01_OFF|R_lowerLip01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip01_GRP|R_lowerLip01_OFF|R_lowerLip01_CTL": {
         "transform": {
             "name": "R_lowerLip01_CTL",
             "overrideEnabled": true,
@@ -26959,7 +26867,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip02_GRP|R_lowerLip02_OFF|R_lowerLip02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip02_GRP|R_lowerLip02_OFF|R_lowerLip02_CTL": {
         "transform": {
             "name": "R_lowerLip02_CTL",
             "overrideEnabled": true,
@@ -27051,7 +26959,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip03_GRP|R_lowerLip03_OFF|R_lowerLip03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_lowerLip03_GRP|R_lowerLip03_OFF|R_lowerLip03_CTL": {
         "transform": {
             "name": "R_lowerLip03_CTL",
             "overrideEnabled": true,
@@ -27511,7 +27419,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL|R_nose_GRP|R_nose_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL|R_nose_GRP|R_nose_CTL": {
         "transform": {
             "name": "R_nose_CTL",
             "overrideEnabled": true,
@@ -27603,7 +27511,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL": {
         "transform": {
             "name": "R_nosetril_CTL",
             "overrideEnabled": true,
@@ -29223,7 +29131,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid00_GRP|R_upperEyelid00_OFF|R_upperEyelid00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid00_GRP|R_upperEyelid00_OFF|R_upperEyelid00_CTL": {
         "transform": {
             "name": "R_upperEyelid00_CTL",
             "overrideEnabled": true,
@@ -29481,7 +29389,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid01_GRP|R_upperEyelid01_OFF|R_upperEyelid01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid01_GRP|R_upperEyelid01_OFF|R_upperEyelid01_CTL": {
         "transform": {
             "name": "R_upperEyelid01_CTL",
             "overrideEnabled": true,
@@ -29739,7 +29647,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid02_GRP|R_upperEyelid02_OFF|R_upperEyelid02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid02_GRP|R_upperEyelid02_OFF|R_upperEyelid02_CTL": {
         "transform": {
             "name": "R_upperEyelid02_CTL",
             "overrideEnabled": true,
@@ -29997,7 +29905,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid03_GRP|R_upperEyelid03_OFF|R_upperEyelid03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid03_GRP|R_upperEyelid03_OFF|R_upperEyelid03_CTL": {
         "transform": {
             "name": "R_upperEyelid03_CTL",
             "overrideEnabled": true,
@@ -30255,7 +30163,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid04_GRP|R_upperEyelid04_OFF|R_upperEyelid04_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid04_GRP|R_upperEyelid04_OFF|R_upperEyelid04_CTL": {
         "transform": {
             "name": "R_upperEyelid04_CTL",
             "overrideEnabled": true,
@@ -30513,7 +30421,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid05_GRP|R_upperEyelid05_OFF|R_upperEyelid05_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid05_GRP|R_upperEyelid05_OFF|R_upperEyelid05_CTL": {
         "transform": {
             "name": "R_upperEyelid05_CTL",
             "overrideEnabled": true,
@@ -30771,7 +30679,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid06_GRP|R_upperEyelid06_OFF|R_upperEyelid06_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid06_GRP|R_upperEyelid06_OFF|R_upperEyelid06_CTL": {
         "transform": {
             "name": "R_upperEyelid06_CTL",
             "overrideEnabled": true,
@@ -31029,7 +30937,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid07_GRP|R_upperEyelid07_OFF|R_upperEyelid07_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid07_GRP|R_upperEyelid07_OFF|R_upperEyelid07_CTL": {
         "transform": {
             "name": "R_upperEyelid07_CTL",
             "overrideEnabled": true,
@@ -31287,7 +31195,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid08_GRP|R_upperEyelid08_OFF|R_upperEyelid08_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidExtraControllers_GRP|R_upperEyelid08_GRP|R_upperEyelid08_OFF|R_upperEyelid08_CTL": {
         "transform": {
             "name": "R_upperEyelid08_CTL",
             "overrideEnabled": true,
@@ -31545,7 +31453,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip00_GRP|R_upperLip00_OFF|R_upperLip00_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip00_GRP|R_upperLip00_OFF|R_upperLip00_CTL": {
         "transform": {
             "name": "R_upperLip00_CTL",
             "overrideEnabled": true,
@@ -31637,7 +31545,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip01_GRP|R_upperLip01_OFF|R_upperLip01_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip01_GRP|R_upperLip01_OFF|R_upperLip01_CTL": {
         "transform": {
             "name": "R_upperLip01_CTL",
             "overrideEnabled": true,
@@ -31729,7 +31637,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip02_GRP|R_upperLip02_OFF|R_upperLip02_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip02_GRP|R_upperLip02_OFF|R_upperLip02_CTL": {
         "transform": {
             "name": "R_upperLip02_CTL",
             "overrideEnabled": true,
@@ -31821,7 +31729,7 @@
             }
         ]
     },
-    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_face_CTL|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip03_GRP|R_upperLip03_OFF|R_upperLip03_CTL": {
+    "|Nini|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_secondaryLipsControllers_GRP|R_upperLip03_GRP|R_upperLip03_OFF|R_upperLip03_CTL": {
         "transform": {
             "name": "R_upperLip03_CTL",
             "overrideEnabled": true,

@@ -337,7 +337,7 @@
             }
         ]
     },
-    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL": {
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyeMain_GRP|C_eyeMain_CTL": {
         "transform": {
             "name": "C_eyeMain_CTL",
             "overrideEnabled": false,
@@ -1444,6 +1444,98 @@
                             -0.25376058882821345,
                             0.647019783409515,
                             0.8976850767058198
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_lowerTeeth_GRP|C_lowerTeeth_ANM|C_lowerTeeth_CTL": {
+        "transform": {
+            "name": "C_lowerTeeth_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_lowerTeeth_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -3259,6 +3351,558 @@
             }
         ]
     },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL": {
+        "transform": {
+            "name": "C_tongue00_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue00_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL": {
+        "transform": {
+            "name": "C_tongue01_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue01_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL": {
+        "transform": {
+            "name": "C_tongue02_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue02_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL": {
+        "transform": {
+            "name": "C_tongue03_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue03_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL": {
+        "transform": {
+            "name": "C_tongue04_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue04_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL|C_tongue03_GRP|C_tongue03_ANM|C_tongue03_CTL|C_tongue04_GRP|C_tongue04_ANM|C_tongue04_CTL|C_tongue05_GRP|C_tongue05_ANM|C_tongue05_CTL": {
+        "transform": {
+            "name": "C_tongue05_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_tongue05_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
     "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_upperJaw_GRP|C_upperJaw_OFF|C_upperJaw_CTL": {
         "transform": {
             "name": "C_upperJaw_CTL",
@@ -3738,6 +4382,98 @@
                             -0.25376058882821345,
                             0.6470197834080371,
                             1.134218735841162
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            }
+        ]
+    },
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_upperTeeth_GRP|C_upperTeeth_ANM|C_upperTeeth_CTL": {
+        "transform": {
+            "name": "C_upperTeeth_CTL",
+            "overrideEnabled": false,
+            "overrideColor": null
+        },
+        "shapes": [
+            {
+                "name": "C_upperTeeth_CTLShape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            -1.1081941875543881,
+                            5.74489823752483e-17,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            -0.7836116248912245,
+                            0.0
+                        ],
+                        [
+                            -1.1100856969603225e-16,
+                            -1.1081941875543884,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            -0.7836116248912244,
+                            0.0
+                        ],
+                        [
+                            1.1081941875543881,
+                            -1.511240500779959e-16,
+                            0.0
+                        ],
+                        [
+                            0.7836116248912245,
+                            0.7836116248912246,
+                            0.0
+                        ],
+                        [
+                            6.785732323110912e-17,
+                            1.1081941875543877,
+                            0.0
+                        ],
+                        [
+                            -0.7836116248912245,
+                            0.7836116248912244,
+                            0.0
                         ]
                     ],
                     "form": "periodic",
@@ -12169,59 +12905,142 @@
                 "curve": {
                     "cvs": [
                         [
-                            0.46957749207537886,
-                            0.4695774920754073,
-                            9.7972598559493
+                            0.0006135628565002862,
+                            2.442222331127156,
+                            -2.4422223311267546
                         ],
                         [
-                            4.0663347313455e-17,
-                            0.6640828578781743,
-                            9.7972598559493
+                            0.0006135628564982597,
+                            3.453823943010296,
+                            6.184399442160102e-15
                         ],
                         [
-                            -0.46957749207537886,
-                            0.4695774920754073,
-                            9.7972598559493
+                            0.0004475035604372288,
+                            1.7812407921721731,
+                            2.706297635758752
                         ],
                         [
-                            -0.6640828578781461,
-                            2.845613560302466e-14,
-                            9.7972598559493
+                            0.00044750356043730965,
+                            2.4307426672726884e-13,
+                            3.444111729728563
                         ],
                         [
-                            -0.46957749207537886,
-                            -0.46957749207535043,
-                            9.7972598559493
+                            0.0004475035604372288,
+                            -1.7812407921716864,
+                            2.706297635758752
                         ],
                         [
-                            -6.652163406071703e-17,
-                            -0.6640828578781177,
-                            9.7972598559493
+                            0.0006135628564982598,
+                            -3.453823943009515,
+                            6.741679358817651e-15
                         ],
                         [
-                            0.46957749207537886,
-                            -0.46957749207535043,
-                            9.7972598559493
+                            0.0006135628565002862,
+                            -2.4422223311263718,
+                            -2.4422223311267546
                         ],
                         [
-                            0.6640828578781461,
-                            2.8331148685548096e-14,
-                            9.7972598559493
+                            0.000613562856499287,
+                            3.861404004581644e-13,
+                            -3.4538239430099003
                         ],
                         [
-                            0.46957749207537886,
-                            0.4695774920754073,
-                            9.7972598559493
+                            0.0006135628565002862,
+                            2.442222331127156,
+                            -2.4422223311267546
                         ],
                         [
-                            4.0663347313455e-17,
-                            0.6640828578781743,
-                            9.7972598559493
+                            0.0006135628564982597,
+                            3.453823943010296,
+                            6.184399442160102e-15
                         ],
                         [
-                            -0.46957749207537886,
-                            0.4695774920754073,
-                            9.7972598559493
+                            0.0004475035604372288,
+                            1.7812407921721731,
+                            2.706297635758752
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            },
+            {
+                "name": "L_eyeDirect_CTL1Shape",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            -2.442222331127212,
+                            0.0006135628564416976,
+                            -2.442222331126755
+                        ],
+                        [
+                            -2.5190548861420616,
+                            0.0004475035603552959,
+                            0.9250568435868275
+                        ],
+                        [
+                            -1.781240792172258,
+                            0.0004475035603559182,
+                            2.706297635758752
+                        ],
+                        [
+                            -3.2256672705629864e-13,
+                            0.00044750356035535107,
+                            3.444111729728563
+                        ],
+                        [
+                            1.7812407921716025,
+                            0.00044750356035454117,
+                            2.706297635758752
+                        ],
+                        [
+                            3.4538239430094597,
+                            0.0006135628564400147,
+                            6.879295499502202e-15
+                        ],
+                        [
+                            2.4422223311263176,
+                            0.0006135628564425858,
+                            -2.4422223311267555
+                        ],
+                        [
+                            -4.415592397852632e-13,
+                            0.0006135628564419197,
+                            -3.4538239430099003
+                        ],
+                        [
+                            -2.442222331127212,
+                            0.0006135628564416976,
+                            -2.442222331126755
+                        ],
+                        [
+                            -2.5190548861420616,
+                            0.0004475035603552959,
+                            0.9250568435868275
+                        ],
+                        [
+                            -1.781240792172258,
+                            0.0004475035603559182,
+                            2.706297635758752
                         ]
                     ],
                     "form": "periodic",
@@ -12245,7 +13064,7 @@
             }
         ]
     },
-    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL|L_eye_GRP|L_eye_CTL": {
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyeMain_GRP|C_eyeMain_CTL|L_eye_GRP|L_eye_CTL": {
         "transform": {
             "name": "L_eye_CTL",
             "overrideEnabled": true,
@@ -33071,7 +33890,7 @@
         },
         "shapes": [
             {
-                "name": "R_eyeDirect_CTLShape01",
+                "name": "R_eyeDirect_CTLShape",
                 "overrideEnabled": false,
                 "overrideColor": 0,
                 "alwaysDrawOnTop": false,
@@ -33079,59 +33898,142 @@
                 "curve": {
                     "cvs": [
                         [
-                            -0.4695920021214599,
-                            0.47101394599059176,
-                            9.79717417852402
+                            0.0006135628565002862,
+                            2.442222331127156,
+                            -2.4422223311267546
                         ],
                         [
-                            -1.4516347574655697e-05,
-                            0.6655193231234477,
-                            9.797135312785073
+                            0.0006135628564982597,
+                            3.453823943010296,
+                            6.184399442160102e-15
                         ],
                         [
-                            0.4695629820266731,
-                            0.47101397686682844,
-                            9.797176398539662
+                            0.0004475035604372288,
+                            1.7812407921721731,
+                            2.706297635758752
                         ],
                         [
-                            0.6640683630388788,
-                            0.001436501103739829,
-                            9.797273368309973
+                            0.00044750356043730965,
+                            2.4307426672726884e-13,
+                            3.444111729728563
                         ],
                         [
-                            0.46956301244663745,
-                            -0.4681409874486917,
-                            9.797369418519697
+                            0.0004475035604372288,
+                            -1.7812407921716864,
+                            2.706297635758752
                         ],
                         [
-                            -1.447332724868744e-05,
-                            -0.6626463645815477,
-                            9.797408284258651
+                            0.0006135628564982598,
+                            -3.453823943009515,
+                            6.741679358817651e-15
                         ],
                         [
-                            -0.4695919717014956,
-                            -0.4681410183249284,
-                            9.797367198504059
+                            0.0006135628565002862,
+                            -2.4422223311263718,
+                            -2.4422223311267546
                         ],
                         [
-                            -0.6640973527137035,
-                            0.0014364574381886541,
-                            9.797270228733748
+                            0.000613562856499287,
+                            3.861404004581644e-13,
+                            -3.4538239430099003
                         ],
                         [
-                            -0.4695920021214599,
-                            0.47101394599059176,
-                            9.79717417852402
+                            0.0006135628565002862,
+                            2.442222331127156,
+                            -2.4422223311267546
                         ],
                         [
-                            -1.4516347574655697e-05,
-                            0.6655193231234477,
-                            9.797135312785073
+                            0.0006135628564982597,
+                            3.453823943010296,
+                            6.184399442160102e-15
                         ],
                         [
-                            0.4695629820266731,
-                            0.47101397686682844,
-                            9.797176398539662
+                            0.0004475035604372288,
+                            1.7812407921721731,
+                            2.706297635758752
+                        ]
+                    ],
+                    "form": "periodic",
+                    "knots": [
+                        -2.0,
+                        -1.0,
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                    ],
+                    "degree": 3
+                }
+            },
+            {
+                "name": "R_eyeDirect_CTLShape1",
+                "overrideEnabled": false,
+                "overrideColor": 0,
+                "alwaysDrawOnTop": false,
+                "lineWidth": -1.0,
+                "curve": {
+                    "cvs": [
+                        [
+                            -2.442222331127212,
+                            0.0006135628564416976,
+                            -2.442222331126755
+                        ],
+                        [
+                            -2.5190548861420616,
+                            0.0004475035603552959,
+                            0.9250568435868275
+                        ],
+                        [
+                            -1.781240792172258,
+                            0.0004475035603559182,
+                            2.706297635758752
+                        ],
+                        [
+                            -3.2256672705629864e-13,
+                            0.00044750356035535107,
+                            3.444111729728563
+                        ],
+                        [
+                            1.7812407921716025,
+                            0.00044750356035454117,
+                            2.706297635758752
+                        ],
+                        [
+                            3.4538239430094597,
+                            0.0006135628564400147,
+                            6.879295499502202e-15
+                        ],
+                        [
+                            2.4422223311263176,
+                            0.0006135628564425858,
+                            -2.4422223311267555
+                        ],
+                        [
+                            -4.415592397852632e-13,
+                            0.0006135628564419197,
+                            -3.4538239430099003
+                        ],
+                        [
+                            -2.442222331127212,
+                            0.0006135628564416976,
+                            -2.442222331126755
+                        ],
+                        [
+                            -2.5190548861420616,
+                            0.0004475035603552959,
+                            0.9250568435868275
+                        ],
+                        [
+                            -1.781240792172258,
+                            0.0004475035603559182,
+                            2.706297635758752
                         ]
                     ],
                     "form": "periodic",
@@ -33155,7 +34057,7 @@
             }
         ]
     },
-    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_eyeMain_GRP|C_eyeMain_CTL|R_eye_GRP|R_eye_CTL": {
+    "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyeMain_GRP|C_eyeMain_CTL|R_eye_GRP|R_eye_CTL": {
         "transform": {
             "name": "R_eye_CTL",
             "overrideEnabled": true,

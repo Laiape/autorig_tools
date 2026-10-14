@@ -59,6 +59,28 @@ flowchart TD
 ### Read `maya_tools/how_it_works.md` if you need...
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
 - Edward's native Maya 2024+ photo picker, installer and controller exports.
+- Joint corrective targets, vertex masks and shoulder angle activation in Maya.
+- Pose blendshapes with controller capture, preserved target names, pre/post
+  sculpt editing and a Neutral pose button for all controls of the loaded rig.
+- Optional native orientation correctives (Swing/Twist), mirror and `.skc`
+  persistence, using base-rig joints independently of IK/FK control channels.
+- Test Rig combination-pose geometry reports and build health diagnostics,
+  with versioned comparisons and DG/Serial/Parallel measurements.
+- Corrective sculpt transfer across topologies/LODs, with optional landmark
+  registration, region masks and shared orientation drivers.
+- Deformation-stack baking to skin, with separate fit/held-out poses,
+  per-vertex error colors and rollback when an error limit is exceeded.
+- Portable Bifrost wrinkle presets, editable vertex regions and local controls,
+  with explicit projection across topologies and `.skc` provenance.
+- Native combination correctives, continuous facial contact reports, local DQ
+  comparisons and measured viewport detail modes in the existing editors.
+- Hybrid skin/residual bake candidates and frozen rig packages with input hashes,
+  two rebuild comparisons and native scene reopen before validation.
+- General rig roles, configurable body/face/hand validation profiles, portable
+  pose libraries, surface contact diagnostics and preflighted version migration
+  in the existing Test Rig window. These workflows are character-independent.
+- Skin `.skc` snapshots restore Pose Blendshapes SDKs and proximityWrap driver
+  branches; see `maya_tools/how_it_works.md` for compatibility and validation.
 
 ### Read `maya_tools/criterios-ui.md` if you need...
 - Menu, shelf, Qt windows. Do not invent a parallel Maya chrome.

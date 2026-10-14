@@ -4,6 +4,7 @@ from importlib import reload
 from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import surface_pin
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(curve_tool)
 reload(surface_pin)
@@ -36,6 +37,7 @@ class WingModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
+    @organize_module_nurbs
     def make(self, side, chains, joints_along=None, joints_across=None, controls_per_gap=3):
 
         """

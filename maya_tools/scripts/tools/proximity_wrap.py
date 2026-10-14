@@ -42,11 +42,11 @@ def mesh_shape(node):
     return shapes[0]
 
 
-def direct_deformers(shape):
+def direct_deformers(shape, types=("skinCluster", "proximityWrap")):
     """Filter history by actual deformer membership, excluding driver history."""
     result = []
     for node in cmds.listHistory(shape, pruneDagObjects=True) or []:
-        if cmds.nodeType(node) not in ("skinCluster", "proximityWrap"):
+        if cmds.nodeType(node) not in types:
             continue
         geometries = cmds.deformer(node, query=True, geometry=True) or []
         members = set()

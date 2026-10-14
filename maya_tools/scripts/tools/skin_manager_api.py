@@ -14,6 +14,7 @@ except ImportError:
 
 class SkinManager(object):
     SCENE_DEFORMERS_KEY = "__scene_deformers__"
+    WRINKLES_KEY = "__wrinkles__"
 
     def __init__(self):
         self.ext = ".skc"
@@ -278,11 +279,45 @@ class SkinManager(object):
         nodes = []
         stacks = {}
         auxiliary_nodes = {}
+        output_cache = {}
+        unresolved_outputs = {}
+
+        def geometry_outputs(obj):
+            # A filter can feed only another filter's driverGeometry (e.g. a
+            # proximityWrap). Maya reports that output connection but returns
+            # an invalid, empty MDagPath because no driven DAG shape exists.
+            # Keep the filter's attributes/connections, without querying an
+            # empty shape name or inventing a geometry membership.
+            name = om.MFnDependencyNode(obj).name()
+            if name not in output_cache:
+                outputs = []
+                failures = []
+                filt = oma.MFnGeometryFilter(obj)
+                for i in range(filt.numOutputConnections()):
+                    index = filt.indexForOutputConnection(i)
+                    try:
+                        path = filt.getPathAtIndex(index)
+                        shape = path.fullPathName() if path.isValid() else ""
+                        if not shape or not cmds.objExists(shape):
+                            raise ValueError("Output has no associated DAG mesh")
+                        outputs.append({"index": index, "shape": shape})
+                    except (RuntimeError, ValueError) as exc:
+                        failures.append({"index": index, "reason": str(exc)})
+                output_cache[name] = outputs
+                if failures:
+                    unresolved_outputs[name] = failures
+            return output_cache[name]
+
         iterator = om.MItDependencyNodes(om.MFn.kGeometryFilt)
         while not iterator.isDone():
             obj = iterator.thisNode()
             fn = om.MFnDependencyNode(obj)
             name = fn.name()
+            if fn.typeName == "combinationShape" and any(
+                    cmds.attributeQuery("combinationData", node=n, exists=True)
+                    for n in cmds.listConnections(name + ".message", source=False, destination=True) or []):
+                iterator.next()
+                continue  # Reconstructed from the owned combination pose metadata.
             attributes, skipped, errors = export_attributes(fn)
             connections = []
             for plug in fn.getConnections():
@@ -305,12 +340,9 @@ class SkinManager(object):
                             }
 
             geometry_filter = oma.MFnGeometryFilter(obj)
-            geometries = []
-            for i in range(geometry_filter.numOutputConnections()):
-                index = geometry_filter.indexForOutputConnection(i)
-                path = geometry_filter.getPathAtIndex(index)
-                shape = path.fullPathName()
-                geometries.append({"index": index, "shape": shape})
+            geometries = geometry_outputs(obj)
+            for geometry in geometries:
+                shape = geometry["shape"]
                 if shape not in stacks:
                     # Maya history is listed downstream to upstream; reverse it.
                     history = cmds.listHistory(shape, pruneDagObjects=True) or []
@@ -321,10 +353,7 @@ class SkinManager(object):
                         history_obj = selection.getDependNode(0)
                         if not history_obj.hasFn(om.MFn.kGeometryFilt):
                             continue
-                        history_fn = oma.MFnGeometryFilter(history_obj)
-                        outputs = [history_fn.getPathAtIndex(
-                            history_fn.indexForOutputConnection(j)).fullPathName()
-                            for j in range(history_fn.numOutputConnections())]
+                        outputs = [output["shape"] for output in geometry_outputs(history_obj)]
                         if shape in outputs and history_node not in stack:
                             stack.append(history_node)
                     stacks[shape] = stack
@@ -348,11 +377,164 @@ class SkinManager(object):
             }
             if fn.typeName == "skinCluster":
                 entry["weights_storage"] = "per_mesh_skin_section_if_in_export_scope"
+            if cmds.attributeQuery("branchDriverMesh", node=name, exists=True):
+                unresolved_outputs[name] = [{"index": 0, "reason": "Managed hidden driver geometry"}]
+                entry["geometries"] = []
+            if name in unresolved_outputs:
+                entry["unresolved_outputs"] = unresolved_outputs[name]
+                entry["branch_inputs"] = []
+                for output in unresolved_outputs[name]:
+                    index = output["index"]
+                    source = cmds.connectionInfo(
+                        "{}.input[{}].inputGeometry".format(name, index), sourceFromDestination=True)
+                    branch = {"index": index, "source": source}
+                    original = fn.findPlug("originalGeometry", False).elementByLogicalIndex(index).asMObject()
+                    if not original.isNull() and original.hasFn(om.MFn.kMeshData):
+                        branch["original_geometry"] = self._export_geometry(om.MFnMesh(original))
+                    entry["branch_inputs"].append(branch)
+                om.MGlobal.displayWarning(
+                    "{}: output has no DAG mesh; attributes, connections and driver "
+                    "branch geometry are preserved in the export.".format(name))
             nodes.append(entry)
             iterator.next()
+        from maya_tools.scripts.tools import orientation_correctives, rig_performance
         return {"version": 1, "nodes": sorted(nodes, key=lambda item: item["name"]),
                 "geometry_stacks": stacks,
-                "auxiliary_nodes": sorted(auxiliary_nodes.values(), key=lambda item: item["name"])}
+                "auxiliary_nodes": sorted(auxiliary_nodes.values(), key=lambda item: item["name"]),
+                "pose_targets": self._export_pose_targets(),
+                "orientation_systems": orientation_correctives.export_systems(),
+                "detail_modes": rig_performance.export_detail_modes()}
+
+    @staticmethod
+    def _export_pose_targets():
+        """Keep the controller poses and SDKs belonging to Pose Blendshapes."""
+        records = []
+        for node in cmds.ls(type="network") or []:
+            if not cmds.attributeQuery("poseBlendshapeTarget", node=node, exists=True):
+                continue
+            def linked(attr):
+                return (cmds.listConnections(node + "." + attr, source=True,
+                                             destination=False) or [None])[0]
+            entry = {"name": node, "blendShape": linked("blendShape"),
+                     "mesh": linked("mesh"), "controller": linked("controller"),
+                     "targetIndex": cmds.getAttr(node + ".targetIndex"),
+                     "channels": json.loads(cmds.getAttr(node + ".channels")), "drivers": []}
+            from maya_tools.scripts.tools import pose_blendshapes as poses
+            entry["targetName"] = dict(poses.targets(entry["blendShape"])).get(entry["targetIndex"])
+            from maya_tools.scripts.tools import orientation_correctives as orientation
+            system = orientation.linked(node, "orientationSystem")
+            if system:
+                entry["orientation"] = {"system": system, "pose": cmds.getAttr(node + ".orientationPose")}
+            if cmds.attributeQuery("transferData", node=node, exists=True):
+                entry["transfer"] = json.loads(cmds.getAttr(node + ".transferData"))
+            if cmds.attributeQuery("combinationData", node=node, exists=True):
+                from maya_tools.scripts.tools import combination_correctives
+                entry["combination"] = combination_correctives.data(node)
+            for index in cmds.getAttr(node + ".driverNodes", multiIndices=True) or []:
+                driver = linked("driverNodes[%d]" % index)
+                if not driver:
+                    continue
+                data = {"name": driver, "type": cmds.nodeType(driver)}
+                if data["type"].startswith("animCurveU"):
+                    data["inputs"] = cmds.keyframe(driver, query=True, floatChange=True) or []
+                    data["values"] = cmds.keyframe(driver, query=True, valueChange=True) or []
+                    data["weighted"] = (cmds.keyTangent(driver, query=True, weightedTangents=True) or [False])[0]
+                    data["preInfinity"] = cmds.getAttr(driver + ".preInfinity")
+                    data["postInfinity"] = cmds.getAttr(driver + ".postInfinity")
+                    data["tangents"] = {flag: cmds.keyTangent(driver, query=True, **{flag: True}) or []
+                                        for flag in ("inTangentType", "outTangentType", "inAngle",
+                                                     "outAngle", "inWeight", "outWeight", "lock", "weightLock")}
+                entry["drivers"].append(data)
+            records.append(entry)
+        return records
+
+    def _import_pose_targets(self, records, node_map, replace_existing, warnings, branch_meshes=None):
+        if not records:
+            return
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        for entry in records:
+            bs = node_map.get(entry["blendShape"]) or self._resolve_deformer_node(entry["blendShape"])
+            control = self._resolve_deformer_node(entry["controller"]) if entry.get("controller") else None
+            mesh = self._resolve_deformer_node(entry["mesh"]) if entry.get("mesh") else None
+            if branch_meshes and entry["blendShape"] in branch_meshes:
+                mesh = cmds.listRelatives(branch_meshes[entry["blendShape"]], parent=True, fullPath=True)[0]
+            if not bs or not control or not mesh:
+                warnings.append("{}: corrective blendshape, mesh or controller is missing.".format(entry["name"]))
+                continue
+            orientation_data = entry.get("orientation")
+            orientation_system = node_map.get(orientation_data["system"]) if orientation_data else None
+            if orientation_data and not orientation_system:
+                warnings.append(entry["name"] + ": orientation region is missing; target driver was not restored.")
+                continue
+            index = entry["targetIndex"]
+            record = poses.pose_record(bs, index)
+            if record:
+                if branch_meshes and entry["blendShape"] in branch_meshes and poses.linked(record, "mesh") != mesh:
+                    cmds.connectAttr(mesh + ".message", record + ".mesh", force=True)
+                # Existing edits/drivers belong to the current scene.
+                continue
+            destination = bs + ".weight[%d]" % index
+            if cmds.connectionInfo(destination, isDestination=True):
+                warnings.append("{}: target already has another driver; keeping it.".format(destination))
+                continue
+            record = cmds.createNode("network", name=entry["name"], skipSelect=True)
+            cmds.addAttr(record, longName=poses.POSE_MARKER, attributeType="bool", defaultValue=True)
+            cmds.addAttr(record, longName="targetIndex", attributeType="long", defaultValue=index)
+            for attr, source in (("blendShape", bs), ("mesh", mesh), ("controller", control)):
+                poses._message(source, record, attr)
+            poses._string(record, "channels", json.dumps(entry["channels"]))
+            poses._string(record, "targetName", entry.get("targetName") or entry["name"].split("_poseData", 1)[0])
+            if entry.get("transfer"):
+                poses._string(record, "transferData", json.dumps(entry["transfer"]))
+            if entry.get("combination"):
+                from maya_tools.scripts.tools import combination_correctives as combinations
+                snapshot = dict(entry["combination"])
+                snapshot['captures'] = [dict(c, controller=self._resolve_deformer_node(c['controller'])) for c in snapshot['captures']]
+                cmds.addAttr(record, longName="driverNodes", attributeType="message", multi=True)
+                combinations.restore(record, bs, index, snapshot, allocate_weights=True)
+            elif orientation_data:
+                from maya_tools.scripts.tools import orientation_correctives as orientation
+                clamp_data = entry.get("drivers", [])
+                old_name = clamp_data[0]["name"] if clamp_data else None
+                orientation.restore_target(record, orientation_system, orientation_data["pose"], bs, index, old_name)
+            else:
+                poses._connect_driver(bs, index, control, entry["channels"], record)
+            indices = cmds.getAttr(record + ".driverNodes", multiIndices=True) or []
+            for old, new_index in zip(entry.get("drivers", []), indices):
+                new = poses.linked(record, "driverNodes[%d]" % new_index)
+                node_map[old["name"]] = new
+                if "inputs" not in old:
+                    continue
+                initial_inputs = cmds.keyframe(new, query=True, floatChange=True) or []
+                for key_input, value in zip(old["inputs"], old["values"]):
+                    cmds.setKeyframe(new, float=key_input, value=value)
+                # Cutting every key deletes the SDK node in Maya. Install the
+                # saved keys first, then remove only obsolete default keys.
+                for key_input in initial_inputs:
+                    if key_input not in old["inputs"]:
+                        cmds.cutKey(new, float=(key_input, key_input), clear=True)
+                cmds.keyTangent(new, edit=True, weightedTangents=old["weighted"])
+                tangents = old["tangents"]
+                for key_index in range(len(old["inputs"])):
+                    kwargs = {"index": (key_index, key_index), "lock": False}
+                    if old["weighted"]:
+                        kwargs["weightLock"] = False
+                    cmds.keyTangent(new, edit=True, **kwargs)
+                    for prefix in ("in", "out"):
+                        kind = tangents[prefix + "TangentType"][key_index]
+                        cmds.keyTangent(new, edit=True, index=(key_index, key_index),
+                                        **{prefix + "TangentType": kind})
+                        if kind == "fixed":
+                            kwargs = {prefix + "Angle": tangents[prefix + "Angle"][key_index]}
+                            if old["weighted"]:
+                                kwargs[prefix + "Weight"] = tangents[prefix + "Weight"][key_index]
+                            cmds.keyTangent(new, edit=True, index=(key_index, key_index), **kwargs)
+                    kwargs = {"lock": tangents["lock"][key_index]}
+                    if old["weighted"]:
+                        kwargs["weightLock"] = tangents["weightLock"][key_index]
+                    cmds.keyTangent(new, edit=True, index=(key_index, key_index), **kwargs)
+                cmds.setAttr(new + ".preInfinity", old["preInfinity"])
+                cmds.setAttr(new + ".postInfinity", old["postInfinity"])
 
     @staticmethod
     def _resolve_deformer_node(name, geometry=False):
@@ -416,6 +598,10 @@ class SkinManager(object):
         warnings = []
         created_count = 0
         auxiliary = {entry["name"]: entry for entry in snapshot.get("auxiliary_nodes", [])}
+        branches = {entry["name"]: entry for entry in snapshot.get("nodes", [])
+                    if entry.get("branch_inputs") and not entry.get("geometries")
+                    and entry["type"] == "blendShape"}
+        branch_meshes = {}
 
         def restore_auxiliary(name):
             existing = self._resolve_deformer_node(name)
@@ -443,9 +629,75 @@ class SkinManager(object):
                     warnings.append("{}: {}".format(plug, exc))
             return node
 
+        # A branch-only blendShape has no DAG membership. Recreate its geometry
+        # inputs directly, preserving the separate driver branch of a wrap.
+        for name, entry in branches.items():
+            existing = self._resolve_deformer_node(name)
+            if existing and not replace_existing:
+                node_map[name] = existing
+                continue
+            inputs = []
+            for branch in entry["branch_inputs"]:
+                source_name, _, source_attr = branch["source"].partition(".")
+                source = self._resolve_deformer_node(source_name, geometry=True)
+                if not source or not branch.get("original_geometry"):
+                    break
+                inputs.append((branch, source + "." + source_attr))
+            if len(inputs) != len(entry["branch_inputs"]):
+                warnings.append("{}: driver branch geometry is missing; skipping.".format(name))
+                continue
+            helper_shapes = (cmds.listConnections(existing + ".branchDriverMesh", source=True, destination=False) or []) if existing and cmds.attributeQuery("branchDriverMesh", node=existing, exists=True) else []
+            if existing and not helper_shapes:
+                cmds.delete(existing)
+                existing = None
+            if helper_shapes:
+                node = existing
+                branch_meshes[name] = helper_shapes[0]
+            else:
+                branch, source = inputs[0]
+                geometry = branch["original_geometry"]
+                source_selection = om.MSelectionList(); source_selection.add(source)
+                live_geometry = source_selection.getPlug(0).asMObject()
+                if live_geometry.hasFn(om.MFn.kMeshData):
+                    geometry = self._export_geometry(om.MFnMesh(live_geometry))
+                dag_source = self._resolve_deformer_node(branch["source"].split(".")[0], geometry=True)
+                root_name = dag_source.split("|")[1] if dag_source and dag_source.startswith("|") else None
+                kwargs = {"name": name + "_driver"}
+                if root_name:
+                    kwargs["parent"] = "|" + root_name
+                helper = cmds.createNode("transform", **kwargs)
+                cmds.setAttr(helper + ".inheritsTransform", False)
+                cmds.setAttr(helper + ".visibility", False)
+                selection = om.MSelectionList(); selection.add(helper)
+                shape_object = om.MFnMesh().create([om.MPoint(*point) for point in geometry["points"]],
+                    geometry["polygon_counts"], geometry["polygon_connects"], parent=selection.getDependNode(0))
+                helper_shape = om.MFnDagNode(shape_object).fullPathName()
+                node = cmds.blendShape(helper_shape, name=name)[0]
+                cmds.addAttr(node, longName="branchDriverMesh", attributeType="message")
+                cmds.connectAttr(helper_shape + ".message", node + ".branchDriverMesh")
+                branch_meshes[name] = helper_shape
+            for branch, source in inputs:
+                index = branch["index"]
+                cmds.connectAttr(source, "{}.input[{}].inputGeometry".format(node, index), force=True)
+                geometry = branch["original_geometry"]
+                data = om.MFnMeshData().create()
+                om.MFnMesh().create([om.MPoint(*point) for point in geometry["points"]],
+                                   geometry["polygon_counts"], geometry["polygon_connects"], parent=data)
+                selection = om.MSelectionList()
+                selection.add(node)
+                fn = om.MFnDependencyNode(selection.getDependNode(0))
+                original_plug = fn.findPlug("originalGeometry", False).elementByLogicalIndex(index)
+                if not original_plug.isDestination:
+                    original_plug.setMObject(data)
+            node_map[name] = node
+            created_count += not bool(existing)
+            pending.append((entry, node, {branch["index"]: branch["index"] for branch in entry["branch_inputs"]}, {}))
+
         # Create all filters first, so inter-filter connections can resolve.
         for entry in snapshot.get("nodes", []):
             name, node_type = entry["name"], entry["type"]
+            if name in branches:
+                continue
             if node_type == "skinCluster":
                 existing = self._resolve_deformer_node(name)
                 if existing:
@@ -477,6 +729,17 @@ class SkinManager(object):
                 if match:
                     source_name = connection["source"].split(".", 1)[0]
                     resolved = self._resolve_deformer_node(source_name, geometry=True)
+                    if source_name in branch_meshes:
+                        resolved = branch_meshes[source_name]
+                    if not resolved and source_name in branches and source_name in node_map:
+                        # Bind the wrap against the upstream DAG driver, then
+                        # restore the corrective branch on driverGeometry.
+                        match_output = re.search(r"outputGeometry\[(\d+)\]", connection["source"])
+                        output_index = int(match_output.group(1)) if match_output else 0
+                        branch = next((item for item in branches[source_name]["branch_inputs"]
+                                       if item["index"] == output_index), None)
+                        if branch:
+                            resolved = self._resolve_deformer_node(branch["source"].split(".", 1)[0], geometry=True)
                     if resolved:
                         driver_sources.append((int(match.group(1)), resolved))
                     else:
@@ -515,7 +778,9 @@ class SkinManager(object):
                             raise RuntimeError("Falta el tipo del handle nonlinear.")
                         node, generated_handle = cmds.nonLinear(geometries, type=subtype, name=name)
                     elif node_type == "blendShape":
-                        node = cmds.blendShape(geometries, name=name, after=True)[0]
+                        # Explicit after can follow a proximityWrap consumer
+                        # instead of the visible mesh and break the skin stack.
+                        node = cmds.blendShape(geometries, name=name)[0]
                     else:
                         node = cmds.deformer(geometries, type=node_type, name=name, after=True)[0]
                     if generated_handle:
@@ -552,6 +817,14 @@ class SkinManager(object):
                             "{}.drivers[{}].driverGeometry".format(node, index),
                             source=True, destination=False) or []
                         if sources:
+                            # Old branch drivers may have a filter instead of a DAG
+                            # mesh on driverGeometry. Restore its valid native DAG
+                            # driver before asking proximityWrap to remove/rebind it.
+                            old_driver = sources[0]
+                            if old_driver in branch_meshes:
+                                driver_shape = branch_meshes[old_driver]
+                                cmds.connectAttr(driver_shape + ".worldMesh[0]", "{}.drivers[{}].driverGeometry".format(node, index), force=True)
+                                sources = [driver_shape]
                             cmds.proximityWrap(node, edit=True, removeDrivers=sources)
                     for old_index, driver in sorted(driver_sources):
                         new_index = cmds.proximityWrap(node, query=True, freeDriverIndex=True)
@@ -569,20 +842,23 @@ class SkinManager(object):
             return re.sub(r"^(drivers|input|weightList|inputTarget)\[(\d+)\]",
                           replace_index, attr)
 
+        from maya_tools.scripts.tools import orientation_correctives
+        orientation_correctives.import_systems(snapshot.get("orientation_systems", []),
+                                              self._resolve_deformer_node, node_map, warnings)
+        self._import_pose_targets(snapshot.get("pose_targets", []), node_map,
+                                  replace_existing, warnings, branch_meshes)
+
         for entry, node, index_map, driver_map in pending:
             aliases = entry.get("aliases", [])
-            for alias, attr in zip(aliases[0::2], aliases[1::2]):
-                try:
-                    cmds.aliasAttr(alias, node + "." + attr)
-                except Exception as exc:
-                    warnings.append("{} alias {}: {}".format(node, alias, exc))
             connected = {connection["destination"].split(".", 1)[1]
                          for connection in entry.get("connections", [])}
             # Allocating blendShape target groups can reset their weights.
             attribute_items = sorted(entry.get("attributes", {}).items(),
                                      key=lambda item: item[0].startswith("weight["))
             for attr, data in attribute_items:
-                if attr in connected or data.get("value") is None:
+                # Shape Editor's directory index arrays are internal Maya
+                # bookkeeping and do not accept generic typed-array setAttr.
+                if attr.startswith("targetDirectory[") or attr in connected or data.get("value") is None:
                     continue
                 plug = node + "." + remap_attribute(attr, index_map, driver_map)
                 try:
@@ -594,10 +870,25 @@ class SkinManager(object):
                         cmds.setAttr(plug, lock=data.get("locked", False))
                 except Exception as exc:
                     warnings.append("{}: {}".format(plug, exc))
+            # Native target array allocation may reset aliases. Restore them
+            # after all target data exists, before resolving aliased connections.
+            for alias, attr in zip(aliases[0::2], aliases[1::2]):
+                try:
+                    plug = node + "." + attr
+                    if cmds.aliasAttr(plug, query=True) != alias:
+                        cmds.aliasAttr(alias, plug)
+                except Exception as exc:
+                    warnings.append("{} alias {}: {}".format(node, alias, exc))
+            if entry["type"] == "blendShape":
+                from maya_tools.scripts.tools import pose_blendshapes as poses
+                poses.restore_target_names(node)
             for connection in entry.get("connections", []):
                 attr = connection["destination"].split(".", 1)[1]
-                if (attr.startswith(("input[", "originalGeometry["))
-                        or re.fullmatch(r"drivers\[\d+\]\.(driverGeometry|driverBindGeometry)", attr)):
+                is_branch_driver = (connection["source"].split(".", 1)[0] in branches
+                                    and attr.endswith(".driverGeometry"))
+                if (attr.startswith(("input[", "originalGeometry[", "targetDirectory["))
+                        or (re.fullmatch(r"drivers\[\d+\]\.(driverGeometry|driverBindGeometry)", attr)
+                            and not is_branch_driver)):
                     continue  # These are reconstructed by Maya, not copied.
                 source_name, source_attr = connection["source"].split(".", 1)
                 source_node = node_map.get(source_name) or restore_auxiliary(source_name)
@@ -605,6 +896,8 @@ class SkinManager(object):
                     warnings.append("{}: falta conexion externa {}.".format(node, connection["source"]))
                     continue
                 source = source_node + "." + source_attr
+                if source_name in branch_meshes and attr.endswith(".driverGeometry"):
+                    source = branch_meshes[source_name] + ".worldMesh[0]"
                 destination = node + "." + remap_attribute(attr, index_map, driver_map)
                 try:
                     if not cmds.isConnected(source, destination):
@@ -700,7 +993,9 @@ class SkinManager(object):
                 it_dep.next()
 
         scene_deformers = self._export_scene_deformers()
-        if not meshes_map and not scene_deformers["nodes"]:
+        from maya_tools.scripts.tools import bifrost_wrinkles
+        wrinkles = bifrost_wrinkles.export_setups()
+        if not meshes_map and not scene_deformers["nodes"] and not wrinkles:
             om.MGlobal.displayWarning("No se encontraron skins ni deformadores.")
             return
 
@@ -790,17 +1085,21 @@ class SkinManager(object):
             full_data[mesh_name] = mesh_skins_data
 
         full_data[self.SCENE_DEFORMERS_KEY] = scene_deformers
+        if wrinkles:
+            full_data[self.WRINKLES_KEY] = wrinkles
         with open(self.json_path, 'w') as f:
             json.dump(full_data, f, separators=(',', ':')) # Separators comprime el JSON
             
         om.MGlobal.displayInfo(
             f"Export completado: {self.json_path} | "
-            f"Deformadores: {len(scene_deformers['nodes'])}")
+            f"Deformadores: {len(scene_deformers['nodes'])} | Wrinkles: {len(wrinkles)}")
+        return self.json_path
 
     # ----------------------------------------------------------------
     # --- IMPORT SKINS (Lógica Referencia: Reorder & Sparse) ---
     # ----------------------------------------------------------------
-    def import_skins(self, in_path=None, replace_existing=False, import_method="auto"):
+    def import_skins(self, in_path=None, replace_existing=False, import_method="auto",
+                     import_wrinkles=True):
         """
         Importa los pesos desde un archivo JSON (.skc).
         Si in_path es None, busca automáticamente la versión más reciente.
@@ -856,7 +1155,7 @@ class SkinManager(object):
         existing_scene_skins = self._get_scene_skin_clusters()
 
         for mesh_name, skins_list in full_data.items():
-            if mesh_name == self.SCENE_DEFORMERS_KEY:
+            if mesh_name in (self.SCENE_DEFORMERS_KEY, self.WRINKLES_KEY):
                 continue
             # Buscar Mesh en escena
             mesh_path = self._get_dag_path(mesh_name)
@@ -876,6 +1175,10 @@ class SkinManager(object):
             surface_mapping = None
             # Capturar antes de crear skins o cambiar pesos en el stack.
             target_points = mf_mesh.getPoints(om.MSpace.kObject)
+            # Binding another skin can replace the shape's evaluated mesh data.
+            # Keep topology scalars before any DG mutation; an MFnMesh retained
+            # across skinCluster creation can dereference freed geometry in Maya.
+            current_vertex_count = mf_mesh.numVertices
 
             for skin_data in skins_list:
                 skin_name = skin_data["name"]
@@ -884,7 +1187,7 @@ class SkinManager(object):
                 if skin_name in existing_scene_skins and not replace_existing:
                     continue
 
-                topology_matches = (mf_mesh.numVertices == target_vtx_count
+                topology_matches = (current_vertex_count == target_vtx_count
                                     and same_topology is not False)
                 use_surface = (import_method == "closestPoint"
                                or (import_method == "auto" and not topology_matches))
@@ -957,7 +1260,7 @@ class SkinManager(object):
                 scene_inf_names = [p.partialPathName() for p in scene_inf_paths]
                 scene_inf_map = {name: i for i, name in enumerate(scene_inf_names)}
 
-                num_verts = mf_mesh.numVertices
+                num_verts = current_vertex_count
                 num_scene_infs = len(scene_inf_names)
                 full_weight_list = [0.0] * (target_vtx_count * num_scene_infs)
                 
@@ -1033,7 +1336,26 @@ class SkinManager(object):
         
         self._import_scene_deformers(
             full_data.get(self.SCENE_DEFORMERS_KEY), replace_existing=replace_existing)
+        if import_wrinkles:
+            from maya_tools.scripts.tools import bifrost_wrinkles
+            bifrost_wrinkles.import_setups(full_data.get(self.WRINKLES_KEY), replace_existing)
+            from maya_tools.scripts.tools import rig_performance
+            rig_performance.restore_detail_modes(full_data.get(self.SCENE_DEFORMERS_KEY, {}).get("detail_modes", []))
         om.MGlobal.displayInfo("Skin weights and scene deformers imported.")
+
+    def import_wrinkles(self, in_path=None, replace_existing=False):
+        """Build calls this after all skin/corrective deformation is in place."""
+        path = in_path or self.get_latest_version_path()
+        if not os.path.exists(path):
+            return []
+        with open(path, "r") as stream:
+            full_data = json.load(stream)
+            records = full_data.get(self.WRINKLES_KEY, [])
+        from maya_tools.scripts.tools import bifrost_wrinkles
+        result = bifrost_wrinkles.import_setups(records, replace_existing)
+        from maya_tools.scripts.tools import rig_performance
+        rig_performance.restore_detail_modes(full_data.get(self.SCENE_DEFORMERS_KEY, {}).get("detail_modes", []))
+        return result
 
     def find_mesh_in_scene(self, name):
         """Helper para fallback de búsqueda."""

@@ -1,0 +1,69 @@
+{
+  "scene": "scenes/Edward_working_v001.mb",
+  "model": "models/Edward_v003.ma",
+  "textures": [
+    "sourceimages/Eduard_low_calcado_ojos_mtl_BaseColor.png",
+    "sourceimages/Eduard_low_calcado_ojos_mtl_Normal.png",
+    "sourceimages/Eduard_low_calcado_ojos_mtl_Roughness.png",
+    "sourceimages/Eduard_low_complementos_mtl_BaseColor.png",
+    "sourceimages/Eduard_low_complementos_mtl_Metalness.png",
+    "sourceimages/Eduard_low_complementos_mtl_Normal.png",
+    "sourceimages/Eduard_low_complementos_mtl_Roughness.png",
+    "sourceimages/Eduard_low_pelo_mtl_BaseColor.png",
+    "sourceimages/Eduard_low_pelo_mtl_Normal.png",
+    "sourceimages/Eduard_low_pelo_mtl_Roughness.png",
+    "sourceimages/Eduard_low_piel_mtl_BaseColor.png",
+    "sourceimages/Eduard_low_piel_mtl_Normal.png",
+    "sourceimages/Eduard_low_piel_mtl_Roughness.png",
+    "sourceimages/Eduard_low_ropa_mtl_BaseColor.png",
+    "sourceimages/Eduard_low_ropa_mtl_Normal.png",
+    "sourceimages/Eduard_low_ropa_mtl_Roughness.png",
+    "sourceimages/boca_low_boca_mtl_BaseColor.png",
+    "sourceimages/boca_low_boca_mtl_Normal.png",
+    "sourceimages/boca_low_boca_mtl_Roughness.png"
+  ],
+  "unavailable_legacy_xgen_maps": [
+    {
+      "node": "pasted__file26",
+      "filename": "scalp_cabello_Shape_EDWARD_cabello_pelo.iff"
+    },
+    {
+      "node": "pasted__file27",
+      "filename": "scalp_cabello_Shape_EDWARD_cabello_Region.iff"
+    },
+    {
+      "node": "pasted__file29",
+      "filename": "scalp_cabello_Shape_EDWARD_cabello_1guuide_controlMapDir.iff"
+    },
+    {
+      "node": "pasted__file30",
+      "filename": "scalp_cabello_Shape_EDWARD_cabello_1guuide_mask.iff"
+    },
+    {
+      "node": "pasted__file31",
+      "filename": "scalp_cabello_Shape_EDWARD_cabello_1guuide_Region.iff"
+    },
+    {
+      "node": "pasted__file32",
+      "filename": "scalp_cabello_Shape_EDWARD_cabello_1guuide_Region1.iff"
+    },
+    {
+      "node": "pasted__file33",
+      "filename": "scalp_cabello_Shape_EDWARD_mechones_sueltos_mechones.iff"
+    },
+    {
+      "node": "pasted__file34",
+      "filename": "scalp_cabello_Shape_EDWARD_mechones_sueltos_Region.iff"
+    },
+    {
+      "node": "pasted__file35",
+      "filename": "scalp_pestanas_Shape_CARA_pest_pestanasmask.iff"
+    },
+    {
+      "node": "pasted__file36",
+      "filename": "scalp_pestanas_Shape_CARA_pest_Region.iff"
+    }
+  ],
+  "maya": "2026",
+  "ngSkinTools2": "2.4.0"
+}

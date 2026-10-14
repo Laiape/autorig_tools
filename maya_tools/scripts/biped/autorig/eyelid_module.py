@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -81,6 +82,7 @@ class EyelidModule(object):
         self.face_controls_parent = (data_manager.DataExportBiped().get_data("neck_module", "face_controls_parent") or self.face_ctl)
         self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
+    @organize_module_nurbs
     def make(self, side, sockets=True, surface=False, iris_radius=None,
              iris_rings=(0.1, 0.2, 0.3, 0.4, 0.5)):
 
@@ -946,6 +948,29 @@ class EyelidModule(object):
         #     cmds.connectAttr(f"{aim}.outputMatrix", f"{jnt}.offsetParentMatrix", f=True)
         
 
+    def socket_fleshy_setup(self, socket, offset_node, socket_guide_matrix):
+        """Orbit a primary socket around the eye with the existing fleshy driver.
+
+        Secondary sockets already blend the primary outputs. Driving them here
+        as well would apply the motion twice. Keep the OFF translate channels
+        available for the eyebrow's Auto_Socket connection.
+        """
+        corner = socket in ("inSocket", "outSocket")
+        driver = f"{self.side}_fleshy{'Corners' if corner else ''}_CM.outputMatrix"
+        eye_matrix = om.MMatrix(self.eye_guide_matrix)
+        socket_matrix = om.MMatrix(socket_guide_matrix)
+        rest_rotation = om.MMatrix(cmds.getAttr(driver))
+        follow = cmds.createNode("multMatrix", name=f"{self.side}_{socket}Fleshy_MMX", ss=True)
+        # Calibrate at build time, as the eyelid fleshy setup does, so adding the
+        # follow keeps the bind pose even when the rest gaze has a small roll.
+        cmds.setAttr(f"{follow}.matrixIn[0]",
+                     list(socket_matrix * eye_matrix.inverse() * rest_rotation.inverse()), type="matrix")
+        cmds.connectAttr(driver, f"{follow}.matrixIn[1]")
+        cmds.setAttr(f"{follow}.matrixIn[2]",
+                     list(eye_matrix * socket_matrix.inverse()), type="matrix")
+        cmds.connectAttr(f"{follow}.matrixSum", f"{offset_node}.offsetParentMatrix")
+        return follow
+
     def sockets(self):
 
         """
@@ -1124,6 +1149,12 @@ class EyelidModule(object):
             for name in socket_names:
                 if cmds.objExists(f"{self.side}_{name}_JNT"):
                     cmds.delete(f"{self.side}_{name}_JNT")
+
+        # Install after baking all secondary offsets, preserving their bind pose.
+        for socket, ctl in zip(socket_logic, socket_main_controllers):
+            self.socket_fleshy_setup(
+                socket, ctl.replace("_CTL", "_OFF"),
+                cmds.getAttr(f"{ctl.replace('_CTL', '_GRP')}.offsetParentMatrix"))
 
         return socket_main_controllers
 

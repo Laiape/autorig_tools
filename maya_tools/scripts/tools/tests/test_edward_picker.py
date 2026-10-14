@@ -142,19 +142,26 @@ class PickerInteractionTests(unittest.TestCase):
     def test_installer_relaunch_after_closed_window_is_idempotent(self):
         cmds = sys.modules["maya.cmds"]
         shelves, buttons, saves = set(),set(),[]
+        labels = {}
         def shelf_layout(name, **kw):
+            if kw.get("query") and kw.get("childArray"):
+                return [button for button in buttons if button.startswith(name+"|")]
             if kw.get("exists"):
                 return name in shelves
             full = kw.get("parent","")+"|"+name
             shelves.add(full)
             return full
         def shelf_button(name, **kw):
+            if kw.get("query") and kw.get("label"):
+                return labels[name]
             if kw.get("exists"):
                 return name in buttons
             full = kw["parent"]+"|"+name
             buttons.add(full)
+            labels[full] = kw["label"]
             return full
         cmds.shelfLayout,cmds.shelfButton = shelf_layout,shelf_button
+        cmds.objectTypeUI = lambda _: "shelfButton"
         cmds.deleteUI = lambda name: buttons.discard(name)
         cmds.saveShelf = lambda *args: saves.append(args)
         mel = types.ModuleType("maya.mel")
@@ -168,7 +175,10 @@ class PickerInteractionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="edward-picker-test-",dir=str(base)) as directory:
             install_root = Path(directory).resolve()
             self.assertTrue(install_root.is_relative_to(base))
-            cmds.internalVar = lambda **kw: str(install_root/"shelves" if kw.get("userShelfDir") else install_root)
+            cmds.internalVar = lambda **kw: (str(install_root/"studio_shelves")+";"+str(install_root/"shelves") if kw.get("userShelfDir") else str(install_root))
+            shelves.add("ShelfTop|AutoRig")
+            buttons.add("ShelfTop|AutoRig|repository_picker")
+            labels["ShelfTop|AutoRig|repository_picker"] = "EdwardPicker"
             destination = Path(installer.install())
             self.assertTrue((destination/"backgrounds/face.png").is_file())
             self.assertTrue((install_root/"scripts/edward_picker_launcher.py").is_file())
@@ -177,6 +187,7 @@ class PickerInteractionTests(unittest.TestCase):
             installer.install()
             self.assertEqual(len(buttons),1)
             self.assertEqual(len(saves),2)
+            self.assertTrue(all(path == str(install_root/"shelves/shelf_AutoRig") for _,path in saves))
             sys.modules["edward_maya_picker"]._WINDOW.close()
             self.app.processEvents()
             sys.path.remove(str(install_root/"scripts"))

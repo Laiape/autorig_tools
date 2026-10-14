@@ -39,10 +39,22 @@ Read this map, pick the row that matches the meaning, and put it there.
 | JSON / other sidecar listed by the manager | Character Manager | Maya rigger | `ALLOWED_ENDINGS` includes `.json` |
 | Autorig build cache | Internal `maya_tools/cache/biped.cache` during build. Not a menu. | Build (`create_rig.AutoRig`) | `maya_tools/scripts/utils/data_manager.py` |
 | Corrective blendshape export/import | Correctives submenu | Maya rigger | `maya_tools/scripts/tools/corrective_blendshape_manager.py` |
+| Controller or orientation-driven corrective sculpt targets | Corrective Blendshapes > Pose Blendshapes | Maya rigger | `maya_tools/scripts/tools/pose_blendshapes.py`; `maya_tools/scripts/tools/orientation_correctives.py`; `maya_tools/scripts/ui/pose_blendshapes_UI.py`; native scene-stored deltas, SDK/native pose drivers and `.skc` metadata |
+| Joint corrective targets and scene-stored vertex masks | Joint Corrective Targets (CORRECTIVES menu) | Maya rigger | `maya_tools/scripts/tools/joint_correctives.py`; `maya_tools/scripts/ui/joint_correctives_UI.py`; native Maya scene and normalized skin layer |
+| Procedural wrinkle regions, masks and presets | Wrinkle Regions / Presets (CORRECTIVES menu) | Maya rigger | `maya_tools/scripts/tools/wrinkle_presets.py`; `maya_tools/scripts/ui/wrinkle_regions_UI.py`; `maya_tools/assets/<character>/wrinkles/*.wrinkles.json`; native Bifrost graph and `.skc` wrinkle snapshot |
 | Cloth / auto skin transfer | Auto Skin Transfer (Clothes) window | Maya rigger | `maya_tools/scripts/ui/skin_transfer_UI.py` |
-| Pose test of the built rig | Test Rig (pose tester) | Maya rigger | `maya_tools/scripts/ui/pose_tester_UI.py` |
-| Edward animation control picker | Edward Picker (ANIMATION menu / shelf) | Maya animator/rigger | `maya_tools/assets/Edward/picker/reference_workflow/Edward_reference_picker.json`; native Qt entry `maya_tools/scripts/tools/edward_picker.py` |
+| Baked deformation copies and error validation | Bake Deformation to Skin (SKINNING menu) | Maya rigger | `maya_tools/scripts/tools/proximity_bake.py`; `maya_tools/scripts/ui/proximity_bake_UI.py`; scene-stored validation, error color set and optional new `.skc` |
+| Pose test and versioned build comparison | Test Rig (pose tester) | Maya rigger | `maya_tools/scripts/ui/pose_tester_UI.py`; `maya_tools/scripts/tools/rig_validation.py`; `.rigqa.json` pose/geometry reports and `maya_tools/assets/<character>/validation/*.righealth.json` |
+| Character animation control picker | Character Picker (ANIMATION menu / shelf) | Maya animator/rigger | Shared guide gates `utils/module_guides.py`; per-asset `picker/picker_profile.json`; native entry `tools/character_picker.py`; generated data/report and portable installer per character |
 | Model sanity before rig | Model Checker | Maya rigger | `maya_tools/scripts/tools/model_checker.py` |
+| Composite corrective poses | Pose Blendshapes | Maya rigger | `maya_tools/scripts/tools/combination_correctives.py`; native combination data in `.skc` |
+| Facial contact and local skinning comparisons | Test Rig | Maya rigger | `maya_tools/scripts/tools/facial_contact_validation.py`; `maya_tools/scripts/tools/skinning_volume.py`; `.contact.json` and `.skincompare.json` |
+| Viewport detail and measured interaction | Test Rig | Maya animator/rigger | `maya_tools/scripts/tools/rig_performance.py`; root `detailMode`, `.viewport.json` and `.mayaProfile` |
+| Hybrid deformation approximations | Bake Deformation to Skin | Maya rigger | `maya_tools/scripts/tools/hybrid_bake.py`; scene `hybridBakeValidation` and per-vertex errors |
+| Frozen validated rig inputs | Validated Rig Packages | Maya rigger/pipeline | `maya_tools/scripts/tools/rig_package.py`; manifest hashes, captured asset versions and publish comparison reports |
+| Character semantic bindings (`.roles.json`) | Test Rig > General rig tools > Rig roles | Maya rigger | `maya_tools/scripts/tools/rig_roles.py`; native message membership; optional `maya_tools/assets/<character>/rig_data/roles.roles.json` rebuild sidecar |
+| Portable validation profiles and pose libraries | Test Rig > General rig tools | Maya rigger | `maya_tools/scripts/tools/rig_profiles.py`; `maya_tools/scripts/tools/rig_pose_library.py`; `.rigprofile.json`, `.rigposes.json` and `.rigqa.json` with PNG captures and optional colored snapshot |
+| Surface regions and migration preflight | Test Rig > General rig tools > Surface contact / Version migration | Maya rigger | `maya_tools/scripts/tools/rig_surface_contact.py`; `maya_tools/scripts/tools/rig_migration.py`; profile contact specs, scene diagnostics and fresh destination candidate |
 | Unreal production rigging notes | `ue_tools/docs/` | Unreal rigger | `ue_tools/docs/unreal_fest_chicago_2026_rigging_produccion.md` |
 
 Wrong: a new dump window because the map had no row. Add a row with the user, or leave TODO.

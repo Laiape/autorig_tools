@@ -1,6 +1,6 @@
 {
     "Rig_Type": 0,
-    "solver_mode": 0,
+    "solver_mode": 1,
     "solver_front_leg": 0,
     "solver_back_leg": 0,
     "reciprocal_coupling": 1,

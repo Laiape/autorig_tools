@@ -3,7 +3,7 @@
 Controller drawing and asset cache writes are stubbed; deformers, pins and matrices
 are real Maya nodes. Checks O profile, ordered pins and independent corners.
 """
-import os,ast,math,json,tempfile
+import os,ast,math,json,tempfile,runpy
 from pathlib import Path
 from types import SimpleNamespace
 os.environ['MAYA_SKIP_USERSETUP_PY']='1'
@@ -31,6 +31,7 @@ def guides(name,parent=None):
  if parent:cmds.parent(n,parent)
  return n
 scope={'cmds':cmds,'om':om,'math':math,'os':os,'curve_tool':SimpleNamespace(create_controller=create_controller,lock_attributes=lock_attributes),'guides_manager':SimpleNamespace(get_guides=guides),'data_manager':SimpleNamespace(DataExportBiped=lambda:SimpleNamespace(append_data=lambda *a:None))}
+scope['organize_module_nurbs']=runpy.run_path(str(scripts/'utils/module_nurbs.py'))['organize_module_nurbs']
 mt=ast.parse((scripts/'utils/matrix_manager.py').read_text(encoding='utf-8'))
 f=[n for n in mt.body if isinstance(n,ast.FunctionDef) and n.name=='getClosestParamsToPositionSurface'];ms={'cmds':cmds,'om':om};exec(compile(ast.Module(body=f,type_ignores=[]),'<matrix>','exec'),ms);scope['matrix_manager']=SimpleNamespace(getClosestParamsToPositionSurface=ms['getClosestParamsToPositionSurface'])
 tree=ast.parse((scripts/'biped/autorig/jaw_module_nurbs.py').read_text(encoding='utf-8'));cl=next(n for n in tree.body if isinstance(n,ast.ClassDef));exec(compile(ast.Module(body=[cl],type_ignores=[]),'<jaw>','exec'),scope)
@@ -40,6 +41,9 @@ try:
  obj=scope['JawModule'].__new__(scope['JawModule'])
  for field in ['modules','skel_grp','masterwalk_ctl','face_ctl','head_ctl']:setattr(obj,field,cmds.createNode('transform',name=field))
  obj.face_controls_parent=obj.face_ctl;obj.make('C')
+ module_path=cmds.ls(obj.module_trn,long=True)[0]
+ for shape in cmds.ls(type=['nurbsCurve','nurbsSurface'],long=True):
+  assert shape.startswith(module_path+'|'),('Construction NURBS outside jaw module',shape)
  for values in [[0,.0166,.0083,.0523,1],[0,.2,.1,.15,.5,1],[0,0,.5,1]]:
   repaired=obj._ordered_lip_parameters(values);assert all(a<b for a,b in zip(repaired,repaired[1:])),repaired
  for c in cmds.ls('*Lip*CTL','*lip*CTL'):
@@ -68,6 +72,37 @@ try:
  # upper/lower stations must receive the same broad, smooth displacement.
  def lip_positions(part):
   return np.asarray([cmds.xform(('R_' if i<12 else 'C_' if i==12 else 'L_')+part+'Lip%02d_JNT'%(i if i<12 else 0 if i==12 else 24-i),q=True,ws=True,t=True) for i in range(25)])
+ # Auto Narrow is a calibrated inward move, sharing the existing smooth,
+ # paired upper/lower corner falloff without pulling the opposite half.
+ for side in ['L','R']:
+  corner=side+'_lipCorner_CTL';attr=corner+'.autoNarrow'
+  assert cmds.getAttr(attr)==0 and cmds.getAttr(attr,keyable=True)
+  assert not cmds.getAttr(attr,lock=True)
+  coefficients=np.array(cmds.getAttr(side+'_lipOutFrac_VPR.input2')[0])
+  inward=-.25*coefficients/np.dot(coefficients,coefficients)
+  endpoint_index=24 if side=='L' else 0
+  opposite_half=slice(0,13) if side=='L' else slice(12,25)
+  for angle in [0,20,30]:
+   cmds.setAttr('C_jaw_CTL.rx',angle)
+   rest={part:lip_positions(part) for part in ['upper','lower']}
+   for value in [.25,.5,1.]:
+    cmds.setAttr(attr,value)
+    posed={part:lip_positions(part) for part in rest}
+    delta={part:posed[part]-rest[part] for part in rest}
+    assert np.allclose(delta['upper'],delta['lower'],atol=1e-5),(side,angle,value)
+    assert np.allclose(delta['upper'][opposite_half],0,atol=1e-5),(side,angle,value)
+    endpoint=delta['upper'][endpoint_index]
+    assert endpoint[0]*(-1 if side=='L' else 1)>.001,(side,angle,value,endpoint)
+    for index in range(13):
+     station_index=24-index if side=='L' else index
+     assert np.allclose(delta['upper'][station_index][[0,2]],obj._corner_drag_weight(index/12.)*endpoint[[0,2]],atol=1e-5)
+    assert all(np.isfinite(p).all() and np.all(np.diff(p[:,0])>0) for p in posed.values()),(side,angle,value)
+    cmds.setAttr(attr,0)
+    cmds.setAttr(corner+'.translate',*(inward*value))
+    assert all(np.allclose(lip_positions(part),posed[part],atol=1e-5) for part in rest)
+    cmds.setAttr(corner+'.translate',0,0,0)
+    assert all(np.allclose(lip_positions(part),rest[part],atol=1e-5) for part in rest)
+ cmds.setAttr('C_jaw_CTL.rx',0)
  for angle in [0,20,30]:
   cmds.setAttr('C_jaw_CTL.rx',angle)
   rest={part:lip_positions(part) for part in ['upper','lower']}
@@ -79,9 +114,26 @@ try:
     endpoint=delta['upper'][24]
     for i in range(12,25):
      weight=obj._corner_drag_weight((24-i)/12.)
-     assert np.allclose(delta['upper'][i],weight*endpoint,atol=1e-5),(angle,axis,value,i)
+     assert np.allclose(delta['upper'][i][[0,2]],weight*endpoint[[0,2]],atol=1e-5),(angle,axis,value,i)
     assert np.allclose(delta['upper'][:13],0,atol=1e-5)
     cmds.setAttr('L_lipCorner_CTL.'+axis,0)
+ cmds.setAttr('C_jaw_CTL.rx',0)
+ # Raised and widened corners form a rounded U: the middle slope is much
+ # shallower than a V, while the endpoint and independent opening remain free.
+ for jaw_angle in [0,20]:
+  cmds.setAttr('C_jaw_CTL.rx',jaw_angle)
+  for side in ['L','R']:
+   cmds.setAttr(side+'_lipCorner_CTL.translate',5.2,2,0)
+  middle=(lip_positions('upper')+lip_positions('lower'))*.5
+  for half in [middle[:13][::-1],middle[12:]]:
+   height=half[-1,1]-half[0,1]
+   assert height>.1
+   assert (half[2,1]-half[0,1])/height<.08,half
+   near_slope=abs((half[1,1]-half[0,1])/(half[1,0]-half[0,0]))
+   outer_slope=abs((half[-1,1]-half[-4,1])/(half[-1,0]-half[-4,0]))
+   assert near_slope<.25*outer_slope,(near_slope,outer_slope)
+  for side in ['L','R']:
+   cmds.setAttr(side+'_lipCorner_CTL.translate',0,0,0)
  cmds.setAttr('C_jaw_CTL.rx',0)
  # Primary vertical motion has a flat, gradual middle independently of jaw
  # opening, while the opposite lip and endpoints retain their positions.
@@ -100,6 +152,31 @@ try:
     assert np.linalg.norm(delta[13])/center>.999
     cmds.setAttr('C_'+part+'Lip_CTL.ty',0)
  cmds.setAttr('C_jaw_CTL.rx',0)
+ # Corner rotation must reshape both lip arcs, including stations well beyond
+ # the endpoint orientation blend. Check both sides and jaw-follow poses.
+ for corner_side in ['L','R']:
+  corner=corner_side+'_lipCorner_CTL'
+  affected=slice(15,23) if corner_side=='L' else slice(2,10)
+  other_endpoint=0 if corner_side=='L' else 24
+  own_endpoint=24-other_endpoint
+  for attr in ['rx','ry','rz']:
+   assert not cmds.getAttr(corner+'.'+attr,lock=True)
+   assert cmds.getAttr(corner+'.'+attr,keyable=True)
+  for jaw_angle in [0,20,30]:
+   cmds.setAttr('C_jaw_CTL.rx',jaw_angle)
+   rest={part:lip_positions(part) for part in ['upper','lower']}
+   for axis in ['rx','ry','rz']:
+    for angle in [-25.,25.]:
+     cmds.setAttr(corner+'.'+axis,angle)
+     for part in rest:
+      posed=lip_positions(part)
+      assert np.isfinite(posed).all()
+      assert np.max(np.linalg.norm(posed[affected]-rest[part][affected],axis=1))>.01,(corner,jaw_angle,axis,part)
+      assert np.allclose(posed[other_endpoint],rest[part][other_endpoint],atol=1e-5)
+      assert np.allclose(posed[own_endpoint],rest[part][own_endpoint],atol=1e-5),(corner,jaw_angle,axis,part,posed[own_endpoint]-rest[part][own_endpoint])
+     cmds.setAttr(corner+'.'+axis,0)
+     assert all(np.allclose(lip_positions(part),rest[part],atol=1e-5) for part in rest)
+ cmds.setAttr('C_jaw_CTL.rx',0)
  # Fine-control axes follow independent neighbouring base positions. Their
  # translation maps to the displayed axes without changing neutral ribbon poses.
  ctl='L_lowerLip02_CTL';grp='L_lowerLip02_GRP';driver='L_lowerLip02Driver_JNT'
@@ -113,6 +190,73 @@ try:
  movement=np.array(cmds.xform(driver,q=True,ws=True,t=True))-before
  assert np.allclose(movement,.1*orientation[0],atol=1e-6),(movement,orientation[0])
  cmds.setAttr(ctl+'.tx',0);cmds.setAttr('C_lowerLip_CTL.ty',0)
+ # Combined corner rotations respect rotateOrder and the displayed fine axes.
+ # Translation still composes with rotation, and sticky can close rotated arcs.
+ cmds.setAttr('C_jaw_CTL.rx',20)
+ for order in range(6):
+  cmds.setAttr('L_lipCorner_CTL.rotateOrder',order)
+  cmds.setAttr('L_lipCorner_CTL.rotate',17,13,22)
+  cmds.setAttr('R_lipCorner_CTL.rotate',-11,8,-19)
+  cmds.setAttr('L_lipCorner_CTL.translate',.4,.3,.2)
+  cmds.setAttr('C_lowerLip_CTL.ty',1)
+  orientation=np.asarray(cmds.getAttr(grp+'.worldMatrix[0]')).reshape(4,4)[:3,:3]
+  assert np.allclose(orientation@orientation.T,np.eye(3),atol=1e-6)
+  before=np.array(cmds.xform(driver,q=True,ws=True,t=True))
+  cmds.setAttr(ctl+'.tx',.1)
+  movement=np.array(cmds.xform(driver,q=True,ws=True,t=True))-before
+  assert np.allclose(movement,.1*orientation[0],atol=1e-6),(order,movement,orientation[0])
+  cmds.setAttr(ctl+'.tx',0)
+  cmds.setAttr('C_jaw_CTL.stickyLips',1)
+  assert np.allclose(lip_positions('upper'),lip_positions('lower'),atol=1e-5)
+  cmds.setAttr('C_jaw_CTL.stickyLips',0)
+ for corner_side in ['L','R']:
+  corner=corner_side+'_lipCorner_CTL'
+  cmds.setAttr(corner+'.rotate',0,0,0)
+  cmds.setAttr(corner+'.translate',0,0,0)
+  cmds.setAttr(corner+'.rotateOrder',0)
+ cmds.setAttr('C_lowerLip_CTL.ty',0);cmds.setAttr('C_jaw_CTL.rx',0)
+ # Main-mouth motion must transform the rotated lips once, without changing
+ # the corner pivot inside the module's deformation space.
+ cmds.setAttr('L_lipCorner_CTL.rotate',17,13,22)
+ cmds.setAttr('R_lipCorner_CTL.rotate',-11,8,-19)
+ rest={part:lip_positions(part) for part in ['upper','lower']}
+ cmds.setAttr('C_mainMouth_CTL.translate',1,.5,-.3)
+ cmds.setAttr('C_mainMouth_CTL.rotate',9,-14,7)
+ mouth_delta=np.asarray(cmds.getAttr('C_mainMouthDelta_MMX.matrixSum')).reshape(4,4)
+ for part in rest:
+  expected=np.c_[rest[part],np.ones(25)]@mouth_delta
+  assert np.allclose(lip_positions(part),expected[:,:3],atol=1e-5),part
+ cmds.setAttr('C_mainMouth_CTL.translate',0,0,0)
+ cmds.setAttr('C_mainMouth_CTL.rotate',0,0,0)
+ cmds.setAttr('L_lipCorner_CTL.rotate',0,0,0)
+ cmds.setAttr('R_lipCorner_CTL.rotate',0,0,0)
+ # Continuous corner rotations used to flip the fine-control and output frames
+ # by 180 degrees between adjacent poses. Check the entire chain and its aim,
+ # rather than just orthogonality at a few isolated poses.
+ fine_aims=cmds.ls('*upperLip*Neighbor_AMX','*lowerLip*Neighbor_AMX')
+ frame_plugs=[n+'.outputMatrix' for n in fine_aims]
+ output_names=cmds.ls('*upperLip*_JNT','*lowerLip*_JNT')
+ frame_plugs += [n+'.worldMatrix[0]' for n in output_names]
+ for jaw_angle in [0,30]:
+  cmds.setAttr('C_jaw_CTL.rx',jaw_angle)
+  for corner_side in ['L','R']:
+   corner=corner_side+'_lipCorner_CTL'
+   for axis in ['rx','ry','rz']:
+    previous=None
+    for angle in range(-100,101):
+     cmds.setAttr(corner+'.'+axis,angle)
+     frames=[np.asarray(cmds.getAttr(p)).reshape(4,4)[:3,:3] for p in frame_plugs]
+     assert all(np.isfinite(m).all() and np.allclose(m@m.T,np.eye(3),atol=1e-6) for m in frames)
+     if previous is not None:
+      assert all(np.trace(a@b.T)>2.8 for a,b in zip(frames,previous)),(jaw_angle,corner,axis,angle)
+     previous=frames
+     for aim,matrix in zip(fine_aims,frames):
+      local=np.asarray(cmds.getAttr(aim+'.primaryInputAxis')[0])
+      actual=local@matrix;actual/=np.linalg.norm(actual)
+      target=np.asarray(cmds.getAttr(aim+'.primaryTargetVector')[0]);target/=np.linalg.norm(target)
+      assert np.dot(actual,target)>.99999,(aim,angle,actual,target)
+    cmds.setAttr(corner+'.'+axis,0)
+ cmds.setAttr('C_jaw_CTL.rx',0)
  # Coincident targets and almost coincident targets keep finite frames.
  base=cmds.createNode('composeMatrix',name='neighborProbeBase')
  target=cmds.createNode('composeMatrix',name='neighborProbeTarget')
@@ -192,7 +336,7 @@ try:
   assert np.isclose(cmds.getAttr('C_lowerLipCorner%02dBlend_BMX.target[0].rotateWeight'%k),expected)
  with open(work/'new_build_report.json','w') as f:json.dump(records,f,indent=2)
  cmds.setAttr('C_jaw_CTL.rx',0);cmds.file(rename=str(work/'new_lips_build.mb'));cmds.file(save=True,type='mayaBinary',force=True)
- print('PASS complete jaw/lips build with Edward guides, removed attributes, ordered pins, opening poses',flush=True)
+ print('PASS jaw/lips build: corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure',flush=True)
  print(json.dumps([{'angle':r['angle'],'width':r['width'],'height':r['height'],'quarter_gap':r['gap'][6],'center_gap':r['gap'][12]} for r in records]),flush=True)
 finally:
  maya.standalone.uninitialize()

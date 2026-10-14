@@ -99,12 +99,33 @@ class AutoRig(object):
             progress._set_pct("Importing corrective blendshapes…", 96)
             self.import_corrective_blendshapes()
 
+            progress._set_pct("Importing facial wrinkles...", 97)
+            skin_manager_api.SkinManager().import_wrinkles()
+
             progress._set_pct("Cleaning up node graph…", 98)
             self.hide_all_utility_nodes()
 
+            progress._set_pct("Validating built rig...", 99)
+            try:
+                import os
+                from datetime import datetime, timezone
+                from maya_tools.scripts.tools import rig_validation
+                from maya_tools.scripts.tools import rig_roles
+                import json
+                role_file = os.path.join(rig_manager.asset_path(char_name, 'rig_data'), 'roles.roles.json')
+                if os.path.isfile(role_file):
+                    with open(role_file, encoding='utf-8') as stream:
+                        rig_roles.restore(char_name, json.load(stream))
+                rig_roles.discover(char_name)
+                validation_dir = rig_manager.asset_path(char_name, "validation")
+                stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+                rig_validation.write_build_health(char_name, os.path.join(validation_dir, stamp + ".righealth.json"))
+            except Exception as exc:
+                om.MGlobal.displayWarning("[Rig validation] Could not write build audit: " + str(exc))
+
             progress._set_pct("Generating picker…", 99)
             try:
-                picker_generator.generate_and_load()
+                picker_generator.generate_and_load(character=char_name)
             except Exception as e:
                 om.MGlobal.displayWarning(f"[Picker] Could not generate picker: {e}")
 
@@ -198,6 +219,10 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
 
+        # Rig modules use lookdevKit's floatConstant nodes. A clean Maya
+        # session must load the dependency before creating the module graphs.
+        if not cmds.pluginInfo("lookdevKit", query=True, loaded=True):
+            cmds.loadPlugin("lookdevKit", quiet=True)
         char_name = rig_manager.get_character_name_from_build()
         rig_manager.build_rig(char_name, on_step=on_step, leg_impl=leg_impl, leg_solver=leg_solver)
 
@@ -369,7 +394,7 @@ class AutoRig(object):
            are found and this character has no direct weights yet.
         """
         skinner = skin_manager_api.SkinManager()
-        skinner.import_skins()
+        skinner.import_skins(import_wrinkles=False)
 
         # self._auto_transfer_from_source()
 

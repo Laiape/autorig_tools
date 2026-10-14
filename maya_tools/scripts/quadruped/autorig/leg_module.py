@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -86,6 +87,7 @@ class LegModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
+    @organize_module_nurbs
     def make(self, side, solver="spring", skinning_jnts=5, bendys=True, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
 
         """
@@ -1344,6 +1346,7 @@ class FrontLegModule(LegModule):
     FLOATING_WIDTH_MULT = 3.0   # ancho de la superficie (U, fore/aft) ~ longitud escápula→root
     FLOATING_LENGTH_MULT = 2.0  # alto (V, up/down)
 
+    @organize_module_nurbs
     def make(self, side, solver="spring", skinning_jnts=5, bendys=True, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0)):
         super().make(side, solver=solver, skinning_jnts=skinning_jnts, bendys=bendys,
                      primaryInputAxis=primaryInputAxis, secondaryInputAxis=secondaryInputAxis)

@@ -1,0 +1,4 @@
+# Versions installed on the source Maya 2026 workstation.
+# Install with Maya's mayapy, not a separate system Python.
+numpy==1.26.4
+reportlab==5.0.1

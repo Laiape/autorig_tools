@@ -4,6 +4,10 @@ import json
 import os
 import tempfile
 import unittest
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
 os.environ["MAYA_SKIP_USERSETUP_PY"] = "1"
 import maya.standalone
@@ -239,6 +243,132 @@ class SkinSurfaceImportTests(unittest.TestCase):
         auxiliary = data[module.SkinManager.SCENE_DEFORMERS_KEY]["auxiliary_nodes"]
         handle_shape = next(node for node in auxiliary if node["type"] == "deformBend")
         self.assertAlmostEqual(handle_shape["attributes"]["curvature"]["value"], 0.5)
+
+    def test_export_blendshape_feeding_only_proximity_driver(self):
+        driver = cmds.polyPlane(name="driver", subdivisionsX=1, subdivisionsY=1)[0]
+        target = cmds.duplicate(driver, name="driverTarget")[0]
+        cmds.move(0, 0.75, 0, target + ".vtx[0]", relative=True)
+        blend = cmds.blendShape(target, driver, name="driverBlend")[0]
+        cmds.delete(target)
+        shape = cmds.listRelatives(driver, shapes=True, noIntermediate=True)[0]
+        cloth = cmds.polyPlane(name="cloth")[0]
+        wrap = cmds.deformer(cloth, type="proximityWrap")[0]
+        cmds.proximityWrap(wrap, edit=True, addDrivers=[shape], applyUserDefaults=False)
+        source = cmds.listConnections(blend + ".input[0].inputGeometry",
+                                      source=True, destination=False, plugs=True)[0]
+        cmds.connectAttr(source, shape + ".inMesh", force=True)
+        destination = wrap + ".drivers[0].driverGeometry"
+        cmds.connectAttr(blend + ".outputGeometry[0]", destination, force=True)
+        selection = om.MSelectionList()
+        selection.add(blend)
+        filt = oma.MFnGeometryFilter(selection.getDependNode(0))
+        self.assertEqual(filt.numOutputConnections(), 1)
+        self.assertFalse(filt.getPathAtIndex(0).isValid())
+
+        cmds.select("body")
+        self.manager.export_skins(in_path=self.path)
+        with open(self.path) as stream:
+            data = json.load(stream)
+        entry = next(node for node in data[module.SkinManager.SCENE_DEFORMERS_KEY]["nodes"]
+                     if node["name"] == blend)
+        self.assertEqual(entry["geometries"], [])
+        self.assertEqual(entry["unresolved_outputs"][0]["index"], 0)
+        self.assertIn("inputTarget[0].inputTargetGroup[0].inputTargetItem[6000].inputPointsTarget",
+                      entry["attributes"])
+        wrap_entry = next(node for node in data[module.SkinManager.SCENE_DEFORMERS_KEY]["nodes"]
+                          if node["name"] == wrap)
+        self.assertIn({"source": blend + ".outputGeometry[0]", "destination": destination},
+                      wrap_entry["connections"])
+        self.assertEqual(data["bodyShape"][0]["sparse_weights"]["left"], {"ix": [0], "vw": [1.0]})
+        self.assertIn("original_geometry", entry["branch_inputs"][0])
+        cmds.setAttr(blend + ".weight[0]", 0.6)
+        expected = cmds.xform(cloth + ".vtx[*]", query=True, objectSpace=True, translation=True)
+        cmds.setAttr(blend + ".weight[0]", 0)
+        cmds.delete(blend, wrap)
+        self.manager.import_skins(in_path=self.path)
+        helper = cmds.listConnections(blend + ".branchDriverMesh", source=True, destination=False)[0]
+        self.assertTrue(cmds.isConnected(helper + ".worldMesh[0]", destination))
+        self.assertTrue(cmds.blendShape(blend, query=True, geometry=True))
+        selection = om.MSelectionList(); selection.add(blend)
+        restored_filter = oma.MFnGeometryFilter(selection.getDependNode(0))
+        self.assertTrue(restored_filter.getPathAtIndex(0).isValid())
+        cmds.setAttr(blend + ".weight[0]", 0.6)
+        actual = cmds.xform(cloth + ".vtx[*]", query=True, objectSpace=True, translation=True)
+        for a, b in zip(actual, expected):
+            self.assertAlmostEqual(a, b, places=5)
+
+    def test_pose_correctives_roundtrip_sdk_metadata_multiple_channels_and_fanout(self):
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        cloth = cmds.polyPlane(name="cloth")[0]
+        wrap = cmds.deformer(cloth, type="proximityWrap")[0]
+        cmds.proximityWrap(wrap, edit=True, addDrivers=["bodyShape"], applyUserDefaults=False)
+        control = cmds.createNode("transform", name="L_test_CTL")
+        cmds.setAttr(control + ".translateX", 5)
+        cmds.setAttr(control + ".rotateZ", 30)
+        blend = poses.create_blendshape("body", order="post")
+        index, alias = poses.add_target("body", blend, control)
+        cmds.move(0, 0.75, 0, "body.vtx[0]", relative=True, worldSpace=True)
+        poses.finish_edit(save=True)
+        record = poses.pose_record(blend, index)
+        drivers = cmds.listConnections(record + ".driverNodes", source=True, destination=False)
+        curve = next(node for node in drivers if cmds.nodeType(node).startswith("animCurve"))
+        cmds.setKeyframe(curve, float=2.5, value=0.35)
+        cmds.keyTangent(curve, edit=True, inTangentType="linear", outTangentType="linear")
+        samples = [(0, 0), (2.5, 15), (5, 30), (5, 0)]
+        expected = []
+        for tx, rz in samples:
+            cmds.setAttr(control + ".translateX", tx)
+            cmds.setAttr(control + ".rotateZ", rz)
+            expected.append((cmds.getAttr(blend + ".weight[%d]" % index),
+                             cmds.xform("body.vtx[*]", query=True, objectSpace=True, translation=True)))
+        cmds.select("body")
+        self.manager.export_skins(in_path=self.path)
+        cmds.delete(blend, record, drivers)
+        self.manager.import_skins(in_path=self.path)
+        restored = poses.pose_record(blend, index)
+        self.assertIsNotNone(restored)
+        self.assertEqual(poses.linked(restored, "controller"), control)
+        self.assertEqual(poses.targets(blend), [(index, alias)])
+        self.assertEqual(poses.geometry_index(blend, "body"), 0)
+        self.assertEqual(poses.deformation_order(blend, "body"), "post")
+        for (tx, rz), (weight, points) in zip(samples, expected):
+            cmds.setAttr(control + ".translateX", tx)
+            cmds.setAttr(control + ".rotateZ", rz)
+            self.assertAlmostEqual(cmds.getAttr(blend + ".weight[%d]" % index), weight)
+            actual = cmds.xform("body.vtx[*]", query=True, objectSpace=True, translation=True)
+            for a, b in zip(actual, points):
+                self.assertAlmostEqual(a, b, places=5)
+        before = cmds.ls(type="animCurveUU")
+        self.manager.import_skins(in_path=self.path)
+        self.assertEqual(cmds.ls(type="animCurveUU"), before)
+
+    def test_sparse_pose_targets_recover_missing_aliases_on_import(self):
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        control = cmds.createNode("transform", name="L_lip_CTL")
+        blend = poses.create_blendshape("body")
+        for value in (5, -2, 8):
+            cmds.setAttr(control + ".translateX", value)
+            index, alias = poses.add_target("body", blend, control)
+            cmds.move(0, .2, 0, "body.vtx[0]", relative=True, worldSpace=True)
+            poses.finish_edit(True)
+        poses.remove_target("body", blend, 1)
+        expected = poses.targets(blend)
+        for index, alias in expected:
+            cmds.aliasAttr(blend + ".weight[%d]" % index, remove=True)
+        self.assertEqual(poses.targets(blend), expected)
+        cmds.select("body")
+        self.manager.export_skins(in_path=self.path)
+        records = [poses.pose_record(blend, index) for index, _ in expected]
+        drivers = [driver for record in records for driver in cmds.listConnections(
+            record + ".driverNodes", source=True, destination=False) or []]
+        cmds.delete(blend, records, drivers)
+        self.manager.import_skins(in_path=self.path)
+        self.assertEqual(poses.targets(blend), expected)
+        self.assertEqual(len(cmds.aliasAttr(blend, query=True)), 4)
+        self.assertEqual(cmds.getAttr(blend + ".weight", multiIndices=True), [0, 2])
+        for index, alias in expected:
+            poses.go_to_pose(blend, index)
+            self.assertAlmostEqual(cmds.getAttr(blend + ".weight[%d]" % index), 1)
 
     def test_import_wrap_roundtrip_multiple_drivers_renamed_shape_and_no_duplicates(self):
         belt = cmds.polyPlane(name="belt", subdivisionsX=1, subdivisionsY=1)[0]

@@ -6,6 +6,7 @@ from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -65,6 +66,7 @@ class DigitsModule(object):
         self.skel_grp       = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
+    @organize_module_nurbs
     def make(self, side, leg_prefix="frontLeg"):
 
         """

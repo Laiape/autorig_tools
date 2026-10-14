@@ -51,11 +51,18 @@ def install():
     button = shelf+"|edward_picker_shelf_button"
     if cmds.shelfButton(button, exists=True):
         cmds.deleteUI(button)
+    # The repository shelf may already contain an unnamed picker button.
+    for child in cmds.shelfLayout(shelf, query=True, childArray=True) or []:
+        if cmds.objectTypeUI(child) == "shelfButton" and cmds.shelfButton(child, query=True, label=True) == "EdwardPicker":
+            cmds.deleteUI(child)
     cmds.shelfButton("edward_picker_shelf_button", parent=shelf, label="EdwardPicker",
                      annotation="Edward body and face picker", image="pickWalkUp.png",
                      imageOverlayLabel="Edward", sourceType="python",
                      command="import edward_picker_launcher; edward_picker_launcher.show()")
-    cmds.saveShelf(shelf, str(Path(cmds.internalVar(userShelfDir=True))/"shelf_AutoRig"))
+    # userShelfDir can contain a semicolon-separated studio search path.
+    shelf_directory = Path(cmds.internalVar(userPrefDir=True))/"shelves"
+    shelf_directory.mkdir(parents=True, exist_ok=True)
+    cmds.saveShelf(shelf, str(shelf_directory/"shelf_AutoRig"))
     importlib.invalidate_caches()
     sys.modules.pop("edward_picker_launcher",None)
     launcher_module = importlib.import_module("edward_picker_launcher")

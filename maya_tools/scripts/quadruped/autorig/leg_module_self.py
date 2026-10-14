@@ -12,6 +12,7 @@ from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import rig_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -84,6 +85,7 @@ class LegModule(object):
         self.primaryInputAxisRibbon = (1, 0, 0)
         self.secondaryInputAxisRibbon = (0, 0, 1)
 
+    @organize_module_nurbs
     def make(self, side, solver=SOLVER_SPRING, skinning_joints_number=5,
              bendys=True, config=None):
         """Punto de entrada. Construye la pierna entera."""
@@ -1221,6 +1223,7 @@ class FrontLegModule(LegModule):
     ROOT_JOINT = "Shoulder"
     PV_SIGN = -1
 
+    @organize_module_nurbs
     def make(self, side, **kwargs):
         """Llama al padre y monta la escápula encima (necesita orient_guides)."""
         self.side = side

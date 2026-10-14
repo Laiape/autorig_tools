@@ -17,9 +17,9 @@ reload(guides_manager)
 reload(create_rig)
 reload(data_manager)
 
-def open_edward_picker():
-    from tools import edward_picker
-    return edward_picker.show()
+def open_character_picker():
+    from tools import character_picker
+    return character_picker.show()
 
 
 def create_custom_menu():
@@ -36,6 +36,7 @@ def create_custom_menu():
     cmds.menuItem(divider=True, dividerLabel="PIPELINE")
 
     cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="fileOpen.png")
+    cmds.menuItem(label="Validated Rig Packages", command=lambda x: open_rig_package_ui(), image="fileOpen.png")
 
     # ── MODELING ──────────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="MODELING")
@@ -71,12 +72,20 @@ def create_custom_menu():
     cmds.menuItem(divider=True, dividerLabel="ANIMATION")
 
     cmds.menuItem(label="Test Rig", command=lambda x: open_pose_tester(), boldFont=True, image="setKeyframe.png")
-    cmds.menuItem(label="Edward Picker", command=lambda x: open_edward_picker(), image="pickWalkUp.png")
+    cmds.menuItem(label="Character Picker", command=lambda x: open_character_picker(), image="pickWalkUp.png")
 
     # ── CORRECTIVES ───────────────────────────────────────────────────────────
     cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
 
+    cmds.menuItem(label="Joint Corrective Targets", command=lambda x: open_joint_correctives_ui(),
+                  annotation="Editable joint targets with manual weights or automatic pose drivers.",
+                  image="kinJoint.png")
+    cmds.menuItem(label="Wrinkle Regions / Presets", command=lambda x: open_wrinkle_regions_ui(), image="blendShape.png")
+
     cmds.menuItem(label="Corrective Blendshapes", subMenu=True, tearOff=True, image="blendShape.png")
+    cmds.menuItem(label="Pose Blendshapes", command=lambda x: open_pose_blendshapes_ui(),
+                  annotation="Capture a controller pose and sculpt automatically named corrective targets.",
+                  image="blendShape.png")
     cmds.menuItem(label="Export Corrective Blendshapes", command=lambda x: export_corrective_blendshapes(), image="export.png")
     cmds.menuItem(label="Import Corrective Blendshapes", command=lambda x: import_corrective_blendshapes(), image="import.png")
     cmds.setParent('..', menu=True)
@@ -97,7 +106,7 @@ def create_custom_menu():
 
     cmds.menuItem(label="Proximity Wrap (Multiple Drivers)",
                   command=lambda x: open_proximity_wrap_ui(), image="wrap.png")
-    cmds.menuItem(label="Bake Proximity Wrap to Skin",
+    cmds.menuItem(label="Bake Deformation to Skin",
                   command=lambda x: open_proximity_bake_ui(), image="paintSkinWeights.png")
 
     # ── SIMULATION / ADONIS ───────────────────────────────────────────────────
@@ -110,6 +119,12 @@ def rebuild_ui():
     from ui import auto_rig_UI
     reload(auto_rig_UI)
     auto_rig_UI.create_custom_menu()
+
+
+def open_rig_package_ui():
+    from maya_tools.scripts.ui import rig_package_UI
+    reload(rig_package_UI)
+    rig_package_UI.show()
 
 
 def create_new_asset():
@@ -320,6 +335,22 @@ def open_adonis_copy_weights():
     from adonis import copyWeightsAdonis
     reload(copyWeightsAdonis)
     copyWeightsAdonis.show()
+
+
+def open_pose_blendshapes_ui():
+    from ui import pose_blendshapes_UI
+    return pose_blendshapes_UI.show()
+
+
+def open_joint_correctives_ui():
+    from ui import joint_correctives_UI
+    return joint_correctives_UI.show()
+
+
+def open_wrinkle_regions_ui():
+    from maya_tools.scripts.ui import wrinkle_regions_UI
+    reload(wrinkle_regions_UI)
+    return wrinkle_regions_UI.show()
 
 
 def open_corrective_curve_ui():

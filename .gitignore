@@ -17,9 +17,6 @@ incrementalSave/
 # Autorig build cache (regenerated on CREATE RIG)
 maya_tools/cache/*.cache
 
-# Oversized scene (GitHub 100MB limit; use LFS if you must version it)
-**/chihuahua_v001.ma
-
 # Local agent config (not this repo's .cursor/rules)
 .claude/
 
@@ -29,5 +26,24 @@ Thumbs.db
 .idea/
 *.iml
 
-# Local Edward model
-/maya_tools/assets/Edward/models/Edward_v003.ma
+# Regenerable packages, experiments and validation output.
+# Working rigs intended for another PC belong in assets/<character>/scenes/.
+/maya_tools/assets/*/packages/
+/maya_tools/assets/*/experiments/
+/maya_tools/assets/*/validation/
+/maya_tools/assets/*/picker/validation/
+/maya_tools/validation/
+**/validation_report.json
+
+# Local environments, test output and credentials
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+*.tmp
+*.bak

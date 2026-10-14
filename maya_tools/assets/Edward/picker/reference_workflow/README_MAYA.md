@@ -2,6 +2,15 @@
 
 ## Install
 
+For a single-file handoff, send `Edward_Picker_Installer.py` from the parent
+picker folder. Drag that file into Maya's viewport. It embeds the runtime,
+controller data and images, installs the shelf button and opens the picker.
+No extracted bundle or AutoRig repository is required. Run it inside Maya,
+not by double-clicking it in Windows. It does not contain the Edward rig;
+the recipient still needs a scene with the matching rig to select controls.
+
+The ZIP installation below remains available:
+
 1. Extract `Edward_Maya_Picker_2024_plus.zip` to a folder.
 2. Open Maya 2024 or later.
 3. Drag `install_edward_picker.py` from the extracted folder into the Maya
@@ -54,10 +63,22 @@ layer visibility, missing namespaces, callback cleanup and installer
 relaunch after closing the window. `04_maya_picker_preview.png` is an
 offline Qt preview, not a screenshot from Maya.
 
-No Maya session was available on this host. The picker has not been
-executed against a live Maya rig, and PySide2 runtime was not tested here.
-The exported target list can differ from the current scene; the status bar
-reports how many targets actually resolve.
+Live validation on 2026-10-09 passed in Maya 2026.2 with PySide6/Qt 6.5.3,
+using `edward_source.mb` and a temporary scene with two references of that
+rig (`EdwardA`, `EdwardB`). All 310 targets resolved in each rig: 127 body
+and 183 face, with no missing or ambiguous targets. Click/Shift/Ctrl,
+selection synchronization, group selectors, layers, zoom, pan, Fit,
+namespace isolation, close/reopen and shelf launch after a Maya restart
+were checked against the real Maya API and GUI. Ambiguous targets were
+also checked with a temporary duplicate DAG node and were not selected.
+The installer now saves to the local preferences shelf directory instead
+of treating the studio shelf search path as one directory, and replaces
+existing EdwardPicker buttons when reinstalled.
+
+The five simulated-API Qt tests were run separately from the live Maya
+session. Maya 2024, PySide2 and other Maya versions remain untested.
+These results apply to this Edward rig; the exported target list can differ
+from another scene. The status bar reports how many targets actually resolve.
 
 Primary compatibility references:
 

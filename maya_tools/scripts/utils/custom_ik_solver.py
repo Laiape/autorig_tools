@@ -172,9 +172,6 @@ def triangle_solver(name, guides=[], controllers=[], use_stretch=False, use_soft
         cmds.connectAttr(aim_matrix+'.outputMatrix', mult_matrix_upper_wm+'.matrixIn[1]') # connect aim matrix to world matrix
         cmds.connectAttr(four_by_four_up_local_rotation+'.output', mult_matrix_upper_wm+'.matrixIn[0]') # connect local rotation to world matrix
         upper_wm = mult_matrix_upper_wm+'.matrixSum' # upper world matrix
-        limb = name.split('_')[1]
-        locator_upper = cmds.spaceLocator(name=f"{side}_{limb}Upper_LOC")[0]
-        cmds.connectAttr(upper_wm, locator_upper+'.offsetParentMatrix') # connect upper
         #  ----- This will be used to connect it to the blend matrix later -----
 
         # Lower WM
@@ -231,8 +228,6 @@ def triangle_solver(name, guides=[], controllers=[], use_stretch=False, use_soft
         cmds.connectAttr(four_by_four_low_local_rotation+'.output', mult_matrix_lower_rwm+'.matrixIn[0]') # connect local rotation to world matrix
         lower_wm = mult_matrix_lower_rwm+'.matrixSum' # lower world matrix
         lower_lm = four_by_four_low_local_rotation+'.output' # lower local matrix
-        locator_lower = cmds.spaceLocator(name=f"{side}_{limb}Lower_LOC")[0]
-        cmds.connectAttr(lower_wm, locator_lower+'.offsetParentMatrix') # connect lower
         # ----- This will be used to connect it to the blend matrix later -----
 
         # Effector WM
@@ -276,8 +271,6 @@ def triangle_solver(name, guides=[], controllers=[], use_stretch=False, use_soft
         cmds.connectAttr(hand_local_f4+'.output', effector_mult_matrix_wm+'.matrixIn[0]')
         cmds.connectAttr(lower_wm, effector_mult_matrix_wm+'.matrixIn[1]')
         effector_wm = effector_mult_matrix_wm+'.matrixSum'
-        locator_effector = cmds.spaceLocator(name=f"{side}_{limb}Effector_LOC")[0]
-        cmds.connectAttr(effector_wm, locator_effector+'.offsetParentMatrix')
         # ----- This will be used to connect it to the blend matrix
 
         ik_matrices = [upper_wm, lower_wm, effector_wm]

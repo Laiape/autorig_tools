@@ -6,7 +6,7 @@
     "reciprocal_coupling": 1,
     "foot_type": 0,
     "spine_skinning_jnts": 8,
-    "spine_controllers": 5,
+    "spine_controllers": 6,
     "neck_skinning_jnts": 5,
     "neck_controllers": 2,
     "arm_skinning_jnts": 5,

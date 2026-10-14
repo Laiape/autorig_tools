@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -29,6 +30,7 @@ class NeckModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.preferences_ctl = data_manager.DataExportBiped().get_data("basic_structure", "preferences_ctl")
 
+    @organize_module_nurbs
     def make(self, side, skinning_joints_number, controllers_number, mGear_integration=False):
 
         """ 
@@ -80,7 +82,12 @@ class NeckModule(object):
             # Clean up and store data
             # if cmds.objExists(self.throat_guide[0]):
             #     cmds.delete(self.throat_guide)
-   
+
+        # Keep the settings control at its authored position while making its
+        # offset group follow the head, including the head's space switches.
+        settings_group = cmds.listRelatives(self.preferences_ctl, parent=True, fullPath=True)[0]
+        head_control = self.head_ctl if mGear_integration else self.neck_ctls[-1]
+        cmds.parent(settings_group, head_control, absolute=True)
 
     def load_guides(self):
 

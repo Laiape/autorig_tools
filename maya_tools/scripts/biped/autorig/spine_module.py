@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -28,6 +29,7 @@ class SpineModule(object):
         self.skel_grp = data_manager.DataExportBiped().get_data("basic_structure", "skel_GRP")
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
 
+    @organize_module_nurbs
     def make(self, side, spine_skinning_jnts, spine_controllers):
 
         """ 
@@ -600,8 +602,11 @@ class SpineModule(object):
         cmds.setAttr(f"{main_created_nodes[3]}.input1", 2)
         cmds.setAttr(f"{main_created_nodes[4]}.input2", 1)
         cmds.setAttr(f"{main_created_nodes[5]}.input1", 1)
-        cmds.connectAttr(f"{spine_settings_trn}.maxStretchEffect", f"{main_created_nodes[4]}.input1")
-        cmds.connectAttr(f"{spine_settings_trn}.minStretchEffect", f"{main_created_nodes[5]}.input2")
+        # Like Vittorio's inverse-length volume response: short -> wider,
+        # long -> thinner. These effects correspond to min/max LENGTH,
+        # not min/max width; crossing them reverses squash and stretch.
+        cmds.connectAttr(f"{spine_settings_trn}.minStretchEffect", f"{main_created_nodes[4]}.input1")
+        cmds.connectAttr(f"{spine_settings_trn}.maxStretchEffect", f"{main_created_nodes[5]}.input2")
 
         for i, joint in enumerate(output_joints):
             nodes_to_create = {

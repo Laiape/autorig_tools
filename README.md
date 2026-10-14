@@ -8,39 +8,32 @@ Graph of how the repo is organised: `how_it_works.md`.
 
 ---
 
-## Load in Maya
+## Install on another PC
 
-The module file is `maya_tools/self_module.mod`. It lists known clone
-roots. Maya skips a `+` block whose folder is missing and uses the first
-path that exists:
+The full setup guide is [SETUP_OTHER_PC.md](SETUP_OTHER_PC.md).
 
-- `C:\proyectos_laia\autorig_tools`
-- `C:\GIT\autorig_tools`
+```powershell
+git clone https://github.com/Laiape/autorig_tools.git
+cd autorig_tools
+git lfs install
+git lfs pull
+python scripts/install_maya_module.py
+& "C:/Program Files/Autodesk/Maya2026/bin/mayapy.exe" -m pip install --user -r requirements-maya.txt
+```
 
-Do not replace a block when you clone somewhere else: copy a new `+`
-block with that root and `PYTHONPATH`. Icons stay `maya_tools/icons`.
+Install Git LFS before cloning when possible. The module installer uses this
+checkout's actual location, so the clone can live outside `C:/GIT`. Restart Maya
+to load the **AutoRig Tools** menu and **AutoRig** shelf.
 
-Maya only reads a `.mod` if it sits on `MAYA_MODULE_PATH` or in the user modules folder.
+Character assets, guides, curves, build settings, skins and picker installers
+are included. Large Maya scenes and skin files use Git LFS. The current Edward
+working rig is `maya_tools/assets/Edward/scenes/Edward_working_v001.mb`.
+Open it through `scripts/open_edward.py` inside Maya to resolve this clone's
+textures automatically (see the setup guide).
 
-**Option A (no env var).** Put `maya_tools/self_module.mod` in:
-
-`Documents/maya/modules/self_module.mod`
-
-On this machine that copy is already there. Restart Maya.
-
-**Option B.** Set user environment variable `MAYA_MODULE_PATH` to the
-`maya_tools` folder of the clone you want (the `.mod` still picks the
-first existing root from its list).
-
-Restart Maya.
-
-On a successful load you get:
-
-- Menu **AutoRig Tools** (Maya menu bar)
-- Shelf **AutoRig** (AssetMgr opens Character Manager; EdwardPicker opens the
-  body/face animation picker)
-
-If the menu is missing, the `.mod` path does not match this clone, or Maya did not see the module folder. Script Editor will show `userSetup.py` warnings.
+Maya and third-party Maya plug-ins are installed separately; the guide identifies
+which ones the tools and the saved scene need. Experiments, duplicate rig
+packages, generated caches and validation output stay outside Git.
 
 ---
 

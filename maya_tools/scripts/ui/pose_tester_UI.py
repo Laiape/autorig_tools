@@ -38,7 +38,7 @@ from maya_tools.scripts.tools import pose_tester
 
 def _maya_main_window():
     ptr = omui.MQtUtil.mainWindow()
-    return wrapInstance(int(ptr), QtWidgets.QWidget)
+    return wrapInstance(int(ptr), QtWidgets.QWidget) if ptr else None
 
 
 _SIDES = {
@@ -72,6 +72,13 @@ class PoseTesterUI(QtWidgets.QDialog):
         root = QtWidgets.QVBoxLayout(self)
         root.setContentsMargins(10, 10, 10, 10)
         root.setSpacing(8)
+        content = QtWidgets.QWidget()
+        scroll = QtWidgets.QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(content)
+        root.addWidget(scroll)
+        root = QtWidgets.QVBoxLayout(content)
+        self.resize(640, 820)
 
         info = QtWidgets.QLabel(
             "Range of Motion test: keys every N frames, one axis at a time,\n"
@@ -81,6 +88,50 @@ class PoseTesterUI(QtWidgets.QDialog):
 
         root.addWidget(self._build_options_group())
         root.addWidget(self._build_zones_group())
+        report_group = QtWidgets.QGroupBox("Build comparison")
+        report_layout = QtWidgets.QVBoxLayout(report_group)
+        self._report_meshes = []
+        self._report_mesh_label = QtWidgets.QLabel("Select meshes from one character, then load them.")
+        self._report_mesh_label.setWordWrap(True)
+        report_layout.addWidget(self._report_mesh_label)
+        buttons = QtWidgets.QHBoxLayout()
+        load_meshes = QtWidgets.QPushButton("Load selected meshes")
+        load_meshes.clicked.connect(self._load_report_meshes)
+        buttons.addWidget(load_meshes)
+        report_button = QtWidgets.QPushButton("Combination poses + report")
+        report_button.clicked.connect(self._run_report)
+        buttons.addWidget(report_button)
+        report_layout.addLayout(buttons)
+        contact_button = QtWidgets.QPushButton("Continuous facial contact report")
+        contact_button.clicked.connect(self._run_contact_report)
+        report_layout.addWidget(contact_button)
+        dq_button = QtWidgets.QPushButton("Compare local DQ using selected joints")
+        dq_button.clicked.connect(self._compare_skinning)
+        report_layout.addWidget(dq_button)
+        apply_dq = QtWidgets.QPushButton("Apply last tested local DQ mask")
+        apply_dq.clicked.connect(self._apply_skinning)
+        report_layout.addWidget(apply_dq)
+        detail_button = QtWidgets.QPushButton("Create detail modes: select high mesh, then low mesh")
+        detail_button.clicked.connect(self._create_detail_modes)
+        report_layout.addWidget(detail_button)
+        viewport_button = QtWidgets.QPushButton("Profile viewport interaction and detail modes")
+        viewport_button.clicked.connect(self._profile_viewport)
+        report_layout.addWidget(viewport_button)
+        self._baseline = QtWidgets.QLineEdit()
+        self._baseline.setPlaceholderText("Optional previous .rigqa.json report")
+        baseline_row = QtWidgets.QHBoxLayout()
+        baseline_row.addWidget(self._baseline)
+        choose = QtWidgets.QPushButton("Baseline...")
+        choose.clicked.connect(self._choose_baseline)
+        baseline_row.addWidget(choose)
+        report_layout.addLayout(baseline_row)
+        root.addWidget(report_group)
+        from maya_tools.scripts.ui.rig_tools_panel import GeneralRigPanel
+        self.general_rig = GeneralRigPanel(self)
+        general_group = QtWidgets.QGroupBox('General rig tools')
+        general_layout = QtWidgets.QVBoxLayout(general_group)
+        general_layout.addWidget(self.general_rig)
+        root.addWidget(general_group)
 
         # ── acciones globales ────────────────────────────────────────────────
         actions = QtWidgets.QHBoxLayout()
@@ -172,6 +223,121 @@ class PoseTesterUI(QtWidgets.QDialog):
 
     def _sides(self):
         return _SIDES[self._side_combo.currentText()]
+
+    def _load_report_meshes(self):
+        from maya_tools.scripts.tools import pose_blendshapes
+        try:
+            self._report_meshes = [pose_blendshapes.mesh_transform(n) for n in cmds.ls(selection=True, long=True) or []]
+            if not self._report_meshes:
+                raise ValueError("Select at least one polygon mesh.")
+            self._report_mesh_label.setText(", ".join(m.rsplit("|", 1)[-1] for m in self._report_meshes))
+        except Exception as exc:
+            self._status.setText(str(exc))
+
+    def _choose_baseline(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Previous build report", "", "Rig QA (*.rigqa.json)")
+        if path:
+            self._baseline.setText(path)
+
+    def _run_report(self):
+        from maya_tools.scripts.tools import rig_validation
+        try:
+            if not self._report_meshes:
+                raise ValueError("Load the character meshes first.")
+            path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "New build report", "", "Rig QA (*.rigqa.json)")
+            if not path:
+                return
+            if not path.endswith(".rigqa.json"):
+                path += ".rigqa.json"
+            root = "|" + self._report_meshes[0].split("|")[1]
+            report = rig_validation.run_report(root, self._report_meshes, path, self._baseline.text().strip() or None,
+                                               sides=self._sides())
+            self._status.setText("Saved %d combination poses. Parallel mean: %.2f ms. Missing channels: %d." % (
+                len(report["poses"]), report["timings"]["parallel"]["mean_ms"], len(report["missing_channels"])))
+        except Exception as exc:
+            self._status.setText(str(exc))
+            cmds.warning(str(exc))
+
+    def _run_contact_report(self):
+        from maya_tools.scripts.tools import facial_contact_validation
+        try:
+            if not self._report_meshes:
+                raise ValueError("Load the facial meshes first.")
+            path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "New facial contact report", "", "Facial contact (*.contact.json)")
+            if not path:
+                return
+            if not path.endswith(".contact.json"):
+                path += ".contact.json"
+            root = "|" + self._report_meshes[0].split("|")[1]
+            report = facial_contact_validation.run(root, self._report_meshes, path)
+            failed = sum(not s['closed_contact_pass'] for s in report['sequences'])
+            self._status.setText("Saved %d continuous sequences. Closed landmark contact failures: %d." % (len(report['sequences']), failed))
+        except Exception as exc:
+            self._status.setText(str(exc))
+            cmds.warning(str(exc))
+
+    def _compare_skinning(self):
+        from maya_tools.scripts.tools import skinning_volume, rig_validation
+        try:
+            if not self._report_meshes:
+                raise ValueError("Load the body mesh, then select its arm or forearm skin joints.")
+            mesh = self._report_meshes[0]
+            joints = cmds.ls(selection=True, type="joint", long=True) or []
+            candidates = cmds.ls(cmds.listHistory(mesh), type="skinCluster") or []
+            skin = next((s for s in candidates if set(cmds.ls(cmds.skinCluster(s, q=True, influence=True), long=True) or []).intersection(joints)), None)
+            if not skin:
+                raise ValueError("Select joints influencing the loaded mesh.")
+            regional, mask = skinning_volume.local_mask(mesh, skin, joints)
+            path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "New skinning comparison", "", "Skinning comparison (*.skincompare.json)")
+            if not path:
+                return
+            if not path.endswith(".skincompare.json"):
+                path += ".skincompare.json"
+            root = "|" + mesh.split("|")[1]
+            self._skin_candidate = skinning_volume.compare(root, mesh, skin, path, rig_validation.COMBINATION_POSES, mask, [i for i,w in enumerate(regional) if w > .5])
+            self._status.setText("Compared native skinning methods. Review shapes before applying the tested mask.")
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
+
+    def _apply_skinning(self):
+        from maya_tools.scripts.tools import skinning_volume, rig_validation
+        try:
+            candidate = getattr(self, "_skin_candidate", None)
+            if not candidate or not cmds.objExists(candidate['skin']) or rig_validation.mesh_data(candidate['mesh'])['topology'] != candidate['topology']:
+                raise ValueError("Run a comparison on this mesh before applying its mask.")
+            skinning_volume.apply_mask(candidate['mesh'], candidate['skin'], candidate['mask'])
+            self._status.setText("Applied tested local DQ mask. Maya Undo restores the previous settings.")
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
+
+    def _create_detail_modes(self):
+        from maya_tools.scripts.tools import rig_performance, bifrost_wrinkles
+        try:
+            meshes = cmds.ls(selection=True, long=True, objectsOnly=True) or []
+            if len(meshes) != 2:
+                raise ValueError("Select the rendered high mesh followed by the low mesh.")
+            root = "|" + meshes[0].split("|")[1]
+            settings = [r['prefix']+'_Settings' for r in bifrost_wrinkles.export_setups() if r['prefix']+'_Face' == meshes[0].rsplit('|',1)[-1]]
+            rig_performance.create_detail_modes(root, [meshes[0]], [meshes[1]], settings)
+            self._status.setText("Created Animation / Review / Export on the character root. Review is active.")
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
+
+    def _profile_viewport(self):
+        from maya_tools.scripts.tools import rig_performance
+        try:
+            if not self._report_meshes:
+                raise ValueError("Load meshes belonging to the character first.")
+            path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "New viewport benchmark", "", "Viewport benchmark (*.viewport.json)")
+            if not path:
+                return
+            if not path.endswith(".viewport.json"):
+                path += ".viewport.json"
+            root = "|" + self._report_meshes[0].split("|")[1]
+            report = rig_performance.benchmark(root, path)
+            self._status.setText("Viewport mean: Animation %.2f ms; Review %.2f ms. Profiler capture saved." % (report['variants']['animation']['mean_ms'], report['variants']['review']['mean_ms']))
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
 
     def _on_animate(self, zone, pose_index):
         label = pose_tester.pose_labels(zone)[pose_index]

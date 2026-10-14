@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -34,6 +35,7 @@ class TongueModule(object):
         self.face_controls_parent = (data_manager.DataExportBiped().get_data("neck_module", "face_controls_parent") or self.face_ctl)
         self.head_guide_matrix = data_manager.DataExportBiped().get_data("neck_module", "head_guide_matrix")
 
+    @organize_module_nurbs
     def make(self, side):
 
         """ 

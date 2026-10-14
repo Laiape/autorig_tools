@@ -11,6 +11,7 @@ from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ik_fk_match
 from maya_tools.scripts.utils import ribbon
 from maya_tools.scripts.utils import custom_ik_solver
+from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
 reload(guides_manager)
@@ -33,6 +34,7 @@ class LegModule(object):
         self.masterwalk_ctl = data_manager.DataExportBiped().get_data("basic_structure", "masterwalk_ctl")
         self.local_hip_ctl = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
 
+    @organize_module_nurbs
     def make(self, side, skinning_jnts, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, -1, 0)):
 
         """ 
@@ -628,7 +630,6 @@ class LegModule(object):
 
         nonRollAlign = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollAlign_BLM", ss=True)
         nonRollAim = cmds.createNode("aimMatrix", name=f"{self.side}_legNonRollAim_AMX", ss=True)
-        self.nonRollAim = nonRollAim
         blend_matrix_nodes = cmds.createNode("blendMatrix", name=f"{self.side}_legNonRollControllers_BLM", ss=True)
 
         cmds.connectAttr(f"{self.root_ik_nodes[0]}.worldMatrix[0]", f"{blend_matrix_nodes}.inputMatrix")
@@ -716,10 +717,6 @@ class LegModule(object):
         cmds.parent(ball_skinning_jnt, self.skeleton_grp)
         cmds.parent(toe_skinning_jnt, self.skeleton_grp)
 
-        # Blend the skinning joints toward a single smooth cubic (hip -> ankle)
-        self.curvature_setup()
-        # Volume preservation squash on the skinning joints
-        self.volume_preservation()
 
         # Contraint settings controller to first skinning joint
         first_skinning_jnt = self.upper_skinning_jnt_trn[0]
@@ -752,9 +749,6 @@ class LegModule(object):
         up_bendy_nodes, up_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}UpBendy", offset=["GRP"])
         low_bendy_nodes, low_bendy_ctl = curve_tool.create_controller(name=f"{self.module_name}{part}LowBendy", offset=["GRP"])
 
-        # Store the main bendy controller (curvature CV) and the bendy groups (volume scale)
-        setattr(self, f"{part.lower()}_main_bendy_ctl", main_bendy_ctl)
-        setattr(self, f"{part.lower()}_bendy_grps", [up_bendy_nodes[0], main_bendy_nodes[0], low_bendy_nodes[0]])
 
         for node in [main_bendy_nodes[0], up_bendy_nodes[0], low_bendy_nodes[0]]:
 
@@ -817,135 +811,3 @@ class LegModule(object):
             cmds.delete(t)
 
         return output_joints
-
-    def curvature_setup(self):
-
-        """
-        Build a single smooth cubic (degree 3) de Boor curve spanning the whole
-        leg (hip -> knee -> ankle, using the main bendy controllers as the
-        intermediate CVs) and blend the existing skinning joints toward it with a
-        'Curvature' attribute on the settings controller.
-
-        At Curvature = 0 the joints keep the current two-ribbon solution; at
-        Curvature = 1 they follow the smooth cubic, rounding out the knee into a
-        continuous arc from hip to ankle.  The same output joints are reused
-        (only a blendMatrix is inserted before each joint's offsetParentMatrix).
-        """
-
-        # ----- whole-leg control vertices (5 CVs -> degree 3 cubic B-spline)
-        cvs = [
-            self.nonRollAim,                  # hip
-            self.upper_main_bendy_ctl,        # mid thigh
-            self.blend_matrices[1][0],        # knee
-            self.lower_main_bendy_ctl,        # mid shin
-            self.blend_matrices[2][0],        # ankle
-        ]
-
-        # ----- global parameter for every existing joint (upper then lower),
-        # split proportionally to the rest length of each segment so the smooth
-        # targets stay aligned with the current joints
-        hip = om.MVector(cmds.xform(self.leg_chain[0], q=True, ws=True, t=True))
-        knee = om.MVector(cmds.xform(self.leg_chain[1], q=True, ws=True, t=True))
-        ankle = om.MVector(cmds.xform(self.leg_chain[2], q=True, ws=True, t=True))
-        upper_len = (knee - hip).length()
-        lower_len = (ankle - knee).length()
-        total = upper_len + lower_len
-        split = upper_len / total if total else 0.5
-
-        seg = [i / 4.0 for i in range(5)]
-        seg[-1] = 0.95
-        global_params = [p * split for p in seg] + [split + p * (1 - split) for p in seg]
-
-        # ----- build the smooth cubic ribbon as temporary driver joints
-        driver_jnts, temp = ribbon.de_boor_ribbon(
-            cvs, name=f"{self.module_name}Curvature", d=3, custom_parameter=global_params,
-            aim_axis=self.aim_axis_signed, up_axis=self.up_axis_signed, skeleton_grp=self.skeleton_grp,
-            num_joints=len(global_params))
-
-        for t in temp:
-            cmds.delete(t)
-
-        # capture the matrix plug feeding each driver joint, then disconnect and
-        # delete the joints.  Disconnecting first leaves the feeder nodes alive
-        # (a plain joint delete would otherwise drag its input history with it).
-        driver_plugs = []
-        for dj in driver_jnts:
-            src = cmds.listConnections(f"{dj}.offsetParentMatrix", source=True, destination=False, plugs=True)
-            plug = src[0] if src else None
-            driver_plugs.append(plug)
-            if plug:
-                cmds.disconnectAttr(plug, f"{dj}.offsetParentMatrix")
-        cmds.delete(driver_jnts)
-
-        # ----- Curvature attributes on the settings controller
-        if not cmds.attributeQuery("Curvature", node=self.settings_ctl, exists=True):
-            cmds.addAttr(self.settings_ctl, longName="Curvature", attributeType="float",
-                         minValue=0, maxValue=1, defaultValue=0, keyable=True)
-            cmds.addAttr(self.settings_ctl, longName="AutoBend", niceName="Auto Curvature",
-                         attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
-
-        # auto curvature from the knee bend (dot-based, no flip), added to the manual value
-        bend_plug = matrix_manager.bend_factor(
-            self.blend_matrices[0][0], self.blend_matrices[1][0], self.blend_matrices[2][0],
-            name=f"{self.module_name}Curvature")
-        auto_mult = cmds.createNode("multiply", name=f"{self.module_name}AutoCurvature_MUL", ss=True)
-        cmds.connectAttr(bend_plug, f"{auto_mult}.input[0]")
-        cmds.connectAttr(f"{self.settings_ctl}.AutoBend", f"{auto_mult}.input[1]")
-        curv_sum = cmds.createNode("sum", name=f"{self.module_name}Curvature_SUM", ss=True)
-        cmds.connectAttr(f"{self.settings_ctl}.Curvature", f"{curv_sum}.input[0]")
-        cmds.connectAttr(f"{auto_mult}.output", f"{curv_sum}.input[1]")
-        curv_clamp = cmds.createNode("clamp", name=f"{self.module_name}Curvature_CLP", ss=True)
-        cmds.setAttr(f"{curv_clamp}.maxR", 1)
-        cmds.connectAttr(f"{curv_sum}.output", f"{curv_clamp}.inputR")
-        curvature_weight = f"{curv_clamp}.outputR"
-
-        # ----- blend every existing skinning joint toward its smooth target
-        existing = list(self.upper_skinning_jnt_trn) + list(self.lower_skinning_jnt_trn)
-        for jnt, dplug in zip(existing, driver_plugs):
-
-            if dplug is None:
-                continue
-
-            current = cmds.listConnections(f"{jnt}.offsetParentMatrix", source=True, destination=False, plugs=True)
-            if not current:
-                continue
-
-            blend = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Curvature_BLM"), ss=True)
-            cmds.connectAttr(current[0], f"{blend}.inputMatrix")
-            cmds.connectAttr(dplug, f"{blend}.target[0].targetMatrix")
-            cmds.connectAttr(curvature_weight, f"{blend}.target[0].weight")
-            cmds.connectAttr(f"{blend}.outputMatrix", f"{jnt}.offsetParentMatrix", force=True)
-
-    def volume_preservation(self):
-
-        """
-        Volume preservation: squash/stretch the skinning joints' secondary axes by
-        1/sqrt(stretch) per segment, driven by a 'Volume' attribute (0 = off).
-        Upper joints follow the thigh stretch, lower joints the shin stretch.
-        """
-
-        if not cmds.attributeQuery("Volume", node=self.settings_ctl, exists=True):
-            cmds.addAttr(self.settings_ctl, longName="Volume", attributeType="float",
-                         minValue=0, maxValue=1, defaultValue=0, keyable=True)
-
-        hip = om.MVector(cmds.xform(self.leg_chain[0], q=True, ws=True, t=True))
-        knee = om.MVector(cmds.xform(self.leg_chain[1], q=True, ws=True, t=True))
-        ankle = om.MVector(cmds.xform(self.leg_chain[2], q=True, ws=True, t=True))
-
-        upper_scale = matrix_manager.segment_volume(
-            self.blend_matrices[0][0], self.blend_matrices[1][0], (knee - hip).length(),
-            f"{self.settings_ctl}.Volume", f"{self.masterwalk_ctl}.globalScale",
-            name=f"{self.module_name}Upper")
-        lower_scale = matrix_manager.segment_volume(
-            self.blend_matrices[1][0], self.blend_matrices[2][0], (ankle - knee).length(),
-            f"{self.settings_ctl}.Volume", f"{self.masterwalk_ctl}.globalScale",
-            name=f"{self.module_name}Lower")
-
-        for grp in self.upper_bendy_grps:
-            cmds.connectAttr(upper_scale, f"{grp}.scaleY")
-            cmds.connectAttr(upper_scale, f"{grp}.scaleZ")
-        for grp in self.lower_bendy_grps:
-            cmds.connectAttr(lower_scale, f"{grp}.scaleY")
-            cmds.connectAttr(lower_scale, f"{grp}.scaleZ")
-
-        

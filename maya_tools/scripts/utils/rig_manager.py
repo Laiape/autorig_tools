@@ -20,6 +20,7 @@ except:
     from PySide2 import QtWidgets, QtCore, QtGui
 
 from maya_tools.scripts.utils import guides_manager
+from maya_tools.scripts.utils import module_guides
 from maya_tools.scripts.ui import auto_rig_UI
 
 from maya_tools.scripts.utils import data_manager
@@ -30,8 +31,9 @@ reload(rig_manager)
 reload(guides_manager)
 reload(auto_rig_UI)
 reload(om)
-reload(glob)
-reload(pathlib)
+# Standard-library modules do not need hot reload. Reloading glob scans
+# sys.path again and can fail on disconnected studio/network locations.
+# Reloading pathlib invalidates Path classes already imported by other tools.
 
 
 # Body mechanics
@@ -57,7 +59,6 @@ from maya_tools.scripts.biped.autorig import jaw_module_nurbs as jaw_module_nurb
 from maya_tools.scripts.biped.autorig import cheekbone_module
 from maya_tools.scripts.biped.autorig import tongue_module
 from maya_tools.scripts.biped.autorig import teeth_module
-from maya_tools.scripts.biped.autorig import facial_correctives_module
 
 
 reload(arm_module)
@@ -388,9 +389,6 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
         print(f"[ERROR] No se pudieron cargar las guías para: {character_name}")
         return
 
-    def check(guide_name):
-        return guide_name in all_guides_data
-
     # =========================================================================
     # LOAD RIG SETTINGS
     # =========================================================================
@@ -414,13 +412,22 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
     tail_controllers    = rig_settings.get("tail_controllers", 5)
     mGear_integration   = rig_settings.get("mGear_integration", 0)
 
+    # Biped limbs share the solver setting exported with the guides.
+    # Resolve locally so switching assets never leaves a previous module active.
+    if rig_settings.get("solver_mode", 0) == 1:
+        from maya_tools.scripts.biped.autorig import arm_module_custom as selected_arm_module
+        from maya_tools.scripts.biped.autorig import leg_module_custom as selected_leg_module
+    else:
+        selected_arm_module = arm_module
+        selected_leg_module = leg_module
+
     data_manager.DataExportBiped().append_data("rig_settings",
                             {
                                 "mGear_integration" : mGear_integration,
                             })
 
     # --- Spine ---
-    if check("C_spine00_JNT"):
+    if module_guides.enabled(all_guides_data, "spine"):
         step("Building spine…")
         if rig_type == 0:
             reload(biped_spine_module)
@@ -440,18 +447,18 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
 
     # --- Legs (Solo Biped) ---
     if rig_type == 0:
-        if check("L_hip_JNT") and check("R_hip_JNT"):
+        if module_guides.enabled(all_guides_data, "leg"):
             step("Building legs…")
-            reload(leg_module)
-            leg_module.LegModule().make("L", leg_skinning_jnts)
-            leg_module.LegModule().make("R", leg_skinning_jnts)
+            reload(selected_leg_module)
+            selected_leg_module.LegModule().make("L", leg_skinning_jnts)
+            selected_leg_module.LegModule().make("R", leg_skinning_jnts)
 
     # --- Legs (Solo Quadruped) ---
     if rig_type == 1:
         front_leg_solver, back_leg_solver = resolve_leg_solvers(rig_settings, override=leg_solver)
 
         # Patas Delanteras — implementación elegida por leg_impl
-        if check("L_frontLegShoulder_JNT") and check("R_frontLegShoulder_JNT"):
+        if module_guides.enabled(all_guides_data, "front_leg"):
             step("Building front legs…")
             if leg_impl == "reference":
                 reload(quad_leg_module)
@@ -463,7 +470,7 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
                 leg_module_self.FrontLegModule().make("R", solver=front_leg_solver, skinning_joints_number=leg_skinning_jnts)
 
         # Fallback: limb genérico con el naming antiguo
-        elif check("L_frontLeg_JNT") and check("R_frontLeg_JNT"):
+        elif module_guides.enabled(all_guides_data, "front_limb"):
             step("Building front limbs…")
             reload(leg_module_self)
 
@@ -476,7 +483,7 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
             leg_module_self.FrontLegModule().make("R", skinning_joints_number=leg_skinning_jnts)
 
         # Patas Traseras — implementación elegida por leg_impl
-        if check("L_backLegHip_JNT") and check("R_backLegHip_JNT"):
+        if module_guides.enabled(all_guides_data, "back_leg"):
             step("Building back legs…")
             if leg_impl == "reference":
                 reload(quad_leg_module)
@@ -488,32 +495,32 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
                 leg_module_self.BackLegModule().make("R", solver=back_leg_solver, skinning_joints_number=leg_skinning_jnts)
 
     # --- Arms / Clavicles ---
-    if check("L_clavicle_JNT") and check("R_clavicle_JNT"):
+    if module_guides.enabled(all_guides_data, "clavicle"):
         step("Building clavicles…")
         reload(clavicle_module)
         clavicle_module.ClavicleModule().make("L")
         clavicle_module.ClavicleModule().make("R")
 
-    if check("L_shoulder_JNT") and check("R_shoulder_JNT"):
+    if module_guides.enabled(all_guides_data, "arm"):
         step("Building arms…")
-        reload(arm_module)
-        arm_module.ArmModule().make("L", arm_skinning_jnts)
-        arm_module.ArmModule().make("R", arm_skinning_jnts)
+        reload(selected_arm_module)
+        selected_arm_module.ArmModule().make("L", arm_skinning_jnts)
+        selected_arm_module.ArmModule().make("R", arm_skinning_jnts)
 
-    if check("L_thumb00_JNT") and check("R_thumb00_JNT"):
+    if module_guides.enabled(all_guides_data, "fingers"):
         step("Building fingers…")
         reload(fingers_module)
         fingers_module.FingersModule().make("L")
         fingers_module.FingersModule().make("R")
 
     # --- Tail ---
-    if check("C_tail00_JNT"):
+    if module_guides.enabled(all_guides_data, "tail"):
         step("Building tail…")
         reload(tail_module)
         tail_module.TailModule().make("C", tail_skinning_jnts, tail_controllers)
 
     # --- Neck ---
-    if check("C_neck00_JNT"):
+    if module_guides.enabled(all_guides_data, "neck"):
         step("Building neck…")
         if rig_type == 0:
             if mGear_integration:
@@ -530,19 +537,18 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
     # BUILD: FACIAL
     # =========================================================================
 
-    if check("C_jaw_JNT"):
+    if module_guides.enabled(all_guides_data, "jaw"):
         step("Building jaw…")
         reload(jaw_module_nurbs)
         jaw_module_nurbs.JawModule().make("C")
 
-    if (check("L_eyebrowMain_JNT") and check("R_eyebrowMain_JNT")) or \
-       (check("L_eyebrow_CRVShape") and check("R_eyebrow_CRVShape")):
+    if module_guides.enabled(all_guides_data, "eyebrow"):
         step("Building eyebrows…")
         reload(eyebrow_module)
         eyebrow_module.EyebrowModule().make("L")
         eyebrow_module.EyebrowModule().make("R")
 
-    if check("L_eye_JNT") and check("R_eye_JNT"):
+    if module_guides.enabled(all_guides_data, "eye"):
         step("Building eyelids…")
         reload(eyelid_module)
         build_sockets = (rig_type == 0)
@@ -552,40 +558,33 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
         eyelid_module.EyelidModule().make("L", sockets=build_sockets, surface=eyelid_surface)
         eyelid_module.EyelidModule().make("R", sockets=build_sockets, surface=eyelid_surface)
 
-    if check("C_tongue00_JNT"):
+    if module_guides.enabled(all_guides_data, "tongue"):
         step("Building tongue…")
         reload(tongue_module)
         tongue_module.TongueModule().make("C")
 
-    if check("C_upperTeeth_JNT"):
+    if module_guides.enabled(all_guides_data, "teeth"):
         step("Building teeth…")
         reload(teeth_module)
         teeth_module.TeethModule().make("C")
 
-    if check("L_ear00_JNT") and check("R_ear00_JNT"):
+    if module_guides.enabled(all_guides_data, "ear"):
         step("Building ears…")
         reload(ear_module)
         ear_module.EarModule().make("L")
         ear_module.EarModule().make("R")
 
-    if check("C_nose_JNT"):
+    if module_guides.enabled(all_guides_data, "nose"):
         step("Building nose…")
         reload(nose_module)
         nose_module.NoseModule().make("L")
         nose_module.NoseModule().make("R")
 
-    if check("L_cheekbone_JNT") and check("R_cheekbone_JNT"):
+    if module_guides.enabled(all_guides_data, "cheekbone"):
         step("Building cheekbones…")
         reload(cheekbone_module)
         cheekbone_module.CheekboneModule().make("L")
         cheekbone_module.CheekboneModule().make("R")
-
-    # Correctivas faciales por joint
-    if check("C_jaw_JNT") or check("L_eye_JNT") or \
-       check("L_eyebrowMain_JNT") or check("L_eyebrow_CRVShape"):
-        step("Building facial correctives…")
-        reload(facial_correctives_module)
-        facial_correctives_module.FacialCorrectivesModule().make()
 
     if rig_type == 0 and mGear_integration == 0:
         biped_space_switches()
