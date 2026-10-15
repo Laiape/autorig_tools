@@ -513,6 +513,8 @@ class JawModule(object):
         the correction; live upper/lower positions never enter the shared graph.
         Integrate a smoothstep activation so its derivative stays between zero
         and one. The resulting vertical response cannot reverse during a raise.
+        A quartic spatial profile leaves a broad base when corners widen;
+        a parabola retains too much rise beside the authored center contour.
         """
         count = len(frames["upper"])
         mid = count // 2
@@ -575,7 +577,8 @@ class JawModule(object):
             cmds.setAttr(bounded + ".maxR", 1)
             cmds.connectAttr(ratio, bounded + ".inputR")
             square = scalar(f"{index:02d}Square_MUL", "multiply", bounded + ".outputR", bounded + ".outputR")
-            difference = scalar(f"{index:02d}Delta_SUB", "subtract", square, weight)
+            quartic = scalar(f"{index:02d}Quartic_MUL", "multiply", square, square)
+            difference = scalar(f"{index:02d}Delta_SUB", "subtract", quartic, weight)
             delta = scalar(f"{index:02d}Blend_MUL", "multiply", difference, rises[side])
             translate = cmds.createNode("composeMatrix", name=f"{name}{index:02d}Delta_CMX", ss=True)
             cmds.connectAttr(delta, translate + ".inputTranslateY")

@@ -71,7 +71,8 @@ flowchart TD
   Architecture, current scope and phased implementation: `maya_tools/framework_plan.md`.
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
 - Jaw narrow with one shared projection NURBS and regulable corner controls;
-  native lip/ribbon behavior is described in `maya_tools/how_it_works.md`.
+  rounded-U corner falloff and native lip/ribbon regressions are described in
+  `maya_tools/how_it_works.md`.
 - Build crash fixes, optional health audit, verified binary model cache and
   per-stage timings: `maya_tools/docs/build_performance_results.md`.
 - Shared native UI hierarchy: semantic main-button colors, tool/tab icons,

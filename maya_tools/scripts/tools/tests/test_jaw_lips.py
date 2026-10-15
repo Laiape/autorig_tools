@@ -120,7 +120,8 @@ try:
  cmds.setAttr('C_jaw_CTL.rx',0)
  # Raised and widened corners form a rounded U: the middle slope is much
  # shallower than a V, while the endpoint and independent opening remain free.
- for jaw_angle in [0,20]:
+ u_profiles=[]
+ for jaw_angle in [0,10,20,30]:
   cmds.setAttr('C_jaw_CTL.rx',jaw_angle)
   for side in ['L','R']:
    cmds.setAttr(side+'_lipCorner_CTL.translate',5.2,2,0)
@@ -132,6 +133,17 @@ try:
    near_slope=abs((half[1,1]-half[0,1])/(half[1,0]-half[0,0]))
    outer_slope=abs((half[-1,1]-half[-4,1])/(half[-1,0]-half[-4,0]))
    assert near_slope<.25*outer_slope,(near_slope,outer_slope)
+   u_profiles.append({'jaw_angle':jaw_angle,'center_fraction':float((half[2,1]-half[0,1])/height),
+                      'slope_ratio':float(near_slope/outer_slope)})
+  # Preserve each primary's independent motion while the U correction is active.
+  posed={part:lip_positions(part) for part in ['upper','lower']}
+  for part,other in [('upper','lower'),('lower','upper')]:
+   for value in [-1.,1.]:
+    cmds.setAttr('C_'+part+'Lip_CTL.ty',value)
+    assert np.allclose(lip_positions(other),posed[other],atol=1e-5),(jaw_angle,part,value)
+    assert np.linalg.norm(lip_positions(part)[12]-posed[part][12])>.01
+   cmds.setAttr('C_'+part+'Lip_CTL.ty',0)
+   assert np.allclose(lip_positions(part),posed[part],atol=1e-5)
   for side in ['L','R']:
    cmds.setAttr(side+'_lipCorner_CTL.translate',0,0,0)
  cmds.setAttr('C_jaw_CTL.rx',0)
@@ -336,7 +348,8 @@ try:
   assert np.isclose(cmds.getAttr('C_lowerLipCorner%02dBlend_BMX.target[0].rotateWeight'%k),expected)
  with open(work/'new_build_report.json','w') as f:json.dump(records,f,indent=2)
  cmds.setAttr('C_jaw_CTL.rx',0);cmds.file(rename=str(work/'new_lips_build.mb'));cmds.file(save=True,type='mayaBinary',force=True)
- print('PASS jaw/lips build: corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure',flush=True)
+ print('PASS jaw/lips build: rounded U, independent primaries, corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure',flush=True)
+ print('U_PROFILE '+json.dumps(u_profiles),flush=True)
  print(json.dumps([{'angle':r['angle'],'width':r['width'],'height':r['height'],'quarter_gap':r['gap'][6],'center_gap':r['gap'][12]} for r in records]),flush=True)
 finally:
  maya.standalone.uninitialize()

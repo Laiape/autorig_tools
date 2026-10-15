@@ -370,9 +370,23 @@ This takes effect on the next rebuild; existing saved scenes are not rewritten.
 Regression: `scripts/tools/tests/test_jaw_single_surface.py`, 49 poses covering
 narrow, jaw opening, corner translation/rotation and sticky lips. Comparison to
 the former two-surface module has maximum world-matrix component error 2.39e-7;
-native binary reopen error is zero. The separate composite `test_jaw_lips.py`
-currently fails its rounded-U assertion at line 131 on both module versions;
-this surface cleanup does not change that pre-existing profile issue.
+native binary reopen error is zero. These comparison numbers describe the
+projection-surface cleanup before the subsequent rounded-U profile adjustment.
+
+Raised corners use a quartic spatial falloff in the display and output frames.
+This gives the U a broader base than the previous quadratic profile, which left
+too much rise next to the authored center contour. The existing integrated
+smoothstep activation preserves continuous, monotone vertical motion; each lip's
+own deformation remains independent. No extra surface or runtime Python is used.
+`test_jaw_lips.py` checks the U on both sides at jaw angles 0, 10, 20 and 30,
+including independent primary motion with raised/widened corners. The original
+center-height and slope thresholds are unchanged. `test_lip_u_response.py`
+checks monotonicity, continuous transition slopes and identical retracing.
+Native Edward-guide validation (2026-10-15): all three jaw/lip regressions pass.
+The U's maximum near-center height fraction is 0.07321 (limit 0.08), and its
+maximum near/outer slope ratio is 0.12526 (limit 0.25). The former quadratic
+profile reached 0.09681 at the closed jaw and failed the unchanged height limit.
+The 49-pose single-surface regression still reopens with zero matrix error.
 
 ### Biped spine controls and foot blending
 
