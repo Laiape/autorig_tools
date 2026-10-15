@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "tests": [
+    {
+      "test": "test_rig_validation.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_rig_validation.py.log.gz"
+    },
+    {
+      "test": "test_wrinkle_skin_roundtrip.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_wrinkle_skin_roundtrip.py.log.gz"
+    },
+    {
+      "test": "test_rig_performance.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_rig_performance.py.log.gz"
+    },
+    {
+      "test": "test_spine_chest_stretch.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_spine_chest_stretch.py.log.gz"
+    },
+    {
+      "test": "test_neck_stretch_squash.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_neck_stretch_squash.py.log.gz"
+    },
+    {
+      "test": "test_rig_package.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_rig_package.py.log.gz"
+    },
+    {
+      "test": "test_regional_wrinkle_workflow.py",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_regional_wrinkle_workflow.py.log.gz"
+    },
+    {
+      "test": "test_build_pipeline.py",
+      "cases": 10,
+      "success": true,
+      "log": "test_build_pipeline.log.gz"
+    }
+  ]
+}

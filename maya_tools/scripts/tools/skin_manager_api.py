@@ -1153,6 +1153,11 @@ class SkinManager(object):
         try:
             with open(self.json_path, 'r') as f:
                 full_data = json.load(f)
+            stat = os.stat(self.json_path)
+            self._wrinkle_import_snapshot = (
+                os.path.abspath(self.json_path), stat.st_mtime_ns, stat.st_size,
+                full_data.get(self.WRINKLES_KEY, []),
+                full_data.get(self.SCENE_DEFORMERS_KEY, {}).get('detail_modes', []))
         except Exception as e:
             om.MGlobal.displayError(f"Error al leer el JSON: {e}")
             return
@@ -1357,13 +1362,20 @@ class SkinManager(object):
         path = in_path or self.get_latest_version_path()
         if not os.path.exists(path):
             return []
-        with open(path, "r") as stream:
-            full_data = json.load(stream)
-            records = full_data.get(self.WRINKLES_KEY, [])
+        stat = os.stat(path)
+        cached = getattr(self, '_wrinkle_import_snapshot', None)
+        identity = (os.path.abspath(path), stat.st_mtime_ns, stat.st_size)
+        if cached and cached[:3] == identity:
+            records, details = cached[3:]
+        else:
+            with open(path, "r") as stream:
+                full_data = json.load(stream)
+                records = full_data.get(self.WRINKLES_KEY, [])
+                details = full_data.get(self.SCENE_DEFORMERS_KEY, {}).get("detail_modes", [])
         from maya_tools.scripts.tools import bifrost_wrinkles
         result = bifrost_wrinkles.import_setups(records, replace_existing)
         from maya_tools.scripts.tools import rig_performance
-        rig_performance.restore_detail_modes(full_data.get(self.SCENE_DEFORMERS_KEY, {}).get("detail_modes", []))
+        rig_performance.restore_detail_modes(details)
         return result
 
     def find_mesh_in_scene(self, name):

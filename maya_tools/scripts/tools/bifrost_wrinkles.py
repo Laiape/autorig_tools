@@ -235,7 +235,9 @@ def build(mesh=None, prefix="EdwardWrinkles", patterns=None, hide_source=False,
         stored = {r: [struct.unpack('f', struct.pack('f', v + 2.))[0] - 2.
                       for v in values] for r, values in patterns.items()}
         regional = wrinkle_regions_core.plan(stored, neighbor_arrays)
-    cmds.loadPlugin("bifrostGraph", quiet=True)
+    from maya_tools.scripts.utils.build_timing import measure
+    with measure('Load Bifrost plugin'):
+        cmds.loadPlugin("bifrostGraph", quiet=True)
     cmds.undoInfo(openChunk=True, chunkName="Bifrost cartoon wrinkles")
     chunk_open = True
     group = converter = None
@@ -408,7 +410,8 @@ def build(mesh=None, prefix="EdwardWrinkles", patterns=None, hide_source=False,
             cmds.vnnNode(graph, ".output", createInputPort=("WrinkledFace", "Object"))
             g.connect(output_normals + ".out_mesh", ".WrinkledFace")
         finally:
-            cmds.vnnChangeBracket(graph, close=True)
+            with measure('Compile wrinkle graph'):
+                cmds.vnnChangeBracket(graph, close=True)
         converter = cmds.createNode("bifrostGeoToMaya", name=prefix + "_ToMaya")
         cmds.connectAttr(graph + ".WrinkledFace", converter + ".bifrostGeo")
         source_transform = cmds.listRelatives(shape, parent=True, fullPath=True)[0]

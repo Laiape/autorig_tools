@@ -134,7 +134,12 @@ def _session():
 
 
 def audit_deformers(meshes):
-    """Ask Maya about GPU eligibility; flag graph patterns without guessing FPS."""
+    """Inspect history without forcing native GPU partition introspection.
+
+    deformerEvaluator(nodeStatus/message) can crash interactive Maya while a
+    newly built graph is dirty. Automatic audits must never run those queries.
+    Actual compute and GPU activity belong to an explicit Profiler capture.
+    """
     result = []
     for mesh in meshes:
         history = cmds.listHistory(mesh) or []
@@ -145,14 +150,8 @@ def audit_deformers(meshes):
             for source in cmds.listConnections(node + ".inputTarget", source=True, destination=False, plugs=True) or []:
                 if cmds.nodeType(source.split(".")[0]) == "mesh":
                     item["live_targets"].append({"blendShape": node, "source": source})
-        if cmds.about(batch=True):
-            item["gpu"] = {"status": "unavailable", "reason": "Viewport GPU evaluation is not measured in batch Maya."}
-        else:
-            try:
-                item["gpu"] = {"node_status": cmds.deformerEvaluator(mesh, query=True, nodeStatus=True, asText=True),
-                               "messages": cmds.deformerEvaluator(mesh, query=True, message=True)}
-            except RuntimeError as exc:
-                item["gpu"] = {"status": "unavailable", "reason": str(exc)}
+        item["gpu"] = {"status": "not_queried", "reason":
+                       "Automatic audits do not query native GPU partitions. Use a separate Profiler capture."}
         result.append(item)
     return result
 

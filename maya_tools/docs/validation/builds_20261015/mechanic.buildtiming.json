@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "asset": "mechanic",
+  "status": "complete",
+  "phases": [
+    {
+      "name": "Creating basic structure...",
+      "seconds": 8.128072999999858
+    },
+    {
+      "name": "Building rig modules...",
+      "seconds": 0.49932429999989836
+    },
+    {
+      "name": "Loading rig settings\u2026",
+      "seconds": 0.0037168000003475754
+    },
+    {
+      "name": "Building neck\u2026",
+      "seconds": 0.29736949999960416
+    },
+    {
+      "name": "Building jaw\u2026",
+      "seconds": 2.1727131000002373
+    },
+    {
+      "name": "Building eyebrows\u2026",
+      "seconds": 1.1215922999999748
+    },
+    {
+      "name": "Building eyelids\u2026",
+      "seconds": 4.374494199999845
+    },
+    {
+      "name": "Building tongue\u2026",
+      "seconds": 0.3355869000001803
+    },
+    {
+      "name": "Building teeth\u2026",
+      "seconds": 0.4419121000000814
+    },
+    {
+      "name": "Building ears\u2026",
+      "seconds": 0.6475973999999951
+    },
+    {
+      "name": "Building nose\u2026",
+      "seconds": 0.7134992000001148
+    },
+    {
+      "name": "Building cheekbones\u2026",
+      "seconds": 0.825822899999821
+    },
+    {
+      "name": "Labeling joints...",
+      "seconds": 0.10739030000013372
+    },
+    {
+      "name": "Hiding utility nodes...",
+      "seconds": 0.2682513999998264
+    },
+    {
+      "name": "Setting inherit transforms...",
+      "seconds": 0.028568300000188174
+    },
+    {
+      "name": "Importing skin weights...",
+      "seconds": 2.7743351999997685
+    },
+    {
+      "name": "Localizing corrective skin...",
+      "seconds": 0.012477600000238454
+    },
+    {
+      "name": "Importing corrective blendshapes...",
+      "seconds": 0.014659299999948416
+    },
+    {
+      "name": "Importing facial wrinkles...",
+      "seconds": 0.050543500000003405
+    },
+    {
+      "name": "Cleaning up node graph...",
+      "seconds": 0.5248498999999356
+    },
+    {
+      "name": "Restoring Maya state...",
+      "seconds": 0.29422489999979007
+    }
+  ],
+  "calls": [
+    {
+      "name": "Check model cache",
+      "seconds": 0.03763230000004114
+    },
+    {
+      "name": "Open source model",
+      "seconds": 7.538590800000293
+    },
+    {
+      "name": "Prepare binary model cache",
+      "seconds": 0.001662799999849085
+    },
+    {
+      "name": "Open model scene",
+      "seconds": 7.608987699999943
+    }
+  ],
+  "current_phase": "Complete",
+  "elapsed_seconds": 23.688687599999867,
+  "total_seconds": 23.690711600000213
+}

@@ -1,0 +1,75 @@
+{
+  "success": true,
+  "result": {
+    "success": true,
+    "results": [
+      {
+        "asset": "Nini",
+        "build": {
+          "asset": "Nini",
+          "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\validation\\20261015T062341269903Z.buildtiming.json"
+        },
+        "checks": [
+          {
+            "meshes": 59,
+            "gpu_queries": [
+              "not_queried"
+            ]
+          },
+          {
+            "meshes": 59,
+            "gpu_queries": [
+              "not_queried"
+            ]
+          },
+          {
+            "meshes": 59,
+            "gpu_queries": [
+              "not_queried"
+            ]
+          }
+        ],
+        "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\.git\\gui_build_validation\\Nini_build_fixed.mb",
+        "mode": [
+          "parallel",
+          "Evaluation graph is ready."
+        ],
+        "success": true
+      },
+      {
+        "asset": "Edward",
+        "build": {
+          "asset": "Edward",
+          "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\validation\\20261015T062357282059Z.buildtiming.json"
+        },
+        "checks": [
+          {
+            "meshes": 60,
+            "gpu_queries": [
+              "not_queried"
+            ]
+          },
+          {
+            "meshes": 60,
+            "gpu_queries": [
+              "not_queried"
+            ]
+          },
+          {
+            "meshes": 60,
+            "gpu_queries": [
+              "not_queried"
+            ]
+          }
+        ],
+        "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\.git\\gui_build_validation\\Edward_build_fixed.mb",
+        "mode": [
+          "parallel",
+          "Evaluation graph is ready."
+        ],
+        "success": true
+      }
+    ],
+    "pid": 31476
+  }
+}

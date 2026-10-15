@@ -70,6 +70,8 @@ flowchart TD
   Menu and panel share Rigging subsections and the Deformers category.
   Architecture, current scope and phased implementation: `maya_tools/framework_plan.md`.
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
+- Build crash fixes, optional health audit, verified binary model cache and
+  per-stage timings: `maya_tools/docs/build_performance_results.md`.
 - Shared native UI hierarchy: semantic main-button colors, tool/tab icons,
   preserved vendor controls and live restyling through Reload UI. Asset switches
   retire obsolete version tabs and tolerate expired Qt style proxies.

@@ -45,3 +45,6 @@ Based on Guido Gonzalez's 2026 rig study, sections 3-5, 7, 10 and 12.
   reopen and SKC/preset round-trips before accepting a structural replacement.
 - Do not transfer the study's speedups, 16.4 ms fitted intercept, GPU thresholds
   or subsystem costs to Edward without a controlled measurement.
+- Profile build latency separately from animation. Keep optional health audits
+  outside normal builds; never query native GPU partitions in automatic audits.
+- Verify model-cache invalidation, file hashes and source equivalence.

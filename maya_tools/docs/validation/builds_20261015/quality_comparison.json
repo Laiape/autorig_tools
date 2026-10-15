@@ -1,0 +1,220 @@
+{
+  "success": true,
+  "max_error": 0.0,
+  "poses": 10,
+  "meshes": 3,
+  "missing_channels": [],
+  "comparison": [
+    {
+      "pose": "neutral",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "neutral",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "neutral",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "shoulder_raise_twist",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "shoulder_raise_twist",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "shoulder_raise_twist",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "shoulder_front_elbow",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "shoulder_front_elbow",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "shoulder_front_elbow",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "hip_flex_twist",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "hip_flex_twist",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "hip_flex_twist",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "hip_abduction_knee",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "hip_abduction_knee",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "hip_abduction_knee",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "jaw_open_smile",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "jaw_open_smile",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "jaw_open_smile",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "jaw_half_smile",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "jaw_half_smile",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "jaw_half_smile",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "lip_up_jaw",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "lip_up_jaw",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "lip_up_jaw",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "brow_frown",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "brow_frown",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "brow_frown",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "blink_side_look",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "blink_side_look",
+      "mesh": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    },
+    {
+      "pose": "blink_side_look",
+      "mesh": "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base",
+      "status": "compared",
+      "rms": 0.0,
+      "max": 0.0
+    }
+  ],
+  "report_sha256": "e15ac69e4de1ffacba7f8c98d761781c5511ae1c319d3a9849b60efc25ae50e3"
+}

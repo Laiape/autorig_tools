@@ -187,7 +187,7 @@ class RigProgressDialog(QtWidgets.QDialog):
         self._step_lbl.setText(label.upper())
         self._pct_lbl.setText(f"{int(pct)}%")
         self._bar.setValue(int(pct))
-        QtWidgets.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
 
     def set_step(self, label, current, total):
         pct = int(current / max(total, 1) * 100)
@@ -203,5 +203,12 @@ class RigProgressDialog(QtWidgets.QDialog):
         t = f"{m}M {s:.1f}S" if m else f"{s:.1f}S"
         self._time_lbl.setText(t)
         self._close_btn.setVisible(True)
-        QtWidgets.QApplication.processEvents()
+        QtWidgets.QApplication.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)
         QtCore.QTimer.singleShot(3000, self.hide)
+
+    def fail(self, error):
+        """Leave a failed build visible instead of reporting successful completion."""
+        self._step_lbl.setText('BUILD FAILED.')
+        self._step_lbl.setToolTip(str(error))
+        self._close_btn.setVisible(True)
+        QtWidgets.QApplication.processEvents(QtCore.QEventLoop.ExcludeUserInputEvents)

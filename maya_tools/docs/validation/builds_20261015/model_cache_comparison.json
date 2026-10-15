@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "result": [
+    {
+      "ascii_seconds": 6.1385708999996496,
+      "binary_seconds": 1.2050912999998218,
+      "export_seconds": 3.4323076999999103,
+      "same_geometry_and_material_membership": true,
+      "meshes": 59,
+      "binary_bytes": 153764584
+    },
+    {
+      "ascii_seconds": 4.845664100000249,
+      "binary_seconds": 1.0895227000000887,
+      "export_seconds": 3.234470599999895,
+      "same_geometry_and_material_membership": true,
+      "meshes": 59,
+      "binary_bytes": 153764568
+    }
+  ]
+}

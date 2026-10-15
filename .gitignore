@@ -47,3 +47,5 @@ htmlcov/
 *.log
 *.tmp
 *.bak
+# Derived binary model copies are local, content-checked caches.
+maya_tools/cache/models/

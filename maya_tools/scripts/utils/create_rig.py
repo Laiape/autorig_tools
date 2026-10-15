@@ -35,97 +35,88 @@ class AutoRig(object):
     AutoRig class to create a custom rig for a character in Maya.
     """
 
-    def build(self, leg_impl="self", leg_solver=None):
-
-        """
-        Initialize the AutoRig class, setting up the basic structure and connecting UI elements.
-        leg_impl: "self" | "reference" — implementación de pata de cuadrúpedo.
-        leg_solver: None (usa el de los rig settings) o un preset para forzarlo.
-        """
+    def build(self, leg_impl="self", leg_solver=None, validate=False):
+        """Build all character stages under one guarded construction session."""
         from maya_tools.scripts.ui import rig_progress
+        from maya_tools.scripts.utils.build_timing import BuildTiming
         reload(rig_progress)
-
-        start = time.time()
+        start = time.perf_counter()
         char_name = rig_manager.get_character_name_from_build() or "Asset"
+        validation_dir = rig_manager.asset_path(char_name, "validation")
+        with BuildTiming(char_name, validation_dir) as timings:
+            settings = rig_manager.build_rig_from_data(char_name) or {}
+            progress = rig_progress.RigProgressDialog(char_name, mgear=bool(settings.get("mGear_integration", 0)))
+            progress.show()
+            session = self._begin_fast_session()
+            success = False
 
-        # Read mGear setting early so the icon shows from the start
-        mgear = False
-        try:
-            settings = rig_manager.build_rig_from_data(char_name)
-            if settings:
-                mgear = bool(settings.get("mGear_integration", 0))
-        except Exception:
-            pass
-
-        progress = rig_progress.RigProgressDialog(char_name, mgear=mgear)
-        progress.show()
-
-        session = self._begin_fast_session()
-
-        try:
-            progress._set_pct("Creating basic structure…", 2)
-            data_manager.DataExportBiped().new_build()
-            self.basic_structure()
-
-            def on_module_step(label, current, total):
-                pct = 5 + int(current / max(total, 1) * 75)
+            def step(label, pct):
+                timings.mark(label)
                 progress._set_pct(label, pct)
 
-            progress._set_pct("Building rig modules…", 5)
-            self.make_rig(on_step=on_module_step, leg_impl=leg_impl, leg_solver=leg_solver)
-
-            progress._set_pct("Labeling joints…", 82)
-            self.label_joints()
-
-            progress._set_pct("Hiding utility nodes…", 85)
-            self.hide_connections()
-
-            progress._set_pct("Setting inherit transforms…", 88)
-            self.inherit_transforms()
-            self._end_fast_session(session)
-            session = None
-
-            progress._set_pct("Importing skin weights…", 91)
-            self.import_weights()
-
-            progress._set_pct("Localizing corrective skin…", 95)
-            self.localize_correctives()
-
-            # progress._set_pct("Applying delta mush…", 95)
-            # self.apply_delta_mush()
-
-            progress._set_pct("Importing corrective blendshapes…", 96)
-            self.import_corrective_blendshapes()
-
-            progress._set_pct("Importing facial wrinkles...", 97)
-            skin_manager_api.SkinManager().import_wrinkles()
-
-            progress._set_pct("Cleaning up node graph…", 98)
-            self.hide_all_utility_nodes()
-
-            progress._set_pct("Validating built rig...", 99)
             try:
+                step("Creating basic structure...", 2)
+                data_manager.DataExportBiped().new_build()
+                self.basic_structure()
+                roots = [n for n in cmds.ls(type='transform', long=True) or []
+                         if n.rsplit('|', 1)[-1].casefold() == char_name.casefold()]
+                character_root = roots[0] if len(roots) == 1 else char_name
+                # Opening a model can restore scene preferences. Reassert the
+                # owned construction state before creating thousands of nodes.
+                cmds.evaluationManager(mode="off")
+                cmds.undoInfo(stateWithoutFlush=False)
+                cmds.refresh(suspend=True)
+
+                def on_module_step(label, current, total):
+                    step(label, 5 + int(current / max(total, 1) * 75))
+
+                step("Building rig modules...", 5)
+                self.make_rig(on_step=on_module_step, leg_impl=leg_impl, leg_solver=leg_solver)
+                step("Labeling joints...", 82)
+                self.label_joints()
+                step("Hiding utility nodes...", 85)
+                self.hide_connections()
+                step("Setting inherit transforms...", 88)
+                self.inherit_transforms()
+                step("Importing skin weights...", 91)
+                skinner = self.import_weights()
+                step("Localizing corrective skin...", 95)
+                self.localize_correctives()
+                step("Importing corrective blendshapes...", 96)
+                self.import_corrective_blendshapes()
+                step("Importing facial wrinkles...", 97)
+                skinner.import_wrinkles()
+                step("Cleaning up node graph...", 98)
+                self.hide_all_utility_nodes()
+                # Saved authored bindings are rig data, independent of the optional audit.
                 import os
-                from datetime import datetime, timezone
-                from maya_tools.scripts.tools import rig_validation
-                from maya_tools.scripts.tools import rig_roles
                 import json
+                from maya_tools.scripts.tools import rig_roles
                 role_file = os.path.join(rig_manager.asset_path(char_name, 'rig_data'), 'roles.roles.json')
                 if os.path.isfile(role_file):
+                    step("Restoring saved rig bindings...", 99)
                     with open(role_file, encoding='utf-8') as stream:
-                        rig_roles.restore(char_name, json.load(stream))
-                rig_roles.discover(char_name)
-                validation_dir = rig_manager.asset_path(char_name, "validation")
-                stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-                rig_validation.write_build_health(char_name, os.path.join(validation_dir, stamp + ".righealth.json"))
+                        rig_roles.restore(character_root, json.load(stream))
+                if validate:
+                    step("Validating built rig...", 99)
+                    from datetime import datetime, timezone
+                    from maya_tools.scripts.tools import rig_validation
+                    rig_roles.discover(character_root)
+                    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+                    rig_validation.write_build_health(character_root, os.path.join(validation_dir, stamp + ".righealth.json"))
+                success = True
             except Exception as exc:
-                om.MGlobal.displayWarning("[Rig validation] Could not write build audit: " + str(exc))
-
-        finally:
-            self._end_fast_session(session)
-            elapsed = time.time() - start
-            progress.finish(elapsed)
-        # self.proxy_locator()
+                progress.fail(exc)
+                raise
+            finally:
+                timings.mark("Restoring Maya state...")
+                self._end_fast_session(session)
+                if success:
+                    progress.finish(time.perf_counter() - start)
+                    om.MGlobal.displayInfo("[AutoRig build] Timing report: " + str(timings.path))
+                    cmds.inViewMessage(amg='Completed <hl>' + char_name.upper() + ' RIG</hl> build.',
+                                       pos='midCenter', fade=True, alpha=0.8)
+        return {'asset': char_name, 'timing_report': str(timings.path)}
 
     def _begin_fast_session(self):
 
@@ -151,6 +142,9 @@ class AutoRig(object):
         except Exception:
             state["undo"] = None
         try:
+            state["script_editor_flags"] = {
+                flag: cmds.scriptEditorInfo(query=True, **{flag: True})
+                for flag in ("suppressInfo", "suppressWarnings", "suppressResults")}
             cmds.scriptEditorInfo(e=True, suppressInfo=True, suppressWarnings=True, suppressResults=True)
             state["script_editor"] = True
         except Exception:
@@ -167,14 +161,9 @@ class AutoRig(object):
         """Restaura el estado guardado por _begin_fast_session (siempre, en finally)."""
         if not state:
             return
-        if state.get("refresh"):
-            try:
-                cmds.refresh(suspend=False)
-            except Exception:
-                pass
         if state.get("script_editor"):
             try:
-                cmds.scriptEditorInfo(e=True, suppressInfo=False, suppressWarnings=False, suppressResults=False)
+                cmds.scriptEditorInfo(e=True, **state["script_editor_flags"])
             except Exception:
                 pass
         if state.get("undo") is not None:
@@ -190,6 +179,11 @@ class AutoRig(object):
         if state.get("eval_mode"):
             try:
                 cmds.evaluationManager(mode=state["eval_mode"])
+            except Exception:
+                pass
+        if state.get("refresh"):
+            try:
+                cmds.refresh(suspend=False)
             except Exception:
                 pass
         try:
@@ -211,19 +205,13 @@ class AutoRig(object):
         Create the rig for the character, including joints, skinning, and control curves.
         """
 
-        # Rig modules use lookdevKit's floatConstant nodes. A clean Maya
-        # session must load the dependency before creating the module graphs.
-        if not cmds.pluginInfo("lookdevKit", query=True, loaded=True):
-            cmds.loadPlugin("lookdevKit", quiet=True)
+        # Every rig family must work without relying on GUI autoload order.
+        # Missing matrixNodes silently creates unknown inverseMatrix nodes.
+        for plugin in ("matrixNodes", "quatNodes", "lookdevKit"):
+            if not cmds.pluginInfo(plugin, query=True, loaded=True):
+                cmds.loadPlugin(plugin, quiet=True)
         char_name = rig_manager.get_character_name_from_build()
         rig_manager.build_rig(char_name, on_step=on_step, leg_impl=leg_impl, leg_solver=leg_solver)
-
-        cmds.inViewMessage(
-        amg=f'Completed <hl>{char_name.upper()} RIG</hl> build.',
-        pos='midCenter',
-        fade=True,
-        alpha=0.8)
-    
 
     def label_joints(self):
 
@@ -387,6 +375,7 @@ class AutoRig(object):
         """
         skinner = skin_manager_api.SkinManager()
         skinner.import_skins(import_wrinkles=False)
+        return skinner
 
         # self._auto_transfer_from_source()
 

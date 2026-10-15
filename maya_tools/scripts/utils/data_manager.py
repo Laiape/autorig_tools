@@ -14,7 +14,8 @@ class DataExportBiped:
         """
         complete_path = os.path.realpath(__file__)
         relative_path = complete_path.split("\scripts")[0]
-        final_path = os.path.join(relative_path, "cache")   
+        final_path = os.environ.get("AUTORIG_BUILD_CACHE_DIR") or os.path.join(relative_path, "cache")
+        os.makedirs(final_path, exist_ok=True)
         self.build_path = os.path.join(final_path, "biped.cache")
 
 
@@ -94,5 +95,6 @@ class DataExportQuadruped(DataExportBiped):
         super().__init__()
         complete_path = os.path.realpath(__file__)
         relative_path = complete_path.split("\scripts")[0]
-        final_path = os.path.join(relative_path, "cache")   
+        final_path = os.environ.get("AUTORIG_BUILD_CACHE_DIR") or os.path.join(relative_path, "cache")
+        os.makedirs(final_path, exist_ok=True)
         self.build_path = os.path.join(final_path, "quadruped.cache")

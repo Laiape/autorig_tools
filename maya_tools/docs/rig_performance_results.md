@@ -3,6 +3,9 @@
 Parent: `maya_tools/how_it_works.md`. Research and requirements:
 `maya_tools/docs/rig_performance_plan.md`.
 
+Build startup and crash corrections, optional audit behavior, model cache and
+all-character build timings are documented in `maya_tools/docs/build_performance_results.md`.
+
 ## Delivered behavior
 
 Edward's working scene is `maya_tools/assets/Edward/scenes/Edward_working_v002.mb`.

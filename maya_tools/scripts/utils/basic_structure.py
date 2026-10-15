@@ -18,6 +18,11 @@ def _suspend_eval():
     estado previo. En headless (sin viewport) el suspend es no-op, así que es
     seguro llamarlo siempre.
     """
+    from maya_tools.scripts.utils import build_timing
+    if build_timing.active() is not None:
+        # The outer build owns refresh suspension until every deformer is ready.
+        # A nested helper must not resume it halfway through scene construction.
+        return lambda: None
     prev = {}
     try:
         prev["em"] = (cmds.evaluationManager(q=True, mode=True) or ["parallel"])[0]
@@ -79,8 +84,11 @@ def _parent_model_under_final(main_xf, geo_grp, final_geo, character_name):
     for c in (cmds.listRelatives(main_xf, children=True, type="transform", fullPath=True) or []):
         if not is_rig_or_system(c):
             geo_roots.append(c)
+    main_path = (cmds.ls(main_xf, long=True) or [main_xf])[0]
     for a in (cmds.ls(assemblies=True, transforms=True, long=True) or []):
-        if short(a) == short(main_xf):
+        if a == main_path or main_path.startswith(a+'|'):
+            # Some source models nest their character root in a model group.
+            # That ancestor cannot be parented below the character's FINAL group.
             continue
         if not is_rig_or_system(a):
             geo_roots.append(a)

@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "asset": "moana",
+  "status": "complete",
+  "phases": [
+    {
+      "name": "Creating basic structure...",
+      "seconds": 7.395888799999739
+    },
+    {
+      "name": "Building rig modules...",
+      "seconds": 0.5028283999999985
+    },
+    {
+      "name": "Loading rig settings\u2026",
+      "seconds": 0.007818300000053569
+    },
+    {
+      "name": "Building spine\u2026",
+      "seconds": 0.7727723000002698
+    },
+    {
+      "name": "Building legs\u2026",
+      "seconds": 1.7755501999999979
+    },
+    {
+      "name": "Building clavicles\u2026",
+      "seconds": 0.28257499999972424
+    },
+    {
+      "name": "Building arms\u2026",
+      "seconds": 1.2422233000002052
+    },
+    {
+      "name": "Building fingers\u2026",
+      "seconds": 1.3406801000000996
+    },
+    {
+      "name": "Building neck\u2026",
+      "seconds": 0.2047709999997096
+    },
+    {
+      "name": "Building jaw\u2026",
+      "seconds": 2.265455799999927
+    },
+    {
+      "name": "Building eyebrows\u2026",
+      "seconds": 0.8227820000001884
+    },
+    {
+      "name": "Building eyelids\u2026",
+      "seconds": 6.782391700000062
+    },
+    {
+      "name": "Building tongue\u2026",
+      "seconds": 0.48684830000001966
+    },
+    {
+      "name": "Building teeth\u2026",
+      "seconds": 0.32692539999970904
+    },
+    {
+      "name": "Building ears\u2026",
+      "seconds": 0.48305359999994835
+    },
+    {
+      "name": "Building nose\u2026",
+      "seconds": 0.32053300000006857
+    },
+    {
+      "name": "Building cheekbones\u2026",
+      "seconds": 0.9413211999999476
+    },
+    {
+      "name": "Labeling joints...",
+      "seconds": 0.04455500000040047
+    },
+    {
+      "name": "Hiding utility nodes...",
+      "seconds": 0.08382689999962167
+    },
+    {
+      "name": "Setting inherit transforms...",
+      "seconds": 0.009090700000342622
+    },
+    {
+      "name": "Importing skin weights...",
+      "seconds": 0.29043759999967733
+    },
+    {
+      "name": "Localizing corrective skin...",
+      "seconds": 0.006286799999998038
+    },
+    {
+      "name": "Importing corrective blendshapes...",
+      "seconds": 0.021464100000230246
+    },
+    {
+      "name": "Importing facial wrinkles...",
+      "seconds": 0.03830310000012105
+    },
+    {
+      "name": "Cleaning up node graph...",
+      "seconds": 0.44527289999996356
+    },
+    {
+      "name": "Restoring Maya state...",
+      "seconds": 0.0530559999997422
+    }
+  ],
+  "calls": [
+    {
+      "name": "Check model cache",
+      "seconds": 0.07808849999992162
+    },
+    {
+      "name": "Open source model",
+      "seconds": 7.144775299999765
+    },
+    {
+      "name": "Prepare binary model cache",
+      "seconds": 0.023422199999913573
+    },
+    {
+      "name": "Open model scene",
+      "seconds": 7.270463899999868
+    }
+  ],
+  "current_phase": "Complete",
+  "elapsed_seconds": 27.02110589999984,
+  "total_seconds": 27.02240619999975
+}

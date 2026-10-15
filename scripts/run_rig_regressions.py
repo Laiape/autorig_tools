@@ -7,6 +7,7 @@ import subprocess
 import time
 
 TESTS = (
+    'test_build_pipeline.py',
     'test_rig_performance.py', 'test_bifrost_wrinkles.py', 'test_wrinkle_regions_native.py',
     'test_rig_compute_bypass.py', 'test_wrinkle_skin_roundtrip.py', 'test_wrinkle_presets.py',
     'test_wrinkle_regions_ui.py', 'test_rig_validation.py', 'test_facial_contact_validation.py',

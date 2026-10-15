@@ -589,6 +589,42 @@ Edward's low-head candidate is saved separately as
 error colors and persisted metrics. The jaw trial reached a 2.330226 cm
 held-out maximum error, so it is not used to replace the approved stack.
 
+### Build startup and diagnostics
+
+CREATE RIG uses one guarded DG/refresh/undo construction session through skin,
+correctives and wrinkles, restoring Maya state in finally. Nested geometry
+organization must not resume the viewport mid-build. Required matrixNodes,
+quatNodes and lookdevKit dependencies load explicitly for every rig family.
+User input is excluded while updating build progress; recursive builds are rejected.
+Failures remain failures in the progress dialog and timing receipt.
+
+The ordinary build does not run the optional history/role health audit.
+`AutoRig().build(validate=True)` requests it explicitly. Test Rig's existing
+Build comparison and validation profiles remain the quality-review entry points.
+Automatic and explicit CPU audits never call native deformerEvaluator per-node
+GPU introspection; those queries caused interactive crashes on dirty build graphs.
+Use separate native Profiler captures to inspect actual GPU work.
+
+Model loading opens just the selected model, without an empty-scene reset first.
+ASCII models can use a derived local binary copy in `maya_tools/cache/models`.
+Source content, Maya API and binary hashes are checked before use. A changed source
+regenerates the copy; corrupt copies are rejected. Failed conversion retains the
+source scene. Source models and their version selection are unchanged. First-time
+conversion and first-time renderer/plugin loading are separate costs in timings.
+The cache is local and ignored by Git; it is rebuilt once on another computer.
+
+Each build writes `assets/<character>/validation/<stamp>.buildtiming.json`, with
+phase durations, model open/cache preparation, Bifrost load and graph compilation.
+These are build wall times, not playback FPS. Skin and wrinkle stages share the
+same imported snapshot, avoiding a second full SKC parse; changed files invalidate it.
+`scripts/benchmark_rig_builds.py` runs every asset with model/guides/build inputs in
+an isolated process, with private build caches. `--assets` selects a subset and
+`--validate` includes the optional health audit. Build completion is a smoke check,
+not approval of artistic deformation or completeness of legacy asset data.
+Regression: `scripts/tools/tests/test_build_pipeline.py`.
+Measured results and known legacy input limitations:
+`docs/build_performance_results.md`.
+
 ### Portable wrinkle regions
 
 Correctives > Wrinkle Regions / Presets edits the existing Bifrost wrinkle
@@ -752,8 +788,8 @@ unambiguous namespace-free node hints. For different node names, Python
 `rig_roles.restore(root, snapshot, node_map={semantic_key: destination_node})`
 provides the explicit mapping. Save rebuild bindings as
 `maya_tools/assets/<character>/rig_data/roles.roles.json`; CREATE RIG restores
-that file after deformers/wrinkles, then discovers known controls. Build health
-records role coverage and unbound conventionally named controls. Frozen rig
+that file after deformers/wrinkles. The optional health audit discovers known
+controls and records role coverage and unbound conventionally named controls. Frozen rig
 packages copy and hash the complete per-character `rig_data/` directory.
 
 ### Portable validation and pose review

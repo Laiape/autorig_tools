@@ -682,6 +682,42 @@ class JawModule(object):
             cmds.connectAttr(plug, result + f".matrixIn[{index}]")
         return result + ".matrixSum"
 
+    def _sticky_meeting_frames(self, frames, mouth_height_rev):
+        """Preserve matching layouts; interpolate opposing stations for unequal lips."""
+        def sample(part, position, name):
+            row = frames[part]
+            offset = position*(len(row)-1)
+            lo = int(offset)
+            hi = min(lo+1, len(row)-1)
+            weight = offset-lo
+            if lo == hi or weight < 1e-10:
+                return row[lo]
+            node = cmds.createNode('blendMatrix', name=name+'_BMX', ss=True)
+            cmds.connectAttr(row[lo], node+'.inputMatrix')
+            cmds.connectAttr(row[hi], node+'.target[0].targetMatrix')
+            cmds.setAttr(node+'.target[0].weight', weight)
+            return node+'.outputMatrix'
+        matching = len(frames['upper']) == len(frames['lower'])
+        result = {}
+        for part in (('upper',) if matching else ('upper', 'lower')):
+            plugs = []
+            count = len(frames[part])
+            for i in range(count):
+                name = ('C_lipsZipMeet' if matching else 'C_'+part+'LipsZipMeet')+str(i).zfill(2)
+                u = i/float(max(1, count-1))
+                upper = frames['upper'][i] if part == 'upper' else sample('upper', u, name+'Upper')
+                lower = frames['lower'][i] if part == 'lower' or matching else sample('lower', u, name+'Lower')
+                meet = cmds.createNode('wtAddMatrix', name=name+'_WAM', ss=True)
+                cmds.connectAttr(upper, meet+'.wtMatrix[0].matrixIn')
+                cmds.connectAttr(lower, meet+'.wtMatrix[1].matrixIn')
+                cmds.connectAttr(self.jaw_ctl+'.mouthHeight', meet+'.wtMatrix[0].weightIn')
+                cmds.connectAttr(mouth_height_rev+'.outputX', meet+'.wtMatrix[1].weightIn')
+                plugs.append(meet+'.matrixSum')
+            result[part] = plugs
+        if matching:
+            result['lower'] = result['upper']
+        return result
+
     def create_lips_setup(self):
 
         """
@@ -1428,30 +1464,35 @@ class JawModule(object):
         # ----- ANTI-PINCH DE ESQUINAS -----
         # Upper/lower share the control's rest-compensated corner orientation.
         # Smoothstep fades this frame into the interior without changing position.
-        n_out = len(output_joints["upper"])
-        corner_blend = min(6, n_out // 2)
-        for corner_idx in (0, n_out - 1):
-            for k in range(corner_blend):
-                idx = corner_idx + k if corner_idx == 0 else corner_idx - k
-                t = k / float(max(1, corner_blend - 1))
-                w = 1.0 - t * t * (3.0 - 2.0 * t)
-                # One control frame for both lips; never average unstable pin axes.
-                corner = next(c for c in corner_controllers if c.startswith("R_" if corner_idx == 0 else "L_"))
-                avg = cmds.createNode("multMatrix", name=f"C_lipCorner{idx:02d}Frame_MMX", ss=True)
-                rest_corner = om.MMatrix(cmds.getAttr(f"{corner}.worldMatrix[0]"))
-                cmds.setAttr(f"{avg}.matrixIn[0]", list(rest_corner.inverse()), type="matrix")
-                cmds.connectAttr(f"{corner}.worldMatrix[0]", f"{avg}.matrixIn[1]")
-                for part in ("upper", "lower"):
+        corner_frames = {}
+        for part in ("upper", "lower"):
+            n_out = len(output_joints[part])
+            corner_blend = min(6, n_out // 2)
+            for corner_idx in (0, n_out-1):
+                corner_side = "R" if corner_idx == 0 else "L"
+                for k in range(corner_blend):
+                    idx = corner_idx+k if corner_idx == 0 else corner_idx-k
+                    t = k/float(max(1, corner_blend-1))
+                    w = 1.0-t*t*(3.0-2.0*t)
+                    key = (corner_side, k)
+                    if key not in corner_frames:
+                        corner = next(c for c in corner_controllers if c.startswith(corner_side+"_"))
+                        avg = cmds.createNode("multMatrix", name=f"C_lipCorner{idx:02d}Frame_MMX", ss=True)
+                        rest_corner = om.MMatrix(cmds.getAttr(corner+".worldMatrix[0]"))
+                        cmds.setAttr(avg+".matrixIn[0]", list(rest_corner.inverse()), type="matrix")
+                        cmds.connectAttr(corner+".worldMatrix[0]", avg+".matrixIn[1]")
+                        corner_frames[key] = avg
+                    avg = corner_frames[key]
                     own = orient_plugs[part][idx]
                     jb = cmds.createNode("blendMatrix", name=f"C_{part}LipCorner{idx:02d}Blend_BMX", ss=True)
-                    cmds.connectAttr(own, f"{jb}.inputMatrix")
-                    cmds.connectAttr(f"{avg}.matrixSum", f"{jb}.target[0].targetMatrix")
-                    cmds.setAttr(f"{jb}.target[0].translateWeight", 0)  # conserva la posición propia
-                    cmds.setAttr(f"{jb}.target[0].rotateWeight", w)     # converge en rotación hacia la media
-                    cmds.setAttr(f"{jb}.target[0].scaleWeight", 0)
-                    cmds.setAttr(f"{jb}.target[0].shearWeight", 0)
-                    orient_plugs[part][idx] = f"{jb}.outputMatrix"
-                    cmds.connectAttr(f"{jb}.outputMatrix", f"{output_joints[part][idx]}.offsetParentMatrix", force=True)
+                    cmds.connectAttr(own, jb+".inputMatrix")
+                    cmds.connectAttr(avg+".matrixSum", jb+".target[0].targetMatrix")
+                    cmds.setAttr(jb+".target[0].translateWeight", 0)
+                    cmds.setAttr(jb+".target[0].rotateWeight", w)
+                    cmds.setAttr(jb+".target[0].scaleWeight", 0)
+                    cmds.setAttr(jb+".target[0].shearWeight", 0)
+                    orient_plugs[part][idx] = jb+".outputMatrix"
+                    cmds.connectAttr(jb+".outputMatrix", output_joints[part][idx]+".offsetParentMatrix", force=True)
 
         # ----- MANUAL STICKY LIPS (jaw_module_matrix setup) -----
         # Close corners first, then center. Independent of jaw rotation.
@@ -1462,14 +1503,7 @@ class JawModule(object):
         cmds.connectAttr(f"{self.jaw_ctl}.mouthHeight", f"{mouth_height_rev}.inputX")
 
         # Reference weights: upper * mouthHeight + lower * (1-mouthHeight).
-        meeting_plugs = []
-        for i in range(len(output_joints["upper"])):
-            meet = cmds.createNode("wtAddMatrix", name=f"C_lipsZipMeet{i:02d}_WAM", ss=True)
-            cmds.connectAttr(orient_plugs["upper"][i], f"{meet}.wtMatrix[0].matrixIn")
-            cmds.connectAttr(orient_plugs["lower"][i], f"{meet}.wtMatrix[1].matrixIn")
-            cmds.connectAttr(f"{self.jaw_ctl}.mouthHeight", f"{meet}.wtMatrix[0].weightIn")
-            cmds.connectAttr(f"{mouth_height_rev}.outputX", f"{meet}.wtMatrix[1].weightIn")
-            meeting_plugs.append(f"{meet}.matrixSum")
+        meeting_plugs = self._sticky_meeting_frames(orient_plugs, mouth_height_rev)
 
         for part in ["upper", "lower"]:
 
@@ -1497,7 +1531,7 @@ class JawModule(object):
                 # Conexión del blendMatrix sticky a la joint de salida.
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
                 cmds.connectAttr(orient_plugs[part][i], f"{blend_matrix_sticky_rot}.inputMatrix")
-                cmds.connectAttr(meeting_plugs[i], f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
+                cmds.connectAttr(meeting_plugs[part][i], f"{blend_matrix_sticky_rot}.target[0].targetMatrix")
                 cmds.connectAttr(sticky_weight, f"{blend_matrix_sticky_rot}.target[0].weight")
                 # Match reference rotation blend; keep scale/shear out of
                 # the weighted matrix average to avoid shrinking the lip frame.
@@ -1508,7 +1542,7 @@ class JawModule(object):
                 # ...y también a la NON-ROTATE (solo traslación: conserva su no-rotación).
                 blend_matrix_sticky_nr = cmds.createNode("blendMatrix", name=f"{non_rot_joint}Sticky_BMX", ss=True)
                 cmds.connectAttr(f"{pick_matrices[part][i]}.outputMatrix", f"{blend_matrix_sticky_nr}.inputMatrix")
-                cmds.connectAttr(meeting_plugs[i], f"{blend_matrix_sticky_nr}.target[0].targetMatrix")
+                cmds.connectAttr(meeting_plugs[part][i], f"{blend_matrix_sticky_nr}.target[0].targetMatrix")
                 cmds.connectAttr(sticky_weight, f"{blend_matrix_sticky_nr}.target[0].weight")
                 cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].rotateWeight", 0)
                 cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].scaleWeight", 0)

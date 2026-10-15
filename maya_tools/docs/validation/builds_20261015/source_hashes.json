@@ -1,0 +1,14 @@
+{
+  "maya_tools/scripts/utils/create_rig.py": "2bf23a011209407fa0d415409b13aec340461f041a6d2c25de89e3ab8ad22206",
+  "maya_tools/scripts/utils/basic_structure.py": "bda839f48d773fe69387e5f9f06822dcd21272fc71fb5dbb2506982614530928",
+  "maya_tools/scripts/utils/model_cache.py": "bc83894f879c6ee68e6d196f3554fb2bf0baedb6dc2da0ab4e448efaff994c6a",
+  "maya_tools/scripts/utils/build_timing.py": "f8492ba8a5e9e67348a835a6f2b41b94af1e8e2fb9ab84b68bdad2ff7d6ab853",
+  "maya_tools/scripts/utils/rig_manager.py": "7e07212e1a82356d16c66177575306645b592db0317a76661506759288378422",
+  "maya_tools/scripts/utils/data_manager.py": "a1b6f1ec1146b31f2062a4c55cdc1505faeed7ff5427fe8e92b96d9b3fb0d950",
+  "maya_tools/scripts/tools/skin_manager_api.py": "29ece533c7f4c804e6637d74b1cd895a8d50fa35290817716488338b3af86275",
+  "maya_tools/scripts/tools/rig_validation.py": "a5d912b132584bef5eaee26c6d6633e42e8f75e0ace52c2ebfd8cc8e52c201f9",
+  "maya_tools/scripts/tools/bifrost_wrinkles.py": "ad1c9a5db0fcb5bd474e62018f6088dea82df5026070054cfd313e64b74bd28a",
+  "maya_tools/scripts/biped/autorig/jaw_module_nurbs.py": "1a5613343553a37211ae3d0d4a59160427c37b5e6c1c544066bbc12f5595fb7f",
+  "maya_tools/scripts/ui/rig_progress.py": "2e92148ad6b7980e72fe637b30af78ab467ac3edaf9fa1f9431b096843e17be5",
+  "scripts/benchmark_rig_builds.py": "4a327d193c3b9a4fb09f1ed1e0dc649429e2ab6c4dd256a7338ae21bc3e24653"
+}

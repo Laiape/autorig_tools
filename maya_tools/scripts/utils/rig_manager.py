@@ -294,14 +294,9 @@ def prepare_rig_scene():
     
     character_name = cmds.optionVar(q="currentAssetRigName")
 
-    cmds.file(new=True, force=True)
-    
     scene_name = f"CHAR_{character_name}_v001.ma"
-    cmds.file(rename=scene_name)
-    
-    om.MGlobal.displayInfo(f"Nueva escena creada y renombrada como: {scene_name}")
-
     scene_to_open, scene_assemblies = open_model_scene(character_name)
+    cmds.file(rename=scene_name)
     
     if not scene_to_open:
         cmds.warning(f"No se encontraron mallas para importar en la carpeta de {character_name}")
@@ -331,7 +326,10 @@ def open_model_scene(character_name):
     scene_to_open = os.path.join(models_dir, files[-1]).replace("\\", "/")
 
     try:
-        cmds.file(scene_to_open, open=True, force=True)
+        from maya_tools.scripts.utils.build_timing import measure
+        from maya_tools.scripts.utils import model_cache
+        with measure('Open model scene'):
+            model_cache.open_model(scene_to_open)
     except Exception as e:
         cmds.error(f"No se pudo abrir la escena: {e}")
 
