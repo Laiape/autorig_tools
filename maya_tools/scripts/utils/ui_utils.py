@@ -4,8 +4,10 @@ import re
 
 try:
     from PySide6 import QtCore, QtGui, QtWidgets
+    from shiboken6 import isValid
 except ImportError:
     from PySide2 import QtCore, QtGui, QtWidgets
+    from shiboken2 import isValid
 
 from . import ui_theme
 
@@ -42,7 +44,7 @@ def preserve_style(widget, subtree=False):
 
 
 def action(button, role="primary", icon_name=None):
-    if _native_only(button):
+    if not isValid(button) or _native_only(button):
         return button
     if role not in ui_theme.COLORS and role != "secondary":
         raise ValueError("Unknown AutoRig action role: " + role)
@@ -50,9 +52,28 @@ def action(button, role="primary", icon_name=None):
     if icon_name:
         button.setProperty("arActionIcon", icon_name)
     # Re-polish only this control; do not change enabled or checked state.
-    button.style().unpolish(button)
-    button.style().polish(button)
+    _repolish(button)
     return button
+
+
+def _repolish(widget):
+    """Keep one live style wrapper while Qt replaces stylesheet proxies."""
+    if not isValid(widget):
+        return
+    try:
+        style = widget.style()
+        if not isValid(style):
+            return
+        style.unpolish(widget)
+        if isValid(style) and isValid(widget):
+            style.polish(widget)
+        if isValid(widget):
+            widget.update()
+    except RuntimeError as exc:
+        # Maya can retire its QProxyStyle during the refresh itself. The root
+        # stylesheet application refreshes selectors after the traversal.
+        if "already deleted" not in str(exc):
+            raise
 
 
 def _stylesheet():
@@ -70,7 +91,9 @@ def _stylesheet():
 
 
 def _children(widget):
-    return [child for child in widget.children() if isinstance(child, QtWidgets.QWidget)]
+    if not isValid(widget):
+        return []
+    return [child for child in widget.children() if isinstance(child, QtWidgets.QWidget) and isValid(child)]
 
 
 def _native_only(widget):
@@ -85,8 +108,10 @@ def _restore_native(widget):
         if not button.property("arKeepStyle"):
             button.setStyleSheet("")
         button.setIcon(QtGui.QIcon())
-        button.style().unpolish(button); button.style().polish(button)
+        _repolish(button)
     def visit(node):
+        if not isValid(node):
+            return
         if node.property("arStyleBoundary"):
             # Only our explicit Paint/Flood accents were changed in this island.
             for button in node.findChildren(QtWidgets.QPushButton):
@@ -208,7 +233,7 @@ def apply_maya_style(widget, profile_name=None):
     Vendor boundaries are never traversed. Reapplying is idempotent and styles
     newly populated controls without erasing swatches or live editing feedback.
     """
-    if widget is None or widget.property("arStyleBoundary"):
+    if widget is None or not isValid(widget) or widget.property("arStyleBoundary"):
         return
     if _native_only(widget):
         _restore_native(widget)
@@ -219,6 +244,8 @@ def apply_maya_style(widget, profile_name=None):
         widget.setProperty("arProfile", profile_name)
         widget.setProperty("arUiManaged", True)
     def visit(node, current):
+        if not isValid(node):
+            return
         if node.property("arStyleBoundary"):
             return
         name = type(node).__name__
@@ -302,6 +329,8 @@ def restyle_open_tools():
         return 0
     roots = []
     for widget in app.allWidgets():
+        if not isValid(widget):
+            continue
         if widget.property("arUiManaged") or type(widget).__name__ in ui_theme.PROFILES:
             if not any(parent in roots for parent in _parents(widget)):
                 roots.append(widget)
@@ -313,7 +342,7 @@ def restyle_open_tools():
 
 
 def _parents(widget):
-    parent = widget.parentWidget()
-    while parent:
+    parent = widget.parentWidget() if isValid(widget) else None
+    while parent is not None and isValid(parent):
         yield parent
         parent = parent.parentWidget()

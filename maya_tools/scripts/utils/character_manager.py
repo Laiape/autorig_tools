@@ -877,7 +877,14 @@ class AssetManagerUI(QtWidgets.QWidget):
         self._load_thumbnail()
 
     def _refresh_tabs(self):
-        self.tabs.clear()
+        # QTabWidget.clear() hides pages but leaves them parented and alive.
+        # Retire old asset pages before styling their replacements.
+        while self.tabs.count():
+            page = self.tabs.widget(0)
+            self.tabs.removeTab(0)
+            page.hide()
+            page.setParent(None)
+            page.deleteLater()
         if not self.current_asset:
             return
         asset_dir = os.path.join(self.assets_path, self.current_asset)

@@ -85,6 +85,10 @@ for light/dark Maya; no third-party artwork or installation is replaced.
 `apply_maya_style` is idempotent and also handles nested profiles and dynamically
 created controls. Use `action(button, role, icon_name)` for explicit controls and
 `preserve_style` for functional swatches/LIVE state or vendor subtree boundaries.
+Action refresh holds one valid Qt style wrapper and skips retired proxies during
+stylesheet replacement. Deleted widgets are excluded from the traversal. Character
+Manager detaches and deletes obsolete version pages when switching assets, keeping
+only the four current category tabs in its styled hierarchy.
 NG, brSmoothWeights and Ramp keep their original editors. The user explicitly
 prefers Skinning Manager's previous appearance: `ui_theme.NATIVE_ONLY` excludes
 that workspace and all embedded editors from new headers, icons and button
@@ -101,7 +105,9 @@ Regression: `scripts/tools/tests/test_ui_theme.py` constructs 13 real editors,
 checks primary controls and native fields, exercises dynamic asset tabs and
 loop skinning, verifies rendered button fills/disabled behavior, protects
 vendor controls/swatches and covers the Skinning Manager exception plus
-portable picker fallback. Existing functional Qt regressions still apply.
+portable picker fallback. It also checks retired QProxyStyle handling and repeated
+asset switches without accumulating version pages. Existing functional Qt
+regressions still apply.
 
 ### Dockable Tool Framework
 
@@ -837,11 +843,13 @@ capture/restoration is additionally checked in a separate Maya 2026 GUI session.
 ## 7. Edward photo picker
 
 The current shared pipeline for **all characters** is documented in
-`scripts/tools/CHARACTER_PICKER.md`. CREATE RIG now uses actual built controls,
+`scripts/tools/CHARACTER_PICKER.md`. Picker generation uses actual built controls,
 shared module guide prerequisites, per-character guide proportions and
 `assets/<character>/picker/picker_profile.json`. Its entry is Animation >
 Character Picker / the CharacterPicker shelf button. Thaiz has its generated
 bundle and portable single-file installer under `assets/thaiz/picker`.
+CREATE RIG does not generate, embed or open the picker. Open it manually from
+the menu, shelf or Tool Framework; opening generates a bundle if it is missing.
 The Edward photo workflow below remains a separately distributable reference.
 
 The separate DWPicker photo design and individual SVG/PNG controller assets

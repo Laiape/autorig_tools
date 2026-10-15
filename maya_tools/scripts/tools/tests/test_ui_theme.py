@@ -12,6 +12,7 @@ os.environ["QT_QPA_PLATFORM"] = "offscreen"
 ROOT = Path(__file__).resolve().parents[4]
 sys.path[:0] = [str(ROOT), str(ROOT / "maya_tools" / "scripts")]
 from PySide6 import QtCore, QtGui, QtWidgets, QtTest
+import shiboken6
 APP = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
 QtGui.QFontDatabase.addApplicationFont("C:/Windows/Fonts/arial.ttf")
 APP.setFont(QtGui.QFont("Arial", 9))
@@ -71,6 +72,51 @@ class ThemeTests(unittest.TestCase):
         self.assertIn("#694899", vendor.styleSheet())
         self.assertEqual(field.value(), 32)
         self.assertIn("#ff7a00", swatch.styleSheet())
+
+    def test_expired_proxy_style_does_not_abort_action_refresh(self):
+        window = self.own(QtWidgets.QWidget()); box = QtWidgets.QVBoxLayout(window)
+        button = QtWidgets.QPushButton("Save"); box.addWidget(button)
+        stale = QtWidgets.QProxyStyle(QtWidgets.QStyleFactory.create("Fusion"))
+        shiboken6.delete(stale)
+        self.assertFalse(shiboken6.isValid(stale))
+        clicks = QtTest.QSignalSpy(button.clicked)
+        with mock.patch.object(button, "style", return_value=stale):
+            ui_utils.action(button, "success")
+            ui_utils.apply_maya_style(window)
+        window.show(); APP.processEvents()
+        self.assertEqual(button.property("arActionRole"), "success")
+        self.assertFalse(button.grab().isNull())
+        button.click();self.assertEqual(clicks.count(),1)
+        # A valid style is acquired once; a fresh getter can return a retired
+        # proxy after unpolish, so both operations must use the same wrapper.
+        with mock.patch.object(button, "style", side_effect=[button.style(), stale]) as getter:
+            ui_utils.action(button, "primary")
+        self.assertEqual(getter.call_count,1)
+        with mock.patch.object(button, "style", side_effect=RuntimeError("Unrelated style failure")):
+            with self.assertRaisesRegex(RuntimeError,"Unrelated style failure"):
+                ui_utils.action(button,"primary")
+
+    def test_character_manager_switch_releases_old_version_pages(self):
+        from maya_tools.scripts.utils import character_manager
+        with tempfile.TemporaryDirectory() as directory:
+            for name in ("Alpha", "Beta"):(Path(directory)/name).mkdir()
+            parent=self.own(QtWidgets.QWidget())
+            with mock.patch.object(character_manager,"get_assets_path",return_value=directory), mock.patch.object(character_manager.AssetManagerUI,"_restore_session"):
+                manager=self.own(character_manager.AssetManagerUI(parent=parent))
+            manager.settings=QtCore.QSettings(str(Path(directory)/"test.ini"),QtCore.QSettings.IniFormat)
+            retired=[]
+            for name in ("Alpha","Beta","Alpha","Beta"):
+                retired.extend(manager.tabs.widget(i) for i in range(manager.tabs.count()))
+                item=manager.asset_list.findItems(name,QtCore.Qt.MatchExactly)[0]
+                manager._on_asset_selected(item)
+                self.assertEqual(manager.tabs.count(),4)
+                self.assertEqual(len(manager.findChildren(character_manager.VersionTab)),4)
+                for i in range(manager.tabs.count()):
+                    page=manager.tabs.widget(i)
+                    self.assertEqual(page.asset_path,str(Path(directory)/name))
+                    self.assertEqual(page.btn_save.property("arActionRole"),"success")
+            QtCore.QCoreApplication.sendPostedEvents(None,QtCore.QEvent.DeferredDelete)
+            self.assertTrue(all(not shiboken6.isValid(page) for page in retired))
 
     def test_actual_editors_have_primary_actions_and_native_inputs(self):
         from maya_tools.scripts.tools import model_checker, curve_library, rig_tools

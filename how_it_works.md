@@ -71,7 +71,8 @@ flowchart TD
   Architecture, current scope and phased implementation: `maya_tools/framework_plan.md`.
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
 - Shared native UI hierarchy: semantic main-button colors, tool/tab icons,
-  preserved vendor controls and live restyling through Reload UI.
+  preserved vendor controls and live restyling through Reload UI. Asset switches
+  retire obsolete version tabs and tolerate expired Qt style proxies.
 - Model Checker: native results, 23 scoped automatic checks, guided visual
   review, vertex-set contact comparison, undoable repairs and JSON reports.
 - Dockable Skinning Manager with native NG and its stacked skinCluster selector,
@@ -86,6 +87,7 @@ flowchart TD
   review maps these layers to the production skin and tests animator controls.
 - Biped spine control counts/spacing and IK/FK blending of deforming foot joints.
 - Edward's native Maya 2024+ photo picker, installer and controller exports.
+  Character Picker opens manually; CREATE RIG does not generate or embed it.
 - Joint corrective targets, vertex masks and shoulder angle activation in Maya.
 - Pose blendshapes with controller capture, preserved target names, pre/post
   sculpt editing and a Neutral pose button for all controls of the loaded rig.

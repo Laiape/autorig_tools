@@ -5,18 +5,22 @@ only when its complete guide prerequisite exists. An empty guide export is an
 error; no picker is generated. A removed digit root also excludes its old exported
 controls. Unknown control naming is reported in `build_report.json`, never guessed.
 
-CREATE RIG generates a native picker from the **actual controls under the character
-root**, after building the modules. Open it through Animation > Character Picker
+The native picker uses the **actual controls under the character root**. CREATE
+RIG does not generate, embed or open a picker. Open it through Animation > Character Picker
 or the CharacterPicker button on the AutoRig shelf. Select a control first when
 several characters are present. Namespace and Use Selection choose the instance.
+Opening generates the picker bundle if it is missing; existing bundles are reused.
 Ambiguous targets are excluded from selection. Maya 2024+ is required; Qt uses
 PySide6 when available, otherwise PySide2. Version compatibility requires actual
 testing on each Maya version.
 
-## Automatic picker saved with the rig
+## Optional embedded picker for explicit installation
 
-CREATE RIG embeds one `scriptNode` per character root after successful guide-driven
-generation. The node contains the runtime, config, shapes and backgrounds, linked
+Explicit `character_picker.generate(load=True)` or the portable installer embeds
+one `scriptNode` per character root after successful guide-driven generation.
+CREATE RIG never installs this node. Existing scenes with a previously embedded
+picker retain their saved scene-load behavior. The node contains the runtime,
+config, shapes and backgrounds, linked
 to its rig root by a message connection. On GUI scene load it recreates a
 `SelectionChanged` scriptJob and opens the picker. Selecting another embedded rig
 switches to its picker and namespace; targets are restricted to that exact root.
@@ -26,7 +30,7 @@ The receiver needs neither AutoRig nor a separate installation. No build logic o
 model is embedded in the picker payload.
 
 ScriptJobs are session objects. The scriptNode is the saved part that restores
-them after Maya restarts. Rebuilding/reinstalling reuses the node; scene changes
+them after Maya restarts. Reinstalling reuses the node; scene changes
 and root deletion clean up jobs and the window. Closing the picker intentionally
 is respected until another rig/scene is selected or it is opened manually.
 Maya's scene-script security approval remains in force; no trust preferences are
@@ -76,7 +80,9 @@ control's `position` (pixel center) and `size` (pixel width/height), in the prof
 }
 ```
 
-Rebuild after modifying a profile or guides. Controls use standard module naming;
+Regenerate the picker explicitly after modifying a profile or guides, using
+`character_picker.generate(character, load=False)` for bundle generation only.
+Controls use standard module naming;
 new naming requires an explicit ownership/anchor mapping in the shared builder.
 
 ## Share without AutoRig
