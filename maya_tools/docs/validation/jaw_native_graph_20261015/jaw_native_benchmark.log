@@ -1,0 +1,4 @@
+PASS compatibility: 278 poses, max matrix error 3.9479530755670567e-13
+{"success": true, "baseline_ref": "a6f81f2", "source_sha256": "5a9bdd87026b66e42f715b2a86f55483cde19f9f771b06ae81f03f7228d5a264", "cases": 278, "measurement": "Native jaw fixture, DG, all joint/control-group world matrices via MPlug; excludes mesh and viewport cost. Paired ABBA order, one warm-up sweep per build.", "maya_version": "2026", "created": "2026-10-15T07:55:18.986449+00:00", "maximum_matrix_error": 3.9479530755670567e-13, "worst": {"pose": "lowertx-2", "node": "L_lowerLip00NonRot_JNT", "component": 12}, "matrices_per_pose": 152}
+BEFORE 3503 5860 17.69437916666069
+AFTER 2871 5339 14.211062499991083

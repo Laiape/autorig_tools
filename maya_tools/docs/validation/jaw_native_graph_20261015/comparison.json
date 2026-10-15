@@ -1,0 +1,344 @@
+{
+  "success": true,
+  "baseline_ref": "a6f81f2",
+  "source_sha256": "5a9bdd87026b66e42f715b2a86f55483cde19f9f771b06ae81f03f7228d5a264",
+  "cases": 278,
+  "measurement": "Native jaw fixture, DG, all joint/control-group world matrices via MPlug; excludes mesh and viewport cost. Paired ABBA order, one warm-up sweep per build.",
+  "maya_version": "2026",
+  "created": "2026-10-15T07:55:18.986449+00:00",
+  "samples": [
+    {
+      "kind": "before",
+      "build_seconds": 0.8691865999999209,
+      "ms_per_pose": 18.404062499977652,
+      "controls_ms": {
+        "jaw": 14.61368333336092,
+        "corner": 18.80264999999781,
+        "fine": 10.097379166647139,
+        "mixed": 18.404062499977652
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 0.5772135000006529,
+      "ms_per_pose": 14.251500000000306,
+      "controls_ms": {
+        "jaw": 15.705895833320938,
+        "corner": 13.154854166676463,
+        "fine": 11.04347916664968,
+        "mixed": 14.251500000000306
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 0.6225083999997878,
+      "ms_per_pose": 14.17062499998186,
+      "controls_ms": {
+        "jaw": 13.3624624999887,
+        "corner": 16.54225000000527,
+        "fine": 12.277412499997808,
+        "mixed": 14.17062499998186
+      }
+    },
+    {
+      "kind": "before",
+      "build_seconds": 0.7395521000007648,
+      "ms_per_pose": 15.725141666659209,
+      "controls_ms": {
+        "jaw": 14.496754166695306,
+        "corner": 13.86547916664919,
+        "fine": 9.59003333336265,
+        "mixed": 15.725141666659209
+      }
+    },
+    {
+      "kind": "before",
+      "build_seconds": 0.5805921999999555,
+      "ms_per_pose": 18.136029166650285,
+      "controls_ms": {
+        "jaw": 12.072412500022741,
+        "corner": 16.840304166673075,
+        "fine": 7.991329166657124,
+        "mixed": 18.136029166650285
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 0.5166396999993594,
+      "ms_per_pose": 12.738579166655958,
+      "controls_ms": {
+        "jaw": 13.441420833335846,
+        "corner": 14.910933333339926,
+        "fine": 9.394604166648909,
+        "mixed": 12.738579166655958
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 0.6462707999999111,
+      "ms_per_pose": 14.550354166658508,
+      "controls_ms": {
+        "jaw": 11.836845833310386,
+        "corner": 13.556154166659931,
+        "fine": 7.660041666667894,
+        "mixed": 14.550354166658508
+      }
+    },
+    {
+      "kind": "before",
+      "build_seconds": 0.5901392999994641,
+      "ms_per_pose": 17.252729166671088,
+      "controls_ms": {
+        "jaw": 14.024324999998802,
+        "corner": 14.44502500002424,
+        "fine": 11.801504166669474,
+        "mixed": 17.252729166671088
+      }
+    },
+    {
+      "kind": "before",
+      "build_seconds": 0.5851393000002645,
+      "ms_per_pose": 13.49618750001961,
+      "controls_ms": {
+        "jaw": 15.114125000006121,
+        "corner": 12.681612500008063,
+        "fine": 13.761345833321078,
+        "mixed": 13.49618750001961
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 0.5476552000000083,
+      "ms_per_pose": 15.468695833343796,
+      "controls_ms": {
+        "jaw": 14.058741666682787,
+        "corner": 16.44331666667161,
+        "fine": 9.151566666673716,
+        "mixed": 15.468695833343796
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 0.5705660999992688,
+      "ms_per_pose": 12.883733333334627,
+      "controls_ms": {
+        "jaw": 14.136912500021026,
+        "corner": 12.775754166682418,
+        "fine": 11.228337499990934,
+        "mixed": 12.883733333334627
+      }
+    },
+    {
+      "kind": "before",
+      "build_seconds": 0.7176123999997799,
+      "ms_per_pose": 19.10250833335188,
+      "controls_ms": {
+        "jaw": 14.65390833334368,
+        "corner": 12.25240416666414,
+        "fine": 11.014195833354279,
+        "mixed": 19.10250833335188
+      }
+    }
+  ],
+  "before": {
+    "nodes": 3503,
+    "connections": 5860,
+    "node_types": {
+      "time": 1,
+      "sequenceManager": 1,
+      "hardwareRenderingGlobals": 1,
+      "partition": 2,
+      "renderGlobalsList": 1,
+      "defaultLightList": 1,
+      "defaultShaderList": 1,
+      "postProcessList": 1,
+      "defaultRenderUtilityList": 1,
+      "defaultRenderingList": 1,
+      "lightList": 1,
+      "defaultTextureList": 1,
+      "lambert": 1,
+      "standardSurface": 1,
+      "openPBRSurface": 1,
+      "particleCloud": 1,
+      "shadingEngine": 2,
+      "materialInfo": 1,
+      "shaderGlow": 1,
+      "dof": 1,
+      "renderGlobals": 1,
+      "renderQuality": 1,
+      "resolution": 1,
+      "objectSet": 2,
+      "viewColorManager": 1,
+      "colorManagementGlobals": 1,
+      "hardwareRenderGlobals": 1,
+      "hwRenderGlobals": 1,
+      "hyperGraphInfo": 1,
+      "hyperLayout": 1,
+      "globalCacheControl": 1,
+      "strokeGlobals": 1,
+      "ikSystem": 1,
+      "dynController": 1,
+      "lightLinker": 1,
+      "transform": 101,
+      "camera": 4,
+      "displayLayerManager": 1,
+      "displayLayer": 1,
+      "renderLayerManager": 1,
+      "renderLayer": 1,
+      "joint": 130,
+      "multMatrix": 387,
+      "sum": 93,
+      "unitConversion": 103,
+      "clamp": 43,
+      "blendTwoAttr": 1,
+      "composeMatrix": 295,
+      "nurbsCurve": 10,
+      "nurbsSurface": 5,
+      "locator": 1,
+      "motionPath": 22,
+      "fourByFourMatrix": 29,
+      "parentMatrix": 8,
+      "rowFromMatrix": 4,
+      "closestPointOnSurface": 4,
+      "inverseMatrix": 38,
+      "aimMatrix": 70,
+      "reverse": 3,
+      "wtAddMatrix": 27,
+      "decomposeMatrix": 146,
+      "plusMinusAverage": 130,
+      "vectorProduct": 554,
+      "multiplyDivide": 252,
+      "multiply": 254,
+      "condition": 172,
+      "subtract": 40,
+      "skinCluster": 6,
+      "dagPose": 3,
+      "pickMatrix": 84,
+      "blendMatrix": 140,
+      "remapValue": 104,
+      "divide": 34,
+      "blendWeighted": 60,
+      "uvPin": 4,
+      "distanceBetween": 50,
+      "blendColors": 50
+    },
+    "plugins": [
+      "cacheEvaluator",
+      "lookdevKit",
+      "matrixNodes",
+      "renderSetup"
+    ],
+    "median_ms_per_pose": 17.69437916666069,
+    "median_build_seconds": 0.653875849999622,
+    "median_controls_ms": {
+      "jaw": 14.555218750028112,
+      "corner": 14.155252083336714,
+      "fine": 10.555787500000708,
+      "mixed": 17.69437916666069
+    }
+  },
+  "after": {
+    "nodes": 2871,
+    "connections": 5339,
+    "node_types": {
+      "time": 1,
+      "sequenceManager": 1,
+      "hardwareRenderingGlobals": 1,
+      "partition": 2,
+      "renderGlobalsList": 1,
+      "defaultLightList": 1,
+      "defaultShaderList": 1,
+      "postProcessList": 1,
+      "defaultRenderUtilityList": 1,
+      "defaultRenderingList": 1,
+      "lightList": 1,
+      "defaultTextureList": 1,
+      "lambert": 1,
+      "standardSurface": 1,
+      "openPBRSurface": 1,
+      "particleCloud": 1,
+      "shadingEngine": 2,
+      "materialInfo": 1,
+      "shaderGlow": 1,
+      "dof": 1,
+      "renderGlobals": 1,
+      "renderQuality": 1,
+      "resolution": 1,
+      "objectSet": 2,
+      "viewColorManager": 1,
+      "colorManagementGlobals": 1,
+      "hardwareRenderGlobals": 1,
+      "hwRenderGlobals": 1,
+      "hyperGraphInfo": 1,
+      "hyperLayout": 1,
+      "globalCacheControl": 1,
+      "strokeGlobals": 1,
+      "ikSystem": 1,
+      "dynController": 1,
+      "lightLinker": 1,
+      "transform": 101,
+      "camera": 4,
+      "displayLayerManager": 1,
+      "displayLayer": 1,
+      "renderLayerManager": 1,
+      "renderLayer": 1,
+      "joint": 130,
+      "multMatrix": 203,
+      "sum": 234,
+      "unitConversion": 55,
+      "clamp": 43,
+      "blendTwoAttr": 1,
+      "composeMatrix": 139,
+      "nurbsCurve": 10,
+      "nurbsSurface": 5,
+      "locator": 1,
+      "motionPath": 22,
+      "fourByFourMatrix": 29,
+      "parentMatrix": 8,
+      "rowFromMatrix": 4,
+      "closestPointOnSurface": 4,
+      "inverseMatrix": 24,
+      "aimMatrix": 70,
+      "reverse": 3,
+      "wtAddMatrix": 27,
+      "translationFromMatrix": 128,
+      "plusMinusAverage": 82,
+      "vectorProduct": 410,
+      "multiplyDivide": 240,
+      "multiply": 206,
+      "condition": 172,
+      "subtract": 40,
+      "skinCluster": 6,
+      "dagPose": 3,
+      "pickMatrix": 70,
+      "blendMatrix": 90,
+      "remapValue": 67,
+      "divide": 34,
+      "blendWeighted": 60,
+      "uvPin": 4,
+      "distanceBetween": 50,
+      "blendColors": 50
+    },
+    "plugins": [
+      "cacheEvaluator",
+      "lookdevKit",
+      "matrixNodes",
+      "renderSetup"
+    ],
+    "median_ms_per_pose": 14.211062499991083,
+    "median_build_seconds": 0.5738897999999608,
+    "median_controls_ms": {
+      "jaw": 13.750081250009316,
+      "corner": 14.233543749999928,
+      "fine": 10.219041666649295,
+      "mixed": 14.211062499991083
+    }
+  },
+  "maximum_matrix_error": 3.9479530755670567e-13,
+  "worst": {
+    "pose": "lowertx-2",
+    "node": "L_lowerLip00NonRot_JNT",
+    "component": 12
+  },
+  "matrices_per_pose": 152
+}

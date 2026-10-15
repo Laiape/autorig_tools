@@ -442,7 +442,8 @@ inward half-width sweep has ordered output joints and minimum adjacent spacing
 zero new triangle reversals against matching Auto Wide-off poses, unchanged
 neutral/body geometry and zero geometry error after saving/reopening the rig.
 
-An isolated comparison against commit `70302b5` gives zero matrix error in eight
+Before the native graph simplification below, an isolated comparison against
+commit `70302b5` gave zero matrix error in eight
 poses when both corner Auto Wide attributes are disabled. The fixture grows
 from 3223 to 3503 nodes. Three warmed 30-pose DG samples give median CPU
 pose/query costs of 19.40 ms before and 17.37 ms with Auto Wide active
@@ -451,6 +452,61 @@ or regression. They include Python queries of 50 joints and exclude mesh/viewpor
 rendering; they are not animation FPS or a controlled comparison of complete
 character build times.
 Raw samples are in the validation folder's `performance.json`.
+
+### Native jaw graph simplification
+
+The jaw uses the existing Maya nodes; there is no new plugin or per-frame Python.
+Rebuild the rig to apply the simplified graph. Controls, skin joints, skin weights,
+the shared projection NURBS and the corner Auto Wide attributes retain their
+existing behavior and names.
+
+- Corner orientation axes and rotation/pivot bases are evaluated once per corner.
+  Neighbor aiming shares one position extraction per displayed station.
+- `translationFromMatrix` replaces full TRS decomposition where only position is
+  consumed. The primary/up-vector guards and continuous singularity fallback stay.
+- Corner drag, center compensation, rounded U and Auto Wide feed one positional
+  offset matrix per station. Scalar sums retain double precision. Display offsets
+  remain separate from ribbon bases, including at zero weights, avoiding feedback
+  and a second application of corrections to the ribbon.
+- Equal Sticky Lips falloffs share the same driver. Roll's base sum is evaluated
+  once per lip. Non Rotate joints extract position from the solved Sticky matrix;
+  Roll still acts downstream on the Rotate joint's local channel.
+
+Validation uses Maya 2026. `scripts/benchmark_jaw_graph.py` compares a prior Git
+revision in a disposable fixture without replacing the checkout or artist scene.
+Its 278 poses cover jaw opening, primary translation/rotation/scale, secondary
+controls, corner rotation orders, Narrow, Auto Wide, rounded U, partial/full
+sticky closure, Roll and deterministic combinations. The five jaw/lip regressions
+also rebuild Edward's real geometry and save/reopen the full scene.
+Receipts are in `maya_tools/docs/validation/jaw_native_graph_20261015`.
+
+Against `a6f81f2`, the fixture has 2871 nodes instead of 3503 (-18.04%) and
+5339 connections instead of 5860 (-8.89%). Across 278 poses and 152 matrices per
+pose, the maximum component error is 3.95e-13. All five existing regressions
+pass, including full Edward geometry, zero new triangle reversals and zero
+native reopen error. No additional Maya plugins are loaded by the new graph.
+
+Six warmed samples per version in paired ABBA order give mixed-control CPU
+pose/query medians of 17.69 ms before and 14.21 ms after (-19.69%) for the
+isolated fixture. Jaw-only medians are 14.56/13.75 ms, corner-only 14.16/14.23 ms,
+and secondary-only 10.56/10.22 ms. These query all joint/control-group matrices;
+they are not viewport FPS or a uniform speed improvement for every control.
+
+Four complete Edward builds with the same imported skin/wrinkle settings give
+zero vertex difference in six comparison poses. CPU geometry-query medians
+before/after are 92.07/79.27 ms for jaw motion, 78.96/74.56 ms for corners,
+66.07/75.74 ms for secondaries and 80.17/79.97 ms for mixed motion. The secondary
+result is slower in this cross-build sample. Follow-up ABBA trials inside a
+single scene favor the selected shared Non Rotate path (66.20 vs 70.45 ms for
+secondaries) and translation-only extraction (63.91 vs 72.15 ms). This exposes
+substantial whole-character timing variability; no general secondary-control,
+full-rig playback or viewport speedup is claimed. Raw samples and the separate
+geometry checks remain in the validation folder.
+
+Reproduce the fixture comparison in a disposable worker with:
+`mayapy scripts/run_maya_test.py scripts/benchmark_jaw_graph.py --baseline-ref a6f81f2 --output .git/jaw_graph_comparison`.
+The output directory must be new. The tool reads the baseline through Git and
+never replaces the working source or an artist scene.
 
 ### Biped spine controls and foot blending
 

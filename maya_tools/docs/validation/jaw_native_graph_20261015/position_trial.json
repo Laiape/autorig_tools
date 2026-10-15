@@ -1,0 +1,47 @@
+{
+  "purpose": "Position extractor comparison in one complete optimized Edward graph; DG geometry queries. All other jaw topology and skin/wrinkle settings remain identical.",
+  "samples": [
+    {
+      "kind": "translation",
+      "ms": {
+        "fine": 62.113225000075545,
+        "jaw": 66.16421249998439,
+        "mixed": 75.07617500004926
+      }
+    },
+    {
+      "kind": "decompose",
+      "ms": {
+        "fine": 68.21529999990616,
+        "jaw": 73.43060000005153,
+        "mixed": 75.3887250000389
+      }
+    },
+    {
+      "kind": "decompose",
+      "ms": {
+        "fine": 76.09143125000628,
+        "jaw": 74.71980000002532,
+        "mixed": 75.06296250005562
+      }
+    },
+    {
+      "kind": "translation",
+      "ms": {
+        "fine": 65.70591249999325,
+        "jaw": 75.89086250004584,
+        "mixed": 75.19006874997558
+      }
+    }
+  ],
+  "translation": {
+    "fine": 63.909568750034396,
+    "jaw": 71.02753750001511,
+    "mixed": 75.13312187501242
+  },
+  "decompose": {
+    "fine": 72.15336562495622,
+    "jaw": 74.07520000003842,
+    "mixed": 75.22584375004726
+  }
+}

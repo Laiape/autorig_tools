@@ -1,0 +1,174 @@
+[AutoRig build] Creating basic structure...
+00:00:00   535MB         | log started Thu Oct 15 09:59:47 2026
+00:00:00   535MB         | Arnold 7.4.4.2 [2a3ebfba] windows x86_64 clang-20.1.8 oiio-2.6.3 osl-1.13.3 vdb-11.0.0 adlsdk-9.8.2.57 clmhub-3.1.1.43 rlm-17.0.1 optix-8.0.0 2026/01/20 08:08:17
+00:00:00   535MB         | running on LAIAPERISWEELKO, pid=14332
+00:00:00   535MB         |  1 x Intel(R) Core(TM) i9-14900HX (32 cores, 32 logical) with 32396MB
+00:00:00   535MB         |  NVIDIA driver version 616.56
+00:00:00   535MB         |  GPU 0: NVIDIA GeForce RTX 5060 Laptop GPU @ 2212MHz (compute 12.0) with 8123MB (7344MB available) (NVLink:0)
+00:00:00   535MB         |  Windows 10 (version 10.0, build 26300)
+00:00:00   535MB         |  soft limit for open files changed from 512 to 2048
+00:00:00   535MB         |
+00:00:00   535MB         | Installing system handler with mask 255
+00:00:01   728MB         | [metadata] loading metadata file: C:\Program Files\Autodesk\Arnold\Maya2026\bin\arnold.mtd
+00:00:01   731MB         | loading plugins from C:\Program Files\Autodesk\Arnold\Maya2026\bin\..\plugins ...
+00:00:01   731MB         |  alembic_proc.dll: alembic uses Arnold 7.4.4.2
+00:00:02   757MB         |  usd_proc.dll: usd uses Arnold 7.4.4.2
+00:00:02   757MB         | loaded 2 plugins from 2 lib(s) in 0:00.29
+--- Geo organizada en geo_GRP: {'FINAL': 6} ---
+--- MGEAR INTEGRATION: None ---
+[AutoRig build] Building rig modules...
+[AutoRig build] Loading rig settings�
+[AutoRig build] Building spine�
+[AutoRig build] Building legs�
+[AutoRig build] Building clavicles�
+[AutoRig build] Building arms�
+[AutoRig build] Building fingers�
+[AutoRig build] Building neck�
+[AutoRig build] Building jaw�
+[AutoRig build] Building eyebrows�
+[AutoRig build] Building eyelids�
+[AutoRig build] Building tongue�
+[AutoRig build] Building teeth�
+[AutoRig build] Building ears�
+[AutoRig build] Building nose�
+[AutoRig build] Building cheekbones�
+[AutoRig build] Labeling joints...
+[AutoRig build] Hiding utility nodes...
+[AutoRig build] Setting inherit transforms...
+[AutoRig build] Importing skin weights...
+[AutoRig build] Localizing corrective skin...
+[AutoRig build] Importing corrective blendshapes...
+[AutoRig build] Importing facial wrinkles...
+// Bifrost: Pre-loaded mayaUsdPlugin to access proper Maya USD libraries.
+bifrostGraph::bifrostRiggingMenu: (kFailure): Unexpected Internal Failure
+Initialized VP2.0 renderer {
+  Version : 2016.11.62.12. Feature Level 4.
+  Adapter : NVIDIA GeForce RTX 5060 Laptop GPU/PCIe/SSE2
+  Vendor ID: 4318. Device ID : 42888
+  Driver : .
+  API : OpenGL V.4.6.
+  Max texture size : 32768 * 32768.
+  Max texture coords : 8
+  Shader versions supported (Vertex: 4, Geometry: 4, Pixel 4).
+  Shader compiler profile : (Best card profile)
+  Active stereo support available : 0
+  GPU Memory Limit : 8151 MB.
+  CPU Memory Limit : 30776.9 MB.
+}
+OpenCL evaluator is attempting to initialize OpenCL.
+Detected 2 OpenCL Platforms:
+ 0: NVIDIA Corporation. NVIDIA CUDA. OpenCL 3.0 CUDA 13.4.62.
+ Supported extensions: cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_fp64 cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_icd cl_khr_gl_sharing cl_nv_compiler_options cl_nv_device_attribute_query cl_nv_pragma_unroll cl_nv_d3d10_sharing cl_khr_d3d10_sharing cl_nv_d3d11_sharing cl_nv_copy_opts cl_nv_create_buffer cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_device_uuid cl_khr_pci_bus_info cl_khr_external_semaphore cl_khr_external_memory cl_khr_external_semaphore_win32 cl_khr_external_memory_win32 cl_khr_semaphore
+ Selected matching OpenCL Platform: NVIDIA Corporation NVIDIA CUDA OpenCL 3.0 CUDA 13.4.62.
+ 1: Intel(R) Corporation. Intel(R) OpenCL Graphics. OpenCL 3.0 .
+ Supported extensions: cl_khr_byte_addressable_store cl_khr_device_uuid cl_khr_fp16 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_icd cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_intel_command_queue_families cl_intel_subgroups cl_intel_required_subgroup_size cl_intel_subgroups_short cl_khr_spir cl_intel_accelerator cl_intel_driver_diagnostics cl_khr_priority_hints cl_khr_throttle_hints cl_khr_create_command_queue cl_intel_subgroups_char cl_intel_subgroups_long cl_khr_il_program cl_intel_mem_force_host_memory cl_khr_subgroup_extended_types cl_khr_subgroup_non_uniform_vote cl_khr_subgroup_ballot cl_khr_subgroup_non_uniform_arithmetic cl_khr_subgroup_shuffle cl_khr_subgroup_shuffle_relative cl_khr_subgroup_clustered_reduce cl_intel_device_attribute_query cl_khr_expect_assume cl_khr_extended_bit_ops cl_khr_suggested_local_work_size cl_intel_split_work_group_barrier cl_intel_spirv_media_block_io cl_intel_spirv_subgroups cl_khr_spirv_linkonce_odr cl_khr_spirv_no_integer_wrap_decoration cl_intel_unified_shared_memory cl_khr_mipmap_image cl_khr_mipmap_image_writes cl_ext_float_atomics cl_khr_external_memory cl_intel_planar_yuv cl_intel_packed_yuv cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_image2d_from_buffer cl_khr_depth_images cl_khr_3d_image_writes cl_intel_media_block_io cl_intel_subgroup_local_block_io cl_khr_integer_dot_product cl_khr_gl_sharing cl_khr_gl_depth_images cl_khr_gl_event cl_khr_gl_msaa_sharing cl_intel_dx9_media_sharing cl_khr_dx9_media_sharing cl_khr_d3d10_sharing cl_khr_d3d11_sharing cl_intel_d3d11_nv12_media_sharing cl_intel_sharing_format_query cl_khr_pci_bus_info cl_intel_simultaneous_sharing
+OpenCL evaluator choosing OpenCL platform NVIDIA Corporation.
+OpenCL evaluator is unable to find a GPU device that can share VBOs with OpenGL.
+Warning: Fragment BIFisoSurfaceVoxelFragmentVtt missing Cg implementation
+Warning: Fragment BIFisoSurfaceVoxelFragmentVttInteractive missing Cg implementation
+Warning: Fragment BIFvolumeVoxelFragmentVtt missing Cg implementation
+Error: line 1: menuSet: There are no menuSets to query.
+Error: line 1: Error evaluating argument at position 1 in procedure "findMenuSetFromLabel".
+Error: RuntimeError: Error occurred during execution of MEL script
+line 1: line 1: Error evaluating argument at position 1 in procedure "findMenuSetFromLabel".
+Error: Bifrost: The user's default publishing location does not exist: C:/Users/LaiaPeris/Autodesk/Bifrost/Compounds
+[AutoRig build] Cleaning up node graph...
+[AutoRig build] Restoring Maya state...
+[AutoRig build] Timing report: C:\proyectos\auto-rig\autorig_tools\maya_tools\assets\Edward\validation\20261015T075944753507Z.buildtiming.json
+[AutoRig build] Complete
+EDWARD_CPU_SAMPLE before {"jaw": 99.703624999961, "corner": 78.56470625000611, "fine": 64.97778749996996, "mixed": 81.93858749996252} geometry_error 0
+[AutoRig build] Creating basic structure...
+--- Geo organizada en geo_GRP: {'FINAL': 6} ---
+--- MGEAR INTEGRATION: None ---
+[AutoRig build] Building rig modules...
+[AutoRig build] Loading rig settings�
+[AutoRig build] Building spine�
+[AutoRig build] Building legs�
+[AutoRig build] Building clavicles�
+[AutoRig build] Building arms�
+[AutoRig build] Building fingers�
+[AutoRig build] Building neck�
+[AutoRig build] Building jaw�
+[AutoRig build] Building eyebrows�
+[AutoRig build] Building eyelids�
+[AutoRig build] Building tongue�
+[AutoRig build] Building teeth�
+[AutoRig build] Building ears�
+[AutoRig build] Building nose�
+[AutoRig build] Building cheekbones�
+[AutoRig build] Labeling joints...
+[AutoRig build] Hiding utility nodes...
+[AutoRig build] Setting inherit transforms...
+[AutoRig build] Importing skin weights...
+[AutoRig build] Localizing corrective skin...
+[AutoRig build] Importing corrective blendshapes...
+[AutoRig build] Importing facial wrinkles...
+[AutoRig build] Cleaning up node graph...
+[AutoRig build] Restoring Maya state...
+[AutoRig build] Timing report: C:\proyectos\auto-rig\autorig_tools\maya_tools\assets\Edward\validation\20261015T080040362611Z.buildtiming.json
+[AutoRig build] Complete
+EDWARD_CPU_SAMPLE after {"jaw": 80.16888125001742, "corner": 77.49434375000419, "fine": 77.04880624999078, "mixed": 83.72190000000046} geometry_error 0
+[AutoRig build] Creating basic structure...
+--- Geo organizada en geo_GRP: {'FINAL': 6} ---
+--- MGEAR INTEGRATION: None ---
+[AutoRig build] Building rig modules...
+[AutoRig build] Loading rig settings�
+[AutoRig build] Building spine�
+[AutoRig build] Building legs�
+[AutoRig build] Building clavicles�
+[AutoRig build] Building arms�
+[AutoRig build] Building fingers�
+[AutoRig build] Building neck�
+[AutoRig build] Building jaw�
+[AutoRig build] Building eyebrows�
+[AutoRig build] Building eyelids�
+[AutoRig build] Building tongue�
+[AutoRig build] Building teeth�
+[AutoRig build] Building ears�
+[AutoRig build] Building nose�
+[AutoRig build] Building cheekbones�
+[AutoRig build] Labeling joints...
+[AutoRig build] Hiding utility nodes...
+[AutoRig build] Setting inherit transforms...
+[AutoRig build] Importing skin weights...
+[AutoRig build] Localizing corrective skin...
+[AutoRig build] Importing corrective blendshapes...
+[AutoRig build] Importing facial wrinkles...
+[AutoRig build] Cleaning up node graph...
+[AutoRig build] Restoring Maya state...
+[AutoRig build] Timing report: C:\proyectos\auto-rig\autorig_tools\maya_tools\assets\Edward\validation\20261015T080119231865Z.buildtiming.json
+[AutoRig build] Complete
+EDWARD_CPU_SAMPLE after {"jaw": 78.36629374997983, "corner": 71.6320687499774, "fine": 74.44049999998015, "mixed": 76.21920625001621} geometry_error 0
+[AutoRig build] Creating basic structure...
+--- Geo organizada en geo_GRP: {'FINAL': 6} ---
+--- MGEAR INTEGRATION: None ---
+[AutoRig build] Building rig modules...
+[AutoRig build] Loading rig settings�
+[AutoRig build] Building spine�
+[AutoRig build] Building legs�
+[AutoRig build] Building clavicles�
+[AutoRig build] Building arms�
+[AutoRig build] Building fingers�
+[AutoRig build] Building neck�
+[AutoRig build] Building jaw�
+[AutoRig build] Building eyebrows�
+[AutoRig build] Building eyelids�
+[AutoRig build] Building tongue�
+[AutoRig build] Building teeth�
+[AutoRig build] Building ears�
+[AutoRig build] Building nose�
+[AutoRig build] Building cheekbones�
+[AutoRig build] Labeling joints...
+[AutoRig build] Hiding utility nodes...
+[AutoRig build] Setting inherit transforms...
+[AutoRig build] Importing skin weights...
+[AutoRig build] Localizing corrective skin...
+[AutoRig build] Importing corrective blendshapes...
+[AutoRig build] Importing facial wrinkles...
+[AutoRig build] Cleaning up node graph...
+[AutoRig build] Restoring Maya state...
+[AutoRig build] Timing report: C:\proyectos\auto-rig\autorig_tools\maya_tools\assets\Edward\validation\20261015T080157176624Z.buildtiming.json
+[AutoRig build] Complete
+EDWARD_CPU_SAMPLE before {"jaw": 84.44378125000185, "corner": 79.36141874995428, "fine": 67.1717187499894, "mixed": 78.40398749999622} geometry_error 0
+PASS complete Edward geometry comparison and CPU sampling
+{"before": {"median_controls_ms": {"jaw": 92.07370312498142, "corner": 78.9630624999802, "fine": 66.07475312497968, "mixed": 80.17128749997937}}, "after": {"median_controls_ms": {"jaw": 79.26758749999863, "corner": 74.5632062499908, "fine": 75.74465312498546, "mixed": 79.97055312500834}}, "maximum_geometry_error": 0}

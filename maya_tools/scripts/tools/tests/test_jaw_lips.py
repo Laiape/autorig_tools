@@ -292,7 +292,7 @@ try:
   previous=None
   for driver in np.linspace(0,1,81):
    cmds.setAttr('C_jaw_CTL.stickyLips',float(driver))
-   weights=np.array([cmds.getAttr(j.replace('_JNT','NonRot_JNT')+'StickyFalloff_RMV.outValue') for j in joint_names])
+   weights=np.array([cmds.getAttr(j+'Sticky_BMX.target[0].weight') for j in joint_names])
    expected=np.array([min(1.,driver/(min(i,24-i)/12.*.7+falloff)) for i in range(25)])
    assert np.allclose(weights,expected,atol=1e-6),(weights,expected)
    if previous is not None:assert np.all(weights>=previous-1e-8)

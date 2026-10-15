@@ -84,7 +84,7 @@ try:
         inward(side, 0)
 
     # Continuous activation, saturation and a smooth bilateral intersection.
-    probe = 'C_lipAutoWideOutputupper12_CMX.inputTranslateZ'
+    probe = 'C_lipAutoWideOutputupper12Forward_MDV.outputZ'
     for boundary in (0, 1):
         values = []
         epsilon = .001

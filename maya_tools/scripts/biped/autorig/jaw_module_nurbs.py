@@ -195,16 +195,18 @@ class JawModule(object):
         return result
 
     @staticmethod
-    def _neighbor_lip_aim(name, frame, target, reverse=False):
+    def _neighbor_lip_aim(name, frame, target, reverse=False, positions=None):
         """Aim fine controls at independent neighbour bases, preserving rest axes."""
-        current = cmds.createNode("decomposeMatrix", name=name + "NeighborPosition_DCM", ss=True)
-        neighbor = cmds.createNode("decomposeMatrix", name=name + "NeighborTarget_DCM", ss=True)
-        cmds.connectAttr(frame, current + ".inputMatrix")
-        cmds.connectAttr(target, neighbor + ".inputMatrix")
+        if positions is None:
+            positions = []
+            for suffix, matrix in (("Position", frame), ("Target", target)):
+                node = cmds.createNode("translationFromMatrix", name=name + "Neighbor" + suffix + "_TFM", ss=True)
+                cmds.connectAttr(matrix, node + ".input")
+                positions.append(node + ".output")
         direction = cmds.createNode("plusMinusAverage", name=name + "NeighborDirection_PMA", ss=True)
         cmds.setAttr(direction + ".operation", 2)
-        cmds.connectAttr(neighbor + ".outputTranslate", direction + ".input3D[0]")
-        cmds.connectAttr(current + ".outputTranslate", direction + ".input3D[1]")
+        cmds.connectAttr(positions[1], direction + ".input3D[0]")
+        cmds.connectAttr(positions[0], direction + ".input3D[1]")
         length = cmds.createNode("vectorProduct", name=name + "NeighborLength_VPR", ss=True)
         cmds.setAttr(length + ".operation", 1)
         cmds.connectAttr(direction + ".output3D", length + ".input1")
@@ -391,7 +393,7 @@ class JawModule(object):
 
     @staticmethod
     def _stable_lip_aim(name, pin, auxiliary, corner_matrix, rest_position,
-                        preserve_up_direction=False):
+                        preserve_up_direction=False, corner_axes=None):
         """Stateless frame: pin Z plus a guarded auxiliary up direction."""
         def vector_node(suffix, operation, first=None, second=None):
             node = cmds.createNode("vectorProduct", name=name + suffix, ss=True)
@@ -402,14 +404,14 @@ class JawModule(object):
                 cmds.connectAttr(second, node + ".input2")
             return node
 
-        pin_pos = cmds.createNode("decomposeMatrix", name=name + "Pin_DCM", ss=True)
-        up_pos = cmds.createNode("decomposeMatrix", name=name + "Up_DCM", ss=True)
-        cmds.connectAttr(pin, pin_pos + ".inputMatrix")
-        cmds.connectAttr(auxiliary, up_pos + ".inputMatrix")
+        pin_pos = cmds.createNode("translationFromMatrix", name=name + "Pin_TFM", ss=True)
+        up_pos = cmds.createNode("translationFromMatrix", name=name + "Up_TFM", ss=True)
+        cmds.connectAttr(pin, pin_pos + ".input")
+        cmds.connectAttr(auxiliary, up_pos + ".input")
         subtract = cmds.createNode("plusMinusAverage", name=name + "Up_PMA", ss=True)
         cmds.setAttr(subtract + ".operation", 2)
-        cmds.connectAttr(up_pos + ".outputTranslate", subtract + ".input3D[0]")
-        cmds.connectAttr(pin_pos + ".outputTranslate", subtract + ".input3D[1]")
+        cmds.connectAttr(up_pos + ".output", subtract + ".input3D[0]")
+        cmds.connectAttr(pin_pos + ".output", subtract + ".input3D[1]")
         # Normalize only with a guarded divisor: vectorProduct normalization of
         # a zero vector reports an error before the downstream fallback runs.
         distance = cmds.createNode("distanceBetween", name=name + "UpDistance_DST", ss=True)
@@ -428,13 +430,15 @@ class JawModule(object):
         primary = vector_node("Primary_VPR", 3)
         cmds.setAttr(primary + ".input1", 0, 0, 1)
         cmds.connectAttr(pin, primary + ".matrix")
-        axes = []
-        for label, axis in [("Y", (0, 1, 0)), ("X", (1, 0, 0)), ("Z", (0, 0, 1))]:
-            node = vector_node("Corner" + label + "_VPR", 3)
-            cmds.setAttr(node + ".input1", *axis)
-            cmds.connectAttr(corner_matrix, node + ".matrix")
-            cmds.setAttr(node + ".normalizeOutput", 1)
-            axes.append(node + ".output")
+        axes = corner_axes
+        if axes is None:
+            axes = []
+            for label, axis in [("Y", (0, 1, 0)), ("X", (1, 0, 0)), ("Z", (0, 0, 1))]:
+                node = vector_node("Corner" + label + "_VPR", 3)
+                cmds.setAttr(node + ".input1", *axis)
+                cmds.connectAttr(corner_matrix, node + ".matrix")
+                cmds.setAttr(node + ".normalizeOutput", 1)
+                axes.append(node + ".output")
         primary_length = vector_node("PrimaryLength_VPR", 1, primary + ".output", primary + ".output")
         primary_guard = cmds.createNode("condition", name=name + "PrimarySafety_CND", ss=True)
         cmds.setAttr(primary_guard + ".operation", 4)
@@ -484,7 +488,7 @@ class JawModule(object):
         cmds.connectAttr(fallback + ".outColor", blend + ".color2")
         aim = cmds.createNode("aimMatrix", name=name + "Vector_AMX", ss=True)
         position = cmds.createNode("composeMatrix", name=name + "Position_CMX", ss=True)
-        cmds.connectAttr(pin_pos + ".outputTranslate", position + ".inputTranslate")
+        cmds.connectAttr(pin_pos + ".output", position + ".inputTranslate")
         cmds.connectAttr(position + ".outputMatrix", aim + ".inputMatrix")
         cmds.setAttr(aim + ".primaryInputAxis", 0, 0, 1)
         cmds.connectAttr(primary + ".output", aim + ".primaryTargetVector")
@@ -506,7 +510,7 @@ class JawModule(object):
         return 1.0 - t * t * (3.0 - 2.0 * t)
 
     @staticmethod
-    def _round_raised_lip_frames(name, frames, corner_drags, half_width, stations=None):
+    def _round_raised_lip_frames(name, frames, corner_drags, half_width, stations=None, offsets=None):
         """Round corner translation while leaving each lip's own motion independent.
 
         Capture the neutral X stations once. Only corner displacement drives
@@ -580,6 +584,10 @@ class JawModule(object):
             quartic = scalar(f"{index:02d}Quartic_MUL", "multiply", square, square)
             difference = scalar(f"{index:02d}Delta_SUB", "subtract", quartic, weight)
             delta = scalar(f"{index:02d}Blend_MUL", "multiply", difference, rises[side])
+            if offsets is not None:
+                for part in ("upper", "lower"):
+                    offsets[part][index]["inputs"][1].append(delta)
+                continue
             translate = cmds.createNode("composeMatrix", name=f"{name}{index:02d}Delta_CMX", ss=True)
             cmds.connectAttr(delta, translate + ".inputTranslateY")
             corrections[index] = translate + ".outputMatrix"
@@ -660,7 +668,7 @@ class JawModule(object):
             drivers[part]["center"] = scalar(name + "_DIV", "divide", [twice, total])
         return drivers
 
-    def _auto_wide_lip_frames(self, name, frames, drivers, forward, stations=None):
+    def _auto_wide_lip_frames(self, name, frames, drivers, forward, stations=None, offsets=None):
         """Add a bounded forward bulge once, before sticky/roll and final following.
 
         Both sides compressed equally produce a center-heavy smoothstep profile.
@@ -688,6 +696,12 @@ class JawModule(object):
                 cmds.setAttr(scale + ".input1", *forward, type="double3")
                 for axis in "XYZ":
                     cmds.connectAttr(field + ".output", scale + ".input2" + axis)
+                if offsets is not None:
+                    for axis, inputs in zip("XYZ", offsets[part][index]["inputs"]):
+                        # Direction is constant: omit identically zero components.
+                        if forward["XYZ".index(axis)]:
+                            inputs.append(scale + ".output" + axis)
+                    continue
                 translate = cmds.createNode("composeMatrix", name=prefix + "_CMX", ss=True)
                 cmds.connectAttr(scale + ".output", translate + ".inputTranslate")
                 matrix = cmds.createNode("multMatrix", name=prefix + "_MMX", ss=True)
@@ -695,6 +709,52 @@ class JawModule(object):
                 cmds.connectAttr(translate + ".outputMatrix", matrix + ".matrixIn[1]")
                 result[part][index] = matrix + ".matrixSum"
         return result
+
+    @staticmethod
+    def _finish_lip_offsets(offsets):
+        """Sum only translations in double precision, preserving rigid frames.
+
+        Adding matrices at every corrective stage repeats the same operation.
+        Scalar sums avoid the float-vector rounding of plusMinusAverage and
+        feed one translation matrix per station. Calls may append more fields.
+        """
+        for offset in offsets:
+            for axis, sources in enumerate(offset["inputs"]):
+                if not sources:
+                    continue
+                if len(sources) == 1:
+                    output = sources[0]
+                else:
+                    node = offset["sums"].get(axis)
+                    if node is None:
+                        node = cmds.createNode("sum", name=offset["compose"][:-4] + "XYZ"[axis] + "_SUM", ss=True)
+                        offset["sums"][axis] = node
+                    for slot, source in enumerate(sources):
+                        destination = node + f".input[{slot}]"
+                        if not cmds.isConnected(source, destination):
+                            cmds.connectAttr(source, destination)
+                    output = node + ".output"
+                destination = offset["compose"] + ".inputTranslate" + "XYZ"[axis]
+                if not cmds.isConnected(output, destination):
+                    cmds.connectAttr(output, destination, force=True)
+
+    def _lip_offset_frame(self, name, frame, translations):
+        """Keep display and ribbon bases independent, including at zero weights."""
+        compose = cmds.createNode("composeMatrix", name=name + "Offset_CMX", ss=True)
+        matrix = cmds.createNode("multMatrix", name=name + "Offset_MMX", ss=True)
+        cmds.connectAttr(frame, matrix + ".matrixIn[0]")
+        cmds.connectAttr(compose + ".outputMatrix", matrix + ".matrixIn[1]")
+        offset = {"compose": compose, "inputs": [[], [], []], "sums": {}}
+        for slot, (vector, weight) in enumerate(translations):
+            if abs(weight) < 1e-12:
+                continue
+            scale = cmds.createNode("multiplyDivide", name=f"{name}Offset{slot}_MDV", ss=True)
+            cmds.connectAttr(vector, scale + ".input1")
+            cmds.setAttr(scale + ".input2", weight, weight, weight)
+            for axis, sources in zip("XYZ", offset["inputs"]):
+                sources.append(scale + ".output" + axis)
+        self._finish_lip_offsets([offset])
+        return matrix + ".matrixSum", offset
 
     @staticmethod
     def _corner_auto_narrow(corner, offset_group, local_matrix, outward_fraction):
@@ -727,9 +787,9 @@ class JawModule(object):
         cmds.connectAttr(corner + ".matrix", effective + ".matrixIn[0]")
         cmds.connectAttr(compose + ".outputMatrix", effective + ".matrixIn[1]")
         cmds.connectAttr(effective + ".matrixSum", local_matrix + ".matrixIn[0]", force=True)
-        decompose = cmds.createNode("decomposeMatrix", name=name + "_DCM", ss=True)
-        cmds.connectAttr(effective + ".matrixSum", decompose + ".inputMatrix")
-        cmds.connectAttr(decompose + ".outputTranslate", outward_fraction + ".input1", force=True)
+        position = cmds.createNode("translationFromMatrix", name=name + "_TFM", ss=True)
+        cmds.connectAttr(effective + ".matrixSum", position + ".input")
+        cmds.connectAttr(position + ".output", outward_fraction + ".input1", force=True)
 
     @staticmethod
     def _corner_drag_driver(side, corner_joint, jaw_blend, parent):
@@ -742,14 +802,14 @@ class JawModule(object):
         cmds.connectAttr(jaw_plug, f"{baseline}.matrixIn[1]")
         joint = cmds.createNode("joint", name=f"{side}_cornerLipBase_JNT", ss=True, parent=parent)
         cmds.connectAttr(f"{baseline}.matrixSum", f"{joint}.offsetParentMatrix")
-        current = cmds.createNode("decomposeMatrix", name=f"{side}_cornerLipDrag_DCM", ss=True)
-        original = cmds.createNode("decomposeMatrix", name=f"{side}_cornerLipBase_DCM", ss=True)
-        cmds.connectAttr(f"{corner_joint}.worldMatrix[0]", f"{current}.inputMatrix")
-        cmds.connectAttr(f"{baseline}.matrixSum", f"{original}.inputMatrix")
+        current = cmds.createNode("translationFromMatrix", name=f"{side}_cornerLipDrag_TFM", ss=True)
+        original = cmds.createNode("translationFromMatrix", name=f"{side}_cornerLipBase_TFM", ss=True)
+        cmds.connectAttr(f"{corner_joint}.worldMatrix[0]", f"{current}.input")
+        cmds.connectAttr(f"{baseline}.matrixSum", f"{original}.input")
         delta = cmds.createNode("plusMinusAverage", name=f"{side}_cornerLipDrag_PMA", ss=True)
         cmds.setAttr(f"{delta}.operation", 2)
-        cmds.connectAttr(f"{current}.outputTranslate", f"{delta}.input3D[0]")
-        cmds.connectAttr(f"{original}.outputTranslate", f"{delta}.input3D[1]")
+        cmds.connectAttr(f"{current}.output", f"{delta}.input3D[0]")
+        cmds.connectAttr(f"{original}.output", f"{delta}.input3D[1]")
         return joint, f"{delta}.output3D"
 
     @staticmethod
@@ -766,7 +826,7 @@ class JawModule(object):
         return result + ".matrixSum"
 
     @staticmethod
-    def _add_corner_rotation(name, frame, corner, pivot, weight):
+    def _add_corner_rotation(name, frame, corner, pivot, weight, basis=None):
         """Rotate a lip station about its corner, fading to the mouth center.
 
         Use the jaw-follow pivot in the module's deformation space; head and
@@ -776,17 +836,19 @@ class JawModule(object):
         """
         if weight <= 0.0:
             return frame
-        rotation = cmds.createNode("pickMatrix", name=name + "CornerRotation_PCM", ss=True)
-        cmds.connectAttr(corner + ".matrix", rotation + ".inputMatrix")
-        for component in ("Translate", "Scale", "Shear"):
-            cmds.setAttr(rotation + ".use" + component, 0)
+        if basis is None:
+            rotation = cmds.createNode("pickMatrix", name=name + "CornerRotation_PCM", ss=True)
+            cmds.connectAttr(corner + ".matrix", rotation + ".inputMatrix")
+            for component in ("Translate", "Scale", "Shear"):
+                cmds.setAttr(rotation + ".use" + component, 0)
+            inverse = cmds.createNode("inverseMatrix", name=name + "CornerPivot_IMX", ss=True)
+            cmds.connectAttr(pivot, inverse + ".inputMatrix")
+            basis = (rotation + ".outputMatrix", inverse + ".outputMatrix")
         blend = cmds.createNode("blendMatrix", name=name + "CornerRotation_BMX", ss=True)
-        cmds.connectAttr(rotation + ".outputMatrix", blend + ".target[0].targetMatrix")
+        cmds.connectAttr(basis[0], blend + ".target[0].targetMatrix")
         cmds.setAttr(blend + ".target[0].weight", weight)
-        inverse = cmds.createNode("inverseMatrix", name=name + "CornerPivot_IMX", ss=True)
-        cmds.connectAttr(pivot, inverse + ".inputMatrix")
         result = cmds.createNode("multMatrix", name=name + "CornerRotation_MMX", ss=True)
-        for index, plug in enumerate((frame, inverse + ".outputMatrix",
+        for index, plug in enumerate((frame, basis[1],
                                       blend + ".outputMatrix", pivot)):
             cmds.connectAttr(plug, result + f".matrixIn[{index}]")
         return result + ".matrixSum"
@@ -1263,6 +1325,26 @@ class JawModule(object):
         all_secondary_controls = {}
         all_secondary_control_frames = {}
         all_secondary_stations = {}
+        display_offsets = {"upper": [], "lower": []}
+        corner_rotation_bases = {}
+        corner_aim_axes = {}
+        for corner in corner_controllers:
+            side = corner.split("_")[0]
+            rotation = cmds.createNode("pickMatrix", name=side + "_lipCornerRotation_PCM", ss=True)
+            cmds.connectAttr(corner + ".matrix", rotation + ".inputMatrix")
+            for component in ("Translate", "Scale", "Shear"):
+                cmds.setAttr(rotation + ".use" + component, 0)
+            inverse = cmds.createNode("inverseMatrix", name=side + "_lipCornerPivot_IMX", ss=True)
+            cmds.connectAttr(corner_pivots[side], inverse + ".inputMatrix")
+            corner_rotation_bases[side] = (rotation + ".outputMatrix", inverse + ".outputMatrix")
+            corner_aim_axes[side] = []
+            for label, axis in (("Y", (0, 1, 0)), ("X", (1, 0, 0)), ("Z", (0, 0, 1))):
+                node = cmds.createNode("vectorProduct", name=side + "_lipCorner" + label + "_VPR", ss=True)
+                cmds.setAttr(node + ".operation", 3)
+                cmds.setAttr(node + ".input1", *axis)
+                cmds.setAttr(node + ".normalizeOutput", 1)
+                cmds.connectAttr(corner + ".worldMatrix[0]", node + ".matrix")
+                corner_aim_axes[side].append(node + ".output")
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
 
@@ -1328,13 +1410,13 @@ class JawModule(object):
                 corner = next(c for c in corner_controllers if c.startswith(drag_side + "_"))
                 base_frame = self._add_corner_rotation(
                     ctl_name, f"{fbf}.output", corner, corner_pivots[drag_side],
-                    self._corner_drag_weight(2.0 * min(real_param, 1.0 - real_param)))
-                display_frame = self._add_corner_drag(
-                    ctl_name + "Display", base_frame, corner_drags[drag_side],
-                    self._corner_drag_weight(2.0 * min(real_param, 1.0 - real_param)))
-                display_frame = self._add_corner_drag(
-                    ctl_name + "DisplayCenterProfile", display_frame,
-                    center_drags[part], display_corrections[index])
+                    self._corner_drag_weight(2.0 * min(real_param, 1.0 - real_param)),
+                    basis=corner_rotation_bases[drag_side])
+                display_frame, offset = self._lip_offset_frame(
+                    ctl_name + "Display", base_frame,
+                    [(corner_drags[drag_side], self._corner_drag_weight(2.0 * min(real_param, 1.0 - real_param))),
+                     (center_drags[part], display_corrections[index])])
+                display_offsets[part].append(offset)
                 cmds.connectAttr(display_frame, f"{secondary_nodes[0]}.offsetParentMatrix")
 
                 mult_matrix_secondary_local = cmds.createNode(
@@ -1356,12 +1438,18 @@ class JawModule(object):
 
             # Targets use pre-aim frames, as in the matrix reference: no
             # controller world matrices enter this graph (no feedback cycle).
+            display_positions = []
+            for index, frame in enumerate(secondary_display_frames):
+                position = cmds.createNode("translationFromMatrix", name=secondary_ctls[index][:-4] + "Neighbor_TFM", ss=True)
+                cmds.connectAttr(frame, position + ".input")
+                display_positions.append(position + ".output")
             for index, ctl in enumerate(secondary_ctls):
                 name = ctl.rsplit("_CTL", 1)[0]
                 target_index = index + 1 if index + 1 < len(secondary_ctls) else index - 1
                 aimed = self._neighbor_lip_aim(name, secondary_display_frames[index],
                                                secondary_display_frames[target_index],
-                                               index == len(secondary_ctls) - 1)
+                                               index == len(secondary_ctls) - 1,
+                                               positions=(display_positions[index], display_positions[target_index]))
                 cmds.connectAttr(aimed, secondary_grps[index] + ".offsetParentMatrix", force=True)
                 secondary_control_frames.append(aimed)
                 rotation = cmds.createNode("pickMatrix", name=name + "NeighborRotation_PCM", ss=True)
@@ -1445,20 +1533,14 @@ class JawModule(object):
 
         # Correct the displayed frames only. Output pins receive their own corner
         # correction once; warping ribbon drivers here would apply it twice.
-        display_destinations = {plug: cmds.listConnections(plug, s=False, d=True, p=True) or []
-                                for values in all_secondary_display_frames.values() for plug in values}
         rounded_display, _ = self._round_raised_lip_frames(
             "C_lipRoundedRibbon", all_secondary_display_frames, corner_drags, half,
-            stations=self._curve_cv_parameters(self.upper_rebuild_lip_curve))
-        rounded_display = self._auto_wide_lip_frames(
+            stations=self._curve_cv_parameters(self.upper_rebuild_lip_curve), offsets=display_offsets)
+        self._auto_wide_lip_frames(
             "C_lipAutoWideDisplay", rounded_display, auto_wide_drivers,
-            forward, stations=all_secondary_stations)
+            forward, stations=all_secondary_stations, offsets=display_offsets)
         for part in ("upper", "lower"):
-            for index in range(len(rounded_display[part])):
-                original_display = all_secondary_display_frames[part][index]
-                for destination in display_destinations[original_display]:
-                    if not cmds.isConnected(rounded_display[part][index], destination):
-                        cmds.connectAttr(rounded_display[part][index], destination, force=True)
+            self._finish_lip_offsets(display_offsets[part])
 
         output_joints = { "upper": [], "lower": [] }
         non_rotate_output_joints = { "upper": [], "lower": [] }
@@ -1466,6 +1548,7 @@ class JawModule(object):
         orient_plugs = { "upper": [], "lower": [] }
         pick_matrices = { "upper": [], "lower": [] }
         output_stations = {}
+        output_offsets = {"upper": [], "lower": []}
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
             
@@ -1542,14 +1625,14 @@ class JawModule(object):
                     f"{side}_{part}Lip{name_index:02d}",
                     f"{uv_pin_nurbs}.outputMatrix[{i}]", f"{uv_pin_up}.outputMatrix[{i}]",
                     f"{corner}.worldMatrix[0]", vertex_cv_pos,
-                    preserve_up_direction=True)
-                frame = self._add_corner_drag(
+                    preserve_up_direction=True,
+                    corner_axes=corner_aim_axes["R" if i <= mid_point else "L"])
+                frame, offset = self._lip_offset_frame(
                     f"{side}_{part}Lip{name_index:02d}", frame,
-                    corner_drags["R" if i <= mid_point else "L"],
-                    self._corner_drag_weight(min(i, linear_curve_cvs - 1 - i) / float(mid_point)))
-                frame = self._add_corner_drag(
-                    f"{side}_{part}Lip{name_index:02d}CenterProfile", frame,
-                    center_drags[part], center_corrections[i])
+                    [(corner_drags["R" if i <= mid_point else "L"],
+                      self._corner_drag_weight(min(i, linear_curve_cvs - 1 - i) / float(mid_point))),
+                     (center_drags[part], center_corrections[i])])
+                output_offsets[part].append(offset)
 
                 out_joint = cmds.createNode("joint", name=f"{side}_{part}Lip{name_index:02d}_JNT", ss=True, parent=self.lips_skinning_grp)
                 cmds.connectAttr(frame, f"{out_joint}.offsetParentMatrix")
@@ -1583,11 +1666,12 @@ class JawModule(object):
 
 
         orient_plugs, _ = self._round_raised_lip_frames(
-            "C_lipRoundedOutput", orient_plugs, corner_drags, half)
+            "C_lipRoundedOutput", orient_plugs, corner_drags, half, offsets=output_offsets)
         orient_plugs = self._auto_wide_lip_frames(
             "C_lipAutoWideOutput", orient_plugs, auto_wide_drivers,
-            forward, stations=output_stations)
+            forward, stations=output_stations, offsets=output_offsets)
         for part in ("upper", "lower"):
+            self._finish_lip_offsets(output_offsets[part])
             for index, frame in enumerate(orient_plugs[part]):
                 for destination in (output_joints[part][index] + ".offsetParentMatrix",
                                     pick_matrices[part][index] + ".inputMatrix"):
@@ -1637,12 +1721,19 @@ class JawModule(object):
 
         # Reference weights: upper * mouthHeight + lower * (1-mouthHeight).
         meeting_plugs = self._sticky_meeting_frames(orient_plugs, mouth_height_rev)
+        sticky_weights = {}
 
         for part in ["upper", "lower"]:
 
-            for i, (non_rot_joint, out_joint) in enumerate(zip(non_rotate_output_joints[part], output_joints[part])):
+            roll_controller = upper_lip_ctl if part == "upper" else lower_lip_ctl
+            roll_rx_deg = cmds.createNode("multiply", name=f"C_{part}LipRollRxDeg_MUL", ss=True)
+            cmds.connectAttr(roll_controller + ".rotateX", roll_rx_deg + ".input[0]")
+            cmds.setAttr(roll_rx_deg + ".input[1]", 1.0)
+            roll_drive = cmds.createNode("plusMinusAverage", name=f"C_{part}LipRollDrive_PMA", ss=True)
+            cmds.connectAttr(roll_rx_deg + ".output", roll_drive + ".input1D[0]")
+            cmds.connectAttr(roll_controller + ".Roll", roll_drive + ".input1D[1]")
 
-                roll_controller = upper_lip_ctl if part == "upper" else lower_lip_ctl
+            for i, (non_rot_joint, out_joint) in enumerate(zip(non_rotate_output_joints[part], output_joints[part])):
 
                 real_index = i if i <= mid_point else (linear_curve_cvs - 1) - i
 
@@ -1651,15 +1742,18 @@ class JawModule(object):
                 # Same falloff as the matrix module: inputMin stays at zero,
                 # inputMax = normalized distance from corner * .7 + falloff.
                 t_stick = float(real_index) / float(mid_point) if mid_point else 0.0
-                sticky_rmv = cmds.createNode("remapValue", name=f"{non_rot_joint}StickyFalloff_RMV", ss=True)
-                cmds.connectAttr(f"{self.jaw_ctl}.stickyLips", f"{sticky_rmv}.inputValue")
-                falloff_sum = cmds.createNode("sum", name=f"{non_rot_joint}Falloff_SUM", ss=True)
-                cmds.setAttr(f"{falloff_sum}.input[0]", t_stick * 0.7)
-                cmds.connectAttr(f"{self.jaw_ctl}.stickyFalloff", f"{falloff_sum}.input[1]")
-                cmds.connectAttr(f"{falloff_sum}.output", f"{sticky_rmv}.inputMax")
-                cmds.setAttr(f"{sticky_rmv}.outputMin", 0)
-                cmds.setAttr(f"{sticky_rmv}.outputMax", 1)
-                sticky_weight = f"{sticky_rmv}.outValue"
+                if t_stick not in sticky_weights:
+                    prefix = f"C_lipsSticky{len(sticky_weights):02d}"
+                    sticky_rmv = cmds.createNode("remapValue", name=prefix + "_RMV", ss=True)
+                    cmds.connectAttr(f"{self.jaw_ctl}.stickyLips", f"{sticky_rmv}.inputValue")
+                    falloff_sum = cmds.createNode("sum", name=prefix + "Falloff_SUM", ss=True)
+                    cmds.setAttr(f"{falloff_sum}.input[0]", t_stick * 0.7)
+                    cmds.connectAttr(f"{self.jaw_ctl}.stickyFalloff", f"{falloff_sum}.input[1]")
+                    cmds.connectAttr(f"{falloff_sum}.output", f"{sticky_rmv}.inputMax")
+                    cmds.setAttr(f"{sticky_rmv}.outputMin", 0)
+                    cmds.setAttr(f"{sticky_rmv}.outputMax", 1)
+                    sticky_weights[t_stick] = f"{sticky_rmv}.outValue"
+                sticky_weight = sticky_weights[t_stick]
 
                 # Conexión del blendMatrix sticky a la joint de salida.
                 blend_matrix_sticky_rot = cmds.createNode("blendMatrix", name=f"{out_joint}Sticky_BMX", ss=True)
@@ -1672,15 +1766,13 @@ class JawModule(object):
                 cmds.setAttr(f"{blend_matrix_sticky_rot}.target[0].shearWeight", 0)
                 cmds.connectAttr(f"{blend_matrix_sticky_rot}.outputMatrix", f"{out_joint}.offsetParentMatrix", f=True)
 
-                # ...y también a la NON-ROTATE (solo traslación: conserva su no-rotación).
-                blend_matrix_sticky_nr = cmds.createNode("blendMatrix", name=f"{non_rot_joint}Sticky_BMX", ss=True)
-                cmds.connectAttr(f"{pick_matrices[part][i]}.outputMatrix", f"{blend_matrix_sticky_nr}.inputMatrix")
-                cmds.connectAttr(meeting_plugs[part][i], f"{blend_matrix_sticky_nr}.target[0].targetMatrix")
-                cmds.connectAttr(sticky_weight, f"{blend_matrix_sticky_nr}.target[0].weight")
-                cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].rotateWeight", 0)
-                cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].scaleWeight", 0)
-                cmds.setAttr(f"{blend_matrix_sticky_nr}.target[0].shearWeight", 0)
-                cmds.connectAttr(f"{blend_matrix_sticky_nr}.outputMatrix", f"{non_rot_joint}.offsetParentMatrix", f=True)
+                # Non Rotate shares the solved sticky position and strips rotation.
+                # Roll stays on the Rotate joint's local channel downstream.
+                cmds.connectAttr(blend_matrix_sticky_rot + ".outputMatrix",
+                                 pick_matrices[part][i] + ".inputMatrix", force=True)
+                destination = non_rot_joint + ".offsetParentMatrix"
+                if not cmds.isConnected(pick_matrices[part][i] + ".outputMatrix", destination):
+                    cmds.connectAttr(pick_matrices[part][i] + ".outputMatrix", destination, force=True)
 
                 max_index = mid_point - 1
                 if side == "C":
@@ -1700,12 +1792,6 @@ class JawModule(object):
                 # tangente (curl hacia dentro/fuera), encima del sticky, con falloff
                 # smoothstep (máximo en el centro, 0 en las esquinas).
                 # (rotateX -> nodo multiply lo expone en grados, coherente con Roll.)
-                roll_rx_deg = cmds.createNode("multiply", name=f"{out_joint}RollRxDeg_MUL", ss=True)
-                cmds.connectAttr(f"{roll_controller}.rotateX", f"{roll_rx_deg}.input[0]")
-                cmds.setAttr(f"{roll_rx_deg}.input[1]", 1.0)
-                roll_drive = cmds.createNode("plusMinusAverage", name=f"{out_joint}RollDrive_PMA", ss=True)
-                cmds.connectAttr(f"{roll_rx_deg}.output", f"{roll_drive}.input1D[0]")
-                cmds.connectAttr(f"{roll_controller}.Roll", f"{roll_drive}.input1D[1]")
 
                 # ---MULTIPLY ---
                 roll_mul = cmds.createNode("multiply", name=f"{out_joint}_Roll_MUL", ss=True)

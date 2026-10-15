@@ -1,0 +1,47 @@
+{
+  "purpose": "Compare only the Non Rotate dependency route inside one complete optimized Edward build; native DG geometry queries, no source or artist scene edits.",
+  "samples": [
+    {
+      "kind": "shared",
+      "ms": {
+        "fine": 65.02053125001339,
+        "jaw": 74.31461250001803,
+        "mixed": 73.10902500000793
+      }
+    },
+    {
+      "kind": "independent",
+      "ms": {
+        "fine": 72.79008124999109,
+        "jaw": 78.40537499998845,
+        "mixed": 75.04573125004299
+      }
+    },
+    {
+      "kind": "independent",
+      "ms": {
+        "fine": 68.1147562499973,
+        "jaw": 69.7136750000027,
+        "mixed": 78.13093125002979
+      }
+    },
+    {
+      "kind": "shared",
+      "ms": {
+        "fine": 67.37287499998956,
+        "jaw": 68.61857500001634,
+        "mixed": 67.53941250002526
+      }
+    }
+  ],
+  "shared": {
+    "fine": 66.19670312500148,
+    "jaw": 71.46659375001718,
+    "mixed": 70.3242187500166
+  },
+  "independent": {
+    "fine": 70.4524187499942,
+    "jaw": 74.05952499999557,
+    "mixed": 76.58833125003639
+  }
+}

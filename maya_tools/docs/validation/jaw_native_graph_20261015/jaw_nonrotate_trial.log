@@ -1,0 +1,283 @@
+[AutoRig build] Creating basic structure...
+00:00:00   536MB         | log started Thu Oct 15 10:06:12 2026
+00:00:00   536MB         | Arnold 7.4.4.2 [2a3ebfba] windows x86_64 clang-20.1.8 oiio-2.6.3 osl-1.13.3 vdb-11.0.0 adlsdk-9.8.2.57 clmhub-3.1.1.43 rlm-17.0.1 optix-8.0.0 2026/01/20 08:08:17
+00:00:00   536MB         | running on LAIAPERISWEELKO, pid=16616
+00:00:00   536MB         |  1 x Intel(R) Core(TM) i9-14900HX (32 cores, 32 logical) with 32396MB
+00:00:00   536MB         |  NVIDIA driver version 616.56
+00:00:00   536MB         |  GPU 0: NVIDIA GeForce RTX 5060 Laptop GPU @ 2212MHz (compute 12.0) with 8123MB (7361MB available) (NVLink:0)
+00:00:00   536MB         |  Windows 10 (version 10.0, build 26300)
+00:00:00   536MB         |  soft limit for open files changed from 512 to 2048
+00:00:00   536MB         |
+00:00:00   536MB         | Installing system handler with mask 255
+00:00:01   728MB         | [metadata] loading metadata file: C:\Program Files\Autodesk\Arnold\Maya2026\bin\arnold.mtd
+00:00:01   731MB         | loading plugins from C:\Program Files\Autodesk\Arnold\Maya2026\bin\..\plugins ...
+00:00:01   731MB         |  alembic_proc.dll: alembic uses Arnold 7.4.4.2
+00:00:01   757MB         |  usd_proc.dll: usd uses Arnold 7.4.4.2
+00:00:01   757MB         | loaded 2 plugins from 2 lib(s) in 0:00.01
+--- Geo organizada en geo_GRP: {'FINAL': 6} ---
+--- MGEAR INTEGRATION: None ---
+[AutoRig build] Building rig modules...
+[AutoRig build] Loading rig settings�
+[AutoRig build] Building spine�
+[AutoRig build] Building legs�
+[AutoRig build] Building clavicles�
+[AutoRig build] Building arms�
+[AutoRig build] Building fingers�
+[AutoRig build] Building neck�
+[AutoRig build] Building jaw�
+[AutoRig build] Building eyebrows�
+[AutoRig build] Building eyelids�
+[AutoRig build] Building tongue�
+[AutoRig build] Building teeth�
+[AutoRig build] Building ears�
+[AutoRig build] Building nose�
+[AutoRig build] Building cheekbones�
+[AutoRig build] Labeling joints...
+[AutoRig build] Hiding utility nodes...
+[AutoRig build] Setting inherit transforms...
+[AutoRig build] Importing skin weights...
+[AutoRig build] Localizing corrective skin...
+[AutoRig build] Importing corrective blendshapes...
+[AutoRig build] Importing facial wrinkles...
+// Bifrost: Pre-loaded mayaUsdPlugin to access proper Maya USD libraries.
+bifrostGraph::bifrostRiggingMenu: (kFailure): Unexpected Internal Failure
+Initialized VP2.0 renderer {
+  Version : 2016.11.62.12. Feature Level 4.
+  Adapter : NVIDIA GeForce RTX 5060 Laptop GPU/PCIe/SSE2
+  Vendor ID: 4318. Device ID : 42888
+  Driver : .
+  API : OpenGL V.4.6.
+  Max texture size : 32768 * 32768.
+  Max texture coords : 8
+  Shader versions supported (Vertex: 4, Geometry: 4, Pixel 4).
+  Shader compiler profile : (Best card profile)
+  Active stereo support available : 0
+  GPU Memory Limit : 8151 MB.
+  CPU Memory Limit : 30776.9 MB.
+}
+OpenCL evaluator is attempting to initialize OpenCL.
+Detected 2 OpenCL Platforms:
+ 0: NVIDIA Corporation. NVIDIA CUDA. OpenCL 3.0 CUDA 13.4.62.
+ Supported extensions: cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_fp64 cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_icd cl_khr_gl_sharing cl_nv_compiler_options cl_nv_device_attribute_query cl_nv_pragma_unroll cl_nv_d3d10_sharing cl_khr_d3d10_sharing cl_nv_d3d11_sharing cl_nv_copy_opts cl_nv_create_buffer cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_device_uuid cl_khr_pci_bus_info cl_khr_external_semaphore cl_khr_external_memory cl_khr_external_semaphore_win32 cl_khr_external_memory_win32 cl_khr_semaphore
+ Selected matching OpenCL Platform: NVIDIA Corporation NVIDIA CUDA OpenCL 3.0 CUDA 13.4.62.
+ 1: Intel(R) Corporation. Intel(R) OpenCL Graphics. OpenCL 3.0 .
+ Supported extensions: cl_khr_byte_addressable_store cl_khr_device_uuid cl_khr_fp16 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_icd cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_intel_command_queue_families cl_intel_subgroups cl_intel_required_subgroup_size cl_intel_subgroups_short cl_khr_spir cl_intel_accelerator cl_intel_driver_diagnostics cl_khr_priority_hints cl_khr_throttle_hints cl_khr_create_command_queue cl_intel_subgroups_char cl_intel_subgroups_long cl_khr_il_program cl_intel_mem_force_host_memory cl_khr_subgroup_extended_types cl_khr_subgroup_non_uniform_vote cl_khr_subgroup_ballot cl_khr_subgroup_non_uniform_arithmetic cl_khr_subgroup_shuffle cl_khr_subgroup_shuffle_relative cl_khr_subgroup_clustered_reduce cl_intel_device_attribute_query cl_khr_expect_assume cl_khr_extended_bit_ops cl_khr_suggested_local_work_size cl_intel_split_work_group_barrier cl_intel_spirv_media_block_io cl_intel_spirv_subgroups cl_khr_spirv_linkonce_odr cl_khr_spirv_no_integer_wrap_decoration cl_intel_unified_shared_memory cl_khr_mipmap_image cl_khr_mipmap_image_writes cl_ext_float_atomics cl_khr_external_memory cl_intel_planar_yuv cl_intel_packed_yuv cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_image2d_from_buffer cl_khr_depth_images cl_khr_3d_image_writes cl_intel_media_block_io cl_intel_subgroup_local_block_io cl_khr_integer_dot_product cl_khr_gl_sharing cl_khr_gl_depth_images cl_khr_gl_event cl_khr_gl_msaa_sharing cl_intel_dx9_media_sharing cl_khr_dx9_media_sharing cl_khr_d3d10_sharing cl_khr_d3d11_sharing cl_intel_d3d11_nv12_media_sharing cl_intel_sharing_format_query cl_khr_pci_bus_info cl_intel_simultaneous_sharing
+OpenCL evaluator choosing OpenCL platform NVIDIA Corporation.
+OpenCL evaluator is unable to find a GPU device that can share VBOs with OpenGL.
+Warning: Fragment BIFisoSurfaceVoxelFragmentVtt missing Cg implementation
+Warning: Fragment BIFisoSurfaceVoxelFragmentVttInteractive missing Cg implementation
+Warning: Fragment BIFvolumeVoxelFragmentVtt missing Cg implementation
+Error: line 1: menuSet: There are no menuSets to query.
+Error: line 1: Error evaluating argument at position 1 in procedure "findMenuSetFromLabel".
+Error: RuntimeError: Error occurred during execution of MEL script
+line 1: line 1: Error evaluating argument at position 1 in procedure "findMenuSetFromLabel".
+Error: Bifrost: The user's default publishing location does not exist: C:/Users/LaiaPeris/Autodesk/Bifrost/Compounds
+[AutoRig build] Cleaning up node graph...
+[AutoRig build] Restoring Maya state...
+[AutoRig build] Timing report: C:\proyectos\auto-rig\autorig_tools\maya_tools\assets\Edward\validation\20261015T080608396507Z.buildtiming.json
+[AutoRig build] Complete
+Warning: 'C_lowerLip00_JNTSticky_BMX.outputMatrix' is already connected to 'C_lowerLip00NonRot_PCM.inputMatrix'.
+Warning: 'C_lowerLip00NonRot_PCM.outputMatrix' is already connected to 'C_lowerLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'C_upperLip00_JNTSticky_BMX.outputMatrix' is already connected to 'C_upperLip00NonRot_PCM.inputMatrix'.
+Warning: 'C_upperLip00NonRot_PCM.outputMatrix' is already connected to 'C_upperLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip00_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip00NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip00NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip01_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip01NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip01NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip02_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip02NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip02NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip03_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip03NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip03NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip04_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip04NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip04NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip05_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip05NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip05NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip06_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip06NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip06NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip07_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip07NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip07NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip08_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip08NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip08NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip09_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip09NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip09NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip10_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip10NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip10NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip11_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip11NonRot_PCM.inputMatrix'.
+Warning: 'L_lowerLip11NonRot_PCM.outputMatrix' is already connected to 'L_lowerLip11NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip00_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip00NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip00NonRot_PCM.outputMatrix' is already connected to 'L_upperLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip01_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip01NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip01NonRot_PCM.outputMatrix' is already connected to 'L_upperLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip02_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip02NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip02NonRot_PCM.outputMatrix' is already connected to 'L_upperLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip03_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip03NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip03NonRot_PCM.outputMatrix' is already connected to 'L_upperLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip04_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip04NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip04NonRot_PCM.outputMatrix' is already connected to 'L_upperLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip05_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip05NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip05NonRot_PCM.outputMatrix' is already connected to 'L_upperLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip06_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip06NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip06NonRot_PCM.outputMatrix' is already connected to 'L_upperLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip07_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip07NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip07NonRot_PCM.outputMatrix' is already connected to 'L_upperLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip08_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip08NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip08NonRot_PCM.outputMatrix' is already connected to 'L_upperLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip09_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip09NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip09NonRot_PCM.outputMatrix' is already connected to 'L_upperLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip10_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip10NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip10NonRot_PCM.outputMatrix' is already connected to 'L_upperLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip11_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip11NonRot_PCM.inputMatrix'.
+Warning: 'L_upperLip11NonRot_PCM.outputMatrix' is already connected to 'L_upperLip11NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip00_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip00NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip00NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip01_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip01NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip01NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip02_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip02NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip02NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip03_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip03NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip03NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip04_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip04NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip04NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip05_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip05NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip05NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip06_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip06NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip06NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip07_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip07NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip07NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip08_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip08NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip08NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip09_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip09NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip09NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip10_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip10NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip10NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip11_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip11NonRot_PCM.inputMatrix'.
+Warning: 'R_lowerLip11NonRot_PCM.outputMatrix' is already connected to 'R_lowerLip11NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip00_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip00NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip00NonRot_PCM.outputMatrix' is already connected to 'R_upperLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip01_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip01NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip01NonRot_PCM.outputMatrix' is already connected to 'R_upperLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip02_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip02NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip02NonRot_PCM.outputMatrix' is already connected to 'R_upperLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip03_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip03NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip03NonRot_PCM.outputMatrix' is already connected to 'R_upperLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip04_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip04NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip04NonRot_PCM.outputMatrix' is already connected to 'R_upperLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip05_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip05NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip05NonRot_PCM.outputMatrix' is already connected to 'R_upperLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip06_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip06NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip06NonRot_PCM.outputMatrix' is already connected to 'R_upperLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip07_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip07NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip07NonRot_PCM.outputMatrix' is already connected to 'R_upperLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip08_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip08NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip08NonRot_PCM.outputMatrix' is already connected to 'R_upperLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip09_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip09NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip09NonRot_PCM.outputMatrix' is already connected to 'R_upperLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip10_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip10NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip10NonRot_PCM.outputMatrix' is already connected to 'R_upperLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip11_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip11NonRot_PCM.inputMatrix'.
+Warning: 'R_upperLip11NonRot_PCM.outputMatrix' is already connected to 'R_upperLip11NonRot_JNT.offsetParentMatrix'.
+NONROTATE shared {"fine": 65.02053125001339, "jaw": 74.31461250001803, "mixed": 73.10902500000793}
+NONROTATE independent {"fine": 72.79008124999109, "jaw": 78.40537499998845, "mixed": 75.04573125004299}
+Warning: 'C_lowerLip00Offset_MMX.matrixSum' is already connected to 'C_lowerLip00NonRot_PCM.inputMatrix'.
+Warning: 'trial_C_lowerLip00NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'C_lowerLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'C_upperLip00Offset_MMX.matrixSum' is already connected to 'C_upperLip00NonRot_PCM.inputMatrix'.
+Warning: 'trial_C_upperLip00NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'C_upperLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip00Offset_MMX.matrixSum' is already connected to 'L_lowerLip00NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip00NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip01Offset_MMX.matrixSum' is already connected to 'L_lowerLip01NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip01NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip02Offset_MMX.matrixSum' is already connected to 'L_lowerLip02NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip02NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip03Offset_MMX.matrixSum' is already connected to 'L_lowerLip03NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip03NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip04Offset_MMX.matrixSum' is already connected to 'L_lowerLip04NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip04NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip05Offset_MMX.matrixSum' is already connected to 'L_lowerLip05NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip05NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip06Offset_MMX.matrixSum' is already connected to 'L_lowerLip06NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip06NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip07Offset_MMX.matrixSum' is already connected to 'L_lowerLip07NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip07NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip08Offset_MMX.matrixSum' is already connected to 'L_lowerLip08NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip08NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip09Offset_MMX.matrixSum' is already connected to 'L_lowerLip09NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip09NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip10Offset_MMX.matrixSum' is already connected to 'L_lowerLip10NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip10NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_lowerLip11Offset_MMX.matrixSum' is already connected to 'L_lowerLip11NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_lowerLip11NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_lowerLip11NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip00Offset_MMX.matrixSum' is already connected to 'L_upperLip00NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip00NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip01Offset_MMX.matrixSum' is already connected to 'L_upperLip01NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip01NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip02Offset_MMX.matrixSum' is already connected to 'L_upperLip02NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip02NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip03Offset_MMX.matrixSum' is already connected to 'L_upperLip03NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip03NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip04Offset_MMX.matrixSum' is already connected to 'L_upperLip04NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip04NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip05Offset_MMX.matrixSum' is already connected to 'L_upperLip05NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip05NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip06Offset_MMX.matrixSum' is already connected to 'L_upperLip06NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip06NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip07Offset_MMX.matrixSum' is already connected to 'L_upperLip07NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip07NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip08Offset_MMX.matrixSum' is already connected to 'L_upperLip08NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip08NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip09Offset_MMX.matrixSum' is already connected to 'L_upperLip09NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip09NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip10Offset_MMX.matrixSum' is already connected to 'L_upperLip10NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip10NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'L_upperLip11Offset_MMX.matrixSum' is already connected to 'L_upperLip11NonRot_PCM.inputMatrix'.
+Warning: 'trial_L_upperLip11NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'L_upperLip11NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip00Offset_MMX.matrixSum' is already connected to 'R_lowerLip00NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip00NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip01Offset_MMX.matrixSum' is already connected to 'R_lowerLip01NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip01NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip02Offset_MMX.matrixSum' is already connected to 'R_lowerLip02NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip02NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip03Offset_MMX.matrixSum' is already connected to 'R_lowerLip03NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip03NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip04Offset_MMX.matrixSum' is already connected to 'R_lowerLip04NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip04NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip05Offset_MMX.matrixSum' is already connected to 'R_lowerLip05NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip05NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip06Offset_MMX.matrixSum' is already connected to 'R_lowerLip06NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip06NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip07Offset_MMX.matrixSum' is already connected to 'R_lowerLip07NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip07NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip08Offset_MMX.matrixSum' is already connected to 'R_lowerLip08NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip08NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip09Offset_MMX.matrixSum' is already connected to 'R_lowerLip09NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip09NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip10Offset_MMX.matrixSum' is already connected to 'R_lowerLip10NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip10NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_lowerLip11Offset_MMX.matrixSum' is already connected to 'R_lowerLip11NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_lowerLip11NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_lowerLip11NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip00Offset_MMX.matrixSum' is already connected to 'R_upperLip00NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip00NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip00NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip01Offset_MMX.matrixSum' is already connected to 'R_upperLip01NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip01NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip01NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip02Offset_MMX.matrixSum' is already connected to 'R_upperLip02NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip02NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip02NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip03Offset_MMX.matrixSum' is already connected to 'R_upperLip03NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip03NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip03NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip04Offset_MMX.matrixSum' is already connected to 'R_upperLip04NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip04NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip04NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip05Offset_MMX.matrixSum' is already connected to 'R_upperLip05NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip05NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip05NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip06Offset_MMX.matrixSum' is already connected to 'R_upperLip06NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip06NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip06NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip07Offset_MMX.matrixSum' is already connected to 'R_upperLip07NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip07NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip07NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip08Offset_MMX.matrixSum' is already connected to 'R_upperLip08NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip08NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip08NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip09Offset_MMX.matrixSum' is already connected to 'R_upperLip09NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip09NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip09NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip10Offset_MMX.matrixSum' is already connected to 'R_upperLip10NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip10NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip10NonRot_JNT.offsetParentMatrix'.
+Warning: 'R_upperLip11Offset_MMX.matrixSum' is already connected to 'R_upperLip11NonRot_PCM.inputMatrix'.
+Warning: 'trial_R_upperLip11NonRot_JNTSticky_BMX.outputMatrix' is already connected to 'R_upperLip11NonRot_JNT.offsetParentMatrix'.
+NONROTATE independent {"fine": 68.1147562499973, "jaw": 69.7136750000027, "mixed": 78.13093125002979}
+NONROTATE shared {"fine": 67.37287499998956, "jaw": 68.61857500001634, "mixed": 67.53941250002526}
+{"purpose": "Compare only the Non Rotate dependency route inside one complete optimized Edward build; native DG geometry queries, no source or artist scene edits.", "samples": [{"kind": "shared", "ms": {"fine": 65.02053125001339, "jaw": 74.31461250001803, "mixed": 73.10902500000793}}, {"kind": "independent", "ms": {"fine": 72.79008124999109, "jaw": 78.40537499998845, "mixed": 75.04573125004299}}, {"kind": "independent", "ms": {"fine": 68.1147562499973, "jaw": 69.7136750000027, "mixed": 78.13093125002979}}, {"kind": "shared", "ms": {"fine": 67.37287499998956, "jaw": 68.61857500001634, "mixed": 67.53941250002526}}], "shared": {"fine": 66.19670312500148, "jaw": 71.46659375001718, "mixed": 70.3242187500166}, "independent": {"fine": 70.4524187499942, "jaw": 74.05952499999557, "mixed": 76.58833125003639}}

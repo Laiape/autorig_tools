@@ -1,0 +1,90 @@
+{
+  "asset": "Edward",
+  "baseline_ref": "a6f81f2",
+  "source_sha256": "5a9bdd87026b66e42f715b2a86f55483cde19f9f771b06ae81f03f7228d5a264",
+  "success": true,
+  "measurement": "Complete Edward rig, normal imported skin and wrinkle settings, DG mode. CPU MFnMesh.getPoints on cabeza_high, cabeza_low and cuerpo_base; excludes viewport drawing. ABBA order, warm-up sweep before each measured sweep. Private worker and cache, no artist scene or source file replacement.",
+  "samples": [
+    {
+      "kind": "before",
+      "build_seconds": 44.233773899999505,
+      "controls_ms": {
+        "jaw": 99.703624999961,
+        "corner": 78.56470625000611,
+        "fine": 64.97778749996996,
+        "mixed": 81.93858749996252
+      },
+      "nodes": 17152,
+      "mesh_vertices": {
+        "cabeza_high": 11475,
+        "cabeza_low": 3082,
+        "cuerpo_base": 5458
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 28.243930999999975,
+      "controls_ms": {
+        "jaw": 80.16888125001742,
+        "corner": 77.49434375000419,
+        "fine": 77.04880624999078,
+        "mixed": 83.72190000000046
+      },
+      "nodes": 16522,
+      "mesh_vertices": {
+        "cabeza_high": 11475,
+        "cabeza_low": 3082,
+        "cuerpo_base": 5458
+      }
+    },
+    {
+      "kind": "after",
+      "build_seconds": 27.638013200000387,
+      "controls_ms": {
+        "jaw": 78.36629374997983,
+        "corner": 71.6320687499774,
+        "fine": 74.44049999998015,
+        "mixed": 76.21920625001621
+      },
+      "nodes": 16522,
+      "mesh_vertices": {
+        "cabeza_high": 11475,
+        "cabeza_low": 3082,
+        "cuerpo_base": 5458
+      }
+    },
+    {
+      "kind": "before",
+      "build_seconds": 25.997715600000447,
+      "controls_ms": {
+        "jaw": 84.44378125000185,
+        "corner": 79.36141874995428,
+        "fine": 67.1717187499894,
+        "mixed": 78.40398749999622
+      },
+      "nodes": 17154,
+      "mesh_vertices": {
+        "cabeza_high": 11475,
+        "cabeza_low": 3082,
+        "cuerpo_base": 5458
+      }
+    }
+  ],
+  "maximum_geometry_error": 0,
+  "before": {
+    "median_controls_ms": {
+      "jaw": 92.07370312498142,
+      "corner": 78.9630624999802,
+      "fine": 66.07475312497968,
+      "mixed": 80.17128749997937
+    }
+  },
+  "after": {
+    "median_controls_ms": {
+      "jaw": 79.26758749999863,
+      "corner": 74.5632062499908,
+      "fine": 75.74465312498546,
+      "mixed": 79.97055312500834
+    }
+  }
+}
