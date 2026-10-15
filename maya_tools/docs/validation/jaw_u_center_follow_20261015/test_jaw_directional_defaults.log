@@ -1,0 +1,2 @@
+PASS signed defaults: unchanged rest, Narrow X+, Wide X-, zero Y/Z activation, smooth gates and retracing
+{"neutral_gain_matrix_error": 0.0, "boundary_slope_errors": [0.0012552873909221773, 0.002473592758178711, 0.0025033950805664062], "sweep_samples": 81}

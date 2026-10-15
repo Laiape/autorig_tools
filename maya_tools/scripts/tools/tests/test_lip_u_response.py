@@ -92,6 +92,27 @@ def run():
                     assert max(abs((c-b)/epsilon - (b-a)/epsilon)
                                for a, b, c in zip(*values)) < .001
                 cmds.setAttr(drags[side] + '.inputTranslate', 0, 0, 0)
+        # Bilateral lift accompanies the middle; a unilateral lift still leaves
+        # the center/opposite half free. The base remains rounded, not a V.
+        for side in drags:
+            cmds.setAttr(drags[side] + '.inputTranslate', 0, 2, 0)
+        values = y_positions('upper')
+        assert .067 < values[12] < .069, values
+        assert .29 < values[6] < .30, values
+        assert values[12] < values[6] < values[3] < values[0]
+        for side in drags:
+            cmds.setAttr(drags[side] + '.inputTranslate', 0, 0, 0)
+        samples = []
+        for value in [i * .025 - 1 for i in range(161)]:
+            for side in drags:
+                cmds.setAttr(drags[side] + '.inputTranslateY', value)
+            samples.append(y_positions('upper'))
+        assert all(all(b >= a - 1e-8 for a, b in zip(previous, current))
+                   for previous, current in zip(samples, samples[1:]))
+        for value, expected in zip(reversed([i * .025 - 1 for i in range(161)]), reversed(samples)):
+            for side in drags:
+                cmds.setAttr(drags[side] + '.inputTranslateY', value)
+            assert y_positions('upper') == expected
         print('PASS: independent lips, monotone raise/lower, continuous slopes and identical retrace')
     finally:
         maya.standalone.uninitialize()

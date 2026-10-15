@@ -72,7 +72,7 @@ flowchart TD
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
 - Jaw narrow with one shared projection NURBS, default-on Narrow (X+) and Wide
   (X-) corner intensities, neutral-preserving rest and Wrinkle Value default 1;
-  rounded-U corner falloff, forward Auto Wide controls on each corner and native
+  a U that follows from the center, forward Auto Wide controls on each corner and native
   graph simplification with lip/ribbon regressions are described in
   `maya_tools/how_it_works.md`.
 - Build crash fixes, optional health audit, verified binary model cache and

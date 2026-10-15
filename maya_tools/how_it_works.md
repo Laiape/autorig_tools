@@ -374,16 +374,17 @@ the former two-surface module has maximum world-matrix component error 2.39e-7;
 native binary reopen error is zero. These comparison numbers describe the
 projection-surface cleanup before the subsequent rounded-U profile adjustment.
 
-Raised corners use a quartic spatial falloff in the display and output frames.
-This gives the U a broader base than the previous quadratic profile, which left
-too much rise next to the authored center contour. The existing integrated
+Raised corners use a quartic spatial falloff in the display and output frames,
+plus a small bilateral center lift. The middle accompanies the smile while
+keeping its rounded base. The existing integrated
 smoothstep activation preserves continuous, monotone vertical motion; each lip's
 own deformation remains independent. No extra surface or runtime Python is used.
 `test_jaw_lips.py` checks the U on both sides at jaw angles 0, 10, 20 and 30,
 including independent primary motion with raised/widened corners. The original
-center-height and slope thresholds are unchanged. `test_lip_u_response.py`
+near/outer slope limit stays at 0.25 and the near-center height limit at 0.08.
+`test_lip_u_response.py`
 checks monotonicity, continuous transition slopes and identical retracing.
-Native Edward-guide validation (2026-10-15): all three jaw/lip regressions pass.
+Historical quartic validation before the center-follow update:
 The U's maximum near-center height fraction is 0.07321 (limit 0.08), and its
 maximum near/outer slope ratio is 0.12526 (limit 0.25). The former quadratic
 profile reached 0.09681 at the closed jaw and failed the unchanged height limit.
@@ -391,7 +392,7 @@ The 49-pose single-surface regression still reopens with zero matrix error.
 
 ### Jaw Auto Wide
 
-Rebuilding the jaw adds two keyable attributes on each of
+Rebuilding the jaw adds these keyable attributes on each of
 `L_lipCorner_CTL` and `R_lipCorner_CTL`:
 
 - `autoWide` / Auto Wide: 0 disables compensation, 1 enables it (default 1).
@@ -399,6 +400,8 @@ Rebuilding the jaw adds two keyable attributes on each of
   the neutral mouth half-width (default 0.2, range 0 to 1).
 
 Each corner has its own intensity and depth. They are not on `C_jaw_CTL`.
+Wide adds forward translation only. There is no Auto Wide Roll attribute or
+automatic curl; existing manual Roll remains available on the primary lips.
 
 The module reads negative rest-relative local corner X independently of
 `autoNarrow`, plus signed secondary-controller translations calibrated to the
@@ -505,6 +508,50 @@ zero vertex error after native scene reopen.
 Concurrent regression workers now own separate Maya preference directories to
 avoid startup writes racing during parallel batch tests. Rebuild to apply these
 defaults and drivers; existing artist scenes are not rewritten.
+
+### U center follow
+
+Wide keeps its forward-only behavior. No Auto Wide Roll attribute or automatic
+opening curl is built. Manual Roll keeps its existing behavior. The U update
+uses the existing native positional correction, with no new surface, deformer,
+plugin, runtime Python or skin-weight change.
+
+The U retains its quartic lateral profile. A shared center lift is 4 percent
+of the smooth harmonic mean of the integrated positive corner rises at a closed
+jaw. It fades smoothly as jaw opening goes from 0 to 30 degrees, preserving the
+authored open-mouth profile. It is zero for a unilateral raise and when either
+corner is not raised. Its spatial support concentrates the primary-center
+profile to `(1 - (2*u-1)^4)^8` in station space, keeping the lift concentrated in
+the middle instead of carrying it into the cheeks as the mouth widens.
+This lets the middle accompany both corners,
+while each upper/lower primary remains independent. The time-domain activation
+still has continuous slopes, monotone raising/lowering and identical retracing.
+
+The existing Wide, U and lip tests check DG/Serial/Parallel, native reopen, bilateral
+center follow, a progressive curve, unchanged unilateral isolation and a rounded
+base with the original near/outer slope limit of 0.25 and near-center height
+bound of 0.08. The shared center correction must exceed 0.1 units in the closed
+jaw reference pose and fade to zero at 30 degrees.
+Receipts and before/after native renders are in
+`maya_tools/docs/validation/jaw_u_center_follow_20261015`.
+
+Accepted native Maya 2026/API 20260303 validation (2026-10-15): all five jaw/lip
+regressions pass. A full Edward build comparison against `c1c45c5` covers 52
+poses, including 40 intermediate combinations of jaw opening, corner width and
+height. There are no new triangle normal reversals on the high/low head or body.
+The nine neutral, ordinary jaw/lip, Sticky, mouth and forward Wide reference
+poses match exactly; the body matches in every pose. The largest intended high
+head vertex change in the U poses is 0.104935 units. The fixture's maximum U
+near-center height fraction is 0.074622 and near/outer slope ratio is 0.127486,
+below the unchanged 0.08 and 0.25 limits. Closed-jaw center follow is 0.108933
+units in the Edward reference pose. Full-scene inventory changes from 16,512
+to 16,587 nodes; this is not an interactive performance measurement.
+
+Reproduce the mesh/render comparison from the repository root with mayapy and
+`scripts/run_maya_test.py maya_tools/docs/validation/jaw_u_center_follow_20261015/compare_edward.py`
+in a private Maya profile. The script uses disposable scenes and derived cache
+files under `.git`; it does not open or save the artist's Maya session.
+Rebuild the character to apply these changes to an existing rig.
 
 ### Native jaw graph simplification
 

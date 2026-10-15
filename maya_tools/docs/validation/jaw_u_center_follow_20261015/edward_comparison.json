@@ -1,0 +1,910 @@
+{
+  "success": true,
+  "baseline_ref": "c1c45c5",
+  "source_sha256": "40917d1d68ebfd94503c89732aaa2dd162833cb35b5e6faeb6c9c7cd644de00d",
+  "maya_version": "2026",
+  "maya_api": 20260303,
+  "center_gain": 0.04,
+  "center_profile_power": 8,
+  "center_jaw_fade_degrees": 30,
+  "unchanged_pose_count": 9,
+  "u_pose_count": 43,
+  "measurement": "CPU mesh/world matrix geometry and native Maya software reference renders. Private batch scenes; no artist scene changes or viewport FPS claim.",
+  "variants": {
+    "before": {
+      "scene_nodes": 16512,
+      "source_sha256": "6472e9e68f6bb03b468f43393a820ca0167a402c45731c90b366dde5130441ec"
+    },
+    "after": {
+      "scene_nodes": 16587,
+      "source_sha256": "40917d1d68ebfd94503c89732aaa2dd162833cb35b5e6faeb6c9c7cd644de00d"
+    }
+  },
+  "cases": [
+    {
+      "pose": "neutral",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "jaw20",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "jaw30",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "upper",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "lower",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "sticky",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "mouth",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "wide0",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "wide20",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "U0",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.1041107177734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.1089324951171875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "U20",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0302734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.031890869140625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "U30",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.045684814453125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0478057861328125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0817718505859375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0855712890625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0695343017578125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0727691650390625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.1041107177734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.1089324951171875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0460662841796875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0482177734375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.08184814453125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0856781005859375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0706634521484375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.073974609375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.1049346923828125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.109832763671875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0460205078125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.048187255859375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0811920166015625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.08502197265625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0711669921875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0745086669921875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.1048431396484375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.1097564697265625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0455474853515625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0477142333984375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0798187255859375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0836181640625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0709686279296875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0743560791015625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.103759765625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.10870361328125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.044677734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.04681396484375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0777587890625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.08148193359375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.07012939453125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0734710693359375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.1017608642578125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.1066436767578125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.041748046875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.043792724609375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.071685791015625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0751953125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0664520263671875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0697021484375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.095062255859375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0997161865234375,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.03741455078125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.041995882987976074,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.06341552734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.066558837890625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0603485107421875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0633544921875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.085174560546875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.08941650390625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.02581787109375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0363311767578125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.042694091796875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.06962895393371582,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.042694091796875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0477294921875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0587921142578125,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0618438720703125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0132904052734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0194244384765625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0214691162109375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0334014892578125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0224761962890625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.02683711051940918,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0302734375,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.031890869140625,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    }
+  ],
+  "orientation_failures": []
+}

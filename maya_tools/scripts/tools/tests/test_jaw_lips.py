@@ -133,10 +133,14 @@ try:
   for side in ['L','R']:
    cmds.setAttr(side+'_lipCorner_CTL.translate',5.2,2,0)
   middle=(lip_positions('upper')+lip_positions('lower'))*.5
+  center_lift=cmds.getAttr('C_lipRoundedOutputCenterRise_DIV.output')
+  assert (center_lift>.1 if jaw_angle==0 else center_lift>0 if jaw_angle<30 else center_lift==0),(jaw_angle,center_lift)
   for half in [middle[:13][::-1],middle[12:]]:
    height=half[-1,1]-half[0,1]
    assert height>.1
+   # The middle accompanies the smile while the spatial base stays rounded.
    assert (half[2,1]-half[0,1])/height<.08,half
+   assert np.all(np.diff(half[:,1])>0),half
    near_slope=abs((half[1,1]-half[0,1])/(half[1,0]-half[0,0]))
    outer_slope=abs((half[-1,1]-half[-4,1])/(half[-1,0]-half[-4,0]))
    assert near_slope<.25*outer_slope,(near_slope,outer_slope)

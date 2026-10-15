@@ -66,6 +66,7 @@ try:
     assert not cmds.objExists('C_jaw_CTL.autoWide')
     assert not cmds.objExists('C_jaw_CTL.autoWideDepth')
     for corner in CORNERS:
+        assert not cmds.objExists(corner + '.autoWideRoll')
         for attr, default in (('autoNarrow', 1), ('autoWide', 1), ('autoWideDepth', .2)):
             plug = corner + '.' + attr
             assert cmds.getAttr(plug) == default
