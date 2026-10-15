@@ -390,11 +390,14 @@ The 49-pose single-surface regression still reopens with zero matrix error.
 
 ### Jaw Auto Wide
 
-Rebuilding the jaw adds two keyable attributes on `C_jaw_CTL`:
+Rebuilding the jaw adds two keyable attributes on each of
+`L_lipCorner_CTL` and `R_lipCorner_CTL`:
 
 - `autoWide` / Auto Wide: 0 disables compensation, 1 enables it (default 1).
 - `autoWideDepth` / Auto Wide Depth: maximum forward distance as a fraction of
   the neutral mouth half-width (default 0.2, range 0 to 1).
+
+Each corner has its own intensity and depth. They are not on `C_jaw_CTL`.
 
 The module reads existing per-side Narrow inputs, including `autoNarrow`, and
 signed secondary-controller translations calibrated to the neutral lateral
@@ -407,7 +410,8 @@ midline and cannot move inward toward itself.
 Each station receives a forward-only positional offset in the jaw's deformation
 space. Direction comes from the authored lip arch and lateral axis; main-mouth
 and head following transform it downstream. For center weight `c`, the field is
-`c*(1-c)*side + c*c*shared`, with a smooth harmonic mean of L/R as `shared`.
+`c*(1-c)*side + c*c*shared`, with a smooth harmonic mean of the independently
+scaled L/R forward amounts as `shared`.
 Equal bilateral compression gives maximum output at the center. A unilateral
 input fades to zero at the center and leaves the other half unchanged. Secondary
 compression on one lip does not drive the other lip. Shared corner inputs drive
@@ -439,11 +443,13 @@ zero new triangle reversals against matching Auto Wide-off poses, unchanged
 neutral/body geometry and zero geometry error after saving/reopening the rig.
 
 An isolated comparison against commit `70302b5` gives zero matrix error in eight
-poses when Auto Wide is disabled. The fixture grows from 3223 to 3499 nodes;
-three warmed 30-pose DG samples give median CPU pose/query costs of 9.46 ms
-before and 10.60 ms with Auto Wide active (11.50 ms disabled). These include
-Python queries of 50 joints and exclude mesh/viewport rendering; they are not
-animation FPS or a controlled comparison of complete character build times.
+poses when both corner Auto Wide attributes are disabled. The fixture grows
+from 3223 to 3503 nodes. Three warmed 30-pose DG samples give median CPU
+pose/query costs of 19.40 ms before and 17.37 ms with Auto Wide active
+(20.22 ms disabled). The samples vary and do not establish a speed improvement
+or regression. They include Python queries of 50 joints and exclude mesh/viewport
+rendering; they are not animation FPS or a controlled comparison of complete
+character build times.
 Raw samples are in the validation folder's `performance.json`.
 
 ### Biped spine controls and foot blending

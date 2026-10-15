@@ -12,9 +12,13 @@ from maya import cmds
 import numpy as np
 from fixtures.jaw_scene import build
 
-GAIN = 'C_jaw_CTL.autoWide'
-DEPTH = 'C_jaw_CTL.autoWideDepth'
+CORNERS = ('L_lipCorner_CTL', 'R_lipCorner_CTL')
 PARTS = ('upper', 'lower')
+
+
+def set_gain(value):
+    for corner in CORNERS:
+        cmds.setAttr(corner + '.autoWide', value)
 
 
 def joints(part):
@@ -31,9 +35,9 @@ def snapshot():
 
 
 def compensation():
-    cmds.setAttr(GAIN, 0)
+    set_gain(0)
     before = snapshot()
-    cmds.setAttr(GAIN, 1)
+    set_gain(1)
     after = snapshot()
     return {part: after[part] - before[part] for part in PARTS}
 
@@ -60,8 +64,13 @@ try:
     started = time.perf_counter()
     obj = build()
     build_seconds = time.perf_counter() - started
-    assert cmds.getAttr(GAIN) == 1 and cmds.getAttr(DEPTH) == .2
-    assert cmds.getAttr(GAIN, keyable=True) and not cmds.getAttr(GAIN, lock=True)
+    assert not cmds.objExists('C_jaw_CTL.autoWide')
+    assert not cmds.objExists('C_jaw_CTL.autoWideDepth')
+    for corner in CORNERS:
+        for attr, default in (('autoWide', 1), ('autoWideDepth', .2)):
+            plug = corner + '.' + attr
+            assert cmds.getAttr(plug) == default
+            assert cmds.getAttr(plug, keyable=True) and not cmds.getAttr(plug, lock=True)
     assert cmds.ls('C_jaw_NURB', type='transform') and not cmds.objExists('C_jawStatic_NURB')
     neutral = snapshot()
     # Jaw-only poses and outward movement must not activate a compression response.
@@ -134,13 +143,25 @@ try:
     for side in ('L', 'R'):
         cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', 1)
     full = snapshot()
-    cmds.setAttr(GAIN, 0)
+    set_gain(0)
     off = snapshot()
-    cmds.setAttr(GAIN, .5)
+    set_gain(.5)
     half = snapshot()
     for part in PARTS:
         assert np.allclose(half[part], .5 * (full[part] + off[part]), atol=1e-6, rtol=0)
-    cmds.setAttr(GAIN, 1)
+    set_gain(1)
+    # Either corner can disable its own half; the shared center then fades out.
+    for corner in CORNERS:
+        set_gain(0)
+        baseline = snapshot()
+        other = CORNERS[1] if corner == CORNERS[0] else CORNERS[0]
+        cmds.setAttr(other + '.autoWide', 1)
+        for part in PARTS:
+            delta = positions(part) - baseline[part]
+            own = slice(12, 25) if corner.startswith('L_') else slice(0, 13)
+            assert np.max(np.abs(delta[own])) < 1e-7, corner
+            assert delta[:, 2].max() > .001, corner
+    set_gain(1)
     for side in ('L', 'R'):
         cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', 0)
 

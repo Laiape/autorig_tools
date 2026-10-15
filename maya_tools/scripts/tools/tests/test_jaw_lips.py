@@ -75,7 +75,7 @@ try:
  # Auto Narrow is a calibrated inward move, sharing the existing smooth,
  # paired upper/lower corner falloff without pulling the opposite half.
  # Isolate the original Narrow displacement; Auto Wide has its own native suite.
- cmds.setAttr('C_jaw_CTL.autoWide',0)
+ for corner_side in ['L','R']:cmds.setAttr(corner_side+'_lipCorner_CTL.autoWide',0)
  for side in ['L','R']:
   corner=side+'_lipCorner_CTL';attr=corner+'.autoNarrow'
   assert cmds.getAttr(attr)==0 and cmds.getAttr(attr,keyable=True)
@@ -122,7 +122,7 @@ try:
  cmds.setAttr('C_jaw_CTL.rx',0)
  # Raised and widened corners form a rounded U: the middle slope is much
  # shallower than a V, while the endpoint and independent opening remain free.
- cmds.setAttr('C_jaw_CTL.autoWide',1)
+ for corner_side in ['L','R']:cmds.setAttr(corner_side+'_lipCorner_CTL.autoWide',1)
  u_profiles=[]
  for jaw_angle in [0,10,20,30]:
   cmds.setAttr('C_jaw_CTL.rx',jaw_angle)

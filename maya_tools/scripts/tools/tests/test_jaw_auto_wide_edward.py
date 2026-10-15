@@ -59,9 +59,11 @@ try:
             for amount in (0, .5, 1):
                 for side in ('L', 'R'):
                     cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', amount)
-                cmds.setAttr('C_jaw_CTL.autoWide', 0)
+                for side in ('L', 'R'):
+                    cmds.setAttr(side + '_lipCorner_CTL.autoWide', 0)
                 before = points()
-                cmds.setAttr('C_jaw_CTL.autoWide', 1)
+                for side in ('L', 'R'):
+                    cmds.setAttr(side + '_lipCorner_CTL.autoWide', 1)
                 after = points()
                 case = {'jaw': angle, 'autoNarrow': amount, 'meshes': {}}
                 for mesh in MESHES:
