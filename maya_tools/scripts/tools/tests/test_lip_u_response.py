@@ -97,8 +97,8 @@ def run():
         for side in drags:
             cmds.setAttr(drags[side] + '.inputTranslate', 0, 2, 0)
         values = y_positions('upper')
-        assert .067 < values[12] < .069, values
-        assert .29 < values[6] < .30, values
+        assert .509 < values[12] < .511, values
+        assert .95 < values[6] < .97, values
         assert values[12] < values[6] < values[3] < values[0]
         for side in drags:
             cmds.setAttr(drags[side] + '.inputTranslate', 0, 0, 0)

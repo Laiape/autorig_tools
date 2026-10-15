@@ -1,0 +1,2522 @@
+{
+  "success": true,
+  "baseline_ref": "a88f90d",
+  "source_sha256": "0dee2b46666325e4ab16c59b7f7f39345e245faa3696c0953157bf20d7d8ebf8",
+  "maya_version": "2026",
+  "maya_api": 20260303,
+  "center_gain": 0.3,
+  "arc_power": 2,
+  "center_jaw_fade_degrees": null,
+  "unchanged_pose_count": 9,
+  "u_pose_count": 43,
+  "measurement": "CPU mesh/world matrix geometry and native Maya software reference renders. Private batch scenes; no artist scene changes or viewport FPS claim.",
+  "variants": {
+    "before": {
+      "scene_nodes": 16552,
+      "source_sha256": "031989d754558fb59905f2059fb96ad2c632338de25477b14782f1a074101a58"
+    },
+    "after": {
+      "scene_nodes": 16549,
+      "source_sha256": "0dee2b46666325e4ab16c59b7f7f39345e245faa3696c0953157bf20d7d8ebf8"
+    }
+  },
+  "cases": [
+    {
+      "pose": "neutral",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "jaw20",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "jaw30",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "upper",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "lower",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "sticky",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "mouth",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "wide0",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "wide20",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "U0",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.03289794921875,
+          "new_triangle_reversals": 15,
+          "crossings_before": 511,
+          "crossings_after": 465,
+          "new_crossings": 196
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.08770751953125,
+          "new_triangle_reversals": 14,
+          "crossings_before": 188,
+          "crossings_after": 165,
+          "new_crossings": 82
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "U20",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.2536773681640625,
+          "new_triangle_reversals": 30,
+          "crossings_before": 246,
+          "crossings_after": 157,
+          "new_crossings": 106
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.38348388671875,
+          "new_triangle_reversals": 16,
+          "crossings_before": 183,
+          "crossings_after": 171,
+          "new_crossings": 91
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "U30",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.326934814453125,
+          "new_triangle_reversals": 35,
+          "crossings_before": 341,
+          "crossings_after": 213,
+          "new_crossings": 158
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.507293701171875,
+          "new_triangle_reversals": 26,
+          "crossings_before": 318,
+          "crossings_after": 325,
+          "new_crossings": 164
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.45257568359375,
+          "new_triangle_reversals": 0,
+          "crossings_before": 298,
+          "crossings_after": 256,
+          "new_crossings": 74
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.4766082763671875,
+          "new_triangle_reversals": 7,
+          "crossings_before": 135,
+          "crossings_after": 132,
+          "new_crossings": 46
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.80975341796875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.85272216796875,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.6908721923828125,
+          "new_triangle_reversals": 7
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.7275238037109375,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_0_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.03289794921875,
+          "new_triangle_reversals": 15
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.08770751953125,
+          "new_triangle_reversals": 14
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.4582977294921875,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.4845123291015625,
+          "new_triangle_reversals": 7
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.814056396484375,
+          "new_triangle_reversals": 2
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.8603057861328125,
+          "new_triangle_reversals": 11
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.7052001953125,
+          "new_triangle_reversals": 7
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.7442779541015625,
+          "new_triangle_reversals": 12
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_1.25_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.0457763671875,
+          "new_triangle_reversals": 17
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.103515625,
+          "new_triangle_reversals": 16
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.4640960693359375,
+          "new_triangle_reversals": 1
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.492584228515625,
+          "new_triangle_reversals": 6
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.8185882568359375,
+          "new_triangle_reversals": 5
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.86810302734375,
+          "new_triangle_reversals": 11
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.7197265625,
+          "new_triangle_reversals": 9
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.7612762451171875,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_2.5_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.058929443359375,
+          "new_triangle_reversals": 18
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.1196441650390625,
+          "new_triangle_reversals": 18
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.4700164794921875,
+          "new_triangle_reversals": 2
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.5007781982421875,
+          "new_triangle_reversals": 6
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.8232879638671875,
+          "new_triangle_reversals": 10
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.8761138916015625,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.7344207763671875,
+          "new_triangle_reversals": 9
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.778533935546875,
+          "new_triangle_reversals": 9
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_3.75_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.0723724365234375,
+          "new_triangle_reversals": 21
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.1360626220703125,
+          "new_triangle_reversals": 17
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.4760589599609375,
+          "new_triangle_reversals": 2
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.5091400146484375,
+          "new_triangle_reversals": 6
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.8282012939453125,
+          "new_triangle_reversals": 9
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.8843841552734375,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.74932861328125,
+          "new_triangle_reversals": 9
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.7960357666015625,
+          "new_triangle_reversals": 9
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_5_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.0860748291015625,
+          "new_triangle_reversals": 20
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.152801513671875,
+          "new_triangle_reversals": 15
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.4884185791015625,
+          "new_triangle_reversals": 9
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.526275634765625,
+          "new_triangle_reversals": 6
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.838470458984375,
+          "new_triangle_reversals": 11
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.901519775390625,
+          "new_triangle_reversals": 8
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.7796478271484375,
+          "new_triangle_reversals": 12
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.83172607421875,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_7.5_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.1141510009765625,
+          "new_triangle_reversals": 19
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.1891326904296875,
+          "new_triangle_reversals": 16
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.501007080078125,
+          "new_triangle_reversals": 11
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.5438385009765625,
+          "new_triangle_reversals": 6
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.849151611328125,
+          "new_triangle_reversals": 8
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.919281005859375,
+          "new_triangle_reversals": 8
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.810455322265625,
+          "new_triangle_reversals": 20
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.8682098388671875,
+          "new_triangle_reversals": 12
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_10_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.1428985595703125,
+          "new_triangle_reversals": 24
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.2275238037109375,
+          "new_triangle_reversals": 15
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.526153564453125,
+          "new_triangle_reversals": 6
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.57952880859375,
+          "new_triangle_reversals": 7
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.870147705078125,
+          "new_triangle_reversals": 13
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.95538330078125,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.872406005859375,
+          "new_triangle_reversals": 26
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.94610595703125,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_15_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.20037841796875,
+          "new_triangle_reversals": 27
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.30645751953125,
+          "new_triangle_reversals": 16
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.549285888671875,
+          "new_triangle_reversals": 4
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.6140289306640625,
+          "new_triangle_reversals": 8
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.8876800537109375,
+          "new_triangle_reversals": 14
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.9892425537109375,
+          "new_triangle_reversals": 17
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.931549072265625,
+          "new_triangle_reversals": 25
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.0238037109375,
+          "new_triangle_reversals": 13
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_20_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.2536773681640625,
+          "new_triangle_reversals": 30
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.38348388671875,
+          "new_triangle_reversals": 16
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_2.6_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.5810699462890625,
+          "new_triangle_reversals": 1
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 0.66998291015625,
+          "new_triangle_reversals": 10
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_2.6_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 0.8995819091796875,
+          "new_triangle_reversals": 12
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.0361785888671875,
+          "new_triangle_reversals": 18
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_5.2_1",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.0250244140625,
+          "new_triangle_reversals": 20
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.157806396484375,
+          "new_triangle_reversals": 15
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "pose": "grid_30_5.2_2",
+      "meshes": {
+        "cabeza_high": {
+          "maximum_vertex_error": 1.326934814453125,
+          "new_triangle_reversals": 35
+        },
+        "cabeza_low": {
+          "maximum_vertex_error": 1.507293701171875,
+          "new_triangle_reversals": 26
+        },
+        "cuerpo_base": {
+          "maximum_vertex_error": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    }
+  ],
+  "orientation_failures": [
+    {
+      "pose": "U0",
+      "mesh": "cabeza_high",
+      "triangles": [
+        4770,
+        11166,
+        11213,
+        11289,
+        11298,
+        11300,
+        14675,
+        14676,
+        14677,
+        15157,
+        15158,
+        15184,
+        21596,
+        21934,
+        21938
+      ]
+    },
+    {
+      "pose": "U0",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1192,
+        1195,
+        2814,
+        2815,
+        2822,
+        2823,
+        2824,
+        2868,
+        2869,
+        3810,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "U20",
+      "mesh": "cabeza_high",
+      "triangles": [
+        1737,
+        11198,
+        11200,
+        11201,
+        11206,
+        11208,
+        11307,
+        11448,
+        11522,
+        14822,
+        14823,
+        14827,
+        15095,
+        15102,
+        15152,
+        15155,
+        15236,
+        15237,
+        16511,
+        21596,
+        21599,
+        21845,
+        21924,
+        21945,
+        22840,
+        22841,
+        22844,
+        22845,
+        22852,
+        22855
+      ]
+    },
+    {
+      "pose": "U20",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1184,
+        1194,
+        2783,
+        2815,
+        2820,
+        2821,
+        2822,
+        2865,
+        3774,
+        5780,
+        5865,
+        5866,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "U30",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11196,
+        11198,
+        11200,
+        11206,
+        11208,
+        11244,
+        11522,
+        14702,
+        14816,
+        14820,
+        14822,
+        14823,
+        14827,
+        15020,
+        15093,
+        15094,
+        15141,
+        15142,
+        15152,
+        15155,
+        15236,
+        15237,
+        16511,
+        21596,
+        21599,
+        21844,
+        21855,
+        21945,
+        22840,
+        22846,
+        22847,
+        22850,
+        22852,
+        22853,
+        22855
+      ]
+    },
+    {
+      "pose": "U30",
+      "mesh": "cabeza_low",
+      "triangles": [
+        966,
+        980,
+        1182,
+        1183,
+        1184,
+        1185,
+        1194,
+        2783,
+        2815,
+        2820,
+        2821,
+        3681,
+        3719,
+        5780,
+        5861,
+        5862,
+        5864,
+        5869,
+        5870,
+        5877,
+        5878,
+        5879,
+        5895,
+        6108,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_0_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1192,
+        1195,
+        2786,
+        2814,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_0_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2786,
+        2814,
+        2815,
+        2820,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_0_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11166,
+        11213,
+        11419,
+        15184,
+        21590,
+        21597,
+        21938
+      ]
+    },
+    {
+      "pose": "grid_0_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1192,
+        1195,
+        2822,
+        2823,
+        2824,
+        2868,
+        2869,
+        5780,
+        5987,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_0_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        4770,
+        11166,
+        11213,
+        11289,
+        11298,
+        11300,
+        14675,
+        14676,
+        14677,
+        15157,
+        15158,
+        15184,
+        21596,
+        21934,
+        21938
+      ]
+    },
+    {
+      "pose": "grid_0_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1192,
+        1195,
+        2814,
+        2815,
+        2822,
+        2823,
+        2824,
+        2868,
+        2869,
+        3810,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_1.25_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1192,
+        1195,
+        2786,
+        2814,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_1.25_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        15147,
+        21584
+      ]
+    },
+    {
+      "pose": "grid_1.25_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2786,
+        2814,
+        2815,
+        2820,
+        2822,
+        3811,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_1.25_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11166,
+        11213,
+        11419,
+        15184,
+        21590,
+        21597,
+        21938
+      ]
+    },
+    {
+      "pose": "grid_1.25_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1192,
+        1195,
+        2814,
+        2822,
+        2823,
+        2824,
+        2868,
+        2869,
+        5780,
+        5915,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_1.25_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11166,
+        11212,
+        11213,
+        11215,
+        11298,
+        14674,
+        14675,
+        14676,
+        14677,
+        15068,
+        15157,
+        15158,
+        15184,
+        21596,
+        21599,
+        21934,
+        21938
+      ]
+    },
+    {
+      "pose": "grid_1.25_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1192,
+        1194,
+        1195,
+        2814,
+        2815,
+        2822,
+        2824,
+        2829,
+        2868,
+        2869,
+        3810,
+        5780,
+        5987,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_2.5_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        22845
+      ]
+    },
+    {
+      "pose": "grid_2.5_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1195,
+        2814,
+        2815,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_2.5_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        15144,
+        15147,
+        21584,
+        22842,
+        22843
+      ]
+    },
+    {
+      "pose": "grid_2.5_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2786,
+        2814,
+        2815,
+        2820,
+        2822,
+        3811,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_2.5_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11419,
+        11421,
+        14824,
+        14825,
+        15184,
+        21590,
+        21597,
+        22842,
+        22843
+      ]
+    },
+    {
+      "pose": "grid_2.5_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1192,
+        1195,
+        2814,
+        2815,
+        2822,
+        2824,
+        2868,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_2.5_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11166,
+        11212,
+        11213,
+        11215,
+        11298,
+        14674,
+        14675,
+        14676,
+        15068,
+        15157,
+        15158,
+        15184,
+        21596,
+        21599,
+        21934,
+        21938,
+        22842,
+        22843
+      ]
+    },
+    {
+      "pose": "grid_2.5_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1192,
+        1194,
+        1195,
+        2814,
+        2815,
+        2822,
+        2824,
+        2826,
+        2829,
+        2868,
+        2869,
+        3810,
+        5780,
+        5915,
+        5987,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_3.75_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        22844,
+        22845
+      ]
+    },
+    {
+      "pose": "grid_3.75_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1195,
+        2814,
+        2815,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_3.75_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11455,
+        14824,
+        14825,
+        15144,
+        15147,
+        21584,
+        22842,
+        22843,
+        22858,
+        22868
+      ]
+    },
+    {
+      "pose": "grid_3.75_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2786,
+        2814,
+        2815,
+        2820,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_3.75_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11419,
+        14824,
+        14825,
+        21590,
+        21597,
+        22842,
+        22843,
+        22844,
+        22845
+      ]
+    },
+    {
+      "pose": "grid_3.75_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1192,
+        1195,
+        2814,
+        2815,
+        2822,
+        2868,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_3.75_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11166,
+        11212,
+        11213,
+        11214,
+        11215,
+        11298,
+        14674,
+        14824,
+        14825,
+        15068,
+        15157,
+        15158,
+        15184,
+        15238,
+        15239,
+        21596,
+        21599,
+        21938,
+        21945,
+        22842,
+        22843
+      ]
+    },
+    {
+      "pose": "grid_3.75_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1182,
+        1183,
+        1192,
+        1194,
+        1195,
+        2814,
+        2815,
+        2822,
+        2824,
+        2826,
+        2829,
+        2868,
+        2869,
+        5780,
+        5915,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_5_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        22844,
+        22845
+      ]
+    },
+    {
+      "pose": "grid_5_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1195,
+        2814,
+        2815,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_5_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        14824,
+        14825,
+        15144,
+        15147,
+        22841,
+        22842,
+        22843,
+        22858,
+        22868
+      ]
+    },
+    {
+      "pose": "grid_5_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2786,
+        2814,
+        2815,
+        2820,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_5_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11419,
+        14824,
+        14825,
+        21590,
+        21597,
+        22842,
+        22843,
+        22844,
+        22845
+      ]
+    },
+    {
+      "pose": "grid_5_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1192,
+        1195,
+        2814,
+        2815,
+        2822,
+        2868,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_5_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11166,
+        11212,
+        11213,
+        11214,
+        11215,
+        11307,
+        14824,
+        14825,
+        15068,
+        15157,
+        15158,
+        15184,
+        15238,
+        15239,
+        21596,
+        21599,
+        21945,
+        22842,
+        22843,
+        22857
+      ]
+    },
+    {
+      "pose": "grid_5_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1182,
+        1183,
+        1192,
+        1194,
+        1195,
+        2814,
+        2815,
+        2822,
+        2826,
+        2829,
+        2868,
+        2869,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_7.5_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11208,
+        14830,
+        14831,
+        15142,
+        22844,
+        22845,
+        22846,
+        22847
+      ]
+    },
+    {
+      "pose": "grid_7.5_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1195,
+        2814,
+        2815,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_7.5_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        14824,
+        14825,
+        14827,
+        14888,
+        15144,
+        15147,
+        21585,
+        22841,
+        22842,
+        22843,
+        22858
+      ]
+    },
+    {
+      "pose": "grid_7.5_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2815,
+        2820,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_7.5_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11208,
+        11419,
+        15142,
+        15236,
+        15237,
+        21590,
+        21597,
+        22844,
+        22845,
+        22847,
+        22852
+      ]
+    },
+    {
+      "pose": "grid_7.5_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1194,
+        1195,
+        2782,
+        2814,
+        2815,
+        2822,
+        2868,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_7.5_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11307,
+        14824,
+        14825,
+        15092,
+        15100,
+        15134,
+        15157,
+        15158,
+        15238,
+        15239,
+        21596,
+        21599,
+        21846,
+        21945,
+        22841,
+        22842,
+        22843,
+        22857,
+        22858
+      ]
+    },
+    {
+      "pose": "grid_7.5_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1182,
+        1183,
+        1194,
+        1195,
+        2782,
+        2814,
+        2815,
+        2820,
+        2822,
+        2826,
+        2829,
+        2868,
+        5763,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_10_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11208,
+        14828,
+        14829,
+        14830,
+        14831,
+        15142,
+        15236,
+        22846,
+        22847,
+        22853
+      ]
+    },
+    {
+      "pose": "grid_10_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        2814,
+        2815,
+        2822,
+        2869,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_10_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        14824,
+        14827,
+        14888,
+        15144,
+        22841,
+        22844,
+        22845,
+        22858
+      ]
+    },
+    {
+      "pose": "grid_10_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2815,
+        2820,
+        2822,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_10_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11206,
+        11207,
+        11208,
+        14827,
+        14830,
+        14831,
+        15141,
+        15142,
+        15236,
+        15237,
+        21597,
+        21945,
+        22840,
+        22844,
+        22845,
+        22846,
+        22847,
+        22852,
+        22853
+      ]
+    },
+    {
+      "pose": "grid_10_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1182,
+        1194,
+        1195,
+        2782,
+        2814,
+        2815,
+        2822,
+        2829,
+        2868,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_10_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11201,
+        11307,
+        11419,
+        14824,
+        14825,
+        14827,
+        15092,
+        15100,
+        15134,
+        15152,
+        15157,
+        15158,
+        15238,
+        15239,
+        21596,
+        21599,
+        21846,
+        21945,
+        22841,
+        22842,
+        22843,
+        22857,
+        22858
+      ]
+    },
+    {
+      "pose": "grid_10_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        551,
+        1182,
+        1183,
+        1194,
+        2782,
+        2814,
+        2815,
+        2820,
+        2822,
+        2826,
+        2829,
+        2868,
+        5780,
+        5888,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_15_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11208,
+        14823,
+        14828,
+        14829,
+        15143,
+        21933
+      ]
+    },
+    {
+      "pose": "grid_15_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1194,
+        2815,
+        2820,
+        2869,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_15_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11208,
+        14822,
+        14827,
+        14888,
+        15133,
+        15134,
+        15236,
+        15237,
+        22841,
+        22844,
+        22845,
+        22852
+      ]
+    },
+    {
+      "pose": "grid_15_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1184,
+        1194,
+        2785,
+        2815,
+        2820,
+        5779,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_15_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11206,
+        11207,
+        11208,
+        14823,
+        14827,
+        14828,
+        14829,
+        14830,
+        14831,
+        15092,
+        15141,
+        15142,
+        15143,
+        15236,
+        15237,
+        16511,
+        21846,
+        21945,
+        22840,
+        22846,
+        22847,
+        22849,
+        22850,
+        22852,
+        22853
+      ]
+    },
+    {
+      "pose": "grid_15_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1194,
+        2814,
+        2815,
+        2820,
+        2822,
+        2829,
+        3774,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_15_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        1737,
+        11200,
+        11201,
+        11208,
+        11307,
+        14822,
+        14823,
+        14827,
+        15092,
+        15095,
+        15102,
+        15152,
+        15155,
+        15157,
+        15158,
+        15236,
+        15237,
+        16511,
+        21596,
+        21599,
+        21845,
+        21924,
+        21945,
+        22841,
+        22844,
+        22845,
+        22858
+      ]
+    },
+    {
+      "pose": "grid_15_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        550,
+        551,
+        1182,
+        1183,
+        1184,
+        1194,
+        2782,
+        2814,
+        2815,
+        2820,
+        2822,
+        2868,
+        3774,
+        5780,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_20_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11206,
+        14828,
+        14829,
+        15143
+      ]
+    },
+    {
+      "pose": "grid_20_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1194,
+        2815,
+        2820,
+        2868,
+        3783,
+        5780,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_20_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11208,
+        14822,
+        14823,
+        14827,
+        14888,
+        15236,
+        15237,
+        21933,
+        22844,
+        22846,
+        22847,
+        22852,
+        22853,
+        22855
+      ]
+    },
+    {
+      "pose": "grid_20_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1184,
+        1194,
+        2785,
+        2815,
+        2820,
+        2821,
+        2865,
+        2868,
+        2869,
+        3783,
+        5779,
+        5780,
+        5888,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_20_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11200,
+        11206,
+        11207,
+        11208,
+        11522,
+        14823,
+        14827,
+        14828,
+        14829,
+        14830,
+        14831,
+        15141,
+        15142,
+        15143,
+        15158,
+        15236,
+        15237,
+        16511,
+        21945,
+        22840,
+        22846,
+        22847,
+        22849,
+        22850,
+        22853
+      ]
+    },
+    {
+      "pose": "grid_20_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2783,
+        2814,
+        2815,
+        2820,
+        2822,
+        2865,
+        5780,
+        5866,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_20_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        1737,
+        11198,
+        11200,
+        11201,
+        11206,
+        11208,
+        11307,
+        11448,
+        11522,
+        14822,
+        14823,
+        14827,
+        15095,
+        15102,
+        15152,
+        15155,
+        15236,
+        15237,
+        16511,
+        21596,
+        21599,
+        21845,
+        21924,
+        21945,
+        22840,
+        22841,
+        22844,
+        22845,
+        22852,
+        22855
+      ]
+    },
+    {
+      "pose": "grid_20_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1184,
+        1194,
+        2783,
+        2815,
+        2820,
+        2821,
+        2822,
+        2865,
+        3774,
+        5780,
+        5865,
+        5866,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_30_2.6_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11206
+      ]
+    },
+    {
+      "pose": "grid_30_2.6_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1194,
+        2820,
+        3707,
+        5780,
+        5865,
+        5866,
+        5870,
+        5879,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_30_2.6_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11196,
+        11198,
+        14820,
+        14823,
+        14888,
+        15098,
+        15141,
+        15142,
+        15237,
+        22846,
+        22847,
+        22853
+      ]
+    },
+    {
+      "pose": "grid_30_2.6_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1184,
+        1194,
+        2782,
+        2820,
+        2821,
+        2868,
+        2869,
+        3707,
+        5779,
+        5780,
+        5865,
+        5866,
+        5870,
+        5879,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_30_5.2_1",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11117,
+        11196,
+        11206,
+        11522,
+        11535,
+        14828,
+        14829,
+        15020,
+        15094,
+        15113,
+        15139,
+        15143,
+        15157,
+        15158,
+        16511,
+        21844,
+        21855,
+        22849,
+        22850,
+        22864
+      ]
+    },
+    {
+      "pose": "grid_30_5.2_1",
+      "mesh": "cabeza_low",
+      "triangles": [
+        1182,
+        1183,
+        1194,
+        2815,
+        2820,
+        2821,
+        3681,
+        3719,
+        3761,
+        5780,
+        5870,
+        5879,
+        6108,
+        6109,
+        6110
+      ]
+    },
+    {
+      "pose": "grid_30_5.2_2",
+      "mesh": "cabeza_high",
+      "triangles": [
+        11196,
+        11198,
+        11200,
+        11206,
+        11208,
+        11244,
+        11522,
+        14702,
+        14816,
+        14820,
+        14822,
+        14823,
+        14827,
+        15020,
+        15093,
+        15094,
+        15141,
+        15142,
+        15152,
+        15155,
+        15236,
+        15237,
+        16511,
+        21596,
+        21599,
+        21844,
+        21855,
+        21945,
+        22840,
+        22846,
+        22847,
+        22850,
+        22852,
+        22853,
+        22855
+      ]
+    },
+    {
+      "pose": "grid_30_5.2_2",
+      "mesh": "cabeza_low",
+      "triangles": [
+        966,
+        980,
+        1182,
+        1183,
+        1184,
+        1185,
+        1194,
+        2783,
+        2815,
+        2820,
+        2821,
+        3681,
+        3719,
+        5780,
+        5861,
+        5862,
+        5864,
+        5869,
+        5870,
+        5877,
+        5878,
+        5879,
+        5895,
+        6108,
+        6109,
+        6110
+      ]
+    }
+  ],
+  "normal_rotation_note": "Intentional arc changes can rotate triangle normals beyond 90 degrees. These counts are diagnostic, not an inversion test. Collapsed triangles and strict non-adjacent crossings are checked separately.",
+  "quality_review": "See posed_contacts.json. The low-head jaw20 extreme U has 14 additional strict crossing pairs and requires artistic review."
+}

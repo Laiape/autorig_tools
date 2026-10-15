@@ -285,6 +285,16 @@ class SkinManager(object):
         auxiliary_nodes = {}
         output_cache = {}
         unresolved_outputs = {}
+        # Plugin geometry consumers can make MFnGeometryFilter report the
+        # consumer's DAG shape instead of the owned polygon mesh. Captured pose
+        # metadata names that mesh explicitly; use it only for one-base filters.
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        pose_meshes = {}
+        for record in poses._find(poses.POSE_MARKER):
+            bs, mesh = poses.linked(record, "blendShape"), poses.linked(record, "mesh")
+            resolved = self._resolve_deformer_node(mesh, geometry=True) if mesh else None
+            if bs and resolved and cmds.nodeType(resolved) == "mesh":
+                pose_meshes.setdefault(bs, set()).add(resolved)
 
         def geometry_outputs(obj):
             # A filter can feed only another filter's driverGeometry (e.g. a
@@ -299,14 +309,23 @@ class SkinManager(object):
                 filt = oma.MFnGeometryFilter(obj)
                 for i in range(filt.numOutputConnections()):
                     index = filt.indexForOutputConnection(i)
+                    owned = pose_meshes.get(name, set())
+                    owned_shape = (next(iter(owned))
+                                   if filt.numOutputConnections() == 1 and len(owned) == 1 else None)
                     try:
                         path = filt.getPathAtIndex(index)
                         shape = path.fullPathName() if path.isValid() else ""
                         if not shape or not cmds.objExists(shape):
                             raise ValueError("Output has no associated DAG mesh")
+                        if (cmds.nodeType(shape) not in ("mesh", "nurbsCurve", "nurbsSurface", "lattice")
+                                and owned_shape):
+                            shape = owned_shape
                         outputs.append({"index": index, "shape": shape})
                     except (RuntimeError, ValueError) as exc:
-                        failures.append({"index": index, "reason": str(exc)})
+                        if owned_shape:
+                            outputs.append({"index": index, "shape": owned_shape})
+                        else:
+                            failures.append({"index": index, "reason": str(exc)})
                 output_cache[name] = outputs
                 if failures:
                     unresolved_outputs[name] = failures
@@ -587,7 +606,7 @@ class SkinManager(object):
         else:
             raise ValueError("Tipo no restaurable: " + data_type)
 
-    def _import_scene_deformers(self, snapshot, replace_existing=False):
+    def _import_scene_deformers(self, snapshot, replace_existing=False, mesh_snapshots=None):
         """Recreate missing filters; let Maya build the geometry history wiring.
 
         Never reconnect exported input/original/output plugs: their intermediate
@@ -606,6 +625,27 @@ class SkinManager(object):
                     if entry.get("branch_inputs") and not entry.get("geometries")
                     and entry["type"] == "blendShape"}
         branch_meshes = {}
+
+        def captured_mesh(entry):
+            # Repair legacy exports whose one-base corrective names a Bifrost
+            # consumer that does not exist yet. Never guess by node name: require
+            # one captured mesh and identical saved polygon connectivity.
+            if entry["type"] != "blendShape" or len(entry.get("geometries", [])) != 1:
+                return None
+            owners = {p.get("mesh") for p in snapshot.get("pose_targets", [])
+                      if p.get("blendShape") == entry["name"] and p.get("mesh")}
+            if len(owners) != 1 or not mesh_snapshots:
+                return None
+            mesh = self._resolve_deformer_node(next(iter(owners)), geometry=True)
+            if not mesh or cmds.nodeType(mesh) != "mesh":
+                return None
+            for name, skins in mesh_snapshots.items():
+                if name.startswith("__") or self._resolve_deformer_node(name, geometry=True) != mesh:
+                    continue
+                saved = next((skin["geometry"] for skin in skins if skin.get("geometry")), None)
+                if saved and self._same_topology(om.MFnMesh(self._get_dag_path(mesh)), saved):
+                    return mesh
+            return None
 
         def restore_auxiliary(name):
             existing = self._resolve_deformer_node(name)
@@ -719,6 +759,8 @@ class SkinManager(object):
             index_map = {}
             for geometry in sorted(entry.get("geometries", []), key=lambda item: item["index"]):
                 resolved = self._resolve_deformer_node(geometry["shape"], geometry=True)
+                if not resolved or cmds.nodeType(resolved) not in ("mesh", "nurbsCurve", "nurbsSurface", "lattice"):
+                    resolved = captured_mesh(entry)
                 if not resolved:
                     break
                 geometry_map[geometry["shape"]] = resolved
@@ -1349,7 +1391,8 @@ class SkinManager(object):
                         om.MGlobal.displayWarning(f"No se pudo ordenar {inner} antes de {outer}: {e}")
         
         self._import_scene_deformers(
-            full_data.get(self.SCENE_DEFORMERS_KEY), replace_existing=replace_existing)
+            full_data.get(self.SCENE_DEFORMERS_KEY), replace_existing=replace_existing,
+            mesh_snapshots=full_data)
         if import_wrinkles:
             from maya_tools.scripts.tools import bifrost_wrinkles
             bifrost_wrinkles.import_setups(full_data.get(self.WRINKLES_KEY), replace_existing)

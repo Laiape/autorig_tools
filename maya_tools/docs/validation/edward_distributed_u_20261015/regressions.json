@@ -1,0 +1,164 @@
+{
+  "success": true,
+  "tests": [
+    {
+      "test": "test_lip_u_response.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 12.810282200000074,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_lip_u_response.log",
+      "last_lines": [
+        "PASS: independent lips, monotone raise/lower, continuous slopes and identical retrace"
+      ],
+      "source_sha256": "4a14de1ebcde7484ad7bb2629f5f11a6d8ea9fefad494fbd19455d632c8a4e26"
+    },
+    {
+      "test": "test_jaw_auto_wide.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 10.182365199998458,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_jaw_auto_wide.log",
+      "last_lines": [
+        "File read in  0.14 seconds.",
+        "PASS Auto Wide: smooth forward profile, unilateral/fine independence, gain, sticky, EM and reopen",
+        "{\"fixture_build_seconds\": 0.6361857999982021, \"maximum_tested_center_push\": 0.07343333214521408, \"minimum_tested_joint_spacing\": 0.04608301335586842, \"cycles\": 0}"
+      ],
+      "source_sha256": "ca2c398ce251098a7c887951da5324426184fdd3f6fe23fd88e92e9ce24ab18c"
+    },
+    {
+      "test": "test_jaw_directional_defaults.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.10806919999959,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_jaw_directional_defaults.log",
+      "last_lines": [
+        "PASS signed defaults: unchanged rest, Narrow X+, Wide X-, zero Y/Z activation, smooth gates and retracing",
+        "{\"neutral_gain_matrix_error\": 0.0, \"boundary_slope_errors\": [0.0012552873909221773, 0.002473592758178711, 0.0025033950805664062], \"sweep_samples\": 81}"
+      ],
+      "source_sha256": "ef9318ed8ca912240cb81ca780fa63ee0643796c0ecd13286f7944b234ce5b50"
+    },
+    {
+      "test": "test_jaw_single_surface.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 11.10121060000165,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_jaw_single_surface.log",
+      "last_lines": [
+        "File read in  0.19 seconds.",
+        "PASS single jaw projection surface; regulated narrow, opening, independent corner transforms and sticky lips",
+        "{\"cases\": 49, \"projectors\": 4, \"baseline_max_matrix_error\": null, \"reopen_max_matrix_error\": 0.0}"
+      ],
+      "source_sha256": "606e19f95a499eadfd32b018411b3230b5114b70a78902f066c2aaac103282e8"
+    },
+    {
+      "test": "test_skin_manager_api.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.481477400000585,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_skin_manager_api.log",
+      "last_lines": [
+        "Procesando: bodyShape | Skins: 1",
+        "Export completado: C:\\Users\\LAIAPE~1\\AppData\\Local\\Temp\\tmp1i0vv4rr\\weights.skc | Deformadores: 1 | Wrinkles: 0",
+        "Importing skin weights\ufffd",
+        "bodySkin: importando por closest point on surface.",
+        "secondSkin: importando por closest point on surface.",
+        "Deformadores: 0 creados, 0 restaurados, 0 incidencias.",
+        "Skin weights and scene deformers imported.",
+        ".",
+        "----------------------------------------------------------------------",
+        "Ran 20 tests in 1.072s",
+        "",
+        "OK"
+      ],
+      "source_sha256": "967c225ee1f58bc8a675c54e43c00349abb4fe4d63a6e099964ea92c1c25a670"
+    },
+    {
+      "test": "test_pose_blendshapes.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 7.1247911999998905,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_pose_blendshapes.log",
+      "last_lines": [
+        "Undo: PoseBlendshapes_4c0f1cf3584c4a84acc293938b75f28f",
+        "File read in  0.0098 seconds.",
+        "PASS pre native posed sculpt, follows rotation, neutral/half/full weights, cancel, mixed signed drivers, unique names, delete/undo, rename, save/reopen, no Pose Interpolator",
+        "Undo: PoseBlendshapes_03c0c5851f70419e969a662fb9663766",
+        "File read in  0.012 seconds.",
+        "PASS post native posed sculpt, follows rotation, neutral/half/full weights, cancel, mixed signed drivers, unique names, delete/undo, rename, save/reopen, no Pose Interpolator",
+        "Added drivers: wrap_driver_bodyShape.",
+        "PASS: post sculpt on body with proximityWrap consumers preserves driver connections",
+        "PASS: existing blendshape target geometry, driver weights and live connections preserved"
+      ],
+      "source_sha256": "8d30e1e53f4643487107ed7aeb709cabffa53cc522792d60a774dbfebc84a7fe"
+    },
+    {
+      "test": "test_jaw_lips.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 59.078125299998646,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_jaw_lips.log",
+      "last_lines": [
+        "PASS jaw/lips build: rounded U, independent primaries, corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure",
+        "U_PROFILE [{\"jaw_angle\": 0, \"center_fraction\": 0.12064541357436762, \"slope_ratio\": 0.33732602987478966, \"center_follow_fraction\": 0.23359902127295268, \"outer_rise_share\": 0.2296818385876244}, {\"jaw_angle\": 0, \"center_fraction\": 0.12062697614223826, \"slope_ratio\": 0.32685946277952865, \"center_follow_fraction\": 0.23518081546772324, \"outer_rise_share\": 0.229457899285601}, {\"jaw_angle\": 10, \"center_fraction\": 0.11016220311026063, \"slope_ratio\": 0.29570583996036404, \"center_follow_fraction\": 0.24191094800618426, \"outer_rise_share\": 0.23096084235144343}, {\"jaw_angle\": 10, \"center_fraction\": 0.10988080183343141, \"slope_ratio\": 0.2885055505034446, \"center_follow_fraction\": 0.24300372797285535, \"outer_rise_share\": 0.23077402441709433}, {\"jaw_angle\": 20, \"center_fraction\": 0.10284175169672549, \"slope_ratio\": 0.2688253883988173, \"center_follow_fraction\": 0.24889547558330224, \"outer_rise_share\": 0.23218499875468931}, {\"jaw_angle\": 20, \"center_fraction\": 0.10238999275496011, \"slope_ratio\": 0.2633920295166336, \"center_follow_fraction\": 0.249540751447522, \"outer_rise_share\": 0.23197335723382803}, {\"jaw_angle\": 30, \"center_fraction\": 0.0977953036572658, \"slope_ratio\": 0.2506851471116999, \"center_follow_fraction\": 0.25490206740702165, \"outer_rise_share\": 0.2331447681678923}, {\"jaw_angle\": 30, \"center_fraction\": 0.09722208735381105, \"slope_ratio\": 0.24631947014404273, \"center_follow_fraction\": 0.2551361835619941, \"outer_rise_share\": 0.2329232344145127}]",
+        "[{\"angle\": 0, \"width\": 5.014339923858644, \"height\": 0.4658050537109659, \"quarter_gap\": 0.24023437500002842, \"center_gap\": 0.0186767578125}, {\"angle\": 5, \"width\": 5.014339985967423, \"height\": 1.378692884873658, \"quarter_gap\": 0.9931774604879422, \"center_gap\": 0.982409804898623}, {\"angle\": 10, \"width\": 5.0143398199867715, \"height\": 2.2670571407700777, \"quarter_gap\": 1.7144787099367136, \"center_gap\": 1.9064133870438127}, {\"angle\": 20, \"width\": 5.014339701554533, \"height\": 3.9299859518543485, \"quarter_gap\": 3.040606560955098, \"center_gap\": 3.6074591404367027}, {\"angle\": 30, \"width\": 5.014339621914802, \"height\": 5.3599284352397945, \"quarter_gap\": 4.178194906654227, \"center_gap\": 5.070128603494226}]"
+      ],
+      "source_sha256": "70962213e89dcc25bd5f29814478cc6c4ba204f14449c2640666bbeca68e6457"
+    },
+    {
+      "test": "test_orientation_correctives.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.113963600000716,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_orientation_correctives.log",
+      "last_lines": [
+        "Sin selecci\ufffdn. Escaneando escena completa...",
+        "Procesando: bodyShape | Skins: 1",
+        "Export completado: C:\\Users\\LAIAPE~1\\AppData\\Local\\Temp\\tmpgv01uv6t\\orientation.skc | Deformadores: 2 | Wrinkles: 0",
+        "--- Exportando Skins a: C:\\Users\\LAIAPE~1\\AppData\\Local\\Temp\\tmpgv01uv6t\\orientation.skc ---",
+        "Export completado: C:\\Users\\LAIAPE~1\\AppData\\Local\\Temp\\tmpgv01uv6t\\orientation.skc | Deformadores: 2 | Wrinkles: 0",
+        "Undo: PoseBlendshapes_1d2fd93b61de4ef0a05ae9870434f59c",
+        "Warning: Nothing is selected. Select objects or components to delete.",
+        "Importing skin weights\ufffd",
+        "Deformadores: 1 creados, 1 restaurados, 0 incidencias.",
+        "Skin weights and scene deformers imported.",
+        "PASS orientation: front/side separation, IK/FK, global transforms, duplicate rollback, mirror, delete/undo, native reopen, SKC reconstruction, DG/Serial/Parallel",
+        "PASS orientation: swing ignores axial twist; twist ignores swing"
+      ],
+      "source_sha256": "879eb45c39bdc38ca261b1565c702be440f50e6811be8330b233c91ba36b4108"
+    },
+    {
+      "test": "test_eye_head_deformation.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 5.888124599998264,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_eye_head_deformation.log",
+      "last_lines": [
+        "PASS: L/R eyes follow bounded neck, head squash/Volume, gaze, direct rotation, globalScale, skin and ENV; DG/parallel; no cycles"
+      ],
+      "source_sha256": "05dd7b911b2c02ad153b630dca866cb245b665ca83fcfc486f84f3e9e89f5f93"
+    },
+    {
+      "test": "test_jaw_auto_wide_edward.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 71.73713899999711,
+      "log": "maya_tools/docs/validation/edward_distributed_u_20261015/test_jaw_auto_wide_edward.log",
+      "last_lines": [
+        "[AutoRig build] Cleaning up node graph...",
+        "[AutoRig build] Restoring Maya state...",
+        "[AutoRig build] Timing report: maya_tools\\assets\\Edward\\validation\\20261015T103831476010Z.buildtiming.json",
+        "[AutoRig build] Complete",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "Warning: Unrecognized node type for node 'hyperShadePrimaryNodeEditorSavedTabsInfo'; preserving node information during this session.",
+        "Warning: Unrecognized node type for node 'MayaNodeEditorSavedTabsInfo'; preserving node information during this session.",
+        "Warning: Errors have occurred while reading this scene that may result in data loss.",
+        "File read in  4.6 seconds.",
+        "PASS Edward signed Narrow/Wide: real meshes, defaults, unchanged neutral/body, no new triangle reversals, sticky and reopen",
+        "{\"build_seconds\": 38.54297310000038, \"saved_correctives\": 10, \"reopen_error\": 0.0, \"poses\": [{\"corrective\": \"autoWide\", \"jaw\": 0, \"signed_x_fraction\": -0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 0, \"signed_x_fraction\": -0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3167, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": -9.5367431640625e-07, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 536, \"maximum_forward\": 0.019084930419921875, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 0, \"signed_x_fraction\": -0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3191, \"maximum_forward\": 0.06984996795654297, \"minimum_forward\": -9.5367431640625e-07, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 541, \"maximum_forward\": 0.07343292236328125, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 20, \"signed_x_fraction\": -0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 20, \"signed_x_fraction\": -0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3173, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 601, \"maximum_forward\": 0.01930713653564453, \"minimum_forward\": -0.0007047653198242188, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 20, \"signed_x_fraction\": -0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3190, \"maximum_forward\": 0.06984996795654297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.07428932189941406, \"minimum_forward\": -0.0017728805541992188, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 30, \"signed_x_fraction\": -0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 30, \"signed_x_fraction\": -0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3177, \"maximum_forward\": 0.018153667449951172, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 606, \"maximum_forward\": 0.019431114196777344, \"minimum_forward\": -0.0006608963012695312, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 30, \"signed_x_fraction\": -0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3186, \"maximum_forward\": 0.06984949111938477, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.07476997375488281, \"minimum_forward\": -0.0010662078857421875, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 0, \"signed_x_fraction\": 0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 0, \"signed_x_fraction\": 0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3245, \"maximum_forward\": 0.010483741760253906, \"minimum_forward\": -0.0028715133666992188, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 567, \"maximum_forward\": 0.010661125183105469, \"minimum_forward\": -0.0030241012573242188, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 0, \"signed_x_fraction\": 0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3248, \"maximum_forward\": 0.040050506591796875, \"minimum_forward\": -0.011187553405761719, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 567, \"maximum_forward\": 0.040726661682128906, \"minimum_forward\": -0.011781692504882812, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 20, \"signed_x_fraction\": 0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 20, \"signed_x_fraction\": 0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3245, \"maximum_forward\": 0.009096145629882812, \"minimum_forward\": -0.004536628723144531, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.009271621704101562, \"minimum_forward\": -0.00482940673828125, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 20, \"signed_x_fraction\": 0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3249, \"maximum_forward\": 0.03467273712158203, \"minimum_forward\": -0.017663002014160156, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 628, \"maximum_forward\": 0.035335540771484375, \"minimum_forward\": -0.018800735473632812, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 30, \"signed_x_fraction\": 0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 30, \"signed_x_fraction\": 0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3243, \"maximum_forward\": 0.00821685791015625, \"minimum_forward\": -0.005174160003662109, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.008378028869628906, \"minimum_forward\": -0.0055370330810546875, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 30, \"signed_x_fraction\": 0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3249, \"maximum_forward\": 0.031276702880859375, \"minimum_forward\": -0.0201416015625, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 634, \"maximum_forward\": 0.03188323974609375, \"minimum_forward\": -0.021541595458984375, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}]}"
+      ],
+      "source_sha256": "a47d3880741931fee9758103ce8b0579290c33e07d32602c34dc3230fbda122a"
+    }
+  ],
+  "measurement": "Correctness checks; worker/build durations are not interactive performance benchmarks."
+}

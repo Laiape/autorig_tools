@@ -1,0 +1,14 @@
+File read in  0.013 seconds.
+--- Exportando Skins a: C:\Users\LAIAPE~1\AppData\Local\Temp\tmpgv01uv6t\orientation.skc ---
+Sin selecci�n. Escaneando escena completa...
+Procesando: bodyShape | Skins: 1
+Export completado: C:\Users\LAIAPE~1\AppData\Local\Temp\tmpgv01uv6t\orientation.skc | Deformadores: 2 | Wrinkles: 0
+--- Exportando Skins a: C:\Users\LAIAPE~1\AppData\Local\Temp\tmpgv01uv6t\orientation.skc ---
+Export completado: C:\Users\LAIAPE~1\AppData\Local\Temp\tmpgv01uv6t\orientation.skc | Deformadores: 2 | Wrinkles: 0
+Undo: PoseBlendshapes_1d2fd93b61de4ef0a05ae9870434f59c
+Warning: Nothing is selected. Select objects or components to delete.
+Importing skin weights�
+Deformadores: 1 creados, 1 restaurados, 0 incidencias.
+Skin weights and scene deformers imported.
+PASS orientation: front/side separation, IK/FK, global transforms, duplicate rollback, mirror, delete/undo, native reopen, SKC reconstruction, DG/Serial/Parallel
+PASS orientation: swing ignores axial twist; twist ignores swing

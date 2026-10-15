@@ -51,6 +51,16 @@ try:
         create_rig.AutoRig().build()
         build_seconds = time.perf_counter() - started
         cmds.evaluationManager(mode='off')
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        from maya_tools.scripts.tools.skin_manager_api import SkinManager
+        saved = json.loads(Path(SkinManager().get_latest_version_path()).read_text())
+        captured = saved.get('__scene_deformers__', {}).get('pose_targets', [])
+        for target in captured:
+            bs, index = target['blendShape'], target['targetIndex']
+            assert cmds.objExists(bs), ('Missing saved corrective', bs)
+            assert poses.pose_record(bs, index), (bs, index, 'Missing saved driver')
+            assert dict(poses.targets(bs))[index] == target['targetName']
+            assert poses.geometry_index(bs, target['mesh']) == 0
         for side in ('L', 'R'):
             for attr in ('autoNarrow', 'autoWide'):
                 assert cmds.getAttr(side + '_lipCorner_CTL.' + attr) == 1
@@ -113,6 +123,6 @@ try:
         reopen_error = max(float(np.abs(reopened[m] - expected[m]).max()) for m in MESHES)
         assert reopen_error < 1e-5, reopen_error
         print('PASS Edward signed Narrow/Wide: real meshes, defaults, unchanged neutral/body, no new triangle reversals, sticky and reopen')
-        print(json.dumps(dict(build_seconds=build_seconds, reopen_error=reopen_error, poses=records)), flush=True)
+        print(json.dumps(dict(build_seconds=build_seconds, saved_correctives=len(captured), reopen_error=reopen_error, poses=records)), flush=True)
 finally:
     maya.standalone.uninitialize()

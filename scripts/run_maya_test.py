@@ -16,8 +16,14 @@ import maya.standalone
 maya.standalone.uninitialize = lambda: None
 status = 1
 try:
-    runpy.run_path(str(Path(sys.argv[1]).resolve()), run_name='__main__')
+    script = str(Path(sys.argv[1]).resolve())
+    sys.argv = [script, *sys.argv[2:]]
+    runpy.run_path(script, run_name='__main__')
     status = 0
+except SystemExit as exc:
+    status = exc.code if isinstance(exc.code, int) else (0 if exc.code is None else 1)
+    if status:
+        traceback.print_exc()
 except BaseException:
     traceback.print_exc()
 finally:

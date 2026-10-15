@@ -84,8 +84,17 @@ def geometry_index(bs, mesh):
     shapes = cmds.blendShape(bs, query=True, geometry=True) or []
     indices = cmds.blendShape(bs, query=True, geometryIndices=True) or []
     for index, shape in zip(indices, shapes):
-        if mesh_transform(shape) == mesh:
+        if cmds.nodeType(shape) == "mesh" and mesh_transform(shape) == mesh:
             return index
+    # An in-place wrinkle graph can be reported as the filter's output path.
+    # Keep saved targets editable via their explicit mesh ownership; do not
+    # mistake a corrective on a separate wrap-driver branch for this mesh.
+    if len(indices) == 1 and bs in (cmds.listHistory(mesh) or []):
+        for record in _find(POSE_MARKER):
+            if linked(record, "blendShape") == bs:
+                owner = linked(record, "mesh")
+                if owner and cmds.ls(owner, long=True) == [mesh]:
+                    return indices[0]
     raise ValueError("This blendshape does not affect the loaded mesh.")
 
 

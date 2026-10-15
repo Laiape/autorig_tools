@@ -510,14 +510,14 @@ class JawModule(object):
         return 1.0 - t * t * (3.0 - 2.0 * t)
 
     @staticmethod
-    def _round_raised_lip_frames(name, frames, corner_drags, half_width, stations=None, offsets=None, center_follow=.04):
+    def _round_raised_lip_frames(name, frames, corner_drags, half_width, stations=None, offsets=None, center_follow=.3):
         """Round corner translation while leaving each lip's own motion independent.
 
         Capture the neutral X stations once. Only corner displacement drives
         the correction; live upper/lower positions never enter the shared graph.
         Integrate a smoothstep activation so its derivative stays between zero
         and one. The resulting vertical response cannot reverse during a raise.
-        The quartic base stays rounded. A bilateral center lift follows the corners
+        A quadratic arc distributes the rise from the middle to the corners
         without coupling either primary lip or a unilateral corner to its peer.
         """
         count = len(frames["upper"])
@@ -591,12 +591,11 @@ class JawModule(object):
                 cmds.setAttr(bounded + ".maxR", 1)
                 cmds.connectAttr(ratio, bounded + ".inputR")
                 square = scalar(f"{index:02d}Square_MUL", "multiply", bounded + ".outputR", bounded + ".outputR")
-                quartic = scalar(f"{index:02d}Quartic_MUL", "multiply", square, square)
-                difference = scalar(f"{index:02d}Delta_SUB", "subtract", quartic, weight)
+                difference = scalar(f"{index:02d}Delta_SUB", "subtract", square, weight)
                 original = scalar(f"{index:02d}Blend_MUL", "multiply", difference, rises[side])
-                # Concentrate the primary-center profile in station space.
-                # Keep gain below 1/(2*8) for a monotone asymmetric response.
-                profile = (1. - (2. * stations[index] - 1.) ** 4) ** 8
+                # Share the same live arc in both terms. Center follow below
+                # one half keeps the response ordered even for unequal raises.
+                profile = scalar(f"{index:02d}CenterMask_SUB", "subtract", 1., square)
                 carried = scalar(f"{index:02d}CenterCarry_MUL", "multiply", center_lift, profile)
                 delta = scalar(f"{index:02d}CenterDelta_SUM", "sum", original, carried)
             if offsets is not None:
@@ -1545,19 +1544,9 @@ class JawModule(object):
 
         # Correct the displayed frames only. Output pins receive their own corner
         # correction once; warping ribbon drivers here would apply it twice.
-        # A closed smile can carry its middle upward. Fade that shared lift as
-        # the jaw opens, preserving the authored open-mouth profile and lip skin.
-        center_follow = cmds.createNode("remapValue", name="C_lipUCenterFollow_RMV", ss=True)
-        cmds.connectAttr(self.jaw_ctl + ".rotateX", center_follow + ".inputValue")
-        cmds.setAttr(center_follow + ".inputMax", 30.)
-        cmds.setAttr(center_follow + ".outputMin", 1.)
-        cmds.setAttr(center_follow + ".outputMax", 0.)
-        for slot in (0, 1):
-            cmds.setAttr(center_follow + f".value[{slot}].value_Interp", 2)
-        center_gain = self._lip_wide_scalar("C_lipUCenterFollow_MUL", "multiply", [center_follow + ".outValue", .04])
         rounded_display, _ = self._round_raised_lip_frames(
             "C_lipRoundedRibbon", all_secondary_display_frames, corner_drags, half,
-            stations=self._curve_cv_parameters(self.upper_rebuild_lip_curve), offsets=display_offsets, center_follow=center_gain)
+            stations=self._curve_cv_parameters(self.upper_rebuild_lip_curve), offsets=display_offsets)
         self._auto_wide_lip_frames(
             "C_lipAutoWideDisplay", rounded_display, auto_wide_drivers,
             forward, stations=all_secondary_stations, offsets=display_offsets)
@@ -1688,7 +1677,7 @@ class JawModule(object):
 
 
         orient_plugs, _ = self._round_raised_lip_frames(
-            "C_lipRoundedOutput", orient_plugs, corner_drags, half, offsets=output_offsets, center_follow=center_gain)
+            "C_lipRoundedOutput", orient_plugs, corner_drags, half, offsets=output_offsets)
         orient_plugs = self._auto_wide_lip_frames(
             "C_lipAutoWideOutput", orient_plugs, auto_wide_drivers,
             forward, stations=output_stations, offsets=output_offsets)

@@ -374,21 +374,11 @@ the former two-surface module has maximum world-matrix component error 2.39e-7;
 native binary reopen error is zero. These comparison numbers describe the
 projection-surface cleanup before the subsequent rounded-U profile adjustment.
 
-Raised corners use a quartic spatial falloff in the display and output frames,
-plus a small bilateral center lift. The middle accompanies the smile while
-keeping its rounded base. The existing integrated
-smoothstep activation preserves continuous, monotone vertical motion; each lip's
-own deformation remains independent. No extra surface or runtime Python is used.
-`test_jaw_lips.py` checks the U on both sides at jaw angles 0, 10, 20 and 30,
-including independent primary motion with raised/widened corners. The original
-near/outer slope limit stays at 0.25 and the near-center height limit at 0.08.
-`test_lip_u_response.py`
-checks monotonicity, continuous transition slopes and identical retracing.
-Historical quartic validation before the center-follow update:
-The U's maximum near-center height fraction is 0.07321 (limit 0.08), and its
-maximum near/outer slope ratio is 0.12526 (limit 0.25). The former quadratic
-profile reached 0.09681 at the closed jaw and failed the unchanged height limit.
-The 49-pose single-surface regression still reopens with zero matrix error.
+Raised corners now use a distributed quadratic U with bilateral center follow.
+The native positional correction leaves each primary lip independent and has
+smooth activation and retracing. See Distributed U and Edward corrective
+restoration below for the current shape, test criteria and corrective audit.
+The former quartic profile and its receipts are historical.
 
 ### Jaw Auto Wide
 
@@ -509,49 +499,73 @@ Concurrent regression workers now own separate Maya preference directories to
 avoid startup writes racing during parallel batch tests. Rebuild to apply these
 defaults and drivers; existing artist scenes are not rewritten.
 
-### U center follow
+### Distributed U and Edward corrective restoration
 
-Wide keeps its forward-only behavior. No Auto Wide Roll attribute or automatic
-opening curl is built. Manual Roll keeps its existing behavior. The U update
-uses the existing native positional correction, with no new surface, deformer,
-plugin, runtime Python or skin-weight change.
+The former quartic U with a 4-percent center carry was rejected in visual review:
+its corners rose too independently of the middle. The current U uses a quadratic
+arc across each live mouth half. The common center rise is 30 percent of the
+smooth harmonic mean of the integrated positive corner rises. It stays active
+when the jaw opens. For side rise R, shared center C and normalized lateral
+distance q, the activated field is `C + (R-C)*q*q`. The existing unactivated
+corner motion is preserved through the smooth onset. The center fades naturally
+to zero if either corner is not raised, preserving unilateral isolation.
+Upper/lower primaries, fine controls, manual Roll, animator corner endpoints and
+neutral rest remain independent. Wide still translates forward without Auto Wide
+Roll. There is no new plugin, surface, deformer, runtime Python or skin-weight edit.
 
-The U retains its quartic lateral profile. A shared center lift is 4 percent
-of the smooth harmonic mean of the integrated positive corner rises at a closed
-jaw. It fades smoothly as jaw opening goes from 0 to 30 degrees, preserving the
-authored open-mouth profile. It is zero for a unilateral raise and when either
-corner is not raised. Its spatial support concentrates the primary-center
-profile to `(1 - (2*u-1)^4)^8` in station space, keeping the lift concentrated in
-the middle instead of carrying it into the cheeks as the mouth widens.
-This lets the middle accompany both corners,
-while each upper/lower primary remains independent. The time-domain activation
-still has continuous slopes, monotone raising/lowering and identical retracing.
+The U regression now measures the requested distribution: the middle must follow
+20-50 percent of the actual corner rise and the outer quarter must carry less
+than 60 percent of the center-to-corner rise. Edward's guide fixture measures
+23.36-25.51 percent center follow and 22.95-23.32 percent outer-quarter share at
+jaw angles 0/10/20/30. Monotone motion, smooth transition slopes, identical
+retracing, a rounded middle and primary/unilateral independence are still tested.
+The previous 0.08 height and 0.25 slope ratios described the rejected flat base;
+they are not artistic acceptance criteria for this revision.
 
-The existing Wide, U and lip tests check DG/Serial/Parallel, native reopen, bilateral
-center follow, a progressive curve, unchanged unilateral isolation and a rounded
-base with the original near/outer slope limit of 0.25 and near-center height
-bound of 0.08. The shared center correction must exceed 0.1 units in the closed
-jaw reference pose and fade to zero at 30 degrees.
-Receipts and before/after native renders are in
-`maya_tools/docs/validation/jaw_u_center_follow_20261015`.
+The corrective audit found a separate build error. `Edward_v070.skc` stores all
+nine high-head targets, but their geometry path names `EdwardWrinklesGraphShape`.
+That plugin node does not exist during skin/corrective import, so the old build
+skipped the entire high-head blendshape and its nine pose records. The saved
+sculpts and drivers were present in the file, not lost.
 
-Accepted native Maya 2026/API 20260303 validation (2026-10-15): all five jaw/lip
-regressions pass. A full Edward build comparison against `c1c45c5` covers 52
-poses, including 40 intermediate combinations of jaw opening, corner width and
-height. There are no new triangle normal reversals on the high/low head or body.
-The nine neutral, ordinary jaw/lip, Sticky, mouth and forward Wide reference
-poses match exactly; the body matches in every pose. The largest intended high
-head vertex change in the U poses is 0.104935 units. The fixture's maximum U
-near-center height fraction is 0.074622 and near/outer slope ratio is 0.127486,
-below the unchanged 0.08 and 0.25 limits. Closed-jaw center follow is 0.108933
-units in the Edward reference pose. Full-scene inventory changes from 16,512
-to 16,587 nodes; this is not an interactive performance measurement.
+`skin_manager_api.py` now recovers a one-base corrective from its unique captured
+mesh only when saved polygon connectivity matches exactly. Missing, ambiguous
+or changed-topology bindings are skipped. Export writes the captured mesh rather
+than a plugin consumer or an empty plugin DAG path. Separate wrap-driver branches
+keep their branch ownership. `pose_blendshapes.geometry_index` also resolves a
+saved target through explicit mesh ownership when the native output path is a
+wrinkle graph, keeping that target addressable by the editor.
 
-Reproduce the mesh/render comparison from the repository root with mayapy and
-`scripts/run_maya_test.py maya_tools/docs/validation/jaw_u_center_follow_20261015/compare_edward.py`
-in a private Maya profile. The script uses disposable scenes and derived cache
-files under `.git`; it does not open or save the artist's Maya session.
-Rebuild the character to apply these changes to an existing rig.
+Native Edward validation checks all nine high-head and one low-head targets,
+their names, captured poses, neutral/quarter/half/full weights, and nonzero
+individual mesh contributions. The eight lip SDKs and the jaw orientation driver
+are restored without modifying any saved sculpt, preset or skin snapshot.
+The full build regression now compares every saved pose record against the
+latest SKC so a missing corrective cannot pass silently. Twenty native skin
+import/export cases cover missing plugin consumers, empty DAG paths, SDKs,
+topology rejection and the separate wrap branch. The standalone test runner
+passes script arguments correctly and honors unittest's normal SystemExit(0).
+
+Receipts and native before/after renders:
+`maya_tools/docs/validation/edward_distributed_u_20261015`.
+The U comparison covers 52 poses with correctives restored in both variants;
+nine ordinary/neutral/Wide poses and the body match exactly. U geometry changes
+are intentional. DG, Serial and Parallel head geometry matches, and saving and
+reopening the posed character gives zero vertex error. Contact diagnostics use
+the native posed triangulation; fixed neutral diagonals on deformed quads are
+not a reliable fold test. Existing mouth intersections are reported explicitly.
+These are deformation checks, not interactive FPS measurements.
+
+Contact review remains open for the extreme U at jaw=20 degrees on `cabeza_low`:
+strict mouth crossing pairs increase from 130 to 144, without collapsed
+triangles. The other seven sampled mesh/pose comparisons reduce crossing counts.
+Existing crossings are numerous in the authored mouth; the new U is not certified
+collision-free. Review/re-sculpt the low-head jaw/lip combination after approving
+the new base profile, rather than silently changing the saved sculpts or weights.
+
+The earlier center-follow receipts remain historical; they did not check that
+every saved corrective was actually imported. Rebuild Edward to apply the U and
+restored correctives. The artist's open scene is not rewritten.
 
 ### Native jaw graph simplification
 

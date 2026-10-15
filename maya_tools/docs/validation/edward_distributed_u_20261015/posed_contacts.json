@@ -1,0 +1,78 @@
+{
+  "success": false,
+  "method": "Maya native triangulation is recomputed at each posed mesh; fixed neutral diagonals are not valid for nonplanar posed quads. Strict noncoplanar non-adjacent crossings exclude shared-vertex contact. Existing intersections are reported, not claimed absent.",
+  "cases": [
+    {
+      "pose": "U0",
+      "mesh": "cabeza_high",
+      "strict_crossings_before": 476,
+      "strict_crossings_after": 474,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "U0",
+      "mesh": "cabeza_low",
+      "strict_crossings_before": 176,
+      "strict_crossings_after": 158,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "U20",
+      "mesh": "cabeza_high",
+      "strict_crossings_before": 232,
+      "strict_crossings_after": 157,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "U20",
+      "mesh": "cabeza_low",
+      "strict_crossings_before": 130,
+      "strict_crossings_after": 144,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "U30",
+      "mesh": "cabeza_high",
+      "strict_crossings_before": 296,
+      "strict_crossings_after": 187,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "U30",
+      "mesh": "cabeza_low",
+      "strict_crossings_before": 270,
+      "strict_crossings_after": 257,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "grid_0_2.6_1",
+      "mesh": "cabeza_high",
+      "strict_crossings_before": 308,
+      "strict_crossings_after": 255,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    },
+    {
+      "pose": "grid_0_2.6_1",
+      "mesh": "cabeza_low",
+      "strict_crossings_before": 136,
+      "strict_crossings_after": 129,
+      "degenerate_before": 0,
+      "degenerate_after": 0,
+      "triangulation_changed": true
+    }
+  ]
+}

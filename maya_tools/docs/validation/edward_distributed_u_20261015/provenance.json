@@ -1,0 +1,14 @@
+{
+  "base_commit": "a88f90ddc83b5f77a67cdf1e5122a7b8edf288a0",
+  "inputs": {
+    "maya_tools/scripts/biped/autorig/jaw_module_nurbs.py": "0dee2b46666325e4ab16c59b7f7f39345e245faa3696c0953157bf20d7d8ebf8",
+    "maya_tools/scripts/tools/skin_manager_api.py": "f1f135b4ab1d2c1e9cc62454b7a87689ca894b1cb407086cf417170a592632aa",
+    "maya_tools/scripts/tools/pose_blendshapes.py": "62016048608233379eed13388b78f8adaa1554e25ee86a44dcf6adc2b3df9ce1",
+    "scripts/run_maya_test.py": "717f4177edc3c8250702e953d9d7bebaf229bada4bd2b6838751e6fb594c9428",
+    "maya_tools/assets/Edward/skin_clusters/Edward_v070.skc": "ad205a986278043bc8f19da4cf917268246bff9371828adb09c576414b684c4c",
+    "maya_tools/assets/Edward/wrinkles/Edward_v004.wrinkles.json": "42a0a795e69aad8a44f5153dff95ca57e2f98e8b66d3e4100b02bf44e66c0b2e"
+  },
+  "functional_success": true,
+  "contact_review_required": true,
+  "artist_scene_changed": false
+}

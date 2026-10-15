@@ -130,22 +130,27 @@ try:
  u_profiles=[]
  for jaw_angle in [0,10,20,30]:
   cmds.setAttr('C_jaw_CTL.rx',jaw_angle)
+  neutral_middle=(lip_positions('upper')+lip_positions('lower'))*.5
   for side in ['L','R']:
    cmds.setAttr(side+'_lipCorner_CTL.translate',5.2,2,0)
   middle=(lip_positions('upper')+lip_positions('lower'))*.5
   center_lift=cmds.getAttr('C_lipRoundedOutputCenterRise_DIV.output')
-  assert (center_lift>.1 if jaw_angle==0 else center_lift>0 if jaw_angle<30 else center_lift==0),(jaw_angle,center_lift)
-  for half in [middle[:13][::-1],middle[12:]]:
+  assert center_lift>.5,(jaw_angle,center_lift)
+  motion=middle[:,1]-neutral_middle[:,1]
+  for half,raised in zip([middle[:13][::-1],middle[12:]],[motion[:13][::-1],motion[12:]]):
    height=half[-1,1]-half[0,1]
    assert height>.1
    # The middle accompanies the smile while the spatial base stays rounded.
-   assert (half[2,1]-half[0,1])/height<.08,half
+   assert .2<raised[0]/raised[-1]<.5,raised
+   outer_share=(raised[-1]-raised[-4])/(raised[-1]-raised[0])
+   assert outer_share<.6,raised
    assert np.all(np.diff(half[:,1])>0),half
    near_slope=abs((half[1,1]-half[0,1])/(half[1,0]-half[0,0]))
    outer_slope=abs((half[-1,1]-half[-4,1])/(half[-1,0]-half[-4,0]))
-   assert near_slope<.25*outer_slope,(near_slope,outer_slope)
+   assert near_slope<.5*outer_slope,(near_slope,outer_slope)
    u_profiles.append({'jaw_angle':jaw_angle,'center_fraction':float((half[2,1]-half[0,1])/height),
-                      'slope_ratio':float(near_slope/outer_slope)})
+                      'slope_ratio':float(near_slope/outer_slope),
+                      'center_follow_fraction':float(raised[0]/raised[-1]),'outer_rise_share':float(outer_share)})
   # Preserve each primary's independent motion while the U correction is active.
   posed={part:lip_positions(part) for part in ['upper','lower']}
   for part,other in [('upper','lower'),('lower','upper')]:

@@ -1,0 +1,774 @@
+{
+  "snapshot_sha256": "8129144347e6b7da1048cebf30fba4f9a681af3c411f8364c43025d60ef88bc1",
+  "nodes": [
+    {
+      "node": "L_eyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "L_eyelidBlinkRef_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_eyelidUp_CRV",
+          "neutral_weight": 0.20000000298023224,
+          "connection": "L_eyeDirect_CTL.Blink_Height",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "L_eyelidDown_CRV",
+          "neutral_weight": 0.800000011920929,
+          "connection": "L_blinkHeight_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "L_eyelidBlinkRef_CRVShape.create"
+      ]
+    },
+    {
+      "node": "L_lowerEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "L_eyelidDownRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "L_eyeDirect_CTL.Lower_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "L_eyelidDown_CRV",
+          "neutral_weight": 1.0,
+          "connection": "L_lowerBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "L_lowerEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "L_upperEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "L_eyelidUpRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "L_eyeDirect_CTL.Upper_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "L_eyelidUp_CRV",
+          "neutral_weight": 1.0,
+          "connection": "L_upperBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "L_upperEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "R_eyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "R_eyelidBlinkRef_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "R_eyelidUp_CRV",
+          "neutral_weight": 0.20000000298023224,
+          "connection": "R_eyeDirect_CTL.Blink_Height",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "R_eyelidDown_CRV",
+          "neutral_weight": 0.800000011920929,
+          "connection": "R_blinkHeight_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "R_eyelidBlinkRef_CRVShape.create"
+      ]
+    },
+    {
+      "node": "R_lowerEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "R_eyelidDownRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "R_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "R_eyeDirect_CTL.Lower_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "R_eyelidDown_CRV",
+          "neutral_weight": 1.0,
+          "connection": "R_lowerBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "R_lowerEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "R_upperEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "R_eyelidUpRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "R_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "R_eyeDirect_CTL.Upper_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "R_eyelidUp_CRV",
+          "neutral_weight": 1.0,
+          "connection": "R_upperBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "R_upperEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "cabeza_high_poseCorrectives_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "EdwardWrinklesGraphShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_lipCorner_TX5_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_0_.output",
+          "record": "L_lipCorner_TX5_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "L_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateX",
+              "default": 0.0,
+              "pose": 5.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.44798502088962294
+          },
+          "affected_vertices": {
+            "cabeza_high": 463
+          }
+        },
+        {
+          "index": 2,
+          "name": "L_lipCorner_TXm2_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_2_.output",
+          "record": "L_lipCorner_TXm2_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "L_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateX",
+              "default": 0.0,
+              "pose": -2.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.44603229019361174
+          },
+          "affected_vertices": {
+            "cabeza_high": 777
+          }
+        },
+        {
+          "index": 4,
+          "name": "C_jaw_RX30_BLS",
+          "neutral_weight": 1.6653345369377348e-16,
+          "connection": "C_jaw_RX30_BLS_poseData_orientationWeight.outputR",
+          "record": "C_jaw_RX30_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "C_jaw_CTL",
+          "channels": [
+            {
+              "channel": "rotateX",
+              "default": 0.0,
+              "pose": 29.999999999999996
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 1.6653345369377348e-16
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0017301038606092334
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 2.14093574582765
+          },
+          "affected_vertices": {
+            "cabeza_high": 3443
+          }
+        },
+        {
+          "index": 5,
+          "name": "R_lipCorner_TX5_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_5_.output",
+          "record": "R_lipCorner_TX5_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "R_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateX",
+              "default": 0.0,
+              "pose": 5.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.44798927990419396
+          },
+          "affected_vertices": {
+            "cabeza_high": 462
+          }
+        },
+        {
+          "index": 6,
+          "name": "R_lipCorner_TXm2_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_6_.output",
+          "record": "R_lipCorner_TXm2_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "R_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateX",
+              "default": 0.0,
+              "pose": -2.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.44602466457202644
+          },
+          "affected_vertices": {
+            "cabeza_high": 779
+          }
+        },
+        {
+          "index": 7,
+          "name": "L_lipCorner_TY3_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_7_.output",
+          "record": "L_lipCorner_TY3_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "L_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateY",
+              "default": 0.0,
+              "pose": 3.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 1.1730976588787048
+          },
+          "affected_vertices": {
+            "cabeza_high": 1493
+          }
+        },
+        {
+          "index": 8,
+          "name": "R_lipCorner_TY3_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_8_.output",
+          "record": "R_lipCorner_TY3_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "R_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateY",
+              "default": 0.0,
+              "pose": 3.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.8425035331361691
+          },
+          "affected_vertices": {
+            "cabeza_high": 1589
+          }
+        },
+        {
+          "index": 9,
+          "name": "L_lipCorner_TYm4_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_9_.output",
+          "record": "L_lipCorner_TYm4_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "L_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateY",
+              "default": 0.0,
+              "pose": -4.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.8015774110531746
+          },
+          "affected_vertices": {
+            "cabeza_high": 1317
+          }
+        },
+        {
+          "index": 10,
+          "name": "R_lipCorner_TYm4_BLS",
+          "neutral_weight": 0.0,
+          "connection": "cabeza_high_poseCorrectives_BLS_weight_10_.output",
+          "record": "R_lipCorner_TYm4_BLS_poseData",
+          "geometry_index": 0,
+          "controller": "R_lipCorner_CTL",
+          "channels": [
+            {
+              "channel": "translateY",
+              "default": 0.0,
+              "pose": -4.0
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 0.0
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0
+            }
+          ],
+          "full_contribution": {
+            "cabeza_high": 0.7258305257759198
+          },
+          "affected_vertices": {
+            "cabeza_high": 1318
+          }
+        }
+      ],
+      "outputs": [
+        "EdwardWrinkles_PrimaryWorld.inputGeometry",
+        "EdwardWrinklesGraphShape.AnimatedFace"
+      ]
+    },
+    {
+      "node": "cabeza_low_poseCorrectives_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "cabeza_low_Shape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "C_jaw_RX30_BLS",
+          "neutral_weight": 1.6653345369377348e-16,
+          "connection": "C_jaw_RX30_BLS_poseData1_orientationWeight.outputR",
+          "record": "C_jaw_RX30_BLS_poseData1",
+          "geometry_index": 0,
+          "controller": "C_jaw_CTL",
+          "channels": [
+            {
+              "channel": "rotateX",
+              "default": 0.0,
+              "pose": 29.999999999999996
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 1.6653345369377348e-16
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0017301038606092334
+            }
+          ],
+          "full_contribution": {
+            "cabeza_low": 2.1398752635546217
+          },
+          "affected_vertices": {
+            "cabeza_low": 857
+          }
+        }
+      ],
+      "outputs": [
+        "C_cheeks_local_SKC.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "cuerpo_base_poseCorrectives_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "polySurfaceShape1"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "target_0",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null,
+          "constant_target_contribution": 1.9743618718775855
+        },
+        {
+          "index": 1,
+          "name": "target_1",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null,
+          "constant_target_contribution": 1.9069174194785063
+        },
+        {
+          "index": 2,
+          "name": "target_2",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null,
+          "constant_target_contribution": 1.0061102011787273
+        },
+        {
+          "index": 3,
+          "name": "target_3",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null,
+          "constant_target_contribution": 0.9116755516176394
+        }
+      ],
+      "outputs": [
+        "polySurfaceShape1.inMesh"
+      ]
+    }
+  ],
+  "errors": [],
+  "canonical_reexport_geometry": [
+    {
+      "index": 0,
+      "shape": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high|cabeza_high_Shape"
+    }
+  ],
+  "pose_count_reexport": 10,
+  "evaluation_errors": {
+    "serial": 0.0,
+    "parallel": 0.0,
+    "off": 0.0
+  },
+  "reopen_error": 0.0,
+  "success": true
+}

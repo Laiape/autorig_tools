@@ -342,6 +342,83 @@ class SkinSurfaceImportTests(unittest.TestCase):
         self.manager.import_skins(in_path=self.path)
         self.assertEqual(cmds.ls(type="animCurveUU"), before)
 
+    def test_pose_corrective_recovers_legacy_plugin_consumer_geometry(self):
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        control = cmds.createNode("transform", name="L_lip_CTL")
+        cmds.setAttr(control + ".translateY", 3)
+        blend = poses.create_blendshape("body", "post")
+        index, alias = poses.add_target("body", blend, control)
+        cmds.move(0, .4, 0, "body.vtx[0]", relative=True, worldSpace=True)
+        poses.finish_edit(True)
+        expected = cmds.pointPosition("body.vtx[0]", world=True)
+        cmds.select("body")
+        self.manager.export_skins(in_path=self.path)
+        with open(self.path) as stream:
+            data = json.load(stream)
+        snapshot = data[module.SkinManager.SCENE_DEFORMERS_KEY]
+        entry = next(n for n in snapshot["nodes"] if n["name"] == blend)
+        old_shape = entry["geometries"][0]["shape"]
+        plugin_shape = "|missingWrinkles|missingWrinklesGraphShape"
+        entry["geometries"][0]["shape"] = plugin_shape
+        snapshot["geometry_stacks"][plugin_shape] = snapshot["geometry_stacks"].pop(old_shape)
+        with open(self.path, "w") as stream:
+            json.dump(data, stream)
+        record = poses.pose_record(blend, index)
+        drivers = cmds.listConnections(record + ".driverNodes", source=True, destination=False)
+        cmds.delete(blend, record, drivers)
+        self.manager.import_skins(in_path=self.path, import_wrinkles=False)
+        self.assertEqual(poses.targets(blend), [(index, alias)])
+        self.assertIsNotNone(poses.pose_record(blend, index))
+        actual = cmds.pointPosition("body.vtx[0]", world=True)
+        for a, b in zip(actual, expected):
+            self.assertAlmostEqual(a, b, places=5)
+        cmds.setAttr(control + ".translateY", 1.5)
+        self.assertAlmostEqual(cmds.getAttr(blend + ".weight[%d]" % index), .5)
+        cmds.setAttr(control + ".translateY", 0)
+        self.assertAlmostEqual(cmds.getAttr(blend + ".weight[%d]" % index), 0)
+        cmds.delete(blend, poses.pose_record(blend, index))
+        cmds.polySubdivideFacet("body.f[0]", divisions=1)
+        self.manager._import_scene_deformers(snapshot, mesh_snapshots=data)
+        self.assertFalse(cmds.objExists(blend))
+
+    def test_export_uses_captured_mesh_instead_of_plugin_consumer(self):
+        from unittest.mock import patch
+        from maya_tools.scripts.tools import pose_blendshapes as poses
+        control = cmds.createNode("transform", name="L_lip_CTL")
+        cmds.setAttr(control + ".translateY", 3)
+        blend = poses.create_blendshape("body", "post")
+        poses.add_target("body", blend, control)
+        cmds.move(0, .2, 0, "body.vtx[0]", relative=True, worldSpace=True)
+        poses.finish_edit(True)
+        consumer = cmds.spaceLocator(name="pluginConsumer")[0]
+        path = self.manager._get_dag_path(cmds.listRelatives(consumer, shapes=True)[0])
+        original = module.oma.MFnGeometryFilter
+        class ConsumerPath:
+            def __init__(self, obj):
+                self.native = original(obj)
+                self.name = om.MFnDependencyNode(obj).name()
+            def __getattr__(self, name):
+                return getattr(self.native, name)
+            def getPathAtIndex(self, index):
+                return path if self.name == blend else self.native.getPathAtIndex(index)
+        with patch.object(module.oma, "MFnGeometryFilter", ConsumerPath):
+            snapshot = self.manager._export_scene_deformers()
+        entry = next(n for n in snapshot["nodes"] if n["name"] == blend)
+        self.assertEqual(cmds.nodeType(entry["geometries"][0]["shape"]), "mesh")
+        self.assertTrue(entry["geometries"][0]["shape"].endswith("|bodyShape"))
+        path = om.MDagPath()
+        with patch.object(module.oma, "MFnGeometryFilter", ConsumerPath):
+            snapshot = self.manager._export_scene_deformers()
+        entry = next(n for n in snapshot["nodes"] if n["name"] == blend)
+        self.assertTrue(entry["geometries"][0]["shape"].endswith("|bodyShape"))
+        native_query = cmds.blendShape
+        def plugin_output(*args, **kwargs):
+            if args[0] == blend and kwargs.get("geometry"):
+                return cmds.listRelatives(consumer, shapes=True)
+            return native_query(*args, **kwargs)
+        with patch.object(cmds, "blendShape", plugin_output):
+            self.assertEqual(poses.geometry_index(blend, "body"), 0)
+
     def test_sparse_pose_targets_recover_missing_aliases_on_import(self):
         from maya_tools.scripts.tools import pose_blendshapes as poses
         control = cmds.createNode("transform", name="L_lip_CTL")

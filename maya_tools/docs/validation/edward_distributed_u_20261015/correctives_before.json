@@ -1,0 +1,273 @@
+{
+  "snapshot_sha256": "d53d0a4814a5cb9a2756a082420b7c005a5ee1a5a3452f21efa247aa2accf716",
+  "nodes": [
+    {
+      "node": "L_eyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "L_eyelidBlinkRef_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_eyelidUp_CRV",
+          "neutral_weight": 0.20000000298023224,
+          "connection": "L_eyeDirect_CTL.Blink_Height",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "L_eyelidDown_CRV",
+          "neutral_weight": 0.800000011920929,
+          "connection": "L_blinkHeight_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "L_eyelidBlinkRef_CRVShape.create"
+      ]
+    },
+    {
+      "node": "L_lowerEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "L_eyelidDownRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "L_eyeDirect_CTL.Lower_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "L_eyelidDown_CRV",
+          "neutral_weight": 1.0,
+          "connection": "L_lowerBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "L_lowerEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "L_upperEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "L_eyelidUpRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "L_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "L_eyeDirect_CTL.Upper_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "L_eyelidUp_CRV",
+          "neutral_weight": 1.0,
+          "connection": "L_upperBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "L_upperEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "R_eyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "R_eyelidBlinkRef_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "R_eyelidUp_CRV",
+          "neutral_weight": 0.20000000298023224,
+          "connection": "R_eyeDirect_CTL.Blink_Height",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "R_eyelidDown_CRV",
+          "neutral_weight": 0.800000011920929,
+          "connection": "R_blinkHeight_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "R_eyelidBlinkRef_CRVShape.create"
+      ]
+    },
+    {
+      "node": "R_lowerEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "R_eyelidDownRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "R_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "R_eyeDirect_CTL.Lower_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "R_eyelidDown_CRV",
+          "neutral_weight": 1.0,
+          "connection": "R_lowerBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "R_lowerEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "R_upperEyelidBlink_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "R_eyelidUpRebuilded_CRVShape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "R_eyelidBlinkRef_CRV",
+          "neutral_weight": 0.0,
+          "connection": "R_eyeDirect_CTL.Upper_Blink",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "R_eyelidUp_CRV",
+          "neutral_weight": 1.0,
+          "connection": "R_upperBlink_REV.outputX",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "R_upperEyelid_SKIN.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "cabeza_low_poseCorrectives_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "cabeza_low_Shape"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "C_jaw_RX30_BLS",
+          "neutral_weight": 1.6653345369377348e-16,
+          "connection": "C_jaw_RX30_BLS_poseData1_orientationWeight.outputR",
+          "record": "C_jaw_RX30_BLS_poseData1",
+          "controller": "C_jaw_CTL",
+          "channels": [
+            {
+              "channel": "rotateX",
+              "default": 0.0,
+              "pose": 29.999999999999996
+            }
+          ],
+          "samples": [
+            {
+              "fraction": 0,
+              "weight": 1.6653345369377348e-16
+            },
+            {
+              "fraction": 0.25,
+              "weight": 0.25
+            },
+            {
+              "fraction": 0.5,
+              "weight": 0.5
+            },
+            {
+              "fraction": 0.75,
+              "weight": 0.75
+            },
+            {
+              "fraction": 1,
+              "weight": 1.0
+            },
+            {
+              "fraction": 1.5,
+              "weight": 1.0
+            },
+            {
+              "fraction": -0.5,
+              "weight": 0.0017301038606092334
+            }
+          ],
+          "full_contribution": {
+            "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low": 2.1398752635546217
+          },
+          "affected_vertices": {
+            "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low": 857
+          }
+        }
+      ],
+      "outputs": [
+        "C_cheeks_local_SKC.input[0].inputGeometry"
+      ]
+    },
+    {
+      "node": "cuerpo_base_poseCorrectives_BLS",
+      "envelope": 1.0,
+      "state": 0,
+      "geometries": [
+        "polySurfaceShape1"
+      ],
+      "targets": [
+        {
+          "index": 0,
+          "name": "target_0",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null
+        },
+        {
+          "index": 1,
+          "name": "target_1",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null
+        },
+        {
+          "index": 2,
+          "name": "target_2",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null
+        },
+        {
+          "index": 3,
+          "name": "target_3",
+          "neutral_weight": 1.0,
+          "connection": "",
+          "record": null
+        }
+      ],
+      "outputs": [
+        "polySurfaceShape1.inMesh"
+      ]
+    }
+  ],
+  "errors": []
+}

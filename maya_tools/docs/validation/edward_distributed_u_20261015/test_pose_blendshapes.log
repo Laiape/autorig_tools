@@ -1,0 +1,9 @@
+Undo: PoseBlendshapes_4c0f1cf3584c4a84acc293938b75f28f
+File read in  0.0098 seconds.
+PASS pre native posed sculpt, follows rotation, neutral/half/full weights, cancel, mixed signed drivers, unique names, delete/undo, rename, save/reopen, no Pose Interpolator
+Undo: PoseBlendshapes_03c0c5851f70419e969a662fb9663766
+File read in  0.012 seconds.
+PASS post native posed sculpt, follows rotation, neutral/half/full weights, cancel, mixed signed drivers, unique names, delete/undo, rename, save/reopen, no Pose Interpolator
+Added drivers: wrap_driver_bodyShape.
+PASS: post sculpt on body with proximityWrap consumers preserves driver connections
+PASS: existing blendshape target geometry, driver weights and live connections preserved
