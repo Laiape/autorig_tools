@@ -72,20 +72,22 @@ try:
  # upper/lower stations must receive the same broad, smooth displacement.
  def lip_positions(part):
   return np.asarray([cmds.xform(('R_' if i<12 else 'C_' if i==12 else 'L_')+part+'Lip%02d_JNT'%(i if i<12 else 0 if i==12 else 24-i),q=True,ws=True,t=True) for i in range(25)])
- # Auto Narrow is a calibrated inward move, sharing the existing smooth,
+ # Auto Narrow is a positive-X activated inward move, sharing the smooth,
  # paired upper/lower corner falloff without pulling the opposite half.
  # Isolate the original Narrow displacement; Auto Wide has its own native suite.
  for corner_side in ['L','R']:cmds.setAttr(corner_side+'_lipCorner_CTL.autoWide',0)
  for side in ['L','R']:
   corner=side+'_lipCorner_CTL';attr=corner+'.autoNarrow'
-  assert cmds.getAttr(attr)==0 and cmds.getAttr(attr,keyable=True)
+  assert cmds.getAttr(attr)==1 and cmds.getAttr(attr,keyable=True)
   assert not cmds.getAttr(attr,lock=True)
-  coefficients=np.array(cmds.getAttr(side+'_lipOutFrac_VPR.input2')[0])
-  inward=-.25*coefficients/np.dot(coefficients,coefficients)
   endpoint_index=24 if side=='L' else 0
   opposite_half=slice(0,13) if side=='L' else slice(12,25)
   for angle in [0,20,30]:
    cmds.setAttr('C_jaw_CTL.rx',angle)
+   neutral={part:lip_positions(part) for part in ['upper','lower']}
+   cmds.setAttr(attr,0)
+   assert all(np.allclose(lip_positions(part),neutral[part],atol=1e-7) for part in neutral)
+   cmds.setAttr(corner+'.tx',1.)
    rest={part:lip_positions(part) for part in ['upper','lower']}
    for value in [.25,.5,1.]:
     cmds.setAttr(attr,value)
@@ -100,10 +102,10 @@ try:
      assert np.allclose(delta['upper'][station_index][[0,2]],obj._corner_drag_weight(index/12.)*endpoint[[0,2]],atol=1e-5)
     assert all(np.isfinite(p).all() and np.all(np.diff(p[:,0])>0) for p in posed.values()),(side,angle,value)
     cmds.setAttr(attr,0)
-    cmds.setAttr(corner+'.translate',*(inward*value))
-    assert all(np.allclose(lip_positions(part),posed[part],atol=1e-5) for part in rest)
-    cmds.setAttr(corner+'.translate',0,0,0)
     assert all(np.allclose(lip_positions(part),rest[part],atol=1e-5) for part in rest)
+   cmds.setAttr(corner+'.translate',0,0,0)
+   cmds.setAttr(attr,1)
+   assert all(np.allclose(lip_positions(part),neutral[part],atol=1e-7) for part in neutral)
  cmds.setAttr('C_jaw_CTL.rx',0)
  for angle in [0,20,30]:
   cmds.setAttr('C_jaw_CTL.rx',angle)
@@ -122,7 +124,9 @@ try:
  cmds.setAttr('C_jaw_CTL.rx',0)
  # Raised and widened corners form a rounded U: the middle slope is much
  # shallower than a V, while the endpoint and independent opening remain free.
- for corner_side in ['L','R']:cmds.setAttr(corner_side+'_lipCorner_CTL.autoWide',1)
+ for corner_side in ['L','R']:
+  cmds.setAttr(corner_side+'_lipCorner_CTL.autoWide',1)
+  cmds.setAttr(corner_side+'_lipCorner_CTL.autoNarrow',1)
  u_profiles=[]
  for jaw_angle in [0,10,20,30]:
   cmds.setAttr('C_jaw_CTL.rx',jaw_angle)

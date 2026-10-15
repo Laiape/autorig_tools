@@ -1,0 +1,510 @@
+{
+  "build_seconds": 37.64147839999896,
+  "reopen_error": 0.0,
+  "poses": [
+    {
+      "corrective": "autoWide",
+      "jaw": 0,
+      "signed_x_fraction": -0.0,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 0,
+      "signed_x_fraction": -0.125,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3166,
+          "maximum_forward": 0.01815319061279297,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 536,
+          "maximum_forward": 0.019084930419921875,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 0,
+      "signed_x_fraction": -0.25,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3191,
+          "maximum_forward": 0.06984996795654297,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 541,
+          "maximum_forward": 0.07343292236328125,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 20,
+      "signed_x_fraction": -0.0,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 20,
+      "signed_x_fraction": -0.125,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3174,
+          "maximum_forward": 0.01815319061279297,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 601,
+          "maximum_forward": 0.01930713653564453,
+          "minimum_forward": -0.0007047653198242188,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 20,
+      "signed_x_fraction": -0.25,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3191,
+          "maximum_forward": 0.06984996795654297,
+          "minimum_forward": -2.384185791015625e-07,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 615,
+          "maximum_forward": 0.07428932189941406,
+          "minimum_forward": -0.0017728805541992188,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 30,
+      "signed_x_fraction": -0.0,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 30,
+      "signed_x_fraction": -0.125,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3174,
+          "maximum_forward": 0.018153667449951172,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 606,
+          "maximum_forward": 0.019431114196777344,
+          "minimum_forward": -0.0006608963012695312,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoWide",
+      "jaw": 30,
+      "signed_x_fraction": -0.25,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3186,
+          "maximum_forward": 0.06984949111938477,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 615,
+          "maximum_forward": 0.07476997375488281,
+          "minimum_forward": -0.0010662078857421875,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 0,
+      "signed_x_fraction": 0.0,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 0,
+      "signed_x_fraction": 0.125,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3245,
+          "maximum_forward": 0.010483741760253906,
+          "minimum_forward": -0.0028715133666992188,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 567,
+          "maximum_forward": 0.010661125183105469,
+          "minimum_forward": -0.0030241012573242188,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 0,
+      "signed_x_fraction": 0.25,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3248,
+          "maximum_forward": 0.040050506591796875,
+          "minimum_forward": -0.011187553405761719,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 567,
+          "maximum_forward": 0.040726661682128906,
+          "minimum_forward": -0.011781692504882812,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 20,
+      "signed_x_fraction": 0.0,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 20,
+      "signed_x_fraction": 0.125,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3245,
+          "maximum_forward": 0.009096145629882812,
+          "minimum_forward": -0.004536628723144531,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 614,
+          "maximum_forward": 0.009263038635253906,
+          "minimum_forward": -0.004830360412597656,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 20,
+      "signed_x_fraction": 0.25,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3250,
+          "maximum_forward": 0.03467273712158203,
+          "minimum_forward": -0.017663002014160156,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 628,
+          "maximum_forward": 0.03536033630371094,
+          "minimum_forward": -0.01880645751953125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 30,
+      "signed_x_fraction": 0.0,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 30,
+      "signed_x_fraction": 0.125,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3244,
+          "maximum_forward": 0.00821685791015625,
+          "minimum_forward": -0.005174160003662109,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 613,
+          "maximum_forward": 0.008365631103515625,
+          "minimum_forward": -0.0055408477783203125,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    },
+    {
+      "corrective": "autoNarrow",
+      "jaw": 30,
+      "signed_x_fraction": 0.25,
+      "meshes": {
+        "cabeza_high": {
+          "vertices": 11475,
+          "moved_vertices": 3249,
+          "maximum_forward": 0.031276702880859375,
+          "minimum_forward": -0.0201416015625,
+          "new_triangle_reversals": 0
+        },
+        "cabeza_low": {
+          "vertices": 3082,
+          "moved_vertices": 632,
+          "maximum_forward": 0.03187751770019531,
+          "minimum_forward": -0.021566390991210938,
+          "new_triangle_reversals": 0
+        },
+        "cuerpo_base": {
+          "vertices": 5458,
+          "moved_vertices": 0,
+          "maximum_forward": 0.0,
+          "minimum_forward": 0.0,
+          "new_triangle_reversals": 0
+        }
+      }
+    }
+  ]
+}

@@ -40,7 +40,7 @@ cases=[('neutral',{})]
 for angle in (5,20,30):cases.append(('jaw_'+str(angle),{'C_jaw_CTL.rx':angle}))
 for side in ('L','R'):
  for angle in (0,20,30):
-  for value in (.25,.5,1):cases.append((side+'_narrow_'+str(angle)+'_'+str(value),{'C_jaw_CTL.rx':angle,side+'_lipCorner_CTL.autoNarrow':value}))
+  for value in (.25,.5,1):cases.append((side+'_narrow_'+str(angle)+'_'+str(value),{'C_jaw_CTL.rx':angle,side+'_lipCorner_CTL.tx':1.,side+'_lipCorner_CTL.autoNarrow':value}))
  for axis in ('tx','ty','tz','rx','ry','rz'):
   for sign in (-1,1):cases.append((side+'_'+axis+str(sign),{'C_jaw_CTL.rx':20,side+'_lipCorner_CTL.'+axis:sign*(1 if axis.startswith('t') else 20)}))
 for value in (0,.5,1):cases.append(('sticky_'+str(value),{'C_jaw_CTL.rx':30,'C_jaw_CTL.stickyLips':value,'L_lipCorner_CTL.autoNarrow':.5,'R_lipCorner_CTL.autoNarrow':.5}))
@@ -78,7 +78,8 @@ try:
  assert len(sources)==1,sources
  for side in ('L','R'):
   attr=side+'_lipCorner_CTL.autoNarrow'
-  assert cmds.getAttr(attr)==0 and cmds.getAttr(attr,keyable=True)
+  assert cmds.getAttr(attr)==1 and cmds.getAttr(attr,keyable=True)
+  assert cmds.attributeQuery('autoNarrow',node=side+'_lipCorner_CTL',listDefault=True)==[1.]
   assert not cmds.getAttr(attr,lock=True)
  actual=samples();maximum=0.
  if baseline:

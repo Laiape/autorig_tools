@@ -362,7 +362,8 @@ Standalone corrective UI regression: `test_pose_blendshapes_ui.py` with mayapy.
 
 `scripts/biped/autorig/jaw_module_nurbs.py` builds one shared projection target,
 `C_jaw_NURB`. Narrow is always wired into the control projection inputs and remains
-regulable through corner translation and `autoNarrow` (default 0). The redundant
+regulable through positive local corner X and `autoNarrow` (default 1). At rest,
+activation and offset are zero, preserving the authored initial pose. The redundant
 `C_jawStatic_NURB` and four second-pass closest-point nodes are no longer built.
 Upper/lower ribbon surfaces still serve their separate downstream skin/pin roles.
 This takes effect on the next rebuild; existing saved scenes are not rewritten.
@@ -399,9 +400,9 @@ Rebuilding the jaw adds two keyable attributes on each of
 
 Each corner has its own intensity and depth. They are not on `C_jaw_CTL`.
 
-The module reads existing per-side Narrow inputs, including `autoNarrow`, and
-signed secondary-controller translations calibrated to the neutral lateral
-axes. It sums compression separately for each lip and side, then applies a
+The module reads negative rest-relative local corner X independently of
+`autoNarrow`, plus signed secondary-controller translations calibrated to the
+neutral lateral axes. It sums compression separately for each lip and side, then applies a
 smooth, bounded activation. Outward secondary motion can relieve compression.
 Jaw opening, head following and main-mouth movement alone do not activate it.
 The central secondary's lateral translation is excluded: it is already at the
@@ -433,7 +434,8 @@ temporary build cache, checks actual high/low head and body geometry, and saves
 and reopens a full native scene. Validation receipts and logs are in
 `maya_tools/docs/validation/jaw_auto_wide_20261015`.
 
-Validation on 2026-10-15: all five regressions pass, including DG/serial/parallel,
+Historical validation before the signed default-on inputs below: all five
+regressions pass, including DG/serial/parallel,
 activation and saturation continuity, mirrored secondary controls, Sticky Lips,
 Roll, the rounded U and native reopen. The standard full `autoNarrow=1` pose
 produces 0.07343 units of extra central joint depth. The tested 0 to 25 percent
@@ -452,6 +454,57 @@ or regression. They include Python queries of 50 joints and exclude mesh/viewpor
 rendering; they are not animation FPS or a controlled comparison of complete
 character build times.
 Raw samples are in the validation folder's `performance.json`.
+
+### Signed jaw defaults and wrinkle defaults
+
+On both corners, `autoNarrow` and `autoWide` default to 1 and remain independent
+intensity controls. The builder captures neutral local X and lateral response
+once. Rest-relative X+ activates Narrow's inward offset and projection pull;
+X- activates forward Wide. Smoothstep gates have zero slope at neutral and at
+saturation. At X=0 both corrections are zero for every intensity, so no static
+offset or changed rest surface is needed. Jaw/head following and local Y/Z alone
+cannot activate these corner gates. Secondary compression remains a separate,
+lip-local Wide input using the authored neutral axes.
+
+`maya_tools/scripts/tools/tests/test_jaw_directional_defaults.py` checks defaults, rest invariance, signed
+activation, boundary derivatives and forward/reverse sweeps. Existing regressions
+cover per-side independence, gains, Sticky, Roll, DG/Serial/Parallel and binary
+reopen. Corners project their effective inward offset once; an additional
+center-directed pull on the same corner was redundant and pinched the low head
+mesh under combined opening/Narrow. Only central inputs keep that pull. The
+original U limits pass with Narrow at its new default 1; its corrective graph
+and thresholds are unchanged.
+The graph benchmark pose bank now supplies X+ for Narrow and X- for Wide.
+All-pose comparisons require matching driver semantics; the comparison to
+`2a3fad8` in this validation checks only poses that should remain unchanged.
+
+`wrinkleValue` defaults to 1 on new and reused controls. Reusing a control updates
+its reset default without discarding its current/saved intensity. Edward's new
+`maya_tools/assets/Edward/skin_clusters/Edward_v069.skc` and
+`maya_tools/assets/Edward/wrinkles/Edward_v003.wrinkles.json` change only the two saved corner
+Wrinkle Values from 0 to 1. All weights, sculpts, masks, rest fields and depths,
+including the saved corner depths, are preserved. Earlier versions remain intact.
+The later shared-checkout versions `maya_tools/assets/Edward/skin_clusters/Edward_v070.skc`
+and `maya_tools/assets/Edward/wrinkles/Edward_v004.wrinkles.json` were present
+before final integration tests. They retain all 26 Wrinkle Values at 1 and their
+additional wrinkle-authoring changes are included in the project snapshot.
+The SKC/preset regressions also verify controller defaults and native round trips.
+
+Validation receipts: `maya_tools/docs/validation/jaw_directional_defaults_20261015`.
+The independent comparison to `2a3fad8` has zero matrix error across 13 fixture
+poses (152 matrices each) and zero vertex error across 12 complete Edward poses
+on the high/low heads and body. These check rest, jaw opening, primary offsets,
+Sticky and following; activated corner poses intentionally use the new behavior.
+The fixture has 2863 nodes versus 2871 before this change. The U reference with
+Narrow=1 has maximum center height fraction 0.07215 and near/outer slope ratio
+0.12701, below the unchanged 0.08 and 0.25 limits. These are geometry checks,
+not viewport FPS measurements.
+All eight scoped regressions pass. Edward's 18 signed Narrow/Wide poses at jaw
+0/20/30 have no new triangle reversals, unchanged neutral/body geometry and
+zero vertex error after native scene reopen.
+Concurrent regression workers now own separate Maya preference directories to
+avoid startup writes racing during parallel batch tests. Rebuild to apply these
+defaults and drivers; existing artist scenes are not rewritten.
 
 ### Native jaw graph simplification
 
@@ -776,6 +829,17 @@ Measured results and known legacy input limitations:
 `docs/build_performance_results.md`.
 
 ### Portable wrinkle regions
+
+Edward's current import preset is `maya_tools/assets/Edward/wrinkles/Edward_v004.wrinkles.json`.
+It retains inward/up brows (Forehead), down brows on the upper nose (Nose),
+and smile (Cheeks); Eyes and Chin fields and their local masks are removed.
+The 19 retained local controls keep the approved maps, settings and rest data,
+including the lip-corner Wrinkle Value 1 defaults from v003. The matching
+`maya_tools/assets/Edward/skin_clusters/Edward_v070.skc` changes only the v069
+wrinkle snapshot, so CREATE RIG imports this configuration after skin/correctives.
+Replace an existing setup with prefix `EdwardWrinkles` when applying the preset.
+Native preset restoration has zero geometry difference across neutral and all
+four expressions; evidence: `maya_tools/assets/Edward/validation/Edward_v070_four_wrinkles.json`.
 
 Correctives > Wrinkle Regions / Presets edits the existing Bifrost wrinkle
 backend. Create empty regions for any neutral facial mesh, assign selected

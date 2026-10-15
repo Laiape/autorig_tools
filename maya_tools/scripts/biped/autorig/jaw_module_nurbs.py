@@ -611,10 +611,21 @@ class JawModule(object):
                 cmds.setAttr(node + "." + attr, value)
         return node + ".output"
 
-    def _lip_auto_wide_drivers(self, controls, control_frames, half_width, lateral):
+    @staticmethod
+    def _lip_smooth_activation(name, source):
+        """Bounded smoothstep, with zero slope at rest and saturation."""
+        node = cmds.createNode("remapValue", name=name, ss=True)
+        cmds.connectAttr(source, node + ".inputValue")
+        cmds.setAttr(node + ".inputMax", 1)
+        cmds.setAttr(node + ".value[0].value_Interp", 2)
+        cmds.setAttr(node + ".value[1].value_Interp", 2)
+        return node + ".outValue"
+
+    def _lip_auto_wide_drivers(self, controls, control_frames, half_width, lateral, corner_inputs):
         """Read animator inputs upstream of the corrective to avoid feedback.
 
-        Calibrate secondary lateral axes at build, like the corner Narrow driver.
+        Corners use negative rest-relative local X, independently of Narrow gain.
+        Calibrate secondary lateral axes at build, like the corner offset vector.
         Positive inward secondary translations add compression on their own lip
         and side. Outward translations can relieve that compression. The smooth
         remap saturates at one half-width. Jaw/head motion alone cannot drive it.
@@ -632,7 +643,7 @@ class JawModule(object):
             depths[side] = scalar(side + "_lipAutoWideDepth_MUL", "multiply", [gain, half_width])
         drivers = {}
         for part, ctls in controls.items():
-            inward = {side: [side + "_lipNarrow_CLM.outputR"] for side in ("L", "R")}
+            inward = {side: [corner_inputs[side]] for side in ("L", "R")}
             mid = len(ctls) // 2
             for index, ctl in enumerate(ctls):
                 if index == mid:
@@ -651,13 +662,9 @@ class JawModule(object):
             for side, values in inward.items():
                 name = f"{side}_{part}LipAutoWide"
                 total = scalar(name + "In_SUM", "sum", values)
-                smooth = cmds.createNode("remapValue", name=name + "In_RMV", ss=True)
-                cmds.connectAttr(total, smooth + ".inputValue")
-                cmds.setAttr(smooth + ".inputMax", 1)
-                cmds.setAttr(smooth + ".value[0].value_Interp", 2)
-                cmds.setAttr(smooth + ".value[1].value_Interp", 2)
+                smooth = self._lip_smooth_activation(name + "In_RMV", total)
                 drivers[part][side] = scalar(name + "Amount_MUL", "multiply",
-                                             [smooth + ".outValue", depths[side]])
+                                             [smooth, depths[side]])
             # Harmonic mean is smooth at equal sides, unlike min(L, R).
             # It is zero for unilateral compression, keeping the other half free.
             name = f"C_{part}LipAutoWideShared"
@@ -756,30 +763,39 @@ class JawModule(object):
         self._finish_lip_offsets([offset])
         return matrix + ".matrixSum", offset
 
-    @staticmethod
-    def _corner_auto_narrow(corner, offset_group, local_matrix, outward_fraction):
-        """Add an inward corner offset to the existing smooth lip drag.
+    def _corner_auto_narrow(self, corner, offset_group, local_matrix, coefficients):
+        """Default-on intensity, activated only by positive rest-relative X.
 
         The calibrated lateral projection handles mirrored control axes. A
-        full value moves a quarter of the mouth's half-width; the existing
+        full activation moves a quarter of the mouth's half-width; the existing
         paired-lip falloff carries it from the corner to zero at the center.
+        Both the offset and projection pull are zero in the authored rest pose,
+        even with autoNarrow=1. Negative X drives Wide through a separate branch.
         Read the control's local matrix, never its world matrix, to avoid a
         feedback loop through the corner's display offset.
         """
         attr = corner + ".autoNarrow"
         if not cmds.objExists(attr):
             cmds.addAttr(corner, longName="autoNarrow", niceName="Auto Narrow",
-                         attributeType="float", min=0, max=1, defaultValue=0, keyable=True)
+                         attributeType="float", min=0, max=1, defaultValue=1, keyable=True)
         name = corner.removesuffix("_CTL") + "AutoNarrow"
-        coefficients = om.MVector(*cmds.getAttr(outward_fraction + ".input2")[0])
+        coefficients = om.MVector(*coefficients)
         magnitude = coefficients * coefficients
-        if magnitude <= 1e-12:
+        if magnitude <= 1e-12 or abs(coefficients.x) <= 1e-12:
             raise ValueError("Cannot determine lateral lip direction for " + corner)
+        side = corner.split("_")[0]
+        scalar = self._lip_wide_scalar
+        rest = scalar(side + "_lipRestX_SUB", "subtract",
+                      [corner + ".translateX", cmds.getAttr(corner + ".translateX")])
+        signed_x = scalar(side + "_lipSignedX_MUL", "multiply", [rest, abs(coefficients.x)])
+        activation = self._lip_smooth_activation(name + "Activation_RMV", signed_x)
+        narrow = scalar(side + "_lipNarrow_MUL", "multiply", [activation, attr])
+        wide_input = scalar(side + "_lipWideInput_MUL", "multiply", [signed_x, -1.0])
         inward = coefficients * (-0.25 / magnitude)
         translation = cmds.createNode("multiplyDivide", name=name + "_MDV", ss=True)
         cmds.setAttr(translation + ".input1", *inward, type="double3")
         for axis in "XYZ":
-            cmds.connectAttr(attr, translation + ".input2" + axis)
+            cmds.connectAttr(narrow, translation + ".input2" + axis)
         compose = cmds.createNode("composeMatrix", name=name + "_CMX", ss=True)
         cmds.connectAttr(translation + ".output", compose + ".inputTranslate")
         cmds.connectAttr(compose + ".outputMatrix", offset_group + ".offsetParentMatrix")
@@ -787,9 +803,7 @@ class JawModule(object):
         cmds.connectAttr(corner + ".matrix", effective + ".matrixIn[0]")
         cmds.connectAttr(compose + ".outputMatrix", effective + ".matrixIn[1]")
         cmds.connectAttr(effective + ".matrixSum", local_matrix + ".matrixIn[0]", force=True)
-        position = cmds.createNode("translationFromMatrix", name=name + "_TFM", ss=True)
-        cmds.connectAttr(effective + ".matrixSum", position + ".input")
-        cmds.connectAttr(position + ".output", outward_fraction + ".input1", force=True)
+        return narrow, wide_input
 
     @staticmethod
     def _corner_drag_driver(side, corner_joint, jaw_blend, parent):
@@ -1069,7 +1083,6 @@ class JawModule(object):
 
         corner_nodes_ctls = []
         corner_controllers = []
-        corner_proj = {}  # side -> (rfm_local, cps_local) para el narrow pull por-lado
         corner_drags = {}
         corner_pivots = {}
         corner_offsets = {}
@@ -1169,7 +1182,6 @@ class JawModule(object):
             cmds.connectAttr(f"{inverse_matrix_jaw}.outputMatrix", f"{mmx_offset_jaw_pos}.matrixIn[1]")
             cmds.connectAttr(f"{parent_matrix_blender_local}.outputMatrix", f"{mmx_offset_jaw_pos}.matrixIn[2]")
             cmds.connectAttr(f"{mmx_offset_jaw_pos}.matrixSum", f"{local_jnt}.offsetParentMatrix")
-            corner_proj[side] = (rfm_local, cps_local)
 
             base_corner, corner_drags[side] = self._corner_drag_driver(
                 side, local_jnt, wta_local, self.module_trn)
@@ -1182,10 +1194,8 @@ class JawModule(object):
                 lower_local_jnts.append(lower_local_jnt)
 
 
-        # --- NARROW/WIDE POR LADO (sin cross-talk L<->R) ---
-        # Driver por lado = tx del corner en fracción del semiancho, con signo geométrico
-        # (dot del eje X del GRP con la dirección centro->corner, capturado al build).
-        # Mover el corner L NO afecta al lado R.
+        # Signed local X drives independent, default-on corrective intensities.
+        # Capture the neutral axes once; jaw/head following cannot activate them.
         start_pos = om.MVector(*cmds.xform(corner_controllers[0], q=True, ws=True, t=True))
         end_pos = om.MVector(*cmds.xform(corner_controllers[1], q=True, ws=True, t=True))
         rest_dist = (end_pos - start_pos).length() or 1.0
@@ -1193,14 +1203,12 @@ class JawModule(object):
         half = rest_dist / 2.0
         corner_pos = {c.split("_")[0]: om.MVector(*cmds.xform(c, q=True, ws=True, t=True))
                       for c in corner_controllers}
+        narrow_drivers, wide_inputs = {}, {}
         for ctl in corner_controllers:
             side = ctl.split("_")[0]
-            # Driver = proyección del TRANSLATE COMPLETO del ctl sobre la dirección
-            # hacia-fuera, con jacobiano medido EMPIRICAMENTE al build (cuánto mueve en
-            # mundo cada eje local): robusto ante frames rotados/mirror y ante drags
-            # que se reparten entre tx/ty/tz.
-            # 'hacia fuera' = eje LATERAL puro entre los dos corners (usar el centro de
-            # la esfera contaminaba la dirección con Z y mataba el driver de tx).
+            # Measure all three neutral axes to construct a purely lateral inward
+            # offset on mirrored/rotated controls. Only local X drives activation;
+            # its projected magnitude sets a scale-relative response distance.
             p0 = corner_pos[side]
             other = corner_pos["R" if side == "L" else "L"]
             outdir = (p0 - other).normal()
@@ -1210,30 +1218,21 @@ class JawModule(object):
                 p1 = om.MVector(*cmds.xform(ctl, q=True, ws=True, t=True))
                 cmds.setAttr(f"{ctl}.translate{ax}", 0.0)
                 jac.append(((p1 - p0) * outdir) / half)
-            frac = cmds.createNode("vectorProduct", name=f"{side}_lipOutFrac_VPR", ss=True)
-            cmds.setAttr(f"{frac}.operation", 1)  # dot
-            cmds.connectAttr(f"{ctl}.translate", f"{frac}.input1")
-            cmds.setAttr(f"{frac}.input2", jac[0], jac[1], jac[2], type="double3")
-            self._corner_auto_narrow(ctl, corner_offsets[side], corner_local_matrices[side], frac)
-            neg = cmds.createNode("multiply", name=f"{side}_lipInNeg_MUL", ss=True)
-            cmds.connectAttr(f"{frac}.outputX", f"{neg}.input[0]"); cmds.setAttr(f"{neg}.input[1]", -1.0)
-            inw = cmds.createNode("clamp", name=f"{side}_lipNarrow_CLM", ss=True)
-            cmds.connectAttr(f"{neg}.output", f"{inw}.inputR")
-            cmds.setAttr(f"{inw}.minR", 0); cmds.setAttr(f"{inw}.maxR", 1)
-        # Efectos CENTRALES driveados por el MINIMO de ambos lados: solo actúan cuando
-        # LOS DOS corners van hacia dentro (pucker real). Mover un solo lado deja el
-        # centro (y por la curva, el otro lado) quieto -> sin cross-talk L<->R.
+            narrow_drivers[side], wide_inputs[side] = self._corner_auto_narrow(
+                ctl, corner_offsets[side], corner_local_matrices[side], jac)
+        # Central narrowing needs both sides; a single side leaves the center
+        # and the opposite half untouched.
         in_min = cmds.createNode("condition", name="C_lipNarrowMin_COND", ss=True)
         cmds.setAttr(f"{in_min}.operation", 4)  # Less Than
-        cmds.connectAttr("L_lipNarrow_CLM.outputR", f"{in_min}.firstTerm")
-        cmds.connectAttr("R_lipNarrow_CLM.outputR", f"{in_min}.secondTerm")
-        cmds.connectAttr("L_lipNarrow_CLM.outputR", f"{in_min}.colorIfTrueR")
-        cmds.connectAttr("R_lipNarrow_CLM.outputR", f"{in_min}.colorIfFalseR")
+        cmds.connectAttr(narrow_drivers["L"], f"{in_min}.firstTerm")
+        cmds.connectAttr(narrow_drivers["R"], f"{in_min}.secondTerm")
+        cmds.connectAttr(narrow_drivers["L"], f"{in_min}.colorIfTrueR")
+        cmds.connectAttr(narrow_drivers["R"], f"{in_min}.colorIfFalseR")
         in_center = f"{in_min}.outColorR"
 
-        # NARROW PULL por-lado: el input de la proyección se acerca al centro de la boca
-        # (sustituye a escalar la esfera, que movía TAMBIÉN el otro lado). Corner L con
-        # su driver, corner R con el suyo, upper/lower (centro) con el promedio.
+        # Corners already project their effective, inward-offset local matrix.
+        # Pulling them toward the center again doubles Narrow, pinching the low
+        # head mesh and changing the raised U. Only central inputs need a pull.
         def _narrow_pull(name, rfm, cps, in_plug):
             f_sub = cmds.createNode("subtract", name=f"{name}PullF_SUB", ss=True)
             cmds.setAttr(f"{f_sub}.input1", 1.0)
@@ -1255,8 +1254,6 @@ class JawModule(object):
             cmds.setAttr(f"{add}.input3D[1]", *self.mouth_center, type="double3")
             for ax in "XYZ":
                 cmds.connectAttr(f"{add}.output3D.output3D{ax.lower()}", f"{cps}.inPosition{ax}", force=True)
-        for side, (rfm_c, cps_c) in corner_proj.items():
-            _narrow_pull(f"{side}_cornerLip", rfm_c, cps_c, f"{side}_lipNarrow_CLM.outputR")
         _narrow_pull("C_upperLip", rfm_upper_local, cps_upper_local, in_center)
         _narrow_pull("C_lowerLip", rfm_lower_local, cps_lower_local, in_center)
 
@@ -1529,7 +1526,7 @@ class JawModule(object):
         if forward * arch < 0:
             forward *= -1
         auto_wide_drivers = self._lip_auto_wide_drivers(
-            all_secondary_controls, all_secondary_control_frames, half, lateral)
+            all_secondary_controls, all_secondary_control_frames, half, lateral, wide_inputs)
 
         # Correct the displayed frames only. Output pins receive their own corner
         # correction once; warping ribbon drivers here would apply it twice.

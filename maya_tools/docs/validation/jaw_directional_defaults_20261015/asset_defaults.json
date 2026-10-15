@@ -1,0 +1,48 @@
+[
+  {
+    "before": "maya_tools/assets/Edward/skin_clusters/Edward_v068.skc",
+    "after": "maya_tools/assets/Edward/skin_clusters/Edward_v069.skc",
+    "changes": [
+      {
+        "control": "L_lipCorner_CTL",
+        "attribute": "wrinkleValue",
+        "before": 0.0,
+        "after": 1.0
+      },
+      {
+        "control": "R_lipCorner_CTL",
+        "attribute": "wrinkleValue",
+        "before": 0.0,
+        "after": 1.0
+      }
+    ],
+    "before_sha256": "c1342334c35e1f06bd751e2ddb245ed0c04e264583f82860c7e59b9683fbfd95",
+    "after_sha256": "91750860b01faa99008fdab3f6130b884f95b44306289877f454fe5db6ef1d6e",
+    "identical_except_values": true,
+    "differing_bytes": 2,
+    "bytes": 22712323
+  },
+  {
+    "before": "maya_tools/assets/Edward/wrinkles/Edward_v002.wrinkles.json",
+    "after": "maya_tools/assets/Edward/wrinkles/Edward_v003.wrinkles.json",
+    "changes": [
+      {
+        "control": "L_lipCorner_CTL",
+        "attribute": "wrinkleValue",
+        "before": 0.0,
+        "after": 1.0
+      },
+      {
+        "control": "R_lipCorner_CTL",
+        "attribute": "wrinkleValue",
+        "before": 0.0,
+        "after": 1.0
+      }
+    ],
+    "before_sha256": "0d988780edc69a30177b256a4198829f82438ca3cbadbd6fd672b17ddc6f14f0",
+    "after_sha256": "8e15feda66a5b5532d2bfacf614ad7ce79c7dc57c0a4275c413b0509fbac7d27",
+    "identical_except_values": true,
+    "differing_bytes": 2,
+    "bytes": 7839087
+  }
+]

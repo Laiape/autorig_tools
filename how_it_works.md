@@ -70,7 +70,8 @@ flowchart TD
   Menu and panel share Rigging subsections and the Deformers category.
   Architecture, current scope and phased implementation: `maya_tools/framework_plan.md`.
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
-- Jaw narrow with one shared projection NURBS and regulable corner controls;
+- Jaw narrow with one shared projection NURBS, default-on Narrow (X+) and Wide
+  (X-) corner intensities, neutral-preserving rest and Wrinkle Value default 1;
   rounded-U corner falloff, forward Auto Wide controls on each corner and native
   graph simplification with lip/ribbon regressions are described in
   `maya_tools/how_it_works.md`.
@@ -107,6 +108,7 @@ flowchart TD
   per-vertex error colors and rollback when an error limit is exceeded.
 - Portable Bifrost wrinkle presets, editable vertex regions and local controls,
   with explicit projection across topologies and `.skc` provenance.
+  Edward v004 keeps inward/down/up brows and smile; v070 SKC imports it during build.
 - Native combination correctives, continuous facial contact reports, local DQ
   comparisons and measured viewport detail modes in the existing editors.
 - Hybrid skin/residual bake candidates and frozen rig packages with input hashes,

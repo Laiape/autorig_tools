@@ -26,10 +26,19 @@ try:
     mesh = cmds.polyPlane(w=8, h=8, sx=8, sy=8, ch=False)[0]
     rest = positions(mesh)
     controls = [cmds.createNode('transform', name=n) for n in ('L_test_CTL', 'R_test_CTL')]
+    # Legacy controls can retain a disabled reset value after reusing a setup.
+    cmds.addAttr(controls[0], longName='wrinkleValue', attributeType='double',
+                 min=0, max=1, defaultValue=0, keyable=True)
+    cmds.setAttr(controls[0] + '.wrinkleValue', .4)
     patterns = {r: [1. if r == 'Forehead' else 0. for _ in rest] for r in bw.REGIONS}
     fields = [{'controller': n, 'masks': {'Forehead': [float((p[0] < 0) == (i == 0)) for p in rest]}}
               for i, n in enumerate(controls)]
     setup = bw.build(mesh, 'TestWrinkles', patterns, control_fields=fields, hide_source=True)
+    for control in controls:
+        assert cmds.attributeQuery('wrinkleValue', node=control, listDefault=True) == [1.]
+    assert cmds.getAttr(controls[0] + '.wrinkleValue') == .4
+    assert cmds.getAttr(controls[1] + '.wrinkleValue') == 1
+    cmds.setAttr(controls[0] + '.wrinkleValue', 1)
     cmds.setAttr(setup['settings'] + '.ManualActivation', 1)
     baseline = positions(setup['output'])
     cmds.setAttr(controls[0] + '.wrinkleDepth', 2)

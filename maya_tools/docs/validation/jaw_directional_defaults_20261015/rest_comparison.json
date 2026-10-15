@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "baseline_ref": "2a3fad8",
+  "maya_version": "2026",
+  "source_sha256": "90d757ef6b4151d1f34d2757ebcedbb4ffcb08936626737e8b09064bcdb3db22",
+  "purpose": "Independent default-pose comparison only. Signed corner poses intentionally change and are tested separately. CPU geometry and world matrices, no viewport or timing claim.",
+  "fixture_matrix_error": 0.0,
+  "fixture_cases": 13,
+  "fixture_matrix_count": 152,
+  "fixture_nodes_before_after": [
+    2871,
+    2863
+  ],
+  "edward_geometry_error": 0.0,
+  "edward_cases": 12,
+  "edward_vertices": {
+    "cabeza_high": 11475,
+    "cabeza_low": 3082,
+    "cuerpo_base": 5458
+  }
+}

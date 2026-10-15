@@ -303,6 +303,10 @@ def build(mesh=None, prefix="EdwardWrinkles", patterns=None, hide_source=False,
                         if maximum is not None:
                             kwargs["maxValue"] = maximum
                         cmds.addAttr(control, **kwargs)
+                    elif attr == "wrinkleValue":
+                        # Reset-to-default must enable wrinkles on reused controls.
+                        # Saved/current values still round-trip independently.
+                        cmds.addAttr(control + "." + attr, edit=True, defaultValue=1.)
                     plug = control + "." + attr
                     if attr in field.get("values", {}) and cmds.getAttr(plug, settable=True):
                         cmds.setAttr(plug, field["values"][attr])

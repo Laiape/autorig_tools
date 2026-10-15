@@ -1,0 +1,143 @@
+{
+  "success": true,
+  "tests": [
+    {
+      "test": "test_jaw_directional_defaults.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 10.12678330000017,
+      "log": "test_jaw_directional_defaults.log",
+      "last_lines": [
+        "PASS signed defaults: unchanged rest, Narrow X+, Wide X-, zero Y/Z activation, smooth gates and retracing",
+        "{\"neutral_gain_matrix_error\": 0.0, \"boundary_slope_errors\": [0.0012552873909221773, 0.002473592758178711, 0.0025033950805664062], \"sweep_samples\": 81}"
+      ],
+      "test_sha256": "ef9318ed8ca912240cb81ca780fa63ee0643796c0ecd13286f7944b234ce5b50"
+    },
+    {
+      "test": "test_jaw_auto_wide.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 14.499949099999867,
+      "log": "test_jaw_auto_wide.log",
+      "last_lines": [
+        "File read in  0.38 seconds.",
+        "PASS Auto Wide: smooth forward profile, unilateral/fine independence, gain, sticky, EM and reopen",
+        "{\"fixture_build_seconds\": 0.8249462999992829, \"maximum_tested_center_push\": 0.07343333214521408, \"minimum_tested_joint_spacing\": 0.04608301335586842, \"cycles\": 0}"
+      ],
+      "test_sha256": "4cc4539244920fb24cd0c1292b881580f18297cfeacb26b05902d025d8d263fb"
+    },
+    {
+      "test": "test_jaw_single_surface.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 17.06015209999896,
+      "log": "test_jaw_single_surface.log",
+      "last_lines": [
+        "File read in  0.35 seconds.",
+        "PASS single jaw projection surface; regulated narrow, opening, independent corner transforms and sticky lips",
+        "{\"cases\": 49, \"projectors\": 4, \"baseline_max_matrix_error\": null, \"reopen_max_matrix_error\": 0.0}"
+      ],
+      "test_sha256": "606e19f95a499eadfd32b018411b3230b5114b70a78902f066c2aaac103282e8"
+    },
+    {
+      "test": "test_lip_u_response.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 15.66441980000127,
+      "log": "test_lip_u_response.log",
+      "last_lines": [
+        "PASS: independent lips, monotone raise/lower, continuous slopes and identical retrace"
+      ],
+      "test_sha256": "a333267995174000909da41499d465db9a09d1f329852b11e9f248cdaee4d420"
+    },
+    {
+      "test": "test_wrinkle_skin_roundtrip.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 50.58560840000064,
+      "log": "test_wrinkle_skin_roundtrip.log",
+      "last_lines": [
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Skin weights and scene deformers imported.",
+        "Importing skin weights\ufffd",
+        "Deformadores: 0 creados, 0 restaurados, 0 incidencias.",
+        "Skin weights and scene deformers imported.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "File read in  0.1 seconds.",
+        "PASS wrinkle .skc: local depth/value, side isolation, posed export, automatic import, idempotence, replacement, topology guard, native reopen"
+      ],
+      "test_sha256": "cbc80ade72f755ab8d4f01d246bcc287e33bbeb808172b62b6e588d209a85064"
+    },
+    {
+      "test": "test_jaw_lips.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 94.2995334999996,
+      "log": "test_jaw_lips.log",
+      "last_lines": [
+        "PASS jaw/lips build: rounded U, independent primaries, corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure",
+        "U_PROFILE [{\"jaw_angle\": 0, \"center_fraction\": 0.07214537282573696, \"slope_ratio\": 0.12700299020647998}, {\"jaw_angle\": 0, \"center_fraction\": 0.07177767567484523, \"slope_ratio\": 0.12250340916355985}, {\"jaw_angle\": 10, \"center_fraction\": 0.06549693155097391, \"slope_ratio\": 0.11475160999967164}, {\"jaw_angle\": 10, \"center_fraction\": 0.06501027813904246, \"slope_ratio\": 0.11096944710008659}, {\"jaw_angle\": 20, \"center_fraction\": 0.06092985672149034, \"slope_ratio\": 0.10670534533328761}, {\"jaw_angle\": 20, \"center_fraction\": 0.06036241980967889, \"slope_ratio\": 0.10330921105083277}, {\"jaw_angle\": 30, \"center_fraction\": 0.05789329587918973, \"slope_ratio\": 0.10140873946594253}, {\"jaw_angle\": 30, \"center_fraction\": 0.05726441958815946, \"slope_ratio\": 0.09825394571181717}]",
+        "[{\"angle\": 0, \"width\": 5.014339923858644, \"height\": 0.4658050537109659, \"quarter_gap\": 0.24023437500002842, \"center_gap\": 0.0186767578125}, {\"angle\": 5, \"width\": 5.014339985967423, \"height\": 1.378692884873658, \"quarter_gap\": 0.9931774604879422, \"center_gap\": 0.982409804898623}, {\"angle\": 10, \"width\": 5.0143398199867715, \"height\": 2.2670571407700777, \"quarter_gap\": 1.7144787099367136, \"center_gap\": 1.9064133870438127}, {\"angle\": 20, \"width\": 5.014339701554533, \"height\": 3.9299859518543485, \"quarter_gap\": 3.040606560955098, \"center_gap\": 3.6074591404367027}, {\"angle\": 30, \"width\": 5.014339621914802, \"height\": 5.3599284352397945, \"quarter_gap\": 4.178194906654227, \"center_gap\": 5.070128603494226}]"
+      ],
+      "test_sha256": "aab6f56e51dbd23c9a7d98863d42af9d23551073ab7c10410def9641004d1e0c"
+    },
+    {
+      "test": "test_wrinkle_presets.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 37.97358490000079,
+      "log": "test_wrinkle_presets.log",
+      "last_lines": [
+        "Undo: PoseBlendshapes_ca3fed262e86438a9516239061031daa",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "--- Exportando Skins a: C:\\Users\\LAIAPE~1\\AppData\\Local\\Temp\\tmpnri0zcy2\\wrinkles.skc ---",
+        "Sin selecci\ufffdn. Escaneando escena completa...",
+        "Export completado: C:\\Users\\LAIAPE~1\\AppData\\Local\\Temp\\tmpnri0zcy2\\wrinkles.skc | Deformadores: 0 | Wrinkles: 2",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "File read in  0.13 seconds.",
+        "PASS wrinkle presets: signed region fields, support/falloff, scale-independent controls, source visibility, calibrated posed restore, explicit topology projection, new rest, SKC provenance and scene reopen"
+      ],
+      "test_sha256": "54ad42b24aaeaf1c8e6b8b418f65f220a4e2bcda3b4676aeee91073cf2c0b9f9"
+    },
+    {
+      "test": "test_jaw_auto_wide_edward.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 91.47550480000064,
+      "log": "test_jaw_auto_wide_edward.log",
+      "last_lines": [
+        "[AutoRig build] Cleaning up node graph...",
+        "[AutoRig build] Restoring Maya state...",
+        "[AutoRig build] Timing report: C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\validation\\20261015T090900243289Z.buildtiming.json",
+        "[AutoRig build] Complete",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "Warning: Unrecognized node type for node 'hyperShadePrimaryNodeEditorSavedTabsInfo'; preserving node information during this session.",
+        "Warning: Unrecognized node type for node 'MayaNodeEditorSavedTabsInfo'; preserving node information during this session.",
+        "Warning: Errors have occurred while reading this scene that may result in data loss.",
+        "File read in  5.3 seconds.",
+        "PASS Edward signed Narrow/Wide: real meshes, defaults, unchanged neutral/body, no new triangle reversals, sticky and reopen",
+        "{\"build_seconds\": 37.64147839999896, \"reopen_error\": 0.0, \"poses\": [{\"corrective\": \"autoWide\", \"jaw\": 0, \"signed_x_fraction\": -0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 0, \"signed_x_fraction\": -0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3166, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 536, \"maximum_forward\": 0.019084930419921875, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 0, \"signed_x_fraction\": -0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3191, \"maximum_forward\": 0.06984996795654297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 541, \"maximum_forward\": 0.07343292236328125, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 20, \"signed_x_fraction\": -0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 20, \"signed_x_fraction\": -0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3174, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 601, \"maximum_forward\": 0.01930713653564453, \"minimum_forward\": -0.0007047653198242188, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 20, \"signed_x_fraction\": -0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3191, \"maximum_forward\": 0.06984996795654297, \"minimum_forward\": -2.384185791015625e-07, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.07428932189941406, \"minimum_forward\": -0.0017728805541992188, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 30, \"signed_x_fraction\": -0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 30, \"signed_x_fraction\": -0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3174, \"maximum_forward\": 0.018153667449951172, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 606, \"maximum_forward\": 0.019431114196777344, \"minimum_forward\": -0.0006608963012695312, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoWide\", \"jaw\": 30, \"signed_x_fraction\": -0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3186, \"maximum_forward\": 0.06984949111938477, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.07476997375488281, \"minimum_forward\": -0.0010662078857421875, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 0, \"signed_x_fraction\": 0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 0, \"signed_x_fraction\": 0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3245, \"maximum_forward\": 0.010483741760253906, \"minimum_forward\": -0.0028715133666992188, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 567, \"maximum_forward\": 0.010661125183105469, \"minimum_forward\": -0.0030241012573242188, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 0, \"signed_x_fraction\": 0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3248, \"maximum_forward\": 0.040050506591796875, \"minimum_forward\": -0.011187553405761719, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 567, \"maximum_forward\": 0.040726661682128906, \"minimum_forward\": -0.011781692504882812, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 20, \"signed_x_fraction\": 0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 20, \"signed_x_fraction\": 0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3245, \"maximum_forward\": 0.009096145629882812, \"minimum_forward\": -0.004536628723144531, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 614, \"maximum_forward\": 0.009263038635253906, \"minimum_forward\": -0.004830360412597656, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 20, \"signed_x_fraction\": 0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3250, \"maximum_forward\": 0.03467273712158203, \"minimum_forward\": -0.017663002014160156, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 628, \"maximum_forward\": 0.03536033630371094, \"minimum_forward\": -0.01880645751953125, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 30, \"signed_x_fraction\": 0.0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 30, \"signed_x_fraction\": 0.125, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3244, \"maximum_forward\": 0.00821685791015625, \"minimum_forward\": -0.005174160003662109, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 613, \"maximum_forward\": 0.008365631103515625, \"minimum_forward\": -0.0055408477783203125, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"corrective\": \"autoNarrow\", \"jaw\": 30, \"signed_x_fraction\": 0.25, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3249, \"maximum_forward\": 0.031276702880859375, \"minimum_forward\": -0.0201416015625, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 632, \"maximum_forward\": 0.03187751770019531, \"minimum_forward\": -0.021566390991210938, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}]}"
+      ],
+      "test_sha256": "ce216df81fef288cb26325065ca3aa30bc3ee4d6128f038f9d0116f99b1309f8"
+    }
+  ],
+  "started": 1792055199.7949226,
+  "completed": 1792055395.698415,
+  "jaw_source_sha256": "90d757ef6b4151d1f34d2757ebcedbb4ffcb08936626737e8b09064bcdb3db22",
+  "wrinkle_source_sha256": "b4fe15795cd40149d020ff13e120281624a277de5f84bbb76757dd25cd4be9a0",
+  "notes": [
+    "Native Maya 2026 workers, disposable scenes and private preference directories. No viewport FPS claim.",
+    "Full Edward geometry covers 18 signed Narrow/Wide poses at jaw 0/20/30, unchanged neutral/body, no new triangle reversals and native reopen.",
+    "An initial double corner pull pinched low-head triangle 2787 at jaw 20. The accepted graph projects the effective corner offset once and retains the central pull. U thresholds pass with Narrow=1."
+  ],
+  "log_normalization": "Trailing whitespace removed from retained log copies. Original outputs remain under .git/jaw_directional_accepted and .git/compare_directional_rest_final.log."
+}

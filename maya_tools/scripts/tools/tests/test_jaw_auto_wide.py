@@ -44,9 +44,8 @@ def compensation():
 
 def inward(side, value):
     ctl = side + '_lipCorner_CTL'
-    coefficients = np.array(cmds.getAttr(side + '_lipOutFrac_VPR.input2')[0])
-    delta = -value * coefficients / np.dot(coefficients, coefficients)
-    cmds.setAttr(ctl + '.translate', *delta)
+    scale = cmds.getAttr(side + '_lipSignedX_MUL.input[1]')
+    cmds.setAttr(ctl + '.translate', -value / scale, 0, 0)
 
 
 def check_frames():
@@ -67,9 +66,10 @@ try:
     assert not cmds.objExists('C_jaw_CTL.autoWide')
     assert not cmds.objExists('C_jaw_CTL.autoWideDepth')
     for corner in CORNERS:
-        for attr, default in (('autoWide', 1), ('autoWideDepth', .2)):
+        for attr, default in (('autoNarrow', 1), ('autoWide', 1), ('autoWideDepth', .2)):
             plug = corner + '.' + attr
             assert cmds.getAttr(plug) == default
+            assert cmds.attributeQuery(attr, node=corner, listDefault=True) == [default]
             assert cmds.getAttr(plug, keyable=True) and not cmds.getAttr(plug, lock=True)
     assert cmds.ls('C_jaw_NURB', type='transform') and not cmds.objExists('C_jawStatic_NURB')
     neutral = snapshot()
@@ -141,7 +141,7 @@ try:
 
     # A half-intensity setting gives half the correction without shifting X/Y.
     for side in ('L', 'R'):
-        cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', 1)
+        inward(side, .25)
     full = snapshot()
     set_gain(0)
     off = snapshot()
@@ -163,7 +163,7 @@ try:
             assert delta[:, 2].max() > .001, corner
     set_gain(1)
     for side in ('L', 'R'):
-        cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', 0)
+        inward(side, 0)
 
     # Secondary compression is local to its lip and side, including mirrored axes.
     for part, other in (('upper', 'lower'), ('lower', 'upper')):
@@ -182,7 +182,7 @@ try:
 
     # Active correction composes with primary offsets, U, roll and sticky closure.
     for side in ('L', 'R'):
-        cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', 1)
+        inward(side, .25)
     for angle in (0, 20, 30):
         cmds.setAttr('C_jaw_CTL.rx', angle)
         cmds.setAttr('C_jaw_CTL.stickyLips', 0)

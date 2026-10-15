@@ -48,6 +48,7 @@ def pose_bank():
             for sides in (('L',), ('R',), ('L', 'R')):
                 case = {'C_jaw_CTL.rx': angle}
                 case.update({s + '_lipCorner_CTL.autoNarrow': amount for s in sides})
+                case.update({s + '_lipCorner_CTL.tx': 1. for s in sides})
                 cases.append((f'narrow_{angle}_{amount}_{"".join(sides)}', case))
         for order in range(6):
             for sticky in (0, .5, 1):
@@ -57,12 +58,14 @@ def pose_bank():
                     'L_lipCorner_CTL.rx': 17, 'L_lipCorner_CTL.ry': 13, 'L_lipCorner_CTL.rz': 22,
                     'R_lipCorner_CTL.rx': -11, 'R_lipCorner_CTL.ry': 8, 'R_lipCorner_CTL.rz': -19,
                     'L_lipCorner_CTL.autoNarrow': .5, 'R_lipCorner_CTL.autoNarrow': .5,
+                    'L_lipCorner_CTL.tx': .7, 'R_lipCorner_CTL.tx': .7,
                     'C_upperLip_CTL.Roll': 12, 'C_lowerLip_CTL.Roll': -15}))
     for side in ('L', 'R'):
         for gain in (0, .5, 1):
             for depth in (.05, .2, .6):
                 cases.append((f'wide_{side}_{gain}_{depth}', {
                     'L_lipCorner_CTL.autoNarrow': 1, 'R_lipCorner_CTL.autoNarrow': 1,
+                    'L_lipCorner_CTL.tx': -1, 'R_lipCorner_CTL.tx': -1,
                     side + '_lipCorner_CTL.autoWide': gain, side + '_lipCorner_CTL.autoWideDepth': depth}))
     for angle in (0, 10, 20, 30):
         cases.append(('rounded_U_' + str(angle), {

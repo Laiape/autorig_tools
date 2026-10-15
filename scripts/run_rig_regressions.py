@@ -2,6 +2,7 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
+import os
 from pathlib import Path
 import subprocess
 import time
@@ -9,6 +10,7 @@ import time
 TESTS = (
     'test_build_pipeline.py',
     'test_jaw_single_surface.py',
+    'test_jaw_directional_defaults.py',
     'test_jaw_auto_wide.py', 'test_jaw_lips.py', 'test_lip_u_response.py',
     'test_jaw_auto_wide_edward.py',
     'test_rig_performance.py', 'test_bifrost_wrinkles.py', 'test_wrinkle_regions_native.py',
@@ -33,10 +35,16 @@ def run(mayapy, output, tests=TESTS, workers=2):
         script = repo / 'maya_tools/scripts/tools/tests' / name
         log = output / (script.stem + '.log')
         start = time.perf_counter()
+        environment = os.environ.copy()
+        # Concurrent Maya startup writes preferences/toolclips even in batch.
+        profile = output / 'maya_profiles' / script.stem
+        profile.mkdir(parents=True)
+        environment['MAYA_APP_DIR'] = str(profile)
         try:
             with log.open('wb') as stream:
                 process = subprocess.run([str(mayapy), str(repo / 'scripts/run_maya_test.py'), str(script)],
-                                         cwd=str(repo), stdout=stream, stderr=subprocess.STDOUT, timeout=300)
+                                         cwd=str(repo), env=environment, stdout=stream,
+                                         stderr=subprocess.STDOUT, timeout=300)
             code = process.returncode
         except subprocess.TimeoutExpired:
             code = -1

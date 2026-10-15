@@ -51,40 +51,50 @@ try:
         create_rig.AutoRig().build()
         build_seconds = time.perf_counter() - started
         cmds.evaluationManager(mode='off')
+        for side in ('L', 'R'):
+            for attr in ('autoNarrow', 'autoWide'):
+                assert cmds.getAttr(side + '_lipCorner_CTL.' + attr) == 1
+        wrinkle_controls = cmds.ls('*.wrinkleValue', objectsOnly=True)
+        assert wrinkle_controls
+        for control in wrinkle_controls:
+            assert cmds.getAttr(control + '.wrinkleValue') == 1, control
+            assert cmds.attributeQuery('wrinkleValue', node=control, listDefault=True) == [1.]
         triangles = {mesh: np.asarray(mesh_function(mesh).getTriangles()[1], dtype=int).reshape(-1, 3)
                      for mesh in MESHES}
         records = []
-        for angle in (0, 20, 30):
-            cmds.setAttr('C_jaw_CTL.rx', angle)
-            for amount in (0, .5, 1):
-                for side in ('L', 'R'):
-                    cmds.setAttr(side + '_lipCorner_CTL.autoNarrow', amount)
-                for side in ('L', 'R'):
-                    cmds.setAttr(side + '_lipCorner_CTL.autoWide', 0)
-                before = points()
-                for side in ('L', 'R'):
-                    cmds.setAttr(side + '_lipCorner_CTL.autoWide', 1)
-                after = points()
-                case = {'jaw': angle, 'autoNarrow': amount, 'meshes': {}}
-                for mesh in MESHES:
-                    a, b = before[mesh], after[mesh]
-                    assert np.isfinite(b).all(), (angle, amount, mesh)
-                    delta = b - a
-                    moved = np.linalg.norm(delta, axis=1) > 1e-7
-                    n0, n1 = normals(a, triangles[mesh]), normals(b, triangles[mesh])
-                    affected = moved[triangles[mesh]].any(axis=1)
-                    valid = np.linalg.norm(n0, axis=1) > 1e-8
-                    flips = int(np.count_nonzero(affected & valid & (np.sum(n0*n1, axis=1) < 0)))
-                    case['meshes'][mesh] = dict(vertices=len(b), moved_vertices=int(moved.sum()),
-                                               maximum_forward=float(delta[:, 2].max()),
-                                               minimum_forward=float(delta[:, 2].min()),
-                                               new_triangle_reversals=flips)
-                    assert flips == 0, (angle, amount, mesh, flips)
-                    if amount == 0 or mesh == 'cuerpo_base':
-                        assert not moved.any(), (angle, amount, mesh)
-                if amount:
-                    assert case['meshes']['cabeza_high']['moved_vertices'] > 0
-                records.append(case)
+        for corrective, sign in (('autoWide', -1), ('autoNarrow', 1)):
+            for angle in (0, 20, 30):
+                cmds.setAttr('C_jaw_CTL.rx', angle)
+                for amount in (0, .5, 1):
+                    for side in ('L', 'R'):
+                        scale = cmds.getAttr(side + '_lipSignedX_MUL.input[1]')
+                        cmds.setAttr(side + '_lipCorner_CTL.tx', sign * .25 * amount / scale)
+                        cmds.setAttr(side + '_lipCorner_CTL.' + corrective, 0)
+                    before = points()
+                    for side in ('L', 'R'):
+                        cmds.setAttr(side + '_lipCorner_CTL.' + corrective, 1)
+                    after = points()
+                    case = {'corrective': corrective, 'jaw': angle,
+                            'signed_x_fraction': sign * .25 * amount, 'meshes': {}}
+                    for mesh in MESHES:
+                        a, b = before[mesh], after[mesh]
+                        assert np.isfinite(b).all(), (corrective, angle, amount, mesh)
+                        delta = b - a
+                        moved = np.linalg.norm(delta, axis=1) > 1e-7
+                        n0, n1 = normals(a, triangles[mesh]), normals(b, triangles[mesh])
+                        affected = moved[triangles[mesh]].any(axis=1)
+                        valid = np.linalg.norm(n0, axis=1) > 1e-8
+                        flips = int(np.count_nonzero(affected & valid & (np.sum(n0*n1, axis=1) < 0)))
+                        case['meshes'][mesh] = dict(vertices=len(b), moved_vertices=int(moved.sum()),
+                                                   maximum_forward=float(delta[:, 2].max()),
+                                                   minimum_forward=float(delta[:, 2].min()),
+                                                   new_triangle_reversals=flips)
+                        assert flips == 0, (corrective, angle, amount, mesh, flips)
+                        if amount == 0 or mesh == 'cuerpo_base':
+                            assert not moved.any(), (corrective, angle, amount, mesh)
+                    if amount:
+                        assert case['meshes']['cabeza_high']['moved_vertices'] > 0
+                    records.append(case)
         cmds.setAttr('C_jaw_CTL.stickyLips', 1)
         for i in range(25):
             prefix = 'R_' if i < 12 else 'C_' if i == 12 else 'L_'
@@ -102,7 +112,7 @@ try:
         reopened = points()
         reopen_error = max(float(np.abs(reopened[m] - expected[m]).max()) for m in MESHES)
         assert reopen_error < 1e-5, reopen_error
-        print('PASS Edward Auto Wide: real meshes, unchanged neutral/body, no new triangle reversals, sticky and reopen')
+        print('PASS Edward signed Narrow/Wide: real meshes, defaults, unchanged neutral/body, no new triangle reversals, sticky and reopen')
         print(json.dumps(dict(build_seconds=build_seconds, reopen_error=reopen_error, poses=records)), flush=True)
 finally:
     maya.standalone.uninitialize()

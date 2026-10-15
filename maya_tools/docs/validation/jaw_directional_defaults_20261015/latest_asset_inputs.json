@@ -1,0 +1,17 @@
+{
+  "note": "These later asset versions appeared in the shared checkout before the accepted full builds. They retain Wrinkle Value 1 and include additional wrinkle-authoring changes; preserved in the whole-project commit.",
+  "inputs": [
+    {
+      "path": "maya_tools/assets/Edward/skin_clusters/Edward_v070.skc",
+      "sha256": "ad205a986278043bc8f19da4cf917268246bff9371828adb09c576414b684c4c",
+      "bytes": 21131637,
+      "wrinkle_controls": 19
+    },
+    {
+      "path": "maya_tools/assets/Edward/wrinkles/Edward_v004.wrinkles.json",
+      "sha256": "42a0a795e69aad8a44f5153dff95ca57e2f98e8b66d3e4100b02bf44e66c0b2e",
+      "bytes": 6258401,
+      "wrinkle_controls": 19
+    }
+  ]
+}
