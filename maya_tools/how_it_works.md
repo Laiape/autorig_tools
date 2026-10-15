@@ -358,6 +358,22 @@ It uses temporary geometry in its own namespace and restores scene selection,
 context, undo state and the modified flag after removing its test nodes.
 Standalone corrective UI regression: `test_pose_blendshapes_ui.py` with mayapy.
 
+### Jaw lip projection surface
+
+`scripts/biped/autorig/jaw_module_nurbs.py` builds one shared projection target,
+`C_jaw_NURB`. Narrow is always wired into the control projection inputs and remains
+regulable through corner translation and `autoNarrow` (default 0). The redundant
+`C_jawStatic_NURB` and four second-pass closest-point nodes are no longer built.
+Upper/lower ribbon surfaces still serve their separate downstream skin/pin roles.
+This takes effect on the next rebuild; existing saved scenes are not rewritten.
+
+Regression: `scripts/tools/tests/test_jaw_single_surface.py`, 49 poses covering
+narrow, jaw opening, corner translation/rotation and sticky lips. Comparison to
+the former two-surface module has maximum world-matrix component error 2.39e-7;
+native binary reopen error is zero. The separate composite `test_jaw_lips.py`
+currently fails its rounded-U assertion at line 131 on both module versions;
+this surface cleanup does not change that pre-existing profile issue.
+
 ### Biped spine controls and foot blending
 
 `biped/autorig/spine_module.py` uses the `.build` `spine_controllers`

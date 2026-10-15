@@ -732,10 +732,8 @@ class JawModule(object):
         # Create NURBS surface
         self.sphere = guides_manager.get_guides("C_jaw_NURBShape", parent=self.module_trn) # NURBS surface guide
         cmds.hide(self.sphere)
-        # Copia ESTÁTICA (sin el shrink de corners): los labios se re-proyectan sobre
-        # ella para quedarse pegados a la jaw y no hundirse al encoger la esfera.
-        self.sphere_static = cmds.duplicate(self.sphere, name="C_jawStatic_NURB")[0]
-        cmds.hide(self.sphere_static)
+        # Narrow modifies projection inputs; the shared surface stays unchanged.
+        # Project each lip control once onto this single guide-derived surface.
 
         # Create a bbox
         bbox = cmds.exactWorldBoundingBox(self.sphere)
@@ -819,10 +817,9 @@ class JawModule(object):
         cmds.connectAttr(f"{rfm_upper_local}.outputY", f"{cps_upper_local}.inPositionY")
         cmds.connectAttr(f"{rfm_upper_local}.outputZ", f"{cps_upper_local}.inPositionZ")
         cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_upper_local}.inputSurface")
-        cps_upper_static = self.reproject_static("C_upperLipLocal", cps_upper_local)
-        cmds.connectAttr(f"{cps_upper_static}.positionX", f"{fbf_upper_lip_projected}.in30")
-        cmds.connectAttr(f"{cps_upper_static}.positionY", f"{fbf_upper_lip_projected}.in31")
-        cmds.connectAttr(f"{cps_upper_static}.positionZ", f"{fbf_upper_lip_projected}.in32")
+        cmds.connectAttr(f"{cps_upper_local}.positionX", f"{fbf_upper_lip_projected}.in30")
+        cmds.connectAttr(f"{cps_upper_local}.positionY", f"{fbf_upper_lip_projected}.in31")
+        cmds.connectAttr(f"{cps_upper_local}.positionZ", f"{fbf_upper_lip_projected}.in32")
         cmds.connectAttr(f"{fbf_upper_lip}.output", f"{parent_matrix_upper_local}.inputMatrix")
         cmds.connectAttr(f"{self.mult_matrix_upper_jaw_local}.matrixSum", f"{parent_matrix_upper_local}.target[0].targetMatrix")
         cmds.setAttr(f"{parent_matrix_upper_local}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_upper_lip_projected}.output", f"{self.mult_matrix_upper_jaw_local}.matrixSum"), type="matrix")
@@ -880,10 +877,9 @@ class JawModule(object):
         cmds.connectAttr(f"{rfm_lower_local}.outputY", f"{cps_lower_local}.inPositionY")
         cmds.connectAttr(f"{rfm_lower_local}.outputZ", f"{cps_lower_local}.inPositionZ")
         cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_lower_local}.inputSurface")
-        cps_lower_static = self.reproject_static("C_lowerLipLocal", cps_lower_local)
-        cmds.connectAttr(f"{cps_lower_static}.positionX", f"{fbf_lower_lip_projected}.in30")
-        cmds.connectAttr(f"{cps_lower_static}.positionY", f"{fbf_lower_lip_projected}.in31")
-        cmds.connectAttr(f"{cps_lower_static}.positionZ", f"{fbf_lower_lip_projected}.in32")
+        cmds.connectAttr(f"{cps_lower_local}.positionX", f"{fbf_lower_lip_projected}.in30")
+        cmds.connectAttr(f"{cps_lower_local}.positionY", f"{fbf_lower_lip_projected}.in31")
+        cmds.connectAttr(f"{cps_lower_local}.positionZ", f"{fbf_lower_lip_projected}.in32")
         cmds.connectAttr(f"{fbf_lower_lip_pos_only}.output", f"{parent_matrix_lower_local}.inputMatrix")
         cmds.connectAttr(f"{self.mult_matrix_jaw_local}.matrixSum", f"{parent_matrix_lower_local}.target[0].targetMatrix")
         cmds.setAttr(f"{parent_matrix_lower_local}.target[0].offsetMatrix", self.get_offset_matrix(f"{fbf_lower_lip_projected}.output", f"{self.mult_matrix_jaw_local}.matrixSum"), type="matrix")
@@ -983,10 +979,9 @@ class JawModule(object):
             cmds.connectAttr(f"{rfm_local}.outputY", f"{cps_local}.inPositionY")
             cmds.connectAttr(f"{rfm_local}.outputZ", f"{cps_local}.inPositionZ")
             cmds.connectAttr(f"{self.sphere}.worldSpace[0]", f"{cps_local}.inputSurface")
-            cps_corner_static = self.reproject_static(f"{side}_cornerLipLocal", cps_local)
-            cmds.connectAttr(f"{cps_corner_static}.positionX", f"{fbf_lip_projected}.in30")
-            cmds.connectAttr(f"{cps_corner_static}.positionY", f"{fbf_lip_projected}.in31")
-            cmds.connectAttr(f"{cps_corner_static}.positionZ", f"{fbf_lip_projected}.in32")
+            cmds.connectAttr(f"{cps_local}.positionX", f"{fbf_lip_projected}.in30")
+            cmds.connectAttr(f"{cps_local}.positionY", f"{fbf_lip_projected}.in31")
+            cmds.connectAttr(f"{cps_local}.positionZ", f"{fbf_lip_projected}.in32")
             fbf_corner_lip_pos_only = cmds.createNode("fourByFourMatrix", name=f"{side}_lipCornerPosOnly_FBF", ss=True)
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.xCoordinate", f"{fbf_corner_lip_pos_only}.in30")
             cmds.connectAttr(f"{mtp_corner_lip}.allCoordinates.yCoordinate", f"{fbf_corner_lip_pos_only}.in31")
@@ -1094,9 +1089,8 @@ class JawModule(object):
         _narrow_pull("C_upperLip", rfm_upper_local, cps_upper_local, in_center)
         _narrow_pull("C_lowerLip", rfm_lower_local, cps_lower_local, in_center)
 
-        # (El follow vertical de las esferas se eliminó: al ser superficies COMPARTIDAS,
-        # mover un labio desplazaba la proyección del contrario. El movimiento de boca
-        # entera ya lo lleva C_mainMouth aguas abajo sin tocar las esferas.)
+        # Keep the shared projection surface fixed. C_mainMouth applies mouth
+        # following downstream, without moving the opposite lip's projection target.
 
         # Get CV count once per curve
         up_cvs = cmds.ls(f"{self.upper_linear_lip_curve}.cv[*]", flatten=True)
@@ -1661,14 +1655,6 @@ class JawModule(object):
 
         cmds.connectAttr(f"{delta_mmx}.matrixSum", f"{self.lips_controllers_grp}.offsetParentMatrix", force=True)
         cmds.connectAttr(f"{delta_mmx}.matrixSum", f"{self.lips_skinning_grp}.offsetParentMatrix", force=True)
-
-    def reproject_static(self, name, cps):
-        """Re-proyecta el resultado de un closestPointOnSurface sobre la jaw ESTÁTICA
-        (sin shrink) -> el punto queda siempre en la superficie de la jaw."""
-        cps2 = cmds.createNode("closestPointOnSurface", name=f"{name}Static_CPS", ss=True)
-        cmds.connectAttr(f"{self.sphere_static}.worldSpace[0]", f"{cps2}.inputSurface")
-        cmds.connectAttr(f"{cps}.position", f"{cps2}.inPosition")
-        return cps2
 
     def get_offset_matrix(self, child, parent):
         """
