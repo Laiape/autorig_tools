@@ -38,8 +38,10 @@ class SpineModule(object):
             side (str): The side of the spine ('L' or 'R').
 
         """
+        if int(spine_controllers) != spine_controllers or spine_controllers < 3:
+            raise ValueError("The biped spine needs at least three controllers.")
         self.spine_skinning_jnts = spine_skinning_jnts
-        self.spine_controllers = spine_controllers
+        self.spine_controllers = int(spine_controllers)
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_spineModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_spineSkinning_GRP", ss=True, p=self.skel_grp)
@@ -111,60 +113,59 @@ class SpineModule(object):
         self.spine_nodes = []
         self.spine_ctls = []
         
-        for i, jnt in enumerate(self.spine_chain):
-            
-            if i == 0 or i == len(self.spine_chain) - 1:
+        # Counts come from the build, not the guide-joint count. Sample the
+        # actual control endpoints: the tip follows the chest guide below.
+        count = self.spine_controllers
+        start = om.MTransformationMatrix(om.MMatrix(self.body_guide_matrix))
+        end = om.MTransformationMatrix(om.MMatrix(self.chest_guide_matrix))
+        start_position = start.translation(om.MSpace.kWorld)
+        end_position = end.translation(om.MSpace.kWorld)
+        start_rotation = start.rotation(asQuaternion=True)
+        end_rotation = end.rotation(asQuaternion=True)
+        tangent_indices = {1, count - 2} if count >= 5 else set()
+        used_names = set()
+        self.spine_control_parameters = [i / float(count - 1) for i in range(count)]
 
-                corner_nodes, corner_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP", "ANM"])
-                curve_tool.lock_attributes(corner_ctl, [ "v"])
-                
-                if i == len(self.spine_chain) - 1:
-                    cmds.matchTransform(corner_nodes[0], jnt, pos=True, rot=True, scl=False)
+        for i, parameter in enumerate(self.spine_control_parameters):
+            # Preserve the existing five-control names for saved curve shapes.
+            guide_index = int(parameter * (len(self.spine_chain) - 1))
+            if i in tangent_indices:
+                guide_index = 1 if i == 1 else len(self.spine_chain) - 2
+            name = self.spine_chain[guide_index].replace("_JNT", "")
+            if i in tangent_indices:
+                name += "Tan"
+            if name in used_names:
+                name += f"Extra{i:02d}"
+            used_names.add(name)
+            offsets = ["GRP", "ANM"] if i in tangent_indices or i in (0, count - 1) else ["GRP"]
+            nodes, ctl = curve_tool.create_controller(name=name, offset=offsets)
+            curve_tool.lock_attributes(ctl, ["v"])
+            rest = om.MTransformationMatrix()
+            rest.setTranslation(start_position + (end_position - start_position) * parameter, om.MSpace.kWorld)
+            rest.setRotation(om.MQuaternion.slerp(start_rotation, end_rotation, parameter))
+            cmds.xform(nodes[0], ws=True, matrix=list(rest.asMatrix()))
+            self.spine_nodes.append(nodes[0])
+            self.spine_ctls.append(ctl)
 
-                if i == 0:
+        cmds.parent(self.spine_nodes[0], self.controllers_grp)
+        cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{self.spine_nodes[0]}.offsetParentMatrix")
+        cmds.setAttr(f"{self.spine_nodes[0]}.inheritsTransform", 0)
+        cmds.xform(self.spine_nodes[0], matrix=list(om.MMatrix.kIdentity))
+        cmds.addAttr(self.spine_ctls[0], longName="tanControllers", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
+        cmds.setAttr(f"{self.spine_ctls[0]}.tanControllers", lock=True, keyable=False, channelBox=True)
+        cmds.addAttr(self.spine_ctls[0], longName="tanVisibility", niceName="Tangent Controllers Visibility", attributeType="bool", defaultValue=True, keyable=True)
+        cmds.setAttr(f"{self.spine_ctls[0]}.tanVisibility", keyable=False, channelBox=True)
 
-                    cmds.connectAttr(f"{self.body_ctl}.worldMatrix[0]", f"{corner_nodes[0]}.offsetParentMatrix") # Parent the first spine ctl to body ctl
-                    cmds.setAttr(f"{corner_nodes[0]}.inheritsTransform", 0) # Don't inherit the transform from body ctl
-                    cmds.parent(corner_nodes[0], self.controllers_grp)
-                    cmds.addAttr(corner_ctl, longName="tanControllers", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
-                    cmds.setAttr(f"{corner_ctl}.tanControllers", lock=True, keyable=False, channelBox=True)
-                    cmds.addAttr(corner_ctl, longName="tanVisibility", niceName="Tangent Controllers Visibility", attributeType="bool", defaultValue=True, keyable=True)
-                    cmds.setAttr(f"{corner_ctl}.tanVisibility", lock=False, keyable=False, channelBox=True)
-
-                else:
-
-                    cmds.parent(self.spine_nodes[-1], corner_ctl)
-                    cmds.parent(corner_nodes[0], self.spine_ctls[(len(self.spine_ctls) // 2)])
-
-                self.spine_nodes.append(corner_nodes[0])
-                self.spine_ctls.append(corner_ctl)
-
-            if i == (len(self.spine_chain) - 1) // 2:
-
-                mid_nodes, mid_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", ""), offset=["GRP"])
-                curve_tool.lock_attributes(mid_ctl, [ "v"])
-
-                cmds.parent(mid_nodes[0], self.spine_ctls[0])
-                cmds.matchTransform(mid_nodes[0], self.spine_chain[(len(self.spine_chain) // 2) - 1], pos=True, rot=True, scl=False)
-                self.spine_nodes.append(mid_nodes[0])
-                self.spine_ctls.append(mid_ctl)
-
-            
-            if i == 1 or i == len(self.spine_chain) - 2:
-
-                tan_nodes, tan_ctl = curve_tool.create_controller(name=jnt.replace("_JNT", "Tan"), offset=["GRP", "ANM"])
-                curve_tool.lock_attributes(tan_ctl, ["v"])
-
-                cmds.matchTransform(tan_nodes[0], jnt, pos=True, rot=True, scl=False)
-                cmds.connectAttr(f"{self.spine_ctls[0]}.tanVisibility", f"{tan_nodes[0]}.visibility")
-
-                if i == 1:
-
-                    cmds.parent(tan_nodes[0], self.spine_ctls[-1])
-
-
-                self.spine_nodes.append(tan_nodes[0])
-                self.spine_ctls.append(tan_ctl)
+        for i in range(1, count):
+            if i == count - 1:
+                parent = self.spine_ctls[count // 2]
+            elif i in tangent_indices and i == count - 2:
+                parent = self.spine_ctls[-1]
+            else:
+                parent = self.spine_ctls[0]
+            cmds.parent(self.spine_nodes[i], parent)
+            if i in tangent_indices:
+                cmds.connectAttr(f"{self.spine_ctls[0]}.tanVisibility", f"{self.spine_nodes[i]}.visibility")
 
     def local_hip_chest_setup(self):
 
@@ -308,7 +309,8 @@ class SpineModule(object):
         IK spine setup
         """
         # ------ Create the IK main setup ------
-        ik_curve = cmds.curve(name=f"{self.side}_spineIK_CRV", degree=3, point= [cmds.xform(ctl, q=True, ws=True, t=True) for ctl in self.spine_ctls])
+        degree = min(3, len(self.spine_ctls) - 1)
+        ik_curve = cmds.curve(name=f"{self.side}_spineIK_CRV", degree=degree, point= [cmds.xform(ctl, q=True, ws=True, t=True) for ctl in self.spine_ctls])
         ik_curve_shape = cmds.listRelatives(ik_curve, shapes=True)[0]
         cmds.rename(ik_curve_shape, f"{self.side}_spineIK_CRVShape")
         ik_handle = cmds.ikHandle(name=f"{self.side}_spineIK_HDL", startJoint=self.spine_chain[0], endEffector=self.spine_chain[-1], solver="ikSplineSolver", curve=ik_curve, createCurve=False)[0]
@@ -345,7 +347,7 @@ class SpineModule(object):
             reversed_spine_chain.append(reversed_jnt)
         cmds.parent(reversed_spine_chain[0], self.module_trn)
 
-        ik_reversed_curve = cmds.curve(name=f"{self.side}_spineReversedIK_CRV", degree=3, point= [cmds.xform(ctl, q=True, ws=True, t=True) for ctl in reversed(self.spine_ctls)])
+        ik_reversed_curve = cmds.curve(name=f"{self.side}_spineReversedIK_CRV", degree=degree, point= [cmds.xform(ctl, q=True, ws=True, t=True) for ctl in reversed(self.spine_ctls)])
         ik_reversed_curve_shape = cmds.listRelatives(ik_reversed_curve, shapes=True)[0]
         cmds.rename(ik_reversed_curve_shape, f"{self.side}_spineReversedIK_CRVShape")
         ik_reversed_handle = cmds.ikHandle(name=f"{self.side}_spineReversedIK_HDL", startJoint=reversed_spine_chain[0], endEffector=reversed_spine_chain[-1], solver="ikSplineSolver", curve=ik_reversed_curve, createCurve=False)[0]

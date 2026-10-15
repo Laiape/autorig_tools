@@ -1,0 +1,47 @@
+---
+description: Efficient rig graphs, matrices, deformation and scene ownership
+alwaysApply: true
+---
+
+# Rig evaluation architecture
+
+Read `maya_tools/docs/rig_performance_plan.md` before restructuring a rig.
+
+- Keep dependencies explicit and directional: controls -> systems -> skeleton/
+  primary deformation -> correctives -> final detail. Final detail must not
+  drive the same controls/joints/deformation from which it was computed.
+- Use Python for builds, authoring, audits and offline baking. Runtime deformation
+  must use suitable native nodes or validated compiled implementations. Do not
+  add per-frame Python callbacks, scriptJobs or expressions with hidden getAttr.
+- C++ alone does not guarantee parallelism or GPU execution. Declare scheduling
+  only after thread-safety tests; GPU deformation needs its own implementation.
+  Audit Parallel, Serial, GloballySerial and Untrusted separately.
+- Prefer compact matrix networks when they reduce measured work. Preserve local
+  animation channels, offsets, jointOrient, rotate order, mirrored/nonuniform
+  scale and segmentScaleCompensate. Validate IK/FK matching and space switching.
+- For offsetParentMatrix parent-space conversion, use the actual parent's inverse
+  world matrix when required. Do not feed a driven node's dependent inverse back
+  into itself or blindly copy the study's parentInverseMatrix example.
+- Share common matrix/space calculations and batch pins per driver surface where
+  possible. Resolve static nearest-point projections and rest data at build time.
+- Profile existing motionPath, IK, decomposeMatrix and repeated utility chains
+  before replacements. Constraint count alone does not establish cycles; keep
+  required pole-vector/orient constraints unless a validated replacement wins.
+- Audit source geometry consumers, including Bifrost, uvPin, proximityWrap,
+  follicles and live targets. A hidden mesh needed downstream still evaluates.
+  uvPin by name alone does not guarantee absence of GPU read-back.
+- Separate lightweight attachment/collision drivers from final display detail.
+  Verify which branch stays on GPU; do not assume every native node is supported.
+- Keep topology stable. Preserve valid Orig shapes, bind/rest geometry, targets,
+  namespaces and ownership links. Clean only proven redundant owned nodes in a
+  versioned copy; never delete all history from a skinned production mesh.
+- Stacked skinClusters, DQ, blendShapes, RBF and wraps are allowed when validated.
+  Prune/bake/consolidate only measured costly layers with held-out pose tests.
+  Do not reduce approved weights or change skinning methods solely for speed.
+- Store corrective deltas sparsely when supported; avoid full live duplicate
+  meshes for stored sculpts. Preserve target aliases/indices and deformer order.
+  Keep topologyCheck unless a verified pipeline contract justifies disabling it.
+- Use typed/semantic lookups and Maya API bulk arrays for large data; avoid
+  per-vertex cmds loops and repeated whole-scene scans in interactive callbacks.
+- Integrate reports and switches into existing Test Rig/Framework/asset workflows.
+  Keep profiling and validation overhead outside normal animation evaluation.

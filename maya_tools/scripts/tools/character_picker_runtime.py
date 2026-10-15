@@ -1,4 +1,4 @@
-"""Shared native character picker runtime; distributed without AutoRig imports."""
+"""Shared native character picker runtime; no required AutoRig dependency."""
 import json
 from pathlib import Path
 
@@ -225,9 +225,17 @@ class CharacterPicker(QtWidgets.QDialog):
             splitter.addWidget(view)
         self.status = QtWidgets.QLabel()
         layout.addWidget(self.status)
-        self.setStyleSheet("QDialog {background:#989898; color:#1a1a1a;} "
-                           "QLabel,QCheckBox {color:#1a1a1a;} "
-                           "QPushButton,QLineEdit {background:#b0b0b0; color:#1a1a1a; padding:4px;}")
+        try:
+            from maya_tools.scripts.utils import ui_utils
+        except ImportError:
+            # Portable exports also inherit Maya's palette. The repository is
+            # optional; retain the same primary-action cue when distributed.
+            use_selection.setStyleSheet("QPushButton {background:#356581; color:#f5f7f9; padding:4px 9px; border-radius:3px;} "
+                                       "QPushButton:disabled {background:palette(button); color:palette(mid);}")
+            use_selection.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DialogApplyButton))
+            refresh.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_BrowserReload))
+        else:
+            ui_utils.apply_maya_style(self)
         self.namespace.editingFinished.connect(self.refresh_targets)
         self.secondary.toggled.connect(self.update_layers)
         self.fine.toggled.connect(self.update_layers)
@@ -235,7 +243,9 @@ class CharacterPicker(QtWidgets.QDialog):
         self.timer.timeout.connect(self.update_selection)
         self.timer.start(250)
         for event in ("SceneOpened", "NewSceneOpened"):
-            self.jobs.append(cmds.scriptJob(event=[event, self.refresh_targets]))
+            job = cmds.scriptJob(event=[event, self.refresh_targets])
+            if job is not None:
+                self.jobs.append(job)
         self.destroyed.connect(self.cleanup)
         self.update_layers()
         self.auto_namespace()

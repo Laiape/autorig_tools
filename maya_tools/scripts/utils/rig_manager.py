@@ -241,7 +241,7 @@ def create_new_asset():
         cmds.deleteUI(window_id)
         
     # 2. Crear ventana
-    cmds.window(window_id, title="Create New Asset", widthHeight=(300, 100), sizeable=False)
+    cmds.window(window_id, title="Create New Asset", widthHeight=(360, 190), sizeable=False)
     cmds.columnLayout(adjustableColumn=True, rowSpacing=10, columnOffset=['both', 10])
     
     cmds.text(label="Enter Asset Name:", align='left', height=25)
@@ -252,6 +252,11 @@ def create_new_asset():
                 command=lambda x: execute_folder_creation(cmds.textField(asset_name_field, q=True, text=True), window_id))
     
     cmds.showWindow(window_id)
+    from maya_tools.scripts.utils import ui_utils
+    ui_utils.style_native_window(window_id, "NativeNewAsset")
+    # Maya restores old window preferences after creation; size the complete
+    # form after showing it so its primary action cannot be clipped.
+    cmds.window(window_id, edit=True, widthHeight=(360, 190))
 
     return asset_name_field
 

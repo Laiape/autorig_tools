@@ -7,3 +7,6 @@ Do not invent extra parked items.
 
 | # | Item | Why it waits |
 |---|---|---|
+No remaining parked items.
+
+Delivery 2026-10-15: completed Edward/autorig and Nini keepout work, including portable scenes and assets, included in the final repository delivery.

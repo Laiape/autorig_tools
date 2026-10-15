@@ -178,5 +178,7 @@ def show_window():
     cmds.button(label="Aplicar a cinturones seleccionados", height=36, command=apply)
     status = cmds.text(label="Listo.", align="left")
     cmds.showWindow(window)
+    from maya_tools.scripts.utils import ui_utils
+    ui_utils.style_native_window(window, "NativeProximityWrap")
 
 

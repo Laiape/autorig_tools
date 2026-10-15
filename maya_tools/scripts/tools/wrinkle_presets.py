@@ -27,6 +27,11 @@ def _rest_geometry(mesh):
     transform = poses.mesh_transform(mesh)
     root = "|" + transform.split("|")[1]
     values, skipped = rig_validation._neutral_values(root)
+    for settings in cmds.ls('*_Settings', type='transform') or []:
+        if (cmds.attributeQuery('wrinkleInPlace', node=settings, exists=True)
+                and cmds.getAttr(settings + '.wrinkleInPlace')
+                and poses.mesh_transform(cmds.connectionInfo(settings + '.sourceMesh', sourceFromDestination=True).split('.')[0]) == transform):
+            values[settings + '.Envelope'] = 0
     with poses._temporary_values(values):
         shape, path, fn = wrinkles._mesh_fn(transform)
         points = [[p.x, p.y, p.z] for p in fn.getPoints(om.MSpace.kObject)]
@@ -56,6 +61,13 @@ def set_patterns(settings, patterns):
             raise ValueError("Region arrays must match the source topology.")
         if any(not math.isfinite(v) or abs(v) > 1 for v in values):
             raise ValueError("Flow values must be finite and inside [-1, 1].")
+    if record.get('compact'):
+        from maya_tools.scripts.tools import rig_performance
+        details = rig_performance.export_detail_modes()
+        record['patterns'].update(patterns)
+        wrinkles.import_setups([record], replace_existing=True)
+        rig_performance.restore_detail_modes(details)
+        return
     for region, values in patterns.items():
         for start in range(0, len(values), 2048):
             batch = [float(v) + 2 for v in values[start:start+2048]]
@@ -167,8 +179,12 @@ def assign_controls(settings, region, controllers, radius=None):
     record["controls"] = fields
     source_transform = poses.mesh_transform(shape)
     visible = cmds.getAttr(source_transform + ".visibility")
+    from maya_tools.scripts.tools import rig_performance
+    details = rig_performance.export_detail_modes()
     result = wrinkles.import_setups([record], replace_existing=True)[0]
-    cmds.setAttr(source_transform + ".visibility", visible)
+    if cmds.getAttr(source_transform + '.visibility', settable=True):
+        cmds.setAttr(source_transform + ".visibility", visible)
+    rig_performance.restore_detail_modes(details)
     return result
 
 
@@ -255,20 +271,25 @@ def apply_preset(input_path, mesh, prefix=None, replace_existing=False, remap_to
     values, _ = rig_validation._neutral_values("|" + poses.mesh_transform(mesh).split("|")[1])
     source_transform = poses.mesh_transform(mesh)
     visible = cmds.getAttr(source_transform + ".visibility")
+    from maya_tools.scripts.tools import rig_performance
+    details = rig_performance.export_detail_modes()
     with poses._temporary_values(values):
         if cmds.objExists(prefix + "_GRP"):
-            cmds.delete(prefix + "_GRP")
+            wrinkles.remove_setup(prefix + '_Settings')
         if cmds.objExists(prefix + "_ToMaya"):
             cmds.delete(prefix + "_ToMaya")
         result = wrinkles.build(mesh, prefix, patterns=record["patterns"],
             rest_data=record["rest"] if identical else None, control_fields=fields,
-            hide_source=False)
+            hide_source=False, compact=record.get('compact', False), in_place=record.get('in_place', False))
         for attr, value in record["settings"].items():
             cmds.setAttr(result["settings"] + "." + attr, value)
         cmds.addAttr(result["settings"], longName="wrinklePreset", dataType="string")
         cmds.setAttr(result["settings"] + ".wrinklePreset", str(Path(input_path).resolve()), type="string")
-        cmds.setAttr(result["output"] + ".visibility", record.get("visible", True))
-    cmds.setAttr(source_transform + ".visibility", visible)
+        if cmds.getAttr(result['output'] + '.visibility', settable=True):
+            cmds.setAttr(result["output"] + ".visibility", record.get("visible", True))
+    if cmds.getAttr(source_transform + '.visibility', settable=True):
+        cmds.setAttr(source_transform + ".visibility", visible)
+    rig_performance.restore_detail_modes(details)
     result["missing_controls"] = missing
     result["projected"] = not same
     return result

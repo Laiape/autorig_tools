@@ -1,0 +1,92 @@
+{
+  "production_rig": true,
+  "production_influences": 246,
+  "rig_joints": 576,
+  "layers": 10,
+  "matching_lip_pairs": 30,
+  "corner_50_50": true,
+  "real_controls_tested": 9,
+  "neutral_return_error": 0.0,
+  "neutral_transfer_error": 0.003037602407457937,
+  "poses": [
+    {
+      "frame": 12,
+      "label": "Left corner",
+      "control": "L_lipCorner_CTL",
+      "max_mesh_movement": 0.4831581989572967,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0,
+      "cheek_vertices_moved": 172,
+      "cheek_skin_matrix_error": 5.33120149572799e-07,
+      "cheek_min_movement": 0.48315800985700885
+    },
+    {
+      "frame": 24,
+      "label": "Right corner",
+      "control": "R_lipCorner_CTL",
+      "max_mesh_movement": 0.4839705016707798,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0
+    },
+    {
+      "frame": 36,
+      "label": "Upper lip",
+      "control": "C_upperLip_CTL",
+      "max_mesh_movement": 0.5201873985801281,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0
+    },
+    {
+      "frame": 48,
+      "label": "Lower lip",
+      "control": "C_lowerLip_CTL",
+      "max_mesh_movement": 0.32315168851131426,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0
+    },
+    {
+      "frame": 60,
+      "label": "Upper lip roll",
+      "control": "C_upperLip_CTL",
+      "max_mesh_movement": 11.883348224566737,
+      "composite_error": 1.0469973979904592e-21,
+      "outside_mask_error": 0.0,
+      "non_rotate_roll_movement": 2.220446049250313e-16,
+      "rotate_roll_movement": 11.883348224566737
+    },
+    {
+      "frame": 72,
+      "label": "Lower lip roll",
+      "control": "C_lowerLip_CTL",
+      "max_mesh_movement": 7.9730899639254655,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0,
+      "non_rotate_roll_movement": 3.3306690738754696e-16,
+      "rotate_roll_movement": 7.9730899639254655
+    },
+    {
+      "frame": 84,
+      "label": "Jaw opening",
+      "control": "C_jaw_CTL",
+      "max_mesh_movement": 6.261794786663958,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0
+    },
+    {
+      "frame": 96,
+      "label": "Main mouth",
+      "control": "C_mainMouth_CTL",
+      "max_mesh_movement": 0.5000076293945312,
+      "composite_error": 0.0,
+      "outside_mask_error": 0.0
+    },
+    {
+      "frame": 108,
+      "label": "Head integration",
+      "control": "C_head_CTL",
+      "max_mesh_movement": 3.382114818969434,
+      "composite_error": 3.835751643949657e-17,
+      "outside_mask_error": 0.0
+    }
+  ]
+}

@@ -1,1322 +1,506 @@
+"""Native Maya modeling checker and guided review of Modeling QC Checklist.
+
+Usage: from tools.model_checker import show; show()
 """
-Minimo Model Checker
-Based on Modeling QC Standards (Roure Osso, 24/01/2023)
+import json
+import weakref
 
-Usage (Maya Script Editor):
-    from tools.model_checker import show
-    show()
-"""
-
-import maya.cmds as cmds
-import maya.OpenMaya as om
-
+from maya import cmds, OpenMayaUI as omui
+import maya.api.OpenMaya as om
 try:
-    from PySide2 import QtWidgets, QtCore, QtGui
-    from PySide2.QtCore import Qt
-    from shiboken2 import wrapInstance
-    import maya.OpenMayaUI as omui
-except ImportError:
-    from PySide6 import QtWidgets, QtCore, QtGui
-    from PySide6.QtCore import Qt
+    from PySide6 import QtCore, QtGui, QtWidgets
     from shiboken6 import wrapInstance
-    import maya.OpenMayaUI as omui
+except ImportError:
+    from PySide2 import QtCore, QtGui, QtWidgets
+    from shiboken2 import wrapInstance
 
-from utils import ui_utils
+from . import model_checker_core as core
+try:
+    from maya_tools.scripts.utils import ui_utils
+except ImportError:
+    from utils import ui_utils
+
+Qt = QtCore.Qt
+_window = None
 
 
 def _maya_main_window():
-    ptr = omui.MQtUtil.mainWindow()
-    return wrapInstance(int(ptr), QtWidgets.QWidget)
+    pointer = omui.MQtUtil.mainWindow()
+    return wrapInstance(int(pointer), QtWidgets.QWidget) if pointer else None
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
-def _get_meshes():
-    return cmds.ls(type='mesh', long=True) or []
-
-
-def _short_name(full_path):
-    parent = cmds.listRelatives(full_path, parent=True, fullPath=True) or []
-    node = parent[0] if parent else full_path
-    return node.split('|')[-1]
-
-
-def _mesh_fn(mesh):
-    sel = om.MSelectionList()
-    sel.add(mesh)
-    dag = om.MDagPath()
-    sel.getDagPath(0, dag)
-    return om.MFnMesh(dag)
-
-
-# ── Auto Check Functions ──────────────────────────────────────────────────────
-# Each function returns a list of (label, [selectable_components]) tuples.
-
-def check_ngons():
-    issues = []
-    for mesh in _get_meshes():
-        fn = _mesh_fn(mesh)
-        counts, _ = om.MIntArray(), om.MIntArray()
-        fn.getVertices(counts, _)
-        idx = [i for i, c in enumerate(counts) if c > 4]
-        if idx:
-            t = _short_name(mesh)
-            issues.append((f"{t}: {len(idx)} n-gon(s)", [f"{t}.f[{i}]" for i in idx]))
-    return issues
-
-
-def check_tris():
-    issues = []
-    for mesh in _get_meshes():
-        fn = _mesh_fn(mesh)
-        counts, _ = om.MIntArray(), om.MIntArray()
-        fn.getVertices(counts, _)
-        idx = [i for i, c in enumerate(counts) if c == 3]
-        if idx:
-            t = _short_name(mesh)
-            issues.append((f"{t}: {len(idx)} tri(s)", [f"{t}.f[{i}]" for i in idx]))
-    return issues
-
-
-def check_nonmanifold():
-    issues = []
-    for mesh in _get_meshes():
-        t = _short_name(mesh)
-        nm_v = cmds.polyInfo(mesh, nmv=True) or []
-        nm_e = cmds.polyInfo(mesh, nme=True) or []
-        sel = []
-        for info in nm_v:
-            parts = info.strip().split()
-            sel.append(f"{t}.vtx[{parts[2].rstrip(':')}]")
-        for info in nm_e:
-            parts = info.strip().split()
-            sel.append(f"{t}.e[{parts[2].rstrip(':')}]")
-        if sel:
-            issues.append((f"{t}: {len(nm_v)} nm-vert(s), {len(nm_e)} nm-edge(s)", sel))
-    return issues
-
-
-def check_history():
-    issues = []
-    for mesh in _get_meshes():
-        if cmds.listConnections(f"{mesh}.inMesh") or []:
-            history = cmds.listHistory(mesh, pruneDagObjects=True) or []
-            history = [h for h in history if cmds.nodeType(h) != 'mesh']
-            if history:
-                t = _short_name(mesh)
-                issues.append((f"{t}: {len(history)} history node(s)", [t]))
-    return issues
-
-
-def check_frozen_transforms():
-    issues = []
-    tol = 0.0001
-    for t in (cmds.ls(type='transform', long=True) or []):
-        if not (cmds.listRelatives(t, shapes=True, type='mesh') or []):
-            continue
-        tx, ty, tz = cmds.getAttr(f"{t}.translate")[0]
-        rx, ry, rz = cmds.getAttr(f"{t}.rotate")[0]
-        sx, sy, sz = cmds.getAttr(f"{t}.scale")[0]
-        if (abs(tx) > tol or abs(ty) > tol or abs(tz) > tol or
-                abs(rx) > tol or abs(ry) > tol or abs(rz) > tol or
-                abs(sx - 1) > tol or abs(sy - 1) > tol or abs(sz - 1) > tol):
-            name = t.split('|')[-1]
-            issues.append((name, [name]))
-    return issues
-
-
-def check_pivots():
-    issues = []
-    tol = 0.0001
-    for t in (cmds.ls(type='transform', long=True) or []):
-        if not (cmds.listRelatives(t, shapes=True, type='mesh') or []):
-            continue
-        rp = cmds.getAttr(f"{t}.rotatePivot")[0]
-        sp = cmds.getAttr(f"{t}.scalePivot")[0]
-        if any(abs(v) > tol for v in rp) or any(abs(v) > tol for v in sp):
-            name = t.split('|')[-1]
-            issues.append((name, [name]))
-    return issues
-
-
-def check_duplicate_names():
-    seen = {}
-    for node in (cmds.ls(type='transform') or []):
-        short = node.split('|')[-1]
-        seen.setdefault(short, []).append(node)
-    issues = []
-    for name, nodes in seen.items():
-        if len(nodes) > 1:
-            issues.append((f"{name}  ({len(nodes)} duplicates)", nodes))
-    return issues
-
-
-def check_multiple_shapes():
-    issues = []
-    for t in (cmds.ls(type='transform', long=True) or []):
-        shapes = cmds.listRelatives(t, shapes=True) or []
-        if len(shapes) > 1:
-            name = t.split('|')[-1]
-            issues.append((f"{name}: {len(shapes)} shapes", [name]))
-    return issues
-
-
-def check_mesh_under_mesh():
-    issues = []
-    for mesh in _get_meshes():
-        parent = cmds.listRelatives(mesh, parent=True, fullPath=True) or []
-        if not parent:
-            continue
-        grandparent = cmds.listRelatives(parent[0], parent=True, fullPath=True) or []
-        if grandparent:
-            gp_shapes = cmds.listRelatives(grandparent[0], shapes=True, type='mesh') or []
-            if gp_shapes:
-                t = _short_name(mesh)
-                issues.append((f"{t} parented under {grandparent[0].split('|')[-1]}", [t]))
-    return issues
-
-
-def check_overlapping_verts():
-    issues = []
-    for mesh in _get_meshes():
-        fn = _mesh_fn(mesh)
-        points = om.MPointArray()
-        fn.getPoints(points, om.MSpace.kObject)
-        pos_map = {}
-        for i in range(points.length()):
-            p = points[i]
-            key = (round(p.x, 4), round(p.y, 4), round(p.z, 4))
-            pos_map.setdefault(key, []).append(i)
-        dup_idx = [i for indices in pos_map.values() if len(indices) > 1 for i in indices]
-        if dup_idx:
-            t = _short_name(mesh)
-            issues.append((f"{t}: {len(dup_idx)} overlapping vert(s)", [f"{t}.vtx[{i}]" for i in dup_idx]))
-    return issues
-
-
-def check_vertex_tweaks():
-    issues = []
-    for mesh in _get_meshes():
-        tweak_nodes = cmds.listConnections(mesh, type='tweak') or []
-        for tw in tweak_nodes:
-            pnts = cmds.getAttr(f"{tw}.vlist[0].vertex") or []
-            dirty_idx = [i for i, p in enumerate(pnts) if any(abs(v) > 0.0001 for v in p)]
-            if dirty_idx:
-                t = _short_name(mesh)
-                issues.append((f"{t}: {len(dirty_idx)} dirty vertex tweak(s)",
-                                [f"{t}.vtx[{i}]" for i in dirty_idx]))
-    return issues
-
-
-def check_empty_groups():
-    issues = []
-    for t in (cmds.ls(type='transform', long=True) or []):
-        children = cmds.listRelatives(t, children=True, fullPath=True) or []
-        if not children:
-            name = t.split('|')[-1]
-            issues.append((name, [name]))
-    return issues
-
-
-def check_unused_shaders():
-    issues = []
-    default_ses = {'initialShadingGroup', 'initialParticleSE'}
-    for se in (cmds.ls(type='shadingEngine') or []):
-        if se in default_ses:
-            continue
-        members = cmds.sets(se, query=True) or []
-        if not members:
-            issues.append((f"Unused shader: {se}", [se]))
-    return issues
-
-
-def check_unused_textures():
-    issues = []
-    for node in (cmds.ls(type='file') or []):
-        if not (cmds.listConnections(node, destination=True, source=False) or []):
-            issues.append((f"Unused texture: {node}", [node]))
-    return issues
-
-
-def check_pasted_nodes():
-    issues = []
-    for node in (cmds.ls(long=True) or []):
-        short = node.split('|')[-1]
-        if 'pasted__' in short:
-            issues.append((short, [short]))
-    return issues
-
-
-def check_namespaces():
-    issues = []
-    default_ns = {':'}
-    for ns in (cmds.namespaceInfo(listOnlyNamespaces=True, recurse=True) or []):
-        if ns in ('UI', 'shared'):
-            continue
-        nodes = cmds.ls(f"{ns}:*") or []
-        if nodes:
-            issues.append((f"Namespace '{ns}': {len(nodes)} node(s)", nodes[:20]))
-    return issues
-
-
-# ── Fix Functions ────────────────────────────────────────────────────────────
-# Each takes (label, sel) and returns a human-readable log string. May raise.
-
-def fix_history(label, sel):
-    node = sel[0]
-    cmds.delete(node, constructionHistory=True)
-    return f"Deleted construction history from  {node}"
-
-
-def fix_frozen(label, sel):
-    node = sel[0]
-    cmds.makeIdentity(node, apply=True, translate=True, rotate=True, scale=True)
-    return f"Frozen T/R/S on  {node}"
-
-
-def fix_pivots(label, sel):
-    node = sel[0]
-    cmds.xform(node, worldSpace=True, pivots=[0, 0, 0])
-    return f"Reset pivot to world origin:  {node}"
-
-
-def fix_mesh_under_mesh(label, sel):
-    node = sel[0]
-    cmds.parent(node, world=True)
-    return f"Parented to world:  {node}"
-
-
-def fix_overlapping_verts(label, sel):
-    mesh = sel[0].split('.')[0]
-    cmds.select(sel)
-    cmds.polyMergeVertex(distance=0.001, alwaysMergeTwoVertices=True)
-    cmds.select(clear=True)
-    cmds.delete(mesh, constructionHistory=True)
-    return f"Merged {len(sel)} overlapping vert(s) on  {mesh}  (history cleared)"
-
-
-def fix_nonmanifold(label, sel):
-    mesh = sel[0].split('.')[0]
-    cmds.polyClean(mesh, cleanNonManifoldEdges=True, cleanNonManifoldVertices=True, flag=1)
-    cmds.delete(mesh, constructionHistory=True)
-    return f"Cleaned non-manifold geometry on  {mesh}  (history cleared)"
-
-
-def fix_vertex_tweaks(label, sel):
-    mesh = sel[0].split('.')[0]
-    for tw in (cmds.listConnections(mesh, type='tweak') or []):
-        n = cmds.polyEvaluate(mesh, vertex=True)
-        for i in range(n):
+def _remove_callbacks(*groups):
+    for group in groups:
+        for callback in group:
             try:
-                cmds.setAttr(f"{tw}.vlist[0].vertex[{i}]", 0, 0, 0)
-            except Exception:
+                om.MMessage.removeCallback(callback)
+            except RuntimeError:
                 pass
-    return f"Cleaned vertex tweaks on  {mesh}"
-
-
-def fix_duplicate_names(label, sel):
-    count = 0
-    base = sel[0].split('|')[-1]
-    for i, node in enumerate(sel[1:], 1):
-        cmds.rename(node, f"{base}_{i:02d}")
-        count += 1
-    return f"Renamed {count} duplicate(s) of  '{base}'"
-
-
-def fix_empty_groups(label, sel):
-    node = sel[0]
-    cmds.delete(node)
-    return f"Deleted empty group:  {node}"
-
-
-def fix_unused_shaders(label, sel):
-    node = sel[0]
-    cmds.delete(node)
-    return f"Deleted unused shader:  {node}"
-
-
-def fix_unused_textures(label, sel):
-    node = sel[0]
-    cmds.delete(node)
-    return f"Deleted unused texture node:  {node}"
-
-
-def fix_pasted_nodes(label, sel):
-    node = sel[0]
-    new_name = node.replace('pasted__', '')
-    cmds.rename(node, new_name)
-    return f"Renamed  '{node}'  →  '{new_name}'"
-
-
-def fix_namespaces(label, sel):
-    ns = label.split("'")[1]
-    cmds.namespace(removeNamespace=ns, mergeNamespaceWithRoot=True)
-    return f"Removed namespace:  '{ns}'"
-
-
-FIX_FUNCS = {
-    "history":        fix_history,
-    "frozen":         fix_frozen,
-    "pivots":         fix_pivots,
-    "meshparent":     fix_mesh_under_mesh,
-    "overlap":        fix_overlapping_verts,
-    "nonmanifold":    fix_nonmanifold,
-    "tweaks":         fix_vertex_tweaks,
-    "dupenames":      fix_duplicate_names,
-    "emptygroups":    fix_empty_groups,
-    "unusedshaders":  fix_unused_shaders,
-    "unusedtex":      fix_unused_textures,
-    "pastednodes":    fix_pasted_nodes,
-    "namespaces":     fix_namespaces,
-}
-
-# Checks that inspect geometry topology — after fixing any of these,
-# all of them must be re-run to catch cascading errors.
-TOPOLOGY_CHECKS = {"ngons", "tris", "nonmanifold", "overlap", "tweaks"}
-
-
-# ── Check Definitions ─────────────────────────────────────────────────────────
-
-AUTO_CHECKS = [
-    dict(id="ngons",       label="No N-gons",                     severity="MUST",   fn=check_ngons,
-         tip="Meshes with non-rigid deformations must not have n-gons."),
-    dict(id="tris",        label="No tris in deformed areas",      severity="SHOULD", fn=check_tris,
-         tip="Tris should be avoided, especially in heavily deformed areas."),
-    dict(id="nonmanifold", label="No non-manifold geometry",       severity="MUST",   fn=check_nonmanifold,
-         tip="Non-manifold geometry prevents some operations from being performed."),
-    dict(id="history",     label="No deformation history",         severity="MUST",   fn=check_history,
-         tip="Meshes must not have any deformation history unless requested."),
-    dict(id="frozen",      label="Transforms frozen (T/R/S)",      severity="MUST",   fn=check_frozen_transforms,
-         tip="All transformations must be frozen: Translate, Rotate, Scale."),
-    dict(id="pivots",      label="Pivots at world center",         severity="SHOULD", fn=check_pivots,
-         tip="Pivots should be at the world center."),
-    dict(id="dupenames",   label="No duplicate names",             severity="MUST",   fn=check_duplicate_names,
-         tip="Duplicate names must be avoided."),
-    dict(id="multishapes", label="Single shape per transform",     severity="MUST",   fn=check_multiple_shapes,
-         tip="Each transform must have a single shape under it."),
-    dict(id="meshparent",  label="No mesh parented under mesh",    severity="MUST",   fn=check_mesh_under_mesh,
-         tip="Meshes can't be parented under other meshes."),
-    dict(id="overlap",     label="No overlapping vertices",        severity="SHOULD", fn=check_overlapping_verts,
-         tip="The same mesh should not have two or more vertices on the exact same position."),
-    dict(id="tweaks",       label="Vertex local transforms clean",  severity="MUST",   fn=check_vertex_tweaks,
-         tip="All vertex local transformations must be cleaned, set to 0."),
-    dict(id="emptygroups",  label="No empty groups",                severity="SHOULD", fn=check_empty_groups,
-         tip="Empty transform groups should be deleted before delivery."),
-    dict(id="unusedshaders",label="No unused shaders",              severity="SHOULD", fn=check_unused_shaders,
-         tip="Unused shading engines add noise to the scene."),
-    dict(id="unusedtex",    label="No unused textures",             severity="SHOULD", fn=check_unused_textures,
-         tip="Unused file texture nodes should be removed."),
-    dict(id="pastednodes",  label="No 'pasted__' nodes",            severity="MUST",   fn=check_pasted_nodes,
-         tip="Nodes prefixed with 'pasted__' indicate pasted content that was not renamed."),
-    dict(id="namespaces",   label="No namespaces",                  severity="MUST",   fn=check_namespaces,
-         tip="All namespaces must be removed before delivery."),
-]
-
-# ── Topology Auto-Check Functions ─────────────────────────────────────────────
-
-def check_topo_ground_contact():
-    meshes = _get_meshes()
-    if not meshes:
-        return []
-    min_y = min(cmds.exactWorldBoundingBox(m)[1] for m in meshes)
-    if abs(min_y) > 0.5:
-        return [(f"Lowest point Y = {min_y:.3f}  (should be ~0.0)", [])]
-    return []
-
-
-def check_topo_symmetry():
-    issues = []
-    for mesh in _get_meshes():
-        fn = _mesh_fn(mesh)
-        pts = om.MPointArray()
-        fn.getPoints(pts, om.MSpace.kWorld)
-        left  = sum(1 for i in range(pts.length()) if pts[i].x >  0.001)
-        right = sum(1 for i in range(pts.length()) if pts[i].x < -0.001)
-        if left > 10 and right > 10:
-            ratio = abs(left - right) / max(left, right)
-            if ratio > 0.05:
-                t = _short_name(mesh)
-                issues.append((f"{t}: {left} L-verts vs {right} R-verts  ({ratio*100:.0f}% diff)", [t]))
-    return issues
-
-
-def check_topo_poles():
-    issues = []
-    for mesh in _get_meshes():
-        sel = om.MSelectionList()
-        sel.add(mesh)
-        dag = om.MDagPath()
-        sel.getDagPath(0, dag)
-        it = om.MItMeshVertex(dag)
-        pole_idx = []
-        while not it.isDone():
-            if not it.onBoundary() and it.numConnectedEdges() != 4:
-                pole_idx.append(it.index())
-            it.next()
-        if pole_idx:
-            t = _short_name(mesh)
-            issues.append((f"{t}: {len(pole_idx)} pole(s)",
-                           [f"{t}.vtx[{i}]" for i in pole_idx[:300]]))
-    return issues
-
-
-_DEFAULT_CAMERAS = {'front', 'side', 'top', 'persp',
-                    'frontShape', 'sideShape', 'topShape', 'perspShape'}
-
-def check_topo_illegal_nodes():
-    issues = []
-    deformer_types = ['cluster', 'lattice', 'wrap', 'blendShape', 'skinCluster',
-                      'nonLinear', 'sculpt', 'softMod', 'jiggle', 'wire', 'deltaMush']
-    for dtype in deformer_types:
-        for node in (cmds.ls(type=dtype) or []):
-            issues.append((f"Deformer node: {node}  ({dtype})", [node]))
-    for cam in (cmds.ls(type='camera') or []):
-        if cam not in _DEFAULT_CAMERAS:
-            parent = (cmds.listRelatives(cam, parent=True) or [cam])[0]
-            issues.append((f"Extra camera: {parent}", [parent]))
-    return issues
-
-
-TOPO_AUTO_CHECKS = [
-    dict(id="t_ground",   label="Character touches ground",         severity="SHOULD",
-         fn=check_topo_ground_contact,
-         tip="The character should be in contact with the ground (min bounding box Y ≈ 0)."),
-    dict(id="t_symmetry", label="Body is symmetrical",              severity="SHOULD",
-         fn=check_topo_symmetry,
-         tip="The underlying body should be symmetrical along the X axis."),
-    dict(id="t_poles",    label="No poles in mesh",                 severity="SHOULD",
-         fn=check_topo_poles,
-         tip="Meshes should not have poles (vertices with != 4 edges) in deformed areas."),
-    dict(id="t_illegal",  label="No illegal nodes",                 severity="MUST",
-         fn=check_topo_illegal_nodes,
-         tip="Remove deformers, extra cameras, and unused shaders from the scene."),
-]
-
-# Manual-only checks (require visual inspection — cannot be automated)
-MANUAL_CHECKS = [
-    # Pose & Alignment
-    ("SHOULD", "Feet tips point straight +Z",                                    "feet_z"),
-    ("SHOULD", "Knees tips point straight +Z",                                   "knees_z"),
-    ("SHOULD", "Left/Right legs are parallel (no A-pose)",                       "legs_parallel"),
-    # Body Topology
-    ("MUST",   "Sole and shoe have matching topology",                           "sole_topo"),
-    ("MUST",   "Loops under foot/shoe are parallel & aligned to ground",         "foot_loops"),
-    ("MUST",   "Real body and cloth elbows are at the same place",               "elbow_cloth"),
-    ("SHOULD", "Clothing appends match the underlying topology",                 "cloth_topo"),
-    ("MUST",   "Straight loop at folding positions (knuckles, elbows, fingers)", "fold_loops"),
-    ("SHOULD", "Knuckles have the same topology style",                          "knuckle_style"),
-    ("SHOULD", "Index/Mid/Ring/Pinky have the same topology",                    "finger_topo"),
-    # Face
-    ("MUST",   "Upper/lower lips vertices match (count & placement)",            "lips_match"),
-    ("MUST",   "Upper/lower eyelids vertices match (count & placement)",         "eyelids_match"),
-    ("SHOULD", "Lips, eyelids and eyebrows are neutralized",                     "neutralized"),
-    ("MUST",   "Sealing loop through center of lips at contact point",           "lips_loop"),
-    ("MUST",   "Sealing loop through center of eyelids at contact point",        "eyelids_loop"),
-    ("SHOULD", "Inner lips topology is similar/parallel to outer",               "inner_lips"),
-    ("INFO",   "Lip commissures checked (thickness, intersections)",             "commissures"),
-    ("INFO",   "Lip intersections not excessive",                                "lip_intersect"),
-    ("INFO",   "No bumps on the lips",                                           "lip_bumps"),
-    # Eyes
-    ("MUST",   "Cornea eye-bulge NOT modeled (rigging will handle it)",          "cornea_bulge"),
-    ("SHOULD", "Cornea and eyeball have matching topology loops",                "cornea_topo"),
-    ("SHOULD", "Eyebrow topology matches underlying body topology",              "eyebrow_topo"),
-    ("SHOULD", "Eyelashes topology matches underlying topology",                 "eyelashes_topo"),
-]
-
-MANUAL_CATEGORIES = [
-    ("Pose & Alignment",  ["feet_z", "knees_z", "legs_parallel"]),
-    ("Body Topology",     ["sole_topo", "foot_loops", "elbow_cloth", "cloth_topo",
-                           "fold_loops", "knuckle_style", "finger_topo"]),
-    ("Face",              ["lips_match", "eyelids_match", "neutralized", "lips_loop",
-                           "eyelids_loop", "inner_lips", "commissures", "lip_intersect", "lip_bumps"]),
-    ("Eyes",              ["cornea_bulge", "cornea_topo", "eyebrow_topo", "eyelashes_topo"]),
-]
-
-
-# ── Styles ────────────────────────────────────────────────────────────────────
-
-C = {
-    "MUST":     "#c94f4f",
-    "SHOULD":   "#c88c30",
-    "INFO":     "#6a6a6a",
-    "PASS":     "#4a9e4a",
-    "IDLE":     "#555555",
-    "BG":       "#282828",
-    "BG2":      "#303030",
-    "BG3":      "#383838",
-    "TEXT":     "#d8d8d8",
-    "SUBTEXT":  "#888888",
-    "BORDER":   "#404040",
-    "ACCENT":   "#4a7cbf",
-}
-
-STYLESHEET = f"""
-QWidget {{
-    background-color: {C['BG']};
-    color: {C['TEXT']};
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 11px;
-}}
-QScrollArea, QScrollArea > QWidget > QWidget {{
-    background-color: {C['BG']};
-    border: none;
-}}
-QGroupBox {{
-    border: 1px solid {C['BORDER']};
-    border-radius: 4px;
-    margin-top: 10px;
-    padding-top: 6px;
-    font-weight: bold;
-    color: {C['TEXT']};
-    font-size: 11px;
-}}
-QGroupBox::title {{
-    subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 4px;
-    color: {C['SUBTEXT']};
-}}
-QPushButton {{
-    background-color: {C['BG3']};
-    color: {C['TEXT']};
-    border: 1px solid {C['BORDER']};
-    border-radius: 3px;
-    padding: 5px 14px;
-    min-height: 22px;
-}}
-QPushButton:hover  {{ background-color: #464646; }}
-QPushButton:pressed {{ background-color: {C['BG2']}; }}
-QPushButton:disabled {{ color: #555; }}
-QCheckBox {{
-    color: {C['TEXT']};
-    spacing: 6px;
-    font-size: 11px;
-}}
-QCheckBox::indicator {{
-    width: 13px; height: 13px;
-    border-radius: 2px;
-    border: 1px solid #555;
-    background: #3c3c3c;
-}}
-QCheckBox::indicator:checked {{
-    background-color: {C['PASS']};
-    border-color: {C['PASS']};
-}}
-QTextEdit {{
-    background-color: {C['BG2']};
-    color: {C['TEXT']};
-    border: 1px solid {C['BORDER']};
-    border-radius: 3px;
-    font-family: Consolas, monospace;
-    font-size: 10px;
-}}
-QTabWidget::pane {{
-    border: 1px solid {C['BORDER']};
-    border-radius: 3px;
-    background: {C['BG']};
-}}
-QTabBar::tab {{
-    background: {C['BG2']};
-    color: {C['SUBTEXT']};
-    padding: 6px 18px;
-    border: 1px solid {C['BORDER']};
-    border-bottom: none;
-    border-radius: 3px 3px 0 0;
-    margin-right: 2px;
-}}
-QTabBar::tab:selected {{
-    background: {C['BG3']};
-    color: {C['TEXT']};
-}}
-QSplitter::handle {{ background: {C['BORDER']}; }}
-"""
-
-
-# ── Widgets ───────────────────────────────────────────────────────────────────
-
-SEV_COLOR = {"MUST": C["MUST"], "SHOULD": C["SHOULD"], "INFO": C["INFO"]}
-
-
-class AutoCheckRow(QtWidgets.QWidget):
-    def __init__(self, label, severity, tip="", parent=None):
-        super().__init__(parent)
-        self.severity = severity
-        self.setToolTip(tip)
-
-        lay = QtWidgets.QHBoxLayout(self)
-        lay.setContentsMargins(6, 2, 6, 2)
-        lay.setSpacing(8)
-
-        badge = QtWidgets.QLabel(severity)
-        badge.setFixedWidth(50)
-        badge.setAlignment(Qt.AlignCenter)
-        badge.setStyleSheet(
-            f"background:{SEV_COLOR.get(severity, C['INFO'])}; color:white;"
-            "border-radius:3px; font-size:9px; font-weight:bold; padding:2px 0;"
-        )
-
-        self.dot = QtWidgets.QLabel("●")
-        self.dot.setFixedWidth(16)
-        self.dot.setAlignment(Qt.AlignCenter)
-        self._set_dot(C["IDLE"], "—")
-
-        lbl = QtWidgets.QLabel(label)
-        lbl.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-
-        lay.addWidget(badge)
-        lay.addWidget(self.dot)
-        lay.addWidget(lbl)
-        ui_utils.apply_maya_style(self)
-
-    def _set_dot(self, color, tooltip):
-        self.dot.setStyleSheet(f"color:{color}; font-size:15px;")
-        self.dot.setToolTip(tooltip)
-
-    def set_pass(self):      self._set_dot(C["PASS"],  "PASS")
-    def set_idle(self):      self._set_dot(C["IDLE"],  "Not run")
-    def set_running(self):   self._set_dot("#aaaaaa",  "Running…")
-    def set_fail(self, msg):
-        color = C["MUST"] if self.severity == "MUST" else C["SHOULD"]
-        self._set_dot(color, f"FAIL: {msg}")
-
-
-class ManualCheckRow(QtWidgets.QWidget):
-    def __init__(self, label, severity, parent=None):
-        super().__init__(parent)
-        self._row_selected = False
-        self.setAutoFillBackground(True)
-
-        lay = QtWidgets.QHBoxLayout(self)
-        lay.setContentsMargins(6, 2, 6, 2)
-        lay.setSpacing(8)
-
-        badge = QtWidgets.QLabel(severity)
-        badge.setFixedWidth(50)
-        badge.setAlignment(Qt.AlignCenter)
-        badge.setStyleSheet(
-            f"background:{SEV_COLOR.get(severity, C['INFO'])}; color:white;"
-            "border-radius:3px; font-size:9px; font-weight:bold; padding:2px 0;"
-        )
-
-        self.cb = QtWidgets.QCheckBox(label)
-        lay.addWidget(badge)
-        lay.addWidget(self.cb, 1)
-        ui_utils.apply_maya_style(self)
-
-    def mousePressEvent(self, event):
-        # Toggle row highlight on click outside the checkbox indicator area
-        self._row_selected = not self._row_selected
-        self._refresh_bg()
-        super().mousePressEvent(event)
-
-    def _refresh_bg(self):
-        pal = self.palette()
-        color = QtGui.QColor("#3a5070") if self._row_selected else QtGui.QColor("transparent")
-        pal.setColor(QtGui.QPalette.Window, color)
-        self.setPalette(pal)
-
-    @property
-    def row_selected(self):
-        return self._row_selected
-
-    @property
-    def checked(self):
-        return self.cb.isChecked()
-
-
-class FixIssueRow(QtWidgets.QWidget):
-    fix_requested    = QtCore.Signal(tuple)   # (check_id, label, sel)
-    select_requested = QtCore.Signal(list)
-
-    def __init__(self, check_id, label, sel, fixable=True, severity="MUST", parent=None):
-        super().__init__(parent)
-        self.check_id = check_id
-        self.label    = label
-        self.sel      = sel
-
-        lay = QtWidgets.QHBoxLayout(self)
-        lay.setContentsMargins(4, 2, 4, 2)
-        lay.setSpacing(6)
-
-        dot_color = C["MUST"] if severity == "MUST" else C["SHOULD"]
-        self._dot = QtWidgets.QLabel("●")
-        self._dot.setFixedWidth(14)
-        self._dot.setStyleSheet(f"color:{dot_color}; font-size:12px;")
-
-        lbl = QtWidgets.QLabel(label)
-        lbl.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-
-        sel_btn = QtWidgets.QPushButton("Select")
-        sel_btn.setFixedSize(52, 20)
-        sel_btn.setStyleSheet("font-size:10px; padding:1px 4px;")
-        sel_btn.clicked.connect(lambda: self.select_requested.emit(self.sel))
-
-        lay.addWidget(self._dot)
-        lay.addWidget(lbl, 1)
-        lay.addWidget(sel_btn)
-
-        if fixable:
-            self._fix_btn = QtWidgets.QPushButton("Fix")
-            self._fix_btn.setFixedSize(38, 20)
-            self._fix_btn.setStyleSheet(
-                "QPushButton{background:#2d5a2d;color:white;font-size:10px;padding:1px 4px;}"
-                "QPushButton:hover{background:#3a7a3a;}"
-                "QPushButton:disabled{background:#333;color:#555;}"
-            )
-            self._fix_btn.clicked.connect(
-                lambda: self.fix_requested.emit((self.check_id, self.label, self.sel))
-            )
-            lay.addWidget(self._fix_btn)
-        else:
-            tag = QtWidgets.QLabel("manual")
-            tag.setStyleSheet(f"color:{C['SUBTEXT']}; font-size:9px; font-style:italic;")
-            lay.addWidget(tag)
-
-        ui_utils.apply_maya_style(self)
-
-    def mark_fixed(self):
-        self._dot.setStyleSheet(f"color:{C['PASS']}; font-size:12px;")
-        if hasattr(self, '_fix_btn'):
-            self._fix_btn.setEnabled(False)
-            self._fix_btn.setText("✓")
-
-
-# ── Main Window ───────────────────────────────────────────────────────────────
-
-class IssueLog(QtWidgets.QListWidget):
-    """Clickable log — issue items select the node in Maya on click."""
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setStyleSheet(f"""
-            QListWidget {{
-                background-color: {C['BG2']};
-                color: {C['TEXT']};
-                border: 1px solid {C['BORDER']};
-                border-radius: 3px;
-                font-family: Consolas, monospace;
-                font-size: 10px;
-                outline: 0;
-            }}
-            QListWidget::item:selected {{
-                background-color: #3a5070;
-                color: white;
-            }}
-            QListWidget::item:hover:!selected {{
-                background-color: #353535;
-            }}
-        """)
-        self.itemClicked.connect(self._on_click)
-
-    def _on_click(self, item):
-        components = item.data(Qt.UserRole)
-        if components:
-            try:
-                cmds.select(components, replace=True)
-            except Exception:
-                pass
-
-    def add_header(self, text, color):
-        item = QtWidgets.QListWidgetItem(f"  {text}")
-        item.setForeground(QtGui.QColor(color))
-        font = QtGui.QFont("Consolas", 10)
-        font.setBold(True)
-        item.setFont(font)
-        item.setFlags(item.flags() & ~Qt.ItemIsSelectable)
-        self.addItem(item)
-
-    def add_issue(self, text, sel=None):
-        item = QtWidgets.QListWidgetItem(f"    • {text}")
-        if sel:
-            item.setData(Qt.UserRole, sel)
-            item.setForeground(QtGui.QColor("#c8c8c8"))
-            n = len(sel)
-            item.setToolTip(f"Click to select  ({n} component{'s' if n != 1 else ''})")
-        else:
-            item.setFlags(item.flags() & ~Qt.ItemIsSelectable)
-            item.setForeground(QtGui.QColor("#777777"))
-        self.addItem(item)
-
-    def add_info(self, text, color=None):
-        item = QtWidgets.QListWidgetItem(f"  {text}")
-        item.setForeground(QtGui.QColor(color or C["SUBTEXT"]))
-        item.setFlags(item.flags() & ~Qt.ItemIsSelectable)
-        self.addItem(item)
-
-    def add_separator(self):
-        item = QtWidgets.QListWidgetItem("")
-        item.setFlags(Qt.NoItemFlags)
-        self.addItem(item)
-
+        group[:] = []
 
 
 class ModelCheckerWindow(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent or _maya_main_window())
+        self.setObjectName("AutoRigModelChecker")
         self.setWindowTitle("Model Checker")
-        self.setMinimumSize(500, 720)
         self.setWindowFlags(self.windowFlags() | Qt.Window)
-        self._auto_rows    = {}
-        self._topo_rows    = {}
-        self._manual_rows  = []
-        self._fix_rows     = []
+        self.resize(920, 760)
+        self.setMinimumSize(640, 520)
+        self.results, self.roots, self.stale = {}, None, False
+        self._busy = self._cancelled = False
+        self._callbacks, self._watchers = [], []
+        self._check_items, self._review_widgets = {}, {}
+        self._vertex_sets, self._unmatched = [[], []], []
         self._build()
         ui_utils.apply_maya_style(self)
+        self._stale_timer = QtCore.QTimer(self)
+        self._stale_timer.setSingleShot(True)
+        self._stale_timer.timeout.connect(self._show_stale)
+        owner = weakref.ref(self)
+        def changed(*args):
+            instance = owner()
+            if instance is not None and not instance._busy:
+                instance._mark_stale()
+        def scene_changed(*args):
+            instance = owner()
+            if instance is not None:
+                instance._reset_scene()
+        self._changed_callback = changed
+        for event in ("Undo", "Redo", "NameChanged"):
+            self._callbacks.append(om.MEventMessage.addEventCallback(event, changed))
+        for event in ("SceneOpened", "NewSceneOpened"):
+            self._callbacks.append(om.MEventMessage.addEventCallback(event, scene_changed))
+        self._callbacks.append(om.MDGMessage.addNodeAddedCallback(changed, "dependNode"))
+        self._callbacks.append(om.MDGMessage.addNodeRemovedCallback(changed, "dependNode"))
+        self._callbacks.append(om.MDGMessage.addConnectionCallback(changed))
+        callbacks, watchers = self._callbacks, self._watchers
+        self.destroyed.connect(lambda *args: _remove_callbacks(callbacks, watchers))
+        self._update_summary()
 
-    # ── Build ─────────────────────────────────────────────────────────────────
+    def closeEvent(self, event):
+        if self._busy:
+            self._cancelled = True
+            event.ignore()
+            return
+        _remove_callbacks(self._callbacks, self._watchers)
+        super().closeEvent(event)
+
+    def _button(self, label, callback, layout):
+        button = QtWidgets.QPushButton(label)
+        button.setAutoDefault(False)
+        button.clicked.connect(callback)
+        layout.addWidget(button)
+        return button
 
     def _build(self):
-        root = QtWidgets.QVBoxLayout(self)
-        root.setContentsMargins(14, 14, 14, 14)
-        root.setSpacing(10)
-
-        # Header
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(8)
+        heading = QtWidgets.QHBoxLayout()
         title = QtWidgets.QLabel("MODEL CHECKER")
-        title.setAlignment(Qt.AlignCenter)
-        title.setStyleSheet("font-size:15px; font-weight:bold; letter-spacing:2px; color:white;")
-        root.addWidget(title)
+        font = title.font(); font.setBold(True); title.setFont(font)
+        heading.addWidget(title)
+        self.scope_info = QtWidgets.QLabel("Whole scene"); self.scope_info.setWordWrap(True)
+        heading.addWidget(self.scope_info, 1); layout.addLayout(heading)
+        scope_row = QtWidgets.QHBoxLayout()
+        scope_row.addWidget(QtWidgets.QLabel("Scope"))
+        self.scope = QtWidgets.QComboBox(); self.scope.addItems(("Whole scene", "Loaded selection"))
+        self.scope.setAccessibleName("Check scope")
+        self.scope.currentIndexChanged.connect(self._scope_changed)
+        scope_row.addWidget(self.scope)
+        self.load_scope_btn = self._button("From selection", self._load_scope, scope_row)
+        self.load_scope_btn.setToolTip("Pin selected mesh / group roots. Selecting findings will not change this scope.")
+        scope_row.addStretch()
+        self.run_btn = self._button("Run all checks", self.run_all, scope_row)
+        self.run_selected_btn = self._button("Run selected checks", self.run_selected, scope_row)
+        self.cancel_btn = self._button("Cancel", self._cancel, scope_row); self.cancel_btn.setEnabled(False)
+        layout.addLayout(scope_row)
+        settings = QtWidgets.QGroupBox("Check settings")
+        settings.setCheckable(True); settings.setChecked(False)
+        settings_box = QtWidgets.QVBoxLayout(settings)
+        self.settings_body = QtWidgets.QWidget()
+        form = QtWidgets.QFormLayout(self.settings_body); form.setContentsMargins(0, 0, 0, 0)
+        self.tolerance = QtWidgets.QDoubleSpinBox()
+        self.tolerance.setDecimals(6); self.tolerance.setRange(0.000001, 1000); self.tolerance.setValue(0.001)
+        self.ground_tolerance = QtWidgets.QDoubleSpinBox()
+        self.ground_tolerance.setDecimals(4); self.ground_tolerance.setRange(0, 10000); self.ground_tolerance.setValue(0.5)
+        self.gpu = QtWidgets.QComboBox()
+        self.gpu.addItem("NVIDIA checklist guidance: 2000 vertices", 2000)
+        self.gpu.addItem("AMD checklist guidance: 500 vertices", 500)
+        form.addRow("Position tolerance (scene units)", self.tolerance)
+        form.addRow("Ground tolerance (scene units)", self.ground_tolerance)
+        form.addRow("Small-mesh advisory", self.gpu); self.gpu.setToolTip(core.BY_ID["gpu"].tip)
+        settings_box.addWidget(self.settings_body); self.settings_body.hide()
+        settings.toggled.connect(self.settings_body.setVisible); layout.addWidget(settings)
+        for control in (self.tolerance, self.ground_tolerance):
+            control.valueChanged.connect(self._invalidate)
+        self.gpu.currentIndexChanged.connect(self._invalidate)
+        self.tabs = QtWidgets.QTabWidget(); self.tabs.setDocumentMode(True)
+        self.tabs.addTab(self._build_automatic(), "Automatic checks")
+        self.tabs.addTab(self._build_review(), "Visual review")
+        self.tabs.addTab(self._build_vertex_sets(), "Vertex comparison")
+        self.tabs.addTab(self._build_report(), "Report")
+        self.tabs.currentChanged.connect(lambda index: self._refresh_report() if index == 3 else None)
+        layout.addWidget(self.tabs, 1)
+        self.progress = QtWidgets.QProgressBar(); self.progress.setMaximum(len(core.CHECKS)); self.progress.setValue(0)
+        self.progress.hide(); layout.addWidget(self.progress)
+        self.summary = QtWidgets.QLabel(); self.summary.setWordWrap(True)
+        self.summary.setTextInteractionFlags(Qt.TextSelectableByMouse); layout.addWidget(self.summary)
+        self.status = QtWidgets.QLabel("Select a scope, run checks, then complete the visual review.")
+        self.status.setWordWrap(True); self.status.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        layout.addWidget(self.status)
 
-        sub = QtWidgets.QLabel("Modeling Standards  ·  Laia Peris  ·  2026")
-        sub.setAlignment(Qt.AlignCenter)
-        sub.setStyleSheet(f"font-size:10px; color:{C['SUBTEXT']}; margin-bottom:2px;")
-        root.addWidget(sub)
-
-        # Splitter: tabs on top, log on bottom (user-resizable)
+    def _build_automatic(self):
+        page = QtWidgets.QWidget(); box = QtWidgets.QVBoxLayout(page); box.setContentsMargins(0, 8, 0, 0)
+        search = QtWidgets.QHBoxLayout()
+        self.query = QtWidgets.QLineEdit(); self.query.setPlaceholderText("Filter checks...")
+        self.query.setClearButtonEnabled(True); self.query.setAccessibleName("Filter automatic checks")
+        self.query.textChanged.connect(self._filter); search.addWidget(self.query, 1)
+        self.result_filter = QtWidgets.QComboBox(); self.result_filter.addItems(("All results", "Findings", "Errors", "Not run"))
+        self.result_filter.currentIndexChanged.connect(self._filter); search.addWidget(self.result_filter)
+        box.addLayout(search)
         splitter = QtWidgets.QSplitter(Qt.Vertical)
-        splitter.setHandleWidth(4)
+        self.check_tree = QtWidgets.QTreeWidget()
+        self.check_tree.setHeaderLabels(("Check", "Priority", "Status", "Findings"))
+        self.check_tree.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.check_tree.setUniformRowHeights(True); self.check_tree.setAccessibleName("Automatic check results")
+        self.check_tree.header().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        for column in (1, 2, 3):
+            self.check_tree.header().setSectionResizeMode(column, QtWidgets.QHeaderView.Interactive)
+        self.check_tree.setColumnWidth(1, 75)
+        self.check_tree.setColumnWidth(2, 90)
+        self.check_tree.setColumnWidth(3, 75)
+        groups = {}
+        for check in core.CHECKS:
+            if check.category not in groups:
+                group = QtWidgets.QTreeWidgetItem(self.check_tree, [check.category])
+                group.setFlags(group.flags() & ~Qt.ItemIsSelectable); group.setExpanded(True)
+                groups[check.category] = group
+            item = QtWidgets.QTreeWidgetItem(groups[check.category], [check.label, check.severity, "NOT RUN", ""])
+            item.setData(0, Qt.UserRole, check.id); item.setToolTip(0, check.tip)
+            self._check_items[check.id] = item
+        self.check_tree.itemSelectionChanged.connect(self._refresh_findings); splitter.addWidget(self.check_tree)
+        findings = QtWidgets.QWidget(); findings_box = QtWidgets.QVBoxLayout(findings)
+        findings_box.setContentsMargins(0, 4, 0, 0)
+        self.guidance = QtWidgets.QLabel("Select checks to inspect findings. Double-click a finding to select it in Maya.")
+        self.guidance.setWordWrap(True); findings_box.addWidget(self.guidance)
+        self.issue_tree = QtWidgets.QTreeWidget(); self.issue_tree.setHeaderLabels(("Finding / diagnostic", "Targets"))
+        self.issue_tree.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.issue_tree.header().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch); self.issue_tree.setColumnWidth(1, 70)
+        self.issue_tree.itemDoubleClicked.connect(lambda *args: self._select_issues())
+        self.issue_tree.itemSelectionChanged.connect(self._update_fix_button); findings_box.addWidget(self.issue_tree, 1)
+        row = QtWidgets.QHBoxLayout(); self._button("Select in Maya", self._select_issues, row)
+        self.fix_btn = self._button("Repair selected finding", self._repair, row); self.fix_btn.setEnabled(False)
+        self.fix_btn.setToolTip("One finding at a time, with Undo. Live deformers, locked and referenced nodes are protected.")
+        row.addStretch(); findings_box.addLayout(row); splitter.addWidget(findings); splitter.setSizes([320, 200])
+        box.addWidget(splitter, 1)
+        return page
 
-        tabs = QtWidgets.QTabWidget()
-        tabs.addTab(self._build_auto_tab(),   "Tech Checks  (auto)")
-        tabs.addTab(self._build_manual_tab(), "Topology Checks  (manual)")
-        tabs.addTab(self._build_fix_tab(),    "Auto Fix")
-        splitter.addWidget(tabs)
+    def _build_review(self):
+        page = QtWidgets.QWidget(); box = QtWidgets.QVBoxLayout(page)
+        hint = QtWidgets.QLabel("Record Pass, Fail or N/A after inspection. N/A needs a reason. Notes are saved in the JSON report.")
+        hint.setWordWrap(True); box.addWidget(hint)
+        tree = QtWidgets.QTreeWidget(); tree.setHeaderLabels(("Visual check", "Priority", "Review", "Notes / exception reason"))
+        tree.setRootIsDecorated(True); tree.header().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        tree.setColumnWidth(1, 65); tree.setColumnWidth(2, 95); tree.setColumnWidth(3, 220)
+        groups = {}
+        for key, category, severity, label in core.MANUAL_CHECKS:
+            if category not in groups:
+                group = QtWidgets.QTreeWidgetItem(tree, [category]); group.setExpanded(True); groups[category] = group
+            item = QtWidgets.QTreeWidgetItem(groups[category], [label, severity]); item.setToolTip(0, label)
+            state = QtWidgets.QComboBox(); state.addItems(core.REVIEW_STATES); state.setAccessibleName(label + " review")
+            note = QtWidgets.QLineEdit(); note.setPlaceholderText("Inspection notes..."); note.setAccessibleName(label + " notes")
+            tree.setItemWidget(item, 2, state); tree.setItemWidget(item, 3, note)
+            self._review_widgets[key] = (state, note)
+            state.currentIndexChanged.connect(self._update_summary); note.textChanged.connect(self._update_summary)
+        box.addWidget(tree, 1)
+        row = QtWidgets.QHBoxLayout(); self._button("Reset review", self._reset_review, row)
+        self._button("Load review from JSON", self._load_review, row); row.addStretch(); box.addLayout(row)
+        return page
 
-        log_widget = QtWidgets.QWidget()
-        log_lay = QtWidgets.QVBoxLayout(log_widget)
-        log_lay.setContentsMargins(0, 4, 0, 0)
-        log_lay.setSpacing(4)
+    def _build_vertex_sets(self):
+        page = QtWidgets.QWidget(); box = QtWidgets.QVBoxLayout(page)
+        text = QtWidgets.QLabel("Load two vertex sets to compare lip / eyelid counts and contact positions, or body / clothing alignment. The test measures world positions; inspect loop flow and order visually.")
+        text.setWordWrap(True); box.addWidget(text)
+        self.vertex_labels = []
+        for index, label in enumerate(("A", "B")):
+            row = QtWidgets.QHBoxLayout()
+            field = QtWidgets.QLabel("Set {}: not loaded".format(label)); field.setWordWrap(True)
+            self.vertex_labels.append(field); row.addWidget(field, 1)
+            self._button("Load selected vertices as " + label, lambda checked=False, i=index: self._load_vertices(i), row)
+            box.addLayout(row)
+        row = QtWidgets.QHBoxLayout(); self._button("Compare vertex sets", self._compare_vertices, row)
+        self._button("Select unmatched vertices", self._select_unmatched, row); row.addStretch(); box.addLayout(row)
+        self.vertex_result = QtWidgets.QPlainTextEdit(); self.vertex_result.setReadOnly(True); box.addWidget(self.vertex_result, 1)
+        return page
 
-        log_header = QtWidgets.QLabel("Results  —  click an error to select in Maya")
-        log_header.setStyleSheet(f"color:{C['SUBTEXT']}; font-size:10px;")
-        log_lay.addWidget(log_header)
+    def _build_report(self):
+        page = QtWidgets.QWidget(); box = QtWidgets.QVBoxLayout(page)
+        self.report_preview = QtWidgets.QPlainTextEdit(); self.report_preview.setReadOnly(True); box.addWidget(self.report_preview, 1)
+        row = QtWidgets.QHBoxLayout(); self._button("Refresh report", self._refresh_report, row)
+        self._button("Copy report", self._copy_report, row); self._button("Export JSON", self._export_report, row)
+        box.addLayout(row)
+        return page
 
-        self.log = IssueLog()
-        log_lay.addWidget(self.log)
-        splitter.addWidget(log_widget)
+    def options(self):
+        return core.Options(self.tolerance.value(), self.ground_tolerance.value(), self.gpu.currentData())
 
-        splitter.setSizes([420, 220])
-        root.addWidget(splitter, 1)
+    def review(self):
+        return {key: dict(state=state.currentText(), note=note.text()) for key, (state, note) in self._review_widgets.items()}
 
-        # Buttons
-        btn_row = QtWidgets.QHBoxLayout()
-        self.run_btn = QtWidgets.QPushButton("▶  Run All Auto Checks")
-        self.run_btn.setStyleSheet(
-            f"QPushButton{{background:#2d5a2d;color:white;font-weight:bold;}}"
-            f"QPushButton:hover{{background:#3a7a3a;}}"
-        )
-        self.run_btn.clicked.connect(self.run_all)
+    def report(self):
+        return core.build_report(self.results, self.review(), self.roots, self.options(), self.stale)
 
-        clear_btn = QtWidgets.QPushButton("Clear Log")
-        clear_btn.clicked.connect(self.log.clear)
+    def _update_summary(self, *args):
+        if not hasattr(self, "summary"):
+            return
+        report = self.report(); counts = report["summary"]
+        self.summary.setText("{} | {} blockers | {} warnings | {} errors | {} visual pending | {} not run | {} skipped".format(
+            report["verdict"], counts["blockers"], counts["warnings"], counts["errors"], counts["pending"], counts["not_run"], counts["skipped"]))
+        if self.tabs.currentIndex() == 3:
+            self._refresh_report()
 
-        copy_btn = QtWidgets.QPushButton("Copy Report")
-        copy_btn.clicked.connect(self._copy_report)
+    def _invalidate(self, *args):
+        self.results.clear(); self.stale = False; _remove_callbacks(self._watchers)
+        self._refresh_checks(); self.status.setText("Settings or scope changed. Run checks again.")
 
-        btn_row.addWidget(self.run_btn, 2)
-        btn_row.addWidget(clear_btn)
-        btn_row.addWidget(copy_btn)
-        root.addLayout(btn_row)
+    def _scope_changed(self, index):
+        self.roots = None if index == 0 else []
+        self.scope_info.setText("Whole scene" if index == 0 else "Load mesh / group roots from selection")
+        self._reset_review(); self._invalidate()
 
-    def _build_auto_tab(self):
-        w = QtWidgets.QWidget()
-        lay = QtWidgets.QVBoxLayout(w)
-        lay.setContentsMargins(6, 8, 6, 6)
+    def _load_scope(self):
+        roots = core.selection_roots()
+        if not roots:
+            self.status.setText("Select one or more mesh / group roots in Maya."); return
+        self.scope.blockSignals(True); self.scope.setCurrentIndex(1); self.scope.blockSignals(False)
+        self.roots = roots
+        self.scope_info.setText("{} loaded root(s): {}".format(len(roots), ", ".join(node.split("|")[-1] for node in roots)))
+        self.scope_info.setToolTip("\n".join(roots)); self._reset_review(); self._invalidate()
 
-        scroll = QtWidgets.QScrollArea()
-        scroll.setWidgetResizable(True)
-        inner = QtWidgets.QWidget()
-        inner_lay = QtWidgets.QVBoxLayout(inner)
-        inner_lay.setSpacing(2)
-        inner_lay.setContentsMargins(0, 0, 0, 0)
+    def _reset_scene(self):
+        self._vertex_sets, self._unmatched = [[], []], []
+        for index, label in enumerate(self.vertex_labels):
+            label.setText("Set {}: not loaded".format("AB"[index]))
+        self.vertex_result.clear(); self.scope.setCurrentIndex(0); self.roots = None
+        self._reset_review(); self._invalidate(); self.status.setText("Scene changed. Scope and review have been reset.")
 
-        for ch in AUTO_CHECKS:
-            row = AutoCheckRow(ch["label"], ch["severity"], ch["tip"])
-            inner_lay.addWidget(row)
-            self._auto_rows[ch["id"]] = row
+    def _reset_review(self):
+        for state, note in self._review_widgets.values():
+            state.setCurrentIndex(0); note.clear()
+        self._update_summary()
 
-        inner_lay.addStretch()
-        scroll.setWidget(inner)
-        lay.addWidget(scroll)
-        return w
+    def _mark_stale(self):
+        if self.results and not self.stale:
+            self.stale = True
+            # Maya dirtiness callbacks may run during DG evaluation. Query the
+            # scene and update Qt only after returning to the event loop.
+            self._stale_timer.start(0)
 
-    def _build_manual_tab(self):
-        w = QtWidgets.QWidget()
-        lay = QtWidgets.QVBoxLayout(w)
-        lay.setContentsMargins(6, 8, 6, 6)
-        lay.setSpacing(6)
+    def _show_stale(self):
+        if self.stale:
+            self.status.setText("Scene changed since the scan. Run all checks to refresh results before repair.")
+            self._update_summary(); self._update_fix_button()
 
-        # ── Auto topology checks ───────────────────────────────────────────────
-        auto_group = QtWidgets.QGroupBox("Auto Checks")
-        auto_group.setStyleSheet(
-            f"QGroupBox{{color:{C['HEADER'] if 'HEADER' in C else C['TEXT']};"
-            "font-weight:bold;}}"
-        )
-        auto_g_lay = QtWidgets.QVBoxLayout(auto_group)
-        auto_g_lay.setSpacing(2)
-        auto_g_lay.setContentsMargins(4, 12, 4, 6)
+    def _watch_context(self, context):
+        _remove_callbacks(self._watchers)
+        for node in set(context.meshes) | set(context.transforms):
+            if cmds.objExists(node):
+                selection = om.MSelectionList(); selection.add(node)
+                self._watchers.append(om.MNodeMessage.addNodeDirtyCallback(selection.getDependNode(0), self._changed_callback))
 
-        for ch in TOPO_AUTO_CHECKS:
-            row = AutoCheckRow(ch["label"], ch["severity"], ch["tip"])
-            auto_g_lay.addWidget(row)
-            self._topo_rows[ch["id"]] = row
-
-        run_topo_btn = QtWidgets.QPushButton("▶  Run Auto Checks")
-        run_topo_btn.setStyleSheet(
-            f"QPushButton{{background:#2d5a2d;color:white;font-weight:bold;}}"
-            f"QPushButton:hover{{background:#3a7a3a;}}"
-        )
-        run_topo_btn.clicked.connect(self._run_topo_checks)
-        auto_g_lay.addWidget(run_topo_btn)
-        lay.addWidget(auto_group)
-
-        # ── Manual visual checks ───────────────────────────────────────────────
-        manual_lbl = QtWidgets.QLabel("Manual Checks  —  visual inspection required")
-        manual_lbl.setStyleSheet(f"color:{C['SUBTEXT']}; font-size:10px; margin-top:4px;")
-        lay.addWidget(manual_lbl)
-
-        scroll = QtWidgets.QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
-        inner = QtWidgets.QWidget()
-        inner_lay = QtWidgets.QVBoxLayout(inner)
-        inner_lay.setSpacing(4)
-        inner_lay.setContentsMargins(0, 0, 0, 0)
-
-        check_map = {c[2]: (c[0], c[1]) for c in MANUAL_CHECKS}
-        for cat_name, ids in MANUAL_CATEGORIES:
-            group = QtWidgets.QGroupBox(cat_name)
-            g_lay = QtWidgets.QVBoxLayout(group)
-            g_lay.setSpacing(2)
-            g_lay.setContentsMargins(4, 12, 4, 6)
-            for cid in ids:
-                if cid in check_map:
-                    sev, label = check_map[cid]
-                    row = ManualCheckRow(label, sev)
-                    g_lay.addWidget(row)
-                    self._manual_rows.append((cid, row))
-            inner_lay.addWidget(group)
-
-        inner_lay.addStretch()
-        scroll.setWidget(inner)
-        lay.addWidget(scroll, 1)
-
-        btn_row = QtWidgets.QHBoxLayout()
-        check_sel_btn = QtWidgets.QPushButton("Check Selected")
-        check_sel_btn.setToolTip("Mark highlighted rows as checked")
-        check_sel_btn.clicked.connect(self._check_selected_manual)
-        check_all_btn = QtWidgets.QPushButton("Check All")
-        check_all_btn.clicked.connect(lambda: [r.cb.setChecked(True) for _, r in self._manual_rows])
-        reset_btn = QtWidgets.QPushButton("Reset")
-        reset_btn.clicked.connect(lambda: [r.cb.setChecked(False) for _, r in self._manual_rows])
-        btn_row.addWidget(check_sel_btn)
-        btn_row.addWidget(check_all_btn)
-        btn_row.addWidget(reset_btn)
-        lay.addLayout(btn_row)
-        return w
-
-    def _run_topo_checks(self):
-        for ch in TOPO_AUTO_CHECKS:
-            row = self._topo_rows[ch["id"]]
-            row.set_running()
-            QtWidgets.QApplication.processEvents()
-            try:
-                issues = ch["fn"]()
-            except Exception as e:
-                self.log.add_info(f"[ERROR] {ch['label']}: {e}")
-                row.set_idle()
-                continue
-            if issues:
-                row.set_fail(f"{len(issues)} issue(s)")
-                color = C["MUST"] if ch["severity"] == "MUST" else C["SHOULD"]
-                self.log.add_header(f"[{ch['severity']}] {ch['label']}", color)
-                for label, sel in issues[:12]:
-                    self.log.add_issue(label, sel=sel if sel else None)
-            else:
-                row.set_pass()
-                self.log.add_info(f"✓  {ch['label']}", color=C["PASS"])
-
-    def _check_selected_manual(self):
-        for _, row in self._manual_rows:
-            if row.row_selected:
-                row.cb.setChecked(True)
-
-    # ── Logic ─────────────────────────────────────────────────────────────────
+    def _cancel(self):
+        self._cancelled = True
 
     def run_all(self):
-        self.log.clear()
-        self.run_btn.setEnabled(False)
-        must_fails = should_fails = 0
+        self._run([check.id for check in core.CHECKS], full=True)
 
-        for ch in AUTO_CHECKS:
-            row = self._auto_rows[ch["id"]]
-            row.set_running()
-            QtWidgets.QApplication.processEvents()
+    def run_selected(self):
+        ids = [item.data(0, Qt.UserRole) for item in self.check_tree.selectedItems() if item.data(0, Qt.UserRole)]
+        if not ids:
+            self.status.setText("Select checks in the automatic results list."); return
+        self._run(ids)
 
-            try:
-                issues = ch["fn"]()
-            except Exception as e:
-                self.log.add_info(f"[ERROR] {ch['label']}: {e}")
-                row.set_idle()
-                continue
-
-            if issues:
-                row.set_fail(f"{len(issues)} issue(s)")
-                if ch["severity"] == "MUST":
-                    must_fails += 1
-                    color = C["MUST"]
-                else:
-                    should_fails += 1
-                    color = C["SHOULD"]
-                self.log.add_header(f"[{ch['severity']}] {ch['label']}", color)
-                for label, sel in issues[:12]:
-                    self.log.add_issue(label, sel=sel)
-                if len(issues) > 12:
-                    self.log.add_info(f"    … and {len(issues) - 12} more")
-            else:
-                row.set_pass()
-                self.log.add_info(f"✓  {ch['label']}", color=C["PASS"])
-
-        self.log.add_separator()
-        if must_fails == 0 and should_fails == 0:
-            self.log.add_info("✓  All checks passed!", color=C["PASS"])
-        else:
-            if must_fails:
-                self.log.add_info(f"✗  {must_fails} MUST failure(s) — blockers", color=C["MUST"])
-            if should_fails:
-                self.log.add_info(f"⚠  {should_fails} SHOULD warning(s)", color=C["SHOULD"])
-
-        self.run_btn.setEnabled(True)
-
-    def _build_fix_tab(self):
-        w = QtWidgets.QWidget()
-        lay = QtWidgets.QVBoxLayout(w)
-        lay.setContentsMargins(6, 8, 6, 6)
-        lay.setSpacing(6)
-
-        scan_btn = QtWidgets.QPushButton("⟳   Scan for Issues")
-        scan_btn.clicked.connect(self._populate_fix_tab)
-        lay.addWidget(scan_btn)
-
-        self._fix_scroll = QtWidgets.QScrollArea()
-        self._fix_scroll.setWidgetResizable(True)
-        self._fix_scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
-        placeholder = QtWidgets.QLabel("Click  'Scan for Issues'  to populate this list.")
-        placeholder.setAlignment(Qt.AlignCenter)
-        placeholder.setStyleSheet(f"color:{C['SUBTEXT']};")
-        self._fix_scroll.setWidget(placeholder)
-        lay.addWidget(self._fix_scroll, 1)
-
-        self._fix_all_btn = QtWidgets.QPushButton("⚡   Fix All Fixable Issues")
-        self._fix_all_btn.setEnabled(False)
-        self._fix_all_btn.setStyleSheet(
-            f"QPushButton{{background:#4a3a10;color:white;font-weight:bold;}}"
-            f"QPushButton:hover{{background:#6a5518;}}"
-            f"QPushButton:disabled{{background:#2a2a2a;color:#555;}}"
-        )
-        self._fix_all_btn.clicked.connect(self._fix_all)
-        lay.addWidget(self._fix_all_btn)
-
-        log_lbl = QtWidgets.QLabel("Fix Log")
-        log_lbl.setStyleSheet(f"color:{C['SUBTEXT']}; font-size:10px; margin-top:2px;")
-        lay.addWidget(log_lbl)
-
-        self.fix_log = QtWidgets.QListWidget()
-        self.fix_log.setStyleSheet(f"""
-            QListWidget {{
-                background:{C['BG2']}; color:{C['TEXT']};
-                border:1px solid {C['BORDER']}; border-radius:3px;
-                font-family:Consolas,monospace; font-size:10px;
-            }}
-        """)
-        self.fix_log.setMinimumHeight(120)
-        self.fix_log.setMaximumHeight(180)
-        lay.addWidget(self.fix_log)
-        return w
-
-    def _populate_fix_tab(self):
-        self._fix_rows = []
-        inner = QtWidgets.QWidget()
-        inner_lay = QtWidgets.QVBoxLayout(inner)
-        inner_lay.setSpacing(4)
-        inner_lay.setContentsMargins(0, 0, 0, 0)
-
-        any_issues = False
-        for ch in AUTO_CHECKS:
-            try:
-                issues = ch["fn"]()
-            except Exception:
-                continue
-            if not issues:
-                continue
-
-            any_issues = True
-            fixable = ch["id"] in FIX_FUNCS
-            color = C["MUST"] if ch["severity"] == "MUST" else C["SHOULD"]
-
-            group = QtWidgets.QGroupBox(f"[{ch['severity']}]  {ch['label']}")
-            group.setStyleSheet(
-                f"QGroupBox{{color:{color};border-color:{color}55;"
-                f"border-width:1px;border-style:solid;border-radius:4px;"
-                f"margin-top:10px;padding-top:6px;}}"
-                f"QGroupBox::title{{subcontrol-origin:margin;left:10px;padding:0 4px;}}"
-            )
-            g_lay = QtWidgets.QVBoxLayout(group)
-            g_lay.setSpacing(2)
-            g_lay.setContentsMargins(4, 12, 4, 6)
-
-            for label, sel in issues:
-                row = FixIssueRow(ch["id"], label, sel,
-                                  fixable=fixable, severity=ch["severity"])
-                row.fix_requested.connect(self._on_fix_requested)
-                row.select_requested.connect(lambda s: cmds.select(s, replace=True))
-                g_lay.addWidget(row)
-                self._fix_rows.append(row)
-
-            inner_lay.addWidget(group)
-
-        if not any_issues:
-            ok = QtWidgets.QLabel("✓   No issues found!")
-            ok.setAlignment(Qt.AlignCenter)
-            ok.setStyleSheet(f"color:{C['PASS']}; font-size:13px; font-weight:bold;")
-            inner_lay.addWidget(ok)
-
-        inner_lay.addStretch()
-        self._fix_scroll.setWidget(inner)
-        self._fix_all_btn.setEnabled(any_issues)
-
-    def _on_fix_requested(self, data):
-        check_id, label, sel = data
-        fn = FIX_FUNCS.get(check_id)
-        if not fn:
+    def _run(self, ids, full=False):
+        if self._busy:
             return
         try:
-            msg = fn(label, sel)
-            self._log_fix(f"✓  {msg}", C["PASS"])
-            for row in self._fix_rows:
-                if row.check_id == check_id and row.label == label:
-                    row.mark_fixed()
-                    break
-            self._recheck_after(check_id)
-        except Exception as e:
-            self._log_fix(f"✗  {label}:  {e}", C["MUST"])
-
-    def _fix_all(self):
-        self.fix_log.clear()
-        self._log_fix("── Fix All started ──────────────────", C["SUBTEXT"])
-        fixed = errors = 0
-        for row in self._fix_rows:
-            if not hasattr(row, '_fix_btn') or not row._fix_btn.isEnabled():
-                continue
-            fn = FIX_FUNCS.get(row.check_id)
-            if not fn:
-                continue
-            try:
-                msg = fn(row.label, row.sel)
-                self._log_fix(f"✓  {msg}", C["PASS"])
-                row.mark_fixed()
-                fixed += 1
-            except Exception as e:
-                self._log_fix(f"✗  {row.label}:  {e}", C["MUST"])
-                errors += 1
-        self._log_fix(
-            f"── Done:  {fixed} fixed,  {errors} error(s) ──────────",
-            C["PASS"] if not errors else C["SHOULD"]
-        )
-        self._log_fix("── Running full QC re-check ─────────", C["SUBTEXT"])
-        self._full_recheck()
-
-    def _recheck_after(self, fixed_check_id):
-        """After a single fix, re-run that check + all topology checks if applicable."""
-        ids_to_run = {fixed_check_id} | (TOPOLOGY_CHECKS if fixed_check_id in TOPOLOGY_CHECKS else set())
-        checks = [ch for ch in AUTO_CHECKS if ch["id"] in ids_to_run]
-        self._log_fix("  ── Re-check ─────────────────────────", C["SUBTEXT"])
-        found = 0
-        for ch in checks:
-            try:
-                issues = ch["fn"]()
-                if issues:
-                    found += len(issues)
-                    color = C["MUST"] if ch["severity"] == "MUST" else C["SHOULD"]
-                    for lbl, _ in issues[:4]:
-                        self._log_fix(f"  ⚠  [{ch['severity']}] {lbl}", color)
-                    if len(issues) > 4:
-                        self._log_fix(f"     … and {len(issues) - 4} more", C["SUBTEXT"])
-                else:
-                    self._log_fix(f"  ✓  {ch['label']}", C["PASS"])
-            except Exception:
-                pass
-        if found:
-            self._log_fix(f"  ⚠  {found} issue(s) remain — re-scan recommended", C["SHOULD"])
-
-    def _full_recheck(self):
-        """Run every check and report remaining issues in the fix log."""
-        self._log_fix("── Full QC re-check ─────────────────", C["SUBTEXT"])
-        remaining = 0
-        for ch in AUTO_CHECKS:
-            try:
-                issues = ch["fn"]()
-                if issues:
-                    remaining += len(issues)
-                    color = C["MUST"] if ch["severity"] == "MUST" else C["SHOULD"]
-                    self._log_fix(f"⚠  [{ch['severity']}] {ch['label']}  ({len(issues)} issue(s))", color)
-                    for lbl, _ in issues[:4]:
-                        self._log_fix(f"   • {lbl}", color)
-                    if len(issues) > 4:
-                        self._log_fix(f"   … and {len(issues) - 4} more", C["SUBTEXT"])
-                else:
-                    self._log_fix(f"✓  {ch['label']}", C["PASS"])
-            except Exception:
-                pass
-        if not remaining:
-            self._log_fix("── Scene is clean! ──────────────────", C["PASS"])
-            self._fix_all_btn.setEnabled(False)
+            context = core.Context(self.roots, self.options())
+        except Exception as exc:
+            self._mark_stale(); self.status.setText(str(exc)); return
+        self._busy = True; self._cancelled = False
+        if full:
+            self.results.clear()
         else:
-            self._log_fix(f"── {remaining} issue(s) remain ──────────────", C["SHOULD"])
+            for key in ids:
+                self.results.pop(key, None)
+        _remove_callbacks(self._watchers)
+        controls = (self.run_btn, self.run_selected_btn, self.scope, self.load_scope_btn, self.tolerance, self.ground_tolerance, self.gpu, self.fix_btn, self.tabs)
+        for control in controls:
+            control.setEnabled(False)
+        self.cancel_btn.setEnabled(True); self.progress.setMaximum(len(ids)); self.progress.setValue(0); self.progress.show()
+        try:
+            for index, check_id in enumerate(ids):
+                self.status.setText("Checking: " + core.BY_ID[check_id].label)
+                QtWidgets.QApplication.processEvents()
+                if self._cancelled:
+                    break
+                self.results[check_id] = core.run_check(context, check_id); self.progress.setValue(index + 1)
+            if full:
+                self.stale = False
+            self._watch_context(context)
+            self.status.setText("Scan cancelled; remaining checks are NOT RUN." if self._cancelled else
+                                "Scan complete: {} meshes. Complete visual review before delivery.".format(len(context.meshes)))
+        except Exception as exc:
+            self.stale = True; self.status.setText("Scan interrupted: " + str(exc))
+        finally:
+            self._busy = False
+            for control in controls:
+                control.setEnabled(True)
+            self.cancel_btn.setEnabled(False); self.progress.hide(); self._refresh_checks()
 
-    def _log_fix(self, text, color=None):
-        item = QtWidgets.QListWidgetItem(text)
-        item.setForeground(QtGui.QColor(color or C["TEXT"]))
-        item.setFlags(item.flags() & ~Qt.ItemIsSelectable)
-        self.fix_log.addItem(item)
-        self.fix_log.scrollToBottom()
+    def _refresh_checks(self):
+        for key, item in self._check_items.items():
+            result = self.results.get(key, core.Result(key)); item.setText(2, result.status)
+            item.setText(3, str(len(result.issues)) if result.status != "NOT RUN" else "")
+            icon = {"PASS": QtWidgets.QStyle.SP_DialogApplyButton, "FAIL": QtWidgets.QStyle.SP_MessageBoxCritical,
+                    "ERROR": QtWidgets.QStyle.SP_MessageBoxCritical, "WARN": QtWidgets.QStyle.SP_MessageBoxWarning,
+                    "INFO": QtWidgets.QStyle.SP_MessageBoxInformation}.get(result.status)
+            item.setIcon(2, self.style().standardIcon(icon) if icon else QtGui.QIcon()); item.setToolTip(2, result.message)
+        self._filter(); self._update_summary()
+
+    def _filter(self, *args):
+        text, mode = self.query.text().lower().strip(), self.result_filter.currentIndex()
+        for key, item in self._check_items.items():
+            result = self.results.get(key, core.Result(key))
+            matches = (mode == 0 or mode == 1 and bool(result.issues) or mode == 2 and result.status == "ERROR" or mode == 3 and result.status == "NOT RUN")
+            item.setHidden(not (matches and text in (core.BY_ID[key].label + " " + core.BY_ID[key].severity + " " + core.BY_ID[key].category).lower()))
+        for index in range(self.check_tree.topLevelItemCount()):
+            group = self.check_tree.topLevelItem(index)
+            group.setHidden(all(group.child(i).isHidden() for i in range(group.childCount())))
+        self._refresh_findings()
+
+    def _refresh_findings(self):
+        self.issue_tree.clear()
+        ids = [item.data(0, Qt.UserRole) for item in self.check_tree.selectedItems() if item.data(0, Qt.UserRole) and not item.isHidden()]
+        self.guidance.setText(core.BY_ID[ids[0]].tip if len(ids) == 1 else
+                              "Double-click a finding to select its full paths in Maya. All findings are retained in the report.")
+        for key in ids or [key for key, item in self._check_items.items() if not item.isHidden()]:
+            result = self.results.get(key)
+            if result is None:
+                continue
+            if result.message:
+                QtWidgets.QTreeWidgetItem(self.issue_tree, ["{}: {}".format(core.BY_ID[key].label, result.message), ""])
+            for issue in result.issues:
+                item = QtWidgets.QTreeWidgetItem(self.issue_tree, [issue.label, str(len(issue.selection))])
+                item.setData(0, Qt.UserRole, (key, issue)); item.setToolTip(0, core.BY_ID[key].label + "\n" + "\n".join(issue.selection))
+        self._update_fix_button()
+
+    def _selected_issues(self):
+        return [item.data(0, Qt.UserRole) for item in self.issue_tree.selectedItems() if item.data(0, Qt.UserRole)]
+
+    def _select_targets(self, targets):
+        valid = [target for target in dict.fromkeys(targets) if cmds.objExists(target)]
+        if valid:
+            try:
+                cmds.select(valid, replace=True); self.status.setText("Selected {} target(s) in Maya.".format(len(valid)))
+            except Exception as exc:
+                self.status.setText(str(exc))
+        else:
+            self.status.setText("No valid targets. Run checks again if the scene changed.")
+
+    def _select_issues(self):
+        self._select_targets([node for _, issue in self._selected_issues() for node in issue.selection])
+
+    def _update_fix_button(self):
+        if not hasattr(self, "fix_btn"):
+            return
+        selected = self._selected_issues()
+        self.fix_btn.setEnabled(not self._busy and not self.stale and len(selected) == 1 and selected[0][0] in core.FIXABLE)
+
+    def _repair(self):
+        selected = self._selected_issues()
+        if self._busy or self.stale or len(selected) != 1:
+            return
+        try:
+            message = core.repair(*selected[0]); self.run_all(); self.status.setText(message + " Full scan refreshed.")
+        except Exception as exc:
+            self._mark_stale(); self.status.setText("Repair unavailable: " + str(exc))
+
+    def _refresh_report(self):
+        self.report_preview.setPlainText(core.report_text(self.report()))
 
     def _copy_report(self):
-        lines = ["Minimo Model Checker — Report", "=" * 44, "", "AUTO CHECKS:"]
-        for ch in AUTO_CHECKS:
-            row = self._auto_rows[ch["id"]]
-            status = row.dot.toolTip() or "Not run"
-            lines.append(f"  [{ch['severity']:6}] {ch['label']}: {status}")
+        QtWidgets.QApplication.clipboard().setText(core.report_text(self.report()))
+        self.status.setText("Full report copied, including diagnostics and visual review.")
 
-        lines += ["", "MANUAL CHECKS:"]
-        for _, row in self._manual_rows:
-            mark = "X" if row.checked else " "
-            lines.append(f"  [{mark}] {row.cb.text()}")
+    def save_report(self, path):
+        with open(path, "w", encoding="utf-8") as stream:
+            json.dump(self.report(), stream, indent=2, ensure_ascii=True)
 
-        QtWidgets.QApplication.clipboard().setText("\n".join(lines))
-        self.log.add_info("Report copied to clipboard.", color=C["ACCENT"])
+    def _export_report(self):
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Export model QC report", "model_qc.json", "JSON report (*.json)")
+        if path:
+            try:
+                self.save_report(path); self.status.setText("Report saved: " + path)
+            except Exception as exc:
+                self.status.setText("Could not save report: " + str(exc))
 
+    def load_review(self, path):
+        with open(path, encoding="utf-8") as stream:
+            data = json.load(stream)
+        current = self.report()
+        if (data.get("schema_version") != 1 or data.get("scene") != current["scene"] or
+                data.get("scope") != current["scope"] or data.get("mesh_identity") != current["mesh_identity"]):
+            raise ValueError("Review belongs to another scene, mesh inventory or scope. Load its original scene and roots first.")
+        reviews = data.get("manual")
+        if not isinstance(reviews, list) or any(not isinstance(row, dict) or row.get("state") not in core.REVIEW_STATES or not isinstance(row.get("note", ""), str) for row in reviews):
+            raise ValueError("Invalid visual review data.")
+        self._reset_review()
+        for row in reviews:
+            if row.get("id") in self._review_widgets:
+                state, note = self._review_widgets[row["id"]]; state.setCurrentText(row["state"]); note.setText(row.get("note", ""))
+        self.status.setText("Visual review loaded. Run automatic checks for the current scene state.")
 
-# ── Entry Point ───────────────────────────────────────────────────────────────
+    def _load_review(self):
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Load visual review", "", "JSON report (*.json)")
+        if path:
+            try:
+                self.load_review(path)
+            except Exception as exc:
+                self.status.setText("Could not load review: " + str(exc))
 
-_window = None
+    def _load_vertices(self, index):
+        vertices = cmds.filterExpand(cmds.ls(selection=True, long=True) or [], selectionMask=31, expand=True) or []
+        if not vertices:
+            self.status.setText("Select polygon vertices in Maya."); return
+        self._vertex_sets[index] = list(dict.fromkeys(vertices))
+        self.vertex_labels[index].setText("Set {}: {} vertices".format("AB"[index], len(self._vertex_sets[index])))
+        self._unmatched = []; self.vertex_result.clear()
+
+    def _compare_vertices(self):
+        try:
+            data = core.compare_vertex_sets(*self._vertex_sets, tolerance=self.options().tolerance)
+            self._unmatched = data["unmatched"]
+            self.vertex_result.setPlainText("A: {} vertices\nB: {} vertices\nEqual counts: {}\nVertices without a contact match: {}\nPosition tolerance: {} scene units\n\nPosition / count comparison only. Confirm sealing loops, ordering and topology visually.".format(
+                data["count_a"], data["count_b"], data["equal_count"], len(data["unmatched"]), data["tolerance"]))
+        except Exception as exc:
+            self._unmatched = []; self.vertex_result.setPlainText(str(exc))
+
+    def _select_unmatched(self):
+        self._select_targets(self._unmatched)
 
 
 def show():
     global _window
-    try:
-        _window.close()
-        _window.deleteLater()
-    except Exception:
-        pass
-    _window = ModelCheckerWindow()
-    _window.show()
+    # Menu launch reloads this module, so the previous Python global may be
+    # gone while its native dialog and callbacks are still alive.
+    for widget in QtWidgets.QApplication.topLevelWidgets():
+        if widget.objectName() == "AutoRigModelChecker":
+            if getattr(widget, "_busy", False):
+                widget.raise_(); widget.activateWindow()
+                return widget
+            widget.close(); widget.deleteLater()
+    _window = ModelCheckerWindow(); _window.show()
+    return _window

@@ -19,6 +19,16 @@ try:
         assert abs(cmds.getAttr(settings+'.Envelope')-(.7 if mode else 0))<1e-6
         assert qa.mesh_data(high)['points']==original
     assert p.export_detail_modes()[0]['high']
+    records = p.export_detail_modes()
+    before = len(cmds.ls())
+    for repeat in range(5):
+        p.restore_detail_modes(records)
+        assert len(cmds.ls()) == before, 'Repeated restoration accumulated owned nodes.'
+    cmds.setAttr(root + '.detailMode', 0)
+    p.restore_detail_modes(records)
+    cmds.setAttr(root + '.detailMode', 1)
+    assert abs(cmds.getAttr(settings + '.Envelope') - .7) < 1e-6
+    assert len(cmds.ls()) == before
     with tempfile.TemporaryDirectory() as tmp:
         try:p.benchmark(root,str(Path(tmp)/'bench.json'));raise AssertionError('Batch FPS claim accepted')
         except ValueError:pass

@@ -1,0 +1,1323 @@
+{
+  "source": "maya_tools/assets/Edward/experiments/rig_performance_20261014_v001/final_v008_detail0.mayaProfile",
+  "events": 993195,
+  "measurement": "Native inclusive event durations; nested/concurrent events overlap and cannot be added as frame time.",
+  "largest_events": [
+    {
+      "name": "SetCurrentTime",
+      "node": "(null)",
+      "category": "Main",
+      "count": 24,
+      "inclusive_us": 523097,
+      "maximum_us": 28308
+    },
+    {
+      "name": "EvaluationGraphExecution",
+      "node": "EvaluationGraph_Normal",
+      "category": "Main",
+      "count": 24,
+      "inclusive_us": 495514,
+      "maximum_us": 27344
+    },
+    {
+      "name": "Vp2SceneRender",
+      "node": "(null)",
+      "category": "Main",
+      "count": 48,
+      "inclusive_us": 213830,
+      "maximum_us": 6524
+    },
+    {
+      "name": "Vp2UpdateScene",
+      "node": "(null)",
+      "category": "Main",
+      "count": 48,
+      "inclusive_us": 208893,
+      "maximum_us": 6397
+    },
+    {
+      "name": "NormalizeVertexNormalsUpdate",
+      "node": "(null)",
+      "category": "Polygon Mesh",
+      "count": 432,
+      "inclusive_us": 183306,
+      "maximum_us": 1636
+    },
+    {
+      "name": "ComputeVertexNormalsUpdate",
+      "node": "(null)",
+      "category": "Polygon Mesh",
+      "count": 432,
+      "inclusive_us": 154937,
+      "maximum_us": 1575
+    },
+    {
+      "name": "skinClusterDeform",
+      "node": "(null)",
+      "category": "Evaluation",
+      "count": 816,
+      "inclusive_us": 135160,
+      "maximum_us": 1707
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,harapo2_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 134522,
+      "maximum_us": 8746
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "harapo2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 134027,
+      "maximum_us": 8729
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "harapo2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 133292,
+      "maximum_us": 8702
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface900_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 130180,
+      "maximum_us": 8699
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface900_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 129574,
+      "maximum_us": 8681
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface900_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 128766,
+      "maximum_us": 8660
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface32_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 128216,
+      "maximum_us": 8161
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface32_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 127587,
+      "maximum_us": 8150
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,harapo1_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 127104,
+      "maximum_us": 6889
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface32_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 126781,
+      "maximum_us": 8129
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "harapo1_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 126573,
+      "maximum_us": 6864
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "harapo1_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 125280,
+      "maximum_us": 6843
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,collar2_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 113065,
+      "maximum_us": 7262
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "collar2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 112572,
+      "maximum_us": 7251
+    },
+    {
+      "name": "Vp2Draw3dBeautyPass",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 105513,
+      "maximum_us": 3073
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,collar3_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 101943,
+      "maximum_us": 7031
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "collar3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 101527,
+      "maximum_us": 7020
+    },
+    {
+      "name": "Vp2UpdateScene",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 101359,
+      "maximum_us": 3464
+    },
+    {
+      "name": "colorPass",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 99331,
+      "maximum_us": 2907
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "collar2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 81992,
+      "maximum_us": 5871
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "collar3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 79171,
+      "maximum_us": 5865
+    },
+    {
+      "name": "Vp2UpdateUI",
+      "node": "(null)",
+      "category": "Main",
+      "count": 48,
+      "inclusive_us": 65811,
+      "maximum_us": 2690
+    },
+    {
+      "name": "UpdateManips",
+      "node": "(null)",
+      "category": "Main",
+      "count": 48,
+      "inclusive_us": 52707,
+      "maximum_us": 2400
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,cabeza_high_poseCorrectives_BLS]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 51957,
+      "maximum_us": 9393
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "cabeza_high_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 51377,
+      "maximum_us": 9369
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,pCylinder16_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 50287,
+      "maximum_us": 2586
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface892_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 49653,
+      "maximum_us": 2593
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "pCylinder16_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 49612,
+      "maximum_us": 2569
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface892_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 48918,
+      "maximum_us": 2565
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface905_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 48841,
+      "maximum_us": 2701
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface905_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 48251,
+      "maximum_us": 2679
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,pCube26_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 47836,
+      "maximum_us": 2699
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,cinturones2_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 47826,
+      "maximum_us": 2750
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "cinturones2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 47386,
+      "maximum_us": 2730
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "pCube26_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 47202,
+      "maximum_us": 2686
+    },
+    {
+      "name": "AllocateTemporaryMeshData",
+      "node": "(null)",
+      "category": "Main",
+      "count": 1584,
+      "inclusive_us": 46582,
+      "maximum_us": 1703
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "pCylinder16_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 45235,
+      "maximum_us": 2385
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface892_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 45141,
+      "maximum_us": 2319
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface905_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 44471,
+      "maximum_us": 2482
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,brazaletes1_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 44202,
+      "maximum_us": 2601
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cinturones2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 43817,
+      "maximum_us": 2608
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "brazaletes1_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 43736,
+      "maximum_us": 2574
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "pCube26_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 43209,
+      "maximum_us": 2609
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface58_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 41864,
+      "maximum_us": 3457
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface58_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 41430,
+      "maximum_us": 3436
+    },
+    {
+      "name": "EvaluateNode",
+      "node": "polySurface58_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 41203,
+      "maximum_us": 3429
+    },
+    {
+      "name": "polySurface58_PRX",
+      "node": "outputGeometry",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 41091,
+      "maximum_us": 3425
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface61_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 40887,
+      "maximum_us": 3005
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,C_body_SKC_COPY_COPY]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 40409,
+      "maximum_us": 2970
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface61_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 40356,
+      "maximum_us": 2986
+    },
+    {
+      "name": "EvaluateNode",
+      "node": "polySurface61_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 40137,
+      "maximum_us": 2977
+    },
+    {
+      "name": "polySurface61_PRX",
+      "node": "outputGeometry",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 40013,
+      "maximum_us": 2972
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "brazaletes1_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 39953,
+      "maximum_us": 2478
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "C_body_SKC_COPY_COPY",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 39332,
+      "maximum_us": 2884
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,tiras30_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 39322,
+      "maximum_us": 2522
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "tiras30_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 38845,
+      "maximum_us": 2507
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface62_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 37748,
+      "maximum_us": 2939
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_body_SKC_COPY_COPY",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 37693,
+      "maximum_us": 2843
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "polySurface62_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 37339,
+      "maximum_us": 2922
+    },
+    {
+      "name": "EvaluateNode",
+      "node": "polySurface62_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 37113,
+      "maximum_us": 2910
+    },
+    {
+      "name": "polySurface62_PRX",
+      "node": "outputGeometry",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 36990,
+      "maximum_us": 2905
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,pasted__brazaletes3_PRX]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 36619,
+      "maximum_us": 3203
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "pasted__brazaletes3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 36198,
+      "maximum_us": 3186
+    },
+    {
+      "name": "EvaluateNode",
+      "node": "pasted__brazaletes3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 35974,
+      "maximum_us": 3177
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "polySurface58_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 35920,
+      "maximum_us": 3291
+    },
+    {
+      "name": "pasted__brazaletes3_PRX",
+      "node": "outputGeometry",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 35819,
+      "maximum_us": 3171
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,cuerpo_base_poseCorrectives_BLS]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 35581,
+      "maximum_us": 2180
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "cuerpo_base_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 34945,
+      "maximum_us": 2146
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "polySurface61_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 34008,
+      "maximum_us": 2749
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "tiras30_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 33757,
+      "maximum_us": 2259
+    },
+    {
+      "name": "readbackGPU",
+      "node": "cabeza_high_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 33012,
+      "maximum_us": 6331
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "polySurface62_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 32122,
+      "maximum_us": 2718
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "pasted__brazaletes3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 31478,
+      "maximum_us": 3042
+    },
+    {
+      "name": "GPUOverrideEnqueueBoundingBoxKernels",
+      "node": "(null)",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 31308,
+      "maximum_us": 3800
+    },
+    {
+      "name": "uiGeometry",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 240,
+      "inclusive_us": 29598,
+      "maximum_us": 366
+    },
+    {
+      "name": "updateGPU",
+      "node": "collar2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 26940,
+      "maximum_us": 1445
+    },
+    {
+      "name": "CurrentTimeChanged",
+      "node": "(null)",
+      "category": "Main",
+      "count": 24,
+      "inclusive_us": 26393,
+      "maximum_us": 3578
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,C_eyelids_local_SKC]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 25580,
+      "maximum_us": 2226
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cuerpo_base_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 25233,
+      "maximum_us": 1782
+    },
+    {
+      "name": "opaqueUIList",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 144,
+      "inclusive_us": 25192,
+      "maximum_us": 357
+    },
+    {
+      "name": "Vp2BuildRenderLists",
+      "node": "(null)",
+      "category": "Main",
+      "count": 48,
+      "inclusive_us": 24744,
+      "maximum_us": 739
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "C_eyelids_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 24424,
+      "maximum_us": 2184
+    },
+    {
+      "name": "QtUpdateRequest",
+      "node": "(null)",
+      "category": "Qt",
+      "count": 24,
+      "inclusive_us": 23945,
+      "maximum_us": 1232
+    },
+    {
+      "name": "shadedBeautyGraphSemantic",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 96,
+      "inclusive_us": 23785,
+      "maximum_us": 523
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_eyelids_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 23710,
+      "maximum_us": 2163
+    },
+    {
+      "name": "View Cube",
+      "node": "(null)",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 23364,
+      "maximum_us": 788
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,encia_sup_low_Shape]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 23281,
+      "maximum_us": 1130
+    },
+    {
+      "name": "Vp2UpdateGeometry",
+      "node": "encia_sup_low_Shape",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 23175,
+      "maximum_us": 1025
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,polySurface94_Shape]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 23059,
+      "maximum_us": 2588
+    },
+    {
+      "name": "Vp2UpdateGeometry",
+      "node": "polySurface94_Shape",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 23006,
+      "maximum_us": 2272
+    },
+    {
+      "name": "GPUOverrideChainEval",
+      "node": "encia_sup_low_Shape",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 22943,
+      "maximum_us": 1114
+    },
+    {
+      "name": "VP2UIDraw",
+      "node": "Vp2View Cube",
+      "category": "VP Evaluation",
+      "count": 96,
+      "inclusive_us": 22943,
+      "maximum_us": 402
+    },
+    {
+      "name": "CustomEvaluateCluster",
+      "node": "deformer|CustomEvaluatorLayer[1,collar1_Shape]",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 22884,
+      "maximum_us": 1457
+    }
+  ],
+  "wrinkle_events": [
+    {
+      "name": "EvaluateNode",
+      "node": "EdwardWrinkles_PrimaryWorld",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 17584,
+      "maximum_us": 1285
+    },
+    {
+      "name": "NodePreEvaluation",
+      "node": "EdwardWrinkles_PrimaryWorld",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 97,
+      "maximum_us": 12
+    },
+    {
+      "name": "NodePostEvaluationIndirect",
+      "node": "EdwardWrinkles_PrimaryWorld",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 27,
+      "maximum_us": 2
+    },
+    {
+      "name": "NodeExternalDataDirty",
+      "node": "EdwardWrinkles_PrimaryWorld",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 20,
+      "maximum_us": 1
+    },
+    {
+      "name": "Vp2UpdateSubScene",
+      "node": "EdwardWrinklesGraphShape",
+      "category": "VP Evaluation",
+      "count": 48,
+      "inclusive_us": 939,
+      "maximum_us": 45
+    }
+  ],
+  "deform_events": [
+    {
+      "name": "skinClusterDeform",
+      "node": "(null)",
+      "category": "Evaluation",
+      "count": 816,
+      "inclusive_us": 135160,
+      "maximum_us": 1707
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_pants_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 9743,
+      "maximum_us": 969
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "L_shin_guard_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 6593,
+      "maximum_us": 422
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "polySurface62_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 32122,
+      "maximum_us": 2718
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "polySurface58_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 35920,
+      "maximum_us": 3291
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "polySurface61_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 34008,
+      "maximum_us": 2749
+    },
+    {
+      "name": "proximityWrap deform",
+      "node": "pasted__brazaletes3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 31478,
+      "maximum_us": 3042
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "skinCluster13",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 7376,
+      "maximum_us": 626
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "skinCluster37",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 8600,
+      "maximum_us": 1904
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "skinCluster8",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 6712,
+      "maximum_us": 1243
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "skinCluster27",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 8139,
+      "maximum_us": 1248
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_eyebrows_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 15874,
+      "maximum_us": 2004
+    },
+    {
+      "name": "polySurface62_ShapeDeformed",
+      "node": "outMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 817,
+      "maximum_us": 45
+    },
+    {
+      "name": "polySurface62_ShapeDeformed",
+      "node": "outSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 24,
+      "maximum_us": 2
+    },
+    {
+      "name": "polySurface62_ShapeDeformed",
+      "node": "cachedSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 25,
+      "maximum_us": 2
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "skinCluster29",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 6666,
+      "maximum_us": 919
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "tiras31_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 12030,
+      "maximum_us": 1036
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface33_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 13331,
+      "maximum_us": 1350
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface48_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 14525,
+      "maximum_us": 1103
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface49_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 15058,
+      "maximum_us": 1257
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface889_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 14900,
+      "maximum_us": 1249
+    },
+    {
+      "name": "polySurface61_ShapeDeformed",
+      "node": "outMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 836,
+      "maximum_us": 46
+    },
+    {
+      "name": "pasted__brazaletes3_ShapeDeformed",
+      "node": "outMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 803,
+      "maximum_us": 46
+    },
+    {
+      "name": "polySurface61_ShapeDeformed",
+      "node": "outSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 25,
+      "maximum_us": 2
+    },
+    {
+      "name": "polySurface61_ShapeDeformed",
+      "node": "cachedSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 23,
+      "maximum_us": 2
+    },
+    {
+      "name": "pasted__brazaletes3_ShapeDeformed",
+      "node": "outSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 27,
+      "maximum_us": 2
+    },
+    {
+      "name": "pasted__brazaletes3_ShapeDeformed",
+      "node": "cachedSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 25,
+      "maximum_us": 2
+    },
+    {
+      "name": "polySurface58_ShapeDeformed",
+      "node": "outMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 950,
+      "maximum_us": 169
+    },
+    {
+      "name": "polySurface58_ShapeDeformed",
+      "node": "outSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 24,
+      "maximum_us": 2
+    },
+    {
+      "name": "polySurface58_ShapeDeformed",
+      "node": "cachedSmoothMesh",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 22,
+      "maximum_us": 1
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_eyelids_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 23710,
+      "maximum_us": 2163
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_ear_nose_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 4532,
+      "maximum_us": 662
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_mouth_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 12824,
+      "maximum_us": 741
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "skinCluster41",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 12741,
+      "maximum_us": 906
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_body_SKC_COPY_COPY",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 37693,
+      "maximum_us": 2843
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cabeza_low_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 3554,
+      "maximum_us": 438
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_cheeks_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 4677,
+      "maximum_us": 804
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_cheeks_high_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 4497,
+      "maximum_us": 718
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_nose_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 4792,
+      "maximum_us": 1391
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_nose_high_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 3720,
+      "maximum_us": 295
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_sockets_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 5445,
+      "maximum_us": 936
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_sockets_high_local_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 5969,
+      "maximum_us": 1169
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "C_head_global_SKC",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 4193,
+      "maximum_us": 606
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cabeza_high_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 15649,
+      "maximum_us": 3002
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "tiras30_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 33757,
+      "maximum_us": 2259
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "brazaletes1_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 39953,
+      "maximum_us": 2478
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cuerpo_base_poseCorrectives_BLS",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 25233,
+      "maximum_us": 1782
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cinturones2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 43817,
+      "maximum_us": 2608
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "harapo1_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 125280,
+      "maximum_us": 6843
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface900_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 128766,
+      "maximum_us": 8660
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "harapo2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 133292,
+      "maximum_us": 8702
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface892_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 45141,
+      "maximum_us": 2319
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface32_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 126781,
+      "maximum_us": 8129
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "pCube26_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 43209,
+      "maximum_us": 2609
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "polySurface905_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 44471,
+      "maximum_us": 2482
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "pCylinder16_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 45235,
+      "maximum_us": 2385
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "collar3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 79171,
+      "maximum_us": 5865
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "collar2_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 81992,
+      "maximum_us": 5871
+    },
+    {
+      "name": "MPxGPUDeformerEvaluate",
+      "node": "cinturon3_PRX",
+      "category": "Evaluation",
+      "count": 24,
+      "inclusive_us": 13652,
+      "maximum_us": 2261
+    }
+  ]
+}

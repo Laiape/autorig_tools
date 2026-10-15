@@ -62,6 +62,7 @@ def run():
             if chest_guide:
                 module.chest_guide_matrix[13] += 1
             module.spine_skinning_jnts = 5
+            module.spine_controllers = 5
             module.controller_creation()
             module.local_hip_chest_setup()
             module.ik_spine()

@@ -114,6 +114,29 @@ class PoseTesterUI(QtWidgets.QDialog):
         detail_button = QtWidgets.QPushButton("Create detail modes: select high mesh, then low mesh")
         detail_button.clicked.connect(self._create_detail_modes)
         report_layout.addWidget(detail_button)
+        mode_row = QtWidgets.QHBoxLayout()
+        self._detail_combo = QtWidgets.QComboBox()
+        self._detail_combo.addItems(['Animation', 'Review', 'Export'])
+        self._detail_combo.setCurrentIndex(1)
+        mode_row.addWidget(self._detail_combo)
+        switch_detail = QtWidgets.QPushButton('Apply detail mode')
+        switch_detail.clicked.connect(self._switch_detail)
+        ui_utils.action(switch_detail, 'success')
+        mode_row.addWidget(switch_detail)
+        bypass = QtWidgets.QPushButton('Install wrinkle compute bypass')
+        bypass.clicked.connect(self._install_detail_bypass)
+        mode_row.addWidget(bypass)
+        report_layout.addLayout(mode_row)
+        timing_row = QtWidgets.QHBoxLayout()
+        self._timing_state = QtWidgets.QComboBox()
+        self._timing_state.addItems(['A: DG / CPU', 'B: Parallel / CPU', 'C: Parallel / GPU', 'D: GPU / Cached'])
+        self._timing_state.setCurrentIndex(2)
+        timing_row.addWidget(self._timing_state)
+        playback = QtWidgets.QPushButton('Measure animated playback')
+        playback.clicked.connect(self._measure_playback)
+        ui_utils.action(playback, 'warning')
+        timing_row.addWidget(playback)
+        report_layout.addLayout(timing_row)
         viewport_button = QtWidgets.QPushButton("Profile viewport interaction and detail modes")
         viewport_button.clicked.connect(self._profile_viewport)
         report_layout.addWidget(viewport_button)
@@ -317,9 +340,48 @@ class PoseTesterUI(QtWidgets.QDialog):
             if len(meshes) != 2:
                 raise ValueError("Select the rendered high mesh followed by the low mesh.")
             root = "|" + meshes[0].split("|")[1]
-            settings = [r['prefix']+'_Settings' for r in bifrost_wrinkles.export_setups() if r['prefix']+'_Face' == meshes[0].rsplit('|',1)[-1]]
+            settings = [r['prefix']+'_Settings' for r in bifrost_wrinkles.export_setups()
+                        if (r['source'] if r.get('in_place') else r['prefix']+'_Face').rsplit('|',1)[-1] == meshes[0].rsplit('|',1)[-1]]
             rig_performance.create_detail_modes(root, [meshes[0]], [meshes[1]], settings)
             self._status.setText("Created Animation / Review / Export on the character root. Review is active.")
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
+
+    def _performance_root(self):
+        if not self._report_meshes:
+            raise ValueError('Load meshes belonging to one character first.')
+        return '|' + self._report_meshes[0].split('|')[1]
+
+    def _switch_detail(self):
+        from maya_tools.scripts.tools import rig_performance
+        try:
+            rig_performance.set_detail_mode(self._performance_root(), self._detail_combo.currentIndex())
+            self._status.setText('Applied ' + self._detail_combo.currentText() + ' detail mode.')
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
+
+    def _install_detail_bypass(self):
+        from maya_tools.scripts.tools import rig_performance
+        try:
+            rig_performance.install_compute_bypass(self._performance_root())
+            self._status.setText('Installed workflow detail routing. Switch modes here; measure skipped work before acceptance.')
+        except Exception as exc:
+            self._status.setText(str(exc)); cmds.warning(str(exc))
+
+    def _measure_playback(self):
+        from maya_tools.scripts.tools import rig_benchmark
+        try:
+            root = self._performance_root()
+            path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'New animated benchmark', '', 'Performance (*.performance.json)')
+            if not path:
+                return
+            if not path.endswith('.performance.json'):
+                path += '.performance.json'
+            state = 'ABCD'[self._timing_state.currentIndex()]
+            report = rig_benchmark.run_state(root, path, state=state, detail=self._detail_combo.currentIndex())
+            timing = report['timing']
+            self._status.setText('%s: median %.2f ms; p95 %.2f ms; variation %.1f%%. Report saved.' %
+                                 (state, timing['median_ms'], timing['p95_ms'], timing['cv_percent']))
         except Exception as exc:
             self._status.setText(str(exc)); cmds.warning(str(exc))
 

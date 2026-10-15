@@ -7,6 +7,7 @@ try:
 except ImportError:
     from PySide2 import QtWidgets
 from maya_tools.scripts.tools import rig_roles, rig_profiles, rig_validation, rig_pose_library, rig_surface_contact
+from maya_tools.scripts.utils import ui_utils
 
 
 class GeneralRigPanel(QtWidgets.QWidget):
@@ -30,6 +31,7 @@ class GeneralRigPanel(QtWidgets.QWidget):
         self._library_tab()
         self._contact_tab()
         self._migration_tab()
+        ui_utils.apply_maya_style(self)
 
     def action(self, function):
         try:
@@ -49,6 +51,8 @@ class GeneralRigPanel(QtWidgets.QWidget):
         if len(selected) != 1:
             raise ValueError('Select one character root transform.')
         self.root = selected[0]
+        from maya_tools.scripts.framework import context as framework_context
+        framework_context.service().set_root(self.root)
         self.root_label.setText(self.root)
         self.refresh_bindings()
 

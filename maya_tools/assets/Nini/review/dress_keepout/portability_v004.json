@@ -1,0 +1,26 @@
+{
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\experiments\\dress_keepout\\Nini_dress_chains_v004.ma",
+  "project_modules_loaded": [],
+  "dress_joint_count": 72,
+  "dress_vertex_count": 2227,
+  "moved_vertex_count": 759,
+  "dg_parallel_error": 0.0,
+  "unknown_nodes": [],
+  "new_module_node_types": [
+    "aimMatrix",
+    "blendMatrix",
+    "cMuscleKeepOut",
+    "cMuscleObject",
+    "composeMatrix",
+    "condition",
+    "decomposeMatrix",
+    "distanceBetween",
+    "joint",
+    "multMatrix",
+    "multiplyDivide",
+    "plusMinusAverage",
+    "transform",
+    "vectorProduct"
+  ],
+  "passed": true
+}

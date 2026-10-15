@@ -70,7 +70,7 @@ wrinkles y pickers sí están incluidos en este repositorio.
 
 ## Archivos de trabajo
 
-- Rig actual: `maya_tools/assets/Edward/scenes/Edward_working_v001.mb`.
+- Rig actual: `maya_tools/assets/Edward/scenes/Edward_working_v002.mb`.
   Para abrirlo con las texturas de este clone, guarda primero tu escena y
   ejecuta en la pestaña Python del Script Editor (ajusta la ruta):
 
@@ -89,7 +89,7 @@ wrinkles y pickers sí están incluidos en este repositorio.
   mapas no se han recuperado; los rigs y las capas de skinning sí se incluyen.
 - Assets para reconstrucción: `maya_tools/assets/<personaje>/models`, `guides`,
   `curves`, `build` y `skin_clusters`.
-- Skins recientes de Edward: versiones 064 y 065, con los skins locales de
+- Skins recientes de Edward: versiones 064, 065 y 068, con los skins locales de
   nariz, sockets, cheeks y cheekbones en la high y el interpolador de mandíbula
   reparado. Character Manager usa las versiones de cada categoría.
 - Pickers: instaladores de Edward, Nini y thaiz en sus carpetas `picker`.

@@ -181,23 +181,38 @@ class CaptureDialog(QtWidgets.QDialog):
 
 
 class PoseBlendshapesUI(QtWidgets.QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, embedded=False):
         super(PoseBlendshapesUI, self).__init__(parent)
         self.setWindowTitle("Pose Blendshapes")
         self.resize(650, 420)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose, not embedded)
+        if embedded:
+            self.setWindowFlags(QtCore.Qt.Widget)
         layout = QtWidgets.QVBoxLayout(self)
         top = QtWidgets.QHBoxLayout()
         self.mesh = QtWidgets.QLineEdit()
         self.mesh.setReadOnly(True)
         self.mesh.setPlaceholderText("Select the mesh to correct")
         top.addWidget(self.mesh)
-        top.addWidget(self.button("Load mesh", self.load_mesh))
+        self.load_mesh_button = self.button("Load mesh", self.load_mesh)
+        top.addWidget(self.load_mesh_button)
         self.refresh_button = self.button("Refresh", self.refresh)
         top.addWidget(self.refresh_button)
         layout.addLayout(top)
         orientation_box = QtWidgets.QGroupBox("Pose driver")
-        driver_layout = QtWidgets.QVBoxLayout(orientation_box)
+        if embedded:
+            orientation_box.setTitle("Pose driver (optional)")
+            orientation_box.setCheckable(True)
+            orientation_box.setChecked(False)
+            driver_content = QtWidgets.QWidget()
+            outer = QtWidgets.QVBoxLayout(orientation_box)
+            outer.addWidget(driver_content)
+            driver_content.hide()
+            orientation_box.toggled.connect(driver_content.setVisible)
+            driver_layout = QtWidgets.QVBoxLayout(driver_content)
+            driver_layout.setContentsMargins(0, 0, 0, 0)
+        else:
+            driver_layout = QtWidgets.QVBoxLayout(orientation_box)
         inputs = QtWidgets.QHBoxLayout()
         self.driver_joint = QtWidgets.QLineEdit()
         self.driver_joint.setPlaceholderText("Base joint")
@@ -205,8 +220,11 @@ class PoseBlendshapesUI(QtWidgets.QDialog):
         self.driver_reference.setPlaceholderText("Torso / parent reference")
         for field, label in ((self.driver_joint, "Load joint"), (self.driver_reference, "Load reference")):
             field.setReadOnly(True)
-            inputs.addWidget(field)
-            inputs.addWidget(self.button(label, lambda f=field: self.load_driver_node(f)))
+            row = QtWidgets.QHBoxLayout() if embedded else inputs
+            row.addWidget(field)
+            row.addWidget(self.button(label, lambda f=field: self.load_driver_node(f)))
+            if embedded:
+                driver_layout.addLayout(row)
         self.driver_axis = QtWidgets.QComboBox()
         self.driver_axis.addItems(["X", "Y", "Z"])
         inputs.addWidget(self.driver_axis)
@@ -220,18 +238,25 @@ class PoseBlendshapesUI(QtWidgets.QDialog):
         for label, value in (("Swing and twist", "swing_twist"), ("Swing only", "swing"), ("Twist only", "twist")):
             self.pose_type.addItem(label, value)
         modes.addWidget(self.pose_type)
-        modes.addWidget(self.button("Convert selected target", self.convert_orientation))
+        convert = self.button("Convert selected target", self.convert_orientation)
+        if not embedded:
+            modes.addWidget(convert)
         driver_layout.addLayout(modes)
+        if embedded:
+            driver_layout.addWidget(convert)
         hint = QtWidgets.QLabel("Create the region in neutral. Add captures the posed joint; Convert uses the target's saved controller pose.")
         hint.setWordWrap(True)
         driver_layout.addWidget(hint)
         layout.addWidget(orientation_box)
         self.orientation_box = orientation_box
         self.controls = []
-        panels = QtWidgets.QHBoxLayout()
+        panels = QtWidgets.QVBoxLayout() if embedded else QtWidgets.QHBoxLayout()
         left = QtWidgets.QVBoxLayout()
         left.addWidget(QtWidgets.QLabel("Blendshapes on this mesh"))
         self.blendshapes = QtWidgets.QListWidget()
+        if embedded:
+            self.blendshapes.setMinimumHeight(75)
+            self.blendshapes.setMaximumHeight(110)
         self.blendshapes.currentItemChanged.connect(self.refresh_targets)
         left.addWidget(self.blendshapes)
         create = QtWidgets.QHBoxLayout()
@@ -245,6 +270,8 @@ class PoseBlendshapesUI(QtWidgets.QDialog):
         right = QtWidgets.QVBoxLayout()
         right.addWidget(QtWidgets.QLabel("Targets"))
         self.targets = QtWidgets.QListWidget()
+        if embedded:
+            self.targets.setMinimumHeight(110)
         self.targets.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.targets.currentItemChanged.connect(self.describe_target)
         self.targets.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -281,8 +308,10 @@ class PoseBlendshapesUI(QtWidgets.QDialog):
         self.details.setWordWrap(True)
         layout.addWidget(self.details)
         editing = QtWidgets.QHBoxLayout()
+        self.editing_layout = editing
         self.live = self.button("LIVE", self.toggle_live)
         self.live.setObjectName("poseBlendshapeLive")
+        ui_utils.preserve_style(self.live)
         self.live.setCheckable(True)
         editing.addWidget(self.live)
         self.save = self.button("Save sculpt", lambda: self.finish(True))
@@ -366,11 +395,19 @@ class PoseBlendshapesUI(QtWidgets.QDialog):
             cmds.warning(str(exc))
 
     def load_mesh(self):
-        tool._idle()
         selection = cmds.ls(selection=True, objectsOnly=True, long=True) or []
         if len(selection) != 1:
             raise ValueError("Select one polygon mesh.")
-        self.mesh.setText(tool.mesh_transform(selection[0]))
+        self.set_mesh(selection[0])
+        if hasattr(self, '_framework_binding'):
+            from maya_tools.scripts.framework import context as framework_context
+            framework_context.service().capture_selection()
+
+    def set_mesh(self, mesh):
+        mesh = tool.mesh_transform(mesh)
+        if mesh != self.mesh.text():
+            tool._idle()
+        self.mesh.setText(mesh)
         self.refresh()
 
     def current_blendshape(self):

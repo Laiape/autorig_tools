@@ -557,6 +557,7 @@ class RigToolsUI(QtWidgets.QWidget):
 
     def _swatch(self, rgb):
         b = QtWidgets.QPushButton()
+        ui_utils.preserve_style(b)
         b.setFixedSize(28, 22)
         self._set_swatch(b, rgb)
         return b

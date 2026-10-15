@@ -65,9 +65,9 @@ def build(count, mirrored, matrix_only):
     return settings, controls, blends
 
 
-def check_module_inverse(filename, side):
+def check_module_inverse(filename, side, foot_skinning=False):
     """Exercise the actual limb controller, stretch, pin and IK construction."""
-    from maya_tools.scripts.utils import ik_fk_match, matrix_manager, guides_manager, custom_ik_solver
+    from maya_tools.scripts.utils import ik_fk_match, matrix_manager, guides_manager, custom_ik_solver, ribbon
     from test_spine_chest_stretch import create_controller as basic_controller
     def lock(ctl, attrs):
         for attr in attrs:
@@ -80,7 +80,7 @@ def check_module_inverse(filename, side):
         return nodes, ctl
     cmds.file(new=True, force=True)
     scope = {"cmds": cmds, "om": om, "math": math, "matrix_manager": matrix_manager,
-             "custom_ik_solver": custom_ik_solver,
+             "custom_ik_solver": custom_ik_solver, "ribbon": ribbon,
              "curve_tool": SimpleNamespace(create_controller=controller, lock_attributes=lock)}
     scope['organize_module_nurbs'] = runpy.run_path(
         str(Path(__file__).resolve().parents[2] / 'utils/module_nurbs.py'))['organize_module_nurbs']
@@ -104,10 +104,13 @@ def check_module_inverse(filename, side):
         cmds.connectAttr(rig.masterwalk_ctl + ".globalScale", rig.masterwalk_ctl + ".scale" + axis)
     rig.local_hip_ctl = rig.masterwalk_ctl
     rig.module_trn = cmds.createNode("transform", name="module")
+    rig.skeleton_grp = cmds.createNode("transform", name="skeleton")
     rig.controllers_grp = cmds.createNode("transform", name="controllers", p=rig.masterwalk_ctl)
     rig.primaryInputAxis = rig.primary_axis = (sign, 0, 0)
     rig.secondaryInputAxis = (0, 0, sign)
     rig.secondary_axis = (0, -sign, 0)
+    rig.aim_axis_signed = "x" if sign > 0 else "-x"
+    rig.up_axis_signed = "y"
     rig.settings_loc = cmds.spaceLocator(name="settings_LOC")[0]
     points = [(0, 0, 0), (5 * sign, 2, 0), (10 * sign, 0, 0)]
     if leg:
@@ -142,6 +145,8 @@ def check_module_inverse(filename, side):
     getattr(rig, "knee_pin_setup" if leg else "elbow_pin_setup")()
     if leg:
         rig.foot_attributes()
+        if foot_skinning:
+            rig.de_boor_ribbon(5)
     root = rig.root_ik_ctl if leg else rig.ik_root_ctl
     end = rig.ik_controllers[0] if leg else rig.ik_wrist_ctl
     ik_fk_match.setup(rig.settings_ctl, rig.fk_controllers, rig.blend_matrices,
@@ -188,6 +193,7 @@ def check_module_inverse(filename, side):
                 actual = cmds.getAttr(blend[0] + ".inputMatrix")[12:15]
                 assert max(abs(a-b) for a, b in zip(actual, expected)) < 1e-3
         print("PASS inverse save/reload")
+    return rig
 
 
 def run():

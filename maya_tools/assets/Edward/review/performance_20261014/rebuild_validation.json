@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "maya": "2026",
+  "rebuild_max_difference": 0.0,
+  "reopen_max_difference": 4.547473508864641e-13,
+  "poses": 10,
+  "meshes": [
+    "cabeza_high",
+    "cuerpo_base",
+    "cabeza_low"
+  ],
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\packages\\Edward_performance_v002\\publish_checks\\Edward_validated.ma",
+  "missing_channels": [],
+  "reports": [
+    "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\packages\\Edward_performance_v002\\publish_checks\\build_1.rigqa.json",
+    "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\packages\\Edward_performance_v002\\publish_checks\\build_2.rigqa.json",
+    "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\packages\\Edward_performance_v002\\publish_checks\\reopened.rigqa.json"
+  ],
+  "performance_report": "validation/regional_compact_startup_repeat_v007_C_detail0.performance.json"
+}

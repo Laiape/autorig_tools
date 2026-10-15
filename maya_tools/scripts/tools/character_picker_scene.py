@@ -99,6 +99,12 @@ def _ar_picker_activate(key, force=False):
             spec.loader.exec_module(module)
         _ar_picker_close()
         window = module.show(root_uuid=instance["root_uuid"])
+        try:
+            from maya_tools.scripts.utils import ui_utils
+        except ImportError:
+            pass
+        else:
+            ui_utils.apply_maya_style(window)
         state["active"], state["window"] = key, window
         return window
     except Exception:

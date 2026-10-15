@@ -1,0 +1,1816 @@
+{
+  "success": true,
+  "maximum_vertex_error": 0.0,
+  "maximum_head_pose_change": 7.084709800389104,
+  "tolerance": 0.0001,
+  "topology_match": true,
+  "pose_count": 10,
+  "modes": [
+    "off",
+    "serial",
+    "parallel"
+  ],
+  "mesh_samples": 300,
+  "comparisons": [
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "blink_side_look",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "brow_frown",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "lip_up_jaw",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_half_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "jaw_open_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "hip_flex_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": "neutral",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "blink_side_look",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "brow_frown",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "lip_up_jaw",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_half_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "jaw_open_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "hip_flex_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": "neutral",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "blink_side_look",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "brow_frown",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "lip_up_jaw",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_half_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "jaw_open_smile",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_abduction_knee",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "hip_flex_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_front_elbow",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "shoulder_raise_twist",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "head",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "low",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "cuerpo_base",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "collar2",
+      "maximum_error": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": "neutral",
+      "mesh": "collar3",
+      "maximum_error": 0.0
+    }
+  ]
+}

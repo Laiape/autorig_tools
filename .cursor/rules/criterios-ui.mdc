@@ -11,9 +11,14 @@ Before changing any Maya menu, shelf, or Qt window, read
 Short reminders:
 
 - Menu `AutoRig Tools` groups in this order: Reload UI, PIPELINE,
-  MODELING, RIGGING, ANIMATION, CORRECTIVES, SKINNING, SIMULATION.
+  MODELING, RIGGING, ANIMATION, DEFORMERS, SIMULATION. Rigging and Deformers
+  subsections are defined in the shared framework registry.
 - Shelf `AutoRig` is the short cut (AssetMgr today). Icons in `maya_tools/icons`.
-- Character Manager Qt palette lives in `character_manager.py`. Reuse it.
+- Keep Maya's native theme. Shared accents/actions/icons live in
+  `utils/ui_theme.py` and `utils/ui_utils.py`: blue main, green save/apply,
+  amber preview, muted red destructive. Preserve vendor UI and functional colors.
+- User exception: Skinning Manager and its embedded editors keep their previous
+  native appearance; no added action colors, header decoration or tab icons.
 - New labels: English. See `.cursor/rules/language.mdc`.
 
 Wrong: a second Maya menu, web chrome, or a dump window not on the data map.

@@ -1,0 +1,143 @@
+{
+  "success": true,
+  "tests": {
+    "test_rig_performance.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.603118200000608,
+      "evidence": "PASS native detail modes, unchanged geometry, native reopen and batch guard"
+    },
+    "test_bifrost_wrinkles.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 21.40126440000313,
+      "evidence": "PASS Bifrost wrinkles: neutral, analytic compression, stretch/rigid invariance, region controls, bypass and persistence"
+    },
+    "test_wrinkle_regions_native.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 22.20402979999926,
+      "evidence": "PASS regional native wrinkles: exact halos, 96 active/961 source vertices, max error 0, one head mesh, primary consumers, replacement and reopen"
+    },
+    "test_rig_compute_bypass.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 17.308835600000748,
+      "evidence": "PASS compute bypass, fresh re-enable, stable restore counts, native reopen and batch guard"
+    },
+    "test_wrinkle_skin_roundtrip.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 23.086969100004353,
+      "evidence": "PASS wrinkle .skc: local depth/value, side isolation, posed export, automatic import, idempotence, replacement, topology guard, native reopen"
+    },
+    "test_wrinkle_presets.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 21.14126660000329,
+      "evidence": "PASS wrinkle presets: signed region fields, support/falloff, scale-independent controls, source visibility, calibrated posed restore, explicit topology projection, new rest, SKC provenance and scene reopen"
+    },
+    "test_rig_validation.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.312110600003507,
+      "evidence": "PASS Rig QA: combined poses, missing controls, equal builds, geometric regression, topology guard, DG/Serial/Parallel, preserved animation/time/selection, failure restoration"
+    },
+    "test_wrinkle_regions_ui.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 16.80378799999744,
+      "evidence": "PASS wrinkle Qt: create, vertex region, plane/spacing, manual preview, clear/undo and setup feedback"
+    },
+    "test_facial_contact_validation.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 7.644530400000804,
+      "evidence": "PASS continuous contact detection, reverse equality and state restoration"
+    },
+    "test_rig_package.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 2.4136139000038384,
+      "evidence": "PASS package hashes, publish gate and immutable working copy"
+    },
+    "test_hybrid_bake.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 10.87887039999623,
+      "evidence": "PASS hybrid native residuals and held-out validation 0.30000001192092896 0.0"
+    },
+    "test_rig_package_ui.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.851061299996218,
+      "evidence": "PASS package Qt controls and isolated validation action"
+    },
+    "test_spine_chest_stretch.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 5.806636100001924,
+      "evidence": "PASS chest_guide=True: move/scale XYZ, squash, endpoint, globalScale, original chest follow/rotation/skin, dependent space switches, no cycles"
+    },
+    "test_eye_head_deformation.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 6.0198043000054895,
+      "evidence": "PASS: L/R eyes follow bounded neck, head squash/Volume, gaze, direct rotation, globalScale, skin and ENV; DG/parallel; no cycles"
+    },
+    "test_ik_fk_settings_match.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 22.933192900003633,
+      "evidence": "PASS inverse save/reload"
+    },
+    "test_neck_stretch_squash.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 6.2475783999980194,
+      "evidence": "PASS: real neck ribbon, stretch limits/on-off, exact volume/falloff, independent head squash, globalScale, no cycles"
+    },
+    "test_general_rig_ui.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 6.381734799993865,
+      "evidence": "PASS general Test Rig Qt: character root, custom role, profile run and scrollable existing UI"
+    },
+    "test_biped_spine_and_foot.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 18.455724300001748,
+      "evidence": "PASS foot: leg_module_custom.py, R, every skin output blended, IK/FK/intermediate, global scale, FK isolation"
+    },
+    "test_pose_blendshapes.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 9.862875999999233,
+      "evidence": "PASS: existing blendshape target geometry, driver weights and live connections preserved"
+    },
+    "test_orientation_correctives.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 12.32015130000218,
+      "evidence": "PASS orientation: swing ignores axial twist; twist ignores swing"
+    },
+    "test_rig_performance_policy.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 0.592589499996393,
+      "evidence": "PASS performance publish policy: clean temporal evidence, matching hashes, budget, variation and fallback"
+    },
+    "test_rig_benchmark_protocol.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 9.71075440000277,
+      "evidence": "PASS temporal protocol: actual time demand, original curves, failure cleanup, nearest-rank p95 and static guard"
+    },
+    "test_regional_wrinkle_workflow.py": {
+      "success": true,
+      "exit_code": 0,
+      "seconds": 24.28185189999931,
+      "evidence": "PASS regional workflow: vertex zero, expansion, empty support, Undo, local controls, neutral export, preset and SKC replacement"
+    }
+  }
+}

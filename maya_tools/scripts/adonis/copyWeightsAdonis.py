@@ -2680,6 +2680,8 @@ def show():
                    ])
 
     cmds.showWindow(win)
+    from maya_tools.scripts.utils import ui_utils
+    ui_utils.style_native_window(win, "NativeAdonisWeights")
 
     _ui_refresh_from_selection()
     _cp_refresh_buffer_field()

@@ -1,0 +1,390 @@
+{
+  "reports": [
+    {
+      "file": "dense_visible_visible_v005_A_detail0.performance.json.gz",
+      "sha256_uncompressed": "7a45550859d308ffc672afd8c0c8fe55538952467c2a44943daa009c2597f7ce",
+      "state": "A",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 167.05847000024127,
+        "median_ms": 167.9094500032079,
+        "p95_ms": 198.9568000062718,
+        "max_ms": 204.59719999780646,
+        "cv_percent": 10.164463173819826,
+        "samples": 120,
+        "derived_fps": 5.955590944886635
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_A_detail1.performance.json.gz",
+      "sha256_uncompressed": "a967e25857e533aa699088aa37e771602d4d5cd69e3fdad891a55d75b4088e34",
+      "state": "A",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 241.32737083370253,
+        "median_ms": 243.57880000025034,
+        "p95_ms": 271.1120000021765,
+        "max_ms": 310.99100000574253,
+        "cv_percent": 8.713406673909029,
+        "samples": 120,
+        "derived_fps": 4.105447600525876
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_B_detail0.performance.json.gz",
+      "sha256_uncompressed": "2657aad67618a6a019b452299f95ee157cbb4c50adb3ae5ae546345391085278",
+      "state": "B",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 34.28597333331709,
+        "median_ms": 33.61944999778643,
+        "p95_ms": 39.024899997457396,
+        "max_ms": 41.90329999983078,
+        "cv_percent": 7.461571101210622,
+        "samples": 120,
+        "derived_fps": 29.74468648552674
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_B_detail1.performance.json.gz",
+      "sha256_uncompressed": "c5679e0a450af426fad9c6495d8def89b7aafd93ed9b498102a5416dc7b32c72",
+      "state": "B",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 114.95579416629577,
+        "median_ms": 114.44955000115442,
+        "p95_ms": 131.2469999975292,
+        "max_ms": 143.4817999979714,
+        "cv_percent": 8.189892081260444,
+        "samples": 120,
+        "derived_fps": 8.737474284432864
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_C_detail0.performance.json.gz",
+      "sha256_uncompressed": "92301ce431d80fe21f6d2119c9ab72a06265fa418e682b8b52dbf5975b443b7a",
+      "state": "C",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 33.1636575000933,
+        "median_ms": 33.378950000042096,
+        "p95_ms": 37.367899996752385,
+        "max_ms": 38.40920000220649,
+        "cv_percent": 7.494191722944378,
+        "samples": 120,
+        "derived_fps": 29.95900110694731
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_C_detail1.performance.json.gz",
+      "sha256_uncompressed": "33f498b78598aed9972f92a1c802a86e99f1177ed3c43f24771866984a503748",
+      "state": "C",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 116.84393083311686,
+        "median_ms": 115.93549999815878,
+        "p95_ms": 136.17069999600062,
+        "max_ms": 143.89090000622673,
+        "cv_percent": 9.79163408599871,
+        "samples": 120,
+        "derived_fps": 8.625485722801743
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_D_detail0.performance.json.gz",
+      "sha256_uncompressed": "a3d782c1934e5558a3bc45b42b634af3c6e91f9274ef39bfeee8133e60623419",
+      "state": "D",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 16.50257583351049,
+        "median_ms": 16.663149999658344,
+        "p95_ms": 19.12129999982426,
+        "max_ms": 22.56900000065798,
+        "cv_percent": 9.689897404240897,
+        "samples": 120,
+        "derived_fps": 60.01266267305424
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_visible_v005_D_detail1.performance.json.gz",
+      "sha256_uncompressed": "81e61a819c58e08f6bb836c670527bdb39faefdc4afcc37e08ae582fe7250e82",
+      "state": "D",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 19.12471666685936,
+        "median_ms": 18.87804999932996,
+        "p95_ms": 21.53379999799654,
+        "max_ms": 25.44300000590738,
+        "cv_percent": 8.363677013143281,
+        "samples": 120,
+        "derived_fps": 52.97157280733408
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "regional_compact_visible_v005_A_detail0.performance.json.gz",
+      "sha256_uncompressed": "fe60351a4b0f66e32766c57b254578b8dccfb1e40ec7f88acef62fe110c19067",
+      "state": "A",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 156.81148666675048,
+        "median_ms": 158.7202000009711,
+        "p95_ms": 181.72469999990426,
+        "max_ms": 190.5867000023136,
+        "cv_percent": 10.815423820244638,
+        "samples": 120,
+        "derived_fps": 6.300395286761747
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_visible_v005_A_detail1.performance.json.gz",
+      "sha256_uncompressed": "b72fcc0615c91406544460deb29a5ada5d9b075b3bae8a9a6a7acecc39361ac1",
+      "state": "A",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 250.02283666641839,
+        "median_ms": 248.8769500014314,
+        "p95_ms": 284.1149999949266,
+        "max_ms": 314.5670000012615,
+        "cv_percent": 8.216402950520187,
+        "samples": 120,
+        "derived_fps": 4.018049883664392
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_visible_v005_B_detail0.performance.json.gz",
+      "sha256_uncompressed": "8da3710834626734f571585dd311c93c55eebc9fdb37a98a1eadd4bc6b292efd",
+      "state": "B",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 33.918419167275715,
+        "median_ms": 33.82555000280263,
+        "p95_ms": 37.69610000017565,
+        "max_ms": 39.286300001549534,
+        "cv_percent": 5.720770217127184,
+        "samples": 120,
+        "derived_fps": 29.563451293981757
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_visible_v005_B_detail1.performance.json.gz",
+      "sha256_uncompressed": "76d4d9d69029282fa9f380356bd3b50b51fdf4604d8194b80f7e020443e0dcb4",
+      "state": "B",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 105.96086416662729,
+        "median_ms": 106.8286999980046,
+        "p95_ms": 123.82470000011381,
+        "max_ms": 129.47110000095563,
+        "cv_percent": 10.227257791091809,
+        "samples": 120,
+        "derived_fps": 9.36078038971436
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_visible_v005_C_detail0.performance.json.gz",
+      "sha256_uncompressed": "415e922817800378e140abe1a2a281c2bc36419ffcbe9221a7d98cd040daffee",
+      "state": "C",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 33.48271166675355,
+        "median_ms": 33.23860000091372,
+        "p95_ms": 38.400600002205465,
+        "max_ms": 41.87439999805065,
+        "cv_percent": 8.21358957470537,
+        "samples": 120,
+        "derived_fps": 30.085502998697606
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_visible_v005_D_detail0.performance.json.gz",
+      "sha256_uncompressed": "43a8c372e9447d655a4e988aedb24df555d61bb179efd92504cee0cc0086f44f",
+      "state": "D",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 16.11813583355494,
+        "median_ms": 16.058500001236098,
+        "p95_ms": 18.25249999819789,
+        "max_ms": 20.211100003507454,
+        "cv_percent": 7.625026422150971,
+        "samples": 120,
+        "derived_fps": 62.2723168367547
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "dense_visible_stable_v006_C_detail0.performance.json.gz",
+      "sha256_uncompressed": "35d0bc816924e79830367635fbf31f930edf42225cd7a729a38c60279d6a9305",
+      "state": "C",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 41.37366916614459,
+        "median_ms": 40.146650000679074,
+        "p95_ms": 51.49819999496685,
+        "max_ms": 242.8924999985611,
+        "cv_percent": 47.57799079374605,
+        "samples": 120,
+        "derived_fps": 24.908678556818195
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_stable_v006_C_detail1.performance.json.gz",
+      "sha256_uncompressed": "2b9154e7e3d6ef907745cd2e258a289e690870952613e4828e9fab3b25f0b3ae",
+      "state": "C",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 93.96840250016491,
+        "median_ms": 91.37864999865997,
+        "p95_ms": 117.25669999577804,
+        "max_ms": 139.41829999384936,
+        "cv_percent": 12.385320446067368,
+        "samples": 120,
+        "derived_fps": 10.943475308670731
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_stable_v006_D_detail0.performance.json.gz",
+      "sha256_uncompressed": "c1de39cd3f4397cb0c23d6889f9987cfa08556e883e8b116d448775e6a5cf843",
+      "state": "D",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 16.83655166683214,
+        "median_ms": 16.55910000044969,
+        "p95_ms": 20.997799998440314,
+        "max_ms": 24.72960000159219,
+        "cv_percent": 11.78874209083328,
+        "samples": 120,
+        "derived_fps": 60.38975548024007
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "dense_visible_stable_v006_D_detail1.performance.json.gz",
+      "sha256_uncompressed": "f5c23e339779c66acb01bcca3cf4f5481d87bbe198b57be6ed4c5a505c18e6aa",
+      "state": "D",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 19.7551616667018,
+        "median_ms": 19.80485000240151,
+        "p95_ms": 21.77730000403244,
+        "max_ms": 23.37470000202302,
+        "cv_percent": 7.0151623897790225,
+        "samples": 120,
+        "derived_fps": 50.49268234188804
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "regional_compact_stable_v006_C_detail0.performance.json.gz",
+      "sha256_uncompressed": "f4cde5a0c8cdfe3c423aa4d5b4179d5cc4bb562257be6635bcd41a42a24368af",
+      "state": "C",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 31.724297499689175,
+        "median_ms": 31.139599999733036,
+        "p95_ms": 37.42760000022827,
+        "max_ms": 41.662499999802094,
+        "cv_percent": 8.59622763411949,
+        "samples": 120,
+        "derived_fps": 32.11345039783983
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_stable_v006_C_detail1.performance.json.gz",
+      "sha256_uncompressed": "fd3c30c95835e35f8138397323bc6ff261efe4968ec2b70b70e9772614edfbba",
+      "state": "C",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 86.39543416641875,
+        "median_ms": 84.95499999844469,
+        "p95_ms": 97.98749999754364,
+        "max_ms": 124.77759999455884,
+        "cv_percent": 10.837979830601297,
+        "samples": 120,
+        "derived_fps": 11.770937555391766
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_stable_v006_D_detail0.performance.json.gz",
+      "sha256_uncompressed": "359b566a3b5b3102ba50e687d51a0c587518a31886356a3c06fbc4e1fa07144e",
+      "state": "D",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 17.036845000378282,
+        "median_ms": 16.88049999938812,
+        "p95_ms": 20.17139999952633,
+        "max_ms": 22.370800004864577,
+        "cv_percent": 10.944347676760707,
+        "samples": 120,
+        "derived_fps": 59.23995142538714
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "regional_compact_stable_v006_D_detail1.performance.json.gz",
+      "sha256_uncompressed": "b3a3ca8528b62a3c4c80b08ac47dc84cf2bf026d53fce74da408b17d3ffcbf44",
+      "state": "D",
+      "detail": 1,
+      "timing": {
+        "mean_ms": 16.916596666427115,
+        "median_ms": 16.767050001362804,
+        "p95_ms": 18.81180000054883,
+        "max_ms": 19.78110000345623,
+        "cv_percent": 6.887467300316881,
+        "samples": 120,
+        "derived_fps": 59.640783555766895
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    },
+    {
+      "file": "dense_visible_startup_repeat_v007_C_detail0.performance.json.gz",
+      "sha256_uncompressed": "0648c043dbf7c619fb06992c5c588d98fef9254bbfd1d43e5eb19bca99f253d1",
+      "state": "C",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 29.275063333201008,
+        "median_ms": 29.044100003375206,
+        "p95_ms": 34.69149999727961,
+        "max_ms": 36.34809999493882,
+        "cv_percent": 8.148925493995113,
+        "samples": 120,
+        "derived_fps": 34.43040066257141
+      },
+      "scene_sha256": "1144414d3748eb9f4057b7bd3d31527e16ff51b899319fbb26137da985256822"
+    },
+    {
+      "file": "regional_compact_startup_repeat_v007_C_detail0.performance.json.gz",
+      "sha256_uncompressed": "d76666fce4c1e0522acb00ed31b108e346c1d83cc766564b44d90eddfa5a5325",
+      "state": "C",
+      "detail": 0,
+      "timing": {
+        "mean_ms": 31.17294916634516,
+        "median_ms": 30.780099998082733,
+        "p95_ms": 36.598799997591414,
+        "max_ms": 39.15460000280291,
+        "cv_percent": 8.745100132625012,
+        "samples": 120,
+        "derived_fps": 32.48852343112235
+      },
+      "scene_sha256": "f5c553c0ce7703948b9eca02d54015e3e0b22a6a8355f3d18b702aa47128efc0"
+    }
+  ],
+  "approved_animation": "approved_animation.performance.json",
+  "notes": "Raw complete performance reports are gzip-compressed without changing their JSON; noisy/failed trials are not approvals."
+}

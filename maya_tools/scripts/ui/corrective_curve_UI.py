@@ -25,6 +25,7 @@ from importlib import reload
 
 import maya.cmds as cmds
 import maya.OpenMayaUI as omui
+from maya_tools.scripts.utils import ui_utils
 
 try:
     from PySide6 import QtWidgets, QtCore
@@ -78,6 +79,7 @@ class CorrectiveCurveUI(QtWidgets.QDialog):
         self.setMinimumWidth(420)
         self.setWindowFlags(self.windowFlags() ^ Qt.WindowContextHelpButtonHint)
         self._build()
+        ui_utils.apply_maya_style(self)
 
     # ------------------------------------------------------------------ layout
 

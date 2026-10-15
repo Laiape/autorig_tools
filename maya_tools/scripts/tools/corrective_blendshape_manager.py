@@ -38,6 +38,10 @@ class CorrectiveBlendshapeManager:
         self.folder_path = self._resolve_folder_path()
 
     def _resolve_asset_name(self):
+        from maya_tools.scripts.framework import context as framework_context
+        active = framework_context.service().snapshot()
+        if active.asset_path:
+            return active.asset
         if HAS_RIG_UTILS:
             try:
                 name = data_manager.DataExportBiped().get_data("basic_structure", "character_name")
@@ -50,6 +54,10 @@ class CorrectiveBlendshapeManager:
         return valid[-1] if valid else "asset"
 
     def _resolve_folder_path(self):
+        from maya_tools.scripts.framework import context as framework_context
+        active = framework_context.service().snapshot()
+        if active.asset_path:
+            return str(active.asset_path / 'corrective_blendshapes')
         if HAS_RIG_UTILS:
             try:
                 return rig_manager.asset_path(self.asset_name, "corrective_blendshapes")

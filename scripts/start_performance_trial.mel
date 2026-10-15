@@ -1,0 +1,3 @@
+// Set AUTORIG_TRIAL_REPO to this checkout before launching an owned trial Maya.
+// Optional AUTORIG_TRIAL_PORT defaults to 7102; never use the artist's session.
+python("import os,sys; os.environ['MAYA_SKIP_USERSETUP_PY']='1'; sys.path.insert(0,os.environ['AUTORIG_TRIAL_REPO']); import maya.cmds as cmds; cmds.commandPort(name='127.0.0.1:'+os.environ.get('AUTORIG_TRIAL_PORT','7102'),sourceType='python',echoOutput=True)");

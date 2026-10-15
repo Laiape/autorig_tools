@@ -1,6 +1,7 @@
 from utils import data_manager
 import maya.cmds as cmds
 from importlib import reload
+from maya_tools.scripts.framework.registry import icon_path
 
 from tools import skin_manager_api
 from ui import skin_transfer_UI
@@ -23,102 +24,62 @@ def open_character_picker():
 
 
 def create_custom_menu():
-    menu_id = "autorig_menu"
+    """Use the same ordered categories and sections as the dockable catalogue."""
+    from maya_tools.scripts.framework import registry
 
+    menu_id = "autorig_menu"
     if cmds.menu(menu_id, exists=True):
         cmds.deleteUI(menu_id)
-
     cmds.menu(menu_id, label="AutoRig Tools", parent='MayaWindow', tearOff=True)
+    cmds.menuItem(parent=menu_id, label="Reload UI", command=lambda x: rebuild_ui(), image=icon_path('reload'))
+    cmds.menuItem(parent=menu_id, label="Tool Framework", command=lambda x: open_tool_framework(),
+                  annotation="Dockable catalogue, search, favorites and recent tools.",
+                  image=icon_path('framework'))
 
-    cmds.menuItem(label="Reload UI", command=lambda x: rebuild_ui(), image="refresh.png")
+    for group in registry.GROUPS:
+        cmds.menuItem(parent=menu_id, divider=True, dividerLabel=group)
+        for section in registry.SECTIONS.get(group, ('',)):
+            members = [tool for tool in registry.TOOLS if tool.group == group and tool.section == section]
+            if not members:
+                continue
+            parent = menu_id
+            if section:
+                parent = cmds.menuItem(parent=menu_id, label=section, subMenu=True, tearOff=True,
+                                       image=icon_path(members[0].icon))
+            for tool in members:
+                cmds.menuItem(parent=parent, label=tool.label, annotation=tool.unavailable or tool.description,
+                              image=icon_path(tool.icon), enable=not bool(tool.unavailable),
+                              boldFont=tool.replaces_scene,
+                              command=lambda unused=False, tool_id=tool.id: _run_menu_tool(tool_id))
 
-    # ── PIPELINE ──────────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="PIPELINE")
 
-    cmds.menuItem(label="Character Manager", command=lambda x: show_character_manager_ui(), image="fileOpen.png")
-    cmds.menuItem(label="Validated Rig Packages", command=lambda x: open_rig_package_ui(), image="fileOpen.png")
+def _run_menu_tool(tool_id):
+    from maya_tools.scripts.framework import execution
+    from maya_tools.scripts.ui import tool_framework_UI
+    result = execution.run(tool_id, confirm=tool_framework_UI.ToolFramework._allow_scene_replacement)
+    if result['status'] in ('blocked', 'failed'):
+        cmds.warning(result['message'])
+    return result
 
-    # ── MODELING ──────────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="MODELING")
 
-    cmds.menuItem(label="Model Checker", command=lambda x: open_model_checker(), image="polyCheckGeometry.png")
+def open_tool_framework():
+    from maya_tools.scripts.ui import tool_framework_UI
+    return tool_framework_UI.show()
 
-    # ── RIGGING ───────────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="RIGGING")
 
-    cmds.menuItem(label="CREATE RIG", command=lambda x: rig(leg_impl="reference"), boldFont=True, image="kinJoint.png")
-    cmds.menuItem(label="BUILD LEG", command=lambda x: leg_rig(), boldFont=True, image="kinJoint.png")
-
-    cmds.menuItem(label="Guides Manager", subMenu=True, tearOff=True, image="locator.png")
-    cmds.menuItem(label="Create New Guides",  command=lambda x: create_new_guides(), image="confirm.png")
-    cmds.menuItem(label="Import Guides",      command=lambda x: import_guides(),     image="move_M.png")
-    cmds.menuItem(label="Export Guides",      command=lambda x: export_guides(),     image="copySelected.png")
-    cmds.menuItem(label="Mirror Guides",      command=lambda x: mirror_guides(),     image="polyMirror.png")
-    cmds.menuItem(label="Test Rig by Guide",  command=lambda x: test_rig_by_guide(), image="kinJoint.png")
-    cmds.setParent('..', menu=True)
-
-    cmds.menuItem(label="Controllers Manager", subMenu=True, tearOff=True, image="circle.png")
-    cmds.menuItem(label="Export All Controllers", command=lambda x: export_all_controllers(), image="save.png")
-    cmds.menuItem(label="Mirror Controllers",     command=lambda x: mirror_controllers(),      image="polyMirror.png")
-    cmds.setParent('..', menu=True)
-
-    cmds.menuItem(label="Skin Cluster Manager", subMenu=True, tearOff=True, image="paintSkinWeights.png")
-    cmds.menuItem(label="Export Skin Cluster", command=lambda x: export_skin_cluster(), image="export.png")
-    cmds.menuItem(label="Import Skin Cluster", command=lambda x: import_skin_cluster(), image="import.png")
-    cmds.menuItem(label="Proxy Skinning", command=lambda x: proxy_skinning(), image="paintSkinWeights.png")
-    cmds.setParent('..', menu=True)
-
-    # ── ANIMATION ─────────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="ANIMATION")
-
-    cmds.menuItem(label="Test Rig", command=lambda x: open_pose_tester(), boldFont=True, image="setKeyframe.png")
-    cmds.menuItem(label="Character Picker", command=lambda x: open_character_picker(), image="pickWalkUp.png")
-
-    # ── CORRECTIVES ───────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="CORRECTIVES")
-
-    cmds.menuItem(label="Joint Corrective Targets", command=lambda x: open_joint_correctives_ui(),
-                  annotation="Editable joint targets with manual weights or automatic pose drivers.",
-                  image="kinJoint.png")
-    cmds.menuItem(label="Wrinkle Regions / Presets", command=lambda x: open_wrinkle_regions_ui(), image="blendShape.png")
-
-    cmds.menuItem(label="Corrective Blendshapes", subMenu=True, tearOff=True, image="blendShape.png")
-    cmds.menuItem(label="Pose Blendshapes", command=lambda x: open_pose_blendshapes_ui(),
-                  annotation="Capture a controller pose and sculpt automatically named corrective targets.",
-                  image="blendShape.png")
-    cmds.menuItem(label="Export Corrective Blendshapes", command=lambda x: export_corrective_blendshapes(), image="export.png")
-    cmds.menuItem(label="Import Corrective Blendshapes", command=lambda x: import_corrective_blendshapes(), image="import.png")
-    cmds.setParent('..', menu=True)
-
-    cmds.menuItem(label="Corrective Skin — Setup / Localize",
-                  command=lambda x: setup_corrective_skin(),
-                  annotation="Selecciona la malla + joints correctivas: crea/actualiza el skin apilado "
-                             "(pesos a 0, blendshape-like) y lo localiza. Rig en pose neutra.",
-                  image="paintSkinWeights.png")
-
-    # ── SKINNING ──────────────────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="SKINNING")
-
-    cmds.menuItem(label="Corrective Curve (Pose → Curve → Joints)",
-                  command=lambda x: open_corrective_curve_ui(), image="kinJoint.png")
-    cmds.menuItem(label="Auto Skin Transfer (Clothes)",
-                  command=lambda x: open_skin_transfer_ui(), image="paintSkinWeights.png")
-
-    cmds.menuItem(label="Proximity Wrap (Multiple Drivers)",
-                  command=lambda x: open_proximity_wrap_ui(), image="wrap.png")
-    cmds.menuItem(label="Bake Deformation to Skin",
-                  command=lambda x: open_proximity_bake_ui(), image="paintSkinWeights.png")
-
-    # ── SIMULATION / ADONIS ───────────────────────────────────────────────────
-    cmds.menuItem(divider=True, dividerLabel="SIMULATION")
-
-    cmds.menuItem(label="AdonisFX Copy Weights", command=lambda x: open_adonis_copy_weights(), image="paintSkinWeights.png")
+def open_skinning_manager_ui():
+    from maya_tools.scripts.ui import skinning_manager_UI
+    return skinning_manager_UI.show()
 
 
 def rebuild_ui():
     from ui import auto_rig_UI
     reload(auto_rig_UI)
     auto_rig_UI.create_custom_menu()
+    from maya_tools.scripts.utils import ui_theme, ui_utils
+    reload(ui_theme)
+    reload(ui_utils)
+    ui_utils.restyle_open_tools()
 
 
 def open_rig_package_ui():

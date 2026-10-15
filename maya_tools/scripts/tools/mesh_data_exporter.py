@@ -75,7 +75,7 @@ class SourceSkinExporter:
     # will be included when body_only=True (default).
     BODY_KEYWORDS = ("body",)
 
-    def export_all(self, uv_method=None, force=False, body_only=True):
+    def export_all(self, uv_method=None, force=False, body_only=True, meshes=None):
         """
         Finds skinned meshes in the scene and exports .skc + .skinmap to
         assets/source/skin_clusters/ (always, regardless of scene context).
@@ -94,6 +94,9 @@ class SourceSkinExporter:
             return []
 
         all_meshes = self._find_skinned_meshes()
+        if meshes is not None:
+            scoped = set(cmds.ls(meshes, long=True) or [])
+            all_meshes = [mesh for mesh in all_meshes if any(path in scoped for path in cmds.ls(mesh, long=True) or [])]
         if not all_meshes:
             _WARN("SourceSkinExporter.export_all: no skinned meshes found.")
             return []

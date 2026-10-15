@@ -512,7 +512,8 @@ class CurveLibraryUI(QtWidgets.QWidget):
 
     def _tab_btn(self, text, active):
         b = QtWidgets.QPushButton(text)
-        b.setCheckable(False)
+        b.setCheckable(True)
+        b.setChecked(active)
         b.setFixedHeight(32)
         color = C_AMBER if active else C_DIM
         border = f"border-bottom:2px solid {C_AMBER};" if active else "border-bottom:2px solid transparent;"
@@ -573,6 +574,7 @@ class CurveLibraryUI(QtWidgets.QWidget):
         lay.addWidget(self.chk_color)
 
         self.color_btn = QtWidgets.QPushButton()
+        ui_utils.preserve_style(self.color_btn)
         self.color_btn.setFixedHeight(24)
         self._set_color_btn(QtGui.QColor(255, 165, 0))
         self.color_btn.clicked.connect(self._pick_color)
@@ -643,10 +645,8 @@ class CurveLibraryUI(QtWidgets.QWidget):
     def _switch_tab(self, builtin):
         self._showing_builtin = builtin
         active, inactive = (self.tab_builtin, self.tab_library) if builtin else (self.tab_library, self.tab_builtin)
-        active.setStyleSheet(active.styleSheet().replace(
-            "border-bottom:2px solid transparent", f"border-bottom:2px solid {C_AMBER}").replace(C_DIM, C_AMBER))
-        inactive.setStyleSheet(inactive.styleSheet().replace(
-            f"border-bottom:2px solid {C_AMBER}", "border-bottom:2px solid transparent").replace(C_AMBER, C_DIM))
+        active.setChecked(True)
+        inactive.setChecked(False)
         self._refresh_grid()
 
     def _refresh_grid(self):

@@ -13,7 +13,7 @@ def default_modules_dir():
     try:
         from maya import cmds
         return Path(cmds.internalVar(userAppDir=True)) / 'modules'
-    except ImportError:
+    except (ImportError, AttributeError):
         pass
     documents = Path.home() / 'Documents'
     if os.name == 'nt':

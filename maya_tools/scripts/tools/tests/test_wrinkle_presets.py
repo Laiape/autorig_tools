@@ -64,9 +64,9 @@ try:
         manager=SkinManager.__new__(SkinManager);manager.k_skin_attrs=[];manager.tolerance=1e-5
         snapshot=str(Path(folder)/'wrinkles.skc');cmds.select(clear=True);manager.export_skins(snapshot)
         saved=json.loads(Path(snapshot).read_text())
-        assert all(r.get('preset')==path for r in saved[manager.WRINKLES_KEY])
+        assert all(Path(r['preset']).resolve() == Path(path).resolve() for r in saved[manager.WRINKLES_KEY])
         scene=str(Path(folder)/'wrinkles.mb');cmds.file(rename=scene);cmds.file(save=True,type='mayaBinary',force=True)
         cmds.file(new=True,force=True);cmds.file(scene,open=True,force=True)
-        assert cmds.getAttr('Portable_Settings.wrinklePreset')==path
+        assert Path(cmds.getAttr('Portable_Settings.wrinklePreset')).resolve() == Path(path).resolve()
     print('PASS wrinkle presets: signed region fields, support/falloff, scale-independent controls, source visibility, calibrated posed restore, explicit topology projection, new rest, SKC provenance and scene reopen',flush=True)
 finally:maya.standalone.uninitialize()

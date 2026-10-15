@@ -1,5 +1,6 @@
 import maya.cmds as cmds
 import maya.mel as mel
+from maya_tools.scripts.framework.registry import icon_path
 
 SHELF_NAME = "AutoRig"
 
@@ -7,12 +8,18 @@ SHELF_NAME = "AutoRig"
 # Para añadir un botón nuevo: una fila más aquí. Los iconos viven en
 # maya_tools/icons (el .mod la añade al XBMLANGPATH, basta el nombre).
 SHELF_BUTTONS = [
-    ("AssetMgr", "myLogo.png", "Character / Asset Manager",
+    ("Framework", icon_path('framework'), "Dockable AutoRig Tool Framework",
+     "from maya_tools.scripts.ui import tool_framework_UI\n"
+     "tool_framework_UI.show()"),
+    ("AssetMgr", icon_path('character'), "Character / Asset Manager",
      "from maya_tools.scripts.ui import auto_rig_UI\n"
      "auto_rig_UI.show_character_manager_ui()"),
-    ("CharacterPicker", "pickWalkUp.png", "Body and face picker for the selected character",
+    ("CharacterPicker", icon_path('picker'), "Body and face picker for the selected character",
      "from tools import character_picker\n"
      "character_picker.show()"),
+    ("Skinning", icon_path('skin'), "Dockable Skinning Manager",
+     "from maya_tools.scripts.ui import skinning_manager_UI\n"
+     "skinning_manager_UI.show()"),
 ]
 
 

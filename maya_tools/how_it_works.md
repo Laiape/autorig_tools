@@ -4,16 +4,24 @@ Parent: `how_it_works.md`.
 Vision (required): `modulos/vision/how_it_works.md`.
 UI: `maya_tools/criterios-ui.md`.
 
+Performance requirements and the phased Autorig/Edward optimization plan:
+`maya_tools/docs/rig_performance_plan.md`. Persistent measurement, graph and
+wrinkle/detail rules live in `.cursor/rules/rig-performance-measurement.mdc`,
+`.cursor/rules/rig-evaluation-architecture.mdc` and
+`.cursor/rules/rig-wrinkles-and-detail.mdc`. Implemented behavior and measured
+acceptance are in `maya_tools/docs/rig_performance_results.md`.
+
 ## 1. Overview
 
-Maya module named `self_module`. Load via `maya_tools/self_module.mod`.
-That file lists known clone roots (`C:\proyectos_laia\autorig_tools`,
-`C:\GIT\autorig_tools`). Maya skips a missing path and uses the first
-folder that exists. Add a new clone as another `+` block; do not
-overwrite the list. Maya finds the `.mod` when it is in
-`Documents/maya/modules/` (copy of the same file) or when
-`MAYA_MODULE_PATH` includes `maya_tools`. Details: `README.md`.
-Live `.mod` is the source of truth.
+Maya module named `self_module`. Run `scripts/install_maya_module.py`
+from the checkout to activate. It writes an explicit checkout path to
+`Documents/maya/modules/self_module.mod` and backs up the previous file.
+The installer also works under uninitialized mayapy, whose `maya.cmds`
+does not yet expose `internalVar`; it falls back to the user's Documents
+folder without initializing Maya. Restart Maya after switching clones.
+The legacy `maya_tools/self_module.mod` lists old clone locations and can
+silently select outdated tools. Details: `README.md`. The installed
+`.mod` is the source of truth.
 
 On start (`maya_tools/scripts/userSetup.py`, deferred):
 
@@ -64,9 +72,313 @@ outside the menu / shelf / `userSetup.py`.
 
 Docs guide; live scripts are the source of truth.
 
+### Shared native editor theme
+
+`maya_tools/scripts/utils/ui_utils.py` keeps Maya's native palette/fonts/input
+controls and applies shared headers, icons and semantic button accents.
+`utils/ui_theme.py` declares explicit profiles for the current standalone and
+embedded editors, plus repository-owned native cmds windows. Main actions are
+blue; save/apply is green, preview is amber, destructive actions are muted red.
+Secondary controls keep native styling. Existing artwork is tinted in memory
+for light/dark Maya; no third-party artwork or installation is replaced.
+
+`apply_maya_style` is idempotent and also handles nested profiles and dynamically
+created controls. Use `action(button, role, icon_name)` for explicit controls and
+`preserve_style` for functional swatches/LIVE state or vendor subtree boundaries.
+NG, brSmoothWeights and Ramp keep their original editors. The user explicitly
+prefers Skinning Manager's previous appearance: `ui_theme.NATIVE_ONLY` excludes
+that workspace and all embedded editors from new headers, icons and button
+accents. Standalone editors still use the shared theme. The shared style does not
+change callbacks, enabled/checked state, shortcuts, selection or scene data.
+
+Existing Reload UI also reloads the theme and restyles open tools in place.
+Lazy skinning panels, loop skinning, corrective curve, generated picker chrome,
+native New Asset/Proximity Wrap/Adonis windows and dynamic asset tabs share the
+same hierarchy. Curve Library uses native checked states for its source tabs
+and preserves the chosen controller color when restyled.
+
+Regression: `scripts/tools/tests/test_ui_theme.py` constructs 13 real editors,
+checks primary controls and native fields, exercises dynamic asset tabs and
+loop skinning, verifies rendered button fills/disabled behavior, protects
+vendor controls/swatches and covers the Skinning Manager exception plus
+portable picker fallback. Existing functional Qt regressions still apply.
+
+### Dockable Tool Framework
+
+Open AutoRig Tools > Tool Framework or the first AutoRig shelf button.
+`scripts/ui/tool_framework_UI.py` provides a native right-docked searchable
+catalogue with persistent favorites and recent tools. It restores through
+Maya `workspaceControl` and launches existing editors on demand.
+`scripts/framework/registry.py` contains the 41 explicit tool entries and
+lazy Python adapters; it imports without Maya or Qt. Original red SVG/PNG
+icons live in `maya_tools/icons/red` and are shared with menu and shelf.
+The menu and catalogue share the same ordered categories and subsections:
+Rigging > Guides / Build / Controllers / Utilities, and Deformers > Skinning /
+Blendshapes / Correctives / Wrinkles / Wrap / Bake. Section filters and search
+use the same metadata. The incomplete legacy BUILD LEG entry is disabled in
+both surfaces; scene replacement actions ask to save before dispatch.
+The context panel pins root, mesh and skinCluster UUIDs and the active asset.
+Skinning, framework-launched Pose Blendshapes and Test Rig follow it; Picker
+receives the selected root UUID. Viewport selection does not replace the
+pinned character. Skin/corrective export paths prefer this explicit asset
+over the old build cache. Use selection, mesh/skin choosers and Clear are
+explicit actions. Finish live sculpting before switching context.
+
+Read-only preflight checks declared requirements before menu/framework
+dispatch. Tools, Workflow and Activity tabs expose the catalogue, guided
+review steps and local operation history. The journal distinguishes opening
+an editor from completing an action and records returned artifact paths,
+duration, warnings, cancellations and errors; legacy None results remain
+unconfirmed. Internal actions performed later inside an editor retain their
+own status/reporting. JSON export is available from Activity.
+
+All tools / Rigging / Deformers / Review profiles remember search, category,
+expanded sections, selected tool and framework/open Skinning/QA tabs. Save
+layout persists the view; profile switches and hiding also save it. Character
+context is session-owned and does not change on profile switches. Workflow
+marks are isolated by root UUID (or explicit asset before a root exists).
+Opening a step marks it in progress; reviewed/skipped are explicit and do not
+certify model/rig/package quality. Next navigates without running a tool.
+
+Modules: `scripts/framework/context.py`, `execution.py`, `state.py`,
+`adapters.py` and `scripts/ui/framework_panels.py`. Regression:
+`scripts/tools/tests/test_tool_framework.py` in mayapy, plus
+`scripts/tools/tests/test_tool_framework_live.py` in interactive Maya.
+The latter checks scene/weight/selection preservation and owned callback
+cleanup. Further editor embedding and versioned recipes are detailed in
+`maya_tools/framework_plan.md`.
+
+### Model Checker
+
+Entry: AutoRig Tools > MODELING > Model Checker. The existing dialog in
+`maya_tools/scripts/tools/model_checker.py` uses `ui_utils.apply_maya_style`
+and PySide6 with a PySide2 fallback. Read-only checks and report data live in
+`maya_tools/scripts/tools/model_checker_core.py`.
+
+Run all executes all 23 automatic geometry, scene and model-design checks.
+Load mesh/group roots with From selection to pin a scope; selecting findings
+does not change it. Scene-wide shader, texture and namespace checks explicitly
+skip a loaded selection. Full DAG paths disambiguate duplicate names;
+intermediate shapes are excluded. Position/ground tolerances use scene units,
+ground contact follows Maya's up axis, and symmetry tests reflected positions
+on meshes crossing world X=0. Pole candidates and the checklist's configurable
+NVIDIA/AMD small-mesh thresholds are advisory, not deformation/GPU certification.
+Lamina and zero-area checks supplement the supplied Modeling QC Checklist.
+
+The native results tree supports search, status filters, selected-check runs,
+cancellation between checks and full component selection. Errors, skipped and
+unrun checks remain explicit and never produce an overall pass. Visual review
+has 24 checks with Pending/Pass/Fail/N/A and notes; N/A needs a reason. Vertex
+comparison loads two explicit sets for count and bidirectional contact-position
+checks, leaving loop connectivity/order to visual inspection.
+
+Report copies all findings and exports JSON with scope, settings, diagnostics
+and visual notes. Load review restores manual states only for the same scene
+and scope; automatic results always require a fresh scan. Scene/node/connection
+changes and watched mesh/transform dirtiness invalidate results. Scene changes
+reset review and loaded vertex sets. Closing removes all owned callbacks.
+
+Repair selected finding is one Maya Undo step and re-runs the full scan.
+References, locked/driven transforms and live deformers are protected.
+Topology merging, non-manifold cleanup, namespace removal and zeroing vertex
+offsets require manual review rather than an automatic batch repair.
+Regression: `maya_tools/scripts/tools/tests/test_model_checker.py`, run with
+mayapy in a disposable standalone scene, including the real Qt editor.
+
+### Dockable Skinning Manager
+
+Entry: AutoRig Tools > DEFORMERS > Skinning > Skinning Manager, or the AutoRig shelf's
+Skinning button. `maya_tools/scripts/ui/skinning_manager_UI.py` owns one
+`AutoRigSkinningWorkspaceControl`. It initially docks to the right of the
+Outliner, supports Maya's tab/dock dragging and Float / dock, and restores
+through a persistent Python uiScript when Maya restores a saved workspace.
+The shell inherits the same native Qt style as Character Manager.
+
+Skinning contains NG, Smooth, Transfer, Ramp and Utilities tabs. Each native
+editor loads on first use. A missing dependency produces a retry page without
+breaking the other tabs. `skinning_tool_adapters.py` builds ngSkinTools2's own
+Qt interface and holds its UI session reference. Its layers, influences,
+paint controls, menus and native actions remain in the panel.
+
+NG has a SkinCluster selector above its native menus. It lists the loaded
+mesh's stacked skinClusters and routes the chosen node through NG's native
+selection handling, including its independent layers and influences. The
+explicit choice is kept when returning to vertex selection on that mesh;
+selected vertices remain in Maya's selection alongside the deformer target.
+Switching while painting restarts the same NG brush on the new target.
+The manager's influence summary follows that active skinCluster. An unskinned
+mesh disables the selector. No installed NG files or shared API functions
+are patched. The regression checks independent layer data, isolated native
+Flood writes, vertex selection and switching with the brush active.
+
+NG also contains a `Loop Rigger (Preview)` tab. This prototype takes one
+connected seed edge loop/chain and assigns a joint to each seed vertex.
+`maya_tools/scripts/tools/facial_loop_skinning.py` follows the opposite edge
+at each quad vertex until the complete transverse loop closes or has no
+unambiguous continuation. It has no distance/row limit or automatic falloff.
+All joints of a feature are painted in the same weight layer. Complete
+traces remain in metadata and previews. At intersections the closest anchor
+along the candidate loops owns the vertex; this is hard ownership, with no
+falloff. Shared upper/lower corner anchors take priority and split the loop
+equally. Mask values initially cover all assigned vertices.
+
+Lip mode pairs Rotate and Non Rotate anchors by their shared seed vertex.
+It creates exactly three layers: Lips, with Rotate above Non Rotate. Each
+child contains all joints of that type with an identical weight distribution;
+the parent mask localizes both. The 50/50 split applies to upper00/lower00
+at the commissures inside each child, not to Rotate versus Non Rotate.
+Loading another seed into the same named region updates these layers,
+preserving existing masks. Eye and brow features use one layer each.
+Optional X mirroring copies L weights to R using explicit L_/R_ joint names.
+Existing joints must map uniquely within
+the displayed anchor tolerance, or the UI can create review joints at the
+exact seed positions. The original NG data and vendor installation are shared.
+
+The embedded controls in `facial_loop_skinning_UI.py` load the selected seed,
+preview full curves, load/create joints and create the NG group. The prototype
+rejects disconnected or branching seeds and stale topology. A failed layer
+operation rolls back its Maya undo chunk. Saved NG hierarchies can renumber
+layer IDs; review metadata therefore resolves unique layer names on reopen.
+
+The native Layers right-click menu now provides `LIPS RIGGER`, `EYELID RIGGER`
+and `EYEBROW RIGGER`, including on NG's initialization page before layers exist.
+`maya_tools/scripts/tools/facial_loop_riggers.py` resolves existing influences
+from the active skinCluster and the selected connected edge loop/chain. A
+feature contour generates complete transverse columns; a transverse loop can
+instead update its joint's literal selection. L selections mirror to R. Lips
+reuses exactly its parent and two children, with identical Rotate/Non Rotate
+weights and shared upper00/lower00 commissures. Eyelids and Eyebrows each use
+one shared weight layer; contour-based brow00 extends up to the midEyebrow
+loop without including it. New facial masks start black; existing painted
+masks survive updates. The actions preserve edge selection, reject foreign
+meshes or missing joint pairs before writes, and update saved layer hierarchies.
+Anchor detection uses skin input geometry and bind positions, with current
+joint positions as a fallback. Smoothed eyebrow joints project to the selected
+vertices within local edge spacing. The resolved vertex IDs persist in metadata
+so later control poses cannot remap an existing section to a different vertex.
+No joints or vendor installation files are created or modified by these actions.
+The SkinCluster selector preserves edge and face components as well as vertices.
+Regression: `maya_tools/scripts/tools/tests/test_facial_loop_riggers.py` uses
+the real Nini rig to check the three actions, repeats, paired weights, complete
+commissures, black masks, mirroring, neutral geometry and scene reopen.
+
+Nini pilot: `maya_tools/assets/Nini/review/loop_rigger/Nini_LoopRigger_review_v003.ma`
+and its JSON report, built by `scripts/build_nini_loop_review.py` in isolated
+mayapy. It uses the original `Nini_v003.ma` model and the vertex-aligned curves
+in `Nini_v010.guides`, with seven regions, ten total NG layers and 30 lip pairs.
+The lips use the three-layer hierarchy above, with L copied to R. Each
+corner00 also owns the complete 110-vertex loop through the cheek pole:
+the Nini continuation is edge 220 -> 701, mirrored across the back midline.
+The user's annotated cheek adds 172 surface vertices on L and their R mirrors,
+split upper00/lower00 50/50 in both children. Explicit coverage overrides are
+stored with the seed plan and replayed by the builder; no extra layers are
+created. The update preserves weights outside the requested extension.
+Each
+eyebrow00 also covers the two inward columns up to the neighbor of the
+midEyebrow loop; that central loop remains excluded from eyebrow00.
+It is a facial skinning review, not a replacement for Nini's production rig
+or saved SKC. It starts neutral at frame 1 with Lips soloed; frames 12
+and 24 test translation and Rotate. Other region frames are listed in the
+scene's `Nini_LOOP_REVIEW_INFO.reviewData`. Loop Rigger's review section can
+solo a region/layer or enable all layers. Frame 90 tests the upper00 corner
+at half weight. A static colored head and hidden
+full-loop curve group help inspect ownership before painting the masks.
+
+Regression: `maya_tools/scripts/tools/tests/test_facial_loop_skinning.py` checks
+long complete columns, reversed/disconnected seeds, the exact hierarchy,
+saved masks and normalized weights, all 30 lip pairs, commissure 50/50,
+L/R symmetry, brow extensions, unchanged neutral model, translation in
+each child and both together, and no rotation in the Non Rotate influence.
+The corner check includes the complete closed loop, annotated cheek surface
+and actual frame-90 movement of the newly assigned vertices.
+Its `run_ui()` exercises preview/create plus appending a second seed without
+adding layers or losing a painted mask.
+
+Real-rig review: `maya_tools/assets/Nini/review/loop_rigger/Nini_LoopRigger_REAL_v001.ma`.
+`scripts/build_nini_real_loop_review.py` takes a full built Nini scene and a
+snapshot of the review layers. It maps the lip, eyelid and brow weights to the
+existing production `_ENV` influences in `C_body_SKC`, keeps the imported
+`Nini_v021.skc` skin as the base layer, and creates no review joints.
+The saved rig has 576 joints and 246 body-skin influences. Its nine keyed
+poses use real corner, primary lip, roll, jaw, main-mouth and head controls.
+Frames 12/24 test the corners, 60/72 the roll, and 84 the jaw. The embedded
+review hint reads the scene's pose labels rather than assuming prototype frames.
+
+`test_nini_real_loop_rig.py` verifies exact transferred layer weights, all 30
+matching lip pairs, 50/50 cheek weights, movement of all 172 added L cheek
+vertices, roll isolation in Non Rotate, no doubled composite movement,
+unchanged deformation outside the layer masks, and exact return to neutral.
+The initial neutral transfer differs from the imported base by at most 0.00304
+scene units; this review allows 0.005. The nine-pose validation used complete-loop
+masks, where Rotate roll also moved distant forehead/neck vertices. At the user's
+request, the saved real-rig review now has all nine facial masks black (0),
+including Lips, Rotate and Non Rotate. Influence weights and the production base
+mask are preserved. Paint the region and child masks to enable their coverage.
+
+brSmoothWeights and brTransferWeights use the installed MEL property builders.
+The adapter scopes their procedure, control and cache names in memory, gives
+the builders a private parent, and preserves the original C++ brush commands.
+Maya's Tool Settings can therefore remain open alongside the embedded controls.
+Paint Smooth / Transfer activates the original brush; settings are disabled
+while another context is active. Embedded brush activation disables the native
+viewport help banner and shows mouse/modifier help in the panel instead.
+Leaving a Smooth/Transfer page or hiding the manager returns its owned brush
+to the selection tool, preventing painting and stale help on unrelated clicks.
+Closing the manager releases its active brush
+and removes its native hosts and script jobs. No vendor files are modified.
+
+Ramp embeds the original rampWeights and weightsServer editor windows with
+their node/deformer lists, ramp controls and menus. Its native type switch
+stays inside the manager. The panel owns new editors and restores pre-existing
+editors to their original parent on close. Install the vendor Maya modules
+separately; their code and binaries are not redistributed in this repository.
+Validated here with Maya 2026, ngSkinTools 2.4.0, brSmoothWeights 1.2.1,
+rampWeights 4.1.1 and weightsServer 4.0.1.
+
+From selection follows one mesh or its components; selecting a rig controller
+keeps the loaded mesh. Utilities include bind, copy, mirror, normalize, prune,
+remove unused influences, existing SKC import/export and transfer/wrap/bake
+entry points. Auxiliary pipeline tools retain their existing dialogs.
+
+Corrective Blendshapes embeds `pose_blendshapes_UI.py` with stacked lists,
+an expandable optional pose-driver section and pinned LIVE / Save / Cancel
+controls. The existing capture/sculpt/mirror/transfer/combination backend and
+SKC metadata stay shared with the standalone editor. A live sculpt session
+prevents switching its mesh; closing the panel leaves the recoverable scene
+session intact for the next editor.
+
+Interactive regression: `maya_tools/scripts/tools/tests/test_skinning_manager_ui.py`.
+It uses temporary geometry in its own namespace and restores scene selection,
+context, undo state and the modified flag after removing its test nodes.
+Standalone corrective UI regression: `test_pose_blendshapes_ui.py` with mayapy.
+
+### Biped spine controls and foot blending
+
+`biped/autorig/spine_module.py` uses the `.build` `spine_controllers`
+count independently of the guide and skin-joint counts. Controls are spaced
+uniformly between the body and chest control rest matrices. Five controls
+sit at 0, 0.25, 0.5, 0.75 and 1; Edward's current build requests five.
+For five or more controls, the first and last interior controls are tangents.
+Three or four controls use ordinary interior controls and an appropriate
+spline degree. The five-control names remain compatible with saved curves.
+These changes take effect when rebuilding the rig.
+
+Both biped leg solvers use IK/FK blend matrices for ankle and ball skin
+outputs. The custom solver also blends its terminal toe: the FK endpoint
+keeps its guide offset from the ball FK control. Its ball and toe skin joints
+must read those blend outputs, not the raw IK matrices. The standard solver
+has ankle and ball skin outputs; its terminal guide is not a separate skin
+joint. Reverse-foot pivot controls remain part of the IK hierarchy.
+
+Regression: `scripts/tools/tests/test_biped_spine_and_foot.py` under
+`maya_tools/`, run with mayapy. It checks Edward's real guide/build data,
+saved curve creation, configurable counts, every curve driver, both sides
+and solvers, IK/FK/intermediate weights, global scale and absence of cycles.
+Chest stretch/squash remains covered by `test_spine_chest_stretch.py`.
+
 ### Joint corrective targets
 
-Entry: AutoRig Tools > CORRECTIVES > Joint Corrective Targets.
+Entry: AutoRig Tools > DEFORMERS > Correctives > Joint Corrective Targets.
 Backend: `maya_tools/scripts/tools/joint_correctives.py`; Qt editor:
 `maya_tools/scripts/ui/joint_correctives_UI.py` (PySide2/6).
 
@@ -98,7 +410,7 @@ Tests: `maya_tools/scripts/tools/tests/test_joint_correctives.py` and
 
 ### Pose blendshapes
 
-Entry: AutoRig Tools > CORRECTIVES > Corrective Blendshapes > Pose Blendshapes.
+Entry: AutoRig Tools > DEFORMERS > Blendshapes > Pose Blendshapes.
 Backend: `maya_tools/scripts/tools/pose_blendshapes.py`; Qt editor:
 `maya_tools/scripts/ui/pose_blendshapes_UI.py`. The editor lists blendshapes on
 the loaded polygon mesh and their targets. New creates a post-deformation
@@ -343,12 +655,17 @@ and forward/reverse geometry; they are not complete mesh collision tests.
 DQ reports compare the existing method, LBS, DQS and a local blend while preserving
 existing blend masks outside the tested region. Principal RMS extents are
 thickness proxies; artists review candidates before applying them. Native detail
-conditions switch rendered high/low meshes and wrinkle envelopes. Viewport
-benchmarks require interactive Maya and record forced-refresh wall time plus a
-native Profiler capture. They do not claim isolated GPU timings or playback FPS.
+conditions switch rendered high/low meshes and wrinkle envelopes. Owned wrinkle
+outputs also support explicit primary/detail routing at workflow boundaries.
+Temporal A/B/C/D benchmarks require interactive Maya, changing time curves and
+visible output. Geometry reads and native Profiler captures are separate from
+clean timing. Control interaction uses only changed channels and forced refresh.
+These wall times include submission and are not isolated GPU execution times.
 Backends: `maya_tools/scripts/tools/facial_contact_validation.py`,
 `maya_tools/scripts/tools/skinning_volume.py`,
 `maya_tools/scripts/tools/rig_performance.py`.
+Runtime, quality evidence and limitations:
+`maya_tools/docs/rig_performance_results.md`.
 
 Bake Deformation to Skin can fit an LBS copy with a small native orientation
 residual bank. Fit frames, withheld frames and additional expressions are measured

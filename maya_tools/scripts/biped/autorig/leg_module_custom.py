@@ -472,6 +472,17 @@ class LegModule(object):
             blend_matrix=self.ball_ik, controller=self.ik_controllers[-2],
             guides=[self.guides_trns[-2], self.guides_trns[-1]])
 
+        # The terminal toe has no separate FK control. Keep its rest offset
+        # from the ball FK control, and blend it with the solved IK endpoint.
+        toe_fk = cmds.createNode("multMatrix", name=f"{self.side}_legToeFk_MMX", ss=True)
+        toe_offset = om.MMatrix(cmds.getAttr(self.guides_matrices[-1])) * om.MMatrix(cmds.getAttr(self.guides_matrices[-2])).inverse()
+        cmds.setAttr(f"{toe_fk}.matrixIn[0]", list(toe_offset), type="matrix")
+        cmds.connectAttr(f"{self.fk_controllers[-1]}.worldMatrix[0]", f"{toe_fk}.matrixIn[1]")
+        self.toe_blend = cmds.createNode("blendMatrix", name=self.leg_chain[-1].replace("JNT", "BM"), ss=True)
+        cmds.connectAttr(self.toe_ik, f"{self.toe_blend}.inputMatrix")
+        cmds.connectAttr(f"{toe_fk}.matrixSum", f"{self.toe_blend}.target[0].targetMatrix")
+        cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{self.toe_blend}.target[0].weight")
+
     def foot_attributes(self):
 
         """
@@ -706,13 +717,13 @@ class LegModule(object):
 
         cmds.select(clear=True)
         ball_skinning_jnt = cmds.joint(name=f"{self.module_name}BallSkinning_JNT")
-        cmds.connectAttr(f"{self.ball_ik}", f"{ball_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.blend_matrices[3][0]}.outputMatrix", f"{ball_skinning_jnt}.offsetParentMatrix")
         cmds.select(clear=True)
         ankle_skinning_jnt = cmds.joint(name=f"{self.module_name}AnkleSkinning_JNT")
         cmds.connectAttr(f"{self.blend_matrices[2][0]}.outputMatrix", f"{ankle_skinning_jnt}.offsetParentMatrix")
         cmds.select(clear=True)
         toe_skinning_jnt = cmds.joint(name=f"{self.module_name}ToeSkinning_JNT")
-        cmds.connectAttr(f"{self.toe_ik}", f"{toe_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.toe_blend}.outputMatrix", f"{toe_skinning_jnt}.offsetParentMatrix")
         cmds.parent(ankle_skinning_jnt, self.skeleton_grp)
         cmds.parent(ball_skinning_jnt, self.skeleton_grp)
         cmds.parent(toe_skinning_jnt, self.skeleton_grp)

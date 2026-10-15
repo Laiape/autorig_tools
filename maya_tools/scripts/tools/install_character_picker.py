@@ -7,7 +7,7 @@ import shutil
 import sys
 
 
-def open_bundle(directory):
+def open_bundle(directory, root_uuid=None):
     path = Path(directory)/"character_picker_runtime.py"
     name = "character_picker_" + re.sub(r"\W", "_", str(directory))
     old = sys.modules.get(name)
@@ -22,7 +22,14 @@ def open_bundle(directory):
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
     spec.loader.exec_module(module)
-    return module.show()
+    window = module.show(root_uuid=root_uuid) if root_uuid else module.show()
+    try:
+        from maya_tools.scripts.utils import ui_utils
+    except ImportError:
+        pass  # Portable bundles do not require the repository.
+    else:
+        ui_utils.apply_maya_style(window)
+    return window
 
 
 def install(source=None):

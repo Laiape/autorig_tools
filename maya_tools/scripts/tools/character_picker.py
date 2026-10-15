@@ -49,9 +49,9 @@ def generate(character=None, load=True):
     return str(directory/"picker.json")
 
 
-def show(character=None):
+def show(character=None, root_uuid=None):
     character = character or scene_character()
     directory = builder.character_asset(character)/"picker/generated"
     if not (directory/"picker.json").is_file():
         generate(character, load=False)
-    return open_bundle(directory)
+    return open_bundle(directory, root_uuid=root_uuid)

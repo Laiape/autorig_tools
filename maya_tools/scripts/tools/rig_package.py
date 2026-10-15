@@ -9,13 +9,15 @@ def digest(path):
         for block in iter(lambda:stream.read(1024*1024),b''):h.update(block)
     return h.hexdigest()
 
-def create(source_repo,asset,output,selected_files=None,reports=None):
+def create(source_repo,asset,output,selected_files=None,reports=None,performance_policy=None):
     repo=Path(source_repo).resolve();output=Path(output).resolve()
     if output.exists():raise ValueError('Use a new package directory.')
     output.mkdir(parents=True)
     manifest={'format':'autorig-rig-package','version':1,'asset':asset,'status':'candidate',
         'created_utc':datetime.now(timezone.utc).isoformat(),'files':{},'inputs':{},
         'build':'A fresh working copy is used so generated cache files do not alter the frozen package.'}
+    if performance_policy:
+        manifest['performance_policy'] = dict(performance_policy)
     try:
         for source in (repo/'maya_tools/scripts').rglob('*'):
             if not source.is_file() or '__pycache__' in source.parts or source.suffix=='.pyc':continue
@@ -60,6 +62,13 @@ def mark_validated(package,validation):
     if not validation.get('success') or validation.get('rebuild_max_difference',1)>1e-4 or validation.get('reopen_max_difference',1)>1e-4:
         raise ValueError('Successful rebuild and native reopen comparisons are required.')
     root=Path(package);manifest=verify(root)
+    if manifest.get('performance_policy'):
+        from maya_tools.scripts.tools import rig_performance_policy
+        relative = validation.get('performance_report')
+        if not relative or relative not in manifest['files']:
+            raise ValueError('Attach the performance report before publish validation.')
+        report = json.loads((root / relative).read_text(encoding='utf-8'))
+        validation = dict(validation, performance=rig_performance_policy.validate(report, manifest['performance_policy']))
     for source in (root/'publish_checks').rglob('*'):
         if source.is_file():manifest['files'][source.relative_to(root).as_posix()]={'sha256':digest(source),'bytes':source.stat().st_size}
     manifest['status']='validated';manifest['validation']=validation

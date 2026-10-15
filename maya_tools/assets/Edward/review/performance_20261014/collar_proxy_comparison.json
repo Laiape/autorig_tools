@@ -1,0 +1,12 @@
+{
+  "maximum_error": {
+    "head": 0.0,
+    "low": 0.0,
+    "cuerpo_base": 0.0,
+    "collar2": 1.1574936440297496,
+    "collar3": 2.0367739242410816
+  },
+  "source_vertices": 3082,
+  "accepted": false,
+  "rolled_back": true
+}

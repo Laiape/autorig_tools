@@ -14,9 +14,10 @@ Python (and a small C++ plugin) tools for character autorig in Autodesk
 Maya, plus a Unreal Engine notes folder. Not a web app. Not a Docker
 stack.
 
-Maya loads the package through `maya_tools/self_module.mod`, which lists
-known clone roots (first folder that exists). Copy that file to
-`Documents/maya/modules/` or set `MAYA_MODULE_PATH` to `maya_tools`.
+Run `scripts/install_maya_module.py` from the checkout Maya should use.
+It writes `Documents/maya/modules/self_module.mod` with that checkout's
+actual path and backs up a previous configuration. The legacy module
+template can select an older clone when several checkouts exist.
 On Maya start, `maya_tools/scripts/userSetup.py` builds the AutoRig Tools
 menu, the AutoRig shelf, optional numpy, `proxy_locator`, and a localhost
 MCP listener. Install steps: `README.md`.
@@ -57,7 +58,33 @@ flowchart TD
 ## Which folder to read
 
 ### Read `maya_tools/how_it_works.md` if you need...
+- Rig performance requirements and the Autorig/Edward optimization roadmap in
+  `maya_tools/docs/rig_performance_plan.md`.
+  Implemented behavior and accepted/rejected trials:
+  `maya_tools/docs/rig_performance_results.md`.
+- The dockable Tool Framework, shared red icons and explicit tool catalogue.
+  Its Character context, read-only preflight, operation history, work profiles
+  and guided per-character review checklist are implemented in Maya.
+  Embedded Smooth/Transfer brushes release on tab changes and hide their
+  viewport help banner; mouse instructions stay in the Skinning Manager.
+  Menu and panel share Rigging subsections and the Deformers category.
+  Architecture, current scope and phased implementation: `maya_tools/framework_plan.md`.
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
+- Shared native UI hierarchy: semantic main-button colors, tool/tab icons,
+  preserved vendor controls and live restyling through Reload UI.
+- Model Checker: native results, 23 scoped automatic checks, guided visual
+  review, vertex-set contact comparison, undoable repairs and JSON reports.
+- Dockable Skinning Manager with native NG and its stacked skinCluster selector,
+  brSmoothWeights, Ramp/Weights Server and a compact corrective blendshape tab.
+- NG layer right-click Lips/Eyelid/Eyebrow Rigger actions use selected loops and
+  the active skin's existing joints, preserve paired lip weights and start new
+  facial masks black. L loops mirror to R and repeated runs reuse their layers.
+- NG complete-loop lip/eye/brow skinning prototype: Lips contains Rotate and
+  Non Rotate weight layers, mirrored commissures split upper00/lower00 50/50,
+  and Nini's isolated review scene includes the complete corner loop and
+  annotated cheek coverage with editable region masks. A separate real-rig
+  review maps these layers to the production skin and tests animator controls.
+- Biped spine control counts/spacing and IK/FK blending of deforming foot joints.
 - Edward's native Maya 2024+ photo picker, installer and controller exports.
 - Joint corrective targets, vertex masks and shoulder angle activation in Maya.
 - Pose blendshapes with controller capture, preserved target names, pre/post
