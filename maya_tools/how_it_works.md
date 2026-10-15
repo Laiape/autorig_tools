@@ -388,6 +388,64 @@ maximum near/outer slope ratio is 0.12526 (limit 0.25). The former quadratic
 profile reached 0.09681 at the closed jaw and failed the unchanged height limit.
 The 49-pose single-surface regression still reopens with zero matrix error.
 
+### Jaw Auto Wide
+
+Rebuilding the jaw adds two keyable attributes on `C_jaw_CTL`:
+
+- `autoWide` / Auto Wide: 0 disables compensation, 1 enables it (default 1).
+- `autoWideDepth` / Auto Wide Depth: maximum forward distance as a fraction of
+  the neutral mouth half-width (default 0.2, range 0 to 1).
+
+The module reads existing per-side Narrow inputs, including `autoNarrow`, and
+signed secondary-controller translations calibrated to the neutral lateral
+axes. It sums compression separately for each lip and side, then applies a
+smooth, bounded activation. Outward secondary motion can relieve compression.
+Jaw opening, head following and main-mouth movement alone do not activate it.
+The central secondary's lateral translation is excluded: it is already at the
+midline and cannot move inward toward itself.
+
+Each station receives a forward-only positional offset in the jaw's deformation
+space. Direction comes from the authored lip arch and lateral axis; main-mouth
+and head following transform it downstream. For center weight `c`, the field is
+`c*(1-c)*side + c*c*shared`, with a smooth harmonic mean of L/R as `shared`.
+Equal bilateral compression gives maximum output at the center. A unilateral
+input fades to zero at the center and leaves the other half unchanged. Secondary
+compression on one lip does not drive the other lip. Shared corner inputs drive
+both, and Sticky Lips retains its intentional coupling during closure.
+
+Display frames are corrected before their existing neighbor aiming. Output
+frames receive the same field after projection and before sticky/roll; ribbon
+drivers do not receive an additional offset. No controller world matrices feed
+the compression driver, no evaluation cycle is introduced, and no extra NURBS,
+deformer, per-frame Python or skin-weight edit is needed. The calibration uses
+rest control axes, as the existing Narrow driver does. Arbitrary secondary
+translations are not collision-limited; this is volume compensation rather than
+a guarantee against mesh intersections in extreme animator poses.
+
+Native regressions: `test_jaw_auto_wide.py`, `test_jaw_auto_wide_edward.py`,
+`test_jaw_single_surface.py`, `test_jaw_lips.py` and `test_lip_u_response.py`
+under `maya_tools/scripts/tools/tests`. The Edward integration test owns its
+temporary build cache, checks actual high/low head and body geometry, and saves
+and reopens a full native scene. Validation receipts and logs are in
+`maya_tools/docs/validation/jaw_auto_wide_20261015`.
+
+Validation on 2026-10-15: all five regressions pass, including DG/serial/parallel,
+activation and saturation continuity, mirrored secondary controls, Sticky Lips,
+Roll, the rounded U and native reopen. The standard full `autoNarrow=1` pose
+produces 0.07343 units of extra central joint depth. The tested 0 to 25 percent
+inward half-width sweep has ordered output joints and minimum adjacent spacing
+0.04735 units. Edward's nine geometry poses (jaw 0/20/30, Narrow 0/0.5/1) have
+zero new triangle reversals against matching Auto Wide-off poses, unchanged
+neutral/body geometry and zero geometry error after saving/reopening the rig.
+
+An isolated comparison against commit `70302b5` gives zero matrix error in eight
+poses when Auto Wide is disabled. The fixture grows from 3223 to 3499 nodes;
+three warmed 30-pose DG samples give median CPU pose/query costs of 9.46 ms
+before and 10.60 ms with Auto Wide active (11.50 ms disabled). These include
+Python queries of 50 joints and exclude mesh/viewport rendering; they are not
+animation FPS or a controlled comparison of complete character build times.
+Raw samples are in the validation folder's `performance.json`.
+
 ### Biped spine controls and foot blending
 
 `biped/autorig/spine_module.py` uses the `.build` `spine_controllers`

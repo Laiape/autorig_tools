@@ -1,0 +1,74 @@
+{
+  "success": true,
+  "tests": [
+    {
+      "test": "test_jaw_auto_wide.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 19.987544900000103,
+      "log": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\jaw_auto_wide_20261015\\test_jaw_auto_wide.log",
+      "last_lines": [
+        "File read in  0.22 seconds.",
+        "PASS Auto Wide: smooth forward profile, unilateral/fine independence, gain, sticky, EM and reopen",
+        "{\"fixture_build_seconds\": 1.3027765000006184, \"maximum_tested_center_push\": 0.07343333959579468, \"minimum_tested_joint_spacing\": 0.047351915585845325, \"cycles\": 0}"
+      ]
+    },
+    {
+      "test": "test_jaw_single_surface.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 16.254161099999692,
+      "log": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\jaw_auto_wide_20261015\\test_jaw_single_surface.log",
+      "last_lines": [
+        "File read in  0.41 seconds.",
+        "PASS single jaw projection surface; regulated narrow, opening, independent corner transforms and sticky lips",
+        "{\"cases\": 49, \"projectors\": 4, \"baseline_max_matrix_error\": null, \"reopen_max_matrix_error\": 0.0}"
+      ]
+    },
+    {
+      "test": "test_jaw_auto_wide_edward.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 110.39941490000001,
+      "log": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\jaw_auto_wide_20261015\\test_jaw_auto_wide_edward.log",
+      "last_lines": [
+        "[AutoRig build] Cleaning up node graph...",
+        "[AutoRig build] Restoring Maya state...",
+        "[AutoRig build] Timing report: C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\validation\\20261015T072524870385Z.buildtiming.json",
+        "[AutoRig build] Complete",
+        "Bifrost: GraphContainer deleted and removed from the Workspace.",
+        "Bifrost: New GraphContainer added to the Workspace.",
+        "Warning: Unrecognized node type for node 'hyperShadePrimaryNodeEditorSavedTabsInfo'; preserving node information during this session.",
+        "Warning: Unrecognized node type for node 'MayaNodeEditorSavedTabsInfo'; preserving node information during this session.",
+        "Warning: Errors have occurred while reading this scene that may result in data loss.",
+        "File read in  6.3 seconds.",
+        "PASS Edward Auto Wide: real meshes, unchanged neutral/body, no new triangle reversals, sticky and reopen",
+        "{\"build_seconds\": 57.27359489999981, \"reopen_error\": 0.0, \"poses\": [{\"jaw\": 0, \"autoNarrow\": 0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 0, \"autoNarrow\": 0.5, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3169, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 532, \"maximum_forward\": 0.019084930419921875, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 0, \"autoNarrow\": 1, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3192, \"maximum_forward\": 0.06984901428222656, \"minimum_forward\": -9.5367431640625e-07, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 541, \"maximum_forward\": 0.07343387603759766, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 20, \"autoNarrow\": 0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 20, \"autoNarrow\": 0.5, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3171, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 598, \"maximum_forward\": 0.019306182861328125, \"minimum_forward\": -0.0006694793701171875, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 20, \"autoNarrow\": 1, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3188, \"maximum_forward\": 0.06984901428222656, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 615, \"maximum_forward\": 0.0742940902709961, \"minimum_forward\": -0.0028018951416015625, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 30, \"autoNarrow\": 0, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 30, \"autoNarrow\": 0.5, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3170, \"maximum_forward\": 0.01815319061279297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 604, \"maximum_forward\": 0.01943206787109375, \"minimum_forward\": -0.0007266998291015625, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}, {\"jaw\": 30, \"autoNarrow\": 1, \"meshes\": {\"cabeza_high\": {\"vertices\": 11475, \"moved_vertices\": 3192, \"maximum_forward\": 0.06984996795654297, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}, \"cabeza_low\": {\"vertices\": 3082, \"moved_vertices\": 623, \"maximum_forward\": 0.07477664947509766, \"minimum_forward\": -0.0020380020141601562, \"new_triangle_reversals\": 0}, \"cuerpo_base\": {\"vertices\": 5458, \"moved_vertices\": 0, \"maximum_forward\": 0.0, \"minimum_forward\": 0.0, \"new_triangle_reversals\": 0}}}]}"
+      ]
+    },
+    {
+      "test": "test_lip_u_response.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 14.463796299999558,
+      "log": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\jaw_auto_wide_20261015\\test_lip_u_response.log",
+      "last_lines": [
+        "PASS: independent lips, monotone raise/lower, continuous slopes and identical retrace"
+      ]
+    },
+    {
+      "test": "test_jaw_lips.py",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 119.41499039999962,
+      "log": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\jaw_auto_wide_20261015\\test_jaw_lips.log",
+      "last_lines": [
+        "PASS jaw/lips build: rounded U, independent primaries, corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure",
+        "U_PROFILE [{\"jaw_angle\": 0, \"center_fraction\": 0.0732016862843652, \"slope_ratio\": 0.12525570719185328}, {\"jaw_angle\": 0, \"center_fraction\": 0.07285585445619684, \"slope_ratio\": 0.12265155781203552}, {\"jaw_angle\": 10, \"center_fraction\": 0.06588435677193728, \"slope_ratio\": 0.11281477640962437}, {\"jaw_angle\": 10, \"center_fraction\": 0.06541801746836631, \"slope_ratio\": 0.11064718886558111}, {\"jaw_angle\": 20, \"center_fraction\": 0.0608647257705206, \"slope_ratio\": 0.10458622159734682}, {\"jaw_angle\": 20, \"center_fraction\": 0.06032025041823787, \"slope_ratio\": 0.10268258825317403}, {\"jaw_angle\": 30, \"center_fraction\": 0.05749589818551389, \"slope_ratio\": 0.09914846163937496}, {\"jaw_angle\": 30, \"center_fraction\": 0.05689395787915499, \"slope_ratio\": 0.09741574604206585}]",
+        "[{\"angle\": 0, \"width\": 5.014339923858644, \"height\": 0.4658050537109659, \"quarter_gap\": 0.24023437500002842, \"center_gap\": 0.0186767578125}, {\"angle\": 5, \"width\": 5.014339985967423, \"height\": 1.378692884873658, \"quarter_gap\": 0.9931774604879422, \"center_gap\": 0.982409804898623}, {\"angle\": 10, \"width\": 5.0143398199867715, \"height\": 2.2670571407700777, \"quarter_gap\": 1.7144787099367136, \"center_gap\": 1.9064133870438127}, {\"angle\": 20, \"width\": 5.014339701554533, \"height\": 3.9299859518543485, \"quarter_gap\": 3.040606560955098, \"center_gap\": 3.6074591404367027}, {\"angle\": 30, \"width\": 5.014339621914802, \"height\": 5.3599284352397945, \"quarter_gap\": 4.178194906654227, \"center_gap\": 5.070128603494226}]"
+      ]
+    }
+  ],
+  "started": 1792049089.9767818,
+  "completed": 1792049245.6370513
+}

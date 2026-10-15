@@ -1,0 +1,34 @@
+{
+  "baseline_commit": "70302b528bb19016742b7d311aced88a5f6d0969",
+  "measurement": "Disposable mayapy, Edward-guide jaw fixture, DG mode. Each sample changes jaw opening and bilateral Auto Narrow over 30 poses, queries 50 joint world matrices, and includes Python overhead. One warm-up sample is excluded; three samples are retained per mode. This excludes skin/viewport cost and is not animation FPS.",
+  "compatibility_poses": 8,
+  "old": {
+    "nodes": 3223,
+    "build_seconds": 0.5313886000003549,
+    "ms_per_pose_samples": [
+      10.540783333332607,
+      9.458886666683005,
+      8.850706666665548
+    ],
+    "median_ms_per_pose": 9.458886666683005
+  },
+  "new_disabled": {
+    "nodes": 3499,
+    "build_seconds": 0.4959577999998146,
+    "ms_per_pose_samples": [
+      11.50419333331835,
+      11.229893333347718,
+      13.28926666665211
+    ],
+    "median_ms_per_pose": 11.50419333331835
+  },
+  "new_enabled": {
+    "ms_per_pose_samples": [
+      9.590440000010858,
+      10.603186666655045,
+      10.816926666666404
+    ],
+    "median_ms_per_pose": 10.603186666655045
+  },
+  "disabled_max_matrix_error": 0.0
+}

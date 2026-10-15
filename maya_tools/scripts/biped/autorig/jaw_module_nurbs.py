@@ -591,6 +591,112 @@ class JawModule(object):
         return result, corrections
 
     @staticmethod
+    def _lip_wide_scalar(name, kind, values):
+        """Small native scalar graph used by Auto Wide (no frame callbacks)."""
+        node = cmds.createNode(kind, name=name, ss=True)
+        inputs = ([f"input[{i}]" for i in range(len(values))]
+                  if kind in ("sum", "multiply") else ["input1", "input2"])
+        for attr, value in zip(inputs, values):
+            if isinstance(value, str):
+                cmds.connectAttr(value, node + "." + attr)
+            else:
+                cmds.setAttr(node + "." + attr, value)
+        return node + ".output"
+
+    def _lip_auto_wide_drivers(self, controls, control_frames, half_width, lateral):
+        """Read animator inputs upstream of the corrective to avoid feedback.
+
+        Calibrate secondary lateral axes at build, like the corner Narrow driver.
+        Positive inward secondary translations add compression on their own lip
+        and side. Outward translations can relieve that compression. The smooth
+        remap saturates at one half-width. Jaw/head motion alone cannot drive it.
+        """
+        for attr, label, default in (("autoWide", "Auto Wide", 1.0),
+                                      ("autoWideDepth", "Auto Wide Depth", .2)):
+            cmds.addAttr(self.jaw_ctl, longName=attr, niceName=label,
+                         attributeType="double", min=0, max=1, defaultValue=default, keyable=True)
+        scalar = self._lip_wide_scalar
+        gain = scalar("C_lipAutoWideGain_MUL", "multiply",
+                      [self.jaw_ctl + ".autoWide", self.jaw_ctl + ".autoWideDepth"])
+        depth = scalar("C_lipAutoWideDepth_MUL", "multiply", [gain, half_width])
+        drivers = {}
+        for part, ctls in controls.items():
+            inward = {side: [side + "_lipNarrow_CLM.outputR"] for side in ("L", "R")}
+            mid = len(ctls) // 2
+            for index, ctl in enumerate(ctls):
+                if index == mid:
+                    continue
+                side = "R" if index < mid else "L"
+                sign = -1 if side == "L" else 1
+                frame = cmds.getAttr(control_frames[part][index])
+                coefficients = [sign * (om.MVector(*frame[row * 4:row * 4 + 3]) * lateral)
+                                / half_width for row in range(3)]
+                dot = cmds.createNode("vectorProduct", name=ctl[:-4] + "AutoWideIn_VPR", ss=True)
+                cmds.setAttr(dot + ".operation", 1)
+                cmds.setAttr(dot + ".input2", *coefficients, type="double3")
+                cmds.connectAttr(ctl + ".translate", dot + ".input1")
+                inward[side].append(dot + ".outputX")
+            drivers[part] = {}
+            for side, values in inward.items():
+                name = f"{side}_{part}LipAutoWide"
+                total = scalar(name + "In_SUM", "sum", values)
+                smooth = cmds.createNode("remapValue", name=name + "In_RMV", ss=True)
+                cmds.connectAttr(total, smooth + ".inputValue")
+                cmds.setAttr(smooth + ".inputMax", 1)
+                cmds.setAttr(smooth + ".value[0].value_Interp", 2)
+                cmds.setAttr(smooth + ".value[1].value_Interp", 2)
+                drivers[part][side] = smooth + ".outValue"
+            # Harmonic mean is smooth at equal sides, unlike min(L, R).
+            # It is zero for unilateral compression, keeping the other half free.
+            name = f"C_{part}LipAutoWideShared"
+            left, right = (drivers[part][side] for side in ("L", "R"))
+            product = scalar(name + "Product_MUL", "multiply", [left, right])
+            twice = scalar(name + "Twice_MUL", "multiply", [product, 2])
+            total = scalar(name + "Sum_SUM", "sum", [left, right, 1e-8])
+            drivers[part]["center"] = scalar(name + "_DIV", "divide", [twice, total])
+        return drivers, depth
+
+    def _auto_wide_lip_frames(self, name, frames, drivers, depth, forward, stations=None):
+        """Add a bounded forward bulge once, before sticky/roll and final following.
+
+        Both sides compressed equally produce a center-heavy smoothstep profile.
+        A single side fades to zero at the center and cannot move the other half.
+        Display and output stations sample the same field independently, so the
+        ribbon driver positions are never corrected twice.
+        """
+        direction = cmds.createNode("multiplyDivide", name=name + "Depth_MDV", ss=True)
+        cmds.setAttr(direction + ".input1", *forward, type="double3")
+        for axis in "XYZ":
+            cmds.connectAttr(depth, direction + ".input2" + axis)
+        result = {}
+        for part, values in frames.items():
+            result[part] = list(values)
+            params = stations[part] if stations else [i / float(len(values) - 1) for i in range(len(values))]
+            for index, (frame, u) in enumerate(zip(values, params)):
+                q = min(1.0, abs(2.0 * u - 1.0))
+                center = 1.0 - q * q * (3.0 - 2.0 * q)
+                if center <= 1e-12:
+                    continue
+                side = "R" if u < .5 else "L"
+                prefix = f"{name}{part}{index:02d}"
+                field = cmds.createNode("blendWeighted", name=prefix + "Field_BW", ss=True)
+                for slot, (plug, weight) in enumerate(((drivers[part][side], center * (1.0 - center)),
+                                                       (drivers[part]["center"], center * center))):
+                    cmds.connectAttr(plug, field + f".input[{slot}]")
+                    cmds.setAttr(field + f".weight[{slot}]", weight)
+                scale = cmds.createNode("multiplyDivide", name=prefix + "Forward_MDV", ss=True)
+                cmds.connectAttr(direction + ".output", scale + ".input1")
+                for axis in "XYZ":
+                    cmds.connectAttr(field + ".output", scale + ".input2" + axis)
+                translate = cmds.createNode("composeMatrix", name=prefix + "_CMX", ss=True)
+                cmds.connectAttr(scale + ".output", translate + ".inputTranslate")
+                matrix = cmds.createNode("multMatrix", name=prefix + "_MMX", ss=True)
+                cmds.connectAttr(frame, matrix + ".matrixIn[0]")
+                cmds.connectAttr(translate + ".outputMatrix", matrix + ".matrixIn[1]")
+                result[part][index] = matrix + ".matrixSum"
+        return result
+
+    @staticmethod
     def _corner_auto_narrow(corner, offset_group, local_matrix, outward_fraction):
         """Add an inward corner offset to the existing smooth lip drag.
 
@@ -1154,6 +1260,9 @@ class JawModule(object):
 
         all_secondary_joints = {"upper": [], "lower": []}
         all_secondary_display_frames = {}
+        all_secondary_controls = {}
+        all_secondary_control_frames = {}
+        all_secondary_stations = {}
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
 
@@ -1166,6 +1275,7 @@ class JawModule(object):
             secondary_local_joints_mmx = []
             secondary_display_frames = []
             secondary_base_frames = []
+            secondary_control_frames = []
             display_corrections = self._central_profile_correction(
                 curve, f"C_{part}Lip_SKIN", f"C_{part}Lip_JNT", cv_parameters)
 
@@ -1253,6 +1363,7 @@ class JawModule(object):
                                                secondary_display_frames[target_index],
                                                index == len(secondary_ctls) - 1)
                 cmds.connectAttr(aimed, secondary_grps[index] + ".offsetParentMatrix", force=True)
+                secondary_control_frames.append(aimed)
                 rotation = cmds.createNode("pickMatrix", name=name + "NeighborRotation_PCM", ss=True)
                 cmds.connectAttr(aimed, rotation + ".inputMatrix")
                 cmds.setAttr(rotation + ".useTranslate", 0)
@@ -1272,6 +1383,9 @@ class JawModule(object):
                 cmds.connectAttr(local + ".outputMatrix", secondary_local_joints_mmx[index] + ".matrixIn[0]", force=True)
 
             all_secondary_display_frames[part] = secondary_display_frames
+            all_secondary_controls[part] = secondary_ctls
+            all_secondary_control_frames[part] = secondary_control_frames
+            all_secondary_stations[part] = cv_parameters
             # ----- PROJECT CURVE DRIVER TO NURBS SURFACE -----
             # for i, joint in enumerate(secondary_joints):
                 
@@ -1316,26 +1430,42 @@ class JawModule(object):
                 cmds.skinPercent(skin_cluster, f"{nurbs}.cv[{row}][*]",
                                  transformValue=[(joint, 1.0)], zeroRemainingInfluences=True)
 
+        lateral = (corner_pos["L"] - corner_pos["R"]).normal()
+        forward = lateral ^ om.MVector(0, 1, 0)
+        if forward.length() < 1e-8:
+            forward = om.MVector(0, 0, 1)
+        forward.normalize()
+        # Orient depth away from the face using the authored lip arch.
+        arch = om.MVector(*cmds.pointPosition(f"{self.upper_linear_lip_curve}.cv[{len(up_cvs) // 2}]", world=True))
+        arch -= (corner_pos["L"] + corner_pos["R"]) * .5
+        if forward * arch < 0:
+            forward *= -1
+        auto_wide_drivers, auto_wide_depth = self._lip_auto_wide_drivers(
+            all_secondary_controls, all_secondary_control_frames, half, lateral)
+
         # Correct the displayed frames only. Output pins receive their own corner
         # correction once; warping ribbon drivers here would apply it twice.
         display_destinations = {plug: cmds.listConnections(plug, s=False, d=True, p=True) or []
                                 for values in all_secondary_display_frames.values() for plug in values}
-        rounded_display, ribbon_corrections = self._round_raised_lip_frames(
+        rounded_display, _ = self._round_raised_lip_frames(
             "C_lipRoundedRibbon", all_secondary_display_frames, corner_drags, half,
             stations=self._curve_cv_parameters(self.upper_rebuild_lip_curve))
+        rounded_display = self._auto_wide_lip_frames(
+            "C_lipAutoWideDisplay", rounded_display, auto_wide_drivers, auto_wide_depth,
+            forward, stations=all_secondary_stations)
         for part in ("upper", "lower"):
-            for index, delta_matrix in enumerate(ribbon_corrections):
-                if delta_matrix is None:
-                    continue
+            for index in range(len(rounded_display[part])):
                 original_display = all_secondary_display_frames[part][index]
                 for destination in display_destinations[original_display]:
-                    cmds.connectAttr(rounded_display[part][index], destination, force=True)
+                    if not cmds.isConnected(rounded_display[part][index], destination):
+                        cmds.connectAttr(rounded_display[part][index], destination, force=True)
 
         output_joints = { "upper": [], "lower": [] }
         non_rotate_output_joints = { "upper": [], "lower": [] }
         aim_matrices = { "upper": [], "lower": [] }
         orient_plugs = { "upper": [], "lower": [] }
         pick_matrices = { "upper": [], "lower": [] }
+        output_stations = {}
 
         for part, nurbs in (["upper", self.upper_lip_nurbs], ["lower", self.lower_lip_nurbs]):
             
@@ -1376,6 +1506,9 @@ class JawModule(object):
                 u_i, _ = matrix_manager.getClosestParamsToPositionSurface(nurbs, pos)
                 u_list.append(u_i)
             u_list = self._ordered_lip_parameters(u_list)
+            # Output corner drag uses normalized joint stations. Auto Wide uses
+            # those same stations rather than the repaired surface projection U.
+            output_stations[part] = [i / float(linear_curve_cvs - 1) for i in range(linear_curve_cvs)]
             center_corrections = self._central_profile_correction(
                 self.upper_rebuild_lip_curve if part == "upper" else self.lower_rebuild_lip_curve,
                 f"C_{part}Lip_SKIN", f"C_{part}Lip_JNT", u_list)
@@ -1451,6 +1584,9 @@ class JawModule(object):
 
         orient_plugs, _ = self._round_raised_lip_frames(
             "C_lipRoundedOutput", orient_plugs, corner_drags, half)
+        orient_plugs = self._auto_wide_lip_frames(
+            "C_lipAutoWideOutput", orient_plugs, auto_wide_drivers, auto_wide_depth,
+            forward, stations=output_stations)
         for part in ("upper", "lower"):
             for index, frame in enumerate(orient_plugs[part]):
                 for destination in (output_joints[part][index] + ".offsetParentMatrix",
