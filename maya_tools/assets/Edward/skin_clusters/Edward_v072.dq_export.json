@@ -1,0 +1,31 @@
+{
+  "skc": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v072.skc",
+  "version": 72,
+  "bytes": 32557531,
+  "sha256": "796f2dc9631f6197e8f7b1919fb58e12e7a3b07cb726a89bb6bb2468a64dd8f8",
+  "new_DQ_skins": 23,
+  "native_skin_nodes": 81,
+  "serialized_polygon_skin_records": 71,
+  "lossless": true,
+  "wrinkles_present": true,
+  "roundtrip": {
+    "poses": 7,
+    "comparisons": 322,
+    "max_position_cm": 0.0,
+    "max_face_vertex_normal": 6.664001874625056e-08,
+    "max_weight_error": 0.0,
+    "tolerance_cm": 0.0001,
+    "passed": true
+  },
+  "dq_comparison_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_SKIN_DQ_COMPARE_v001.ma",
+  "canonical_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_DQ_canonical_v002.ma",
+  "source_weights_preserved": true,
+  "static_bind_rest_nodes": 23,
+  "raw_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001",
+  "scripts_sha256": {
+    "C:\\proyectos\\auto-rig\\scripts\\edward_prx_apply_dq.py": "4ef6fb7c8b3906fea7a4d78795e5fb135a3aa1ad0d27f687f18e23e88298ef76",
+    "C:\\proyectos\\auto-rig\\scripts\\edward_prx_dq_export.py": "9888f4ec47fc1f3009edb19f79f14768acd4a38bb9042b80e13d38cf46cf5a64",
+    "C:\\proyectos\\auto-rig\\scripts\\edward_prx_dq_host.py": "f01f6f3d04de6118cb92fffa534e3079ba03ac6f9992121976e20572e8d15564",
+    "C:\\proyectos\\auto-rig\\scripts\\publish_edward_prx_dq.py": "e9dff5ff64c0af05cb35cf4d73376164de06dbf16f9146a5f67853def8469d5f"
+  }
+}

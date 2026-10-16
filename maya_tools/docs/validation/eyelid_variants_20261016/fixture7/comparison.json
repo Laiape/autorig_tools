@@ -1,0 +1,98 @@
+{
+  "complete": false,
+  "cohort": "isolated_eye",
+  "measurement": "CPU currentTime(update=True) plus demand of a native matrix sum of eyelid output joints. No vertex extraction, Profiler or viewport in timing; not FPS.",
+  "maya": "2026",
+  "platform": "Windows-10-10.0.26300",
+  "logical_cpus": 32,
+  "scene": null,
+  "guide_samples_per_lid": 7,
+  "quality_tolerance": 0.0001,
+  "rows": [],
+  "quality": {
+    "off_reference": {
+      "matrix_max_error": 0.0,
+      "position_max_error": 0.0,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "off_aim": {
+      "matrix_max_error": 0.08045570473012376,
+      "position_max_error": 0.08971128106722773,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": false
+    }
+  },
+  "install_ms": {
+    "aim": [
+      12.041900001349859
+    ]
+  },
+  "variants": {
+    "reference": "Curves/skin + Y-preserving analytic sphere projection; whole-lid roll",
+    "aim": "Same curves/skin; radial aim sphere instead of projection",
+    "deboor": "Direct De Boor matrix moments; approximate partial-blink moving U",
+    "deboor_aim": "Direct De Boor moments plus radial aim sphere"
+  },
+  "excluded": [
+    "GPU",
+    "Cached Playback",
+    "interactive VP2 FPS",
+    "production adoption of prototypes"
+  ],
+  "output_joints": [
+    "L_downEyelid00Skinning_JNT",
+    "L_downEyelid01Skinning_JNT",
+    "L_downEyelid02Skinning_JNT",
+    "L_downEyelid03Skinning_JNT",
+    "L_downEyelid04Skinning_JNT",
+    "L_downEyelid05Skinning_JNT",
+    "L_downEyelid06Skinning_JNT",
+    "L_upperEyelid00Skinning_JNT",
+    "L_upperEyelid01Skinning_JNT",
+    "L_upperEyelid02Skinning_JNT",
+    "L_upperEyelid03Skinning_JNT",
+    "L_upperEyelid04Skinning_JNT",
+    "L_upperEyelid05Skinning_JNT",
+    "L_upperEyelid06Skinning_JNT"
+  ],
+  "units": "cm",
+  "time_unit": "film",
+  "animated_channels": [
+    "L_eyelidUp_CTL.translateX",
+    "L_eyelidUp_CTL.translateY",
+    "L_eyelidUp_CTL.translateZ",
+    "L_eyelidUp_CTL.rotateX",
+    "L_eyelidUp_CTL.rotateY",
+    "L_eyelidUp_CTL.rotateZ",
+    "L_eyelidDown_CTL.translateX",
+    "L_eyelidDown_CTL.translateY",
+    "L_eyelidDown_CTL.translateZ",
+    "L_eyelidDown_CTL.rotateX",
+    "L_eyelidDown_CTL.rotateY",
+    "L_eyelidDown_CTL.rotateZ",
+    "L_eyelidInUp_CTL.translateX",
+    "L_eyelidInUp_CTL.translateY",
+    "L_eyelidInUp_CTL.translateZ",
+    "L_eyelidInUp_CTL.rotateX",
+    "L_eyelidInUp_CTL.rotateY",
+    "L_eyelidInUp_CTL.rotateZ",
+    "L_eyelidOutDown_CTL.translateX",
+    "L_eyelidOutDown_CTL.translateY",
+    "L_eyelidOutDown_CTL.translateZ",
+    "L_eyelidOutDown_CTL.rotateX",
+    "L_eyelidOutDown_CTL.rotateY",
+    "L_eyelidOutDown_CTL.rotateZ",
+    "L_eyeDirect_CTL.Upper_Blink",
+    "L_eyeDirect_CTL.Lower_Blink",
+    "L_eyeDirect_CTL.Blink_Height"
+  ],
+  "baseline_scene_nodes": 813,
+  "scene_nodes": {
+    "reference": 813,
+    "aim": 897
+  },
+  "error": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\scripts\\eyelid_setup_trial.py\", line 135, in run\n    switch(variant)\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\scripts\\eyelid_setup_trial.py\", line 124, in switch\n    if 'deboor' in variant:eyelid_candidates.deboor(prefix)\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_candidates.py\", line 155, in deboor\n    upper = blend(evaluate('upper',own),evaluate('upper',shared),amount,stem+'DeBoorUpper_BLC')\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_candidates.py\", line 143, in blend\n    cmds.connectAttr(a,node+'.color2')\nRuntimeError: Connection not made: 'L_upperDeBoorSample0_ROW.output' -> 'L_downEyelid010DeBoorUpper_BLC.color2'.  Data types of source and destination are not compatible.\nThe attribute 'L_upperDeBoorSample0_ROW.output' cannot be connected to 'L_downEyelid010DeBoorUpper_BLC.color2'.\n\n"
+}

@@ -120,14 +120,14 @@ def export_all_controllers():
 
 def mirror_controllers():
     reload(curve_tool)
-    curve_tool.mirror_curves()
-    cmds.inViewMessage(amg='Controladores Espejados.', pos='midCenter', fade=True)
+    return curve_tool.mirror_shapes()
 
 def open_library():
     print("Funcionalidad para abrir la librería de controladores.")
 
 def replace_shapes():
-    print("Funcionalidad para reemplazar formas de controladores.")
+    reload(curve_tool)
+    return curve_tool.replace_shape_colored()
 
 def tag_scene_curves():
     reload(curve_tool)

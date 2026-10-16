@@ -3,6 +3,13 @@
 Parent: `maya_tools/how_it_works.md`. Research and requirements:
 `maya_tools/docs/rig_performance_plan.md`.
 
+This record concerns the regional v002 lineage and its captured workload. The
+later 2026-10-15 artist snapshot is a different scene: its hot cache matched CPU
+in the tested frame/key-edit scope, while uncached GPU differed in the collars.
+Do not generalize either result to every Edward version. Current decisions:
+`maya_tools/docs/rig_performance_criteria.md` and
+`maya_tools/docs/rig_optimization_roadmap_20261015.md`.
+
 Build startup and crash corrections, optional audit behavior, model cache and
 all-character build timings are documented in `maya_tools/docs/build_performance_results.md`.
 

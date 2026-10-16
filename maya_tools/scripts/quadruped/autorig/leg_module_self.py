@@ -497,7 +497,7 @@ class LegModule(object):
             cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv}.controlPoints[1].{value}")
         cmds.setAttr(f"{crv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv}.overrideEnabled", 1)
-        cmds.setAttr(f"{crv}.overrideDisplayType", 1)
+        cmds.setAttr(f"{crv}.overrideDisplayType", 2)
         cmds.parent(crv, pv_ctl)
         cmds.setAttr(f"{crv}.hiddenInOutliner", 1)
         for shape in cmds.listRelatives(crv, shapes=True) or []:
@@ -1967,6 +1967,11 @@ class PawFoot(FootBase):
             locked_attrs=["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"],
             parent=leg.controllers_grp,
         )
+
+        from maya_tools.scripts.utils import controller_display
+        controller_display.configure_digit_settings(
+            self.paw_attributes_ctl, self.leg_digit_fk_ctls.values(),
+            follow_matrix=leg.blend_plugs[leg.leg_end_index])
 
         cmds.addAttr(self.paw_attributes_ctl, longName="extraAttr", niceName="EXTRA ATTRIBUTES ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.paw_attributes_ctl}.extraAttr", ch=True, lock=True)

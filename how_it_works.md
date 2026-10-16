@@ -58,6 +58,11 @@ flowchart TD
 ## Which folder to read
 
 ### Read `maya_tools/how_it_works.md` if you need...
+- Current rig performance criteria, scene evaluation defaults and improvement
+  order in `maya_tools/docs/rig_performance_criteria.md` and
+  `maya_tools/docs/rig_optimization_roadmap_20261015.md`.
+- Project impact/audit/equivalence skills indexed by
+  `.cursor/skills/how_it_works.md` and stored in `.agents/skills/`.
 - Rig performance requirements and the Autorig/Edward optimization roadmap in
   `maya_tools/docs/rig_performance_plan.md`.
   Implemented behavior and accepted/rejected trials:
@@ -70,6 +75,10 @@ flowchart TD
   Menu and panel share Rigging subsections and the Deformers category.
   Architecture, current scope and phased implementation: `maya_tools/framework_plan.md`.
 - Maya module path, scripts layout, autorig build, tools, plugin, MCP port.
+- Manual eyebrow tangents and shared brow/lip wrinkle reset defaults.
+- Custom leg foot attachment beyond IK reach and with soft IK.
+- Tunic settings control with locked and hidden TRS/visibility channels;
+  non-keyable Show channels appear last.
 - Jaw narrow with one shared projection NURBS, default-on Narrow (X+) and Wide
   (X-) corner intensities, neutral-preserving rest and Wrinkle Value default 1;
   a distributed U with center follow, forward Auto Wide on each corner,

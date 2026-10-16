@@ -69,40 +69,10 @@ class TailModule(object):
 
         self.tail_chain = guides_manager.get_guides(f"{self.side}_tail00_JNT")
 
-        tail_root_guide = cmds.createNode("transform", name=f"{self.side}_tailRoot_Guide", ss=True, p=self.module_trn)
-        cmds.matchTransform(tail_root_guide, self.tail_chain[0], pos=True, rot=True)
-
-        tail_end_guide = cmds.createNode("transform", name=f"{self.side}_tailEnd_Guide", ss=True, p=tail_root_guide)
-        cmds.matchTransform(tail_end_guide, self.tail_chain[-1], pos=True, rot=True)
-
-        # Create aim matrix for tail root
-        aim_matrix_root = cmds.createNode("aimMatrix", name=f"{self.side}_tail00_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix_root}.primaryInputAxis", *self.primary_axis, type="double3")
-        cmds.setAttr(f"{aim_matrix_root}.secondaryInputAxis", *self.secondary_axis, type="double3")
-        cmds.connectAttr(f"{tail_root_guide}.worldMatrix[0]", f"{aim_matrix_root}.inputMatrix")
-        cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{aim_matrix_root}.primaryTargetMatrix")
-
-        blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}_tailEnd_BLM", ss=True)
-        cmds.connectAttr(f"{tail_end_guide}.worldMatrix[0]", f"{blend_matrix_end}.inputMatrix")
-        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.target[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix_end}.envelope", 1)
-        cmds.setAttr(f"{blend_matrix_end}.target[0].translateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_end}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_end}.target[0].shearWeight", 0)
-
-        self.tail_guides_matrices = []
-        self.tail_guides_matrices.append(f"{aim_matrix_root}.outputMatrix")
-
-        for i in range(self.controllers_number - 2):
-            
-            blend_matrix = cmds.createNode("blendMatrix", name=f"{self.side}_tail{str(i+1).zfill(2)}_BLM", ss=True)
-            cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix}.inputMatrix")
-            cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix}.target[0].targetMatrix")
-            weight = (i + 1) / (self.controllers_number - 1)
-            cmds.setAttr(f"{blend_matrix}.envelope", weight)
-            self.tail_guides_matrices.append(f"{blend_matrix}.outputMatrix")
-        
-        self.tail_guides_matrices.append(f"{blend_matrix_end}.outputMatrix")
+        self.tail_guides_matrices = guides_manager.sample_chain_matrices(
+            self.tail_chain, self.controllers_number,
+            self.primary_axis, self.secondary_axis)
+        self.controllers_number = len(self.tail_guides_matrices)
 
     def fk_setup(self):
 
@@ -119,13 +89,9 @@ class TailModule(object):
             nodes, ctl = curve_tool.create_controller(
                 name=controller_name,
                 offset=["GRP", "ANM"],
-                parent=self.controllers_grp,
+                parent=self.tail_controllers[-1] if self.tail_controllers else self.controllers_grp,
+                matrix=self.tail_guides_matrices[i],
                 locked_attrs=["tx", "ty", "tz", "sx", "sy", "sz", "v"])
-            
-            cmds.connectAttr(f"{self.tail_guides_matrices[i]}", f"{nodes[0]}.offsetParentMatrix")
-            
-            if self.tail_controllers:
-                cmds.parent(nodes[0], self.tail_controllers[-1])
             
             self.tail_controllers.append(ctl)
 
@@ -189,8 +155,11 @@ class TailModule(object):
                 
                 ik_controllers.append(tan_ctl)
 
-            # Connect IK controllers to tail guides matrices
-            cmds.connectAttr(f"{self.tail_guides_matrices[i]}", f"{nodes[0]}.offsetParentMatrix")
+            # Store the sampled world frame in the current parent space.
+            parent = cmds.listRelatives(nodes[0], parent=True)[0]
+            local = om.MMatrix(self.tail_guides_matrices[i]) * om.MMatrix(cmds.getAttr(parent + ".worldInverseMatrix[0]"))
+            cmds.setAttr(nodes[0] + ".offsetParentMatrix", list(local), type="matrix")
+            cmds.xform(nodes[0], m=om.MMatrix.kIdentity)
 
         # Create IK chain
         ik_chain = []

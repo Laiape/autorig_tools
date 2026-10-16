@@ -4,6 +4,8 @@ KeepOut is evaluated only at chain stations. The original garment topology,
 materials and upper-body skin remain intact. New weights use periodic quadratic
 B-splines around the waist and along the chains. All driven joints use OPM;
 world-space contact goals are independent of the deforming garment and joints.
+Neutral contact is subtracted before filtering, and fitted rest orientations
+follow the hip to preserve the silhouette and avoid inward transition twists.
 """
 import json
 import math
@@ -117,7 +119,6 @@ def _capsule(prefix,label,start,end,radius,waist,group,settings):
     cmds.connectAttr(distance+'.distance',normalize+'.input1X')
     cmds.connectAttr(row+'.outputScaleX',normalize+'.input2X')
     cmds.connectAttr(normalize+'.outputX',shape+'.length')
-    cmds.connectAttr(settings+'.showColliders',shape+'.draw')
     cmds.setAttr(shape+'.shaded',False)
     return {'shape':shape,'driver':holder,'radius_attribute':radius_plug,'start':start,'end':end}
 
@@ -140,6 +141,72 @@ def _coherence(contacts,chains,levels):
         cmds.setAttr(vector+'.input1',*item['direction'],type='double3')
         for axis in 'XYZ': cmds.connectAttr(push,vector+'.input2'+axis)
         cmds.connectAttr(vector+'.output',item['compose']+'.inputTranslate')
+
+
+def compensate_rest_contacts(data=None):
+    """Calibrate at neutral: only additional capsule contact bends the dress.
+
+    Subtract each station's static KeepOut response before neighborhood maxima.
+    Clamping the difference prevents inward pull when a leg moves away. The
+    saved graph uses native nodes and does not require this module at playback.
+    Joint orientations follow the hip while translations follow contact goals.
+    Call once, with the character in its intended rest pose and collisions on.
+    """
+    if data is None:
+        data=json.loads(cmds.getAttr('NiniDress_Module_GRP.dressRigData'))
+    if data.get('rest_contacts'):
+        raise ValueError('Rest contacts have already been calibrated.')
+    if not cmds.getAttr(data['settings']+'.collisionEnable'):
+        raise ValueError('Enable collisions before calibrating the rest pose.')
+    stations=[]
+    # Sample all stations before editing any connection.
+    for shape in data['keepouts']:
+        name=shape.removesuffix('KeepOutShape')
+        source=name+'Radial_VPR.outputX'
+        destinations=cmds.listConnections(source,source=False,destination=True,plugs=True) or []
+        stations.append((name,source,destinations,cmds.getAttr(source)))
+    records=[]
+    for name,source,destinations,baseline in stations:
+        delta=core._node('plusMinusAverage',name+'RestDelta_PMA')
+        cmds.setAttr(delta+'.operation',2)
+        cmds.connectAttr(source,delta+'.input1D[0]')
+        cmds.setAttr(delta+'.input1D[1]',baseline)
+        positive=core._node('clamp',name+'RestContact_CLP')
+        cmds.setAttr(positive+'.minR',0)
+        cmds.setAttr(positive+'.maxR',1e10)
+        cmds.connectAttr(delta+'.output1D',positive+'.inputR')
+        for destination in destinations:
+            cmds.disconnectAttr(source,destination)
+            cmds.connectAttr(positive+'.outputR',destination)
+        records.append({'station':name,'baseline':baseline,'subtract':delta,'clamp':positive})
+    data['rest_contacts']=records
+    # Follow contact positions without rotating the upper transition into the
+    # body. Joint orientations retain the fitted rest shape and follow the hip;
+    # child local matrices still resolve explicitly against their real parent.
+    waist_inverse=om.MMatrix(cmds.getAttr(data['waist']+'.worldInverseMatrix[0]'))
+    orientations=[(joint,om.MMatrix(cmds.getAttr(joint+'.worldMatrix[0]'))*waist_inverse)
+                  for joint in data['joints']]
+    data['rest_orientations']=[]
+    for joint,local in orientations:
+        name=joint.removesuffix('_JNT')
+        reference=core._node('multMatrix',name+'RestOrientation_MMT')
+        core._set_matrix(reference+'.matrixIn[0]',list(local))
+        cmds.connectAttr(data['waist']+'.worldMatrix[0]',reference+'.matrixIn[1]')
+        destination=name+'ParentSpace_MMT.matrixIn[0]'
+        source=cmds.connectionInfo(destination,sourceFromDestination=True)
+        blend=core._node('blendMatrix',name+'RestOrientation_BMT')
+        cmds.connectAttr(reference+'.matrixSum',blend+'.inputMatrix')
+        cmds.connectAttr(source,blend+'.target[0].targetMatrix')
+        for component in ('rotate','scale','shear'):
+            cmds.setAttr(blend+'.target[0].'+component+'Weight',0)
+        cmds.disconnectAttr(source,destination)
+        cmds.connectAttr(blend+'.outputMatrix',destination)
+        data['rest_orientations'].append({'joint':joint,'reference':reference,'blend':blend})
+    data['rest_collision_settings']={attribute:cmds.getAttr(data['settings']+'.'+attribute)
+                                    for attribute in ('collisionMargin','L_thighRadius','L_calfRadius',
+                                                      'R_thighRadius','R_calfRadius')}
+    cmds.setAttr(data['module']+'.dressRigData',json.dumps(data),type='string')
+    return records
 
 
 def _skin_garment(mesh,skin,data,region,transition=9.0):
@@ -216,17 +283,25 @@ def build(mesh='c_tunic_GEO',skin='skinCluster__c_tunic_GEO',waist='C_localHip_E
     cmds.setAttr(chains_group+'.inheritsTransform',False)
     control_group=core._follow(prefix+'Settings_GRP',(23,9,0),waist+'.worldMatrix[0]','controls_GRP')
     settings=core._control('C_dressSettings_CTL',control_group,2.5,(1,.65,.1),normal=(0,0,1))
+    for channel in ('translate','rotate','scale'):
+        for axis in 'XYZ':
+            cmds.setAttr(settings+'.'+channel+axis,lock=True,keyable=False,channelBox=False)
+        cmds.setAttr(settings+'.'+channel,lock=True,keyable=False,channelBox=False)
+    cmds.setAttr(settings+'.visibility',lock=True,keyable=False,channelBox=False)
     core._attribute(settings,'collisionEnable',False,kind='bool')
     core._attribute(settings,'collisionBlend',1,0,1)
     core._attribute(settings,'collisionMargin',margin,0,6)
-    core._attribute(settings,'showChains',False,kind='bool')
-    core._attribute(settings,'showColliders',False,kind='bool')
-    cmds.connectAttr(settings+'.showChains',chains_group+'.visibility')
     capsules=[]
     for side in ('L','R'):
         for label,start,end,radius in ((side+'_thigh',side+'_legUpper00_ENV',side+'_legLower00_ENV',6.8),
                                        (side+'_calf',side+'_legLower00_ENV',side+'_legAnkle_ENV',4.9)):
             capsules.append(_capsule(prefix,label,start,end,radius,waist,technical,settings))
+    for attribute in ('showChains','showColliders'):
+        plug=core._attribute(settings,attribute,False,kind='bool')
+        cmds.setAttr(plug,keyable=False,channelBox=True)
+    cmds.connectAttr(settings+'.showChains',chains_group+'.visibility')
+    for capsule in capsules:
+        cmds.connectAttr(settings+'.showColliders',capsule['shape']+'.draw')
     goals={};contacts={};rest_nodes={}
     for chain in range(chain_count):
         angle=2*math.pi*chain/chain_count
@@ -300,6 +375,7 @@ def build(mesh='c_tunic_GEO',skin='skinCluster__c_tunic_GEO',waist='C_localHip_E
     cmds.setAttr(settings+'.collisionEnable',True)
     cmds.addAttr(module,longName='dressRigData',dataType='string')
     cmds.setAttr(module+'.dressRigData',json.dumps(data),type='string')
+    compensate_rest_contacts(data)
     return data
 
 

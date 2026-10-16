@@ -1,0 +1,39 @@
+{
+  "skc": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v073.skc",
+  "version": 73,
+  "bytes": 29822535,
+  "sha256": "508ff07b6714e29343ea21badea4a959a6774dbd6a3c5163bf12df415a010595",
+  "garment_skins": 23,
+  "DQ_garments": 21,
+  "classic_linear_meshes": [
+    "cinturones2",
+    "pCube26"
+  ],
+  "removed_static_bind_blendshapes": 23,
+  "original_blendshapes_preserved": [
+    "L_eyelidBlink_BLS",
+    "L_lowerEyelidBlink_BLS",
+    "L_upperEyelidBlink_BLS",
+    "R_eyelidBlink_BLS",
+    "R_lowerEyelidBlink_BLS",
+    "R_upperEyelidBlink_BLS",
+    "cabeza_high_poseCorrectives_BLS",
+    "cabeza_low_poseCorrectives_BLS",
+    "cuerpo_base_poseCorrectives_BLS"
+  ],
+  "native_skin_nodes": 81,
+  "serialized_polygon_skins": 71,
+  "lossless": true,
+  "wrinkles_present": true,
+  "roundtrip": {
+    "comparisons": 322,
+    "max_position_cm": 2.3516581854019542e-05,
+    "max_normal_error": 8.882822662791473e-05,
+    "max_weight_error": 0.0,
+    "passed": true,
+    "native_reopen_max_position_cm": 0.0,
+    "native_reopen_max_normal_error": 0.0
+  },
+  "raw_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\skin_only_delivery_20261016_v001",
+  "max_neutral_change_cm": 0.004701819382747988
+}

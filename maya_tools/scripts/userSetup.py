@@ -79,6 +79,12 @@ def init_auto_rig_UI(_open_ports=vs_code_ports):
         return
 
     try:
+        from maya_tools.scripts.utils import scene_evaluation
+        scene_evaluation.install_callbacks()
+    except Exception as e:
+        cmds.warning('[AutoRig evaluation] Scene setup could not be installed: ' + str(e))
+
+    try:
         from maya_tools.scripts.ui import auto_rig_UI
         reload(auto_rig_UI) 
         auto_rig_UI.create_custom_menu()

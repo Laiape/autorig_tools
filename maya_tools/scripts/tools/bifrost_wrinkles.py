@@ -19,7 +19,7 @@ REGIONS = ("Forehead", "Eyes", "Cheeks", "Nose", "Chin")
 @contextmanager
 def primary_inputs_for_skin_export():
     """Expose owned skin outputs to Maya's DAG skin API without baking detail."""
-    inputs, consumers = {}, {}
+    inputs, consumers, graph_inputs = {}, {}, {}
     modified = cmds.file(query=True, modified=True)
     undo = cmds.undoInfo(query=True, state=True)
     try:
@@ -31,8 +31,15 @@ def primary_inputs_for_skin_export():
             shape = cmds.connectionInfo(settings + '.sourceMesh', sourceFromDestination=True).split('.')[0]
             destination = shape + '.inMesh'
             upstream = cmds.connectionInfo(prefix + 'GraphShape.AnimatedFace', sourceFromDestination=True)
+            if not upstream:
+                continue  # An enclosing export scope already owns this setup.
             inputs[destination] = cmds.connectionInfo(destination, sourceFromDestination=True)
             cmds.connectAttr(upstream, destination, force=True)
+            # The DAG skin API can stop at this plugin-shape branch even while
+            # the primary mesh is connected. Expose only owned native outputs.
+            graph_input = prefix + 'GraphShape.AnimatedFace'
+            graph_inputs[graph_input] = upstream
+            cmds.disconnectAttr(upstream, graph_input)
             for destination, route in json.loads(cmds.getAttr(settings + '.wrinklePrimaryConsumers') or '{}').items():
                 incoming = cmds.connectionInfo(destination, sourceFromDestination=True)
                 if incoming == route['replacement']:
@@ -40,6 +47,8 @@ def primary_inputs_for_skin_export():
                     cmds.connectAttr(route['original'], destination, force=True)
         yield
     finally:
+        for destination, source in graph_inputs.items():
+            cmds.connectAttr(source, destination, force=True)
         for destination, source in consumers.items():
             cmds.connectAttr(source, destination, force=True)
         for destination, source in inputs.items():
@@ -295,18 +304,19 @@ def build(mesh=None, prefix="EdwardWrinkles", patterns=None, hide_source=False,
             for index, field in enumerate(control_fields):
                 control = field["controller"]
                 field["port"] = "Local%d" % index
-                for attr, label, maximum in (("wrinkleDepth", "Wrinkle Depth", None),
-                                              ("wrinkleValue", "Wrinkle Value", 1.)):
+                for attr, label, maximum in (("wrinkleValue", "Wrinkle Value", 1.),
+                                              ("wrinkleDepth", "Wrinkle Depth", None)):
                     if not cmds.attributeQuery(attr, node=control, exists=True):
                         kwargs = dict(longName=attr, niceName=label, attributeType="double",
-                                      defaultValue=1., minValue=0., keyable=True)
+                                      defaultValue=0. if attr == "wrinkleDepth" else 1., minValue=0., keyable=True)
                         if maximum is not None:
                             kwargs["maxValue"] = maximum
                         cmds.addAttr(control, **kwargs)
-                    elif attr == "wrinkleValue":
-                        # Reset-to-default must enable wrinkles on reused controls.
+                    else:
+                        # Brows and lips share reset defaults, including legacy controls.
                         # Saved/current values still round-trip independently.
-                        cmds.addAttr(control + "." + attr, edit=True, defaultValue=1.)
+                        cmds.addAttr(control + "." + attr, edit=True,
+                                     defaultValue=0. if attr == "wrinkleDepth" else 1.)
                     plug = control + "." + attr
                     if attr in field.get("values", {}) and cmds.getAttr(plug, settable=True):
                         cmds.setAttr(plug, field["values"][attr])

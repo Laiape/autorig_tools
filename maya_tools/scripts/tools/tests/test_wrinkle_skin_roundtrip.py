@@ -25,19 +25,27 @@ try:
     cmds.file(new=True, force=True)
     mesh = cmds.polyPlane(w=8, h=8, sx=8, sy=8, ch=False)[0]
     rest = positions(mesh)
-    controls = [cmds.createNode('transform', name=n) for n in ('L_test_CTL', 'R_test_CTL')]
+    controls = [cmds.createNode('transform', name=n) for n in ('L_eyebrowMain_CTL', 'L_lipCorner_CTL')]
     # Legacy controls can retain a disabled reset value after reusing a setup.
     cmds.addAttr(controls[0], longName='wrinkleValue', attributeType='double',
                  min=0, max=1, defaultValue=0, keyable=True)
     cmds.setAttr(controls[0] + '.wrinkleValue', .4)
+    cmds.addAttr(controls[0], longName='wrinkleDepth', attributeType='double',
+                 min=0, defaultValue=1, keyable=True)
+    cmds.setAttr(controls[0] + '.wrinkleDepth', 1.5)
     patterns = {r: [1. if r == 'Forehead' else 0. for _ in rest] for r in bw.REGIONS}
     fields = [{'controller': n, 'masks': {'Forehead': [float((p[0] < 0) == (i == 0)) for p in rest]}}
               for i, n in enumerate(controls)]
     setup = bw.build(mesh, 'TestWrinkles', patterns, control_fields=fields, hide_source=True)
     for control in controls:
         assert cmds.attributeQuery('wrinkleValue', node=control, listDefault=True) == [1.]
+        assert cmds.attributeQuery('wrinkleDepth', node=control, listDefault=True) == [0.]
     assert cmds.getAttr(controls[0] + '.wrinkleValue') == .4
+    assert cmds.getAttr(controls[0] + '.wrinkleDepth') == 1.5
     assert cmds.getAttr(controls[1] + '.wrinkleValue') == 1
+    assert cmds.getAttr(controls[1] + '.wrinkleDepth') == 0
+    for control in controls:
+        cmds.setAttr(control + '.wrinkleDepth', 1)
     cmds.setAttr(controls[0] + '.wrinkleValue', 1)
     cmds.setAttr(setup['settings'] + '.ManualActivation', 1)
     baseline = positions(setup['output'])
@@ -72,6 +80,9 @@ try:
         # Replacement uses saved rest arrays even while the source is compressed.
         manager.import_wrinkles(path, replace_existing=True)
         assert np.allclose(positions('TestWrinkles_Face'), expected, atol=3e-5)
+        for control in controls:
+            assert cmds.attributeQuery('wrinkleValue', node=control, listDefault=True) == [1.]
+            assert cmds.attributeQuery('wrinkleDepth', node=control, listDefault=True) == [0.]
         # A changed topology must fail before removing the working graph.
         record = data[manager.WRINKLES_KEY][0]; record['topology'] = 'wrong'
         try:
@@ -83,7 +94,7 @@ try:
         cmds.file(rename=scene); cmds.file(save=True, type='mayaBinary', force=True)
         cmds.file(new=True, force=True); cmds.file(scene, open=True, force=True)
         assert np.allclose(positions('TestWrinkles_Face'), expected, atol=3e-5)
-        cmds.setAttr('L_test_CTL.wrinkleValue', 0)
+        cmds.setAttr(controls[0] + '.wrinkleValue', 0)
         disabled = positions('TestWrinkles_Face')
         assert np.allclose(disabled[rest[:, 0] < 0], compressed[rest[:, 0] < 0], atol=3e-5)
     print('PASS wrinkle .skc: local depth/value, side isolation, posed export, automatic import, idempotence, replacement, topology guard, native reopen', flush=True)

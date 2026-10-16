@@ -1,0 +1,250 @@
+{
+  "date": "2026-10-16",
+  "scope": "CPU evaluation only; no viewport FPS/GPU/cache acceptance.",
+  "trials": [
+    {
+      "source": "autorig_tools\\maya_tools\\docs\\validation\\eyelid_variants_20261016\\fixture7_exact_v007\\comparison.json",
+      "cohort": "isolated_eye",
+      "guide_samples_per_lid": 7,
+      "joint_count": 14,
+      "measurement": "CPU currentTime(update=True) plus demand of a native matrix sum of eyelid output joints. No vertex extraction, Profiler or viewport in timing; not FPS.",
+      "head_mesh_demand": [],
+      "comparisons": [
+        {
+          "mode": "off",
+          "variant": "aim",
+          "candidate": {
+            "median_ms": 1.6015000073821284,
+            "p95_ms": 2.335999990464188,
+            "max_ms": 2.922200001194142,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.672300000791438,
+            "p95_ms": 2.5375999975949526,
+            "max_ms": 3.910100000211969,
+            "samples": 240
+          },
+          "reference_before_ms": 1.6917500033741817,
+          "reference_after_ms": 1.6628500015940517,
+          "reference_for_delta_ms": 1.6773000024841167,
+          "delta_ms": 0.07579999510198832,
+          "reduction_percent": 4.519167411299525,
+          "reference_drift_percent": 1.7230073175537146,
+          "noise_band_ms": 0.08386500012420584,
+          "outside_noise": false,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 2.913790453362708e-08,
+            "position_max_error": 3.2253665644648574e-08,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "inconclusive_noise",
+          "pass_medians_ms": [
+            1.5334000054281205,
+            1.586699996551033,
+            1.9317499973112717
+          ],
+          "install_median_ms": 26.73759999743197
+        },
+        {
+          "mode": "off",
+          "variant": "deboor_exact",
+          "candidate": {
+            "median_ms": 4.1075999979511835,
+            "p95_ms": 5.0760000012815,
+            "max_ms": 5.61829999787733,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.7118000032496639,
+            "p95_ms": 2.289399999426678,
+            "max_ms": 3.910100000211969,
+            "samples": 240
+          },
+          "reference_before_ms": 1.6628500015940517,
+          "reference_after_ms": 1.7678000003797933,
+          "reference_for_delta_ms": 1.7153250009869225,
+          "delta_ms": -2.392274996964261,
+          "reduction_percent": -139.46482419295768,
+          "reference_drift_percent": 6.118373994744903,
+          "noise_band_ms": 0.10494999878574163,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 29.115166896694888,
+            "position_max_error": 29.182851433697426,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            4.3630500076687895,
+            4.141500001423992,
+            3.6265000017010607
+          ],
+          "install_median_ms": 422.61200000939425
+        },
+        {
+          "mode": "off",
+          "variant": "deboor_exact_aim",
+          "candidate": {
+            "median_ms": 3.2833999939612113,
+            "p95_ms": 3.805499989539385,
+            "max_ms": 5.418100001406856,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.7394000096828677,
+            "p95_ms": 2.181499992730096,
+            "max_ms": 3.47729999339208,
+            "samples": 240
+          },
+          "reference_before_ms": 1.7678000003797933,
+          "reference_after_ms": 1.7157500042230822,
+          "reference_for_delta_ms": 1.7417750023014378,
+          "delta_ms": -1.5416249916597735,
+          "reduction_percent": -88.50884813611387,
+          "reference_drift_percent": 2.9883306447696496,
+          "noise_band_ms": 0.08708875011507189,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 2.7509344132785216,
+            "position_max_error": 3.3171882149064267,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            3.3112500022980385,
+            3.31105000077514,
+            3.2465999975102022
+          ],
+          "install_median_ms": 471.40769999532495
+        },
+        {
+          "mode": "parallel",
+          "variant": "aim",
+          "candidate": {
+            "median_ms": 1.3538499988499098,
+            "p95_ms": 1.5859999984968454,
+            "max_ms": 1.6828000079840422,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.403700007358566,
+            "p95_ms": 1.7228000069735572,
+            "max_ms": 2.110699992044829,
+            "samples": 240
+          },
+          "reference_before_ms": 1.3208000018494204,
+          "reference_after_ms": 1.4931999976397492,
+          "reference_for_delta_ms": 1.4069999997445848,
+          "delta_ms": 0.05315000089467503,
+          "reduction_percent": 3.777540931366272,
+          "reference_drift_percent": 12.253020314259055,
+          "noise_band_ms": 0.17239999579032883,
+          "outside_noise": false,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 2.913790453362708e-08,
+            "position_max_error": 3.2253665644648574e-08,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "inconclusive_noise",
+          "pass_medians_ms": [
+            1.3952000008430332,
+            1.3212499979999848,
+            1.3538499988499098
+          ],
+          "install_median_ms": 26.73759999743197
+        },
+        {
+          "mode": "parallel",
+          "variant": "deboor_exact",
+          "candidate": {
+            "median_ms": 1.5882000006968156,
+            "p95_ms": 1.9706000020960346,
+            "max_ms": 4.273500002454966,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.5198499968391843,
+            "p95_ms": 1.916599998367019,
+            "max_ms": 5.330800006049685,
+            "samples": 240
+          },
+          "reference_before_ms": 1.4931999976397492,
+          "reference_after_ms": 1.5523999973083846,
+          "reference_for_delta_ms": 1.522799997474067,
+          "delta_ms": -0.06540000322274864,
+          "reduction_percent": -4.294720470923982,
+          "reference_drift_percent": 3.887575503469463,
+          "noise_band_ms": 0.07613999987370335,
+          "outside_noise": false,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 10.750934413278522,
+            "position_max_error": 10.910627017929954,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            1.632949999475386,
+            1.5973499976098537,
+            1.491299997724127
+          ],
+          "install_median_ms": 422.61200000939425
+        },
+        {
+          "mode": "parallel",
+          "variant": "deboor_exact_aim",
+          "candidate": {
+            "median_ms": 1.4436499986913987,
+            "p95_ms": 1.7267000075662509,
+            "max_ms": 2.13939999230206,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.4902500042808242,
+            "p95_ms": 1.905500001157634,
+            "max_ms": 5.330800006049685,
+            "samples": 240
+          },
+          "reference_before_ms": 1.5523999973083846,
+          "reference_after_ms": 1.407600000675302,
+          "reference_for_delta_ms": 1.4799999989918433,
+          "delta_ms": 0.03635000030044466,
+          "reduction_percent": 2.4560811030544465,
+          "reference_drift_percent": 9.783783562953953,
+          "noise_band_ms": 0.14479999663308263,
+          "outside_noise": false,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 2.807552734452395,
+            "position_max_error": 3.351150688615715,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            1.5038499986985698,
+            1.4346000025398098,
+            1.4171000002534129
+          ],
+          "install_median_ms": 471.40769999532495
+        }
+      ]
+    }
+  ]
+}

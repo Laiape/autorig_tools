@@ -72,45 +72,11 @@ class NeckModule(object):
         self.neck_chain = guides_manager.get_guides(f"{self.side}_neck00_JNT", parent=self.module_trn)
         cmds.select(clear=True)
 
-        # Red de orientación temporal: se construye igual que antes, se hornean
-        # los valores (las guías son estáticas) y se borra, así el rig no
-        # arrastra transforms _GUIDE ni nodos aim/blend vivos.
-        neck_root_guide = cmds.createNode("transform", name=f"{self.side}_neckRootTemp_TRN", ss=True)
-        cmds.matchTransform(neck_root_guide, self.neck_chain[0], pos=True, rot=True)
-
-        neck_end_guide = cmds.createNode("transform", name=f"{self.side}_neckEndTemp_TRN", ss=True)
-        cmds.matchTransform(neck_end_guide, self.neck_chain[-1], pos=True, rot=True)
-        self.head_guide_matrix = cmds.getAttr(f"{neck_end_guide}.worldMatrix[0]")
-
-        aim_matrix_root = cmds.createNode("aimMatrix", name=f"{self.side}_neck00Temp_AIM", ss=True)
-        cmds.setAttr(f"{aim_matrix_root}.primaryInputAxis", *self.primary_axis, type="double3")
-        cmds.setAttr(f"{aim_matrix_root}.secondaryInputAxis", *self.secondary_axis, type="double3")
-        cmds.connectAttr(f"{neck_root_guide}.worldMatrix[0]", f"{aim_matrix_root}.inputMatrix")
-        cmds.connectAttr(f"{neck_end_guide}.worldMatrix[0]", f"{aim_matrix_root}.primaryTargetMatrix")
-
-        blend_matrix_end = cmds.createNode("blendMatrix", name=f"{self.side}_neckEndTemp_BLM", ss=True)
-        cmds.connectAttr(f"{neck_end_guide}.worldMatrix[0]", f"{blend_matrix_end}.inputMatrix")
-        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_end}.target[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix_end}.envelope", 1)
-        cmds.setAttr(f"{blend_matrix_end}.target[0].translateWeight", 0)
-        cmds.setAttr(f"{blend_matrix_end}.target[0].scaleWeight", 0)
-        cmds.setAttr(f"{blend_matrix_end}.target[0].shearWeight", 0)
-
-        blend_matrix_mid = cmds.createNode("blendMatrix", name=f"{self.side}_neckMidTemp_BLM", ss=True)
-        cmds.connectAttr(f"{aim_matrix_root}.outputMatrix", f"{blend_matrix_mid}.inputMatrix")
-        cmds.connectAttr(f"{blend_matrix_end}.outputMatrix", f"{blend_matrix_mid}.target[0].targetMatrix")
-
-        self.neck_guides_matrices = []
-        self.neck_guides_matrices.append(cmds.getAttr(f"{aim_matrix_root}.outputMatrix"))
-
-        for i in range(self.controllers_number - 2):
-            weight = (i + 1) / (self.controllers_number - 1)
-            cmds.setAttr(f"{blend_matrix_mid}.envelope", weight)
-            self.neck_guides_matrices.append(cmds.getAttr(f"{blend_matrix_mid}.outputMatrix"))
-
-        self.neck_guides_matrices.append(cmds.getAttr(f"{blend_matrix_end}.outputMatrix"))
-
-        cmds.delete(blend_matrix_mid, blend_matrix_end, aim_matrix_root, neck_end_guide, neck_root_guide)
+        self.head_guide_matrix = cmds.getAttr(self.neck_chain[-1] + '.worldMatrix[0]')
+        self.neck_guides_matrices = guides_manager.sample_chain_matrices(
+            self.neck_chain, self.controllers_number,
+            self.primary_axis, self.secondary_axis)
+        self.controllers_number = len(self.neck_guides_matrices)
         cmds.delete(self.neck_chain[0])
 
     def controller_creation(self):

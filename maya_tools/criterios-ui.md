@@ -36,7 +36,8 @@ Rigging > Guides: Create New Guides, Import Guides, Export Guides, Mirror Guides
 Rigging > Build: CREATE RIG, CREATE RIG SELF, CREATE RIG SELF MATH,
 BUILD LEG (disabled legacy entry), Test Rig by Guide, De Boor Ribbon.
 Rigging > Controllers: Export All Controllers, Mirror Controllers,
-Controller Shape Library. Rigging > Utilities: Rig Utilities.
+Replace Controller Shapes, Controller Shape Library.
+Rigging > Utilities: Rig Utilities.
 
 Deformers > Skinning: Skinning Manager, skin import/export/copy, Proxy Skinning,
 Export Source Skin Data, Auto Skin Transfer (Clothes), Skin Along Curve/Surface.

@@ -1,0 +1,186 @@
+{
+  "accepted": true,
+  "max_errors": {
+    "p": 0.0,
+    "n": 0.0,
+    "j": 0.0
+  },
+  "inputs_unchanged": true,
+  "baseline_build_seconds": 31.354688599996734,
+  "optimized_build_seconds": 31.352052000002004,
+  "samples": 4080,
+  "meshes": 60,
+  "joints": 852,
+  "optimizations": {
+    "enabled": true,
+    "static_point_curves": 5451,
+    "shared_math_nodes": 0,
+    "new_skin_bindings": [
+      {
+        "skin": "C_eyebrows_local_SKC",
+        "before": 48,
+        "after": 34
+      },
+      {
+        "skin": "C_eyelids_local_SKC",
+        "before": 103,
+        "after": 85
+      },
+      {
+        "skin": "C_ear_nose_local_SKC",
+        "before": 13,
+        "after": 7
+      },
+      {
+        "skin": "C_nose_high_local_SKC",
+        "before": 7,
+        "after": 5
+      },
+      {
+        "skin": "C_eyelashes_local_SKC",
+        "before": 72,
+        "after": 42
+      },
+      {
+        "skin": "C_eyelashes_global_SKC",
+        "before": 49,
+        "after": 1
+      },
+      {
+        "skin": "C_pants_SKC",
+        "before": 24,
+        "after": 17
+      },
+      {
+        "skin": "C_guantes_SKC",
+        "before": 34,
+        "after": 26
+      },
+      {
+        "skin": "skinCluster13",
+        "before": 19,
+        "after": 16
+      },
+      {
+        "skin": "skinCluster41",
+        "before": 103,
+        "after": 76
+      },
+      {
+        "skin": "C_nose_local_SKC",
+        "before": 7,
+        "after": 5
+      },
+      {
+        "skin": "C_body_SKC_COPY_COPY",
+        "before": 388,
+        "after": 40
+      },
+      {
+        "skin": "collar1_BAKED_SKC",
+        "before": 10,
+        "after": 9
+      }
+    ]
+  },
+  "scope": "Two full CREATE RIG builds from the same current inputs. CPU quality, not viewport FPS.",
+  "native_reopen_max_errors": {
+    "p": 0.0,
+    "n": 0.0,
+    "j": 2.029080117793569e-05
+  },
+  "native_reopen_accepted": true,
+  "nonzero_wrinkle_displacement": 0.8246513633592106,
+  "active_wrinkle_probe_errors": {
+    "p": 0.0,
+    "n": 0.0,
+    "j": 0.0
+  },
+  "active_probe_samples": 720,
+  "active_probe_scope": "Test-only manual activation and nonzero local depths/values; settings are not saved into source or delivered rigs.",
+  "maximum_motion_per_mesh": {
+    "|Edward|cuerpo_base_poseCorrectives_BLS_driver|polySurfaceShape1": 106.79915837146042,
+    "|Edward|geo_GRP|FINAL|Xgen|scalp_cabello|scalp_cabello_Shape": 0.0,
+    "|Edward|geo_GRP|FINAL|Xgen|scalp_pestanas|scalp_pestanas_Shape": 0.0,
+    "|Edward|geo_GRP|FINAL|botas_geo|pasted__brazaletes3|pasted__brazaletes3_ShapeDeformed": 167.5961730768436,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface58|polySurface58_ShapeDeformed": 156.11296570965325,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface61|polySurface61_ShapeDeformed": 127.0180043666588,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface62|polySurface62_ShapeDeformed": 156.85704562647345,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface885|polySurface885_Shape": 192.81758902757267,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface886|polySurface886_Shape": 152.89246553430763,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface887|polySurface887_Shape": 161.34194902985877,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface891|polySurface891_Shape": 100.96349346718024,
+    "|Edward|geo_GRP|FINAL|botas_geo|polySurface92|polySurface92_Shape": 191.84896154054493,
+    "|Edward|geo_GRP|FINAL|cabeza_geo|cabello_geo|cabello_geo_Shape": 38.13900975965109,
+    "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high|cabeza_high_Shape": 33.21278762318434,
+    "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low|cabeza_low_Shape": 9.120126515717224,
+    "|Edward|geo_GRP|FINAL|cabeza_geo|corneas_geo|corneas_geo_Shape": 29.279339932827273,
+    "|Edward|geo_GRP|FINAL|cabeza_geo|ojos_high|ojos_high_Shape": 29.27466079005689,
+    "|Edward|geo_GRP|FINAL|cabeza_geo|pestanas_geo|pestanas_geo_Shape": 3.538774280168592,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|HEBILLAS1|HEBILLAS1_Shape": 46.13309388510824,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|brazaletes1|brazaletes1_ShapeDeformed": 46.13599506363089,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed": 20.66313437136827,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_ShapeDeformed": 23.83446376698426,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|collar1|collar1_Shape": 26.53270566554858,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|collar2|collar2_ShapeDeformed": 26.202287580507093,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|collar3|collar3_ShapeDeformed": 25.90052223588414,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|cuerpo_base|cuerpo_base_Shape": 106.79915837146042,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo1|harapo1_ShapeDeformed": 18.552205890419554,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo2|harapo2_ShapeDeformed": 18.412965369223265,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|pCube26|pCube26_ShapeDeformed": 23.68374732037556,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|pCylinder16|pCylinder16_ShapeDeformed": 25.05656786843434,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|pantalon_geo|pantalon_geo_Shape": 102.21739925874132,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface32|polySurface32_ShapeDeformed": 17.524079974019287,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface33|polySurface33_ShapeDeformed": 17.309446240391896,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface48|polySurface48_ShapeDeformed": 23.405786798065616,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface49|polySurface49_ShapeDeformed": 28.569993884260068,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface889|polySurface889_ShapeDeformed": 20.62365855860732,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface892|polySurface892_ShapeDeformed": 24.423570673518245,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface900|polySurface900_ShapeDeformed": 18.81735159786083,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface905|polySurface905_ShapeDeformed": 24.303339342058745,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras30|tiras30_ShapeDeformed": 25.09714860016875,
+    "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras31|tiras31_ShapeDeformed": 17.687007578004373,
+    "|Edward|geo_GRP|FINAL|mouth|Encia_inf_low|Encia_inf_low_Shape": 27.345056814545345,
+    "|Edward|geo_GRP|FINAL|mouth|LenguaLow2|LenguaLow2_Shape": 27.38651588218794,
+    "|Edward|geo_GRP|FINAL|mouth|encia_sup_low|encia_sup_low_Shape": 27.795477051640514,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|HEBILLAsmun1|HEBILLAsmun1_Shape": 91.49209343141555,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|braz3|braz3_Shape": 104.13646978937783,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|cables1|cables1_Shape": 120.84298771830316,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|pCube9|pCube9_Shape": 102.89644713410247,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|pCylinder10|pCylinder10_Shape": 153.06938969077925,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|pasted__GUANTES2|pasted__GUANTES2_Shape": 126.82637251766117,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface72|polySurface72_Shape": 131.85902685055805,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface79|polySurface79_Shape": 159.61911863173668,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface82|polySurface82_Shape": 164.27917072257756,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface84|polySurface84_Shape": 162.73348646047393,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface87|polySurface87_Shape": 121.44792447219808,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface88|polySurface88_Shape": 134.14477630267828,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface89|polySurface89_Shape": 160.0214219020061,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface93|polySurface93_Shape": 156.1953211039687,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|polySurface94|polySurface94_Shape": 146.46674578144675,
+    "|Edward|geo_GRP|FINAL|tijeras_geo|tiras39|tiras39_Shape": 102.37281606272381
+  },
+  "omitted_zero_bindings": 514,
+  "optimized_skin_count": 58,
+  "cross_character_smoke": [
+    {
+      "asset": "Nini",
+      "success": true,
+      "joints": 576,
+      "skins": 69
+    },
+    {
+      "asset": "horse",
+      "success": true,
+      "joints": 787,
+      "skins": 11
+    }
+  ],
+  "construction_timing_scope": "One sequential A/B pair, OS cache warm; not a statistical speedup or viewport FPS measurement.",
+  "unknown_source_metadata": [
+    "MayaNodeEditorSavedTabsInfo",
+    "hyperShadePrimaryNodeEditorSavedTabsInfo"
+  ],
+  "source_format_note": "Preserved native Maya ASCII. Unsupported source UI metadata blocked binary conversion; no artist data deleted.",
+  "neutralized_pose_detail_displacement": 0.0
+}

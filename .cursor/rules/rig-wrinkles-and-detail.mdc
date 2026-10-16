@@ -4,7 +4,7 @@ alwaysApply: true
 ---
 
 # Wrinkles and detail
-Source and migration plan: `maya_tools/docs/rig_performance_plan.md`.
+Current criteria: `maya_tools/docs/rig_performance_criteria.md`.
 - Define Animation, Review and Final/Export evaluation contracts using the same
   controls and animation. Specify visible output, enabled work and consumers.
 - Animation must bypass expensive wrinkle/detail branches, not just hide output
@@ -42,9 +42,11 @@ Source and migration plan: `maya_tools/docs/rig_performance_plan.md`.
 - Stateful simulation/cloth/muscles require ordered evaluation and explicit cache
   invalidation. Keep them outside the base animation rig; validate cached delivery
   and avoid claiming random-access correctness for an uncached simulation.
-- Cached speedups require an independent geometry/invalidation pass. Edward's
-  current full-quality cache failed this gate; default Review/Export to uncached
-  evaluation until matching evidence approves a replacement.
+- Cached speedups require an independent CPU/DG geometry/invalidation pass.
+  The earlier regional v002 cache failed; the 2026-10-15 artist snapshot's hot
+  cache matched CPU in 11 frame jumps and two key edits with wrinkles OFF/ON.
+  These are different scene lineages. Start uncached; opt in only within matching
+  tested scene/version/edit coverage. Export still needs an explicit final gate.
 - Preserve presets, controls, rest fields and SKC provenance. Restore full
   quality without stale results. Skin export must expose the owned primary DAG
   branch, then restore output and garment connections.

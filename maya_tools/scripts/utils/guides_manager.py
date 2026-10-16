@@ -825,6 +825,51 @@ def _with_translation(matrix, pos):
     return om.MMatrix(values)
 
 
+def sample_chain_matrices(guides, count, primary_axis=(1, 0, 0),
+                          secondary_axis=(0, 1, 0), spacing_bias=1.0):
+    """Sample each ordered segment, retaining a control at every guide.
+
+    The requested count is a minimum: longer chains increase it so no authored
+    corner is discarded. Extra samples split the longest remaining spans; bias
+    affects spacing inside each segment only. Frames aim at the next guide
+    using the authored secondary axis as up. The tip inherits the last frame.
+    No DG nodes are created.
+    """
+    if int(count) != count or count < 2:
+        raise ValueError("A guide path needs at least two controllers.")
+    if len(guides) < 2:
+        raise ValueError("A guide path needs at least two guides.")
+    if not math.isfinite(spacing_bias) or spacing_bias <= 0:
+        raise ValueError("Guide spacing bias must be finite and positive.")
+    for previous, current in zip(guides, guides[1:]):
+        parent = cmds.listRelatives(current, parent=True, fullPath=True) or []
+        if parent != cmds.ls(previous, long=True):
+            raise ValueError("Guide path must be one ordered, unbranched chain.")
+
+    positions = [om.MVector(cmds.xform(g, q=True, ws=True, t=True)) for g in guides]
+    lengths = [(b - a).length() for a, b in zip(positions, positions[1:])]
+    if any(not math.isfinite(length) or length < 1e-6 for length in lengths):
+        raise ValueError("Consecutive path guides must have distinct positions.")
+    divisions = [1] * len(lengths)
+    for _ in range(max(int(count), len(guides)) - len(guides)):
+        index = max(range(len(lengths)), key=lambda i: lengths[i] / divisions[i])
+        divisions[index] += 1
+
+    up_index, up_sign = _axis_index_sign(secondary_axis)
+    matrices = []
+    for i, divisions_in_segment in enumerate(divisions):
+        source = cmds.xform(guides[i], q=True, ws=True, m=True)
+        up = om.MVector(source[up_index * 4:up_index * 4 + 3]) * up_sign
+        frame = _aim_matrix(positions[i], positions[i + 1], positions[i] + up,
+                            primary_axis, secondary_axis)
+        for sample in range(divisions_in_segment):
+            weight = (sample / float(divisions_in_segment)) ** spacing_bias
+            position = positions[i] * (1.0 - weight) + positions[i + 1] * weight
+            matrices.append(list(_with_translation(frame, position)))
+    matrices.append(list(_with_translation(frame, positions[-1])))
+    return matrices
+
+
 def _scale_rotation(matrix, weight):
     """Rotación de la matriz escalada por weight (slerp desde identidad)."""
     quat = om.MTransformationMatrix(matrix).rotation(asQuaternion=True)

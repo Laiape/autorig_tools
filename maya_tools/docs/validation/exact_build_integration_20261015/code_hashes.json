@@ -1,0 +1,5 @@
+{
+  "maya_tools/scripts/utils/create_rig.py": "2279eb6407842b53a510a05d000c4594d8b460d97b2597190a7ef7b204e01550",
+  "maya_tools/scripts/tools/skin_manager_api.py": "0f4dda741a3010e859ad0ec3343421d41caf4c880293613a53a0b8772b7c3bdb",
+  "maya_tools/scripts/tools/rig_exact_cleanup.py": "73199791331ebf1cbe0ff54bdebd56725b6c1a7e2818a6d40eb55f3813370db8"
+}

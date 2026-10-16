@@ -19,6 +19,7 @@ reload(ribbon)
 
 class SpineModule(object):
 
+    # Historical two-guide calibration below; now applied inside each segment.
     # Reparto de la flexión sagital: sesga hacia el extremo CAUDAL las posiciones
     # de REPOSO de los controles -> weight = (i/(n-1))**SAGITTAL_BIAS. Esas
     # posiciones son los CVs del ribbon, así que juntarlos en la grupa deja que la
@@ -124,26 +125,13 @@ class SpineModule(object):
         """
         Create the logic for spine guides.
         """
-        # Nuevo método de guías: matrices horneadas en Python entre la guía root
-        # y la end. Todas comparten la misma orientación (X apunta a la guía
-        # siguiente, Y mira al up del mundo) con las posiciones repartidas en
-        # línea recta entre ambas — tantas como controladores se pidan. El
-        # espaciado lo pondera SAGITTAL_BIAS (ver arriba): no cambia por dónde
-        # pasa la recta, solo dónde caen los controles sobre ella.
-        root_pos = om.MVector(cmds.xform(self.spine_chain[0], q=True, ws=True, t=True))
-        end_pos = om.MVector(cmds.xform(self.spine_chain[-1], q=True, ws=True, t=True))
+        self.spine_guides_matrices = guides_manager.sample_chain_matrices(
+            self.spine_chain, self.spine_controllers,
+            self.primary_input_axis, self.secondary_input_axis,
+            spacing_bias=self.SAGITTAL_BIAS)
+        self.spine_controllers = len(self.spine_guides_matrices)
+        base_matrix = om.MMatrix(self.spine_guides_matrices[0])
         cmds.delete(self.spine_chain[0])
-
-        base_matrix = guides_manager._aim_matrix(
-            root_pos, end_pos, root_pos + om.MVector(0.0, 1.0, 0.0),
-            self.primary_input_axis, self.secondary_input_axis
-        )
-
-        self.spine_guides_matrices = []
-        for i in range(self.spine_controllers):
-            weight = (i / (self.spine_controllers - 1)) ** self.SAGITTAL_BIAS
-            pos = root_pos * (1.0 - weight) + end_pos * weight
-            self.spine_guides_matrices.append(list(guides_manager._with_translation(base_matrix, pos)))
 
         # guia OPCIONAL del localHip: da la POSICION del ctl del pelvis (la
         # orientacion sigue siendo la del spine); sin guia cae al root

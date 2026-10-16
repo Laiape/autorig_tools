@@ -478,7 +478,7 @@ class EyelidModule(object):
                 cmds.connectAttr(f"{row}.output{axis}", f"{eye_aim_curve}.controlPoints[{index}].{value}")
         cmds.setAttr(f"{eye_aim_curve}.inheritsTransform", 0)
         cmds.setAttr(f"{eye_aim_curve}.overrideEnabled", 1)
-        cmds.setAttr(f"{eye_aim_curve}.overrideDisplayType", 1)  # Template.
+        cmds.setAttr(f"{eye_aim_curve}.overrideDisplayType", 2)  # Reference: visible, not selectable.
         cmds.parent(eye_aim_curve, self.side_aim_ctl, relative=True)
         cmds.setAttr(f"{eye_aim_curve}.hiddenInOutliner", 1)
 
@@ -580,61 +580,54 @@ class EyelidModule(object):
         Create the blink setup for the eyelid module.
         """
 
+        # Keep guide curves static: their edit points place the controls.
+        # Pose independent copies before blending, so both lids share exactly
+        # the same animated contact curve at full blink (including rotations).
+        upper_pose = cmds.duplicate(self.eyelid_up_curve, n=f"{self.side}_eyelidUpPose_CRV")[0]
+        lower_pose = cmds.duplicate(self.eyelid_down_curve, n=f"{self.side}_eyelidDownPose_CRV")[0]
+
         # Upper Blink
-        upper_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_up_curve, self.eyelid_up_curve_rebuild, name=f"{self.side}_upperEyelidBlink_BLS")[0]
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink}.{self.blink_ref_curve}")
-        upper_blink_abs = cmds.createNode("condition", name=f"{self.side}_upperBlinkAbs_COND", ss=True)
-        cmds.setAttr(f"{upper_blink_abs}.operation", 4)  # Greater or Equal
-        cmds.setAttr(f"{upper_blink_abs}.secondTerm", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_abs}.firstTerm")
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_abs}.colorIfTrueR")
-        upper_blink_neg = cmds.createNode("negate", name=f"{self.side}_upperBlinkAbs_NEG", ss=True)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_neg}.input")
-        cmds.connectAttr(f"{upper_blink_neg}.output", f"{upper_blink_abs}.colorIfFalseR")
+        upper_blink = cmds.blendShape(self.blink_ref_curve, upper_pose, self.eyelid_up_curve_rebuild, name=f"{self.side}_upperEyelidBlink_BLS")[0]
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink}.weight[0]")
         upper_blink_rev = cmds.createNode("reverse", name=f"{self.side}_upperBlink_REV", ss=True)
-        cmds.connectAttr(f"{upper_blink_abs}.outColorR", f"{upper_blink_rev}.inputX")
-        cmds.connectAttr(f"{upper_blink_rev}.outputX", f"{upper_blink}.{self.eyelid_up_curve}")
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Upper_Blink", f"{upper_blink_rev}.inputX")
+        cmds.connectAttr(f"{upper_blink_rev}.outputX", f"{upper_blink}.weight[1]")
 
         # Lower Blink
-        lower_blink = cmds.blendShape(self.blink_ref_curve, self.eyelid_down_curve, self.eyelid_down_curve_rebuild, name=f"{self.side}_lowerEyelidBlink_BLS")[0]
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink}.{self.blink_ref_curve}")
-        lower_blink_abs = cmds.createNode("condition", name=f"{self.side}_lowerBlinkAbs_COND", ss=True)
-        cmds.setAttr(f"{lower_blink_abs}.operation", 4)  # Greater or Equal
-        cmds.setAttr(f"{lower_blink_abs}.secondTerm", 0)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_abs}.firstTerm")
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_abs}.colorIfTrueR")
-        lower_blink_neg = cmds.createNode("negate", name=f"{self.side}_lowerBlinkAbs_NEG", ss=True)
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_neg}.input")
-        cmds.connectAttr(f"{lower_blink_neg}.output", f"{lower_blink_abs}.colorIfFalseR")
+        lower_blink = cmds.blendShape(self.blink_ref_curve, lower_pose, self.eyelid_down_curve_rebuild, name=f"{self.side}_lowerEyelidBlink_BLS")[0]
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink}.weight[0]")
         lower_blink_rev = cmds.createNode("reverse", name=f"{self.side}_lowerBlink_REV", ss=True)
-        cmds.connectAttr(f"{lower_blink_abs}.outColorR", f"{lower_blink_rev}.inputX")
-        cmds.connectAttr(f"{lower_blink_rev}.outputX", f"{lower_blink}.{self.eyelid_down_curve}")
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Lower_Blink", f"{lower_blink_rev}.inputX")
+        cmds.connectAttr(f"{lower_blink_rev}.outputX", f"{lower_blink}.weight[1]")
 
         # Blink Height
-        blink_blend = cmds.blendShape(self.eyelid_up_curve, self.eyelid_down_curve, self.blink_ref_curve, name=f"{self.side}_eyelidBlink_BLS")[0] # Blend between blink curve and upper eyelid curve
-        cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{blink_blend}.{self.eyelid_up_curve}") # Connect upper blink attribute to blend shape weight
+        blink_blend = cmds.blendShape(upper_pose, lower_pose, self.blink_ref_curve, name=f"{self.side}_eyelidBlink_BLS")[0]
+        cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{blink_blend}.weight[0]")
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_blinkHeight_REV", ss=True)
         cmds.connectAttr(f"{self.eye_direct_ctl}.Blink_Height", f"{reverse_node}.inputX") # Connect blink height attribute to reverse
-        cmds.connectAttr(f"{reverse_node}.outputX", f"{blink_blend}.{self.eyelid_down_curve}") # Connect reverse output to blend shape weight
+        cmds.connectAttr(f"{reverse_node}.outputX", f"{blink_blend}.weight[1]")
 
-        upper_eyelid_curve_skin = cmds.skinCluster(*self.upper_local_jnt, self.eyelid_up_curve_rebuild, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, n=f"{self.side}_upperEyelid_SKIN")[0]
-        lower_eyelid_curve_skin = cmds.skinCluster(*self.lower_local_jnt, self.eyelid_down_curve_rebuild, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, n=f"{self.side}_lowerEyelid_SKIN")[0]
+        upper_eyelid_curve_skin = cmds.skinCluster(*self.upper_local_jnt, upper_pose, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, n=f"{self.side}_upperEyelid_SKIN")[0]
+        lower_eyelid_curve_skin = cmds.skinCluster(*self.lower_local_jnt, lower_pose, toSelectedBones=True, bindMethod=0, skinMethod=0, normalizeWeights=1, n=f"{self.side}_lowerEyelid_SKIN")[0]
 
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[0]", tv=[(self.upper_local_jnt[0], 1.0)])
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[1]", tv=[(self.upper_local_jnt[0], 0.5), (self.upper_local_jnt[1], 0.5)])
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[2]", tv=[(self.upper_local_jnt[1], 1.0)])
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[3]", tv=[(self.upper_local_jnt[2], 1)])
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[4]", tv=[(self.upper_local_jnt[3], 1.0)])
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[5]", tv=[(self.upper_local_jnt[3], 0.5), (self.upper_local_jnt[4], 0.5)])
-        cmds.skinPercent(upper_eyelid_curve_skin, f"{self.eyelid_up_curve_rebuild}.cv[6]", tv=[(self.upper_local_jnt[4], 1.0)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[0]", tv=[(self.upper_local_jnt[0], 1.0)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[1]", tv=[(self.upper_local_jnt[0], 0.5), (self.upper_local_jnt[1], 0.5)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[2]", tv=[(self.upper_local_jnt[1], 1.0)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[3]", tv=[(self.upper_local_jnt[2], 1)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[4]", tv=[(self.upper_local_jnt[3], 1.0)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[5]", tv=[(self.upper_local_jnt[3], 0.5), (self.upper_local_jnt[4], 0.5)])
+        cmds.skinPercent(upper_eyelid_curve_skin, f"{upper_pose}.cv[6]", tv=[(self.upper_local_jnt[4], 1.0)])
 
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[0]", tv=[(self.lower_local_jnt[0], 1.0)])
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[1]", tv=[(self.lower_local_jnt[0], 0.5), (self.lower_local_jnt[1], 0.5)])
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[2]", tv=[(self.lower_local_jnt[1], 1.0)])
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[3]", tv=[(self.lower_local_jnt[2], 1.0)])
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[4]", tv=[(self.lower_local_jnt[3], 1.0)])
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[5]", tv=[(self.lower_local_jnt[3], 0.5), (self.lower_local_jnt[4], 0.5)])
-        cmds.skinPercent(lower_eyelid_curve_skin, f"{self.eyelid_down_curve_rebuild}.cv[6]", tv=[(self.lower_local_jnt[4], 1.0)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[0]", tv=[(self.lower_local_jnt[0], 1.0)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[1]", tv=[(self.lower_local_jnt[0], 0.5), (self.lower_local_jnt[1], 0.5)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[2]", tv=[(self.lower_local_jnt[1], 1.0)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[3]", tv=[(self.lower_local_jnt[2], 1.0)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[4]", tv=[(self.lower_local_jnt[3], 1.0)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[5]", tv=[(self.lower_local_jnt[3], 0.5), (self.lower_local_jnt[4], 0.5)])
+        cmds.skinPercent(lower_eyelid_curve_skin, f"{lower_pose}.cv[6]", tv=[(self.lower_local_jnt[4], 1.0)])
+
+        from maya_tools.scripts.tools import eyelid_rotation
+        eyelid_rotation.install(self.side, self.eye_guide_matrix)
 
     def fleshy_setup(self):
 
@@ -772,6 +765,29 @@ class EyelidModule(object):
         upper_cvs = cmds.ls(f"{self.linear_upper_curve}.cv[*]", fl=True)
         lower_cvs = cmds.ls(f"{self.linear_lower_curve}.cv[*]", fl=True)
 
+        # Preserve fitted rest samples when open; remove their mismatch on
+        # closure by converging to shared parameters and identity rest offsets.
+        parameter_sets = [
+            [self.getClosestParamToPosition(curve, cmds.pointPosition(cv, w=True)) for cv in cvs]
+            for curve, cvs in ((self.eyelid_up_curve_rebuild, upper_cvs),
+                              (self.eyelid_down_curve_rebuild, lower_cvs))
+        ]
+        blink_amounts = []
+        for label, attr in (("upper", "Upper_Blink"), ("lower", "Lower_Blink")):
+            clamp = cmds.createNode("clamp", name=f"{self.side}_{label}ContactAmount_CLP", ss=True)
+            cmds.setAttr(f"{clamp}.maxR", 1)
+            cmds.connectAttr(f"{self.eye_direct_ctl}.{attr}", f"{clamp}.inputR")
+            blink_amounts.append(f"{clamp}.outputR")
+
+        def contact_parameter(fraction):
+            values = []
+            for parameters in parameter_sets:
+                position = fraction * (len(parameters) - 1)
+                index = min(int(position), len(parameters) - 2)
+                weight = position - index
+                values.append(parameters[index] * (1 - weight) + parameters[index + 1] * weight)
+            return sum(values) * 0.5
+
         skinning_jnts = []
         skinning_aims = []
 
@@ -781,15 +797,22 @@ class EyelidModule(object):
 
             if cv in upper_cvs:
                 name = "upper"
-                parameter = self.getClosestParamToPosition(self.eyelid_up_curve_rebuild, cv_pos) # Get the closest parameter on the curve to the CV position
+                parameter = parameter_sets[0][i]
             else:
                 name = "down"
-                parameter = self.getClosestParamToPosition(self.eyelid_down_curve_rebuild, cv_pos) # Get the closest parameter on the curve to the CV position
+                parameter = parameter_sets[1][i - len(upper_cvs)]
 
             mtp = cmds.createNode("motionPath", name=f"{self.side}_{name}Eyelid0{i}_MTP", ss=True)
             four_by_four_matrix = cmds.createNode("fourByFourMatrix", name=f"{self.side}_{name}Eyelid0{i}_F4X4", ss=True)
 
-            cmds.setAttr(f"{mtp}.uValue", parameter) # Set the parameter value
+            lid_index = 0 if cv in upper_cvs else 1
+            index = i if lid_index == 0 else i - len(upper_cvs)
+            count = len(upper_cvs) if lid_index == 0 else len(lower_cvs)
+            parameter_blend = cmds.createNode("blendTwoAttr", name=f"{self.side}_{name}Eyelid0{i}ContactU_BTA", ss=True)
+            cmds.setAttr(f"{parameter_blend}.input[0]", parameter)
+            cmds.setAttr(f"{parameter_blend}.input[1]", contact_parameter(index / float(count - 1)))
+            cmds.connectAttr(blink_amounts[lid_index], f"{parameter_blend}.attributesBlender")
+            cmds.connectAttr(f"{parameter_blend}.output", f"{mtp}.uValue")
             # cmds.setAttr(f"{mtp}.fractionMode", 1) # Disable fraction mode
             
 
@@ -839,13 +862,24 @@ class EyelidModule(object):
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{node[0]}.offsetParentMatrix")
 
             mult_matrix_skin = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}Skinning_MMT", ss=True)
-            cmds.connectAttr(f"{ctl}.matrix", f"{mult_matrix_skin}.matrixIn[0]")
+            # Translation places the attachment; animator rotation is applied
+            # after the procedural aim/projection so the aim cannot erase it.
+            ctl_position = cmds.createNode("pickMatrix", name=f"{self.side}_{name}Eyelid0{i}ControlPosition_PMX", ss=True)
+            cmds.connectAttr(f"{ctl}.matrix", f"{ctl_position}.inputMatrix")
+            for component in ("Rotate", "Scale", "Shear"):
+                cmds.setAttr(f"{ctl_position}.use{component}", 0)
+            cmds.connectAttr(f"{ctl_position}.outputMatrix", f"{mult_matrix_skin}.matrixIn[0]")
             cmds.connectAttr(f"{parent_matrix}.outputMatrix", f"{mult_matrix_skin}.matrixIn[1]")
             cmds.connectAttr(f"{mult_matrix_skin}.matrixSum", f"{skinning_jnt}.offsetParentMatrix")
             four_by_four_matrix_temp = cmds.createNode("transform", name=f"{self.side}_{name}Eyelid0{i}_F4X4_TEMP", ss=True)
             cmds.connectAttr(f"{four_by_four_matrix_origin}.output", f"{four_by_four_matrix_temp}.offsetParentMatrix") # Connect the four by four matrix to the transform offset parent matrix
             cmds.parent(node[0], self.extra_controllers_grp)
             cmds.setAttr(f"{parent_matrix}.target[0].offsetMatrix", matrix_manager.get_offset_matrix(four_by_four_matrix_temp, temp_trn), type="matrix") # Calculate offset matrix between driven and driver
+            contact_offset = cmds.createNode("blendMatrix", name=f"{self.side}_{name}Eyelid0{i}ContactOffset_BMX", ss=True)
+            cmds.setAttr(f"{contact_offset}.inputMatrix", cmds.getAttr(f"{parent_matrix}.target[0].offsetMatrix"), type="matrix")
+            cmds.setAttr(f"{contact_offset}.target[0].targetMatrix", list(om.MMatrix.kIdentity), type="matrix")
+            cmds.connectAttr(blink_amounts[lid_index], f"{contact_offset}.target[0].weight")
+            cmds.connectAttr(f"{contact_offset}.outputMatrix", f"{parent_matrix}.target[0].offsetMatrix")
             cmds.delete(temp_trn)
             cmds.delete(four_by_four_matrix_temp)
 
@@ -867,7 +901,8 @@ class EyelidModule(object):
                 flat_y = cmds.createNode("blendTwoAttr", name=f"{self.side}_{name}Eyelid0{i}FlatY_BTA", ss=True)
                 cmds.connectAttr(f"{loc_rfm}.outputY", f"{flat_y}.input[0]")
                 cmds.connectAttr(self.blink_flat_y, f"{flat_y}.input[1]")
-                cmds.connectAttr(amount, f"{flat_y}.attributesBlender")
+                # Contact is already shared; keep its tilt while projecting.
+                cmds.setAttr(f"{flat_y}.attributesBlender", 0)
                 # escala (X,Z) al círculo de radio sqrt(r^2 - Y^2) a esa latitud
                 xsq = cmds.createNode("multiply", name=f"{self.side}_{name}Eyelid0{i}Xsq_MUL", ss=True)
                 cmds.connectAttr(f"{loc_rfm}.outputX", f"{xsq}.input[0]"); cmds.connectAttr(f"{loc_rfm}.outputX", f"{xsq}.input[1]")
@@ -916,8 +951,21 @@ class EyelidModule(object):
             else:
                 cmds.connectAttr(f"{aim_matrix_final}.outputMatrix", f"{skinning_jnt}.offsetParentMatrix", f=True)
 
+            attachment = cmds.connectionInfo(f"{skinning_jnt}.offsetParentMatrix", sourceFromDestination=True)
+            ctl_rotation = cmds.createNode("pickMatrix", name=f"{self.side}_{name}Eyelid0{i}ControlRotation_PMX", ss=True)
+            cmds.connectAttr(f"{ctl}.matrix", f"{ctl_rotation}.inputMatrix")
+            for component in ("Translate", "Scale", "Shear"):
+                cmds.setAttr(f"{ctl_rotation}.use{component}", 0)
+            final_matrix = cmds.createNode("multMatrix", name=f"{self.side}_{name}Eyelid0{i}ControlRotation_MMX", ss=True)
+            cmds.connectAttr(f"{ctl_rotation}.outputMatrix", f"{final_matrix}.matrixIn[0]")
+            cmds.connectAttr(attachment, f"{final_matrix}.matrixIn[1]")
+            cmds.connectAttr(f"{final_matrix}.matrixSum", f"{skinning_jnt}.offsetParentMatrix", force=True)
+
             skinning_jnts.append(skinning_jnt)
             skinning_aims.append(aim_matrix_final)
+
+        from maya_tools.scripts.tools import eyelid_corners
+        eyelid_corners.install_tangents(self.side)
 
         # for i, (jnt, aim) in enumerate(zip(skinning_jnts, skinning_aims)):
 

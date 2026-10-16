@@ -17,7 +17,7 @@ import maya.standalone
 maya.standalone.initialize(name='python')
 from maya import cmds
 from maya_tools.scripts.tools import rig_validation, skin_manager_api, bifrost_wrinkles, rig_performance
-from maya_tools.scripts.utils import create_rig, basic_structure, build_timing, data_manager, model_cache
+from maya_tools.scripts.utils import create_rig, basic_structure, build_timing, data_manager, model_cache, scene_evaluation
 from maya_tools.scripts.ui import rig_progress
 
 
@@ -53,12 +53,13 @@ class BuildTests(unittest.TestCase):
         observed = []
         def stage():
             observed.append((cmds.evaluationManager(q=True, mode=True)[0], cmds.undoInfo(q=True, state=True)))
+            self.assertFalse(any(scene_evaluation.capture()['evaluators'].values()))
         def structure():
             cmds.createNode('transform', name='BuildCharacter')
             with mock.patch.object(cmds, 'refresh') as refresh:
                 basic_structure._suspend_eval()()
                 refresh.assert_not_called()
-        def weights():
+        def weights(**kwargs):
             stage()
             if fail:
                 raise RuntimeError('Injected skin import failure')
@@ -81,12 +82,16 @@ class BuildTests(unittest.TestCase):
                 rig.build(validate=True) if validate else rig.build()
         self.assertTrue(observed)
         self.assertTrue(all(state == ('off', False) for state in observed))
-        self.assertEqual(cmds.evaluationManager(q=True, mode=True)[0], 'serial')
+        self.assertEqual(cmds.evaluationManager(q=True, mode=True)[0], 'serial' if fail else 'parallel')
+        if not fail:
+            self.assertEqual(cmds.getAttr('BuildCharacter.' + scene_evaluation.ATTRIBUTE), scene_evaluation.PROFILE)
+            self.assertFalse(any(scene_evaluation.capture()['evaluators'].values()))
         self.assertTrue(cmds.undoInfo(q=True, state=True))
         self.assertIsNone(build_timing.active())
         receipts = list(Path(self.temp.name).glob('*.buildtiming.json'))
         report = json.loads(receipts[-1].read_text())
         self.assertEqual(report['status'], 'failed' if fail else 'complete')
+        self.assertTrue(report['optimizations']['enabled'])
         self.assertEqual(Progress.last.finished, not fail)
         self.assertEqual(Progress.last.failed, fail)
 
@@ -106,6 +111,15 @@ class BuildTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'already running'):
                 with build_timing.BuildTiming('NestedBuild', self.temp.name):
                     self.fail('Recursive build was accepted')
+
+    def test_final_profile_failure_restores_runtime_and_reports_failure(self):
+        rig = create_rig.AutoRig()
+        state = rig._begin_fast_session()
+        with mock.patch.object(scene_evaluation, 'apply', side_effect=RuntimeError('Injected final profile failure')):
+            with self.assertRaisesRegex(RuntimeError, 'Injected final profile failure'):
+                rig._end_fast_session(state, success=True)
+        self.assertEqual(cmds.evaluationManager(query=True, mode=True)[0], 'serial')
+        self.assertTrue(cmds.undoInfo(query=True, state=True))
 
     def test_all_rig_families_load_their_native_math_dependencies(self):
         with mock.patch.object(create_rig.rig_manager, 'build_rig'):
@@ -130,6 +144,9 @@ class BuildTests(unittest.TestCase):
             points = rig_validation.mesh_data('Model')
             second = model_cache.open_model(source)
             self.assertTrue(second['cache_hit'])
+            self.assertTrue(source.samefile(cmds.file(query=True, sceneName=True)))
+            self.assertEqual(cmds.file(query=True, type=True), ['mayaAscii'])
+            self.assertFalse(cmds.file(query=True, modified=True))
             self.assertEqual(rig_validation.mesh_data('Model'), points)
             self.assertEqual(source.read_bytes(), original_bytes)
             # A damaged derived cache is rejected before attempting to open it.
@@ -143,6 +160,17 @@ class BuildTests(unittest.TestCase):
             self.assertFalse(changed['cache_hit'])
             self.assertNotEqual(changed['source_sha256'], first['source_sha256'])
             self.assertEqual(cmds.getAttr('Model.translateX'), 7)
+
+    def test_character_manager_model_open_uses_verified_cache(self):
+        from maya_tools.scripts.utils import character_manager
+        tab = mock.Mock(sub_folder='models', full_path=self.temp.name)
+        with mock.patch.object(model_cache, 'open_model') as opened, \
+             mock.patch.object(cmds, 'file', side_effect=AssertionError('Direct ASCII open')), \
+             mock.patch.object(cmds, 'inViewMessage'), \
+             mock.patch.object(character_manager.QtWidgets.QMessageBox, 'warning') as warning:
+            character_manager.VersionTab.import_file(tab, 'Model.ma')
+        opened.assert_called_once_with(os.path.join(self.temp.name, 'Model.ma'))
+        warning.assert_not_called()
 
     def test_sticky_lips_accept_unequal_upper_and_lower_guide_counts(self):
         from maya_tools.scripts.biped.autorig.jaw_module_nurbs import JawModule

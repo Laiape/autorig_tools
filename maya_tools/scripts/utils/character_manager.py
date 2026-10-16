@@ -383,7 +383,8 @@ class VersionTab(QtWidgets.QWidget):
                 reload(curve_tool)
                 curve_tool.load_all_ctl_curves_data(path=path)
             elif self.sub_folder == "models":
-                cmds.file(path, open=True, force=True)
+                from maya_tools.scripts.utils import model_cache
+                model_cache.open_model(path)
             elif self.sub_folder == "skin_clusters":
                 reload(skin_manager_api)
                 # Desde el manager la importación SUSTITUYE los skinClusters que

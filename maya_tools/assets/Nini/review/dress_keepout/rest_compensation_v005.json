@@ -1,0 +1,112 @@
+{
+  "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_dress_chains_v004.ma",
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_dress_chains_v005.ma",
+  "method": "Clamp each station contact minus neutral contact before spatial maxima; retain waist-relative rest orientations.",
+  "rest_contact_stations": 60,
+  "neutral_max_error_cm": {
+    "c_tunic_GEO": 0.0033109152970288887,
+    "c_embroider_GEO": 0.002443142924356525,
+    "c_body_GEO": 0.0
+  },
+  "poses": {
+    "neutral": {
+      "contact": {
+        "minimum_signed_clearance_cm": 0.1397814623193897,
+        "minimum_surface_distance_cm": 0.1397814623193897,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "movement_cm": 1.0445832122293094e-15
+    },
+    "left_step": {
+      "contact": {
+        "minimum_signed_clearance_cm": 0.09151466134785109,
+        "minimum_surface_distance_cm": 0.09151466134785109,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "movement_cm": 20.007890701293945
+    },
+    "right_step": {
+      "contact": {
+        "minimum_signed_clearance_cm": 0.08694518115536352,
+        "minimum_surface_distance_cm": 0.08694518115536352,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "movement_cm": 21.82909721906047
+    },
+    "both_up": {
+      "contact": {
+        "minimum_signed_clearance_cm": 0.09075815095659531,
+        "minimum_surface_distance_cm": 0.09075815095659531,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "movement_cm": 21.390806062135272
+    },
+    "spread": {
+      "contact": {
+        "minimum_signed_clearance_cm": 0.11626226230630006,
+        "minimum_surface_distance_cm": 0.11626226230630006,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "movement_cm": 5.825116121873699
+    },
+    "left_up": {
+      "contact": {
+        "minimum_signed_clearance_cm": 0.1088986009643903,
+        "minimum_surface_distance_cm": 0.1088986009643903,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "movement_cm": 15.106625698626825
+    }
+  },
+  "modes": {
+    "off": {
+      "dg_max_error_cm": 0.0,
+      "fallback": false
+    },
+    "serial": {
+      "dg_max_error_cm": 0.0,
+      "fallback": false
+    },
+    "parallel": {
+      "dg_max_error_cm": 0.0,
+      "fallback": false
+    }
+  },
+  "skin_weights_unchanged": true,
+  "return_to_neutral_cm": 1.0445832122293094e-15,
+  "neutral_toggle_error_cm": 1.1436274629660244e-15,
+  "new_cycles": [],
+  "hierarchy_valid": true,
+  "passed": true,
+  "reload_error_cm": 1.0445832122293094e-15
+}

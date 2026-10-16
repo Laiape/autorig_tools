@@ -361,7 +361,11 @@ try:
  assert np.isfinite(m).all() and np.allclose(m@m.T,np.eye(3),atol=1e-6)
  for k in range(6):
   t=k/5.;expected=1-t*t*(3-2*t)
-  assert np.isclose(cmds.getAttr('C_lowerLipCorner%02dBlend_BMX.target[0].rotateWeight'%k),expected)
+  blend='C_lowerLipCorner%02dBlend_BMX'%k
+  if expected==0:
+   assert not cmds.objExists(blend)
+  else:
+   assert np.isclose(cmds.getAttr(blend+'.target[0].rotateWeight'),expected)
  with open(work/'new_build_report.json','w') as f:json.dump(records,f,indent=2)
  cmds.setAttr('C_jaw_CTL.rx',0);cmds.file(rename=str(work/'new_lips_build.mb'));cmds.file(save=True,type='mayaBinary',force=True)
  print('PASS jaw/lips build: rounded U, independent primaries, corner rotation, continuous aim frames, fine axes, rotateOrder, opening and sticky closure',flush=True)

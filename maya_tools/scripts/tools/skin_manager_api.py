@@ -975,12 +975,17 @@ class SkinManager(object):
             "Deformadores: {} creados, {} restaurados, {} incidencias.".format(
                 created_count, len(pending), len(set(warnings))))
 
-    def export_skins(self, in_path=None):
+    def export_skins(self, in_path=None, lossless=True):
+        """Export exact nonzero weights by default; legacy compact mode is opt-in."""
         from maya_tools.scripts.tools import bifrost_wrinkles
+        # Capture original routes before the native-DAG weight export scope.
+        scene_deformers = self._export_scene_deformers()
+        wrinkles = bifrost_wrinkles.export_setups()
         with bifrost_wrinkles.primary_inputs_for_skin_export():
-            return self._export_skins_primary(in_path)
+            return self._export_skins_primary(in_path, lossless=lossless,
+                                             scene_deformers=scene_deformers, wrinkles=wrinkles)
 
-    def _export_skins_primary(self, in_path=None):
+    def _export_skins_primary(self, in_path=None, lossless=True, scene_deformers=None, wrinkles=None):
         """
         Exporta los pesos. Si in_path es None, genera una NUEVA versión 
         basada en la más alta encontrada para no sobrescribir.
@@ -1043,9 +1048,11 @@ class SkinManager(object):
                 for p in paths: meshes_map[p.fullPathName()] = p
                 it_dep.next()
 
-        scene_deformers = self._export_scene_deformers()
+        if scene_deformers is None:
+            scene_deformers = self._export_scene_deformers()
         from maya_tools.scripts.tools import bifrost_wrinkles
-        wrinkles = bifrost_wrinkles.export_setups()
+        if wrinkles is None:
+            wrinkles = bifrost_wrinkles.export_setups()
         if not meshes_map and not scene_deformers["nodes"] and not wrinkles:
             om.MGlobal.displayWarning("No se encontraron skins ni deformadores.")
             return
@@ -1099,9 +1106,9 @@ class SkinManager(object):
                     # Recorrer vértices para esta influencia
                     for v_idx in range(vtx_count):
                         val = flat_weights[v_idx * stride + inf_idx]
-                        if val > self.tolerance:
+                        if (lossless and val != 0.0) or (not lossless and val > self.tolerance):
                             j_indices.append(v_idx)
-                            j_weights.append(round(val, 5))
+                            j_weights.append(float(val) if lossless else round(val, 5))
                     
                     if j_indices:
                         sparse_weights[inf_name] = {"ix": j_indices, "vw": j_weights}
@@ -1114,14 +1121,15 @@ class SkinManager(object):
                     b_indices = []
                     b_values = []
                     for v_idx, val in enumerate(flat_blend):
-                        if val > self.tolerance:
+                        if (lossless and val != 0.0) or (not lossless and val > self.tolerance):
                             b_indices.append(v_idx)
-                            b_values.append(round(val, 5))
+                            b_values.append(float(val) if lossless else round(val, 5))
                     if b_indices:
                         sparse_blend = {"ix": b_indices, "vw": b_values}
                 except: pass # Si no soporta blend weights, ignorar
                 
                 skin_entry = {
+                    "weight_encoding": "float64_exact_nonzero" if lossless else "legacy_rounded_5",
                     "name": skin_name,
                     "vertex_count": vtx_count,
                     "attributes": attrs,
@@ -1150,7 +1158,7 @@ class SkinManager(object):
     # --- IMPORT SKINS (Lógica Referencia: Reorder & Sparse) ---
     # ----------------------------------------------------------------
     def import_skins(self, in_path=None, replace_existing=False, import_method="auto",
-                     import_wrinkles=True):
+                     import_wrinkles=True, optimize_new_bindings=False):
         """
         Importa los pesos desde un archivo JSON (.skc).
         Si in_path es None, busca automáticamente la versión más reciente.
@@ -1166,6 +1174,11 @@ class SkinManager(object):
         La proyección requiere un .skc exportado con geometría. Usa el espacio
         local de ambas mallas y requiere la misma pose de referencia.
 
+        optimize_new_bindings:
+            Opt-in initial binding with only exact nonzero source influences.
+            Existing skins and driven/all-zero/incomplete records keep their
+            bindings. AutoRig.build enables this without post-edit removal.
+
         replace_existing:
             False (default, flujo de build): los skinClusters que ya existen en
                 escena con el mismo nombre se SALTAN y quedan los últimos del
@@ -1178,6 +1191,7 @@ class SkinManager(object):
         """
         if import_method not in ("auto", "index", "closestPoint"):
             raise ValueError("import_method debe ser 'auto', 'index' o 'closestPoint'")
+        self._import_optimization_report = []
 
         # 1. Determinar la ruta de importación
         if in_path:
@@ -1209,6 +1223,10 @@ class SkinManager(object):
         # Registrar skin clusters ya existentes en escena ANTES de importar.
         # Estos no se importarán y siempre quedarán los últimos en el stack.
         existing_scene_skins = self._get_scene_skin_clusters()
+        driven_weights = {entry['name'] for entry in full_data.get(self.SCENE_DEFORMERS_KEY, {}).get('nodes', [])
+                          if entry.get('type') == 'skinCluster' and any(
+                              connection.get('destination', '').startswith((entry['name']+'.weightList', entry['name']+'.wl['))
+                              for connection in entry.get('connections', []))}
 
         for mesh_name, skins_list in full_data.items():
             if mesh_name in (self.SCENE_DEFORMERS_KEY, self.WRINKLES_KEY):
@@ -1295,6 +1313,20 @@ class SkinManager(object):
                         cmds.skinCluster(skin_name, e=True, lw=False)
                 else:
                     valid_joints = [j for j in json_influences if cmds.objExists(j)]
+                    if optimize_new_bindings and skin_name not in driven_weights:
+                        active = {name for name, block in skin_data.get('sparse_weights', {}).items()
+                                  if any(value != 0.0 for value in block.get('vw', []))}
+                        # Conservative fallback for empty/incomplete source data.
+                        # Filter at initial bind; never remove influences from a
+                        # live skin and leave Maya in its slow post-edit state.
+                        if active and active.issubset(set(valid_joints)):
+                            retained = [name for name in valid_joints if name in active]
+                            omitted = [name for name in valid_joints if name not in active]
+                            if omitted:
+                                self._import_optimization_report.append({
+                                    'skin': skin_name, 'before': len(valid_joints),
+                                    'after': len(retained), 'omitted_zero_influences': omitted})
+                                valid_joints = retained
                     if not valid_joints: 
                         om.MGlobal.displayWarning(f"No hay joints válidos para {skin_name}")
                         continue
@@ -1384,7 +1416,11 @@ class SkinManager(object):
                 desired_order = processed_skins + pre_existing_here
 
                 # reorderDeformers inserta el segundo deformer ANTES del primero.
-                for inner, outer in reversed(list(zip(desired_order, desired_order[1:]))):
+                # Reordering an already matching skin stack can move a skin
+                # across interleaved correctives. Weight replacement is a no-op
+                # for stack order when the native order already matches.
+                pairs = list(zip(desired_order, desired_order[1:])) if current_skins != desired_order else []
+                for inner, outer in reversed(pairs):
                     try:
                         cmds.reorderDeformers(outer, inner, mesh_path.fullPathName())
                     except Exception as e:

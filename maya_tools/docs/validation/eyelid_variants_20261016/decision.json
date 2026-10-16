@@ -1,0 +1,541 @@
+{
+  "date": "2026-10-16",
+  "decision": "Keep the corrected projection builder. Whole-lid main Z rotation is delivered. Aim geometry/contact passes tested cases but no Parallel CPU improvement is demonstrated. De Boor prototypes are not production candidates.",
+  "trials": [
+    {
+      "source": "autorig_tools\\maya_tools\\docs\\validation\\eyelid_variants_20261016\\edward_head_v006\\comparison.json",
+      "cohort": "full_scene",
+      "guide_samples_per_lid": 21,
+      "joint_count": 84,
+      "measurement": "CPU currentTime(update=True) plus demand of a native matrix sum of eyelid output joints. No vertex extraction, Profiler or viewport in timing; not FPS. Also demands listed final head outMesh data handles without extracting vertices.",
+      "head_mesh_demand": [
+        "cabeza_low_Shape.outMesh",
+        "cabeza_high_Shape.outMesh"
+      ],
+      "comparisons": [
+        {
+          "mode": "off",
+          "variant": "aim",
+          "candidate": {
+            "median_ms": 74.6794000006048,
+            "p95_ms": 87.43800000229385,
+            "max_ms": 102.63599999598227,
+            "samples": 48
+          },
+          "neighbor_reference": {
+            "median_ms": 72.0715499992366,
+            "p95_ms": 89.04510000138544,
+            "max_ms": 94.71380000468343,
+            "samples": 96
+          },
+          "reference_before_ms": 60.15160000970354,
+          "reference_after_ms": 78.24534999963362,
+          "reference_for_delta_ms": 69.19847500466858,
+          "delta_ms": -5.4809249959362205,
+          "reduction_percent": -7.920586393799057,
+          "reference_drift_percent": 26.147613785866454,
+          "noise_band_ms": 18.093749989930075,
+          "outside_noise": false,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 1.2106984303983381e-07,
+            "position_max_error": 1.4664009532649372e-07,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "inconclusive_noise",
+          "pass_medians_ms": [
+            80.31869999831542,
+            73.4356999892043,
+            73.70534999790834
+          ],
+          "install_median_ms": 180.2451999974437
+        },
+        {
+          "mode": "off",
+          "variant": "deboor",
+          "candidate": {
+            "median_ms": 106.3631500073825,
+            "p95_ms": 121.13699999463279,
+            "max_ms": 136.47839998884592,
+            "samples": 48
+          },
+          "neighbor_reference": {
+            "median_ms": 78.21819999662694,
+            "p95_ms": 89.15440000419039,
+            "max_ms": 94.71380000468343,
+            "samples": 96
+          },
+          "reference_before_ms": 78.24534999963362,
+          "reference_after_ms": 78.21819999662694,
+          "reference_for_delta_ms": 78.23177499813028,
+          "delta_ms": -28.131375009252224,
+          "reduction_percent": -35.959014108940465,
+          "reference_drift_percent": 0.03470457241617064,
+          "noise_band_ms": 3.911588749906514,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 194.6463923855896,
+            "position_max_error": 195.2846448253535,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            104.65030000341358,
+            106.04700000112643,
+            113.7163499952294
+          ],
+          "install_median_ms": 670.7681999978377
+        },
+        {
+          "mode": "off",
+          "variant": "deboor_aim",
+          "candidate": {
+            "median_ms": 95.26814999844646,
+            "p95_ms": 124.44289999257307,
+            "max_ms": 133.58100000186823,
+            "samples": 48
+          },
+          "neighbor_reference": {
+            "median_ms": 78.17354999860981,
+            "p95_ms": 89.41859999322332,
+            "max_ms": 93.0950999900233,
+            "samples": 96
+          },
+          "reference_before_ms": 78.21819999662694,
+          "reference_after_ms": 77.86019999912241,
+          "reference_for_delta_ms": 78.03919999787468,
+          "delta_ms": -17.228950000571785,
+          "reduction_percent": -22.077302177676092,
+          "reference_drift_percent": 0.45874380761754474,
+          "noise_band_ms": 3.9019599998937338,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": null,
+            "position_max_error": null,
+            "contact_max_distance": 0.0,
+            "finite": false,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            98.07534999708878,
+            94.04024999821559,
+            104.60325000167359
+          ],
+          "install_median_ms": 834.7761999903014
+        },
+        {
+          "mode": "parallel",
+          "variant": "aim",
+          "candidate": {
+            "median_ms": 352.7439500030596,
+            "p95_ms": 387.49660000030417,
+            "max_ms": 418.3102999959374,
+            "samples": 48
+          },
+          "neighbor_reference": {
+            "median_ms": 353.5238000040408,
+            "p95_ms": 457.7394999942044,
+            "max_ms": 538.1143999984488,
+            "samples": 96
+          },
+          "reference_before_ms": 346.1631500031217,
+          "reference_after_ms": 375.30169999809004,
+          "reference_for_delta_ms": 360.7324250006059,
+          "delta_ms": 7.988474997546291,
+          "reduction_percent": 2.214515370369845,
+          "reference_drift_percent": 8.077607660281553,
+          "noise_band_ms": 29.138549994968344,
+          "outside_noise": false,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 1.2106984303983381e-07,
+            "position_max_error": 1.4664009532649372e-07,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "inconclusive_noise",
+          "pass_medians_ms": [
+            357.715799997095,
+            348.9156499999808,
+            347.4528000006103
+          ],
+          "install_median_ms": 180.2451999974437
+        },
+        {
+          "mode": "parallel",
+          "variant": "deboor",
+          "candidate": {
+            "median_ms": 416.6466499955277,
+            "p95_ms": 535.6756000110181,
+            "max_ms": 553.0058000003919,
+            "samples": 48
+          },
+          "neighbor_reference": {
+            "median_ms": 380.95249999605585,
+            "p95_ms": 517.5435999990441,
+            "max_ms": 606.0636000038357,
+            "samples": 96
+          },
+          "reference_before_ms": 375.30169999809004,
+          "reference_after_ms": 392.87509999849135,
+          "reference_for_delta_ms": 384.0883999982907,
+          "delta_ms": -32.558249997237,
+          "reduction_percent": -8.476759516137923,
+          "reference_drift_percent": 4.575352965744218,
+          "noise_band_ms": 19.204419999914535,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 0.3846393522792244,
+            "position_max_error": 0.4567420641990959,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            400.4786500008777,
+            479.7067500039702,
+            408.4631500081741
+          ],
+          "install_median_ms": 670.7681999978377
+        },
+        {
+          "mode": "parallel",
+          "variant": "deboor_aim",
+          "candidate": {
+            "median_ms": 387.9217499998049,
+            "p95_ms": 543.149999997695,
+            "max_ms": 703.8733999943361,
+            "samples": 48
+          },
+          "neighbor_reference": {
+            "median_ms": 360.8419000011054,
+            "p95_ms": 492.67589999362826,
+            "max_ms": 606.0636000038357,
+            "samples": 96
+          },
+          "reference_before_ms": 392.87509999849135,
+          "reference_after_ms": 331.9017500107293,
+          "reference_for_delta_ms": 362.3884250046103,
+          "delta_ms": -25.533324995194562,
+          "reduction_percent": -7.045844523005868,
+          "reference_drift_percent": 16.825413225322066,
+          "noise_band_ms": 60.97334998776205,
+          "outside_noise": false,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 0.3846394283838652,
+            "position_max_error": 0.4567421611125477,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            389.9464999922202,
+            388.52454999869224,
+            375.9889499997371
+          ],
+          "install_median_ms": 834.7761999903014
+        }
+      ]
+    },
+    {
+      "source": "autorig_tools\\maya_tools\\docs\\validation\\eyelid_variants_20261016\\fixture7_exact_v011\\comparison.json",
+      "cohort": "isolated_eye",
+      "guide_samples_per_lid": 7,
+      "joint_count": 14,
+      "measurement": "CPU currentTime(update=True) plus demand of a native matrix sum of eyelid output joints. No vertex extraction, Profiler or viewport in timing; not FPS.",
+      "head_mesh_demand": [],
+      "comparisons": [
+        {
+          "mode": "off",
+          "variant": "aim",
+          "candidate": {
+            "median_ms": 2.445649995934218,
+            "p95_ms": 7.161599991377443,
+            "max_ms": 8.602200003224425,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 2.128999993146863,
+            "p95_ms": 5.950199993094429,
+            "max_ms": 8.27910000225529,
+            "samples": 240
+          },
+          "reference_before_ms": 2.0844500031671487,
+          "reference_after_ms": 2.1884999950998463,
+          "reference_for_delta_ms": 2.1364749991334975,
+          "delta_ms": -0.3091749968007207,
+          "reduction_percent": -14.471266779443456,
+          "reference_drift_percent": 4.8701712856409625,
+          "noise_band_ms": 0.10682374995667487,
+          "outside_noise": true,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 2.913790453362708e-08,
+            "position_max_error": 3.2253665644648574e-08,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "slower",
+          "pass_medians_ms": [
+            2.1559500019066036,
+            2.817100001266226,
+            2.637950012285728
+          ],
+          "install_median_ms": 49.084900005254894
+        },
+        {
+          "mode": "off",
+          "variant": "deboor_exact",
+          "candidate": {
+            "median_ms": 4.503449992625974,
+            "p95_ms": 10.230800005956553,
+            "max_ms": 26.440399989951402,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 2.3719000091659836,
+            "p95_ms": 7.704799994826317,
+            "max_ms": 10.076000005938113,
+            "samples": 240
+          },
+          "reference_before_ms": 2.1884999950998463,
+          "reference_after_ms": 2.743749995715916,
+          "reference_for_delta_ms": 2.466124995407881,
+          "delta_ms": -2.037324997218093,
+          "reduction_percent": -82.61239803382847,
+          "reference_drift_percent": 22.515079391757883,
+          "noise_band_ms": 0.5552500006160699,
+          "outside_noise": true,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 1.7472328455170327e-06,
+            "position_max_error": 1.8018648365045136e-06,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "slower",
+          "pass_medians_ms": [
+            4.429000000527594,
+            5.186700000194833,
+            4.359499995189253
+          ],
+          "install_median_ms": 326.4465999964159
+        },
+        {
+          "mode": "off",
+          "variant": "deboor_exact_aim",
+          "candidate": {
+            "median_ms": 4.256100000930019,
+            "p95_ms": 8.183600002666935,
+            "max_ms": 15.580099992803298,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 2.2361000010278076,
+            "p95_ms": 7.476900005713105,
+            "max_ms": 10.076000005938113,
+            "samples": 240
+          },
+          "reference_before_ms": 2.743749995715916,
+          "reference_after_ms": 2.020599989918992,
+          "reference_for_delta_ms": 2.382174992817454,
+          "delta_ms": -1.8739250081125647,
+          "reduction_percent": -78.6644563796814,
+          "reference_drift_percent": 30.356712163351098,
+          "noise_band_ms": 0.7231500057969242,
+          "outside_noise": true,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 1.7472502928939093e-06,
+            "position_max_error": 1.8018828276473993e-06,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "slower",
+          "pass_medians_ms": [
+            4.29999999323627,
+            3.919050002878066,
+            4.90890000219224
+          ],
+          "install_median_ms": 348.28059999563266
+        },
+        {
+          "mode": "parallel",
+          "variant": "aim",
+          "candidate": {
+            "median_ms": 1.7643500032136217,
+            "p95_ms": 2.3385000095004216,
+            "max_ms": 2.717300012591295,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.6714999946998432,
+            "p95_ms": 2.288200004841201,
+            "max_ms": 2.9734999989159405,
+            "samples": 240
+          },
+          "reference_before_ms": 1.546699997561518,
+          "reference_after_ms": 1.8493000025046058,
+          "reference_for_delta_ms": 1.698000000033062,
+          "delta_ms": -0.06635000318055972,
+          "reduction_percent": -3.907538467565831,
+          "reference_drift_percent": 17.82096613293261,
+          "noise_band_ms": 0.3026000049430877,
+          "outside_noise": false,
+          "equivalent": true,
+          "quality": {
+            "matrix_max_error": 2.913790453362708e-08,
+            "position_max_error": 3.2253665644648574e-08,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": true
+          },
+          "decision": "inconclusive_noise",
+          "pass_medians_ms": [
+            1.7010500014293939,
+            1.6448999958811328,
+            1.9094499948550947
+          ],
+          "install_median_ms": 49.084900005254894
+        },
+        {
+          "mode": "parallel",
+          "variant": "deboor_exact",
+          "candidate": {
+            "median_ms": 1.6651000041747466,
+            "p95_ms": 2.1966999920550734,
+            "max_ms": 2.7017999964300543,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.7854999896371737,
+            "p95_ms": 2.3519999958807603,
+            "max_ms": 2.9734999989159405,
+            "samples": 240
+          },
+          "reference_before_ms": 1.8493000025046058,
+          "reference_after_ms": 1.7359500052407384,
+          "reference_for_delta_ms": 1.792625003872672,
+          "delta_ms": 0.12752499969792552,
+          "reduction_percent": 7.1138692934901995,
+          "reference_drift_percent": 6.323129322585222,
+          "noise_band_ms": 0.11334999726386741,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 5.785486319696774,
+            "position_max_error": 6.122596482773249,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            1.6568999999435619,
+            1.6161999956239015,
+            1.7058000012184493
+          ],
+          "install_median_ms": 326.4465999964159
+        },
+        {
+          "mode": "parallel",
+          "variant": "deboor_exact_aim",
+          "candidate": {
+            "median_ms": 1.6000999967218377,
+            "p95_ms": 2.07129999762401,
+            "max_ms": 2.8873999981442466,
+            "samples": 120
+          },
+          "neighbor_reference": {
+            "median_ms": 1.7038000005413778,
+            "p95_ms": 2.2753999946871772,
+            "max_ms": 2.9510000022128224,
+            "samples": 240
+          },
+          "reference_before_ms": 1.7359500052407384,
+          "reference_after_ms": 1.6688999967300333,
+          "reference_for_delta_ms": 1.7024250009853859,
+          "delta_ms": 0.10232500426354818,
+          "reduction_percent": 6.01054403009361,
+          "reference_drift_percent": 3.938499991006691,
+          "noise_band_ms": 0.08512125004926929,
+          "outside_noise": true,
+          "equivalent": false,
+          "quality": {
+            "matrix_max_error": 0.5498598833950169,
+            "position_max_error": 0.7200994718161431,
+            "contact_max_distance": 0.0,
+            "finite": true,
+            "equivalent_to_reference": false
+          },
+          "decision": "reject_quality",
+          "pass_medians_ms": [
+            1.6809000007924624,
+            1.5223999944282696,
+            1.6255000009550713
+          ],
+          "install_median_ms": 348.28059999563266
+        }
+      ]
+    }
+  ],
+  "aim_portability": {
+    "builds_and_reopens": 6,
+    "cases": "L/R spheres and ellipsoids, arbitrary rotation/translation, affine scale, extreme latitude, shared blink contact; DG, Serial, Parallel",
+    "max_normalized_surface_error": 2.842170943040401e-14,
+    "edward_joint_matrix_max_error": 1.2106984303983381e-07
+  },
+  "deboor_global_gate": {
+    "status": "reject",
+    "dg_and_serial_position_tolerance_pass": 1.8018648365045136e-06,
+    "parallel_failure": true,
+    "native_reopen_max_matrix_error": 3.2036729088356193,
+    "native_reopen_source": "exact_native_reopen/validation.json",
+    "interpretation": "Exact coefficient prototype matches in DG/Serial before native save but fails Parallel and native reopen. DG timings are diagnostics of this prototype, not an accepted cheaper rig or a statement about all De Boor designs."
+  },
+  "rotation": {
+    "live_applied": true,
+    "new_builds": true,
+    "curve_behavior": "Primary Up/Down Z rigidly transforms all seven posed curve CVs about its moving pivot; blink remains downstream and contact retains tilt.",
+    "saved_scene": "C:/proyectos/auto-rig/recovery/Edward_eyelids_roll_20261016_v001.mb",
+    "backup_scene": "C:/proyectos/auto-rig/recovery/eyelids_before_roll_20261016_v001.mb",
+    "tests": "Whole-lid CV rigid transforms, L/R, upper/lower, moving pivot, blink contact, native open/reopen and XYZ detail rotations."
+  },
+  "limits": [
+    "CPU data-demand timings, not interactive viewport FPS.",
+    "Edward cohort forces both high/low native head outputs and eyelid joints; not a whole-character viewport benchmark.",
+    "No GPU/cache acceptance or measured RAM claim.",
+    "No production adoption of experimental backends; no full final-mesh/normal/skin-preset equivalence claim.",
+    "Differences inside max(5% reference median, adjacent reference drift) are inconclusive.",
+    "Node counts in raw data are inventory and include retained unused candidate branches."
+  ],
+  "retained_trials": {
+    "fixture7_v001": "Rejected construction error",
+    "fixture7_v002": "Initial radial shape changed; post-completion native shutdown crash; excluded from final timing conclusions",
+    "fixture7_v003": "Intermediate radial prototype; excluded",
+    "fixture7_aim_latitude_v004": "Intermediate overlapping timing runs; excluded from timing conclusions",
+    "fixture7_point_moments_v005": "Intermediate run overlapping a surface regression; excluded from timing conclusions",
+    "fixture11_v006": "Intentionally terminated during concurrent preparation to avoid overlapping timings; incomplete/excluded",
+    "edward_head_v006": "Completed, final head comparison; reference drift included",
+    "fixture7_exact_v007": "Rejected coefficient tangent/endpoint implementation",
+    "fixture7_exact_v008": "Rejected partial correction",
+    "fixture7_exact_v009": "DG/Serial matched; construction later failed; incomplete/excluded",
+    "fixture7_exact_v010": "Incomplete construction; excluded",
+    "fixture7_exact_v011": "Completed native coefficient prototype, DG cost diagnostic; rejected Parallel and native persistence"
+  }
+}

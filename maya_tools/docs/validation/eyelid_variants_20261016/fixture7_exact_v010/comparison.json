@@ -1,0 +1,174 @@
+{
+  "complete": false,
+  "cohort": "isolated_eye",
+  "measurement": "CPU currentTime(update=True) plus demand of a native matrix sum of eyelid output joints. No vertex extraction, Profiler or viewport in timing; not FPS.",
+  "maya": "2026",
+  "platform": "Windows-10-10.0.26300",
+  "logical_cpus": 32,
+  "scene": null,
+  "guide_samples_per_lid": 7,
+  "quality_tolerance": 0.0001,
+  "rows": [],
+  "quality": {
+    "off_reference": {
+      "matrix_max_error": 0.0,
+      "position_max_error": 0.0,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "off_aim": {
+      "matrix_max_error": 2.913790453362708e-08,
+      "position_max_error": 3.2253665644648574e-08,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "off_deboor_exact": {
+      "matrix_max_error": 3.7862579764068016,
+      "position_max_error": 4.273652795614715,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": false
+    },
+    "off_deboor_exact_aim": {
+      "matrix_max_error": 2.331493504082937,
+      "position_max_error": 3.053845774811123,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": false
+    },
+    "serial_reference": {
+      "matrix_max_error": 0.0,
+      "position_max_error": 0.0,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "serial_aim": {
+      "matrix_max_error": 2.913790453362708e-08,
+      "position_max_error": 3.2253665644648574e-08,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "serial_deboor_exact": {
+      "matrix_max_error": 1.7472328455170327e-06,
+      "position_max_error": 1.8018648365045136e-06,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "serial_deboor_exact_aim": {
+      "matrix_max_error": 1.7472502928939093e-06,
+      "position_max_error": 1.8018828276473993e-06,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "parallel_reference": {
+      "matrix_max_error": 0.0,
+      "position_max_error": 0.0,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "parallel_aim": {
+      "matrix_max_error": 2.913790453362708e-08,
+      "position_max_error": 3.2253665644648574e-08,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": true
+    },
+    "parallel_deboor_exact": {
+      "matrix_max_error": 4.25448352290051,
+      "position_max_error": 4.638258858353207,
+      "contact_max_distance": 0.0,
+      "finite": true,
+      "equivalent_to_reference": false
+    }
+  },
+  "install_ms": {
+    "aim": [
+      16.283400007523596,
+      25.603300004149787,
+      73.07310000760481
+    ],
+    "deboor_exact": [
+      322.97079999989364,
+      349.7833000001265,
+      402.73119999619666
+    ],
+    "deboor_exact_aim": [
+      354.71810000308324,
+      437.8487999929348
+    ]
+  },
+  "variants": {
+    "reference": "Curves/skin + Y-preserving analytic sphere projection; whole-lid roll",
+    "aim": "Same curves/skin; aim longitude and preserved latitude on sphere instead of scalar XZ projection",
+    "deboor_exact": "Exact moving-U De Boor cubic coefficients and direct linear-skin moments",
+    "deboor_exact_aim": "Exact direct De Boor and aim latitude attachment"
+  },
+  "excluded": [
+    "GPU",
+    "Cached Playback",
+    "interactive VP2 FPS",
+    "production adoption of prototypes"
+  ],
+  "output_joints": [
+    "L_downEyelid00Skinning_JNT",
+    "L_downEyelid01Skinning_JNT",
+    "L_downEyelid02Skinning_JNT",
+    "L_downEyelid03Skinning_JNT",
+    "L_downEyelid04Skinning_JNT",
+    "L_downEyelid05Skinning_JNT",
+    "L_downEyelid06Skinning_JNT",
+    "L_upperEyelid00Skinning_JNT",
+    "L_upperEyelid01Skinning_JNT",
+    "L_upperEyelid02Skinning_JNT",
+    "L_upperEyelid03Skinning_JNT",
+    "L_upperEyelid04Skinning_JNT",
+    "L_upperEyelid05Skinning_JNT",
+    "L_upperEyelid06Skinning_JNT"
+  ],
+  "units": "cm",
+  "time_unit": "film",
+  "animated_channels": [
+    "L_eyelidUp_CTL.translateX",
+    "L_eyelidUp_CTL.translateY",
+    "L_eyelidUp_CTL.translateZ",
+    "L_eyelidUp_CTL.rotateX",
+    "L_eyelidUp_CTL.rotateY",
+    "L_eyelidUp_CTL.rotateZ",
+    "L_eyelidDown_CTL.translateX",
+    "L_eyelidDown_CTL.translateY",
+    "L_eyelidDown_CTL.translateZ",
+    "L_eyelidDown_CTL.rotateX",
+    "L_eyelidDown_CTL.rotateY",
+    "L_eyelidDown_CTL.rotateZ",
+    "L_eyelidInUp_CTL.translateX",
+    "L_eyelidInUp_CTL.translateY",
+    "L_eyelidInUp_CTL.translateZ",
+    "L_eyelidInUp_CTL.rotateX",
+    "L_eyelidInUp_CTL.rotateY",
+    "L_eyelidInUp_CTL.rotateZ",
+    "L_eyelidOutDown_CTL.translateX",
+    "L_eyelidOutDown_CTL.translateY",
+    "L_eyelidOutDown_CTL.translateZ",
+    "L_eyelidOutDown_CTL.rotateX",
+    "L_eyelidOutDown_CTL.rotateY",
+    "L_eyelidOutDown_CTL.rotateZ",
+    "L_eyeDirect_CTL.Upper_Blink",
+    "L_eyeDirect_CTL.Lower_Blink",
+    "L_eyeDirect_CTL.Blink_Height"
+  ],
+  "baseline_scene_nodes": 813,
+  "scene_nodes": {
+    "reference": 813,
+    "aim": 995,
+    "deboor_exact": 1729,
+    "deboor_exact_aim": 1911
+  },
+  "error": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\scripts\\eyelid_setup_trial.py\", line 159, in run\n    switch(variant)\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\scripts\\eyelid_setup_trial.py\", line 146, in switch\n    if 'exact' in variant:eyelid_deboor_exact.install(prefix)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_deboor_exact.py\", line 130, in install\n    lower=evaluate('lower',driver,stem+'ExactLower')\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_deboor_exact.py\", line 102, in evaluate\n    coefficient(vector+'.inPoint'+axis,driver,values,3,knots,name+axis+'_ACU')\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_deboor_exact.py\", line 46, in coefficient\n    function.setTangentsLocked(index,False)\nRuntimeError: (kInvalidParameter): Index not in valid range\n"
+}

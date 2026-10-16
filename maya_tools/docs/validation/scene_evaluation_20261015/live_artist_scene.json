@@ -1,0 +1,49 @@
+{
+  "success": true,
+  "result": {
+    "loaded_helper": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\scene_evaluation.py",
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL"
+      ]
+    },
+    "artist_state_unchanged": true,
+    "configuration_samples": [
+      {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        },
+        "profile": "autorig:scene-evaluation:v1:posing_cpu",
+        "seconds": 0.0004667000030167401
+      },
+      {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        },
+        "profile": "autorig:scene-evaluation:v1:posing_cpu",
+        "seconds": 0.0005511999988812022
+      },
+      {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        },
+        "profile": "autorig:scene-evaluation:v1:posing_cpu",
+        "seconds": 0.00028500000189524144
+      }
+    ],
+    "callbacks": 1,
+    "geometry_queries": false,
+    "scene_saved": false,
+    "root_marker_added_to_artist_scene": false
+  }
+}

@@ -4,6 +4,11 @@ Parent: `maya_tools/how_it_works.md`.
 Scope: shared biped/quadruped systems, deformation, wrinkles and delivery.
 Review date: 2026-10-14.
 
+Current acceptance and priorities supersede older blanket GPU/cache statements:
+`maya_tools/docs/rig_performance_criteria.md` and
+`maya_tools/docs/rig_optimization_roadmap_20261015.md`.
+This document retains the original research context and initial phase design.
+
 Prioritize real evaluation bypass for Animation, independent garment drivers,
 and reproducible measurement. Edward already uses matrix systems extensively;
 replacing the remaining constraints or reducing mesh density is not the first

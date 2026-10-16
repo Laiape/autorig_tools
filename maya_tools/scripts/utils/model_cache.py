@@ -37,6 +37,12 @@ def open_model(source):
     if valid:
         with measure('Open cached binary model'):
             cmds.file(str(binary), open=True, force=True)
+            # Keep Save and relative asset paths tied to the authored model,
+            # never to the disposable binary inside the cache directory.
+            modified = cmds.file(query=True, modified=True)
+            cmds.file(rename=str(source))
+            cmds.file(type='mayaAscii')
+            cmds.file(modified=modified)
         return dict(source=str(source), cache_hit=True, binary=str(binary), source_sha256=sha)
     with measure('Open source model'):
         cmds.file(str(source), open=True, force=True)

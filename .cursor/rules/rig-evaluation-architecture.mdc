@@ -5,7 +5,8 @@ alwaysApply: true
 
 # Rig evaluation architecture
 
-Read `maya_tools/docs/rig_performance_plan.md` before restructuring a rig.
+Read `maya_tools/docs/rig_performance_criteria.md` before restructuring a rig.
+For large changes use `.agents/skills/rig-change-impact/SKILL.md`.
 
 - Keep dependencies explicit and directional: controls -> systems -> skeleton/
   primary deformation -> correctives -> final detail. Final detail must not
@@ -45,3 +46,9 @@ Read `maya_tools/docs/rig_performance_plan.md` before restructuring a rig.
   per-vertex cmds loops and repeated whole-scene scans in interactive callbacks.
 - Integrate reports and switches into existing Test Rig/Framework/asset workflows.
   Keep profiling and validation overhead outside normal animation evaluation.
+- Keep startup/build configuration in `utils/scene_evaluation.py`: one owned
+  profile marker, one after-open hook, no per-frame callback or scene scriptNode.
+  Preserve fast DG construction; apply posing settings only after successful
+  completion and restore the caller's runtime flags after failure.
+- New driver meshes need a measured win and original-geometry comparison.
+  Moving belt-only correctives onto the visible body is an artistic change.

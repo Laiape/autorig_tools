@@ -69,9 +69,13 @@ def main():
     cmds.evaluationManager(mode='parallel')
     report['untouched_body_error']=max(abs(a-b) for p,q in zip(baseline_body,tool.mesh_points('c_body_GEO')) for a,b in zip(p,q))
     final_cloth=tool.mesh_points('c_tunic_GEO')
+    report['neutral_cloth_error_cm']=max(sum((a-b)**2 for a,b in zip(p,q))**.5
+                                          for p,q in zip(baseline_cloth,final_cloth))
     report['untouched_upper_cloth_error']=max(abs(a-b) for i,alpha in enumerate(data['garments'][0]['alpha']) if alpha==0 for a,b in zip(baseline_cloth[i],final_cloth[i]))
     report['chain_hierarchy_valid']=all(cmds.listRelatives(chain[level],parent=True)[0]==chain[level-1] for chain in data['chains'] for level in range(1,len(chain)))
-    report['passed']=report['passed'] and report['untouched_body_error']<1e-5 and report['untouched_upper_cloth_error']<1e-5 and report['chain_hierarchy_valid']
+    report['passed']=(report['passed'] and report['untouched_body_error']<1e-5
+                       and report['untouched_upper_cloth_error']<1e-5
+                       and report['neutral_cloth_error_cm']<.005 and report['chain_hierarchy_valid'])
     cmds.select(data['settings']);cmds.file(save=True,type='mayaAscii')
     (DIRECTORY/'nini_dress_report_v{:03d}.json'.format(version)).write_text(json.dumps(report,indent=2),encoding='utf-8')
     brief={k:v for k,v in report.items() if k not in ('contacts','baseline_cycle_plugs')}

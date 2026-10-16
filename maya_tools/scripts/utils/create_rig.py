@@ -14,6 +14,8 @@ from maya_tools.scripts.tools import skin_manager_api
 from maya_tools.scripts.tools import mesh_data_exporter
 from maya_tools.scripts.tools import auto_skin_transfer
 from maya_tools.scripts.tools import corrective_blendshape_manager
+from maya_tools.scripts.tools import rig_exact_cleanup
+from maya_tools.scripts.utils import scene_evaluation
 
 
 reload(guides_manager)
@@ -26,6 +28,7 @@ reload(mesh_data_exporter)
 reload(auto_skin_transfer)
 reload(proxy_locator)
 reload(corrective_blendshape_manager)
+reload(rig_exact_cleanup)
 
 
 
@@ -35,15 +38,22 @@ class AutoRig(object):
     AutoRig class to create a custom rig for a character in Maya.
     """
 
-    def build(self, leg_impl="self", leg_solver=None, validate=False):
-        """Build all character stages under one guarded construction session."""
+    def build(self, leg_impl="self", leg_solver=None, validate=False, exact_optimizations=True):
+        """Build all stages with exact static cleanup and initial-bind filtering.
+
+        Disable exact_optimizations only for comparison/debugging. Existing
+        skins, facial layers, corrective routes and authored detail stay intact.
+        """
         from maya_tools.scripts.ui import rig_progress
         from maya_tools.scripts.utils.build_timing import BuildTiming
         reload(rig_progress)
         start = time.perf_counter()
         char_name = rig_manager.get_character_name_from_build() or "Asset"
+        character_root = None
+        optimization_report = {'enabled': bool(exact_optimizations)}
         validation_dir = rig_manager.asset_path(char_name, "validation")
         with BuildTiming(char_name, validation_dir) as timings:
+            timings.data['optimizations'] = optimization_report
             settings = rig_manager.build_rig_from_data(char_name) or {}
             progress = rig_progress.RigProgressDialog(char_name, mgear=bool(settings.get("mGear_integration", 0)))
             progress.show()
@@ -63,15 +73,27 @@ class AutoRig(object):
                 character_root = roots[0] if len(roots) == 1 else char_name
                 # Opening a model can restore scene preferences. Reassert the
                 # owned construction state before creating thousands of nodes.
-                cmds.evaluationManager(mode="off")
+                scene_evaluation.suspend_for_build()
                 cmds.undoInfo(stateWithoutFlush=False)
                 cmds.refresh(suspend=True)
+                if exact_optimizations:
+                    step("Preparing model data...", 3)
+                    meshes = (cmds.ls(character_root, dag=True, type='mesh', noIntermediate=True, long=True) or []) if len(roots) == 1 else []
+                    if meshes:
+                        cleanup = rig_exact_cleanup.bake_static_point_curves(meshes, apply=True)
+                        optimization_report['static_point_curves'] = cleanup['count']
+                previous_math = (set(cmds.ls(type='blendMatrix') or []) | set(cmds.ls(type='multMatrix') or [])) if exact_optimizations else set()
 
                 def on_module_step(label, current, total):
                     step(label, 5 + int(current / max(total, 1) * 75))
 
                 step("Building rig modules...", 5)
                 self.make_rig(on_step=on_module_step, leg_impl=leg_impl, leg_solver=leg_solver)
+                if exact_optimizations:
+                    step("Optimizing rig graph...", 80)
+                    created_math = (set(cmds.ls(type='blendMatrix') or []) | set(cmds.ls(type='multMatrix') or [])) - previous_math
+                    cleanup = rig_exact_cleanup.share_identical_lip_math(nodes=created_math)
+                    optimization_report['shared_math_nodes'] = len(cleanup['removed'])
                 step("Labeling joints...", 82)
                 self.label_joints()
                 step("Hiding utility nodes...", 85)
@@ -79,7 +101,12 @@ class AutoRig(object):
                 step("Setting inherit transforms...", 88)
                 self.inherit_transforms()
                 step("Importing skin weights...", 91)
-                skinner = self.import_weights()
+                skinner = self.import_weights(optimize_new_bindings=exact_optimizations)
+                if exact_optimizations:
+                    bindings = getattr(skinner, '_import_optimization_report', [])
+                    optimization_report['new_skin_bindings'] = [
+                        {key: row[key] for key in ('skin', 'before', 'after')}
+                        for row in bindings] if isinstance(bindings, list) else []
                 step("Localizing corrective skin...", 95)
                 self.localize_correctives()
                 step("Importing corrective blendshapes...", 96)
@@ -104,19 +131,25 @@ class AutoRig(object):
                     rig_roles.discover(character_root)
                     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
                     rig_validation.write_build_health(character_root, os.path.join(validation_dir, stamp + ".righealth.json"))
+                step("Storing scene evaluation profile...", 99)
+                scene_evaluation.register(character_root)
                 success = True
             except Exception as exc:
                 progress.fail(exc)
                 raise
             finally:
                 timings.mark("Restoring Maya state...")
-                self._end_fast_session(session)
+                try:
+                    self._end_fast_session(session, success=success)
+                except Exception as exc:
+                    progress.fail(exc)
+                    raise
                 if success:
                     progress.finish(time.perf_counter() - start)
                     om.MGlobal.displayInfo("[AutoRig build] Timing report: " + str(timings.path))
                     cmds.inViewMessage(amg='Completed <hl>' + char_name.upper() + ' RIG</hl> build.',
                                        pos='midCenter', fade=True, alpha=0.8)
-        return {'asset': char_name, 'timing_report': str(timings.path)}
+        return {'asset': char_name, 'timing_report': str(timings.path), 'optimizations': optimization_report}
 
     def _begin_fast_session(self):
 
@@ -126,11 +159,7 @@ class AutoRig(object):
         Devuelve el estado previo para restaurarlo en _end_fast_session.
         """
         state = {}
-        try:
-            state["eval_mode"] = cmds.evaluationManager(q=True, mode=True)[0]
-            cmds.evaluationManager(mode="off")  # DG lazy: no reconstruye el grafo por nodo
-        except Exception:
-            state["eval_mode"] = None
+        state["evaluation"] = scene_evaluation.suspend_for_build()
         try:
             state["cycle_check"] = cmds.cycleCheck(q=True, evaluation=True)
             cmds.cycleCheck(e=True, evaluation=False)  # sin chequeo de ciclos en cada conexión
@@ -156,11 +185,12 @@ class AutoRig(object):
             state["refresh"] = None
         return state
 
-    def _end_fast_session(self, state):
+    def _end_fast_session(self, state, success=False):
 
         """Restaura el estado guardado por _begin_fast_session (siempre, en finally)."""
         if not state:
             return
+        evaluation_error = None
         if state.get("script_editor"):
             try:
                 cmds.scriptEditorInfo(e=True, **state["script_editor_flags"])
@@ -176,11 +206,17 @@ class AutoRig(object):
                 cmds.cycleCheck(e=True, evaluation=state["cycle_check"])
             except Exception:
                 pass
-        if state.get("eval_mode"):
+        if state.get("evaluation"):
             try:
-                cmds.evaluationManager(mode=state["eval_mode"])
-            except Exception:
-                pass
+                if success:
+                    scene_evaluation.apply()
+                    if not cmds.about(batch=True):
+                        scene_evaluation.install_callbacks(apply_current=False)
+                else:
+                    scene_evaluation.restore(state["evaluation"])
+            except Exception as error:
+                evaluation_error = error
+                scene_evaluation.restore(state["evaluation"])
         if state.get("refresh"):
             try:
                 cmds.refresh(suspend=False)
@@ -190,6 +226,8 @@ class AutoRig(object):
             cmds.refresh(force=True)  # un único redibujado al final
         except Exception:
             pass
+        if evaluation_error is not None:
+            raise evaluation_error
 
     def basic_structure(self):
 
@@ -363,7 +401,7 @@ class AutoRig(object):
         reload(corrective_blendshape_manager)
         corrective_blendshape_manager.CorrectiveBlendshapeManager().import_from()
 
-    def import_weights(self):
+    def import_weights(self, optimize_new_bindings=True):
         """
         Import skin weights for the rig after creation.
 
@@ -374,7 +412,7 @@ class AutoRig(object):
            are found and this character has no direct weights yet.
         """
         skinner = skin_manager_api.SkinManager()
-        skinner.import_skins(import_wrinkles=False)
+        skinner.import_skins(import_wrinkles=False, optimize_new_bindings=optimize_new_bindings)
         return skinner
 
         # self._auto_transfer_from_source()

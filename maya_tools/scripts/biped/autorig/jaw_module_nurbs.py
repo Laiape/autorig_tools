@@ -487,9 +487,15 @@ class JawModule(object):
         cmds.connectAttr(up_direction, blend + ".color1")
         cmds.connectAttr(fallback + ".outColor", blend + ".color2")
         aim = cmds.createNode("aimMatrix", name=name + "Vector_AMX", ss=True)
-        position = cmds.createNode("composeMatrix", name=name + "Position_CMX", ss=True)
-        cmds.connectAttr(pin_pos + ".output", position + ".inputTranslate")
-        cmds.connectAttr(position + ".outputMatrix", aim + ".inputMatrix")
+        if cmds.nodeType(pin.split(".", 1)[0]) == "uvPin":
+            # uvPin supplies a rigid frame. Two-axis aiming replaces its rotation
+            # and retains its position without rebuilding a translation matrix.
+            cmds.connectAttr(pin, aim + ".inputMatrix")
+        else:
+            # Generic callers may supply scale/shear or a degenerate matrix.
+            position = cmds.createNode("composeMatrix", name=name + "Position_CMX", ss=True)
+            cmds.connectAttr(pin_pos + ".output", position + ".inputTranslate")
+            cmds.connectAttr(position + ".outputMatrix", aim + ".inputMatrix")
         cmds.setAttr(aim + ".primaryInputAxis", 0, 0, 1)
         cmds.connectAttr(primary + ".output", aim + ".primaryTargetVector")
         cmds.setAttr(aim + ".primaryMode", 2)
@@ -648,12 +654,10 @@ class JawModule(object):
         depths = {}
         for side in ("L", "R"):
             corner = side + "_lipCorner_CTL"
-            for attr, label, default in (("autoWide", "Auto Wide", 1.0),
-                                          ("autoWideDepth", "Auto Wide Depth", .2)):
-                cmds.addAttr(corner, longName=attr, niceName=label,
-                             attributeType="double", min=0, max=1, defaultValue=default, keyable=True)
+            cmds.addAttr(corner, longName="autoWide", niceName="Auto Wide",
+                         attributeType="double", min=0, max=1, defaultValue=1.0, keyable=True)
             gain = scalar(side + "_lipAutoWideGain_MUL", "multiply",
-                          [corner + ".autoWide", corner + ".autoWideDepth"])
+                          [corner + ".autoWide", 1.0])
             depths[side] = scalar(side + "_lipAutoWideDepth_MUL", "multiply", [gain, half_width])
         drivers = {}
         for part, ctls in controls.items():
@@ -871,13 +875,16 @@ class JawModule(object):
                 cmds.setAttr(rotation + ".use" + component, 0)
             inverse = cmds.createNode("inverseMatrix", name=name + "CornerPivot_IMX", ss=True)
             cmds.connectAttr(pivot, inverse + ".inputMatrix")
-            basis = (rotation + ".outputMatrix", inverse + ".outputMatrix")
-        blend = cmds.createNode("blendMatrix", name=name + "CornerRotation_BMX", ss=True)
-        cmds.connectAttr(basis[0], blend + ".target[0].targetMatrix")
-        cmds.setAttr(blend + ".target[0].weight", weight)
+            basis = (rotation + ".outputMatrix", inverse + ".outputMatrix", {})
+        rotations = basis[2] if len(basis) > 2 else {}
+        if weight not in rotations:
+            blend = cmds.createNode("blendMatrix", name=name + "CornerRotation_BMX", ss=True)
+            cmds.connectAttr(basis[0], blend + ".target[0].targetMatrix")
+            cmds.setAttr(blend + ".target[0].weight", weight)
+            rotations[weight] = blend + ".outputMatrix"
         result = cmds.createNode("multMatrix", name=name + "CornerRotation_MMX", ss=True)
         for index, plug in enumerate((frame, basis[1],
-                                      blend + ".outputMatrix", pivot)):
+                                      rotations[weight], pivot)):
             cmds.connectAttr(plug, result + f".matrixIn[{index}]")
         return result + ".matrixSum"
 
@@ -1347,7 +1354,7 @@ class JawModule(object):
                 cmds.setAttr(rotation + ".use" + component, 0)
             inverse = cmds.createNode("inverseMatrix", name=side + "_lipCornerPivot_IMX", ss=True)
             cmds.connectAttr(corner_pivots[side], inverse + ".inputMatrix")
-            corner_rotation_bases[side] = (rotation + ".outputMatrix", inverse + ".outputMatrix")
+            corner_rotation_bases[side] = (rotation + ".outputMatrix", inverse + ".outputMatrix", {})
             corner_aim_axes[side] = []
             for label, axis in (("Y", (0, 1, 0)), ("X", (1, 0, 0)), ("Z", (0, 0, 1))):
                 node = cmds.createNode("vectorProduct", name=side + "_lipCorner" + label + "_VPR", ss=True)
@@ -1702,7 +1709,9 @@ class JawModule(object):
                     idx = corner_idx+k if corner_idx == 0 else corner_idx-k
                     t = k/float(max(1, corner_blend-1))
                     w = 1.0-t*t*(3.0-2.0*t)
-                    key = (corner_side, k)
+                    if w <= 1e-12:
+                        continue
+                    key = corner_side
                     if key not in corner_frames:
                         corner = next(c for c in corner_controllers if c.startswith(corner_side+"_"))
                         avg = cmds.createNode("multMatrix", name=f"C_lipCorner{idx:02d}Frame_MMX", ss=True)

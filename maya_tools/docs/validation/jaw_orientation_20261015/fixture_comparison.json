@@ -1,0 +1,261 @@
+{
+  "samples": [
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 9.743954166575955,
+        "corner": 10.393183333235356,
+        "fine": 9.467512499971539,
+        "mixed": 13.41930416674586
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 15.728074999969976,
+        "corner": 8.404229166596147,
+        "fine": 7.271799999974367,
+        "mixed": 11.46711666660849
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 11.361600000024433,
+        "corner": 13.198749999901338,
+        "fine": 9.154266666731322,
+        "mixed": 12.554875000053775
+      }
+    },
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 9.753287499885724,
+        "corner": 9.507145833291966,
+        "fine": 6.667145833337902,
+        "mixed": 16.97023333326797
+      }
+    },
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 10.08094999997411,
+        "corner": 12.08442083331344,
+        "fine": 10.424612500022098,
+        "mixed": 11.599291666698264
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 12.3089624999011,
+        "corner": 11.17058749999463,
+        "fine": 5.2894791667010095,
+        "mixed": 16.87859166668204
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 8.356695833451036,
+        "corner": 17.49420833327046,
+        "fine": 13.769491666607792,
+        "mixed": 10.496737500034214
+      }
+    },
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 10.706245833262074,
+        "corner": 11.756158333355415,
+        "fine": 10.25842916669717,
+        "mixed": 14.020933333237432
+      }
+    }
+  ],
+  "purpose": "Native orientation candidate; exact artist snapshot baseline, current source, all joint/control matrices. No mesh/viewport timing.",
+  "before": {
+    "nodes": 2931,
+    "node_types": {
+      "time": 1,
+      "sequenceManager": 1,
+      "hardwareRenderingGlobals": 1,
+      "partition": 2,
+      "renderGlobalsList": 1,
+      "defaultLightList": 1,
+      "defaultShaderList": 1,
+      "postProcessList": 1,
+      "defaultRenderUtilityList": 1,
+      "defaultRenderingList": 1,
+      "lightList": 1,
+      "defaultTextureList": 1,
+      "lambert": 1,
+      "standardSurface": 1,
+      "openPBRSurface": 1,
+      "particleCloud": 1,
+      "shadingEngine": 2,
+      "materialInfo": 1,
+      "shaderGlow": 1,
+      "dof": 1,
+      "renderGlobals": 1,
+      "renderQuality": 1,
+      "resolution": 1,
+      "objectSet": 2,
+      "viewColorManager": 1,
+      "colorManagementGlobals": 1,
+      "hardwareRenderGlobals": 1,
+      "hwRenderGlobals": 1,
+      "hyperGraphInfo": 1,
+      "hyperLayout": 1,
+      "globalCacheControl": 1,
+      "strokeGlobals": 1,
+      "ikSystem": 1,
+      "dynController": 1,
+      "lightLinker": 1,
+      "transform": 101,
+      "camera": 4,
+      "displayLayerManager": 1,
+      "displayLayer": 1,
+      "renderLayerManager": 1,
+      "renderLayer": 1,
+      "joint": 130,
+      "multMatrix": 203,
+      "sum": 268,
+      "unitConversion": 55,
+      "clamp": 41,
+      "blendTwoAttr": 1,
+      "composeMatrix": 139,
+      "nurbsCurve": 10,
+      "nurbsSurface": 5,
+      "locator": 1,
+      "motionPath": 22,
+      "fourByFourMatrix": 29,
+      "parentMatrix": 8,
+      "rowFromMatrix": 4,
+      "closestPointOnSurface": 4,
+      "inverseMatrix": 24,
+      "aimMatrix": 70,
+      "reverse": 3,
+      "wtAddMatrix": 27,
+      "translationFromMatrix": 126,
+      "plusMinusAverage": 78,
+      "subtract": 68,
+      "multiply": 212,
+      "remapValue": 69,
+      "multiplyDivide": 238,
+      "condition": 172,
+      "skinCluster": 6,
+      "dagPose": 3,
+      "pickMatrix": 70,
+      "vectorProduct": 408,
+      "blendMatrix": 90,
+      "divide": 36,
+      "blendWeighted": 60,
+      "uvPin": 4,
+      "distanceBetween": 50,
+      "blendColors": 50
+    },
+    "median_ms": {
+      "jaw": 9.917118749929916,
+      "corner": 11.074670833295386,
+      "fine": 9.862970833334355,
+      "mixed": 13.720118749991645
+    }
+  },
+  "after": {
+    "nodes": 2860,
+    "node_types": {
+      "time": 1,
+      "sequenceManager": 1,
+      "hardwareRenderingGlobals": 1,
+      "partition": 2,
+      "renderGlobalsList": 1,
+      "defaultLightList": 1,
+      "defaultShaderList": 1,
+      "postProcessList": 1,
+      "defaultRenderUtilityList": 1,
+      "defaultRenderingList": 1,
+      "lightList": 1,
+      "defaultTextureList": 1,
+      "lambert": 1,
+      "standardSurface": 1,
+      "openPBRSurface": 1,
+      "particleCloud": 1,
+      "shadingEngine": 2,
+      "materialInfo": 1,
+      "shaderGlow": 1,
+      "dof": 1,
+      "renderGlobals": 1,
+      "renderQuality": 1,
+      "resolution": 1,
+      "objectSet": 2,
+      "viewColorManager": 1,
+      "colorManagementGlobals": 1,
+      "hardwareRenderGlobals": 1,
+      "hwRenderGlobals": 1,
+      "hyperGraphInfo": 1,
+      "hyperLayout": 1,
+      "globalCacheControl": 1,
+      "strokeGlobals": 1,
+      "ikSystem": 1,
+      "dynController": 1,
+      "lightLinker": 1,
+      "transform": 101,
+      "camera": 4,
+      "displayLayerManager": 1,
+      "displayLayer": 1,
+      "renderLayerManager": 1,
+      "renderLayer": 1,
+      "joint": 130,
+      "multMatrix": 193,
+      "sum": 268,
+      "unitConversion": 55,
+      "clamp": 41,
+      "blendTwoAttr": 1,
+      "composeMatrix": 89,
+      "nurbsCurve": 10,
+      "nurbsSurface": 5,
+      "locator": 1,
+      "motionPath": 22,
+      "fourByFourMatrix": 29,
+      "parentMatrix": 8,
+      "rowFromMatrix": 4,
+      "closestPointOnSurface": 4,
+      "inverseMatrix": 24,
+      "aimMatrix": 70,
+      "reverse": 3,
+      "wtAddMatrix": 27,
+      "translationFromMatrix": 126,
+      "plusMinusAverage": 78,
+      "subtract": 68,
+      "multiply": 212,
+      "remapValue": 69,
+      "multiplyDivide": 238,
+      "condition": 172,
+      "skinCluster": 6,
+      "dagPose": 3,
+      "pickMatrix": 70,
+      "vectorProduct": 408,
+      "blendMatrix": 79,
+      "divide": 36,
+      "blendWeighted": 60,
+      "uvPin": 4,
+      "distanceBetween": 50,
+      "blendColors": 50
+    },
+    "median_ms": {
+      "jaw": 11.835281249962765,
+      "corner": 12.184668749947985,
+      "fine": 8.213033333352845,
+      "mixed": 12.010995833331133
+    }
+  },
+  "maximum_matrix_error": 6.88353723481052e-08,
+  "worst": {
+    "pose": "narrow_0_0.5_LR",
+    "node": "R_lowerLip06_JNT"
+  },
+  "unique_poses": 266,
+  "cycles": [],
+  "success": true
+}

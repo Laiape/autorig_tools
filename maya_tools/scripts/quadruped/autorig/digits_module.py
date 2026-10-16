@@ -201,13 +201,13 @@ class DigitsModule(object):
         for name in self.digit_names:
             cmds.parent(self._nodes[name][0], self.controllers_grp)
 
-        # Control de atributos, colocado sobre el primer dedo de apoyo que haya.
-        anchor = next((n for n in self.digit_names if n != self.DEWCLAW), self.digit_names[0])
+        # Settings are centered above the full digit set.
         self.digit_attributes_nodes, self.digit_attributes_ctl = curve_tool.create_controller(
             name=f"{self.module_name}DigitsAttributes", offset=["GRP"]
         )
         cmds.parent(self.digit_attributes_nodes[0], self.controllers_grp)
-        cmds.matchTransform(self.digit_attributes_nodes[0], self._ctl[anchor][0], pos=True, rot=True)
+        from maya_tools.scripts.utils import controller_display
+        controller_display.configure_digit_settings(self.digit_attributes_ctl, self._ctl.values())
         curve_tool.lock_attributes(self.digit_attributes_ctl, ["tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz", "v"])
 
     def parent_digits_to_mtp(self):

@@ -278,7 +278,7 @@ class LegModule(object):
             cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv_point_pv}.controlPoints[1].{value}")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
-        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
+        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 2)
         cmds.parent(crv_point_pv, self.pv_ctl)
         cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 
@@ -464,13 +464,15 @@ class LegModule(object):
         self.ball_ik = custom_ik_solver.single_chain_solver(
             blend_matrix=f"{ball_base_mmx}.matrixSum", controller=self.ik_controllers[-1],
             guides=[self.guides_trns[2], self.guides_trns[-2]])
-        cmds.connectAttr(f"{self.ball_ik}", f"{self.blend_matrices[-1][0]}.inputMatrix")
 
         # Toe (tip): single-chain solver ball->tip, driven by toeIk (ik_controllers[-2]),
         # chained off the LIVE ball result so it follows the ball.  Drives the toe joint.
         self.toe_ik = custom_ik_solver.single_chain_solver(
             blend_matrix=self.ball_ik, controller=self.ik_controllers[-2],
             guides=[self.guides_trns[-2], self.guides_trns[-1]])
+
+        self.foot_reach_setup()
+        cmds.connectAttr(self.ball_ik, f"{self.blend_matrices[-1][0]}.inputMatrix")
 
         # The terminal toe has no separate FK control. Keep its rest offset
         # from the ball FK control, and blend it with the solved IK endpoint.
@@ -482,6 +484,35 @@ class LegModule(object):
         cmds.connectAttr(self.toe_ik, f"{self.toe_blend}.inputMatrix")
         cmds.connectAttr(f"{toe_fk}.matrixSum", f"{self.toe_blend}.target[0].targetMatrix")
         cmds.connectAttr(f"{self.settings_ctl}.Ik_Fk", f"{self.toe_blend}.target[0].weight")
+
+    def foot_reach_setup(self):
+        """Translate the complete IK foot with the solved ankle's reach offset.
+
+        With stretch disabled or soft IK active, the requested reverse-foot ankle
+        can lie beyond the leg endpoint. Apply the same world translation to the
+        raw ball and toe results so the foot retains its shape and roll pivots.
+        Read the raw IK ankle, before IK/FK blending, to keep FK independent.
+        """
+        rows = []
+        for label, source in (("Solved", self.ik_matrices[2]),
+                              ("Target", f"{self.side}_legIkIkHandleManager_MMX.matrixSum")):
+            row = cmds.createNode("rowFromMatrix", name=f"{self.side}_legFootReach{label}_RFM", ss=True)
+            cmds.setAttr(row + ".input", 3)
+            cmds.connectAttr(source, row + ".matrix")
+            rows.append(row)
+        delta = cmds.createNode("plusMinusAverage", name=f"{self.side}_legFootReachDelta_PMA", ss=True)
+        cmds.setAttr(delta + ".operation", 2)
+        offset = cmds.createNode("fourByFourMatrix", name=f"{self.side}_legFootReach_FBF", ss=True)
+        for column, axis in enumerate("XYZ"):
+            for index, row in enumerate(rows):
+                cmds.connectAttr(row + ".output" + axis,
+                                 f"{delta}.input3D[{index}].input3D{axis.lower()}")
+            cmds.connectAttr(delta + ".output3D" + axis.lower(), f"{offset}.in3{column}")
+        for attr, label in (("ball_ik", "Ball"), ("toe_ik", "Toe")):
+            matrix = cmds.createNode("multMatrix", name=f"{self.side}_leg{label}Reach_MMX", ss=True)
+            cmds.connectAttr(getattr(self, attr), matrix + ".matrixIn[0]")
+            cmds.connectAttr(offset + ".output", matrix + ".matrixIn[1]")
+            setattr(self, attr, matrix + ".matrixSum")
 
     def foot_attributes(self):
 

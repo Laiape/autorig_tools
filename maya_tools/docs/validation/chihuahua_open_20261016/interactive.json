@@ -1,0 +1,85 @@
+{
+  "pid": 37628,
+  "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\model_cache.py",
+  "source": {
+    "open_seconds": 13.287796100004925,
+    "redraw_seconds": 9.574264900002163,
+    "total_seconds": 24.1117571000068
+  },
+  "source_sha256": "43ec2ab71d712410af609c5599f5ec61bc3439e9c55e0e5ccebec6656b1c6df5",
+  "api": 20260303,
+  "samples": [
+    {
+      "kind": "source",
+      "open_seconds": 13.287796100004925,
+      "redraw_seconds": 11.00017569999909,
+      "total_seconds": 24.287971800004016,
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v001.ma",
+      "cache_hit": false
+    },
+    {
+      "kind": "cache",
+      "open_seconds": 4.098531099996762,
+      "redraw_seconds": 11.092048699996667,
+      "total_seconds": 15.19057979999343,
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v001.ma",
+      "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\models\\chihuahua_v001.ma",
+      "cache_hit": true,
+      "binary": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\cache\\models\\ed4ffd44901cbcd64948d1019d0e3f5f9398d33f7873d5bf15c4d15afa7d25f9.mb",
+      "source_sha256": "43ec2ab71d712410af609c5599f5ec61bc3439e9c55e0e5ccebec6656b1c6df5"
+    },
+    {
+      "kind": "cache",
+      "open_seconds": 3.9136799999978393,
+      "redraw_seconds": 10.07733489999373,
+      "total_seconds": 13.991014899991569,
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v001.ma",
+      "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\models\\chihuahua_v001.ma",
+      "cache_hit": true,
+      "binary": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\cache\\models\\ed4ffd44901cbcd64948d1019d0e3f5f9398d33f7873d5bf15c4d15afa7d25f9.mb",
+      "source_sha256": "43ec2ab71d712410af609c5599f5ec61bc3439e9c55e0e5ccebec6656b1c6df5"
+    },
+    {
+      "kind": "source",
+      "open_seconds": 14.537492200004635,
+      "redraw_seconds": 9.574264900002163,
+      "total_seconds": 24.1117571000068,
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v001.ma",
+      "cache_hit": false
+    },
+    {
+      "kind": "source",
+      "open_seconds": 12.309774300010758,
+      "redraw_seconds": 9.327655699991737,
+      "total_seconds": 21.637430000002496,
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v001.ma",
+      "cache_hit": false
+    },
+    {
+      "kind": "cache",
+      "open_seconds": 3.8000281999993604,
+      "redraw_seconds": 9.186421099992003,
+      "total_seconds": 12.986449299991364,
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v001.ma",
+      "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\models\\chihuahua_v001.ma",
+      "cache_hit": true,
+      "binary": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\cache\\models\\ed4ffd44901cbcd64948d1019d0e3f5f9398d33f7873d5bf15c4d15afa7d25f9.mb",
+      "source_sha256": "43ec2ab71d712410af609c5599f5ec61bc3439e9c55e0e5ccebec6656b1c6df5"
+    }
+  ],
+  "scope": "Interactive Maya, open command and explicit redraw measured separately; warm OS/plugin state.",
+  "phase": "complete",
+  "cold_source_open_seconds": 16.57328039999993,
+  "quality": {
+    "exact_match": true,
+    "mesh_count": 14,
+    "xgen_node_count": 16,
+    "checked": "All mesh positions/topology/face-vertex normals/UVs/material memberships, transform matrices, XGen node identities/connections, texture paths, frame and units."
+  },
+  "cache": {
+    "open_seconds": 3.9136799999978393,
+    "redraw_seconds": 10.07733489999373,
+    "total_seconds": 13.991014899991569
+  },
+  "source_unchanged": true
+}

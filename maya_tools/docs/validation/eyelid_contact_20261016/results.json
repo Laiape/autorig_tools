@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-16",
+  "maya_version": "2026",
+  "intent": "Fix blink contact with posed eyelid controls and retain animator XYZ rotation after aim/projection. Intentional change to closure and rotation, not a performance optimization.",
+  "runtime_checkout": "C:\\proyectos\\auto-rig\\autorig_tools",
+  "source_sha256": {
+    "maya_tools/scripts/biped/autorig/eyelid_module.py": "25fd9700eda33ce6e245ca105ec410f6d3f886733469a76ded611bd4f3a1a2cf",
+    "maya_tools/scripts/tools/eyelid_contact.py": "9be44cfed579f88209aaa37b7bec2ebdb53272a486de78e494e888c1e68b007b",
+    "maya_tools/scripts/tools/tests/test_eyelid_blink.py": "6841c7e20478fa35ad426beaf10d5205efef3fb61c4bcf64eb133b60887adb5a"
+  },
+  "before_scene": "C:\\proyectos\\auto-rig\\recovery\\eyelids_before_20261016_v001.mb",
+  "after_scene": "C:\\proyectos\\auto-rig\\recovery\\Edward_eyelids_fixed_20261016_v001.mb",
+  "artist_current_joint_matrix_max_error": 5.684341886080802e-14,
+  "real_closed_curve_max_error": 5.684341886080802e-14,
+  "real_paired_joint_max_distance": 2.5121479338940403e-15,
+  "tolerance_scene_units": 0.0001,
+  "coverage": [
+    "L/R rebuilt fixtures with and without eye projection",
+    "All eight primary/secondary controls rotated on each XYZ axis",
+    "Detail controller XYZ rotations preserved after procedural aim",
+    "Negative, open, partial, full blink and reverse transitions",
+    "Blink heights 0, 0.2, 0.5, 1",
+    "Independent upper blink preserves lower curve",
+    "DG, Serial and Parallel fixture evaluation",
+    "Four independent fixture builds and native ASCII reopen",
+    "Legacy L/R and namespace migration; idempotence, selection and single-step undo",
+    "Real Edward binary snapshot migration: posed curves and paired joints",
+    "Corrected real Edward native binary save/reopen",
+    "Open/full-blink viewport captures inspected in the artist scene: both eyes visibly close at current pose; original camera and channels restored"
+  ],
+  "preserved": "Existing controls, animation, joint identities, skin nodes, weights and bind matrices. No body skin edits. Current artist pose preserved within tolerance.",
+  "limits": [
+    "Contact measurements cover driver curves and paired joints. Viewport review covers open/full closure at the current artist pose, not all final-mesh combined expressions or skin painting.",
+    "No GPU/cache or performance acceptance.",
+    "No new SKC format or data change; native scene persistence tested."
+  ],
+  "regression_log": "C:\\proyectos\\auto-rig\\tmp\\eyelid_regression_validation.log",
+  "real_reopen_log": "C:\\proyectos\\auto-rig\\tmp\\eyelid_reopen_validation.log",
+  "result": "PASS for tested scope"
+}

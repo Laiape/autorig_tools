@@ -6,15 +6,17 @@ alwaysApply: true
 # Rig performance measurement
 
 Scope: every autorig, deformation, LOD, simulation and rig package change.
-Read `maya_tools/docs/rig_performance_plan.md` for evidence and implementation order.
+Read `maya_tools/docs/rig_performance_criteria.md` for current acceptance and
+`maya_tools/docs/rig_optimization_roadmap_20261015.md` for implementation order.
 Based on Guido Gonzalez's 2026 rig study, sections 3-5, 7, 10 and 12.
 
 - Optimize measured critical-path work. Scene node counts and polygon counts are
   inventory, not proof of a frame-time bottleneck. Record the hypothesis first.
 - Use interactive Maya with Viewport 2.0 for viewport/GPU acceptance. Batch Maya
   can validate geometry and inventory, but cannot certify interactive FPS.
-- Production defaults to validated Parallel evaluation plus GPU Override. Check
-  actual fallback/Safe Mode, scheduling and GPU membership under animated load.
+- New rigs default to conservative Parallel CPU with cache OFF after lazy DG
+  construction. GPU/cache require scene-specific geometry and invalidation gates;
+  check fallback/Safe Mode, scheduling and GPU membership under animated load.
 - Benchmark temporal playback and control manipulation separately. Exercise body,
   face, correctives, wrinkles and relevant contacts; a static rig is not a test.
 - Compare DG, Parallel CPU, Parallel GPU and warm Cached Playback. Use Serial
@@ -45,6 +47,16 @@ Based on Guido Gonzalez's 2026 rig study, sections 3-5, 7, 10 and 12.
   reopen and SKC/preset round-trips before accepting a structural replacement.
 - Do not transfer the study's speedups, 16.4 ms fitted intercept, GPU thresholds
   or subsystem costs to Edward without a controlled measurement.
+- Compare cache and GPU separately to accepted CPU/DG geometry. Edward's later
+  artist snapshot cache matched CPU in the tested scope while uncached GPU did
+  not. Do not transfer that approval to the earlier regional scene or all edits.
+- Bypass omits computation AND deformation; deltas are marginal/nonadditive.
+  Inclusive CPU is not wall time. Native payload sizes overlap and are not RAM.
+- Check normals/UV/materials and joint matrices as well as positions. Benchmark
+  native-reopened binding cleanup separately from the post-edit state. Preserve
+  tiny nonzero weights, DQ masks and matching skin/corrective order on SKC import.
+  Retain cache/export failures as evidence; fast completed samples do not erase
+  a hung warmup or approve a default profile.
 - Profile build latency separately from animation. Keep optional health audits
   outside normal builds; never query native GPU partitions in automatic audits.
 - Verify model-cache invalidation, file hashes and source equivalence.

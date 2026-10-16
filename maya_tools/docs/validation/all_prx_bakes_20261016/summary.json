@@ -1,0 +1,2922 @@
+{
+  "date": "2026-10-16",
+  "scope": "Both comparison methods applied to every one of the 23 PRX garment outputs.",
+  "production_approval": false,
+  "source": {
+    "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_artist_baseline.ma",
+    "bytes": 199833931,
+    "sha256": "b402990c112a5331811681dc07649f68d731c36a6f85f075048e76a52a48ed78"
+  },
+  "snapshot": {
+    "source": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_artist_baseline.ma",
+    "bytes": 199833931,
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL"
+      ]
+    },
+    "after": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL"
+      ]
+    }
+  },
+  "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\proximity_bake.py",
+  "outputs": 23,
+  "vertices": 37791,
+  "capture_poses": 150,
+  "held_out_poses": 173,
+  "shared_blendshape": "Edward_AllPRX_SHARED_BLS_TEST",
+  "blendshape_geometry_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ],
+  "shared_weights": 119,
+  "skin_clusters": 23,
+  "capture_seconds": 72.85658820001117,
+  "build_seconds": 59.91450559999794,
+  "quality_gate": {
+    "cases": 326,
+    "mesh_comparisons": 29992,
+    "tolerance_cm": 0.0001,
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 279.9157841999986
+  },
+  "per_output": [
+    {
+      "wrap": "brazaletes1_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|brazaletes1",
+      "vertices": 1774,
+      "skin_influences": 20,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 72,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 14.201478058087654,
+        "global": 1.3617868199407246,
+        "max_normal": 0.4126516859251377,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.10171949378198923,
+        "held_out": 0.11941578980344984,
+        "global": 0.19788119271141177,
+        "max_normal": 0.05969144322536026,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "cinturon3_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3",
+      "vertices": 5589,
+      "skin_influences": 9,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 64,
+      "BLENDSHAPE": {
+        "capture": 4.76837158203125e-07,
+        "held_out": 0.4821523855179737,
+        "global": 0.47051087447993517,
+        "max_normal": 0.5844544189142883,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.42356810694278163,
+        "held_out": 0.2572966336349174,
+        "global": 0.4705103300823738,
+        "max_normal": 0.049370399053137844,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "cinturones2_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2",
+      "vertices": 4885,
+      "skin_influences": 18,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 82,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 1.4940666846473771,
+        "global": 0.7970167163271517,
+        "max_normal": 0.5902361800631369,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.42122281789227034,
+        "held_out": 0.2821151320966033,
+        "global": 0.3922420571579896,
+        "max_normal": 0.0535381397587287,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "collar2_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|collar2",
+      "vertices": 1806,
+      "skin_influences": 9,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 69,
+      "BLENDSHAPE": {
+        "capture": 1.9075814492470335e-06,
+        "held_out": 1.6336137533096693,
+        "global": 1.2595948154709455,
+        "max_normal": 0.41518454015488454,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.18960130817716123,
+        "held_out": 0.13529476022138462,
+        "global": 0.2269137063469394,
+        "max_normal": 0.0849801464311427,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "collar3_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|collar3",
+      "vertices": 1806,
+      "skin_influences": 12,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 69,
+      "BLENDSHAPE": {
+        "capture": 1.9082797281243946e-06,
+        "held_out": 1.8493251959745078,
+        "global": 1.2700209617990885,
+        "max_normal": 0.435341665219708,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 2.4588041069379227,
+        "held_out": 2.427529168978455,
+        "global": 0.345411044082145,
+        "max_normal": 0.07900579502081716,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "harapo1_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo1",
+      "vertices": 338,
+      "skin_influences": 8,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 60,
+      "BLENDSHAPE": {
+        "capture": 2.384185791015625e-07,
+        "held_out": 0.13671298789556996,
+        "global": 0.47937655694488845,
+        "max_normal": 0.5035152650657835,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 1.0422649562588897,
+        "held_out": 0.5743482585519183,
+        "global": 0.47937387461729875,
+        "max_normal": 0.15105816797096264,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "harapo2_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo2",
+      "vertices": 338,
+      "skin_influences": 9,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 60,
+      "BLENDSHAPE": {
+        "capture": 2.384185791015625e-07,
+        "held_out": 0.385016522037047,
+        "global": 0.47702605375825813,
+        "max_normal": 0.564151010987276,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 2.322786758828564,
+        "held_out": 1.2901162278634453,
+        "global": 0.4770284875433633,
+        "max_normal": 0.25417673676259883,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "pCube26_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|pCube26",
+      "vertices": 416,
+      "skin_influences": 15,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 70,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 0.9944319650661823,
+        "global": 0.7630956691843778,
+        "max_normal": 0.48238835677003794,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.35215865768657023,
+        "held_out": 0.25141589013189664,
+        "global": 0.21038556294647856,
+        "max_normal": 0.13981095862295143,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "pCylinder16_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|pCylinder16",
+      "vertices": 484,
+      "skin_influences": 12,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 67,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 1.548972919781625,
+        "global": 1.6255535802332457,
+        "max_normal": 0.3398512486418478,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.48306690846675937,
+        "held_out": 0.43110115396734994,
+        "global": 0.47360238671112026,
+        "max_normal": 0.1159433803393026,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "pasted__brazaletes3_PRX",
+      "source": "|Edward|geo_GRP|FINAL|botas_geo|pasted__brazaletes3",
+      "vertices": 1064,
+      "skin_influences": 6,
+      "skin_max_nonzero": 6,
+      "blendshape_targets": 18,
+      "BLENDSHAPE": {
+        "capture": 1.0789593218788873e-05,
+        "held_out": 27.024248967253918,
+        "global": 0.3287039933959112,
+        "max_normal": 0.5818445172869263,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.9109377780425831,
+        "held_out": 0.4583020489099643,
+        "global": 0.32870344278351105,
+        "max_normal": 0.2267315108972098,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface32_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface32",
+      "vertices": 1636,
+      "skin_influences": 12,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 60,
+      "BLENDSHAPE": {
+        "capture": 4.76837158203125e-07,
+        "held_out": 1.066521585811152,
+        "global": 0.25855986212447535,
+        "max_normal": 0.5224150585931425,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 4.198399535357229,
+        "held_out": 2.423935744872967,
+        "global": 0.2585596789980008,
+        "max_normal": 0.2611735242678557,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface33_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface33",
+      "vertices": 1636,
+      "skin_influences": 9,
+      "skin_max_nonzero": 7,
+      "blendshape_targets": 60,
+      "BLENDSHAPE": {
+        "capture": 9.5367431640625e-07,
+        "held_out": 0.893598909918021,
+        "global": 0.23718341636315565,
+        "max_normal": 0.5763807031426614,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 4.054873063760304,
+        "held_out": 2.2495218516761124,
+        "global": 0.2371825080688788,
+        "max_normal": 0.5875816938668142,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface48_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface48",
+      "vertices": 1618,
+      "skin_influences": 8,
+      "skin_max_nonzero": 7,
+      "blendshape_targets": 64,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 6.329185676784446,
+        "global": 0.3236477683841128,
+        "max_normal": 0.555586640588142,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 1.8753118936865742,
+        "held_out": 1.0723239088893888,
+        "global": 0.3236475042340537,
+        "max_normal": 0.17956290529391458,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface49_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface49",
+      "vertices": 1618,
+      "skin_influences": 6,
+      "skin_max_nonzero": 6,
+      "blendshape_targets": 64,
+      "BLENDSHAPE": {
+        "capture": 1.907406839585262e-06,
+        "held_out": 7.862541238595104,
+        "global": 0.2600013030139239,
+        "max_normal": 0.5420463958158551,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 1.189153272417797,
+        "held_out": 0.6951667365009021,
+        "global": 0.2600006110858728,
+        "max_normal": 0.08643861872471668,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface58_PRX",
+      "source": "|Edward|geo_GRP|FINAL|botas_geo|polySurface58",
+      "vertices": 1576,
+      "skin_influences": 6,
+      "skin_max_nonzero": 6,
+      "blendshape_targets": 18,
+      "BLENDSHAPE": {
+        "capture": 1.0789593218788873e-05,
+        "held_out": 26.207141197410035,
+        "global": 1.3009819320957792,
+        "max_normal": 0.5667409594445434,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.2793739645619305,
+        "held_out": 0.14704172560956214,
+        "global": 1.3009816349835386,
+        "max_normal": 0.0325584860707312,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface61_PRX",
+      "source": "|Edward|geo_GRP|FINAL|botas_geo|polySurface61",
+      "vertices": 1404,
+      "skin_influences": 5,
+      "skin_max_nonzero": 5,
+      "blendshape_targets": 14,
+      "BLENDSHAPE": {
+        "capture": 1.0789593218788873e-05,
+        "held_out": 21.961675065696788,
+        "global": 1.538979936078242,
+        "max_normal": 0.5554178804771213,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.03295165258833169,
+        "held_out": 0.024097285732571427,
+        "global": 1.538980239910404,
+        "max_normal": 0.05857051794056653,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface62_PRX",
+      "source": "|Edward|geo_GRP|FINAL|botas_geo|polySurface62",
+      "vertices": 1576,
+      "skin_influences": 4,
+      "skin_max_nonzero": 4,
+      "blendshape_targets": 18,
+      "BLENDSHAPE": {
+        "capture": 1.0789593218788873e-05,
+        "held_out": 25.639573073769096,
+        "global": 1.3843016084362507,
+        "max_normal": 0.5376068337248965,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.08701508956255229,
+        "held_out": 0.03122534231436037,
+        "global": 1.3843012292173644,
+        "max_normal": 0.029367600408913164,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface889_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface889",
+      "vertices": 450,
+      "skin_influences": 6,
+      "skin_max_nonzero": 6,
+      "blendshape_targets": 64,
+      "BLENDSHAPE": {
+        "capture": 9.5367431640625e-07,
+        "held_out": 3.458023191537371,
+        "global": 0.16237923605491236,
+        "max_normal": 0.5550029845834796,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 3.6509254311560646,
+        "held_out": 2.016493637859187,
+        "global": 0.1623779845184317,
+        "max_normal": 0.5042086419055507,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface892_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface892",
+      "vertices": 211,
+      "skin_influences": 13,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 69,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 1.1952622240418986,
+        "global": 1.2407979764835357,
+        "max_normal": 0.5245137898463224,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.21265863604664553,
+        "held_out": 0.1218533804249199,
+        "global": 0.1936025325927359,
+        "max_normal": 0.06849903112368275,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface900_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface900",
+      "vertices": 2161,
+      "skin_influences": 10,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 60,
+      "BLENDSHAPE": {
+        "capture": 2.384185791015625e-07,
+        "held_out": 0.3689594301833262,
+        "global": 0.25333029393523443,
+        "max_normal": 0.6014077128870299,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 2.665882402108282,
+        "held_out": 1.4510756599208863,
+        "global": 0.25332833648323005,
+        "max_normal": 0.14837086513164385,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "polySurface905_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface905",
+      "vertices": 105,
+      "skin_influences": 13,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 68,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 1.169647481685912,
+        "global": 1.171865254008507,
+        "max_normal": 0.6011846726180939,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.26794095785690636,
+        "held_out": 0.1414732161242112,
+        "global": 0.23555884499525462,
+        "max_normal": 0.05111708755838265,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "tiras30_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras30",
+      "vertices": 2962,
+      "skin_influences": 22,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 82,
+      "BLENDSHAPE": {
+        "capture": 1.9082797281243946e-06,
+        "held_out": 1.5167043487784406,
+        "global": 1.38321940132602,
+        "max_normal": 0.5899475497068251,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 0.25034577483734743,
+        "held_out": 0.18598338170745973,
+        "global": 0.22970082123482788,
+        "max_normal": 0.05624794335604644,
+        "passed": false
+      }
+    },
+    {
+      "wrap": "tiras31_PRX",
+      "source": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras31",
+      "vertices": 2338,
+      "skin_influences": 8,
+      "skin_max_nonzero": 8,
+      "blendshape_targets": 64,
+      "BLENDSHAPE": {
+        "capture": 1.9073486328125e-06,
+        "held_out": 4.490340424607013,
+        "global": 0.24578072246896873,
+        "max_normal": 0.5829191903934505,
+        "passed": false
+      },
+      "SKIN": {
+        "capture": 2.9364425113103243,
+        "held_out": 1.6801567960414527,
+        "global": 0.24578091252873085,
+        "max_normal": 0.13215713273598523,
+        "passed": false
+      }
+    }
+  ],
+  "timing_scope": "Standalone Maya 2026 DG CPU. Set nine body/limb control channels and force all 23 garment outputs. No viewport or full-rig FPS claim.",
+  "timing_summary": {
+    "PRX": {
+      "median_ms": 78.9498999947682,
+      "p95_ms": 89.43832999430013,
+      "max_ms": 104.64080001111142,
+      "samples": 540,
+      "pass_medians_ms": [
+        80.7758000009926,
+        78.39009999588598,
+        80.09175000188407,
+        77.62729999376461,
+        81.43779999954859,
+        79.21850000275299,
+        77.89155000500614,
+        78.15979999577394,
+        77.69335000193678
+      ]
+    },
+    "BLENDSHAPE": {
+      "median_ms": 4.203899996355176,
+      "p95_ms": 6.024540000362319,
+      "max_ms": 6.812100007664412,
+      "samples": 180,
+      "pass_medians_ms": [
+        3.6202999981469475,
+        4.874250000284519,
+        3.9882499986561015
+      ]
+    },
+    "SKIN": {
+      "median_ms": 15.80844999261899,
+      "p95_ms": 18.530914992152233,
+      "max_ms": 21.803299998282455,
+      "samples": 180,
+      "pass_medians_ms": [
+        14.708499998960178,
+        16.554800000449177,
+        16.421799999079667
+      ]
+    }
+  },
+  "scenes": {
+    "BLENDSHAPE": {
+      "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_all_PRX_BLENDSHAPE_COMPARE_v001.ma",
+      "bytes": 335591331,
+      "control": "Edward_PRX_Review",
+      "attribute": "deformationVariant",
+      "outputs": {
+        "brazaletes1_PRX": "brazaletes1_ALLPRX_BLS_TEST",
+        "cinturon3_PRX": "cinturon3_ALLPRX_BLS_TEST",
+        "cinturones2_PRX": "cinturones2_ALLPRX_BLS_TEST",
+        "collar2_PRX": "collar2_ALLPRX_BLS_TEST",
+        "collar3_PRX": "collar3_ALLPRX_BLS_TEST",
+        "harapo1_PRX": "harapo1_ALLPRX_BLS_TEST",
+        "harapo2_PRX": "harapo2_ALLPRX_BLS_TEST",
+        "pCube26_PRX": "pCube26_ALLPRX_BLS_TEST",
+        "pCylinder16_PRX": "pCylinder16_ALLPRX_BLS_TEST",
+        "pasted__brazaletes3_PRX": "pasted__brazaletes3_ALLPRX_BLS_TEST",
+        "polySurface32_PRX": "polySurface32_ALLPRX_BLS_TEST",
+        "polySurface33_PRX": "polySurface33_ALLPRX_BLS_TEST",
+        "polySurface48_PRX": "polySurface48_ALLPRX_BLS_TEST",
+        "polySurface49_PRX": "polySurface49_ALLPRX_BLS_TEST",
+        "polySurface58_PRX": "polySurface58_ALLPRX_BLS_TEST",
+        "polySurface61_PRX": "polySurface61_ALLPRX_BLS_TEST",
+        "polySurface62_PRX": "polySurface62_ALLPRX_BLS_TEST",
+        "polySurface889_PRX": "polySurface889_ALLPRX_BLS_TEST",
+        "polySurface892_PRX": "polySurface892_ALLPRX_BLS_TEST",
+        "polySurface900_PRX": "polySurface900_ALLPRX_BLS_TEST",
+        "polySurface905_PRX": "polySurface905_ALLPRX_BLS_TEST",
+        "tiras30_PRX": "tiras30_ALLPRX_BLS_TEST",
+        "tiras31_PRX": "tiras31_ALLPRX_BLS_TEST"
+      },
+      "candidate_prx_history": {
+        "brazaletes1_PRX": [],
+        "cinturon3_PRX": [],
+        "cinturones2_PRX": [],
+        "collar2_PRX": [],
+        "collar3_PRX": [],
+        "harapo1_PRX": [],
+        "harapo2_PRX": [],
+        "pCube26_PRX": [],
+        "pCylinder16_PRX": [],
+        "pasted__brazaletes3_PRX": [],
+        "polySurface32_PRX": [],
+        "polySurface33_PRX": [],
+        "polySurface48_PRX": [],
+        "polySurface49_PRX": [],
+        "polySurface58_PRX": [],
+        "polySurface61_PRX": [],
+        "polySurface62_PRX": [],
+        "polySurface889_PRX": [],
+        "polySurface892_PRX": [],
+        "polySurface900_PRX": [],
+        "polySurface905_PRX": [],
+        "tiras30_PRX": [],
+        "tiras31_PRX": []
+      },
+      "joints": 852,
+      "default": 1,
+      "identity": {
+        "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_all_PRX_BLENDSHAPE_COMPARE_v001.ma",
+        "bytes": 335591331,
+        "sha256": "7fd4cc297e48dacae1b165ae39b04f6420fcf34f16aeee49849c56fa669ba087"
+      }
+    },
+    "SKIN": {
+      "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_all_PRX_SKIN_COMPARE_v001.ma",
+      "bytes": 215764654,
+      "control": "Edward_PRX_Review",
+      "attribute": "deformationVariant",
+      "outputs": {
+        "brazaletes1_PRX": "brazaletes1_ALLPRX_SKIN_TEST",
+        "cinturon3_PRX": "cinturon3_ALLPRX_SKIN_TEST",
+        "cinturones2_PRX": "cinturones2_ALLPRX_SKIN_TEST",
+        "collar2_PRX": "collar2_ALLPRX_SKIN_TEST",
+        "collar3_PRX": "collar3_ALLPRX_SKIN_TEST",
+        "harapo1_PRX": "harapo1_ALLPRX_SKIN_TEST",
+        "harapo2_PRX": "harapo2_ALLPRX_SKIN_TEST",
+        "pCube26_PRX": "pCube26_ALLPRX_SKIN_TEST",
+        "pCylinder16_PRX": "pCylinder16_ALLPRX_SKIN_TEST",
+        "pasted__brazaletes3_PRX": "pasted__brazaletes3_ALLPRX_SKIN_TEST",
+        "polySurface32_PRX": "polySurface32_ALLPRX_SKIN_TEST",
+        "polySurface33_PRX": "polySurface33_ALLPRX_SKIN_TEST",
+        "polySurface48_PRX": "polySurface48_ALLPRX_SKIN_TEST",
+        "polySurface49_PRX": "polySurface49_ALLPRX_SKIN_TEST",
+        "polySurface58_PRX": "polySurface58_ALLPRX_SKIN_TEST",
+        "polySurface61_PRX": "polySurface61_ALLPRX_SKIN_TEST",
+        "polySurface62_PRX": "polySurface62_ALLPRX_SKIN_TEST",
+        "polySurface889_PRX": "polySurface889_ALLPRX_SKIN_TEST",
+        "polySurface892_PRX": "polySurface892_ALLPRX_SKIN_TEST",
+        "polySurface900_PRX": "polySurface900_ALLPRX_SKIN_TEST",
+        "polySurface905_PRX": "polySurface905_ALLPRX_SKIN_TEST",
+        "tiras30_PRX": "tiras30_ALLPRX_SKIN_TEST",
+        "tiras31_PRX": "tiras31_ALLPRX_SKIN_TEST"
+      },
+      "candidate_prx_history": {
+        "brazaletes1_PRX": [],
+        "cinturon3_PRX": [],
+        "cinturones2_PRX": [],
+        "collar2_PRX": [],
+        "collar3_PRX": [],
+        "harapo1_PRX": [],
+        "harapo2_PRX": [],
+        "pCube26_PRX": [],
+        "pCylinder16_PRX": [],
+        "pasted__brazaletes3_PRX": [],
+        "polySurface32_PRX": [],
+        "polySurface33_PRX": [],
+        "polySurface48_PRX": [],
+        "polySurface49_PRX": [],
+        "polySurface58_PRX": [],
+        "polySurface61_PRX": [],
+        "polySurface62_PRX": [],
+        "polySurface889_PRX": [],
+        "polySurface892_PRX": [],
+        "polySurface900_PRX": [],
+        "polySurface905_PRX": [],
+        "tiras30_PRX": [],
+        "tiras31_PRX": []
+      },
+      "joints": 852,
+      "default": 1,
+      "identity": {
+        "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_all_PRX_SKIN_COMPARE_v001.ma",
+        "bytes": 215764654,
+        "sha256": "0c5bfdbe4f9378479d03011485086106f3f25cf2760db78e7b133a913eeaa2fc"
+      }
+    }
+  },
+  "native_reopen": {
+    "BLENDSHAPE": {
+      "cases": 10,
+      "mesh_comparisons": 460,
+      "tolerance_cm": 0.0001,
+      "summary": {
+        "BLENDSHAPE": {
+          "brazaletes1_PRX": {
+            "capture": {
+              "max_position_cm": 9.5367431640625e-07,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 1.043081283569336e-06,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 2.901719412433521,
+              "worst_pose": "held_combination_07",
+              "max_normal": 0.057373628180888155,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.3617868199407246,
+              "worst_pose": "global_scale",
+              "max_normal": 0.4126516859251377,
+              "passed": false
+            }
+          },
+          "cinturon3_PRX": {
+            "capture": {
+              "max_position_cm": 1.1920928955078125e-07,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.07452593997271198,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.002591843452673796,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.47051087447993517,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5844544189142883,
+              "passed": false
+            }
+          },
+          "cinturones2_PRX": {
+            "capture": {
+              "max_position_cm": 4.76837158203125e-07,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.3523551557102645,
+              "worst_pose": "held_combination_07",
+              "max_normal": 0.0026717059925721004,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.7970167163271517,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5902361800631369,
+              "passed": false
+            }
+          },
+          "collar2_PRX": {
+            "capture": {
+              "max_position_cm": 9.5367431640625e-07,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.7890096493233069,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.008987157992519704,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.2595948154709455,
+              "worst_pose": "global_scale",
+              "max_normal": 0.41518454015488454,
+              "passed": false
+            }
+          },
+          "collar3_PRX": {
+            "capture": {
+              "max_position_cm": 4.76837158203125e-07,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 1.015067420182203,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.014999798552718017,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.2700209617990885,
+              "worst_pose": "global_scale",
+              "max_normal": 0.435341665219708,
+              "passed": false
+            }
+          },
+          "harapo1_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.01007248808351893,
+              "worst_pose": "held_combination_07",
+              "max_normal": 0.000553035119636507,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.47937655694488845,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5035152650657835,
+              "passed": false
+            }
+          },
+          "harapo2_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.008819927709177236,
+              "worst_pose": "held_combination_07",
+              "max_normal": 0.0006048576828364399,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.47702605375825813,
+              "worst_pose": "global_scale",
+              "max_normal": 0.564151010987276,
+              "passed": false
+            }
+          },
+          "pCube26_PRX": {
+            "capture": {
+              "max_position_cm": 4.76837158203125e-07,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.21030499610239345,
+              "worst_pose": "held_combination_07",
+              "max_normal": 0.022435409803355306,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.7630956691843778,
+              "worst_pose": "global_scale",
+              "max_normal": 0.48238835677003794,
+              "passed": false
+            }
+          },
+          "pCylinder16_PRX": {
+            "capture": {
+              "max_position_cm": 2.384185791015625e-07,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 1.4651714030840224e-06,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.6089979222229983,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.02401131847964213,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.6255535802332457,
+              "worst_pose": "global_scale",
+              "max_normal": 0.3398512486418478,
+              "passed": false
+            }
+          },
+          "pasted__brazaletes3_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.0,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 0.3287039933959112,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5818445172869263,
+              "passed": false
+            }
+          },
+          "polySurface32_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.40676901589519054,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.004061831274681781,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.25855986212447535,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5224150585931425,
+              "passed": false
+            }
+          },
+          "polySurface33_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.40897331746654264,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.04781122739551771,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.23718341636315565,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5763807031426614,
+              "passed": false
+            }
+          },
+          "polySurface48_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 2.7366190502635575,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.06503021451878836,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.3236477683841128,
+              "worst_pose": "global_scale",
+              "max_normal": 0.555586640588142,
+              "passed": false
+            }
+          },
+          "polySurface49_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 3.456227767775076,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.06583474018379556,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.2600013030139239,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5420463958158551,
+              "passed": false
+            }
+          },
+          "polySurface58_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 1.3009819320957792,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5667409594445434,
+              "passed": false
+            }
+          },
+          "polySurface61_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 1.538979936078242,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5554178804771213,
+              "passed": false
+            }
+          },
+          "polySurface62_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 1.3843016084362507,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5376068337248965,
+              "passed": false
+            }
+          },
+          "polySurface889_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.021186455313636113,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0007862243873526623,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.16237923605491236,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5550029845834796,
+              "passed": false
+            }
+          },
+          "polySurface892_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.3815635970788743,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.030568342565256472,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.2407979764835357,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5245137898463224,
+              "passed": false
+            }
+          },
+          "polySurface900_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.051170382202682906,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0004047590408100492,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.25333029393523443,
+              "worst_pose": "global_scale",
+              "max_normal": 0.6014077128870299,
+              "passed": false
+            }
+          },
+          "polySurface905_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.34085120596000906,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.006458563257942891,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.171865254008507,
+              "worst_pose": "global_scale",
+              "max_normal": 0.6011846726180939,
+              "passed": false
+            }
+          },
+          "tiras30_PRX": {
+            "capture": {
+              "max_position_cm": 4.76837158203125e-07,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.5566613315380559,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.0038413902409959134,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 1.38321940132602,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5899475497068251,
+              "passed": false
+            }
+          },
+          "tiras31_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 1.9870495262384273,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.053863457089753604,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.24578072246896873,
+              "worst_pose": "global_scale",
+              "max_normal": 0.5829191903934505,
+              "passed": false
+            }
+          }
+        }
+      },
+      "invariants": {
+        "brazaletes1_PRX": {
+          "reference": {
+            "topology": "03727bf43e09545a543f5e35f8e466835df56e02f21a13836a2df04cf2311837",
+            "uv": {
+              "map1": "168524c74bb184e9a7ec0305a92c91973a205f7f8e4c8dd86f6bf407d1b186bc"
+            },
+            "hard_edges": "86e3539d7c9efd1c65ed54495d5f26eb475154f5dc53ba2d1e3b52c15324bdde",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "4b1b998d1925a1130d508996ff5d3ed650050e7e32a80cfe99a71c103e0ca986"
+          },
+          "BLENDSHAPE": {
+            "topology": "03727bf43e09545a543f5e35f8e466835df56e02f21a13836a2df04cf2311837",
+            "uv": {
+              "map1": "168524c74bb184e9a7ec0305a92c91973a205f7f8e4c8dd86f6bf407d1b186bc"
+            },
+            "hard_edges": "86e3539d7c9efd1c65ed54495d5f26eb475154f5dc53ba2d1e3b52c15324bdde",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "4b1b998d1925a1130d508996ff5d3ed650050e7e32a80cfe99a71c103e0ca986"
+          }
+        },
+        "cinturon3_PRX": {
+          "reference": {
+            "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+            "uv": {
+              "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+            },
+            "hard_edges": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+          },
+          "BLENDSHAPE": {
+            "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+            "uv": {
+              "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+            },
+            "hard_edges": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+          }
+        },
+        "cinturones2_PRX": {
+          "reference": {
+            "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+            "uv": {
+              "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+            },
+            "hard_edges": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+          },
+          "BLENDSHAPE": {
+            "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+            "uv": {
+              "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+            },
+            "hard_edges": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+          }
+        },
+        "collar2_PRX": {
+          "reference": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "24c0f7fb4f0c75101796034e1d2bf9af7b618f57186e834b69b33c3018caaf95"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          },
+          "BLENDSHAPE": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "24c0f7fb4f0c75101796034e1d2bf9af7b618f57186e834b69b33c3018caaf95"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          }
+        },
+        "collar3_PRX": {
+          "reference": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "191778df046851bb8ceea7bda1a375b793185041e9f3f768b568a12d02331c0a"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          },
+          "BLENDSHAPE": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "191778df046851bb8ceea7bda1a375b793185041e9f3f768b568a12d02331c0a"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          }
+        },
+        "harapo1_PRX": {
+          "reference": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "1930241bc5306d2330d9225ab170b445f2fa795a3166418b23e368775177d8e9"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          },
+          "BLENDSHAPE": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "1930241bc5306d2330d9225ab170b445f2fa795a3166418b23e368775177d8e9"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          }
+        },
+        "harapo2_PRX": {
+          "reference": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "4c9cd6b5404d9b519bb2d59defb93710be91432398449b62ae7c06f0bfab5a23"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          },
+          "BLENDSHAPE": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "4c9cd6b5404d9b519bb2d59defb93710be91432398449b62ae7c06f0bfab5a23"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          }
+        },
+        "pCube26_PRX": {
+          "reference": {
+            "topology": "620e6ed16d95fb0f65bf6c05f7fb72e736b51d901c290275c4c36745ec525b51",
+            "uv": {
+              "map1": "b265e8c75babe2851b9d18191a0290d540a4a01e3ccd4893bffc1a968a869f5e"
+            },
+            "hard_edges": "63de43b6bbbc54645196ab76ec160786074aaeaa829221327165a5e60c53d4c5",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          },
+          "BLENDSHAPE": {
+            "topology": "620e6ed16d95fb0f65bf6c05f7fb72e736b51d901c290275c4c36745ec525b51",
+            "uv": {
+              "map1": "b265e8c75babe2851b9d18191a0290d540a4a01e3ccd4893bffc1a968a869f5e"
+            },
+            "hard_edges": "63de43b6bbbc54645196ab76ec160786074aaeaa829221327165a5e60c53d4c5",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          }
+        },
+        "pCylinder16_PRX": {
+          "reference": {
+            "topology": "f48028d96b8c10cdc3d9499c61b62e7a14a0ead5020e67ad87e07dd5dfa289a2",
+            "uv": {
+              "map1": "04ccd1aabf42d1f587394f8e7c3a7a69729363312671271208bb3bed4f1cdeae"
+            },
+            "hard_edges": "21264464cfb8ab22cc172767295a57890ce8c7921c19154cb597376c260337e9",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "baa234c528afba1c334f45fcbaf67e346d3d1873483fd0f6d35aa476cf013575"
+          },
+          "BLENDSHAPE": {
+            "topology": "f48028d96b8c10cdc3d9499c61b62e7a14a0ead5020e67ad87e07dd5dfa289a2",
+            "uv": {
+              "map1": "04ccd1aabf42d1f587394f8e7c3a7a69729363312671271208bb3bed4f1cdeae"
+            },
+            "hard_edges": "21264464cfb8ab22cc172767295a57890ce8c7921c19154cb597376c260337e9",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "baa234c528afba1c334f45fcbaf67e346d3d1873483fd0f6d35aa476cf013575"
+          }
+        },
+        "pasted__brazaletes3_PRX": {
+          "reference": {
+            "topology": "95ff3d4448a944d9ac3eb18d0303410b5bc85852205f8775fb6a8981303da41f",
+            "uv": {
+              "map1": "089d200f73c6241b95bd99bc43b22402ae7c71f635828dde7b325e25cf88378d"
+            },
+            "hard_edges": "b73f5e4af65ea84dbea05264ac30df367afe93c44542f01f1601648c7bbc18e6",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "782972264d2f448a7741cb6afbc10275ffde7e1d3f5f9005fd45543a7c2b81b5"
+          },
+          "BLENDSHAPE": {
+            "topology": "95ff3d4448a944d9ac3eb18d0303410b5bc85852205f8775fb6a8981303da41f",
+            "uv": {
+              "map1": "089d200f73c6241b95bd99bc43b22402ae7c71f635828dde7b325e25cf88378d"
+            },
+            "hard_edges": "b73f5e4af65ea84dbea05264ac30df367afe93c44542f01f1601648c7bbc18e6",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "782972264d2f448a7741cb6afbc10275ffde7e1d3f5f9005fd45543a7c2b81b5"
+          }
+        },
+        "polySurface32_PRX": {
+          "reference": {
+            "topology": "1be07ce529e69b758e6a332ebf152097c46dcc31a855111103d9e01af8655319",
+            "uv": {
+              "map1": "a1d6685d5f3d366413b6643a81b97bcb2de45fc2917f01f0bfb3ff68a73a35c8"
+            },
+            "hard_edges": "8ba5ed41fe5f6ce5ae9107e1c2d06915add85a6edbb7cd0e6cad26d52dea6149",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "BLENDSHAPE": {
+            "topology": "1be07ce529e69b758e6a332ebf152097c46dcc31a855111103d9e01af8655319",
+            "uv": {
+              "map1": "a1d6685d5f3d366413b6643a81b97bcb2de45fc2917f01f0bfb3ff68a73a35c8"
+            },
+            "hard_edges": "8ba5ed41fe5f6ce5ae9107e1c2d06915add85a6edbb7cd0e6cad26d52dea6149",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface33_PRX": {
+          "reference": {
+            "topology": "03a6fcf10d788ed901f1b5a9191d6c25d720dee071af8385d000b192b0228291",
+            "uv": {
+              "map1": "df4f1e7dec1ce8707d0cb17c81962ae90259812bcbcbd981227de91192d44ed5"
+            },
+            "hard_edges": "39ec10cb56efc43b9897b6baedd04aa27e2dc4e2d6bde1ebd9860719299c328a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "BLENDSHAPE": {
+            "topology": "03a6fcf10d788ed901f1b5a9191d6c25d720dee071af8385d000b192b0228291",
+            "uv": {
+              "map1": "df4f1e7dec1ce8707d0cb17c81962ae90259812bcbcbd981227de91192d44ed5"
+            },
+            "hard_edges": "39ec10cb56efc43b9897b6baedd04aa27e2dc4e2d6bde1ebd9860719299c328a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface48_PRX": {
+          "reference": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "b56beb969beeb9bfbfce29beef41ffec8fa890bb4d7ecdb3af1e78d73128a8c0"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          },
+          "BLENDSHAPE": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "b56beb969beeb9bfbfce29beef41ffec8fa890bb4d7ecdb3af1e78d73128a8c0"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          }
+        },
+        "polySurface49_PRX": {
+          "reference": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "d34490dbf18bb7c511fffc063b0fef77f2a9f7b07695d7adba842c0a6c5d12ec"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          },
+          "BLENDSHAPE": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "d34490dbf18bb7c511fffc063b0fef77f2a9f7b07695d7adba842c0a6c5d12ec"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          }
+        },
+        "polySurface58_PRX": {
+          "reference": {
+            "topology": "6ccbc6fd088cdb87d1eebab39d7f5e1cbbeb763bbe20c5887daa33f2e18f9c87",
+            "uv": {
+              "map1": "849467f806504e1c935af76ef3823de539f1353ca38f30b3dc5fa36f2f19e5d9"
+            },
+            "hard_edges": "9615ff88477d9cc10d83dc6ce62481cf2a2f73e36a6b194c3115862c66ee4c1a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "BLENDSHAPE": {
+            "topology": "6ccbc6fd088cdb87d1eebab39d7f5e1cbbeb763bbe20c5887daa33f2e18f9c87",
+            "uv": {
+              "map1": "849467f806504e1c935af76ef3823de539f1353ca38f30b3dc5fa36f2f19e5d9"
+            },
+            "hard_edges": "9615ff88477d9cc10d83dc6ce62481cf2a2f73e36a6b194c3115862c66ee4c1a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface61_PRX": {
+          "reference": {
+            "topology": "4b953f87a1ad9f088738b12c99004a8a69af293b0e6478a70142b3441f1cd33b",
+            "uv": {
+              "map1": "53c31b13672222b56468584c20bdaebee8f25c491d311b6001d0783b4d3ef6a2"
+            },
+            "hard_edges": "115ac03978e382f8b81784662270b02bd9c433b951a0ac88e00c2f5e89becc39",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "6c61e3d18d2daf14adc06b3fa59deecf95eb57e8833b1c1df86bc24124d4d43a"
+          },
+          "BLENDSHAPE": {
+            "topology": "4b953f87a1ad9f088738b12c99004a8a69af293b0e6478a70142b3441f1cd33b",
+            "uv": {
+              "map1": "53c31b13672222b56468584c20bdaebee8f25c491d311b6001d0783b4d3ef6a2"
+            },
+            "hard_edges": "115ac03978e382f8b81784662270b02bd9c433b951a0ac88e00c2f5e89becc39",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "6c61e3d18d2daf14adc06b3fa59deecf95eb57e8833b1c1df86bc24124d4d43a"
+          }
+        },
+        "polySurface62_PRX": {
+          "reference": {
+            "topology": "21febd1caa6d326ac1c312aad10d5c82d17ea8445d447d60f3ebb28b27c001ed",
+            "uv": {
+              "map1": "73bc6e147f7050d257ba742d82196260f79664af34b84ff0e1661dad4041c003"
+            },
+            "hard_edges": "f823d7b86e72f36fb44ccb9de5460fd08f4bb2b0226c26e0aee79cf892453d37",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "BLENDSHAPE": {
+            "topology": "21febd1caa6d326ac1c312aad10d5c82d17ea8445d447d60f3ebb28b27c001ed",
+            "uv": {
+              "map1": "73bc6e147f7050d257ba742d82196260f79664af34b84ff0e1661dad4041c003"
+            },
+            "hard_edges": "f823d7b86e72f36fb44ccb9de5460fd08f4bb2b0226c26e0aee79cf892453d37",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface889_PRX": {
+          "reference": {
+            "topology": "ae72145c9ae335ffb5290b3a8a6e6248b1916d0b4c93df61ee747517f9357b72",
+            "uv": {
+              "map1": "51cb46c7681d594b862923cc6258fed6e2aac17191d6ba268b2115d8043ae50c"
+            },
+            "hard_edges": "3cd0285c92983397ba84ad9d5eb1ffe3c87cafd6efa77a5a8a34c2779061b5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "7b4fc1a8dbe6b6121f16ada516e2ac27e02964716bacea5fb7d07cf30595948e"
+          },
+          "BLENDSHAPE": {
+            "topology": "ae72145c9ae335ffb5290b3a8a6e6248b1916d0b4c93df61ee747517f9357b72",
+            "uv": {
+              "map1": "51cb46c7681d594b862923cc6258fed6e2aac17191d6ba268b2115d8043ae50c"
+            },
+            "hard_edges": "3cd0285c92983397ba84ad9d5eb1ffe3c87cafd6efa77a5a8a34c2779061b5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "7b4fc1a8dbe6b6121f16ada516e2ac27e02964716bacea5fb7d07cf30595948e"
+          }
+        },
+        "polySurface892_PRX": {
+          "reference": {
+            "topology": "3b1caf4e2bf7fb2d11487de25a76617a8e6c67ca30b46b3ecffed07f7170c514",
+            "uv": {
+              "map1": "f1bbef1c5bd858348a90af1094e25b854df6579a1493a6a72c4c77b9ba0a6398"
+            },
+            "hard_edges": "b8d641022c937b7d577b0f3e0d6262d8058e5caefc9d9bc4a6c165e13165d2ba",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "67042dfda5683aead81b6055d19c4dba238341f9dd82f49c0e7cc0c19c5f10d1"
+          },
+          "BLENDSHAPE": {
+            "topology": "3b1caf4e2bf7fb2d11487de25a76617a8e6c67ca30b46b3ecffed07f7170c514",
+            "uv": {
+              "map1": "f1bbef1c5bd858348a90af1094e25b854df6579a1493a6a72c4c77b9ba0a6398"
+            },
+            "hard_edges": "b8d641022c937b7d577b0f3e0d6262d8058e5caefc9d9bc4a6c165e13165d2ba",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "67042dfda5683aead81b6055d19c4dba238341f9dd82f49c0e7cc0c19c5f10d1"
+          }
+        },
+        "polySurface900_PRX": {
+          "reference": {
+            "topology": "603b4ae8c008683746250d8fef1fb46003416034b9105e460bf4381351848579",
+            "uv": {
+              "map1": "8dee248eb6dc2bef336631f4822a576fc299808690ec120c67ff3f0d33bc222a"
+            },
+            "hard_edges": "ac4fb0a720e4952c701628362ab92625e2867bc5f1802e6a9b825ca399485425",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a764c326dc00c3f30887e6b3196474e1898a4e66f3a288dd7a14ea42d7ef6081"
+          },
+          "BLENDSHAPE": {
+            "topology": "603b4ae8c008683746250d8fef1fb46003416034b9105e460bf4381351848579",
+            "uv": {
+              "map1": "8dee248eb6dc2bef336631f4822a576fc299808690ec120c67ff3f0d33bc222a"
+            },
+            "hard_edges": "ac4fb0a720e4952c701628362ab92625e2867bc5f1802e6a9b825ca399485425",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a764c326dc00c3f30887e6b3196474e1898a4e66f3a288dd7a14ea42d7ef6081"
+          }
+        },
+        "polySurface905_PRX": {
+          "reference": {
+            "topology": "4fe26dc6733432c729f01cb7e10979b60239831bca82d5f3191c503b7e5c887a",
+            "uv": {
+              "map1": "f7dd50c065176e3f6d1cdffb6557f823559e6a1a402d607a54a40f1717998580"
+            },
+            "hard_edges": "f66ab7d8f00c8798736b86018e59d879c524351a53679116c526570d0ae40a1d",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a1a4f5721c1c4610af7f71078f3a68c330536d679803b0e0507ee8dc10c5dfca"
+          },
+          "BLENDSHAPE": {
+            "topology": "4fe26dc6733432c729f01cb7e10979b60239831bca82d5f3191c503b7e5c887a",
+            "uv": {
+              "map1": "f7dd50c065176e3f6d1cdffb6557f823559e6a1a402d607a54a40f1717998580"
+            },
+            "hard_edges": "f66ab7d8f00c8798736b86018e59d879c524351a53679116c526570d0ae40a1d",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a1a4f5721c1c4610af7f71078f3a68c330536d679803b0e0507ee8dc10c5dfca"
+          }
+        },
+        "tiras30_PRX": {
+          "reference": {
+            "topology": "b50b84d84c3a06cb375d0ee9a3e67294b712b070ed369f4acbe31f162603d18a",
+            "uv": {
+              "map1": "14fac56833c40b63c609295ce3dacaf1153033b27a330414cb8a763abf444e04"
+            },
+            "hard_edges": "8ab8b01885ffab1444f8727c842990b4d5d0a7ea77618499e8550680c36760bc",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "f0d5e0b240d4c753720fbd48e7028c929379887f91260f31a59fe5109838ee68"
+          },
+          "BLENDSHAPE": {
+            "topology": "b50b84d84c3a06cb375d0ee9a3e67294b712b070ed369f4acbe31f162603d18a",
+            "uv": {
+              "map1": "14fac56833c40b63c609295ce3dacaf1153033b27a330414cb8a763abf444e04"
+            },
+            "hard_edges": "8ab8b01885ffab1444f8727c842990b4d5d0a7ea77618499e8550680c36760bc",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "f0d5e0b240d4c753720fbd48e7028c929379887f91260f31a59fe5109838ee68"
+          }
+        },
+        "tiras31_PRX": {
+          "reference": {
+            "topology": "72d845094e458dd9ada873f413c45a23f80892656855a3d003fc380d2306bc75",
+            "uv": {
+              "map1": "69d12c6250def434d40cd8d40d7d911f004189d056cb3bcf52609d900ef6c3a0"
+            },
+            "hard_edges": "743827b1ac2cd37d717ab6c1ddb16ddff5d3a29f7336a2a553533017540c606f",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0e687b1eb2f7d5467ec1315c1b961f4db8860db151cf3627a76287272104dd3d"
+          },
+          "BLENDSHAPE": {
+            "topology": "72d845094e458dd9ada873f413c45a23f80892656855a3d003fc380d2306bc75",
+            "uv": {
+              "map1": "69d12c6250def434d40cd8d40d7d911f004189d056cb3bcf52609d900ef6c3a0"
+            },
+            "hard_edges": "743827b1ac2cd37d717ab6c1ddb16ddff5d3a29f7336a2a553533017540c606f",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0e687b1eb2f7d5467ec1315c1b961f4db8860db151cf3627a76287272104dd3d"
+          }
+        }
+      },
+      "invariants_match": true,
+      "passed": false,
+      "seconds": 13.029850199993234
+    },
+    "SKIN": {
+      "cases": 10,
+      "mesh_comparisons": 460,
+      "tolerance_cm": 0.0001,
+      "summary": {
+        "SKIN": {
+          "brazaletes1_PRX": {
+            "capture": {
+              "max_position_cm": 0.0638636986339583,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.031847079126403915,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.04794939297499438,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.006326611956770999,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.19788119271141177,
+              "worst_pose": "global_scale",
+              "max_normal": 0.05969144322536026,
+              "passed": false
+            }
+          },
+          "cinturon3_PRX": {
+            "capture": {
+              "max_position_cm": 0.10604631639897555,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.013193008223825088,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.0494283469042397,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.009350338560741949,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.4705103300823738,
+              "worst_pose": "global_scale",
+              "max_normal": 0.023790302954175575,
+              "passed": false
+            }
+          },
+          "cinturones2_PRX": {
+            "capture": {
+              "max_position_cm": 0.39418452993772746,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.006244187089732073,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.10985095381105273,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.0024168433209770246,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.3922420571579896,
+              "worst_pose": "global_scale",
+              "max_normal": 0.0535381397587287,
+              "passed": false
+            }
+          },
+          "collar2_PRX": {
+            "capture": {
+              "max_position_cm": 0.0004838687881895973,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.00041772238916427436,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.06455212285963086,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.027821364241065384,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.2269137063469394,
+              "worst_pose": "global_scale",
+              "max_normal": 0.07401270010638608,
+              "passed": false
+            }
+          },
+          "collar3_PRX": {
+            "capture": {
+              "max_position_cm": 0.07590281968890229,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.0026650154376168,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 1.2305988767762905,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.02329168894151372,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.345411044082145,
+              "worst_pose": "global_scale",
+              "max_normal": 0.017404471669625256,
+              "passed": false
+            }
+          },
+          "harapo1_PRX": {
+            "capture": {
+              "max_position_cm": 0.039868539352478014,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.004852062993083936,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.01308893735066628,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.00135814560021624,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.47937387461729875,
+              "worst_pose": "global_scale",
+              "max_normal": 0.024720575616570966,
+              "passed": false
+            }
+          },
+          "harapo2_PRX": {
+            "capture": {
+              "max_position_cm": 0.05028755452899052,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.003660054290613339,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.028702683447476108,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.008838617573784855,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.4770284875433633,
+              "worst_pose": "global_scale",
+              "max_normal": 0.022950900379562232,
+              "passed": false
+            }
+          },
+          "pCube26_PRX": {
+            "capture": {
+              "max_position_cm": 0.18420813172832748,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.03992091820592359,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.15128733133966232,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.017906827806335103,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.21038556294647856,
+              "worst_pose": "global_scale",
+              "max_normal": 0.013294161744241483,
+              "passed": false
+            }
+          },
+          "pCylinder16_PRX": {
+            "capture": {
+              "max_position_cm": 0.08854549552679279,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.010903779565680968,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.05017308657635947,
+              "worst_pose": "held_combination_07",
+              "max_normal": 0.014852236313427726,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.47360238671112026,
+              "worst_pose": "global_scale",
+              "max_normal": 0.047631992889050796,
+              "passed": false
+            }
+          },
+          "pasted__brazaletes3_PRX": {
+            "capture": {
+              "max_position_cm": 0.0,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.0,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 0.32870344278351105,
+              "worst_pose": "global_scale",
+              "max_normal": 0.07550233753463327,
+              "passed": false
+            }
+          },
+          "polySurface32_PRX": {
+            "capture": {
+              "max_position_cm": 0.01353064943988759,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.004983626914291582,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.22389595665182777,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.009926956120611063,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.2585596789980008,
+              "worst_pose": "global_scale",
+              "max_normal": 0.08600659001465305,
+              "passed": false
+            }
+          },
+          "polySurface33_PRX": {
+            "capture": {
+              "max_position_cm": 0.018057934471668324,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.00012627089250537873,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.1887205743568466,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.13649953018383681,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.2371825080688788,
+              "worst_pose": "global_scale",
+              "max_normal": 0.0151548175310502,
+              "passed": false
+            }
+          },
+          "polySurface48_PRX": {
+            "capture": {
+              "max_position_cm": 1.52587890625e-05,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 1.8173650702689522e-05,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.11216991709992097,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.03620377065193451,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.3236475042340537,
+              "worst_pose": "global_scale",
+              "max_normal": 0.03191142609891409,
+              "passed": false
+            }
+          },
+          "polySurface49_PRX": {
+            "capture": {
+              "max_position_cm": 7.62939453125e-06,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.08319516368008134,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.029116237672368536,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.2600006110858728,
+              "worst_pose": "global_scale",
+              "max_normal": 0.05282135206227692,
+              "passed": false
+            }
+          },
+          "polySurface58_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 1.3009816349835386,
+              "worst_pose": "global_scale",
+              "max_normal": 0.0325584860707312,
+              "passed": false
+            }
+          },
+          "polySurface61_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 1.538980239910404,
+              "worst_pose": "global_scale",
+              "max_normal": 0.05857051794056653,
+              "passed": false
+            }
+          },
+          "polySurface62_PRX": {
+            "capture": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "neutral",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 7.450580596923828e-09,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0,
+              "passed": true
+            },
+            "global": {
+              "max_position_cm": 1.3843012292173644,
+              "worst_pose": "global_scale",
+              "max_normal": 0.029367600408913164,
+              "passed": false
+            }
+          },
+          "polySurface889_PRX": {
+            "capture": {
+              "max_position_cm": 0.007057656195419807,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.0004487782506471401,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.08033036723168166,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.006343555177459458,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.1623779845184317,
+              "worst_pose": "global_scale",
+              "max_normal": 0.08981218290928694,
+              "passed": false
+            }
+          },
+          "polySurface892_PRX": {
+            "capture": {
+              "max_position_cm": 0.08363621180029328,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.03839181740228565,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.01253431467080231,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.008349962128752962,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.1936025325927359,
+              "worst_pose": "global_scale",
+              "max_normal": 0.017687891434821548,
+              "passed": false
+            }
+          },
+          "polySurface900_PRX": {
+            "capture": {
+              "max_position_cm": 0.0347417775261366,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 0.014441211184183856,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.06010440521756419,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.0017498542395205264,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.25332833648323005,
+              "worst_pose": "global_scale",
+              "max_normal": 0.029763163082080844,
+              "passed": false
+            }
+          },
+          "polySurface905_PRX": {
+            "capture": {
+              "max_position_cm": 0.11714447271242552,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.01254947742143877,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.019621084697802434,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.002040228646039531,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.23555884499525462,
+              "worst_pose": "global_scale",
+              "max_normal": 0.022555548551666717,
+              "passed": false
+            }
+          },
+          "tiras30_PRX": {
+            "capture": {
+              "max_position_cm": 0.12429577505517805,
+              "worst_pose": "C_localChest_CTL_rotateZ_25",
+              "max_normal": 0.018966172422369976,
+              "passed": false
+            },
+            "held_out": {
+              "max_position_cm": 0.04813402015340371,
+              "worst_pose": "held_combination_12",
+              "max_normal": 0.009848286709979684,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.22970082123482788,
+              "worst_pose": "global_scale",
+              "max_normal": 0.021414413826750786,
+              "passed": false
+            }
+          },
+          "tiras31_PRX": {
+            "capture": {
+              "max_position_cm": 2.4463186909447974e-05,
+              "worst_pose": "C_spine03_CTL_rotateY_-20",
+              "max_normal": 1.128772550249437e-05,
+              "passed": true
+            },
+            "held_out": {
+              "max_position_cm": 0.16810503489107131,
+              "worst_pose": "held_combination_03",
+              "max_normal": 0.04182371738494532,
+              "passed": false
+            },
+            "global": {
+              "max_position_cm": 0.24578091252873085,
+              "worst_pose": "global_scale",
+              "max_normal": 0.026663525415548686,
+              "passed": false
+            }
+          }
+        }
+      },
+      "invariants": {
+        "brazaletes1_PRX": {
+          "reference": {
+            "topology": "03727bf43e09545a543f5e35f8e466835df56e02f21a13836a2df04cf2311837",
+            "uv": {
+              "map1": "168524c74bb184e9a7ec0305a92c91973a205f7f8e4c8dd86f6bf407d1b186bc"
+            },
+            "hard_edges": "86e3539d7c9efd1c65ed54495d5f26eb475154f5dc53ba2d1e3b52c15324bdde",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "4b1b998d1925a1130d508996ff5d3ed650050e7e32a80cfe99a71c103e0ca986"
+          },
+          "SKIN": {
+            "topology": "03727bf43e09545a543f5e35f8e466835df56e02f21a13836a2df04cf2311837",
+            "uv": {
+              "map1": "168524c74bb184e9a7ec0305a92c91973a205f7f8e4c8dd86f6bf407d1b186bc"
+            },
+            "hard_edges": "86e3539d7c9efd1c65ed54495d5f26eb475154f5dc53ba2d1e3b52c15324bdde",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "4b1b998d1925a1130d508996ff5d3ed650050e7e32a80cfe99a71c103e0ca986"
+          }
+        },
+        "cinturon3_PRX": {
+          "reference": {
+            "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+            "uv": {
+              "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+            },
+            "hard_edges": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+          },
+          "SKIN": {
+            "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+            "uv": {
+              "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+            },
+            "hard_edges": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+          }
+        },
+        "cinturones2_PRX": {
+          "reference": {
+            "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+            "uv": {
+              "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+            },
+            "hard_edges": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+          },
+          "SKIN": {
+            "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+            "uv": {
+              "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+            },
+            "hard_edges": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+          }
+        },
+        "collar2_PRX": {
+          "reference": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "24c0f7fb4f0c75101796034e1d2bf9af7b618f57186e834b69b33c3018caaf95"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          },
+          "SKIN": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "24c0f7fb4f0c75101796034e1d2bf9af7b618f57186e834b69b33c3018caaf95"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          }
+        },
+        "collar3_PRX": {
+          "reference": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "191778df046851bb8ceea7bda1a375b793185041e9f3f768b568a12d02331c0a"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          },
+          "SKIN": {
+            "topology": "2d7121d043429f9488847b1041b299e78ffff2753286cba040b7ddfaa35dcfe8",
+            "uv": {
+              "map1": "191778df046851bb8ceea7bda1a375b793185041e9f3f768b568a12d02331c0a"
+            },
+            "hard_edges": "93f2338838a4644f4eeca7ade84577f2be5189357ad6bb31f224184d00c2f5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "719e692d5506340a4dd36d5205827d5b93f9d2d71ad08de3411dcf1fe50c50f0"
+          }
+        },
+        "harapo1_PRX": {
+          "reference": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "1930241bc5306d2330d9225ab170b445f2fa795a3166418b23e368775177d8e9"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          },
+          "SKIN": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "1930241bc5306d2330d9225ab170b445f2fa795a3166418b23e368775177d8e9"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          }
+        },
+        "harapo2_PRX": {
+          "reference": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "4c9cd6b5404d9b519bb2d59defb93710be91432398449b62ae7c06f0bfab5a23"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          },
+          "SKIN": {
+            "topology": "d331f75f2ae50a32fe75ebe4ba8a66f4e2bf8c399ae5bd392572e1407cebf2e4",
+            "uv": {
+              "map1": "4c9cd6b5404d9b519bb2d59defb93710be91432398449b62ae7c06f0bfab5a23"
+            },
+            "hard_edges": "f300d8f9b808f1895dee64d260f6b736f7a00900c2070b983c729a6796b87cbe",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          }
+        },
+        "pCube26_PRX": {
+          "reference": {
+            "topology": "620e6ed16d95fb0f65bf6c05f7fb72e736b51d901c290275c4c36745ec525b51",
+            "uv": {
+              "map1": "b265e8c75babe2851b9d18191a0290d540a4a01e3ccd4893bffc1a968a869f5e"
+            },
+            "hard_edges": "63de43b6bbbc54645196ab76ec160786074aaeaa829221327165a5e60c53d4c5",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          },
+          "SKIN": {
+            "topology": "620e6ed16d95fb0f65bf6c05f7fb72e736b51d901c290275c4c36745ec525b51",
+            "uv": {
+              "map1": "b265e8c75babe2851b9d18191a0290d540a4a01e3ccd4893bffc1a968a869f5e"
+            },
+            "hard_edges": "63de43b6bbbc54645196ab76ec160786074aaeaa829221327165a5e60c53d4c5",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "d457efc0edd106bb2ab6c7b0630f50618de6e1d29c67937e15368e6d5c9df205"
+          }
+        },
+        "pCylinder16_PRX": {
+          "reference": {
+            "topology": "f48028d96b8c10cdc3d9499c61b62e7a14a0ead5020e67ad87e07dd5dfa289a2",
+            "uv": {
+              "map1": "04ccd1aabf42d1f587394f8e7c3a7a69729363312671271208bb3bed4f1cdeae"
+            },
+            "hard_edges": "21264464cfb8ab22cc172767295a57890ce8c7921c19154cb597376c260337e9",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "baa234c528afba1c334f45fcbaf67e346d3d1873483fd0f6d35aa476cf013575"
+          },
+          "SKIN": {
+            "topology": "f48028d96b8c10cdc3d9499c61b62e7a14a0ead5020e67ad87e07dd5dfa289a2",
+            "uv": {
+              "map1": "04ccd1aabf42d1f587394f8e7c3a7a69729363312671271208bb3bed4f1cdeae"
+            },
+            "hard_edges": "21264464cfb8ab22cc172767295a57890ce8c7921c19154cb597376c260337e9",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "baa234c528afba1c334f45fcbaf67e346d3d1873483fd0f6d35aa476cf013575"
+          }
+        },
+        "pasted__brazaletes3_PRX": {
+          "reference": {
+            "topology": "95ff3d4448a944d9ac3eb18d0303410b5bc85852205f8775fb6a8981303da41f",
+            "uv": {
+              "map1": "089d200f73c6241b95bd99bc43b22402ae7c71f635828dde7b325e25cf88378d"
+            },
+            "hard_edges": "b73f5e4af65ea84dbea05264ac30df367afe93c44542f01f1601648c7bbc18e6",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "782972264d2f448a7741cb6afbc10275ffde7e1d3f5f9005fd45543a7c2b81b5"
+          },
+          "SKIN": {
+            "topology": "95ff3d4448a944d9ac3eb18d0303410b5bc85852205f8775fb6a8981303da41f",
+            "uv": {
+              "map1": "089d200f73c6241b95bd99bc43b22402ae7c71f635828dde7b325e25cf88378d"
+            },
+            "hard_edges": "b73f5e4af65ea84dbea05264ac30df367afe93c44542f01f1601648c7bbc18e6",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "782972264d2f448a7741cb6afbc10275ffde7e1d3f5f9005fd45543a7c2b81b5"
+          }
+        },
+        "polySurface32_PRX": {
+          "reference": {
+            "topology": "1be07ce529e69b758e6a332ebf152097c46dcc31a855111103d9e01af8655319",
+            "uv": {
+              "map1": "a1d6685d5f3d366413b6643a81b97bcb2de45fc2917f01f0bfb3ff68a73a35c8"
+            },
+            "hard_edges": "8ba5ed41fe5f6ce5ae9107e1c2d06915add85a6edbb7cd0e6cad26d52dea6149",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "SKIN": {
+            "topology": "1be07ce529e69b758e6a332ebf152097c46dcc31a855111103d9e01af8655319",
+            "uv": {
+              "map1": "a1d6685d5f3d366413b6643a81b97bcb2de45fc2917f01f0bfb3ff68a73a35c8"
+            },
+            "hard_edges": "8ba5ed41fe5f6ce5ae9107e1c2d06915add85a6edbb7cd0e6cad26d52dea6149",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface33_PRX": {
+          "reference": {
+            "topology": "03a6fcf10d788ed901f1b5a9191d6c25d720dee071af8385d000b192b0228291",
+            "uv": {
+              "map1": "df4f1e7dec1ce8707d0cb17c81962ae90259812bcbcbd981227de91192d44ed5"
+            },
+            "hard_edges": "39ec10cb56efc43b9897b6baedd04aa27e2dc4e2d6bde1ebd9860719299c328a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "SKIN": {
+            "topology": "03a6fcf10d788ed901f1b5a9191d6c25d720dee071af8385d000b192b0228291",
+            "uv": {
+              "map1": "df4f1e7dec1ce8707d0cb17c81962ae90259812bcbcbd981227de91192d44ed5"
+            },
+            "hard_edges": "39ec10cb56efc43b9897b6baedd04aa27e2dc4e2d6bde1ebd9860719299c328a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface48_PRX": {
+          "reference": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "b56beb969beeb9bfbfce29beef41ffec8fa890bb4d7ecdb3af1e78d73128a8c0"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          },
+          "SKIN": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "b56beb969beeb9bfbfce29beef41ffec8fa890bb4d7ecdb3af1e78d73128a8c0"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          }
+        },
+        "polySurface49_PRX": {
+          "reference": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "d34490dbf18bb7c511fffc063b0fef77f2a9f7b07695d7adba842c0a6c5d12ec"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          },
+          "SKIN": {
+            "topology": "6df8a3e5cba2b81de099204489767637196ea44df59d84307cb59ee4f9bf2ace",
+            "uv": {
+              "map1": "d34490dbf18bb7c511fffc063b0fef77f2a9f7b07695d7adba842c0a6c5d12ec"
+            },
+            "hard_edges": "64ee1983e299ef41617b7969bc8d63d43d938be9671bf379fc63822b7cf68f41",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "180729b9da7f6458d7f0a143ba9502b01373f10501f0e6272fdd059b2611fdef"
+          }
+        },
+        "polySurface58_PRX": {
+          "reference": {
+            "topology": "6ccbc6fd088cdb87d1eebab39d7f5e1cbbeb763bbe20c5887daa33f2e18f9c87",
+            "uv": {
+              "map1": "849467f806504e1c935af76ef3823de539f1353ca38f30b3dc5fa36f2f19e5d9"
+            },
+            "hard_edges": "9615ff88477d9cc10d83dc6ce62481cf2a2f73e36a6b194c3115862c66ee4c1a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "SKIN": {
+            "topology": "6ccbc6fd088cdb87d1eebab39d7f5e1cbbeb763bbe20c5887daa33f2e18f9c87",
+            "uv": {
+              "map1": "849467f806504e1c935af76ef3823de539f1353ca38f30b3dc5fa36f2f19e5d9"
+            },
+            "hard_edges": "9615ff88477d9cc10d83dc6ce62481cf2a2f73e36a6b194c3115862c66ee4c1a",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface61_PRX": {
+          "reference": {
+            "topology": "4b953f87a1ad9f088738b12c99004a8a69af293b0e6478a70142b3441f1cd33b",
+            "uv": {
+              "map1": "53c31b13672222b56468584c20bdaebee8f25c491d311b6001d0783b4d3ef6a2"
+            },
+            "hard_edges": "115ac03978e382f8b81784662270b02bd9c433b951a0ac88e00c2f5e89becc39",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "6c61e3d18d2daf14adc06b3fa59deecf95eb57e8833b1c1df86bc24124d4d43a"
+          },
+          "SKIN": {
+            "topology": "4b953f87a1ad9f088738b12c99004a8a69af293b0e6478a70142b3441f1cd33b",
+            "uv": {
+              "map1": "53c31b13672222b56468584c20bdaebee8f25c491d311b6001d0783b4d3ef6a2"
+            },
+            "hard_edges": "115ac03978e382f8b81784662270b02bd9c433b951a0ac88e00c2f5e89becc39",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "6c61e3d18d2daf14adc06b3fa59deecf95eb57e8833b1c1df86bc24124d4d43a"
+          }
+        },
+        "polySurface62_PRX": {
+          "reference": {
+            "topology": "21febd1caa6d326ac1c312aad10d5c82d17ea8445d447d60f3ebb28b27c001ed",
+            "uv": {
+              "map1": "73bc6e147f7050d257ba742d82196260f79664af34b84ff0e1661dad4041c003"
+            },
+            "hard_edges": "f823d7b86e72f36fb44ccb9de5460fd08f4bb2b0226c26e0aee79cf892453d37",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          },
+          "SKIN": {
+            "topology": "21febd1caa6d326ac1c312aad10d5c82d17ea8445d447d60f3ebb28b27c001ed",
+            "uv": {
+              "map1": "73bc6e147f7050d257ba742d82196260f79664af34b84ff0e1661dad4041c003"
+            },
+            "hard_edges": "f823d7b86e72f36fb44ccb9de5460fd08f4bb2b0226c26e0aee79cf892453d37",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0c6540cd9dacc14f3fcaadaf369bc9cf032abce993b77e5fdc6bbd48a7ea2b41"
+          }
+        },
+        "polySurface889_PRX": {
+          "reference": {
+            "topology": "ae72145c9ae335ffb5290b3a8a6e6248b1916d0b4c93df61ee747517f9357b72",
+            "uv": {
+              "map1": "51cb46c7681d594b862923cc6258fed6e2aac17191d6ba268b2115d8043ae50c"
+            },
+            "hard_edges": "3cd0285c92983397ba84ad9d5eb1ffe3c87cafd6efa77a5a8a34c2779061b5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "7b4fc1a8dbe6b6121f16ada516e2ac27e02964716bacea5fb7d07cf30595948e"
+          },
+          "SKIN": {
+            "topology": "ae72145c9ae335ffb5290b3a8a6e6248b1916d0b4c93df61ee747517f9357b72",
+            "uv": {
+              "map1": "51cb46c7681d594b862923cc6258fed6e2aac17191d6ba268b2115d8043ae50c"
+            },
+            "hard_edges": "3cd0285c92983397ba84ad9d5eb1ffe3c87cafd6efa77a5a8a34c2779061b5cb",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "7b4fc1a8dbe6b6121f16ada516e2ac27e02964716bacea5fb7d07cf30595948e"
+          }
+        },
+        "polySurface892_PRX": {
+          "reference": {
+            "topology": "3b1caf4e2bf7fb2d11487de25a76617a8e6c67ca30b46b3ecffed07f7170c514",
+            "uv": {
+              "map1": "f1bbef1c5bd858348a90af1094e25b854df6579a1493a6a72c4c77b9ba0a6398"
+            },
+            "hard_edges": "b8d641022c937b7d577b0f3e0d6262d8058e5caefc9d9bc4a6c165e13165d2ba",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "67042dfda5683aead81b6055d19c4dba238341f9dd82f49c0e7cc0c19c5f10d1"
+          },
+          "SKIN": {
+            "topology": "3b1caf4e2bf7fb2d11487de25a76617a8e6c67ca30b46b3ecffed07f7170c514",
+            "uv": {
+              "map1": "f1bbef1c5bd858348a90af1094e25b854df6579a1493a6a72c4c77b9ba0a6398"
+            },
+            "hard_edges": "b8d641022c937b7d577b0f3e0d6262d8058e5caefc9d9bc4a6c165e13165d2ba",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "67042dfda5683aead81b6055d19c4dba238341f9dd82f49c0e7cc0c19c5f10d1"
+          }
+        },
+        "polySurface900_PRX": {
+          "reference": {
+            "topology": "603b4ae8c008683746250d8fef1fb46003416034b9105e460bf4381351848579",
+            "uv": {
+              "map1": "8dee248eb6dc2bef336631f4822a576fc299808690ec120c67ff3f0d33bc222a"
+            },
+            "hard_edges": "ac4fb0a720e4952c701628362ab92625e2867bc5f1802e6a9b825ca399485425",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a764c326dc00c3f30887e6b3196474e1898a4e66f3a288dd7a14ea42d7ef6081"
+          },
+          "SKIN": {
+            "topology": "603b4ae8c008683746250d8fef1fb46003416034b9105e460bf4381351848579",
+            "uv": {
+              "map1": "8dee248eb6dc2bef336631f4822a576fc299808690ec120c67ff3f0d33bc222a"
+            },
+            "hard_edges": "ac4fb0a720e4952c701628362ab92625e2867bc5f1802e6a9b825ca399485425",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a764c326dc00c3f30887e6b3196474e1898a4e66f3a288dd7a14ea42d7ef6081"
+          }
+        },
+        "polySurface905_PRX": {
+          "reference": {
+            "topology": "4fe26dc6733432c729f01cb7e10979b60239831bca82d5f3191c503b7e5c887a",
+            "uv": {
+              "map1": "f7dd50c065176e3f6d1cdffb6557f823559e6a1a402d607a54a40f1717998580"
+            },
+            "hard_edges": "f66ab7d8f00c8798736b86018e59d879c524351a53679116c526570d0ae40a1d",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a1a4f5721c1c4610af7f71078f3a68c330536d679803b0e0507ee8dc10c5dfca"
+          },
+          "SKIN": {
+            "topology": "4fe26dc6733432c729f01cb7e10979b60239831bca82d5f3191c503b7e5c887a",
+            "uv": {
+              "map1": "f7dd50c065176e3f6d1cdffb6557f823559e6a1a402d607a54a40f1717998580"
+            },
+            "hard_edges": "f66ab7d8f00c8798736b86018e59d879c524351a53679116c526570d0ae40a1d",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "a1a4f5721c1c4610af7f71078f3a68c330536d679803b0e0507ee8dc10c5dfca"
+          }
+        },
+        "tiras30_PRX": {
+          "reference": {
+            "topology": "b50b84d84c3a06cb375d0ee9a3e67294b712b070ed369f4acbe31f162603d18a",
+            "uv": {
+              "map1": "14fac56833c40b63c609295ce3dacaf1153033b27a330414cb8a763abf444e04"
+            },
+            "hard_edges": "8ab8b01885ffab1444f8727c842990b4d5d0a7ea77618499e8550680c36760bc",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "f0d5e0b240d4c753720fbd48e7028c929379887f91260f31a59fe5109838ee68"
+          },
+          "SKIN": {
+            "topology": "b50b84d84c3a06cb375d0ee9a3e67294b712b070ed369f4acbe31f162603d18a",
+            "uv": {
+              "map1": "14fac56833c40b63c609295ce3dacaf1153033b27a330414cb8a763abf444e04"
+            },
+            "hard_edges": "8ab8b01885ffab1444f8727c842990b4d5d0a7ea77618499e8550680c36760bc",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "f0d5e0b240d4c753720fbd48e7028c929379887f91260f31a59fe5109838ee68"
+          }
+        },
+        "tiras31_PRX": {
+          "reference": {
+            "topology": "72d845094e458dd9ada873f413c45a23f80892656855a3d003fc380d2306bc75",
+            "uv": {
+              "map1": "69d12c6250def434d40cd8d40d7d911f004189d056cb3bcf52609d900ef6c3a0"
+            },
+            "hard_edges": "743827b1ac2cd37d717ab6c1ddb16ddff5d3a29f7336a2a553533017540c606f",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0e687b1eb2f7d5467ec1315c1b961f4db8860db151cf3627a76287272104dd3d"
+          },
+          "SKIN": {
+            "topology": "72d845094e458dd9ada873f413c45a23f80892656855a3d003fc380d2306bc75",
+            "uv": {
+              "map1": "69d12c6250def434d40cd8d40d7d911f004189d056cb3bcf52609d900ef6c3a0"
+            },
+            "hard_edges": "743827b1ac2cd37d717ab6c1ddb16ddff5d3a29f7336a2a553533017540c606f",
+            "materials": [
+              "pasted__pasted__pasted__complementos_mtlSG"
+            ],
+            "material_faces": "0e687b1eb2f7d5467ec1315c1b961f4db8860db151cf3627a76287272104dd3d"
+          }
+        }
+      },
+      "invariants_match": true,
+      "passed": false,
+      "seconds": 5.789030999992974
+    }
+  },
+  "artist_windows": {
+    "BLENDSHAPE": {
+      "success": true,
+      "pid": 7248,
+      "label": "BLENDSHAPE",
+      "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/all_prx_bakes_20261016_v001/Edward_all_PRX_BLENDSHAPE_COMPARE_v001.ma",
+      "backup": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_belt_BLENDSHAPE_before_all_PRX_v001.ma",
+      "selector": 1,
+      "output_count": 23,
+      "visible_candidates": 23,
+      "joints": 852,
+      "restored_free_control_values": 2230,
+      "evaluation": [
+        "parallel",
+        "Evaluation graph is ready."
+      ],
+      "selection": [
+        "Edward_PRX_Review"
+      ]
+    },
+    "SKIN": {
+      "success": true,
+      "pid": 55092,
+      "label": "SKIN",
+      "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/all_prx_bakes_20261016_v001/Edward_all_PRX_SKIN_COMPARE_v001.ma",
+      "backup": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_belt_SKIN_before_all_PRX_v001.ma",
+      "selector": 1,
+      "output_count": 23,
+      "visible_candidates": 23,
+      "joints": 852,
+      "restored_free_control_values": 2230,
+      "evaluation": [
+        "parallel",
+        "Evaluation graph is ready."
+      ],
+      "selection": [
+        "Edward_PRX_Review"
+      ]
+    }
+  },
+  "previous_reviews": {
+    "BLENDSHAPE": {
+      "pid": 7248,
+      "backup": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_belt_BLENDSHAPE_before_all_PRX_v001.ma",
+      "bytes": 258071600,
+      "before": {
+        "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+        "modified": true,
+        "frame": 0.0,
+        "selection": [
+          "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_ANM|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL|C_spine07_GRP|C_spine07_ANM|C_spine07_CTL"
+        ]
+      }
+    },
+    "SKIN": {
+      "pid": 55092,
+      "backup": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_belt_SKIN_before_all_PRX_v001.ma",
+      "bytes": 204151979,
+      "before": {
+        "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_SKIN_COMPARE_v001.ma",
+        "modified": true,
+        "frame": 0.0,
+        "selection": [
+          "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localChest_GRP|C_localChest_SPC|C_localChest_CTL"
+        ]
+      }
+    }
+  },
+  "scripts": [
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_all_prx_bakes.py",
+      "bytes": 11557,
+      "sha256": "ece43d0072b63723d2de6fdf9cf9fa46341b7b2f3a82a18249b79904bb3f5a4f"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_all_prx_benchmark.py",
+      "bytes": 3224,
+      "sha256": "c06ac4fbbb2ceb947f9efc6c0f01e277f8b318458778e8c1137eb9c4d3f0c60e"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_all_prx_open_existing.py",
+      "bytes": 3299,
+      "sha256": "9405162dab235a78bf015524ba55f09958c8a8352c56efcdb3b609df73b45fc0"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_all_prx_save.py",
+      "bytes": 3658,
+      "sha256": "7ea1bf49118061f7f24f82c85820533a14a700614338de5e19b9ae1d45a4d924"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_all_prx_trial.py",
+      "bytes": 1353,
+      "sha256": "ebb0fca4fd5d56ef80db8c9f7bd10dff4dc5c75aba0eddfb15efa420bcdfe5c2"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_all_prx_validate.py",
+      "bytes": 6040,
+      "sha256": "ab0277af4c8ebd3360d91949717a55e66c0ffefe7aeb3e0570abf5e56a73dfcf"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_trial.py",
+      "bytes": 3788,
+      "sha256": "275716916618f44fec9d0160e39d1d492c4c8eb31fa6cf6f232deab3d5e50511"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\finalize_edward_all_prx_evidence.py",
+      "bytes": 4237,
+      "sha256": "966bb472432e5ae5783e4ad9999a52b7e87cb11a95c9990171e58a318dd363d1"
+    }
+  ],
+  "code_syntax_ascii": true,
+  "raw_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001",
+  "limitations": [
+    "Finite FK pose targets and fitted linear skins do not guarantee arbitrary/combined deformation.",
+    "Original PRX remains available in both review scenes; no production build integration.",
+    "Timing is standalone DG latency for 23 requested outputs, not viewport or full-rig FPS."
+  ]
+}

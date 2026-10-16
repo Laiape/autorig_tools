@@ -1,0 +1,9 @@
+{
+  "file": "C:/proyectos/auto-rig/recovery/Edward_eyelids_soft_ends_20261016_v001.mb",
+  "closed_matrix_errors": {
+    "L": 6.017408793468348e-14,
+    "R": 1.2284617767477357e-13
+  },
+  "versions": 3,
+  "idempotent": true
+}

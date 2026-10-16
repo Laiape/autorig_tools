@@ -21,8 +21,11 @@ def fractions(value):
 
 
 def fields():
+    # Compare dimensionless gates. Auto Wide now has fixed depth 1, so its
+    # physical displacement scales with the authored mouth half-width.
     return np.array([cmds.getAttr(side + '_lipNarrow_MUL.output') for side in ('L', 'R')] +
-                    [cmds.getAttr(side + '_upperLipAutoWideAmount_MUL.output') for side in ('L', 'R')])
+                    [cmds.getAttr(side + '_upperLipAutoWideAmount_MUL.output') /
+                     cmds.getAttr(side + '_lipAutoWideDepth_MUL.input[1]') for side in ('L', 'R')])
 
 
 try:

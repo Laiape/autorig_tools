@@ -1,0 +1,24 @@
+{
+  "file": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\scenes\\Edward_working_v004.mb",
+  "source": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_safe_full.mb",
+  "sha256": "017fdbdfa2cea01fc8a6e4b333a1c814aee286eb39e2f989045cfd0f02ae5baf",
+  "bytes": 169665824,
+  "source_snapshot": "2cab775509387ecb2f82e47382eb60168dd980f470797edd243380131c79108b",
+  "coverage": {
+    "meshes": 60,
+    "clothing_outputs": 47,
+    "joints": 852,
+    "skins": 58,
+    "prx": 23,
+    "modules": 18
+  },
+  "quality": "Original final geometry preserved; full CPU native reopen and weight roundtrip pose checks passed.",
+  "settings": "Parallel CPU; cache/GPU override OFF through AutoRig Tools profile marker; authored wrinkles ON.",
+  "changes": {
+    "shared_identical_native_math": 17,
+    "static_point_curves_baked": 5451,
+    "exact_zero_influences_removed": 474
+  },
+  "not_done": "No live artist replacement; no automatic live cleanup; no full CREATE RIG or deformer rebuild certification; no global GPU/cache approval.",
+  "evidence_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001"
+}

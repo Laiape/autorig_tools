@@ -356,7 +356,7 @@ class LegModule(object):
             cmds.connectAttr(f"{row_ctl}.output{axis}", f"{crv_point_pv}.controlPoints[1].{value}")
         cmds.setAttr(f"{crv_point_pv}.inheritsTransform", 0)
         cmds.setAttr(f"{crv_point_pv}.overrideEnabled", 1)
-        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 1)
+        cmds.setAttr(f"{crv_point_pv}.overrideDisplayType", 2)
         cmds.parent(crv_point_pv, self.pv_ctl)
         cmds.setAttr(f"{crv_point_pv}.hiddenInOutliner", 1)
 

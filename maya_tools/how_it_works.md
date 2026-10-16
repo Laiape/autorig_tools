@@ -11,6 +11,40 @@ wrinkle/detail rules live in `.cursor/rules/rig-performance-measurement.mdc`,
 `.cursor/rules/rig-wrinkles-and-detail.mdc`. Implemented behavior and measured
 acceptance are in `maya_tools/docs/rig_performance_results.md`.
 
+Current engineering criteria: `maya_tools/docs/rig_performance_criteria.md`.
+Measured improvement order: `maya_tools/docs/rig_optimization_roadmap_20261015.md`.
+Exact Edward cleanup, all 47 clothing/accessory meshes, lossless SKC and native
+acceptance: `maya_tools/docs/rig_exact_optimization_results_20261015.md`.
+Normal CREATE RIG integration and full-build regression scope:
+`maya_tools/docs/rig_exact_build_integration_20261015.md`.
+Edward belt shared/per-mesh blendshape prototypes, captured-pose success,
+held-out/scale rejection and isolated DG timings:
+`maya_tools/docs/rig_belt_blendshape_trial_20261016.md`.
+All 23 garment PRX outputs extended to shared blendshape and fitted-skin
+comparison scenes: `maya_tools/docs/rig_all_prx_bakes_20261016.md`.
+Requested DQ conversion and lossless canonical garment export in Edward v072:
+`maya_tools/docs/rig_prx_dq_export_20261016.md`.
+Requested skin-only garment export in Edward v073, with `cinturones2` and
+`pCube26` in Classic Linear and experimental bind blendShapes removed:
+`maya_tools/docs/rig_skin_only_export_20261016.md`.
+Edward Maya/custom limb-module compatibility and interactive timing comparison:
+`maya_tools/docs/rig_custom_solver_comparison_20261016.md`.
+Chihuahua verified binary opening through Character Manager, direct binary
+model delivery and measured load/redraw scope:
+`maya_tools/docs/chihuahua_model_open_20261016.md`.
+Use the project impact/audit/equivalence skills indexed in
+`.cursor/skills/how_it_works.md` for large system and deformation changes.
+
+`utils/scene_evaluation.py` stores a hidden data-only evaluation profile on each
+new character root. CREATE RIG retains lazy DG construction, then adopts Parallel
+CPU with cache/GPU override OFF after success; failure restores prior flags.
+`userSetup.py` installs one after-open hook for marked scenes only. A repeated
+startup or build does not add callbacks/nodes. No model files, global preference
+files, authored detail settings or per-frame evaluation code are changed.
+Saved rigs reopen with that profile when AutoRig Tools is installed; unmarked
+legacy scenes remain opt-in. Tests and overhead evidence are in
+`maya_tools/docs/validation/scene_evaluation_20261015/`.
+
 ## 1. Overview
 
 Maya module named `self_module`. Run `scripts/install_maya_module.py`
@@ -35,11 +69,64 @@ On start (`maya_tools/scripts/userSetup.py`, deferred):
 Autorig build: `maya_tools/scripts/utils/create_rig.py` class `AutoRig`.
 Biped modules under `maya_tools/scripts/biped/autorig/`.
 Quadruped modules under `maya_tools/scripts/quadruped/autorig/`.
+Quadruped tail, spine and neck controls follow every authored guide segment in
+order. `guides_manager.sample_chain_matrices` retains one control at each guide,
+adds any requested extra controls inside the segments and aims frames at the
+next guide. The configured control count is a minimum when there are more
+guides. Spine's sagittal spacing bias applies within each segment; a two-guide
+spine keeps its previous distribution. Tail FK rest offsets use parent space.
+This changes the authored rest path on the next build; existing rigs and skin
+bindings are not migrated in place. The downstream ribbons keep their existing
+smoothing and configured skin-joint counts, so internal guide positions are
+control anchors, not a promise of exact interpolating skin-joint positions.
+Regression: `scripts/tools/tests/test_quadruped_guide_paths.py` exercises native
+module methods with fixture guide loading and fallback controller circles,
+all guide anchors, local frames, DG/Serial/Parallel poses, skin deformation,
+two reproducible builds and native scene reopen. It also loads Chihuahua's
+saved guide positions into the fixtures; this is not a full-character rebuild.
+PawFoot and the alternate quadruped digit module place their settings above
+the complete digit set. `utils/controller_display.py` creates a native paw
+follow offset and a `Controllers_Visibility` channel, OFF by default, on each
+settings control. It hides the digit FK root groups without hiding settings
+or changing joint evaluation. Regression: `test_digit_controller_display.py`.
+PV indicator lines in the biped/quadruped limb builders and both eye aim lines
+use Reference display (type 2), so they remain visible without being selectable.
+Eyebrow builds keep manual InTan/OutTan controls and `browCurve`; they no longer
+create the `autoTangent` channel or its automatic tangent utility network.
+Eyelids skin separate pose curves before the blink blend. Upper and lower lids
+converge to one animated contact curve when both `Upper_Blink` and `Lower_Blink`
+are 1, including translated/rotated primary controls. `Blink_Height` selects
+the contact height. Attachment parameters converge and fitted rest offsets
+fade out during closure; zero blink retains the original fitted open shape.
+Detail eyelid control XYZ rotations apply after procedural aim/projection.
+Primary Up/Down Z uses its original moving main-control pivot. A smooth spatial
+falloff retains full central roll, about 7% on the CVs next to the corners and
+zero on the shared endpoints. The opposite lid does not inherit this roll.
+Calibrated aim tangents transport the skin frame and converge during blink.
+Current evidence: `docs/validation/eyelid_control_falloff_20261016/README.md`.
+The production builder keeps the analytic projection backend. Portable aim
+and De Boor CPU experiments, quality gates and scoped rejection/noise results:
+`maya_tools/docs/eyelid_setup_evaluation_20261016.md`. Aim has no demonstrated
+Parallel CPU gain; the De Boor prototypes are not production replacements.
+For an existing standard rig, explicitly run `tools.eyelid_contact.upgrade()`
+after a native backup. It keeps skin weights/bind matrices and joint/control
+identities, validates the legacy route, supports namespaces, skips upgraded
+sides and rolls back errors in one undo chunk. It does not upgrade references
+or custom driven attachments. New builds use the corrected graph directly.
+Native regression: `scripts/tools/tests/test_eyelid_blink.py`; optional
+`AUTORIG_EYELID_BASELINE` supplies the previous module for migration/undo checks.
+Large-angle coverage: `scripts/tools/tests/test_eyelid_corner_roll.py`.
 Each module's `make` call uses `utils/module_nurbs.py` to keep its construction
 NURBS curves and surfaces under its `Module_GRP`. Controller drawing keeps its
 animation hierarchy. A space transform follows the original parent matrix when
 needed, preserving animated evaluation and connected transform channels.
 Leg impl flags on CREATE RIG: `reference` | `self`; optional `leg_solver="nodes"`.
+
+`tools/dress_keepout_chains.py` creates `C_dressSettings_CTL` with translation,
+rotation, scale and visibility locked and hidden from the Channel Box. Its
+custom collision settings remain editable; the parent group follows the hip.
+`showChains` and `showColliders` are created last and remain visible in the
+Channel Box with keyable disabled.
 
 Language of this file: English ASCII. Some existing Maya `inViewMessage`
 strings are Spanish; do not bulk-rewrite them unless asked.
@@ -71,6 +158,25 @@ Do not add a web frontend. Do not invent a second autorig entry point
 outside the menu / shelf / `userSetup.py`.
 
 Docs guide; live scripts are the source of truth.
+
+### Controller shape mirror and replacement
+
+AutoRig Tools > Controllers and Tool Framework > Rigging > Controllers expose
+Mirror Controllers and Replace Controller Shapes. Mirror copies all editable
+`L_*_CTL` curves onto their `R_*_CTL` peers across world X=0. Replacement uses
+the first selected controller as the source and every following selection as
+a target, copying local curve geometry with L/R/C colors 6/13/17. Namespaces,
+multiple shapes, curve form/knots/weights and line width are supported.
+Both actions preserve controller transforms, animation and hierarchy, keep
+non-curve shapes, preserve selection and use a single Maya undo chunk. Targets
+with references, instancing, locked nodes, curve history or geometry consumers
+are skipped with warnings. Maya Undo must be enabled before either action.
+Display attributes that are locked or connected cause a rollback.
+
+Implementation: `scripts/utils/controller_shapes.py`, with public compatibility
+entry points in `scripts/utils/curve_tool.py`. Adapted from puiastre_tools
+`mirror_shapes` and `replace_shape_colored`; provenance is in
+`THIRD_PARTY_NOTICES.md`. Regression: `scripts/tools/tests/test_controller_shapes.py`.
 
 ### Shared native editor theme
 
@@ -115,7 +221,7 @@ Open AutoRig Tools > Tool Framework or the first AutoRig shelf button.
 `scripts/ui/tool_framework_UI.py` provides a native right-docked searchable
 catalogue with persistent favorites and recent tools. It restores through
 Maya `workspaceControl` and launches existing editors on demand.
-`scripts/framework/registry.py` contains the 41 explicit tool entries and
+`scripts/framework/registry.py` contains the 42 explicit tool entries and
 lazy Python adapters; it imports without Maya or Qt. Original red SVG/PNG
 icons live in `maya_tools/icons/red` and are shared with menu and shelf.
 The menu and catalogue share the same ordered categories and subsections:
@@ -386,10 +492,9 @@ Rebuilding the jaw adds these keyable attributes on each of
 `L_lipCorner_CTL` and `R_lipCorner_CTL`:
 
 - `autoWide` / Auto Wide: 0 disables compensation, 1 enables it (default 1).
-- `autoWideDepth` / Auto Wide Depth: maximum forward distance as a fraction of
-  the neutral mouth half-width (default 0.2, range 0 to 1).
 
-Each corner has its own intensity and depth. They are not on `C_jaw_CTL`.
+Each corner has its own intensity. Depth is fixed internally at 1 times the
+neutral mouth half-width; `autoWideDepth` is no longer exposed on the controls.
 Wide adds forward translation only. There is no Auto Wide Roll attribute or
 automatic curl; existing manual Roll remains available on the primary lips.
 
@@ -471,8 +576,11 @@ The graph benchmark pose bank now supplies X+ for Narrow and X- for Wide.
 All-pose comparisons require matching driver semantics; the comparison to
 `2a3fad8` in this validation checks only poses that should remain unchanged.
 
-`wrinkleValue` defaults to 1 on new and reused controls. Reusing a control updates
-its reset default without discarding its current/saved intensity. Edward's new
+Brows and lips share wrinkle reset defaults on new and reused controls:
+`wrinkleValue` = 1 (range 0..1), `wrinkleDepth` = 0 (minimum 0).
+Reusing a control updates both reset defaults without discarding current/saved
+intensity or depth. These attributes are added by wrinkle setup import, when a
+control has an authored wrinkle field. Edward's new
 `maya_tools/assets/Edward/skin_clusters/Edward_v069.skc` and
 `maya_tools/assets/Edward/wrinkles/Edward_v003.wrinkles.json` change only the two saved corner
 Wrinkle Values from 0 to 1. All weights, sculpts, masks, rest fields and depths,
@@ -622,6 +730,44 @@ Reproduce the fixture comparison in a disposable worker with:
 The output directory must be new. The tool reads the baseline through Git and
 never replaces the working source or an artist scene.
 
+The second orientation pass connects rigid `uvPin` matrices directly into
+two-axis aiming, keeping the primary/up-vector guards and continuous fallback.
+Generic matrix callers retain the translation-only input. Equal corner rotation
+interpolations share one node per side/weight, rest-compensated corner frames
+share one node per side, and zero-weight corner blends are omitted. Edward's
+fixture drops from 2931 to 2860 nodes; 266 distinct comparison poses retain all
+152 joint/control matrices within 6.89e-8 per component.
+
+`tools/jaw_graph_optimizer.py:optimize()` applies that layout to existing owned
+graphs as one undoable transaction, preserving controllers, joints and skins.
+It preserves all target component weights and their incoming drivers when
+reconnecting `blendMatrix.targetMatrix`; Maya can delete the entire target
+element on disconnect. Referenced nodes and artist-extended position paths are
+retained. Running the upgrade again makes no further graph edits.
+
+`scripts/tools/tests/test_jaw_orientation.py` validates the upgrade, Undo,
+singularity guards, evaluation modes and native reopen. The existing lip,
+Auto Wide, directional-default and single-surface tests also cover the new
+layout. Directional gate continuity is checked without mouth-size scaling now
+that Wide depth is fixed at 1.
+
+For animated head geometry, run a disposable worker with
+`mayapy scripts/run_maya_test.py scripts/benchmark_jaw_orientation.py --scene <snapshot.mb> --output <new-directory>`.
+It compares original/upgraded geometry in DG and Parallel, then samples Parallel
+in ABBA order with one warm pass and three measured passes. It includes
+`currentTime` and CPU geometry queries, excludes viewport/GPU timing, and keeps
+all temporary keys and edits inside the worker.
+
+Current-scene evidence is in `docs/validation/jaw_orientation_20261015`.
+The short Parallel CPU sample uses eight keyed endpoint poses, ABBA blocks,
+one warm pass and three measured passes per block (12 frames per scenario and
+version). Median time falls by 8.0% for jaw, 6.9% for corners, 2.9% for fine
+controls and 6.1% for mixed motion. These include full high/low-head and body
+geometry queries in a headless CPU worker, not viewport FPS. Maximum mesh
+deviation is 1.5259e-5 cm, one float32 ULP at the head's world height; rotation
+matrix components differ by at most 3.45e-8. The checked mesh tolerance is
+2e-5 cm and rotation tolerance is 1e-5.
+
 ### Biped spine controls and foot blending
 
 `biped/autorig/spine_module.py` uses the `.build` `spine_controllers`
@@ -639,6 +785,14 @@ keeps its guide offset from the ball FK control. Its ball and toe skin joints
 must read those blend outputs, not the raw IK matrices. The standard solver
 has ankle and ball skin outputs; its terminal guide is not a separate skin
 joint. Reverse-foot pivot controls remain part of the IK hierarchy.
+
+The custom solver translates the raw ball and toe IK results by the difference
+between the solved ankle and the requested reverse-foot ankle. Unreachable
+controls with Stretch=0 and softened IK therefore keep the complete foot attached
+without lengthening the ankle-to-ball segment. Both outputs share the same world
+offset; roll, toe pivots and FK blending remain independent. Native regression:
+`scripts/tools/tests/test_biped_foot_reach.py` (bilateral reach, scale, stretch,
+soft IK, roll, DG/Serial/Parallel and scene reopen).
 
 Regression: `scripts/tools/tests/test_biped_spine_and_foot.py` under
 `maya_tools/`, run with mayapy. It checks Edward's real guide/build data,

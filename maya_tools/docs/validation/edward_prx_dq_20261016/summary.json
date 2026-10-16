@@ -1,0 +1,953 @@
+{
+  "skc": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v072.skc",
+  "version": 72,
+  "bytes": 32557531,
+  "sha256": "796f2dc9631f6197e8f7b1919fb58e12e7a3b07cb726a89bb6bb2468a64dd8f8",
+  "new_DQ_skins": 23,
+  "native_skin_nodes": 81,
+  "serialized_polygon_skin_records": 71,
+  "lossless": true,
+  "wrinkles_present": true,
+  "roundtrip": {
+    "poses": 7,
+    "comparisons": 322,
+    "max_position_cm": 0.0,
+    "max_face_vertex_normal": 6.664001874625056e-08,
+    "max_weight_error": 0.0,
+    "tolerance_cm": 0.0001,
+    "passed": true
+  },
+  "dq_comparison_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_SKIN_DQ_COMPARE_v001.ma",
+  "canonical_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_DQ_canonical_v002.ma",
+  "source_weights_preserved": true,
+  "static_bind_rest_nodes": 23,
+  "raw_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001",
+  "scripts_sha256": {
+    "C:\\proyectos\\auto-rig\\scripts\\edward_prx_apply_dq.py": "4ef6fb7c8b3906fea7a4d78795e5fb135a3aa1ad0d27f687f18e23e88298ef76",
+    "C:\\proyectos\\auto-rig\\scripts\\edward_prx_dq_export.py": "9888f4ec47fc1f3009edb19f79f14768acd4a38bb9042b80e13d38cf46cf5a64",
+    "C:\\proyectos\\auto-rig\\scripts\\edward_prx_dq_host.py": "f01f6f3d04de6118cb92fffa534e3079ba03ac6f9992121976e20572e8d15564",
+    "C:\\proyectos\\auto-rig\\scripts\\publish_edward_prx_dq.py": "e9dff5ff64c0af05cb35cf4d73376164de06dbf16f9146a5f67853def8469d5f"
+  },
+  "apply_DQ": {
+    "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_SKIN_DQ_COMPARE_v001.ma",
+    "before_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_SKIN_before_DQ_v001.ma",
+    "skins_changed": 23,
+    "method": "Dual Quaternion",
+    "weights_and_blend_weights_unchanged": true,
+    "other_skin_methods_unchanged": true,
+    "records": {
+      "brazaletes1_PRX": {
+        "skin": "brazaletes1_PRX_BAKED_TEST_SKC",
+        "mesh": "brazaletes1_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "3a841687c2b8822dfa4d8f25094bfedaaa9f427be7e43f65032e228c84562751",
+          "blend_weights_sha256": "f34ea0ec1c6fe3d9e3ee551357e6ef8dc96fc23bef3163520d41c857ab925610",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV|L_armLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_bicepsCorrective_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_tricepsCorrective_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV|R_armLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_bicepsCorrective_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_tricepsCorrective_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "3a841687c2b8822dfa4d8f25094bfedaaa9f427be7e43f65032e228c84562751",
+          "blend_weights_sha256": "f34ea0ec1c6fe3d9e3ee551357e6ef8dc96fc23bef3163520d41c857ab925610",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV|L_armLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_bicepsCorrective_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_tricepsCorrective_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV|R_armLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_bicepsCorrective_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_tricepsCorrective_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "cinturon3_PRX": {
+        "skin": "cinturon3_PRX_BAKED_TEST_SKC",
+        "mesh": "cinturon3_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "4c30da90752c89e10ed98ca4e6eac4a237e893cf070a1dd5c2bef7e3adab1f03",
+          "blend_weights_sha256": "7fec7844251c0b3ad0f69269a2cdcad8a882f83b9e782dde81ad99fedc95906d",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "4c30da90752c89e10ed98ca4e6eac4a237e893cf070a1dd5c2bef7e3adab1f03",
+          "blend_weights_sha256": "7fec7844251c0b3ad0f69269a2cdcad8a882f83b9e782dde81ad99fedc95906d",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "cinturones2_PRX": {
+        "skin": "cinturones2_PRX_BAKED_TEST_SKC",
+        "mesh": "cinturones2_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "2993bafee06d33204ae140b38d7ea5d81895eacc06bd0473265c10e997623667",
+          "blend_weights_sha256": "22707d2fef3885617b3eef91ca6aba1aa89ecd051a7d05df552d127cc7de0ed1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "2993bafee06d33204ae140b38d7ea5d81895eacc06bd0473265c10e997623667",
+          "blend_weights_sha256": "22707d2fef3885617b3eef91ca6aba1aa89ecd051a7d05df552d127cc7de0ed1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "collar2_PRX": {
+        "skin": "collar2_PRX_BAKED_TEST_SKC",
+        "mesh": "collar2_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "869ec2c2e2b76c84905883dbcfd0e62481087544e4c3dd4ecb4968ccc1f09d62",
+          "blend_weights_sha256": "8d1f66327f49ec9fa764719377c9642914a14f10195b7c55cea4e605731d4caf",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "869ec2c2e2b76c84905883dbcfd0e62481087544e4c3dd4ecb4968ccc1f09d62",
+          "blend_weights_sha256": "8d1f66327f49ec9fa764719377c9642914a14f10195b7c55cea4e605731d4caf",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "collar3_PRX": {
+        "skin": "collar3_PRX_BAKED_TEST_SKC",
+        "mesh": "collar3_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "0ec58177c1a969bf91a680006ecce55034720f513c7f865e6226315205cbfa69",
+          "blend_weights_sha256": "8d1f66327f49ec9fa764719377c9642914a14f10195b7c55cea4e605731d4caf",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "0ec58177c1a969bf91a680006ecce55034720f513c7f865e6226315205cbfa69",
+          "blend_weights_sha256": "8d1f66327f49ec9fa764719377c9642914a14f10195b7c55cea4e605731d4caf",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "harapo1_PRX": {
+        "skin": "harapo1_PRX_BAKED_TEST_SKC",
+        "mesh": "harapo1_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "6825df76c1a537f30890a789e249ef21544f203221a2bab61266a3e84b0e02f9",
+          "blend_weights_sha256": "9dd75789e0f371d50efb6aaf2878d08ccf1374a4189a0941ae6057b11e487c02",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "6825df76c1a537f30890a789e249ef21544f203221a2bab61266a3e84b0e02f9",
+          "blend_weights_sha256": "9dd75789e0f371d50efb6aaf2878d08ccf1374a4189a0941ae6057b11e487c02",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "harapo2_PRX": {
+        "skin": "harapo2_PRX_BAKED_TEST_SKC",
+        "mesh": "harapo2_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "d2373c481ec6b9fff8ee37eabcb772f80fe07bca534379a369746d1537408a69",
+          "blend_weights_sha256": "9dd75789e0f371d50efb6aaf2878d08ccf1374a4189a0941ae6057b11e487c02",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "d2373c481ec6b9fff8ee37eabcb772f80fe07bca534379a369746d1537408a69",
+          "blend_weights_sha256": "9dd75789e0f371d50efb6aaf2878d08ccf1374a4189a0941ae6057b11e487c02",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "pCube26_PRX": {
+        "skin": "pCube26_PRX_BAKED_TEST_SKC",
+        "mesh": "pCube26_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "3919b8f5c7c2518eb6b781360e802d17a23734a699317b5025b4affdf783e6cc",
+          "blend_weights_sha256": "6bb4877dfebc6d4f819999f0f8b65d06aa540746bc63b7c1261282636efcaa15",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "3919b8f5c7c2518eb6b781360e802d17a23734a699317b5025b4affdf783e6cc",
+          "blend_weights_sha256": "6bb4877dfebc6d4f819999f0f8b65d06aa540746bc63b7c1261282636efcaa15",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "pCylinder16_PRX": {
+        "skin": "pCylinder16_PRX_BAKED_TEST_SKC",
+        "mesh": "pCylinder16_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "85096b34f5cfde71ea88e89adfb81a5e7a6792a4f2bbbaf1653a636a6f88c4e0",
+          "blend_weights_sha256": "3dfad550a5e1cd92b601651c5d77b3577d128d449b54d05073501b846b2a24af",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "85096b34f5cfde71ea88e89adfb81a5e7a6792a4f2bbbaf1653a636a6f88c4e0",
+          "blend_weights_sha256": "3dfad550a5e1cd92b601651c5d77b3577d128d449b54d05073501b846b2a24af",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "pasted__brazaletes3_PRX": {
+        "skin": "pasted__brazaletes3_PRX_BAKED_TEST_SKC",
+        "mesh": "pasted__brazaletes3_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "fa9c4fe6fd64f1f4ac209be812cfccb9af2df5ba9a4c83e6684d76a668339a29",
+          "blend_weights_sha256": "2b1b920dc641c4fc04e479010122eb7e8861af9fc9ee2fe3b1e9fcdaaf44ce3b",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "fa9c4fe6fd64f1f4ac209be812cfccb9af2df5ba9a4c83e6684d76a668339a29",
+          "blend_weights_sha256": "2b1b920dc641c4fc04e479010122eb7e8861af9fc9ee2fe3b1e9fcdaaf44ce3b",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface32_PRX": {
+        "skin": "polySurface32_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface32_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "acdcea893dd2f6f30d4499b98325fbc569c6085970395b9b8c7a6f91526fba11",
+          "blend_weights_sha256": "c809bd0dc782a53635d6d6df625bc33aaa724a75aabfc8d2cf485982ca07c3b1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "acdcea893dd2f6f30d4499b98325fbc569c6085970395b9b8c7a6f91526fba11",
+          "blend_weights_sha256": "c809bd0dc782a53635d6d6df625bc33aaa724a75aabfc8d2cf485982ca07c3b1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface33_PRX": {
+        "skin": "polySurface33_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface33_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "2a395e342387f191883d8b0a2a4341eb1c3a90e60996b8eb7d23d0dcf74d1297",
+          "blend_weights_sha256": "c809bd0dc782a53635d6d6df625bc33aaa724a75aabfc8d2cf485982ca07c3b1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "2a395e342387f191883d8b0a2a4341eb1c3a90e60996b8eb7d23d0dcf74d1297",
+          "blend_weights_sha256": "c809bd0dc782a53635d6d6df625bc33aaa724a75aabfc8d2cf485982ca07c3b1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface48_PRX": {
+        "skin": "polySurface48_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface48_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "9395b3a10fdc9310baf93264791b677918d4c65a42447be7798c256f6188903f",
+          "blend_weights_sha256": "14cfe0422d25476bf3cad5e316af35006242e489dac10b46a1b0441844e63024",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "9395b3a10fdc9310baf93264791b677918d4c65a42447be7798c256f6188903f",
+          "blend_weights_sha256": "14cfe0422d25476bf3cad5e316af35006242e489dac10b46a1b0441844e63024",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface49_PRX": {
+        "skin": "polySurface49_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface49_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "675193d0f4f1705c7c35d58f985b72d4e063d952463616b6cd1b95fd0f78447a",
+          "blend_weights_sha256": "14cfe0422d25476bf3cad5e316af35006242e489dac10b46a1b0441844e63024",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV|L_legUpper03_ENV|L_legUpper04_ENV|L_legLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "675193d0f4f1705c7c35d58f985b72d4e063d952463616b6cd1b95fd0f78447a",
+          "blend_weights_sha256": "14cfe0422d25476bf3cad5e316af35006242e489dac10b46a1b0441844e63024",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV|L_legUpper03_ENV|L_legUpper04_ENV|L_legLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface58_PRX": {
+        "skin": "polySurface58_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface58_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "8604e99d75727c5a8ec3b7b7c19a8756b81990690037c403e6682ca13c37d3a2",
+          "blend_weights_sha256": "8e06738f2ac46a9104ebda20fba2aee88442fe884fe4476e969fce00832d5a9c",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "8604e99d75727c5a8ec3b7b7c19a8756b81990690037c403e6682ca13c37d3a2",
+          "blend_weights_sha256": "8e06738f2ac46a9104ebda20fba2aee88442fe884fe4476e969fce00832d5a9c",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface61_PRX": {
+        "skin": "polySurface61_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface61_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "c470c5b894114e28070c0d0ba9c513fb65c9b47ce376a265dde40c7c09928fab",
+          "blend_weights_sha256": "42e92f74cddfbb1f958fe81b0f8d56a22e9312bb10ae2db844c59e76322a63a2",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "c470c5b894114e28070c0d0ba9c513fb65c9b47ce376a265dde40c7c09928fab",
+          "blend_weights_sha256": "42e92f74cddfbb1f958fe81b0f8d56a22e9312bb10ae2db844c59e76322a63a2",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface62_PRX": {
+        "skin": "polySurface62_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface62_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "6e8703e845dce499c31a35069d05da926e861e0ad7bebcf1ef1318ce967b9fe2",
+          "blend_weights_sha256": "8e06738f2ac46a9104ebda20fba2aee88442fe884fe4476e969fce00832d5a9c",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "6e8703e845dce499c31a35069d05da926e861e0ad7bebcf1ef1318ce967b9fe2",
+          "blend_weights_sha256": "8e06738f2ac46a9104ebda20fba2aee88442fe884fe4476e969fce00832d5a9c",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface889_PRX": {
+        "skin": "polySurface889_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface889_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "3fc8f7a1b6d32b2d3f921603fe24050e84688a9561c4859090f623da3430cce6",
+          "blend_weights_sha256": "967eedb2dc77a95e6270119ece23d9f47ca97c3b18ffa7d391d34e461b284f4c",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "3fc8f7a1b6d32b2d3f921603fe24050e84688a9561c4859090f623da3430cce6",
+          "blend_weights_sha256": "967eedb2dc77a95e6270119ece23d9f47ca97c3b18ffa7d391d34e461b284f4c",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface892_PRX": {
+        "skin": "polySurface892_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface892_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "e01ce91df4ba26a8188d5c87400328c286ec62e379d36ad3b5b2ab596062fe76",
+          "blend_weights_sha256": "2c1ba820624d828583e4fb518e3399bfa987f6c161d7749fad46a2ef2f5d8711",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "e01ce91df4ba26a8188d5c87400328c286ec62e379d36ad3b5b2ab596062fe76",
+          "blend_weights_sha256": "2c1ba820624d828583e4fb518e3399bfa987f6c161d7749fad46a2ef2f5d8711",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface900_PRX": {
+        "skin": "polySurface900_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface900_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "4d1b63e1026847efdfbdda30f3fe8bffb3140dc0083a3a3e05a18dc53d7a89ad",
+          "blend_weights_sha256": "8f8feff85258196411115577a6357aba10413519dff2063d75018cf0a03bc6f2",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "4d1b63e1026847efdfbdda30f3fe8bffb3140dc0083a3a3e05a18dc53d7a89ad",
+          "blend_weights_sha256": "8f8feff85258196411115577a6357aba10413519dff2063d75018cf0a03bc6f2",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "polySurface905_PRX": {
+        "skin": "polySurface905_PRX_BAKED_TEST_SKC",
+        "mesh": "polySurface905_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "fac7a23e72baa094a2d4030cc68d15a2e82f7a98063f6c1103e31c68aebdeb53",
+          "blend_weights_sha256": "16d0edc8b7ad7705b23a14058f366ff1c0dfa16a0ad14f741924c308754cf8d1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "fac7a23e72baa094a2d4030cc68d15a2e82f7a98063f6c1103e31c68aebdeb53",
+          "blend_weights_sha256": "16d0edc8b7ad7705b23a14058f366ff1c0dfa16a0ad14f741924c308754cf8d1",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "tiras30_PRX": {
+        "skin": "tiras30_PRX_BAKED_TEST_SKC",
+        "mesh": "tiras30_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "7be90aa8012f638cfccd94bb6db86bc8874528e0faa6bef447d6825aa778c4fc",
+          "blend_weights_sha256": "c0f9c4c90311a91af002c9e5536f751605f7cc990ea3a60121267bd0b9f22fa7",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "7be90aa8012f638cfccd94bb6db86bc8874528e0faa6bef447d6825aa778c4fc",
+          "blend_weights_sha256": "c0f9c4c90311a91af002c9e5536f751605f7cc990ea3a60121267bd0b9f22fa7",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV"
+          ]
+        },
+        "after_method": 1
+      },
+      "tiras31_PRX": {
+        "skin": "tiras31_PRX_BAKED_TEST_SKC",
+        "mesh": "tiras31_ALLPRX_SKIN_TEST",
+        "before_method": 0,
+        "before": {
+          "weights_sha256": "0910f7f1956255abbaac05b69a08fba68ea8f0746439ffb717c0f31b5d984f92",
+          "blend_weights_sha256": "5ad849ba138bf8ac338d948607588fc2d38b69c81c3573bd86309ff3325ec042",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+          ]
+        },
+        "after": {
+          "weights_sha256": "0910f7f1956255abbaac05b69a08fba68ea8f0746439ffb717c0f31b5d984f92",
+          "blend_weights_sha256": "5ad849ba138bf8ac338d948607588fc2d38b69c81c3573bd86309ff3325ec042",
+          "influences": [
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+            "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+          ]
+        },
+        "after_method": 1
+      }
+    },
+    "frame": 0.0,
+    "selection": []
+  },
+  "current_artist_snapshot": {
+    "source": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_artist_current_before_DQ_export.ma",
+    "bytes": 199834053,
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": []
+    },
+    "after": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": []
+    }
+  }
+}

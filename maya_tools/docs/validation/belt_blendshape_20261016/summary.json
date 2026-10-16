@@ -1,0 +1,1166 @@
+{
+  "date": "2026-10-16",
+  "decision": "Reject all candidates for exact production replacement; artist review copies opened as requested.",
+  "artist_source_preserved": {
+    "snapshot": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_artist_baseline.ma",
+    "bytes": 199709641,
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL"
+      ],
+      "frame": 0.0
+    },
+    "after": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL"
+      ],
+      "frame": 0.0
+    }
+  },
+  "source": {
+    "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_artist_baseline.ma",
+    "bytes": 199709641,
+    "sha256": "bbd6c3d75480442fb294d31c68eff1494d6f48d132e4b57d7034c21bb5920150"
+  },
+  "runtime_checkout": "C:\\proyectos\\auto-rig\\autorig_tools",
+  "production_runtime_changed": false,
+  "tolerance_cm": 0.0001,
+  "capture_poses": 101,
+  "held_out_poses": 74,
+  "blendshape_quality": {
+    "tolerance": 0.0001,
+    "units": "cm",
+    "cases": 180,
+    "rows": 2880,
+    "summary": {
+      "shared": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 7.864199877963372e-06,
+            "worst_pose": "C_localHip_CTL_rotateX_25",
+            "rms_at_worst": 1.8084208721021664e-06,
+            "max_face_vertex_normal": 1.4143549221357443e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.06521841461920304,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.031088002577677066,
+            "max_face_vertex_normal": 0.009023607144377988,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 17.097140412921263,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.968432075325664,
+            "max_face_vertex_normal": 0.05195477685370846,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 1.52587890625e-05,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 3.147553334347893e-07,
+            "max_face_vertex_normal": 1.5870800005073538e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.053642818630738616,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.009782236319083015,
+            "max_face_vertex_normal": 0.0021352324011157052,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 0.9950649910909783,
+            "worst_pose": "root_nonuniform_scale_probe",
+            "rms_at_worst": 0.2983324129695665,
+            "max_face_vertex_normal": 0.23667479445223083,
+            "samples": 10
+          }
+        }
+      },
+      "separate": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 7.864199877963372e-06,
+            "worst_pose": "C_localHip_CTL_rotateX_25",
+            "rms_at_worst": 1.8084208721021664e-06,
+            "max_face_vertex_normal": 1.4143549221357443e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.06521841461920304,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.031088002577677066,
+            "max_face_vertex_normal": 0.009023607144377988,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 17.097140412921263,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.968432075325664,
+            "max_face_vertex_normal": 0.05195477685370846,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 1.52587890625e-05,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 3.147553334347893e-07,
+            "max_face_vertex_normal": 1.5870800005073538e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.053642818630738616,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.009782236319083015,
+            "max_face_vertex_normal": 0.0021352324011157052,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 0.9950649910909783,
+            "worst_pose": "root_nonuniform_scale_probe",
+            "rms_at_worst": 0.2983324129695665,
+            "max_face_vertex_normal": 0.23667479445223083,
+            "samples": 10
+          }
+        }
+      },
+      "blendshape_only_shared": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 2.384185791015625e-07,
+            "worst_pose": "C_localHip_CTL_rotateY_-25",
+            "rms_at_worst": 8.533782674182438e-09,
+            "max_face_vertex_normal": 1.3328003749250113e-07,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.12833342727900485,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.02948957507966516,
+            "max_face_vertex_normal": 0.007095480238402417,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 16.630249501442215,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.482350726117021,
+            "max_face_vertex_normal": 0.5844544189142883,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 9.5367431640625e-07,
+            "worst_pose": "C_spine03_CTL_rotateX_25",
+            "rms_at_worst": 9.264796262807067e-08,
+            "max_face_vertex_normal": 6.344312657058807e-06,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.5379844152920037,
+            "worst_pose": "held_R_shoulderFk_CTL_rotateZ_73",
+            "rms_at_worst": 0.06778787755951594,
+            "max_face_vertex_normal": 0.01099306721181985,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 42.07678670393405,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 38.46845058389027,
+            "max_face_vertex_normal": 0.5902361800631369,
+            "samples": 10
+          }
+        }
+      },
+      "blendshape_only_separate": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 2.384185791015625e-07,
+            "worst_pose": "C_localHip_CTL_rotateY_-25",
+            "rms_at_worst": 8.533782674182438e-09,
+            "max_face_vertex_normal": 1.3328003749250113e-07,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.12833342727900485,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.02948957507966516,
+            "max_face_vertex_normal": 0.007095480238402417,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 16.630249501442215,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.482350726117021,
+            "max_face_vertex_normal": 0.5844544189142883,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 9.5367431640625e-07,
+            "worst_pose": "C_spine03_CTL_rotateX_25",
+            "rms_at_worst": 9.264796262807067e-08,
+            "max_face_vertex_normal": 6.344312657058807e-06,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.5379844152920037,
+            "worst_pose": "held_R_shoulderFk_CTL_rotateZ_73",
+            "rms_at_worst": 0.06778787755951594,
+            "max_face_vertex_normal": 0.01099306721181985,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 42.07678670393405,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 38.46845058389027,
+            "max_face_vertex_normal": 0.5902361800631369,
+            "samples": 10
+          }
+        }
+      }
+    },
+    "shared_separate_max": 0.0,
+    "invariants": {
+      "cinturon3": {
+        "reference": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "shared": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "separate": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "blendshape_only_shared": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "blendshape_only_separate": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        }
+      },
+      "cinturones2": {
+        "reference": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "shared": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "separate": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "blendshape_only_shared": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "blendshape_only_separate": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        }
+      }
+    },
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 57.63806179999665
+  },
+  "skin_only_quality": {
+    "tolerance": 0.0001,
+    "units": "cm",
+    "cases": 180,
+    "rows": 720,
+    "summary": {
+      "skin_only": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 0.4032956973210279,
+            "worst_pose": "C_localHip_CTL_rotateX_25",
+            "rms_at_worst": 0.09060538422791535,
+            "max_face_vertex_normal": 0.04926116595422092,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.2569982040476499,
+            "worst_pose": "held_C_localHip_CTL_rotateX_18.25",
+            "rms_at_worst": 0.05772282456044448,
+            "max_face_vertex_normal": 0.03566944211485693,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 17.106770307738124,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.961510415393011,
+            "max_face_vertex_normal": 0.1376161423156875,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 0.43240657072486477,
+            "worst_pose": "R_shoulderFk_CTL_rotateZ_-40",
+            "rms_at_worst": 0.03625199818601483,
+            "max_face_vertex_normal": 0.02202437478933558,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.24085298318422357,
+            "worst_pose": "held_R_shoulderFk_CTL_rotateZ_73",
+            "rms_at_worst": 0.024527143167171896,
+            "max_face_vertex_normal": 0.007613593214292779,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 0.9925001547510052,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.15649748993819007,
+            "max_face_vertex_normal": 0.3074681997529615,
+            "samples": 10
+          }
+        }
+      }
+    },
+    "shared_separate_max": 0.0,
+    "invariants": {
+      "cinturon3": {
+        "reference": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "skin_only": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        }
+      },
+      "cinturones2": {
+        "reference": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "skin_only": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        }
+      }
+    },
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 23.171626299998024
+  },
+  "native_blendshape_reopen": {
+    "tolerance": 0.0001,
+    "units": "cm",
+    "cases": 8,
+    "rows": 128,
+    "summary": {
+      "shared": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 7.688768146799611e-06,
+            "worst_pose": "C_spine07_CTL_rotateZ_35",
+            "rms_at_worst": 4.348053757970635e-07,
+            "max_face_vertex_normal": 9.991559156322605e-07,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.06521841461920304,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.031088002577014818,
+            "max_face_vertex_normal": 0.007042149218513958,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.4705103300823738,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.16553818332309111,
+            "max_face_vertex_normal": 0.023790302954175575,
+            "samples": 6
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 1.52587890625e-05,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 3.147368481867569e-07,
+            "max_face_vertex_normal": 7.6192013813798024e-06,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.053642818630738616,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.009782236319083015,
+            "max_face_vertex_normal": 0.0021352324011157052,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.42048959743578807,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.11342815698730156,
+            "max_face_vertex_normal": 0.053052908610992884,
+            "samples": 6
+          }
+        }
+      },
+      "separate": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 7.688768146799611e-06,
+            "worst_pose": "C_spine07_CTL_rotateZ_35",
+            "rms_at_worst": 4.348053757970635e-07,
+            "max_face_vertex_normal": 9.991559156322605e-07,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.06521841461920304,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.031088002577014818,
+            "max_face_vertex_normal": 0.007042149218513958,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.4705103300823738,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.16553818332309111,
+            "max_face_vertex_normal": 0.023790302954175575,
+            "samples": 6
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 1.52587890625e-05,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 3.147368481867569e-07,
+            "max_face_vertex_normal": 7.6192013813798024e-06,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.053642818630738616,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.009782236319083015,
+            "max_face_vertex_normal": 0.0021352324011157052,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.42048959743578807,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.11342815698730156,
+            "max_face_vertex_normal": 0.053052908610992884,
+            "samples": 6
+          }
+        }
+      },
+      "blendshape_only_shared": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 1.1920928955078125e-07,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 1.0853439794822945e-08,
+            "max_face_vertex_normal": 0.0,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.12833342727900485,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.02948957508044343,
+            "max_face_vertex_normal": 0.007095480238402417,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.47051087447993517,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.16553820509393574,
+            "max_face_vertex_normal": 0.5844544189142883,
+            "samples": 6
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 4.76837158203125e-07,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 6.23815925802947e-08,
+            "max_face_vertex_normal": 0.0,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.2651642339166482,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.11554268983181677,
+            "max_face_vertex_normal": 0.01099306721181985,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.7970167163271517,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.3314916071683241,
+            "max_face_vertex_normal": 0.5902361800631369,
+            "samples": 6
+          }
+        }
+      },
+      "blendshape_only_separate": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 1.1920928955078125e-07,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 1.0853439794822945e-08,
+            "max_face_vertex_normal": 0.0,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.12833342727900485,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.02948957508044343,
+            "max_face_vertex_normal": 0.007095480238402417,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.47051087447993517,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.16553820509393574,
+            "max_face_vertex_normal": 0.5844544189142883,
+            "samples": 6
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 4.76837158203125e-07,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 6.23815925802947e-08,
+            "max_face_vertex_normal": 0.0,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.2651642339166482,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.11554268983181677,
+            "max_face_vertex_normal": 0.01099306721181985,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.7970167163271517,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.3314916071683241,
+            "max_face_vertex_normal": 0.5902361800631369,
+            "samples": 6
+          }
+        }
+      }
+    },
+    "shared_separate_max": 0.0,
+    "invariants": {
+      "cinturon3": {
+        "reference": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "shared": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "separate": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "blendshape_only_shared": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "blendshape_only_separate": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        }
+      },
+      "cinturones2": {
+        "reference": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "shared": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "separate": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "blendshape_only_shared": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "blendshape_only_separate": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        }
+      }
+    },
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 2.5170061999961035
+  },
+  "native_skin_reopen": {
+    "tolerance": 0.0001,
+    "units": "cm",
+    "cases": 8,
+    "rows": 32,
+    "summary": {
+      "skin_only": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 0.10329042979061938,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 0.021908558161547673,
+            "max_face_vertex_normal": 0.010894201765479937,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.1392306369195014,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.03748586307784477,
+            "max_face_vertex_normal": 0.01928969502691556,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.4705103300823738,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.16553818332309111,
+            "max_face_vertex_normal": 0.023790302954175575,
+            "samples": 6
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 0.25977737647273047,
+            "worst_pose": "C_spine07_CTL_rotateZ_35",
+            "rms_at_worst": 0.029070555360554928,
+            "max_face_vertex_normal": 0.011788272527116624,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.14056607043064176,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.01797411028749544,
+            "max_face_vertex_normal": 0.006070136258607018,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.9925001547510052,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.15649748993882748,
+            "max_face_vertex_normal": 0.05139579467001819,
+            "samples": 6
+          }
+        }
+      }
+    },
+    "shared_separate_max": 0.0,
+    "invariants": {
+      "cinturon3": {
+        "reference": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "skin_only": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        }
+      },
+      "cinturones2": {
+        "reference": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "skin_only": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        }
+      }
+    },
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 1.492946900005336
+  },
+  "timing_scope": "Standalone Maya 2026 DG CPU: set three control channels and force only the two belt outMesh outputs. No viewport, frame playback, GPU or full-rig FPS claim.",
+  "timing_summary_ms": {
+    "PRX_reference": {
+      "median_ms": 12.30149999173591,
+      "p95_ms": 18.40819000644842,
+      "max_ms": 25.683200001367368,
+      "pass_medians_ms": [
+        14.259049996326212,
+        13.30029999371618,
+        13.206499999796506,
+        10.87454999651527,
+        11.882150000019465,
+        11.82754999899771
+      ],
+      "samples": 360
+    },
+    "shared": {
+      "median_ms": 5.746250004449394,
+      "p95_ms": 9.804829999484333,
+      "max_ms": 13.153599997167476,
+      "pass_medians_ms": [
+        7.030050001048949,
+        5.265350002446212,
+        5.400949994509574
+      ],
+      "samples": 180
+    },
+    "separate": {
+      "median_ms": 5.974099993181881,
+      "p95_ms": 9.571885001059837,
+      "max_ms": 16.550300002563745,
+      "pass_medians_ms": [
+        7.074099994497374,
+        5.860049997863825,
+        5.377899993618485
+      ],
+      "samples": 180
+    },
+    "blendshape_only_shared": {
+      "median_ms": 1.2734499905491248,
+      "p95_ms": 2.3773049986630213,
+      "max_ms": 7.071800006087869,
+      "pass_medians_ms": [
+        1.8845000086002983,
+        1.0837500012712553,
+        1.0483499936526641
+      ],
+      "samples": 180
+    },
+    "blendshape_only_separate": {
+      "median_ms": 1.343300005828496,
+      "p95_ms": 2.2675700063700774,
+      "max_ms": 3.6748999991687015,
+      "pass_medians_ms": [
+        1.6246999948634766,
+        1.2107999937143177,
+        1.101499998185318
+      ],
+      "samples": 180
+    },
+    "skin_only": {
+      "median_ms": 5.164900001545902,
+      "p95_ms": 8.726550002029388,
+      "max_ms": 14.822700002696365,
+      "pass_medians_ms": [
+        6.469649997598026,
+        4.706399995484389,
+        5.027499995776452
+      ],
+      "samples": 180
+    }
+  },
+  "focused_review_scenes": {
+    "BLENDSHAPE": {
+      "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+      "bytes": 258076746,
+      "review_control": "Edward_BeltBlendshape_Review",
+      "attribute": "beltVariant",
+      "enum": "Original_PRX:Shared_BlendShape:Separate_BlendShapes",
+      "default": 1,
+      "variants": [
+        "blendshape_only_shared",
+        "blendshape_only_separate"
+      ],
+      "notes": "Experimental FK pose targets. New combinations, IK and scale are not certified. Use beltVariant to compare the original.",
+      "identity": {
+        "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+        "bytes": 258076746,
+        "sha256": "1e1300177a72e57ad8a2e3560f9cdf8bf789e1905331a08f3171669f83a7a475"
+      }
+    },
+    "SKIN": {
+      "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_SKIN_COMPARE_v001.ma",
+      "bytes": 204158343,
+      "review_control": "Edward_BeltBlendshape_Review",
+      "attribute": "beltVariant",
+      "enum": "Original_PRX:SkinClusters",
+      "default": 1,
+      "variants": [
+        "skin_only"
+      ],
+      "notes": "Experimental fitted LBS skinClusters, max eight nonzero weights per vertex. Use beltVariant to compare the original.",
+      "identity": {
+        "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_SKIN_COMPARE_v001.ma",
+        "bytes": 204158343,
+        "sha256": "8142247b975c1030d9332f7f2e4ad516146a74860e2a7ab746a171e70200c32b"
+      }
+    }
+  },
+  "opened_windows": {
+    "BLENDSHAPE": {
+      "success": true,
+      "pid": 7248,
+      "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+      "selector": 1,
+      "selection": [
+        "Edward_BeltBlendshape_Review"
+      ],
+      "evaluation": [
+        "parallel",
+        "Evaluation graph is ready."
+      ],
+      "visible_meshes": [
+        "cinturon3_blendshape_only_shared_TEST",
+        "cinturones2_blendshape_only_shared_TEST"
+      ],
+      "joints": 852
+    },
+    "SKIN": {
+      "success": true,
+      "pid": 55092,
+      "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belts_SKIN_COMPARE_v001.ma",
+      "selector": 1,
+      "selection": [
+        "Edward_BeltBlendshape_Review"
+      ],
+      "evaluation": [
+        "parallel",
+        "Evaluation graph is ready."
+      ],
+      "visible_meshes": [
+        "cinturon3_SKIN_ONLY_TEST",
+        "cinturones2_SKIN_ONLY_TEST"
+      ],
+      "joints": 852
+    }
+  },
+  "gui_checks": {
+    "BLENDSHAPE": {
+      "success": true,
+      "result": {
+        "pid": 7248,
+        "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+        "modified": true,
+        "selector": 1,
+        "viewport": [
+          357,
+          870
+        ],
+        "visible_candidates": {
+          "cinturon3_blendshape_only_separate_TEST": false,
+          "cinturon3_blendshape_only_shared_TEST": true,
+          "cinturones2_blendshape_only_separate_TEST": false,
+          "cinturones2_blendshape_only_shared_TEST": true
+        },
+        "image": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\artist_window_7248.png",
+        "joints": 852
+      }
+    },
+    "SKIN": {
+      "success": true,
+      "result": {
+        "pid": 55092,
+        "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belts_SKIN_COMPARE_v001.ma",
+        "modified": true,
+        "selector": 1,
+        "viewport": [
+          1317,
+          750
+        ],
+        "visible_candidates": {
+          "cinturon3_SKIN_ONLY_TEST": true,
+          "cinturones2_SKIN_ONLY_TEST": true
+        },
+        "image": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\artist_window_55092.png",
+        "joints": 852
+      }
+    }
+  },
+  "environment": {
+    "maya": "2026.3.3",
+    "cpu": "Intel Core i9-14900HX",
+    "logical_processors": 32,
+    "installed_ram_bytes": 33970483200,
+    "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU"
+  },
+  "scripts": [
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_benchmark.py",
+      "bytes": 3156,
+      "sha256": "f119efdae8a9cafb6e0f0f1596d66638c2d90b79144e162a205601a5a9be29d4"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_build.py",
+      "bytes": 9754,
+      "sha256": "73b2abd1e56615e8079bf09226abc59977a68c96beacf0fda728d7b8ed03765c"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_only.py",
+      "bytes": 4753,
+      "sha256": "935b8bacf65859dadd91d2f0a39fe60eb0e0834a97fd1962ac8359e2e7b652c7"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_reopen.py",
+      "bytes": 1664,
+      "sha256": "70351560d860562ca438a101dae5a744d47fd2790a6b5d60b92c8a21375db2d4"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_save.py",
+      "bytes": 3225,
+      "sha256": "dcc985149db16a58e7174abbcd1f308821eeabd5d56aeb1271edc56077c68f06"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_trial.py",
+      "bytes": 3788,
+      "sha256": "275716916618f44fec9d0160e39d1d492c4c8eb31fa6cf6f232deab3d5e50511"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_validate.py",
+      "bytes": 7005,
+      "sha256": "086803f8851e741941c6de1133f53fbb406ee0c77b5d3bf394aed9aa3b41648d"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_prepare_artist_scenes.py",
+      "bytes": 4117,
+      "sha256": "eba4f4d65efc65c5e283b40eff46f17f208790068afa807a5835b6acbf567cff"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_review_bootstrap.py",
+      "bytes": 2509,
+      "sha256": "961192a9a4afc05fe53e65875f65d1bfa7573b4e4b3992d3cef9e9e7a5186b9a"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\edward_belt_skin_only.py",
+      "bytes": 3500,
+      "sha256": "a3805bded349b23a7dc53799cca775ee724fa66bb730ee3bdc6a4e968dfa1abd"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\launch_edward_belt_review.py",
+      "bytes": 1978,
+      "sha256": "42a469920f3e22c32ee0c93dcd80d4f49e464eba4c712521b2be5a61f2e644f2"
+    },
+    {
+      "path": "C:\\proyectos\\auto-rig\\scripts\\finalize_edward_belt_evidence.py",
+      "bytes": 3699,
+      "sha256": "a1140f4ac3ad4a6aa4e53f173b5a68ded81d5f86d10499ea940bf6e08ad35b7e"
+    }
+  ],
+  "checks": {
+    "python_syntax": true,
+    "new_code_and_report_ascii": true
+  },
+  "raw_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001",
+  "limitations": [
+    "Finite independent FK pose targets do not guarantee arbitrary poses or IK.",
+    "All variants fail held-out geometry/normal/scale gates.",
+    "Batch DG two-output latency is not viewport or full-rig FPS.",
+    "Review files retain original PRX for visual comparison and are not delivery-size/performance packages.",
+    "No production rebuild or SKC integration follows a rejected geometry prototype."
+  ]
+}

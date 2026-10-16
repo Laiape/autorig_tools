@@ -62,7 +62,6 @@ class EyebrowModule(object):
         self.curve_setup()
         self.ribbon_setup()
         self.slide_setup()
-        self.auto_tangent_setup()
 
         data_manager.DataExportBiped().append_data("eyebrow_module",
                             {
@@ -297,117 +296,6 @@ class EyebrowModule(object):
         cmds.connectAttr(f"{condition_secondary}.outColorR", f"{self.eyebrow_nodes[1][0]}.visibility") # InTan visibility
         cmds.connectAttr(f"{condition_secondary}.outColorR", f"{self.eyebrow_nodes[-2][0]}.visibility") # OutTan visibility
 
-
-    def auto_tangent_setup(self):
-        """
-        Keeps InTan and OutTan on the straight line between In and Out when displaced in Y.
-        Adds autoTangent attr (0=manual, 1=auto) to main_eyebrow_ctl.
-        """
-        
-        cmds.addAttr(self.main_eyebrow_ctl,
-                     longName="autoTangent",
-                     attributeType="float",
-                     min=0, max=1,
-                     defaultValue=1,
-                     keyable=True)
-
-        in_local_trn  = self.local_trns[0]
-        out_local_trn = self.local_trns[-1]
-
-        # Shared translation-row nodes for In and Out world Y (row 3 = translation)
-        rfm_in = cmds.createNode("rowFromMatrix",
-                                  name=f"{self.side}_eyebrowAutoTanIn_RFM", ss=True)
-        rfm_out = cmds.createNode("rowFromMatrix",
-                                   name=f"{self.side}_eyebrowAutoTanOut_RFM", ss=True)
-        cmds.setAttr(f"{rfm_in}.input", 3)
-        cmds.setAttr(f"{rfm_out}.input", 3)
-        cmds.connectAttr(f"{in_local_trn}.matrixSum",  f"{rfm_in}.matrix")
-        cmds.connectAttr(f"{out_local_trn}.matrixSum", f"{rfm_out}.matrix")
-
-        # Project each tangent onto the In-Out line to get its t parameter
-        in_pos  = om.MVector(cmds.xform(self.eyebrow_controllers[0],  q=True, ws=True, t=True))
-        out_pos = om.MVector(cmds.xform(self.eyebrow_controllers[-1], q=True, ws=True, t=True))
-        line        = out_pos - in_pos
-        line_len_sq = line * line
-
-        for idx, name in [(1, "InTan"), (-2, "OutTan")]:
-            local_trn = self.local_trns[idx]
-            local_grp = self.local_grps[idx]
-
-            tan_pos = om.MVector(cmds.xform(self.eyebrow_controllers[idx], q=True, ws=True, t=True))
-            if line_len_sq > 0.0001:
-                t_val = float(((tan_pos - in_pos) * line) / line_len_sq)
-            else:
-                t_val = 0.333 if idx == 1 else 0.667
-
-            # Target world Y = In.Y*(1-t) + Out.Y*t
-            mul_in_t = cmds.createNode("multiply",
-                                       name=f"{self.side}_eyebrow{name}AutoTanInT_MUL", ss=True)
-            mul_out_t = cmds.createNode("multiply",
-                                        name=f"{self.side}_eyebrow{name}AutoTanOutT_MUL", ss=True)
-            cmds.connectAttr(f"{rfm_in}.outputY",  f"{mul_in_t}.input[0]")
-            cmds.setAttr(f"{mul_in_t}.input[1]",  1.0 - t_val)
-            cmds.connectAttr(f"{rfm_out}.outputY", f"{mul_out_t}.input[0]")
-            cmds.setAttr(f"{mul_out_t}.input[1]", t_val)
-
-            pma_world_y = cmds.createNode("plusMinusAverage",
-                                           name=f"{self.side}_eyebrow{name}AutoTanWorldY_PMA", ss=True)
-            cmds.setAttr(f"{pma_world_y}.operation", 1)  # Add
-            cmds.connectAttr(f"{mul_in_t}.output",  f"{pma_world_y}.input1D[0]")
-            cmds.connectAttr(f"{mul_out_t}.output", f"{pma_world_y}.input1D[1]")
-
-            # Auto local Y (in GRP space) = target_world_Y - GRP_world_Y
-            rfm_grp = cmds.createNode("rowFromMatrix",
-                                       name=f"{self.side}_eyebrow{name}AutoTanGRP_RFM", ss=True)
-            cmds.setAttr(f"{rfm_grp}.input", 3)  # translation row
-            cmds.connectAttr(f"{local_grp}.matrixSum", f"{rfm_grp}.matrix")
-
-            pma_local_y = cmds.createNode("plusMinusAverage",
-                                           name=f"{self.side}_eyebrow{name}AutoTanLocalY_PMA", ss=True)
-            cmds.setAttr(f"{pma_local_y}.operation", 2)  # Subtract
-            cmds.connectAttr(f"{pma_world_y}.output1D",       f"{pma_local_y}.input1D[0]")
-            cmds.connectAttr(f"{rfm_grp}.outputY",            f"{pma_local_y}.input1D[1]")
-
-            # Manual Y: CTL offset from its GRP (already driving local_trn.offsetParentMatrix)
-            mmt_name = self.eyebrow_controllers[idx].replace("_CTL", "Local_MMT")
-            rfm_curr_t = cmds.createNode("rowFromMatrix",
-                                          name=f"{self.side}_eyebrow{name}AutoTanManual_RFM", ss=True)
-            cmds.setAttr(f"{rfm_curr_t}.input", 3)  # translation row
-            cmds.connectAttr(f"{mmt_name}.matrixSum", f"{rfm_curr_t}.matrix")
-
-            # Auto ADITIVO: en auto la Y del control se SUMA al seguimiento de la
-            # línea In-Out, no se sustituye — si no, con autoTangent=1 (default)
-            # el ty del tangente quedaba muerto y parecía un control roto.
-            pma_auto_sum = cmds.createNode("plusMinusAverage",
-                                            name=f"{self.side}_eyebrow{name}AutoTanSum_PMA", ss=True)
-            cmds.setAttr(f"{pma_auto_sum}.operation", 1)  # Add
-            cmds.connectAttr(f"{pma_local_y}.output1D", f"{pma_auto_sum}.input1D[0]")
-            cmds.connectAttr(f"{rfm_curr_t}.outputY",   f"{pma_auto_sum}.input1D[1]")
-
-            # Blend: attributesBlender=0 -> manual puro, =1 -> línea + offset manual
-            bta = cmds.createNode("blendTwoAttr",
-                                   name=f"{self.side}_eyebrow{name}AutoTan_BTA", ss=True)
-            cmds.connectAttr(f"{self.main_eyebrow_ctl}.autoTangent", f"{bta}.attributesBlender")
-            cmds.connectAttr(f"{rfm_curr_t}.outputY",                 f"{bta}.input[0]")
-            cmds.connectAttr(f"{pma_auto_sum}.output1D",              f"{bta}.input[1]")
-
-            # Recompose with rowFromMatrix + fourByFourMatrix (no decompose/compose):
-            # rows 0-2 keep rotation/scale from the CTL, row 3 keeps X/Z and takes
-            # the blended Y
-            fbf = cmds.createNode("fourByFourMatrix",
-                                   name=f"{self.side}_eyebrow{name}AutoTan_FBF", ss=True)
-            for row_index in range(3):
-                rfm_row = cmds.createNode("rowFromMatrix",
-                                           name=f"{self.side}_eyebrow{name}AutoTan0{row_index}_RFM", ss=True)
-                cmds.setAttr(f"{rfm_row}.input", row_index)
-                cmds.connectAttr(f"{mmt_name}.matrixSum", f"{rfm_row}.matrix")
-                for col_index, axis in enumerate("XYZ"):
-                    cmds.connectAttr(f"{rfm_row}.output{axis}", f"{fbf}.in{row_index}{col_index}")
-            cmds.connectAttr(f"{rfm_curr_t}.outputX", f"{fbf}.in30")
-            cmds.connectAttr(f"{bta}.output",         f"{fbf}.in31")
-            cmds.connectAttr(f"{rfm_curr_t}.outputZ", f"{fbf}.in32")
-
-            cmds.connectAttr(f"{fbf}.output", f"{local_trn}.matrixIn[0]", force=True)
 
     def curve_setup(self):
 

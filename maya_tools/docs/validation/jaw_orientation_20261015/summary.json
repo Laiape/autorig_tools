@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "fixture_nodes_before": 2931,
+  "fixture_nodes_after": 2860,
+  "removed_nodes": 71,
+  "fixture_unique_poses": 266,
+  "maximum_fixture_matrix_error": 6.88353723481052e-08,
+  "maximum_real_mesh_error_cm": 1.52587890625e-05,
+  "real_geometry_tolerance_cm": 2e-05,
+  "maximum_real_rotation_error": 3.4477496746454506e-08,
+  "parallel_cpu_before_ms": {
+    "jaw": 1400.7505499994295,
+    "corner": 1411.0250500016264,
+    "fine": 1372.906200002035,
+    "mixed": 1371.1906499993347
+  },
+  "parallel_cpu_after_ms": {
+    "jaw": 1288.810600000943,
+    "corner": 1313.0048500006524,
+    "fine": 1333.6313999989216,
+    "mixed": 1287.514050001846
+  },
+  "improvement_percent": {
+    "jaw": 7.991426453377594,
+    "corner": 6.946737054800057,
+    "fine": 2.8607052690894053,
+    "mixed": 6.102477434303484
+  },
+  "measurement": "Parallel currentTime + world-space CPU mesh queries; no viewport/GPU timing.",
+  "sampling_note": "Eight keyed endpoint poses, one warm pass and three measured passes per ABBA block; six measured runs per version; 12 frames per scenario/version. Not viewport FPS.",
+  "source_sha256": {
+    "maya_tools\\scripts\\biped\\autorig\\jaw_module_nurbs.py": "69dbb609ed1798c565528f0a02816834bc44f5e81130e137db1d3696ca84c767",
+    "maya_tools\\scripts\\tools\\jaw_graph_optimizer.py": "cd26adf7f890b0e3435867836be4e0872e0030132879d74567cb1ffd0c7959bb"
+  },
+  "delivery_scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\scenes\\Edward_working_v003.mb",
+  "native_reopen_error": 0.0,
+  "active_artist_scene_changed": false,
+  "baseline_source_sha256": "9a1d09a289a936884247a7b7f8ac6f5aaedac9f6f34f59cd946ce43e592cb68b"
+}
