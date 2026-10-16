@@ -1,0 +1,218 @@
+[
+  {
+    "kind": "open",
+    "create": true,
+    "active": 35,
+    "data": {
+      "nu": 5,
+      "nv": 7,
+      "du": 3,
+      "dv": 3,
+      "fu": 1,
+      "fv": 1,
+      "ku": [
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "kv": [
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain_u": [
+        0.0,
+        1.0
+      ],
+      "domain_v": [
+        0.0,
+        1.0
+      ]
+    },
+    "undo": true,
+    "redo": true,
+    "edit_first_row": {
+      "0": 0.25,
+      "1": 0.5,
+      "2": 0.25
+    },
+    "reopen": true,
+    "restore": true,
+    "undo_detach": true,
+    "redo_detach": true
+  },
+  {
+    "kind": "periodic_v",
+    "create": true,
+    "active": 32,
+    "data": {
+      "nu": 4,
+      "nv": 11,
+      "du": 3,
+      "dv": 3,
+      "fu": 1,
+      "fv": 3,
+      "ku": [
+        0.0,
+        0.0,
+        0.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "kv": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0
+      ],
+      "domain_u": [
+        0.0,
+        2.0
+      ],
+      "domain_v": [
+        0.0,
+        8.0
+      ]
+    },
+    "undo": true,
+    "redo": true,
+    "edit_first_row": {
+      "0": 0.25,
+      "1": 0.5,
+      "2": 0.25
+    },
+    "reopen": true,
+    "restore": true,
+    "undo_detach": true,
+    "redo_detach": true
+  },
+  {
+    "kind": "periodic_uv",
+    "create": true,
+    "active": 32,
+    "data": {
+      "nu": 7,
+      "nv": 11,
+      "du": 3,
+      "dv": 3,
+      "fu": 3,
+      "fv": 3,
+      "ku": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0
+      ],
+      "kv": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0
+      ],
+      "domain_u": [
+        0.0,
+        4.0
+      ],
+      "domain_v": [
+        0.0,
+        8.0
+      ]
+    },
+    "undo": true,
+    "redo": true,
+    "edit_first_row": {
+      "0": 0.25,
+      "1": 0.5,
+      "2": 0.25
+    },
+    "reopen": true,
+    "restore": true,
+    "undo_detach": true,
+    "redo_detach": true
+  },
+  {
+    "kind": "sparse_influences",
+    "create": true,
+    "active": 35,
+    "data": {
+      "nu": 5,
+      "nv": 7,
+      "du": 3,
+      "dv": 3,
+      "fu": 1,
+      "fv": 1,
+      "ku": [
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "kv": [
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain_u": [
+        0.0,
+        1.0
+      ],
+      "domain_v": [
+        0.0,
+        1.0
+      ]
+    },
+    "undo": true,
+    "redo": true,
+    "edit_first_row": {
+      "0": 0.25,
+      "2": 0.75
+    },
+    "reopen": true,
+    "restore": true,
+    "undo_detach": true,
+    "redo_detach": true
+  }
+]

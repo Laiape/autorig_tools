@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "result": {
+    "pid": 5320,
+    "scene": "",
+    "modified": true,
+    "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\curve_tool.py",
+    "asset": "chihuahua",
+    "controls": {},
+    "selection": [],
+    "panels": [
+      "modelPanel1",
+      "modelPanel2",
+      "modelPanel3",
+      "modelPanel4"
+    ]
+  }
+}

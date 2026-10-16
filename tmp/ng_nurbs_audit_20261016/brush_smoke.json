@@ -1,0 +1,11 @@
+{
+  "create_dq_error": 0.0,
+  "undo_influence": true,
+  "redo_influence": true,
+  "undo_empty_mask": true,
+  "dq_flood": 0.8,
+  "ray_hit": "(maya.api.OpenMaya.MPoint(-9.2444637330587320947e-33, -8.3266726846886740532e-17, 1.1102230246251565404e-16, 1), (0.5, 0.5))",
+  "dab": true,
+  "samples": 625,
+  "restore_dq_error": 0.0
+}

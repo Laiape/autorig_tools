@@ -1,0 +1,107 @@
+{
+  "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/flower/scenes/flower_rig_v001.mb",
+  "modified": true,
+  "roots": [
+    "|flower",
+    "|persp",
+    "|top",
+    "|front",
+    "|side",
+    "|C_guides_GRP"
+  ],
+  "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+  "groups": {
+    "flower": {
+      "parent": null,
+      "children": [
+        "|flower|rig_GRP",
+        "|flower|controls_GRP",
+        "|flower|geo_GRP",
+        "|flower|deformers_GRP"
+      ]
+    },
+    "rig_GRP": {
+      "parent": [
+        "|flower"
+      ],
+      "children": [
+        "|flower|rig_GRP|skel_GRP",
+        "|flower|rig_GRP|modules_GRP",
+        "|flower|rig_GRP|skeletonHierarchy_GRP"
+      ]
+    },
+    "modules_GRP": {
+      "parent": [
+        "|flower|rig_GRP"
+      ],
+      "children": [
+        "|flower|rig_GRP|modules_GRP|C_stemModule_GRP",
+        "|flower|rig_GRP|modules_GRP|C_leafModule_GRP",
+        "|flower|rig_GRP|modules_GRP|C_petalModule_GRP"
+      ]
+    },
+    "skel_GRP": {
+      "parent": [
+        "|flower|rig_GRP"
+      ],
+      "children": [
+        "|flower|rig_GRP|skel_GRP|C_freeze_JNT",
+        "|flower|rig_GRP|skel_GRP|C_stemSkinning_GRP"
+      ]
+    },
+    "skeletonHierarchy_GRP": {
+      "parent": [
+        "|flower|rig_GRP"
+      ],
+      "children": null
+    },
+    "C_stemSkinning_GRP": {
+      "parent": [
+        "|flower|rig_GRP|skel_GRP"
+      ],
+      "children": [
+        "|flower|rig_GRP|skel_GRP|C_stemSkinning_GRP|C_stem00Skinning_JNT"
+      ]
+    },
+    "C_stemModule_GRP": {
+      "parent": [
+        "|flower|rig_GRP|modules_GRP"
+      ],
+      "children": [
+        "|flower|rig_GRP|modules_GRP|C_stemModule_GRP|C_flowerWorld_REF"
+      ]
+    },
+    "C_leafModule_GRP": {
+      "parent": [
+        "|flower|rig_GRP|modules_GRP"
+      ],
+      "children": null
+    },
+    "C_petalModule_GRP": {
+      "parent": [
+        "|flower|rig_GRP|modules_GRP"
+      ],
+      "children": null
+    }
+  },
+  "env": [],
+  "module_cache": "C:/proyectos/auto-rig/tmp/flower_20261016/build_cache\\biped.cache",
+  "settings_matrix": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ]
+}

@@ -1,0 +1,1 @@
+Cancelled the full-groom trial after the user selected hidden groom on startup.

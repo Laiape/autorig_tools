@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "result": {
+    "tag": "after",
+    "images": [
+      "C:\\proyectos\\auto-rig\\tmp\\chihuahua_shapes_20261016\\after_overall.png",
+      "C:\\proyectos\\auto-rig\\tmp\\chihuahua_shapes_20261016\\after_front.png",
+      "C:\\proyectos\\auto-rig\\tmp\\chihuahua_shapes_20261016\\after_side.png"
+    ]
+  }
+}

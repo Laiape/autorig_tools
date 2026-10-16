@@ -1,0 +1,850 @@
+{
+  "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+  "modified": true,
+  "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\module_nurbs.py",
+  "indicators": [
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|L_armModule_GRP|L_armNurbs_GRP|L_armPv_CTL_NurbsSpace_GRP|L_armPv_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_armModule_GRP|L_armNurbs_GRP|L_armPv_CTL_NurbsSpace_GRP|L_armPv_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_armModule_GRP|L_armNurbs_GRP|L_armPv_CTL_NurbsSpace_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_armModule_GRP|L_armNurbs_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_armModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|L_armModule_GRP|L_armNurbs_GRP|L_armPv_CTL_NurbsSpace_GRP|L_armPv_CRV|curveShape4"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|L_legModule_GRP|L_legNurbs_GRP|L_legPv_CTL_NurbsSpace_GRP|L_legPv_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_legModule_GRP|L_legNurbs_GRP|L_legPv_CTL_NurbsSpace_GRP|L_legPv_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_legModule_GRP|L_legNurbs_GRP|L_legPv_CTL_NurbsSpace_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_legModule_GRP|L_legNurbs_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|L_legModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|L_legModule_GRP|L_legNurbs_GRP|L_legPv_CTL_NurbsSpace_GRP|L_legPv_CRV|curveShape2"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|R_armModule_GRP|R_armNurbs_GRP|R_armPv_CTL_NurbsSpace_GRP|R_armPv_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_armModule_GRP|R_armNurbs_GRP|R_armPv_CTL_NurbsSpace_GRP|R_armPv_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_armModule_GRP|R_armNurbs_GRP|R_armPv_CTL_NurbsSpace_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_armModule_GRP|R_armNurbs_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_armModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|R_armModule_GRP|R_armNurbs_GRP|R_armPv_CTL_NurbsSpace_GRP|R_armPv_CRV|curveShape5"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|R_legModule_GRP|R_legNurbs_GRP|R_legPv_CTL_NurbsSpace_GRP|R_legPv_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_legModule_GRP|R_legNurbs_GRP|R_legPv_CTL_NurbsSpace_GRP|R_legPv_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_legModule_GRP|R_legNurbs_GRP|R_legPv_CTL_NurbsSpace_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_legModule_GRP|R_legNurbs_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|R_legModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|R_legModule_GRP|R_legNurbs_GRP|R_legPv_CTL_NurbsSpace_GRP|R_legPv_CRV|curveShape3"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP|L_eye_CTL_NurbsSpace_GRP|L_eyeAim_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP|L_eye_CTL_NurbsSpace_GRP|L_eyeAim_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP|L_eye_CTL_NurbsSpace_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP|L_eye_CTL_NurbsSpace_GRP|L_eyeAim_CRV|curveShape6"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidBlinkRef_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidBlinkRef_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidBlinkRef_CRV|L_eyelidBlinkRef_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidBlinkRef_CRV|L_eyelidBlinkRef_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownPose_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownPose_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownPose_CRV|L_eyelidDownPose_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownPose_CRV|L_eyelidDownPose_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownRebuilded_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownRebuilded_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownRebuilded_CRV|L_eyelidDownRebuilded_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDownRebuilded_CRV|L_eyelidDownRebuilded_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDown_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDown_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidDown_CRV|L_eyelidDown_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidLowerLinear_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidLowerLinear_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidLowerLinear_CRV|L_eyelidLowerLinear_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpPose_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpPose_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpPose_CRV|L_eyelidUpPose_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpPose_CRV|L_eyelidUpPose_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpRebuilded_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpRebuilded_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpRebuilded_CRV|L_eyelidUpRebuilded_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpRebuilded_CRV|L_eyelidUpRebuilded_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUp_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUp_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUp_CRV|L_eyelidUp_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpperLinear_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpperLinear_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|L_eyelidUpperLinear_CRV|L_eyelidUpperLinear_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP1|R_eye_CTL_NurbsSpace_GRP|R_eyeAim_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP1|R_eye_CTL_NurbsSpace_GRP|R_eyeAim_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP1|R_eye_CTL_NurbsSpace_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP1",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidNurbs_GRP1|R_eye_CTL_NurbsSpace_GRP|R_eyeAim_CRV|curveShape7"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidBlinkRef_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidBlinkRef_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidBlinkRef_CRV|R_eyelidBlinkRef_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidBlinkRef_CRV|R_eyelidBlinkRef_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownPose_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownPose_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownPose_CRV|R_eyelidDownPose_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownPose_CRV|R_eyelidDownPose_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownRebuilded_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownRebuilded_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownRebuilded_CRV|R_eyelidDownRebuilded_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDownRebuilded_CRV|R_eyelidDownRebuilded_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDown_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDown_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidDown_CRV|R_eyelidDown_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidLowerLinear_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidLowerLinear_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidLowerLinear_CRV|R_eyelidLowerLinear_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpPose_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpPose_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpPose_CRV|R_eyelidUpPose_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpPose_CRV|R_eyelidUpPose_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpRebuilded_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpRebuilded_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpRebuilded_CRV|R_eyelidUpRebuilded_CRVShape",
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpRebuilded_CRV|R_eyelidUpRebuilded_CRVShapeOrig"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUp_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUp_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUp_CRV|R_eyelidUp_CRVShape"
+      ]
+    },
+    {
+      "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpperLinear_CRV",
+      "ancestors": [
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpperLinear_CRV",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward|rig_GRP|modules_GRP",
+          "visibility": false
+        },
+        {
+          "node": "|Edward|rig_GRP",
+          "visibility": true
+        },
+        {
+          "node": "|Edward",
+          "visibility": true
+        }
+      ],
+      "shapes": [
+        "|Edward|rig_GRP|modules_GRP|C_eyelidModule_GRP|C_eyelidCurves_GRP|R_eyelidUpperLinear_CRV|R_eyelidUpperLinear_CRVShape"
+      ]
+    }
+  ],
+  "curve_controls": [
+    "C_eyeMain_CTL",
+    "C_eyebrowMid_CTL",
+    "L_eyeDirect_CTL",
+    "L_eye_CTL",
+    "L_eyebrowInTan_CTL",
+    "L_eyebrowIn_CTL",
+    "L_eyebrowMain_CTL",
+    "L_eyebrowMid_CTL",
+    "L_eyebrowOutTan_CTL",
+    "L_eyebrowOut_CTL",
+    "L_eyelidDown_CTL",
+    "L_eyelidInDown_CTL",
+    "L_eyelidInUp_CTL",
+    "L_eyelidIn_CTL",
+    "L_eyelidOutDown_CTL",
+    "L_eyelidOutUp_CTL",
+    "L_eyelidOut_CTL",
+    "L_eyelidUp_CTL",
+    "R_eyeDirect_CTL",
+    "R_eye_CTL",
+    "R_eyebrowInTan_CTL",
+    "R_eyebrowIn_CTL",
+    "R_eyebrowMain_CTL",
+    "R_eyebrowMid_CTL",
+    "R_eyebrowOutTan_CTL",
+    "R_eyebrowOut_CTL",
+    "R_eyelidDown_CTL",
+    "R_eyelidInDown_CTL",
+    "R_eyelidInUp_CTL",
+    "R_eyelidIn_CTL",
+    "R_eyelidOutDown_CTL",
+    "R_eyelidOutUp_CTL",
+    "R_eyelidOut_CTL",
+    "R_eyelidUp_CTL",
+    "L_armPv_CTL",
+    "L_legPv_CTL",
+    "R_armPv_CTL",
+    "R_legPv_CTL"
+  ],
+  "modules_visibility": false
+}

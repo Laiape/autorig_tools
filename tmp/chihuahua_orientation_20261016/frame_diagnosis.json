@@ -1,0 +1,65 @@
+{
+  "success": true,
+  "result": [
+    {
+      "node": "C_jawSkinning_JNT",
+      "source": "C_jaw_JNT",
+      "error": 1.0
+    },
+    {
+      "node": "R_scapulaSkinning_JNT",
+      "source": "R_scapula_JNT",
+      "error": 2.0841472051502663e-06
+    },
+    {
+      "node": "L_scapulaSkinning_JNT",
+      "source": "L_scapula_JNT",
+      "error": 1.4120985269983066e-07
+    },
+    {
+      "node": "R_ear02_CTL",
+      "source": "R_ear02_JNT",
+      "error": 1.8583447114473017e-08
+    },
+    {
+      "node": "R_ear02Skinning_JNT",
+      "source": "R_ear02_JNT",
+      "error": 1.8583446947939564e-08
+    },
+    {
+      "node": "L_frontLegFetlockSkinning_JNT",
+      "source": "L_frontLegFetlock_JNT",
+      "error": 9.48859046889794e-14
+    },
+    {
+      "node": "R_frontLegFetlockSkinning_JNT",
+      "source": "R_frontLegFetlock_JNT",
+      "error": 3.730349362740526e-14
+    },
+    {
+      "node": "R_frontLegDigitIII02Skinning_JNT",
+      "source": "R_frontLegDigitIII02_JNT",
+      "error": 2.4868995751603507e-14
+    },
+    {
+      "node": "L_frontLegDigitIII02Skinning_JNT",
+      "source": "L_frontLegDigitIII02_JNT",
+      "error": 1.8984813721090177e-14
+    },
+    {
+      "node": "R_frontLegDigitIII01Skinning_JNT",
+      "source": "R_frontLegDigitIII01_JNT",
+      "error": 1.8044593597110747e-14
+    },
+    {
+      "node": "R_ear01_CTL",
+      "source": "R_ear01_JNT",
+      "error": 1.5987211554602254e-14
+    },
+    {
+      "node": "R_ear01Skinning_JNT",
+      "source": "R_ear01_JNT",
+      "error": 1.5987211554602254e-14
+    }
+  ]
+}

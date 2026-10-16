@@ -1,0 +1,8 @@
+{
+  "pid": 13460,
+  "port": 9878,
+  "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\mcp_listener.py",
+  "modules": {
+    "self_module": "C:/proyectos/auto-rig/autorig_tools/maya_tools"
+  }
+}

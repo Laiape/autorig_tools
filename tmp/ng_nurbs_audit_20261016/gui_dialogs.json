@@ -1,0 +1,14 @@
+[
+  {
+    "class": "QDialog",
+    "object": "",
+    "title": "Secure UserSetup Checksum verification",
+    "texts": [
+      "",
+      "Check sum for file <b>C:/proyectos/auto-rig/autorig_tools/maya_tools/scripts/userSetup.py</b> has not been found.<br><br>Do you want to save checksum for this file?",
+      "<html><a href='SecurityPreferences' style='text-decoration:none;'>Learn more about security preferences</a></html>",
+      "Yes",
+      "No"
+    ]
+  }
+]

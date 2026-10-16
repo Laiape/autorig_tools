@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "result": {
+    "scene": "",
+    "modified": true,
+    "selection": [],
+    "nodes": {},
+    "modules": {
+      "quadruped.autorig.leg_module_self": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\quadruped\\autorig\\leg_module_self.py",
+      "maya_tools.scripts.utils.guide_frames": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\guide_frames.py",
+      "maya_tools.scripts.quadruped.autorig.leg_module_self": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\quadruped\\autorig\\leg_module_self.py"
+    }
+  }
+}

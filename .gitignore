@@ -1,3 +1,6 @@
+# The active runtime checkout is an independent repository with its own commits.
+/autorig_tools/
+
 # Python
 *.pyc
 *.pyo

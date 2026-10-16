@@ -11,7 +11,7 @@ import traceback
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / 'autorig_tools'
-FOLDER = ROOT / 'tmp/chihuahua_open_20261016_v001'
+FOLDER = Path(os.environ.get('AUTORIG_CHIHUAHUA_TRIAL_FOLDER', str(ROOT / 'tmp/chihuahua_open_20261016_v001')))
 FOLDER.mkdir(parents=True, exist_ok=True)
 
 
@@ -20,13 +20,31 @@ def run():
     from maya import cmds, mel
     from maya.api import OpenMaya as om
     from maya_tools.scripts.utils import model_cache
+    importing = os.environ.get('AUTORIG_CHIHUAHUA_TRIAL_OPERATION') == 'import'
     source = RUNTIME/'maya_tools/assets/chihuahua/models/chihuahua_v001.ma'
-    report = {'pid': os.getpid(), 'runtime': model_cache.__file__, 'source': str(source),
+    baseline = Path(os.environ.get('AUTORIG_CHIHUAHUA_TRIAL_BASELINE', str(source)))
+    candidate = os.environ.get('AUTORIG_CHIHUAHUA_TRIAL_CANDIDATE')
+    report = {'pid': os.getpid(), 'runtime': model_cache.__file__, 'source_path': str(source),
+              'operation': 'import' if importing else 'open',
+              'baseline': str(baseline), 'candidate': candidate,
               'source_sha256': model_cache.digest(source), 'api': cmds.about(apiVersion=True),
               'samples': [], 'scope': 'Interactive Maya, open command and explicit redraw measured separately; warm OS/plugin state.'}
 
     def commit():
         (FOLDER/'progress.json').write_text(json.dumps(report, indent=2))
+
+    def prepare():
+        cmds.file(new=True, force=True)
+        if importing:
+            cmds.createNode('transform', name='C_guides_GRP')
+            cmds.setAttr('C_guides_GRP.translateX', 12)
+
+    def load_source():
+        if importing:
+            cmds.file(str(baseline), i=True, type='mayaBinary' if baseline.suffix.lower() == '.mb' else 'mayaAscii', ignoreVersion=True,
+                      mergeNamespacesOnClash=False, namespace=':')
+        else:
+            cmds.file(str(baseline), open=True, force=True)
 
     def signature():
         meshes = {}
@@ -59,7 +77,8 @@ def run():
     cmds.evaluator(name='cache', enable=False)
     # Warm renderer/plugin loading before the comparable samples.
     report['phase'] = 'warmup'; commit()
-    started = time.perf_counter(); cmds.file(str(source), open=True, force=True)
+    prepare()
+    started = time.perf_counter(); load_source()
     report['cold_source_open_seconds'] = time.perf_counter()-started
     mel.eval('setNamedPanelLayout "Single Perspective View";')
     cmds.modelEditor('modelPanel4', edit=True, displayAppearance='smoothShaded', rendererName='vp2Renderer')
@@ -68,14 +87,16 @@ def run():
     signatures = {}
     for index, kind in enumerate(('source', 'cache', 'cache', 'source', 'source', 'cache')):
         report['phase'] = '%s_%s' % (index, kind); commit()
-        cmds.file(new=True, force=True)
+        prepare()
         start = time.perf_counter()
         if kind == 'source':
-            cmds.file(str(source), open=True, force=True)
+            load_source()
             info = {'cache_hit': False}
         else:
-            info = model_cache.open_model(source)
-            assert info['cache_hit'], 'Expected the pre-existing validated cache'
+            chosen_source = candidate or source
+            info = (model_cache.import_model(chosen_source, ignoreVersion=True, mergeNamespacesOnClash=False, namespace=':')
+                    if importing else model_cache.open_model(chosen_source))
+            assert info['cache_hit'] or candidate, 'Expected the pre-existing validated cache'
         opened = time.perf_counter()
         cmds.refresh(force=True)
         drawn = time.perf_counter()
@@ -83,12 +104,24 @@ def run():
                                   'redraw_seconds': drawn-opened, 'total_seconds': drawn-start,
                                   'scene': cmds.file(q=True, sceneName=True), **info})
         commit()
+        if importing:
+            assert cmds.getAttr('C_guides_GRP.translateX') == 12, 'Guide scene replaced during import'
         if kind not in signatures:
             signatures[kind] = signature()
     report['quality'] = {'exact_match': signatures['source'] == signatures['cache'],
                          'mesh_count': len(signatures['source']['meshes']),
                          'xgen_node_count': len(signatures['source']['xgen_nodes']),
                          'checked': 'All mesh positions/topology/face-vertex normals/UVs/material memberships, transform matrices, XGen node identities/connections, texture paths, frame and units.'}
+    if candidate:
+        assert not cmds.getAttr('xgen.visibility'), 'Expected the authorized hidden groom startup'
+        cmds.setAttr('xgen.visibility', True)
+        cmds.refresh(force=True)
+        report['quality']['groom_reenabled_matches_source'] = signature() == signatures['source']
+        report['quality']['intentional_change'] = 'Only xgen.visibility starts OFF in the candidate.'
+        assert report['quality']['groom_reenabled_matches_source']
+        cmds.playblast(format='image', compression='png', completeFilename=str(FOLDER/'groom_reenabled.png'),
+                       forceOverwrite=True, viewer=False, showOrnaments=False, widthHeight=(960, 720),
+                       frame=cmds.currentTime(q=True), percent=100, offScreen=True)
     (FOLDER/'signatures.json').write_text(json.dumps(signatures, sort_keys=True))
     for kind in ('source', 'cache'):
         rows = [r for r in report['samples'] if r['kind'] == kind]

@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "result": {
+    "passed": true,
+    "runs": 12,
+    "samples": 4812,
+    "max_angle_degrees": 2.2750393783186955,
+    "cycles": []
+  }
+}

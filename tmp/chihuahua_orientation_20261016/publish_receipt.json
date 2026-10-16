@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "result": {
+    "passed": true,
+    "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\scenes\\chihuahua_oriented_v001.mb",
+    "bytes": 276446476,
+    "compared_nodes": 1197,
+    "native_reopen_max_matrix_error": 0.0,
+    "persisted_paw_sweep": {
+      "passed": true,
+      "runs": 12,
+      "samples": 4812,
+      "max_angle_degrees": 2.2750393783186955,
+      "cycles": []
+    }
+  }
+}

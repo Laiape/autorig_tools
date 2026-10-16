@@ -1,0 +1,90 @@
+{
+    "basic_structure": {
+        "character_name": "chihuahua",
+        "skel_GRP": "skel_GRP",
+        "modules_GRP": "modules_GRP",
+        "masterwalk_ctl": "C_masterwalk_CTL",
+        "character_ctl": "C_character_CTL",
+        "preferences_ctl": "C_settings_CTL",
+        "rig_GRP": "rig_GRP"
+    },
+    "rig_settings": {
+        "mGear_integration": 0
+    },
+    "spine_module": {
+        "local_hip_ctl": "C_pelvis_CTL",
+        "body_ctl": "C_body_CTL",
+        "local_chest_ctl": "C_localChest_CTL"
+    },
+    "frontLeg_module": {
+        "L_legIk": "L_frontLegFetlockIk_CTL",
+        "L_rootIk": "L_frontLegShoulderIk_CTL",
+        "L_hipFk": "L_frontLegShoulderFk_CTL",
+        "L_scapula_master_ctl": "L_scapulaMaster_CTL",
+        "R_legIk": "R_frontLegFetlockIk_CTL",
+        "R_rootIk": "R_frontLegShoulderIk_CTL",
+        "R_hipFk": "R_frontLegShoulderFk_CTL",
+        "R_scapula_master_ctl": "R_scapulaMaster_CTL"
+    },
+    "backLeg_module": {
+        "L_legIk": "L_backLegFetlockIk_CTL",
+        "L_rootIk": "L_backLegHipIk_CTL",
+        "L_hipFk": "L_backLegHipFk_CTL",
+        "R_legIk": "R_backLegFetlockIk_CTL",
+        "R_rootIk": "R_backLegHipIk_CTL",
+        "R_hipFk": "R_backLegHipFk_CTL"
+    },
+    "tail_module": {
+        "tail_ctl": "C_tailFk00_CTL"
+    },
+    "neck_module": {
+        "head_ctl": "C_neck01_CTL",
+        "neck_ctl": "C_neck00_CTL",
+        "head_guide_matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9895911697718904,
+            0.14390731986074076,
+            0.0,
+            0.0,
+            -0.14390731986074076,
+            0.9895911697718904,
+            0.0,
+            -6.879544173200297e-16,
+            21.995075045318714,
+            16.70880380159482,
+            1.0
+        ],
+        "face_ctl": "C_face_CTL"
+    },
+    "jaw_module": {
+        "jaw_ctl": "C_jaw_CTL",
+        "upper_jaw_ctl": "C_upperJaw_CTL",
+        "main_mouth_ctl": "C_mainMouth_CTL",
+        "local_jaw_mmx": "C_jawLocal_MMT",
+        "local_upper_jaw_mmx": "C_upperJawLocal_MMT"
+    },
+    "eyelid_module": {
+        "L_iris_setup_grp": "L_irisSetup_GRP",
+        "L_iris_base_jnt": "L_irisBaseSkinning_JNT",
+        "L_iris_jnts": [
+            "L_iris00Skinning_JNT",
+            "L_iris01Skinning_JNT",
+            "L_iris02Skinning_JNT",
+            "L_iris03Skinning_JNT",
+            "L_iris04Skinning_JNT"
+        ],
+        "R_iris_setup_grp": "R_irisSetup_GRP",
+        "R_iris_base_jnt": "R_irisBaseSkinning_JNT",
+        "R_iris_jnts": [
+            "R_iris00Skinning_JNT",
+            "R_iris01Skinning_JNT",
+            "R_iris02Skinning_JNT",
+            "R_iris03Skinning_JNT",
+            "R_iris04Skinning_JNT"
+        ]
+    }
+}

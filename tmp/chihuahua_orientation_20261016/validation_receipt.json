@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\proyectos\\auto-rig\\tmp\\chihuahua_orientation_20261016\\validate_candidate.py\", line 43, in <module>\n    frames[node]=compare(cmds.xform(node,q=True,ws=True,m=True),guides[source])\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\tmp\\chihuahua_orientation_20261016\\validate_candidate.py\", line 25, in compare\n    if error>tolerance:raise AssertionError('Matrix/position error %s exceeds %s'%(error,tolerance))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Matrix/position error 1.0 exceeds 0.0001\n"
+}

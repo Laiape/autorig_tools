@@ -1,0 +1,1 @@
+python("exec(compile(open('C:/proyectos/auto-rig/tmp/chihuahua_shapes_20261016/bootstrap.py').read(), 'bootstrap.py', 'exec'))");

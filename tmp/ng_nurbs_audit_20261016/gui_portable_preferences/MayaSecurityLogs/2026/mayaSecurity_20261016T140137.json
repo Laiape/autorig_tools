@@ -1,0 +1,10 @@
+{
+    "desc": "Initializing SafeModeController..."
+}{
+    "file": "C:/proyectos/auto-rig/tmp/ng_nurbs_audit_20261016/gui_portable_preferences/ngNurbsBridge/scripts/ng_nurbs_bridge",
+    "function": "brush_plugin.py",
+    "reason": "Untrusted Plugin Loading - Security Warning",
+    "choice": "accept",
+    "action": "Allow",
+    "states": "loadingPlugin"
+}

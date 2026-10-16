@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\proyectos\\auto-rig\\tmp\\ng_nurbs_audit_20261016\\run_gui_tests.py\", line 4, in <module>\n    result=tests.run('C:/proyectos/auto-rig/tmp/ng_nurbs_audit_20261016/gui_images')\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\tests\\test_ng_nurbs_bridge_ui.py\", line 136, in run\n    assert not widget.findChild(QtWidgets.QTabWidget, 'ngNurbsStandaloneTabs')\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+}

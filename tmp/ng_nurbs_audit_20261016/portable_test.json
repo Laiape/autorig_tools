@@ -1,0 +1,23 @@
+{
+  "package": "C:\\proyectos\\auto-rig\\tmp\\ng_nurbs_audit_20261016\\portable_maya\\ngNurbsBridge\\scripts\\ng_nurbs_bridge\\__init__.py",
+  "no_autorig_imports": true,
+  "source_path_removed": true,
+  "repeat_install": true,
+  "before_values": {
+    "0": 0.5,
+    "1": 0.5
+  },
+  "after_values": {
+    "0": 0.25,
+    "1": 0.75
+  },
+  "connected_leaf": 0.25,
+  "baked_values": {
+    "0": 0.25,
+    "1": 0.75
+  },
+  "baked_leaf": 0.25,
+  "independent_authoring": true,
+  "startup_removed": true,
+  "runtime_retained_for_undo": true
+}

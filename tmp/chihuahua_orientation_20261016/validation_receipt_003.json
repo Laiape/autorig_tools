@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\proyectos\\auto-rig\\tmp\\chihuahua_orientation_20261016\\validate_candidate.py\", line 78, in <module>\n    if pose and displacement<1e-4:raise AssertionError('No actual joint motion: '+label)\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: No actual joint motion: nonuniform_spine\n"
+}

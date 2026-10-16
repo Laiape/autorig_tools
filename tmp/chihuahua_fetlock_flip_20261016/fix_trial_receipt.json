@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": [
+    "L_frontLegFetlockAim_AMX",
+    "L_frontLegPasternAim_AMX",
+    "L_backLegFetlockAim_AMX",
+    "L_backLegPasternAim_AMX",
+    "R_frontLegFetlockAim_AMX",
+    "R_frontLegPasternAim_AMX",
+    "R_backLegFetlockAim_AMX",
+    "R_backLegPasternAim_AMX"
+  ]
+}

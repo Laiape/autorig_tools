@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "result": {
+    "maya_version": "2026",
+    "api_version": 20260303,
+    "scene": "",
+    "modified": true,
+    "selection": [],
+    "loaded_modules": {
+      "ngSkinTools2": "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\__init__.py",
+      "maya_tools": null,
+      "maya_tools.scripts.ui.skinning_tool_adapters": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\ui\\skinning_tool_adapters.py",
+      "maya_tools.scripts.ui.skinning_manager_UI": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\ui\\skinning_manager_UI.py",
+      "ngSkinTools2.api.plugin": "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\api\\plugin.py",
+      "ngSkinTools2.ui.mainwindow": "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\ui\\mainwindow.py"
+    },
+    "self_module": "C:/proyectos/auto-rig/autorig_tools/maya_tools",
+    "ng_loaded": true,
+    "ng_plugin": "C:/ProgramData/Autodesk/ApplicationPlugins/ngskintools2/Contents/plug-ins/2026/ngSkinTools2.mll",
+    "ng_version": "2.4.0",
+    "ng_commands": [
+      "ngst2Layers",
+      "ngst2PaintSettingsCmd",
+      "ngst2Hotkey",
+      "ngst2BrushHandlerCmd",
+      "ngst2Tools",
+      "ngst2PaintContextToolCommand"
+    ],
+    "ng_nodes": [
+      "ngst2MeshDisplay",
+      "ngst2SkinLayerData"
+    ]
+  }
+}

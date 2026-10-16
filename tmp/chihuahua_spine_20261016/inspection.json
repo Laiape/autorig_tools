@@ -1,0 +1,23 @@
+{
+  "success": true,
+  "result": {
+    "scene": "",
+    "modified": true,
+    "modules": {
+      "utils.curve_tool": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\curve_tool.py",
+      "utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+      "maya_tools.scripts.biped.autorig.spine_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\spine_module.py",
+      "maya_tools.scripts.quadruped.autorig.spine_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\quadruped\\autorig\\spine_module.py",
+      "maya_tools.scripts.utils.curve_tool": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\curve_tool.py",
+      "maya_tools.scripts.utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py"
+    },
+    "spine": [],
+    "guide_settings": {
+      "C_guides_GRP": {
+        "SPINE_SEP": 0,
+        "spine_skinning_jnts": 8,
+        "spine_controllers": 5
+      }
+    }
+  }
+}

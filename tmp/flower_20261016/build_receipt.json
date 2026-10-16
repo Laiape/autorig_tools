@@ -1,0 +1,2 @@
+{"result": {"asset": "flower", "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\flower\\validation\\20261016T133016361116Z.buildtiming.json", "optimizations": {"enabled": true, "static_point_curves": 0, "shared_math_nodes": 0, "new_skin_bindings": []}, "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\flower\\scenes\\flower_rig_v001.mb", "controls": 104, "skins": ["C_flowerCore_SKC", "C_leaves_SKC", "C_petalsA_SKC", "C_petalsB_SKC", "C_stem_SKC"]}}
+

@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "result": {
+    "tag": "corrected",
+    "images": [
+      "C:\\proyectos\\auto-rig\\tmp\\chihuahua_shapes_20261016\\corrected_overall.png",
+      "C:\\proyectos\\auto-rig\\tmp\\chihuahua_shapes_20261016\\corrected_front.png",
+      "C:\\proyectos\\auto-rig\\tmp\\chihuahua_shapes_20261016\\corrected_side.png"
+    ]
+  }
+}

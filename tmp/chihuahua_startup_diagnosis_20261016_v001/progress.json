@@ -1,0 +1,100 @@
+{
+  "samples": [
+    {
+      "mode": "full",
+      "open_seconds": 3.101580799993826,
+      "redraw_seconds": 21.0262103999994,
+      "geometry_matches": true
+    },
+    {
+      "mode": "no_scripts",
+      "open_seconds": 3.198829500004649,
+      "redraw_seconds": 19.889269799998146,
+      "geometry_matches": true
+    },
+    {
+      "mode": "no_preview",
+      "open_seconds": 2.529655999998795,
+      "redraw_seconds": 17.048214799986454,
+      "geometry_matches": true
+    },
+    {
+      "mode": "no_preview",
+      "open_seconds": 2.4762286999903154,
+      "redraw_seconds": 16.71388980001211,
+      "geometry_matches": true
+    },
+    {
+      "mode": "no_scripts",
+      "open_seconds": 2.7494618000055198,
+      "redraw_seconds": 17.46393650000391,
+      "geometry_matches": true
+    }
+  ],
+  "binary": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\cache\\models\\ed4ffd44901cbcd64948d1019d0e3f5f9398d33f7873d5bf15c4d15afa7d25f9.mb",
+  "pid": 44052,
+  "phase": "5_full_redraw",
+  "meshes": {
+    "|chihuahua|Eyes|corneas|Cornea_L|Cornea_LShape": {
+      "vertices": 282,
+      "smooth": 0
+    },
+    "|chihuahua|Eyes|corneas|Cornea_R|Cornea_RShape": {
+      "vertices": 282,
+      "smooth": 0
+    },
+    "|chihuahua|Eyes|eyes|Eye_L|Eye_LShape": {
+      "vertices": 330,
+      "smooth": 0
+    },
+    "|chihuahua|Eyes|eyes|Eye_R|Eye_RShape": {
+      "vertices": 330,
+      "smooth": 0
+    },
+    "|xgen|SCALP_BODY|SCALP_BODYShape": {
+      "vertices": 18345,
+      "smooth": 2
+    },
+    "|xgen|SCALP_face|SCALP_faceShape": {
+      "vertices": 2908,
+      "smooth": 2
+    },
+    "|chihuahua|body_geo|body_geo_Shape": {
+      "vertices": 23106,
+      "smooth": 0
+    },
+    "|chihuahua|collar_low|collar_lowShape": {
+      "vertices": 15778,
+      "smooth": 0
+    },
+    "|chihuahua|mouth|encia_inf|encia_infShape": {
+      "vertices": 2758,
+      "smooth": 0
+    },
+    "|chihuahua|mouth|encia_sup|encia_supShape": {
+      "vertices": 2492,
+      "smooth": 0
+    },
+    "|chihuahua|nails|nailsShape": {
+      "vertices": 2340,
+      "smooth": 0
+    },
+    "|chihuahua|Eyes|corneas|pasted__pasted__polySurfaceShape1": {
+      "vertices": 330,
+      "smooth": 2
+    },
+    "|xgen|scalp_princ|scalp_princShape": {
+      "vertices": 18345,
+      "smooth": 2
+    },
+    "|chihuahua|mouth|tongue|tongueShape": {
+      "vertices": 314,
+      "smooth": 0
+    }
+  },
+  "groom_visibility": false,
+  "expression_connections": [
+    "xgmRefreshPreview.time",
+    "time1.outTime"
+  ]
+}

@@ -1,0 +1,4632 @@
+{
+  "success": true,
+  "result": {
+    "scene": "",
+    "modified": true,
+    "asset": "chihuahua",
+    "modules": {
+      "quadruped.autorig.leg_module_self": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\quadruped\\autorig\\leg_module_self.py",
+      "utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+      "utils.guides_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\guides_manager.py",
+      "maya_tools.scripts.biped.autorig.spine_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\spine_module.py",
+      "maya_tools.scripts.quadruped.autorig.leg_module_self": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\quadruped\\autorig\\leg_module_self.py",
+      "maya_tools.scripts.quadruped.autorig.spine_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\quadruped\\autorig\\spine_module.py",
+      "maya_tools.scripts.utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+      "maya_tools.scripts.utils.guides_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\guides_manager.py"
+    },
+    "selection": [],
+    "guides": {
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegTip_JNT": {
+        "matrix": [
+          -0.14923825562628842,
+          -0.22732698621216704,
+          0.9623151169951121,
+          0.0,
+          -0.1530900467897443,
+          -0.9561669273708507,
+          -0.24961619453893705,
+          0.0,
+          0.9768783857940232,
+          -0.184573151736323,
+          0.10789518537258144,
+          0.0,
+          2.1440375347007548,
+          -0.20196849120496402,
+          16.17611566406058,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          1.4216744638972716,
+          1.6653345369377348e-15,
+          3.400058012914542e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT"
+        ],
+        "children": [],
+        "uuid": "A6019C3D-48D6-6A82-B1E2-26AC9A6D8FD1"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT|L_frontLegDigitV02_JNT|L_frontLegDigitV03_JNT": {
+        "matrix": [
+          0.6811383479852722,
+          -0.07443858478526164,
+          0.728360795210081,
+          0.0,
+          0.10863872982501421,
+          0.9940812976723824,
+          4.440892098500626e-16,
+          0.0,
+          -0.7240498444761256,
+          0.07912819164596036,
+          0.6851938061606648,
+          0.0,
+          3.6241449761995943,
+          0.06887048045633619,
+          15.556541344824723,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.3276109470652958,
+          9.439697839692575e-16,
+          1.4427987075528802e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT|L_frontLegDigitV02_JNT"
+        ],
+        "children": [],
+        "uuid": "50716220-40DA-A98F-49E6-C9B3170B703D"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT|L_frontLegDigitV02_JNT": {
+        "matrix": [
+          0.6811383479852722,
+          -0.07443858478526164,
+          0.728360795210081,
+          0.0,
+          0.10863872982501421,
+          0.9940812976723824,
+          4.440892098500626e-16,
+          0.0,
+          -0.7240498444761256,
+          0.07912819164596036,
+          0.6851938061606648,
+          0.0,
+          3.4009965969336493,
+          0.09325737571603503,
+          15.317922374900714,
+          1.0
+        ],
+        "jointOrient": [
+          23.329416268407346,
+          -17.488659702193704,
+          28.261350804218083
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -7.535509989156778e-16,
+          -5.9738383453107666e-15,
+          5.18211238143374e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT|L_frontLegDigitV02_JNT|L_frontLegDigitV03_JNT"
+        ],
+        "uuid": "E6579BF9-4389-1373-1E15-969DB9465DE9"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT": {
+        "matrix": [
+          0.5538061666272602,
+          -0.6033421073796733,
+          0.5738266561151321,
+          0.0,
+          0.7365111826782536,
+          0.6764252472919202,
+          0.0004032566739524124,
+          0.0,
+          -0.3883941394968512,
+          0.42240642311489507,
+          0.818976682278428,
+          0.0,
+          3.400996596933656,
+          0.09325737571603643,
+          15.31792237490071,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.2840643642279605,
+          -3.6988553545506506e-16,
+          2.86808736639756e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT|L_frontLegDigitV02_JNT"
+        ],
+        "uuid": "E25493A3-48DC-753A-F19D-DEBFA147AEC5"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT": {
+        "matrix": [
+          0.5538061666272602,
+          -0.6033421073796733,
+          0.5738266561151321,
+          0.0,
+          0.7365111826782536,
+          0.6764252472919202,
+          0.0004032566739524124,
+          0.0,
+          -0.3883941394968512,
+          0.42240642311489507,
+          0.818976682278428,
+          0.0,
+          3.24368000030516,
+          0.26464536786080134,
+          15.15491867065431,
+          1.0
+        ],
+        "jointOrient": [
+          121.8209220568083,
+          -45.583827502158435,
+          29.900284985058313
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.1687785140268204,
+          -0.35959774903425756,
+          0.877910327233082
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT|L_frontLegDigitV01_JNT"
+        ],
+        "uuid": "6E15536A-471D-8C76-F939-B683A4F9C488"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT|L_frontLegDigitIV01_JNT|L_frontLegDigitIV02_JNT": {
+        "matrix": [
+          0.3314473366072591,
+          -0.14035403195698437,
+          0.9329755670806027,
+          0.0,
+          -0.0099458659431374,
+          0.9882981394797488,
+          0.15220994465378784,
+          0.0,
+          -0.9434212965619314,
+          -0.05972883067904283,
+          0.3261728437180494,
+          0.0,
+          3.2258044481044834,
+          0.08520347070749074,
+          16.21575882928908,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.42470006385918435,
+          2.9804820987104847e-16,
+          1.1477567282374884e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT|L_frontLegDigitIV01_JNT"
+        ],
+        "children": [],
+        "uuid": "A6FB4FD5-4584-2463-9C49-25B56617B494"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT|L_frontLegDigitIV01_JNT": {
+        "matrix": [
+          0.3314473366072591,
+          -0.14035403195698437,
+          0.9329755670806027,
+          0.0,
+          -0.0099458659431374,
+          0.9882981394797488,
+          0.15220994465378784,
+          0.0,
+          -0.9434212965619314,
+          -0.05972883067904283,
+          0.3261728437180494,
+          0.0,
+          3.085038743081425,
+          0.14481183704251577,
+          15.819524046370889,
+          1.0
+        ],
+        "jointOrient": [
+          44.02739687086578,
+          -6.755411507244766,
+          6.938444390215046
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.45606267081047136,
+          -6.205527316652613e-16,
+          7.402764400374269e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT|L_frontLegDigitIV01_JNT|L_frontLegDigitIV02_JNT"
+        ],
+        "uuid": "651E95CE-497A-1553-55F0-E2B78CCC6BCB"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT": {
+        "matrix": [
+          0.3284067539649831,
+          -0.3044062285168785,
+          0.8941397273303056,
+          0.0,
+          0.6932784934137437,
+          0.7206097157644024,
+          -0.00930419883268075,
+          0.0,
+          -0.6414935186891239,
+          0.6229434048018151,
+          0.4476913891217579,
+          0.0,
+          2.935264681755958,
+          0.283640154631266,
+          15.411740294246883,
+          1.0
+        ],
+        "jointOrient": [
+          141.92074213714986,
+          -28.25991178822518,
+          1.1446536631265323
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.45763118129961944,
+          -0.3946514567457558,
+          0.6008299577190126
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT|L_frontLegDigitIV01_JNT"
+        ],
+        "uuid": "0FEB6970-4042-0FDC-BEE5-7C871BCE0694"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT|L_frontLegDigitIII01_JNT|L_frontLegDigitIII02_JNT": {
+        "matrix": [
+          0.04140750700091497,
+          -0.054242250776650854,
+          0.9976688812399896,
+          0.0,
+          0.027175094097389885,
+          0.9982170162019091,
+          0.053144170195383575,
+          0.0,
+          -0.9987727131959339,
+          0.024911178126311107,
+          0.042807716355722836,
+          0.0,
+          2.6079749868947397,
+          0.13646826106723345,
+          16.26975375096923,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.36781155706681545,
+          -9.494067098667529e-16,
+          1.454182157597994e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT|L_frontLegDigitIII01_JNT"
+        ],
+        "children": [],
+        "uuid": "92D2E45C-4FE6-EB89-9354-06B0C0D1A315"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT|L_frontLegDigitIII01_JNT": {
+        "matrix": [
+          0.04140750700091497,
+          -0.054242250776650854,
+          0.9976688812399896,
+          0.0,
+          0.027175094097389885,
+          0.9982170162019091,
+          0.053144170195383575,
+          0.0,
+          -0.9987727131959339,
+          0.024911178126311107,
+          0.042807716355722836,
+          0.0,
+          2.5927448272704785,
+          0.15641918778420302,
+          15.902799606323242,
+          1.0
+        ],
+        "jointOrient": [
+          24.79480662827758,
+          -6.7032660091627125,
+          14.180741164225768
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.46588461429460176,
+          -3.917570943947946e-16,
+          7.383226570364287e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT|L_frontLegDigitIII01_JNT|L_frontLegDigitIII02_JNT"
+        ],
+        "uuid": "6E9F065B-4C67-F33A-2277-EC960889782A"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT": {
+        "matrix": [
+          0.03253786713004572,
+          -0.3216069761718162,
+          0.94631402825925,
+          0.0,
+          0.46568678274757797,
+          0.8426392280393828,
+          0.2703607807049746,
+          0.0,
+          -0.8843512354131913,
+          0.43188897212919664,
+          0.17718580128313993,
+          0.0,
+          2.577585935592629,
+          0.3062509298324628,
+          15.461926460266112,
+          1.0
+        ],
+        "jointOrient": [
+          160.43513542160767,
+          -11.142411111668263,
+          3.875430292515032
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.5541654002935538,
+          -0.37404135598973526,
+          0.25266282517784694
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT|L_frontLegDigitIII01_JNT"
+        ],
+        "uuid": "C4F4E9FE-44F8-E65C-9730-C3AC14C9393F"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT|L_frontLegDigitII01_JNT|L_frontLegDigitII02_JNT": {
+        "matrix": [
+          -0.13024922474503067,
+          0.019305585074243632,
+          0.991293313726195,
+          0.0,
+          -0.06943254323438161,
+          -0.9975334312711402,
+          0.010304146564913172,
+          0.0,
+          0.9890471482155561,
+          -0.06748590876150815,
+          0.13126839195064863,
+          0.0,
+          2.0597039506766537,
+          0.07515073332248005,
+          15.841955315198286,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.12113288312561113,
+          1.87625411134037e-17,
+          1.0206295504062445e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT|L_frontLegDigitII01_JNT"
+        ],
+        "children": [],
+        "uuid": "1C312344-416B-6C92-C3CE-FB9C4ABBDBAE"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT|L_frontLegDigitII01_JNT": {
+        "matrix": [
+          -0.13024922474503067,
+          0.019305585074243632,
+          0.991293313726195,
+          0.0,
+          -0.06943254323438161,
+          -0.9975334312711402,
+          0.010304146564913172,
+          0.0,
+          0.9890471482155561,
+          -0.06748590876150815,
+          0.13126839195064863,
+          0.0,
+          2.075481414794895,
+          0.07281219214201018,
+          15.72187709808349,
+          1.0
+        ],
+        "jointOrient": [
+          -14.674085053030808,
+          -10.17235922354739,
+          -33.99728764193946
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.45019781671891745,
+          -8.880711973634378e-16,
+          -6.488581426113564e-17
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT|L_frontLegDigitII01_JNT|L_frontLegDigitII02_JNT"
+        ],
+        "uuid": "2EB0E182-43DA-D6CD-991D-B0BB2CDF776A"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT": {
+        "matrix": [
+          -0.14642000983128525,
+          -0.5608271683642674,
+          0.8148828553513225,
+          0.0,
+          0.31993825436640416,
+          -0.8063349457635911,
+          -0.49745700179352664,
+          0.0,
+          0.9360559246722304,
+          0.18787453916096347,
+          0.29749363593373096,
+          0.0,
+          2.1413993835449023,
+          0.3252953588962554,
+          15.355018615722647,
+          1.0
+        ],
+        "jointOrient": [
+          24.090162192519916,
+          -2.7742587641512184,
+          20.834434788387885
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.5120527728560597,
+          -0.29878926022785046,
+          -0.18848832169172042
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT|L_frontLegDigitII01_JNT"
+        ],
+        "uuid": "246E1B69-4A42-1C69-5C1E-3EB922D90F0C"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT": {
+        "matrix": [
+          -0.14923825562628842,
+          -0.22732698621216704,
+          0.9623151169951121,
+          0.0,
+          -0.1530900467897443,
+          -0.9561669273708507,
+          -0.24961619453893705,
+          0.0,
+          0.9768783857940232,
+          -0.184573151736323,
+          0.10789518537258144,
+          0.0,
+          2.3562057517612223,
+          0.12121648004760266,
+          14.808016836006312,
+          1.0
+        ],
+        "jointOrient": [
+          -86.23757486766551,
+          -60.36327114973398,
+          -3.2713667338194377
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.7489923873069058,
+          -2.0788714841425077e-16,
+          9.327964690097715e-17
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegTip_JNT",
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitV00_JNT",
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIV00_JNT",
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitIII00_JNT",
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT|L_frontLegDigitII00_JNT"
+        ],
+        "uuid": "12B43101-47A0-E589-E85D-CB8B1A8BDC58"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT": {
+        "matrix": [
+          -0.20681055874010218,
+          -0.9437470638703815,
+          0.25801331793076304,
+          0.0,
+          0.9781227970085542,
+          -0.1933786561412672,
+          0.0766843486062177,
+          0.0,
+          -0.022476360153930335,
+          0.26822784118176785,
+          0.963093265706494,
+          0.0,
+          2.5111052858722465,
+          0.8280758464297626,
+          14.614766825052374,
+          1.0
+        ],
+        "jointOrient": [
+          89.99999999999989,
+          5.616183335242054,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          1.295319079601617,
+          -1.0338037921665651e-15,
+          -1.5756845138560321e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT|L_frontLegPastern_JNT"
+        ],
+        "uuid": "09C96262-45B8-12E3-BBFB-9FB40E16F92E"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT": {
+        "matrix": [
+          -0.11009481651717529,
+          -0.9581416959567225,
+          0.26427943893769945,
+          0.0,
+          0.022476360153932298,
+          -0.26822784118176823,
+          -0.9630932657064939,
+          0.0,
+          0.9936669183435061,
+          -0.10009153652604054,
+          0.051066032796527494,
+          0.0,
+          2.6537132022721845,
+          2.069175066164356,
+          14.272440625449962,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          0.0,
+          -21.490125046386368
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          5.559348584081201,
+          1.57130200323286e-15,
+          7.232949374956257e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT|L_frontLegFetlock_JNT"
+        ],
+        "uuid": "0286BA42-47AB-D3E0-B88C-D9A6040AB6CB"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT": {
+        "matrix": [
+          -0.09420709504628211,
+          -0.989795194821497,
+          -0.10691349564585187,
+          0.0,
+          0.06124604993516347,
+          0.10142562114244655,
+          -0.9929560739243246,
+          0.0,
+          0.9936669183435061,
+          -0.10009153652604054,
+          0.051066032796527494,
+          0.0,
+          3.1774432827281354,
+          7.571791581025622,
+          14.866810016087902,
+          1.0
+        ],
+        "jointOrient": [
+          -136.50293697723893,
+          -5.931488238264077,
+          6.215469800099088
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          2.5989441787384133,
+          2.6454533008646308e-17,
+          -4.579669976578771e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT|L_frontLegCarpus_JNT"
+        ],
+        "uuid": "32B37B54-4CB5-1327-2B72-2B89D9FAF8EE"
+      },
+      "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT": {
+        "matrix": [
+          -0.08401091529266408,
+          -0.9635710813766779,
+          -0.2539152166497086,
+          0.0,
+          0.6341618216671345,
+          -0.24825285173928643,
+          0.7322631395496658,
+          0.0,
+          -0.7686227618614415,
+          -0.09950523975093728,
+          0.6319159415702365,
+          0.0,
+          3.3957829619784903,
+          10.076059033770218,
+          15.526721490292765,
+          1.0
+        ],
+        "jointOrient": [
+          -12.163488923018027,
+          -15.011836704181393,
+          -50.23467461380095
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          3.573003267786092,
+          -1.3921155894713877e-16,
+          -2.7755575615628914e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_scapula_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT|L_frontLegElbow_JNT"
+        ],
+        "uuid": "F74E671D-413F-6389-F015-C9B7E5CD7484"
+      },
+      "|C_guides_GRP|L_scapula_JNT": {
+        "matrix": [
+          0.4467531014107421,
+          -0.7905157548343578,
+          0.4189230331917174,
+          0.0,
+          0.17911318423909525,
+          0.5377997867260146,
+          0.8238263510165145,
+          0.0,
+          -0.8765444276313752,
+          -0.2930123389144539,
+          0.38185551669743645,
+          0.0,
+          1.7995326707443375,
+          12.900574409029767,
+          14.029908123747898,
+          1.0
+        ],
+        "jointOrient": [
+          65.13158998163198,
+          -24.766612731013286,
+          -60.52741523749947
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          1.7995326707443375,
+          12.900574409029767,
+          14.029908123747898
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|L_scapula_JNT|L_frontLegShoulder_JNT"
+        ],
+        "uuid": "F546F2F7-455C-CEAA-125A-F6B709A999FA"
+      },
+      "|C_guides_GRP|L_ear00_JNT|L_ear01_JNT|L_ear02_JNT": {
+        "matrix": [
+          0.6986124643830083,
+          -0.39437112530354973,
+          0.597002546171716,
+          0.0,
+          0.4704561868865102,
+          0.8818427794370569,
+          0.03200450866567717,
+          0.0,
+          -0.5390840387443362,
+          0.2585047927631872,
+          0.801600693169334,
+          0.0,
+          11.67237680289331,
+          32.070330878630514,
+          13.961268843149558,
+          1.0
+        ],
+        "jointOrient": [
+          -1.1529510720305252e-14,
+          -0.0,
+          7.951386703658794e-16
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -9.325873406851315e-15,
+          6.315025182510759,
+          -5.329070518200751e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_ear00_JNT|L_ear01_JNT"
+        ],
+        "children": [],
+        "uuid": "9D387D44-41A2-2290-358E-2AAA98FB4116"
+      },
+      "|C_guides_GRP|L_ear00_JNT|L_ear01_JNT": {
+        "matrix": [
+          0.6986124643830083,
+          -0.39437112530354973,
+          0.597002546171716,
+          0.0,
+          0.4704561868865102,
+          0.8818427794370569,
+          0.03200450866567717,
+          0.0,
+          -0.5390840387443362,
+          0.2585047927631872,
+          0.801600693169334,
+          0.0,
+          8.701434135437015,
+          26.501471519470215,
+          13.759159564971933,
+          1.0
+        ],
+        "jointOrient": [
+          32.00735426391303,
+          -4.1736414361000636,
+          6.641504491621181
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          4.440892098500625e-15,
+          5.202482678979949,
+          1.0658141036401503e-14
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_ear00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_ear00_JNT|L_ear01_JNT|L_ear02_JNT"
+        ],
+        "uuid": "28BD6852-4E9D-EB86-F4B5-36B09DA218FF"
+      },
+      "|C_guides_GRP|L_ear00_JNT": {
+        "matrix": [
+          0.6279180933880086,
+          -0.5109610418764006,
+          0.5870584993682924,
+          0.0,
+          0.7624064287820396,
+          0.5554013846929462,
+          -0.3320628543408234,
+          0.0,
+          -0.15638192142247415,
+          0.656085448372193,
+          0.7383065617251914,
+          0.0,
+          4.735027895355493,
+          23.612005435723677,
+          15.486710813012698,
+          1.0
+        ],
+        "jointOrient": [
+          -24.216444194350302,
+          -35.94854706191939,
+          -39.13657174909723
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          4.735027895355493,
+          23.612005435723677,
+          15.486710813012698
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|L_ear00_JNT|L_ear01_JNT"
+        ],
+        "uuid": "69DAAF75-4E2E-5845-ADBB-2DB22CEC187D"
+      },
+      "|C_guides_GRP|C_jaw_JNT|C_chin_JNT": {
+        "matrix": [
+          0.05470827138068772,
+          -0.16860489508498752,
+          0.9841643127018563,
+          0.0,
+          0.01638736509103972,
+          0.9856592876202754,
+          0.16795006101000362,
+          0.0,
+          -0.9983678977751188,
+          0.006939602385679162,
+          0.0566867057679195,
+          0.0,
+          0.0,
+          17.701885596175345,
+          24.882834072036477,
+          1.0
+        ],
+        "jointOrient": [
+          -0.9403773393416175,
+          3.1361187811975295,
+          -3.981656355680509e-14
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          3.522454823730712,
+          -3.197442310920451e-14,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|C_jaw_JNT"
+        ],
+        "children": [],
+        "uuid": "C05F8832-4C2A-1B40-4E71-A6B20666C080"
+      },
+      "|C_guides_GRP|C_jaw_JNT": {
+        "matrix": [
+          0.0,
+          -0.16885777968893867,
+          0.9856404264428898,
+          0.0,
+          0.0,
+          0.9856404264428898,
+          0.16885777968893867,
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          18.296679496765137,
+          21.41096019744873,
+          1.0
+        ],
+        "jointOrient": [
+          90.0,
+          -80.27858539844239,
+          -90.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.0,
+          18.296679496765137,
+          21.41096019744873
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|C_jaw_JNT|C_chin_JNT"
+        ],
+        "uuid": "8A61B4ED-43A9-53B2-419C-8982AB53E8E3"
+      },
+      "|C_guides_GRP|C_neck00_JNT|C_neck01_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.9895911697718904,
+          0.14390731986074076,
+          0.0,
+          0.0,
+          -0.14390731986074076,
+          0.9895911697718904,
+          0.0,
+          -6.879544173200297e-16,
+          21.995075045318714,
+          16.70880380159482,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -6.879544173200297e-16,
+          7.5966776521859325,
+          4.242888038502367e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|C_neck00_JNT"
+        ],
+        "children": [],
+        "uuid": "E5AAB0C5-4FA6-9CC3-5BB4-FDBA7B90278E"
+      },
+      "|C_guides_GRP|C_neck00_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.9895911697718904,
+          0.14390731986074076,
+          0.0,
+          0.0,
+          -0.14390731986074076,
+          0.9895911697718904,
+          0.0,
+          0.0,
+          14.47746992111206,
+          15.615586280822754,
+          1.0
+        ],
+        "jointOrient": [
+          8.274009626583778,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.0,
+          14.47746992111206,
+          15.615586280822754
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|C_neck00_JNT|C_neck01_JNT"
+        ],
+        "uuid": "E3D6610D-4177-B75E-8FAF-96BE29CCFBD8"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegTip_JNT": {
+        "matrix": [
+          0.2890953023323929,
+          -0.3564090004346279,
+          0.888479898803868,
+          0.0,
+          -0.09525263132243525,
+          0.9127945572171732,
+          0.3971561815468284,
+          0.0,
+          -0.9525496535065744,
+          -0.1994460346156186,
+          0.22993572336766413,
+          0.0,
+          4.1886134270423305,
+          -0.1538193562132077,
+          4.211205444781984,
+          1.0
+        ],
+        "jointOrient": [
+          -2.3854160110976384e-15,
+          -0.0,
+          -9.541664044390547e-15
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          1.357180329598822,
+          -1.9984014443252818e-15,
+          8.881784197001252e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT"
+        ],
+        "children": [],
+        "uuid": "AE2D4FCA-426F-29C9-A56F-D9A464C2F299"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT|L_backLegDigitIV01_JNT|L_backLegDigitIV02_JNT": {
+        "matrix": [
+          0.2519173286039375,
+          -0.13843257946478055,
+          0.9577964713297824,
+          0.0,
+          -0.042697446123790825,
+          0.9871623668017313,
+          0.15390708126954633,
+          0.0,
+          -0.9668063858102935,
+          -0.07966732399881366,
+          0.2427725887395575,
+          0.0,
+          4.117224378664024,
+          0.023760792445265577,
+          3.993216945037122,
+          1.0
+        ],
+        "jointOrient": [
+          -2.7829853462805784e-14,
+          -4.2937488199757475e-14,
+          -1.5902773407317584e-15
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.47047537203570045,
+          6.661338147750939e-16,
+          8.881784197001252e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT|L_backLegDigitIV01_JNT"
+        ],
+        "children": [],
+        "uuid": "299EC363-40CA-6E23-4E4A-C9808D582160"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT|L_backLegDigitIV01_JNT": {
+        "matrix": [
+          0.2519173286039375,
+          -0.13843257946478055,
+          0.9577964713297824,
+          0.0,
+          -0.042697446123790825,
+          0.9871623668017313,
+          0.15390708126954633,
+          0.0,
+          -0.9668063858102935,
+          -0.07966732399881366,
+          0.2427725887395575,
+          0.0,
+          3.9987034797668475,
+          0.08888991177081929,
+          3.5425972938537615,
+          1.0
+        ],
+        "jointOrient": [
+          -2.942013080353754e-14,
+          -4.4527765540489235e-14,
+          23.027640645151262
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.5795343478837869,
+          -4.440892098500626e-16,
+          -2.220446049250313e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT|L_backLegDigitIV01_JNT|L_backLegDigitIV02_JNT"
+        ],
+        "uuid": "BA918D02-4462-65AE-FE7B-639775743778"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT": {
+        "matrix": [
+          0.24854579113173197,
+          -0.5135551424408717,
+          0.8212710304054546,
+          0.0,
+          0.05924864612073179,
+          0.8543501818103654,
+          0.5163093692481827,
+          0.0,
+          -0.9668063858102935,
+          -0.07966732399881366,
+          0.2427725887395575,
+          0.0,
+          3.854662656784057,
+          0.3865127563476554,
+          3.0666425228118914,
+          1.0
+        ],
+        "jointOrient": [
+          -6.216005806965452,
+          -3.1249642121172694,
+          -9.585529810103427
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.051136353479674934,
+          0.07045166140474257,
+          -0.052838310130971955
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT|L_backLegDigitIV01_JNT"
+        ],
+        "uuid": "9EF3B23C-4E4F-0135-DA9C-C2B4138B314C"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT|L_backLegDigitV01_JNT|L_backLegDigitV02_JNT": {
+        "matrix": [
+          0.5333446170938738,
+          -0.07937476599458476,
+          0.842165759183009,
+          0.0,
+          -0.05790584166471499,
+          0.9898264193921322,
+          0.1299637371517613,
+          0.0,
+          -0.8439137591709774,
+          -0.1180817767339909,
+          0.5233223300082406,
+          0.0,
+          4.48938258594892,
+          0.09973618969043342,
+          3.339375501039968,
+          1.0
+        ],
+        "jointOrient": [
+          6.361109362927035e-15,
+          1.5902773407317584e-14,
+          -3.975693351829396e-15
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.32514258177336686,
+          -4.996003610813204e-16,
+          -4.440892098500626e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT|L_backLegDigitV01_JNT"
+        ],
+        "children": [],
+        "uuid": "A8B4AD2C-4D15-11C5-AD04-318471AD511F"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT|L_backLegDigitV01_JNT": {
+        "matrix": [
+          0.5333446170938738,
+          -0.07937476599458476,
+          0.842165759183009,
+          0.0,
+          -0.05790584166471499,
+          0.9898264193921322,
+          0.1299637371517613,
+          0.0,
+          -0.8439137591709774,
+          -0.1180817767339909,
+          0.5233223300082406,
+          0.0,
+          4.315969540172089,
+          0.12554430603357,
+          3.065551551818077,
+          1.0
+        ],
+        "jointOrient": [
+          3.975693351829396e-15,
+          2.2263882770244617e-14,
+          29.842152145112586
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.34262885420280087,
+          0.0,
+          -8.881784197001252e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT|L_backLegDigitV01_JNT|L_backLegDigitV02_JNT"
+        ],
+        "uuid": "C1465AE1-417F-5724-13C6-B1BEF2BBA29A"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT": {
+        "matrix": [
+          0.49143756178482545,
+          -0.5613993779865942,
+          0.6658226950647229,
+          0.0,
+          0.21517130373006474,
+          0.8190771834202253,
+          0.5318024799222876,
+          0.0,
+          -0.8439137591709774,
+          -0.1180817767339909,
+          0.5233223300082406,
+          0.0,
+          4.147588851465535,
+          0.3178959316632818,
+          2.8374214847058306,
+          1.0
+        ],
+        "jointOrient": [
+          -14.553112159995523,
+          11.715569234827434,
+          -17.523072043488124
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.04338269054924071,
+          -0.11111994575176065,
+          -0.37088580699460394
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT|L_backLegDigitV01_JNT"
+        ],
+        "uuid": "2F83A4B7-4622-DCC0-0180-F8AB6731C98A"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT|L_backLegDigitIII01_JNT|L_backLegDigitIII02_JNT": {
+        "matrix": [
+          0.06315731017310959,
+          -0.2999091538916119,
+          0.9518748098272772,
+          0.0,
+          0.05868607605006744,
+          0.9532445611391622,
+          0.2964468774273933,
+          0.0,
+          -0.9962766175362863,
+          0.0371390100921353,
+          0.07780485383209038,
+          0.0,
+          3.4880617606366893,
+          0.007388456485178566,
+          4.000901787845842,
+          1.0
+        ],
+        "jointOrient": [
+          4.929859756268451e-14,
+          5.565970692561154e-15,
+          3.1805546814635168e-15
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.36004171278871144,
+          0.0,
+          8.881784197001252e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT|L_backLegDigitIII01_JNT"
+        ],
+        "children": [],
+        "uuid": "8534291A-46F8-14FA-582D-42ADA99FDA30"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT|L_backLegDigitIII01_JNT": {
+        "matrix": [
+          0.06315731017310959,
+          -0.2999091538916119,
+          0.9518748098272772,
+          0.0,
+          0.05868607605006744,
+          0.9532445611391622,
+          0.2964468774273933,
+          0.0,
+          -0.9962766175362863,
+          0.0371390100921353,
+          0.07780485383209038,
+          0.0,
+          3.465322494506836,
+          0.11536826193332772,
+          3.6581871509551998,
+          1.0
+        ],
+        "jointOrient": [
+          4.890102822750157e-14,
+          5.565970692561154e-15,
+          11.686694024175644
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.5948270870666112,
+          4.440892098500626e-16,
+          -8.881784197001252e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT|L_backLegDigitIII01_JNT|L_backLegDigitIII02_JNT"
+        ],
+        "uuid": "8B90909F-421F-C67E-D62B-EA88FE502B15"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT": {
+        "matrix": [
+          0.049960606799611174,
+          -0.4867811063595329,
+          0.8720940845227674,
+          0.0,
+          0.0702626438349093,
+          0.8727341224111531,
+          0.4831131466443066,
+          0.0,
+          -0.9962766175362863,
+          0.0371390100921353,
+          0.07780485383209038,
+          0.0,
+          3.435604572296142,
+          0.40491884946823065,
+          3.139441967010499,
+          1.0
+        ],
+        "jointOrient": [
+          -7.710524509376435,
+          -14.478825093565796,
+          -6.090676390094854
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.011890624586646581,
+          0.1560817775258998,
+          0.35940349362402646
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT|L_backLegDigitIII01_JNT"
+        ],
+        "uuid": "D1A5983F-4066-2BDF-7011-68ABA9D4E6CE"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT|L_backLegDigitII01_JNT|L_backLegDigitII02_JNT": {
+        "matrix": [
+          -0.18249589814819264,
+          -0.08158643741934901,
+          0.9798157481834546,
+          0.0,
+          0.003934386626558442,
+          0.9964826399516378,
+          0.08370704197908191,
+          0.0,
+          -0.9831987427580232,
+          0.01913116578344526,
+          -0.18153300177876477,
+          0.0,
+          2.863139430916657,
+          0.012660844941666367,
+          3.5943876462809796,
+          1.0
+        ],
+        "jointOrient": [
+          -3.2799470152592537e-14,
+          -4.770832022195277e-15,
+          -3.975693351829397e-15
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.13978153020752337,
+          -1.942890293094024e-15,
+          -1.3322676295501878e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT|L_backLegDigitII01_JNT"
+        ],
+        "children": [],
+        "uuid": "56946BE2-48BF-7ECB-C53F-288FB28CF9B9"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT|L_backLegDigitII01_JNT": {
+        "matrix": [
+          -0.18249589814819264,
+          -0.08158643741934901,
+          0.9798157481834546,
+          0.0,
+          0.003934386626558442,
+          0.9964826399516378,
+          0.08370704197908191,
+          0.0,
+          -0.9831987427580232,
+          0.01913116578344526,
+          -0.18153300177876477,
+          0.0,
+          2.8886489868164062,
+          0.02406512200832528,
+          3.457427501678467,
+          1.0
+        ],
+        "jointOrient": [
+          -3.309764715397974e-14,
+          -4.770832022195277e-15,
+          28.524875425409736
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.5018030468399428,
+          8.881784197001252e-16,
+          4.440892098500626e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT|L_backLegDigitII01_JNT|L_backLegDigitII02_JNT"
+        ],
+        "uuid": "75349A28-4EAC-5206-8197-79A0AE74C361"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT": {
+        "matrix": [
+          -0.16222152490957398,
+          -0.547543228761026,
+          0.8209023020396296,
+          0.0,
+          -0.08369234788829394,
+          0.8365586716624946,
+          0.5414473010101977,
+          0.0,
+          -0.9831987427580232,
+          0.01913116578344526,
+          -0.18153300177876477,
+          0.0,
+          2.9700522422790527,
+          0.2988239824771872,
+          3.045496225357057,
+          1.0
+        ],
+        "jointOrient": [
+          2.4017574672524598,
+          -26.903176340722222,
+          -10.225900409315962
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.1921353537262691,
+          0.0662729128125481,
+          0.8024239227210224
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT|L_backLegDigitII01_JNT"
+        ],
+        "uuid": "160A4477-4C33-FC90-6FD4-51BC1C119D43"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT": {
+        "matrix": [
+          0.2890953023323929,
+          -0.3564090004346279,
+          0.888479898803868,
+          0.0,
+          -0.09525263132243525,
+          0.9127945572171732,
+          0.3971561815468284,
+          0.0,
+          -0.9525496535065744,
+          -0.1994460346156186,
+          0.22993572336766413,
+          0.0,
+          3.796258969337383,
+          0.32989192846864934,
+          3.0053780028814234,
+          1.0
+        ],
+        "jointOrient": [
+          12.862271357495885,
+          -7.119433131987882,
+          28.492405267470822
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.9076766188008423,
+          0.0,
+          3.1086244689504383e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegTip_JNT",
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIV00_JNT",
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitV00_JNT",
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitIII00_JNT",
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT|L_backLegDigitII00_JNT"
+        ],
+        "uuid": "9E31494D-42C9-AE06-E34C-25AE9329A61F"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT": {
+        "matrix": [
+          0.2987302586027581,
+          -0.7574746709098258,
+          0.5805104267153007,
+          0.0,
+          0.2977535781299912,
+          0.6518994240240613,
+          0.6974022853904943,
+          0.0,
+          -0.9066989794335917,
+          -0.035486108368608084,
+          0.420282877127935,
+          0.0,
+          3.5251084982753333,
+          1.0174339765873608,
+          2.4784622615818437,
+          1.0
+        ],
+        "jointOrient": [
+          -15.427439750532509,
+          11.08575086306995,
+          34.867127371672645
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          3.1877031014393484,
+          8.881784197001252e-16,
+          -1.7763568394002505e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT|L_backLegPastern_JNT"
+        ],
+        "uuid": "4107B524-48AA-5B81-04A1-E4B5AE386B9C"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT": {
+        "matrix": [
+          0.06394783439720404,
+          -0.9965009357625318,
+          0.05381969435352218,
+          0.0,
+          0.10040985179218069,
+          0.060081198375768516,
+          0.9931304603448653,
+          0.0,
+          -0.9928889848009093,
+          -0.05810451467941487,
+          0.10390057379480439,
+          0.0,
+          3.321261788237034,
+          4.193983100104797,
+          2.3069010549726023,
+          1.0
+        ],
+        "jointOrient": [
+          -11.342393467767504,
+          6.242762585850368,
+          28.46253161374394
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          3.3727612894451697,
+          -7.591149930874508e-15,
+          8.881784197001252e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT|L_backLegFetlock_JNT"
+        ],
+        "uuid": "EBA4AD4B-4CFB-B957-0B9C-AA8E86F0AE82"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT": {
+        "matrix": [
+          0.007078069428130218,
+          -0.90006201984444,
+          -0.4357043279182774,
+          0.0,
+          -0.10629957547735824,
+          -0.4339236577127155,
+          0.8946567272035414,
+          0.0,
+          -0.9943089566057948,
+          0.039982742661870095,
+          -0.0987475523885564,
+          0.0,
+          3.297389149665831,
+          7.229677438735951,
+          3.7764277458190993,
+          1.0
+        ],
+        "jointOrient": [
+          18.258359701520604,
+          6.377393080807395,
+          -18.60765209335648
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          4.487898685199237,
+          9.325873406851315e-15,
+          3.9968028886505635e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_backLegHip_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT|L_backLegHock_JNT"
+        ],
+        "uuid": "3D0B3D82-4732-1E63-5693-BBA7775680CB"
+      },
+      "|C_guides_GRP|L_backLegHip_JNT": {
+        "matrix": [
+          -0.029050360344386572,
+          -0.9935328275703164,
+          -0.1097661017982946,
+          0.0,
+          0.2319670460987831,
+          -0.11351540021402862,
+          0.9660774003352186,
+          0.0,
+          -0.9722897541823973,
+          0.0026027782043775427,
+          0.23376453849451262,
+          0.0,
+          3.4277642236599695,
+          11.688552109291056,
+          4.269046889759101,
+          1.0
+        ],
+        "jointOrient": [
+          76.39743291239705,
+          6.3018325433804065,
+          -91.67482029395153
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          3.4277642236599695,
+          11.688552109291056,
+          4.269046889759101
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|L_backLegHip_JNT|L_backLegStifle_JNT"
+        ],
+        "uuid": "5BA14C85-47A9-E131-84DF-F1B764FE2265"
+      },
+      "|C_guides_GRP|C_tail00_JNT|C_tail01_JNT|C_tail02_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.9999972937057069,
+          0.0023264954893906786,
+          0.0,
+          0.0,
+          -0.0023264954893906786,
+          0.9999972937057069,
+          0.0,
+          -6.257203838003569e-16,
+          17.88915620699657,
+          1.040989923711958,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -4.50652417395533e-19,
+          2.807580305226681,
+          -1.1571566944290671e-15
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|C_tail00_JNT|C_tail01_JNT"
+        ],
+        "children": [],
+        "uuid": "AF35A931-4374-AD75-3DE1-3A83C4C92FBC"
+      },
+      "|C_guides_GRP|C_tail00_JNT|C_tail01_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.9999972937057069,
+          0.0023264954893906786,
+          0.0,
+          0.0,
+          -0.0023264954893906786,
+          0.9999972937057069,
+          0.0,
+          -6.252697313829614e-16,
+          15.081583499908447,
+          1.0344581007957472,
+          1.0
+        ],
+        "jointOrient": [
+          46.91000000000002,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -6.252697313829614e-16,
+          2.815964529262354,
+          -7.815871642287015e-16
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|C_tail00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|C_tail00_JNT|C_tail01_JNT|C_tail02_JNT"
+        ],
+        "uuid": "DAB669AF-41FC-E499-0E9D-0BB2165A6CA8"
+      },
+      "|C_guides_GRP|C_tail00_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6848434737821452,
+          -0.7286902060670256,
+          0.0,
+          0.0,
+          0.7286902060670256,
+          0.6848434737821452,
+          0.0,
+          0.0,
+          13.153088569641113,
+          3.086423873901367,
+          1.0
+        ],
+        "jointOrient": [
+          -46.776701507153376,
+          5.502324892033905e-15,
+          1.2722218725854067e-14
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.0,
+          13.153088569641113,
+          3.086423873901367
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|C_tail00_JNT|C_tail01_JNT"
+        ],
+        "uuid": "5F7B4F33-4E95-3578-754A-C087F8EF84E9"
+      },
+      "|C_guides_GRP|C_spine00_JNT|C_spine01_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.06279373168945312,
+          11.915718078613281,
+          12.27648639678955,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.06279373168945312,
+          0.7898654937744141,
+          5.5890161991119385
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|C_spine00_JNT"
+        ],
+        "children": [],
+        "uuid": "CE5896FA-4183-AB50-5CD0-5698EECF615E"
+      },
+      "|C_guides_GRP|C_spine00_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          11.125852584838867,
+          6.687470197677612,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.0,
+          11.125852584838867,
+          6.687470197677612
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|C_spine00_JNT|C_spine01_JNT"
+        ],
+        "uuid": "C554BEEC-4DBE-BD20-D918-38B6A616A868"
+      },
+      "|C_guides_GRP|L_eye_JNT|L_eyeEnd_JNT": {
+        "matrix": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          -0.9154643287462569,
+          0.0,
+          0.40239913368838814,
+          0.0,
+          0.40239913368838814,
+          0.0,
+          0.9154643287462569,
+          0.0,
+          4.137084487090188,
+          21.8491268157959,
+          21.943852606920895,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.0,
+          -1.7763568394002505e-15,
+          1.6188345388530898
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|L_eye_JNT"
+        ],
+        "children": [],
+        "uuid": "DF384A82-4018-C39D-FBA1-24B5D883B994"
+      },
+      "|C_guides_GRP|L_eye_JNT": {
+        "matrix": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          -0.9154643287462569,
+          0.0,
+          0.40239913368838814,
+          0.0,
+          0.40239913368838814,
+          0.0,
+          0.9154643287462569,
+          0.0,
+          3.485666871070862,
+          21.8491268157959,
+          20.461867332458496,
+          1.0
+        ],
+        "jointOrient": [
+          23.72824583285408,
+          -0.0,
+          90.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          3.485666871070862,
+          21.8491268157959,
+          20.461867332458496
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|L_eye_JNT|L_eyeEnd_JNT"
+        ],
+        "uuid": "4AD2774F-40AF-2AE7-D505-67973BB88B11"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegTip_JNT": {
+        "matrix": [
+          -0.14923825562628854,
+          0.22732698621216718,
+          -0.9623151169951124,
+          0.0,
+          -0.15309004678974364,
+          0.956166927370851,
+          0.24961619453893735,
+          0.0,
+          0.9768783857940236,
+          0.1845731517363224,
+          -0.10789518537258183,
+          0.0,
+          -2.14404,
+          -0.20196799999999993,
+          16.1761,
+          1.0
+        ],
+        "jointOrient": [
+          8.537736462515932e-07,
+          -9.478791484105367e-23,
+          -1.5403036418781262e-22
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -1.4216756369692352,
+          9.482659200088506e-07,
+          1.794534937538117e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT"
+        ],
+        "children": [],
+        "uuid": "8AA36DE7-4EFF-8DAA-B596-4BA5B9385EC7"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT|R_frontLegDigitV02_JNT|R_frontLegDigitV03_JNT": {
+        "matrix": [
+          0.6811383479852725,
+          0.07443858478526158,
+          -0.7283607952100815,
+          0.0,
+          0.10863872982501405,
+          -0.9940812976723824,
+          5.551115123125783e-17,
+          0.0,
+          -0.7240498444761259,
+          -0.07912819164596052,
+          -0.6851938061606648,
+          0.0,
+          -3.624140000000001,
+          0.06887049999999983,
+          15.556500000000002,
+          1.0
+        ],
+        "jointOrient": [
+          8.537736462515933e-07,
+          -2.822417074050198e-22,
+          4.7393955891470065e-23
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.32759142302986,
+          9.150250513401126e-07,
+          6.931443317981234e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT|R_frontLegDigitV02_JNT"
+        ],
+        "children": [],
+        "uuid": "9ECF8585-4E61-0B46-11E0-788C073FE542"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT|R_frontLegDigitV02_JNT": {
+        "matrix": [
+          0.6811383479852725,
+          0.07443858478526158,
+          -0.7283607952100815,
+          0.0,
+          0.10863872982501405,
+          -0.9940812976723824,
+          5.551115123125783e-17,
+          0.0,
+          -0.7240498444761259,
+          -0.07912819164596052,
+          -0.6851938061606648,
+          0.0,
+          -3.4010000000000007,
+          0.09325739999999826,
+          15.3179,
+          1.0
+        ],
+        "jointOrient": [
+          23.329416268407346,
+          -17.488659702193708,
+          28.261350804218118
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.552713678800501e-15,
+          1.3322676295501878e-15,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT|R_frontLegDigitV02_JNT|R_frontLegDigitV03_JNT"
+        ],
+        "uuid": "647B2C9E-4855-C3C0-283C-C2BE08F95761"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT": {
+        "matrix": [
+          0.55380616662726,
+          0.6033421073796736,
+          -0.5738266561151326,
+          0.0,
+          0.7365111826782541,
+          -0.6764252472919196,
+          -0.0004032566739525095,
+          0.0,
+          -0.3883941394968512,
+          -0.4224064231148954,
+          -0.8189766822784281,
+          0.0,
+          -3.401,
+          0.0932574000000013,
+          15.317899999999998,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.2840638868433114,
+          -2.7703840288495485e-06,
+          4.189896506190394e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT|R_frontLegDigitV02_JNT"
+        ],
+        "uuid": "6ADC49DF-4D07-88C0-59A8-C4A6E247104B"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT": {
+        "matrix": [
+          0.55380616662726,
+          0.6033421073796736,
+          -0.5738266561151326,
+          0.0,
+          0.7365111826782541,
+          -0.6764252472919196,
+          -0.0004032566739525095,
+          0.0,
+          -0.3883941394968512,
+          -0.4224064231148954,
+          -0.8189766822784281,
+          0.0,
+          -3.24368,
+          0.2646450000000005,
+          15.154899999999998,
+          1.0
+        ],
+        "jointOrient": [
+          121.82092205680823,
+          -45.583827502158385,
+          29.900284985058345
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.1687773570595148,
+          0.35959674793592544,
+          -0.8779059582659805
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT|R_frontLegDigitV01_JNT"
+        ],
+        "uuid": "765B2DCA-401D-F5B7-0C57-DEA8B28D1272"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT|R_frontLegDigitIV01_JNT|R_frontLegDigitIV02_JNT": {
+        "matrix": [
+          0.33144733660725967,
+          0.14035403195698462,
+          -0.9329755670806029,
+          0.0,
+          -0.009945865943136734,
+          -0.9882981394797488,
+          -0.15220994465378795,
+          0.0,
+          -0.9434212965619315,
+          0.05972883067904228,
+          -0.3261728437180497,
+          0.0,
+          -3.2258000000000004,
+          0.08520349999999974,
+          16.215800000000005,
+          1.0
+        ],
+        "jointOrient": [
+          1.2074182697257325e-06,
+          2.0107553097926148e-22,
+          3.3512589296931924e-22
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.4247590376487942,
+          -9.851328961474337e-06,
+          -2.6662264937638014e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT|R_frontLegDigitIV01_JNT"
+        ],
+        "children": [],
+        "uuid": "E24B0A77-47D3-D2EB-C35A-F29B6DEA32C8"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT|R_frontLegDigitIV01_JNT": {
+        "matrix": [
+          0.33144733660725967,
+          0.14035403195698462,
+          -0.9329755670806029,
+          0.0,
+          -0.009945865943136734,
+          -0.9882981394797488,
+          -0.15220994465378795,
+          0.0,
+          -0.9434212965619315,
+          0.05972883067904228,
+          -0.3261728437180497,
+          0.0,
+          -3.085039999999999,
+          0.14481200000000058,
+          15.819499999999998,
+          1.0
+        ],
+        "jointOrient": [
+          44.02739687086579,
+          -6.755411507244763,
+          6.938444390215053
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.4560790523067144,
+          -4.1948394025048685e-06,
+          -3.6622527703755736e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT|R_frontLegDigitIV01_JNT|R_frontLegDigitIV02_JNT"
+        ],
+        "uuid": "88BB51ED-4505-62E1-CA63-6BA7B39D5472"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT": {
+        "matrix": [
+          0.3284067539649833,
+          0.3044062285168787,
+          -0.8941397273303059,
+          0.0,
+          0.6932784934137444,
+          -0.7206097157644017,
+          0.00930419883268084,
+          0.0,
+          -0.6414935186891233,
+          -0.6229434048018156,
+          -0.44769138912175815,
+          0.0,
+          -2.93526,
+          0.2836400000000002,
+          15.411699999999998,
+          1.0
+        ],
+        "jointOrient": [
+          141.92074213714974,
+          -28.25991178822519,
+          1.1446536631265603
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.4576098658010199,
+          0.39464454524804093,
+          -0.6008186431058355
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT|R_frontLegDigitIV01_JNT"
+        ],
+        "uuid": "4DE61D6A-4439-F986-C805-60A180BFB96B"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT|R_frontLegDigitIII01_JNT|R_frontLegDigitIII02_JNT": {
+        "matrix": [
+          0.041407507000915056,
+          0.05424225077665096,
+          -0.9976688812399901,
+          0.0,
+          0.02717509409739055,
+          -0.9982170162019091,
+          -0.0531441701953837,
+          0.0,
+          -0.9987727131959341,
+          -0.02491117812631166,
+          -0.04280771635572288,
+          0.0,
+          -2.60797,
+          0.13646799999999987,
+          16.2698,
+          1.0
+        ],
+        "jointOrient": [
+          1.2074182697257323e-06,
+          2.010755330979365e-22,
+          1.340503584589327e-22
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.3678573028919434,
+          -2.3594545639493703e-06,
+          -2.120565778307437e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT|R_frontLegDigitIII01_JNT"
+        ],
+        "children": [],
+        "uuid": "617CCFA4-4F86-6EBE-53BA-D4B659E2EA5F"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT|R_frontLegDigitIII01_JNT": {
+        "matrix": [
+          0.041407507000915056,
+          0.05424225077665096,
+          -0.9976688812399901,
+          0.0,
+          0.02717509409739055,
+          -0.9982170162019091,
+          -0.0531441701953837,
+          0.0,
+          -0.9987727131959341,
+          -0.02491117812631166,
+          -0.04280771635572288,
+          0.0,
+          -2.59274,
+          0.15641900000000059,
+          15.902800000000001,
+          1.0
+        ],
+        "jointOrient": [
+          24.79480662827763,
+          -6.703266009162724,
+          14.180741164225767
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.4659098202003005,
+          -2.90215585341258e-06,
+          -1.251009716529694e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT|R_frontLegDigitIII01_JNT|R_frontLegDigitIII02_JNT"
+        ],
+        "uuid": "882671CB-480A-8DFA-CF97-C8A78EBA72E0"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT": {
+        "matrix": [
+          0.032537867130045584,
+          0.3216069761718164,
+          -0.9463140282592504,
+          0.0,
+          0.46568678274757935,
+          -0.8426392280393822,
+          -0.27036078070497477,
+          0.0,
+          -0.8843512354131907,
+          -0.43188897212919786,
+          -0.17718580128314027,
+          0.0,
+          -2.5775900000000003,
+          0.30625099999999994,
+          15.461899999999998,
+          1.0
+        ],
+        "jointOrient": [
+          160.43513542160755,
+          -11.142411111668256,
+          3.875430292515041
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.5541560410787856,
+          0.37403945157339,
+          -0.2526615056306811
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT|R_frontLegDigitIII01_JNT"
+        ],
+        "uuid": "A979F2BA-4BCA-8E41-AFA9-53B37571ECD3"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT|R_frontLegDigitII01_JNT|R_frontLegDigitII02_JNT": {
+        "matrix": [
+          -0.1302492247450308,
+          -0.019305585074243937,
+          -0.9912933137261952,
+          0.0,
+          -0.0694325432343813,
+          0.9975334312711405,
+          -0.01030414656491338,
+          0.0,
+          0.9890471482155565,
+          0.06748590876150784,
+          -0.13126839195064893,
+          0.0,
+          -2.0597000000000003,
+          0.07515070000000004,
+          15.842,
+          1.0
+        ],
+        "jointOrient": [
+          1.2074182697257323e-06,
+          8.587600811802757e-23,
+          1.3405035724510846e-22
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.12115480585568683,
+          -4.4160565616097047e-07,
+          -3.540767927745492e-07
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT|R_frontLegDigitII01_JNT"
+        ],
+        "children": [],
+        "uuid": "73D6D4B9-4FE7-9E2C-1128-88BBC7818602"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT|R_frontLegDigitII01_JNT": {
+        "matrix": [
+          -0.1302492247450308,
+          -0.019305585074243937,
+          -0.9912933137261952,
+          0.0,
+          -0.0694325432343813,
+          0.9975334312711405,
+          -0.01030414656491338,
+          0.0,
+          0.9890471482155565,
+          0.06748590876150784,
+          -0.13126839195064893,
+          0.0,
+          -2.0754799999999998,
+          0.07281219999999916,
+          15.721900000000002,
+          1.0
+        ],
+        "jointOrient": [
+          -14.674085053030755,
+          -10.172359223547396,
+          -33.997287641939494
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.4502317404611613,
+          2.159884163877024e-05,
+          -1.0518773623680033e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT|R_frontLegDigitII01_JNT|R_frontLegDigitII02_JNT"
+        ],
+        "uuid": "1218FD19-4CD0-A7F8-ACFB-24B76E189FAA"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT": {
+        "matrix": [
+          -0.1464200098312856,
+          0.5608271683642677,
+          -0.8148828553513227,
+          0.0,
+          0.319938254366404,
+          0.8063349457635913,
+          0.49745700179352714,
+          0.0,
+          0.9360559246722309,
+          -0.18787453916096297,
+          -0.2974936359337314,
+          0.0,
+          -2.1413999999999995,
+          0.3252949999999998,
+          15.355,
+          1.0
+        ],
+        "jointOrient": [
+          24.090162192519863,
+          -2.774258764151189,
+          20.8344347883879
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.5120515746682166,
+          0.29878837583281026,
+          0.1884920838868096
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT|R_frontLegDigitII01_JNT"
+        ],
+        "uuid": "CE6E89AE-46A3-8C95-00DC-8698DCBEBBA3"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT": {
+        "matrix": [
+          -0.14923825562628854,
+          0.22732698621216718,
+          -0.9623151169951124,
+          0.0,
+          -0.15309004678974364,
+          0.956166927370851,
+          0.24961619453893735,
+          0.0,
+          0.9768783857940236,
+          0.1845731517363224,
+          -0.10789518537258183,
+          0.0,
+          -2.3562100000000004,
+          0.12121599999999899,
+          14.808,
+          1.0
+        ],
+        "jointOrient": [
+          -86.23757480901229,
+          -60.363271335212865,
+          -3.2713667847994796
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.7489801781406409,
+          4.168225871126197e-06,
+          4.832225311091065e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegTip_JNT",
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitV00_JNT",
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIV00_JNT",
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitIII00_JNT",
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT|R_frontLegDigitII00_JNT"
+        ],
+        "uuid": "70B2A6C0-4777-077A-4351-FB89DA021EA2"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT": {
+        "matrix": [
+          -0.20681055866681092,
+          0.9437470647450268,
+          -0.2580133147902802,
+          0.0,
+          0.9781227970157617,
+          0.1933786562272768,
+          -0.076684348297395,
+          0.0,
+          -0.022476360514661994,
+          -0.2682278380423615,
+          -0.9630932665724212,
+          0.0,
+          -2.5111099999999995,
+          0.8280759999999996,
+          14.614799999999999,
+          1.0
+        ],
+        "jointOrient": [
+          89.9999980816957,
+          5.6161833352420425,
+          -1.8773293498183393e-07
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -1.2953422921462923,
+          6.961653339487839e-05,
+          -1.2113424682436147e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT|R_frontLegPastern_JNT"
+        ],
+        "uuid": "D4381D30-478B-8598-0906-9491534FDF55"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT": {
+        "matrix": [
+          -0.11009481651717583,
+          0.9581416959567226,
+          -0.2642794389376995,
+          0.0,
+          0.022476393262923455,
+          0.26822784451681914,
+          0.9630932640049729,
+          0.0,
+          0.9936669175945932,
+          0.10009152758868682,
+          -0.05106606488680452,
+          0.0,
+          -2.65371,
+          2.069180000000002,
+          14.272399999999996,
+          1.0
+        ],
+        "jointOrient": [
+          1.909095911981915e-06,
+          -8.249563705045998e-15,
+          -21.490125046386353
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -5.5593454006771985,
+          -3.105945344472616e-05,
+          2.1352347432390673e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT|R_frontLegFetlock_JNT"
+        ],
+        "uuid": "53BCE5C9-473E-0282-A35C-759AFF0463AE"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT": {
+        "matrix": [
+          -0.09420709504628258,
+          0.9897951948214971,
+          0.10691349564585169,
+          0.0,
+          0.06124604993516375,
+          -0.10142562114244623,
+          0.9929560739243248,
+          0.0,
+          0.9936669183435063,
+          0.10009153652604107,
+          -0.05106603279652788,
+          0.0,
+          -3.177440000000001,
+          7.57179,
+          14.866800000000001,
+          1.0
+        ],
+        "jointOrient": [
+          -136.50293697723896,
+          -5.931488238264063,
+          6.215469800099103
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -2.5989822895145682,
+          -1.8761207590145546e-05,
+          -1.1730943297649787e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT|R_frontLegCarpus_JNT"
+        ],
+        "uuid": "7AE1E6A8-42F8-305B-92C2-CB89BAFA40CB"
+      },
+      "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT": {
+        "matrix": [
+          -0.08401091529266477,
+          0.963571081376678,
+          0.25391521664970845,
+          0.0,
+          0.6341618216671339,
+          0.24825285173928682,
+          -0.7322631395496664,
+          0.0,
+          -0.7686227618614421,
+          0.09950523975093636,
+          -0.631915941570236,
+          0.0,
+          -3.3957800000000002,
+          10.076099999999999,
+          15.526699999999996,
+          1.0
+        ],
+        "jointOrient": [
+          -12.163488923017967,
+          -15.011836704181373,
+          -50.23467461380096
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.5729853837379038,
+          2.7950644572172223e-06,
+          9.353949987245261e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_scapula_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT|R_frontLegElbow_JNT"
+        ],
+        "uuid": "21F15276-4F5D-5BA3-CFA0-129B727C09A0"
+      },
+      "|C_guides_GRP|R_scapula_JNT": {
+        "matrix": [
+          0.44675310141074165,
+          0.790515754834358,
+          -0.41892303319171764,
+          0.0,
+          0.1791131842390958,
+          -0.5377997867260151,
+          -0.8238263510165142,
+          0.0,
+          -0.8765444276313754,
+          0.2930123389144531,
+          -0.3818555166974369,
+          0.0,
+          -1.79953,
+          12.9006,
+          14.0299,
+          1.0
+        ],
+        "jointOrient": [
+          -114.86841001836804,
+          24.766612731013296,
+          60.527415237499504
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -1.79953,
+          12.9006,
+          14.0299
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|R_scapula_JNT|R_frontLegShoulder_JNT"
+        ],
+        "uuid": "235011B4-4749-4C5C-BDE3-E3B26DFBDBE1"
+      },
+      "|C_guides_GRP|R_ear00_JNT|R_ear01_JNT|R_ear02_JNT": {
+        "matrix": [
+          0.6986124643830082,
+          0.3943711253035502,
+          -0.5970025461717158,
+          0.0,
+          0.47045617552616387,
+          -0.8818427848846376,
+          -0.03200452555814893,
+          0.0,
+          -0.5390840486584587,
+          -0.2585047741797401,
+          -0.8016006924948893,
+          0.0,
+          -11.672400000000005,
+          32.07030000000001,
+          13.9613,
+          1.0
+        ],
+        "jointOrient": [
+          1.2074182697257333e-06,
+          5.780921603049113e-22,
+          1.3405036243144836e-22
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.696529888141953e-05,
+          -6.314985398884637,
+          3.751655909312035e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_ear00_JNT|R_ear01_JNT"
+        ],
+        "children": [],
+        "uuid": "07248484-4936-F175-01BF-9F8B80CE01A8"
+      },
+      "|C_guides_GRP|R_ear00_JNT|R_ear01_JNT": {
+        "matrix": [
+          0.6986124643830082,
+          0.3943711253035502,
+          -0.5970025461717158,
+          0.0,
+          0.47045618688651064,
+          -0.8818427794370567,
+          -0.032004508665677445,
+          0.0,
+          -0.539084038744336,
+          -0.25850479276318716,
+          -0.8016006931693341,
+          0.0,
+          -8.701430000000004,
+          26.5015,
+          13.759199999999991,
+          1.0
+        ],
+        "jointOrient": [
+          32.007354263913015,
+          -4.173641436100041,
+          6.6415044916211645
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -8.837453610688328e-06,
+          -5.202479741065128,
+          -6.106456107346503e-05
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_ear00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_ear00_JNT|R_ear01_JNT|R_ear02_JNT"
+        ],
+        "uuid": "70787A25-4CF0-E5FB-5DA9-C79FA39A8969"
+      },
+      "|C_guides_GRP|R_ear00_JNT": {
+        "matrix": [
+          0.6279180933880086,
+          0.5109610418764006,
+          -0.5870584993682924,
+          0.0,
+          0.7624064287820396,
+          -0.5554013846929464,
+          0.3320628543408233,
+          0.0,
+          -0.1563819214224742,
+          -0.6560854483721928,
+          -0.7383065617251916,
+          0.0,
+          -4.73503,
+          23.612,
+          15.4867,
+          1.0
+        ],
+        "jointOrient": [
+          155.7835558056497,
+          35.94854706191939,
+          39.13657174909723
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -4.73503,
+          23.612,
+          15.4867
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|R_ear00_JNT|R_ear01_JNT"
+        ],
+        "uuid": "68CBE59A-4074-FEB5-88DB-43808C95A85D"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegTip_JNT": {
+        "matrix": [
+          0.2890953023323928,
+          0.3564090004346281,
+          -0.8884798988038684,
+          0.0,
+          -0.09525263132243486,
+          -0.9127945572171731,
+          -0.3971561815468287,
+          0.0,
+          -0.9525496535065743,
+          0.1994460346156183,
+          -0.22993572336766407,
+          0.0,
+          -4.188610000000001,
+          -0.15381900000000043,
+          4.211210000000001,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -1.3571812122540172,
+          -1.7004291783528913e-06,
+          -4.77760508044156e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT"
+        ],
+        "children": [],
+        "uuid": "4867E703-45C3-68F2-8AD8-56A507590314"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT|R_backLegDigitIV01_JNT|R_backLegDigitIV02_JNT": {
+        "matrix": [
+          0.25191732860393773,
+          0.13843257946478082,
+          -0.9577964713297829,
+          0.0,
+          -0.0426974461237904,
+          -0.9871623668017311,
+          -0.15390708126954644,
+          0.0,
+          -0.9668063858102933,
+          0.07966732399881338,
+          -0.2427725887395578,
+          0.0,
+          -4.11722,
+          0.0237607999999999,
+          3.99322,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.47047547700798464,
+          -1.1114342424178858e-07,
+          -9.52203034643162e-07
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT|R_backLegDigitIV01_JNT"
+        ],
+        "children": [],
+        "uuid": "3DDD8BBF-4BF0-A8A1-00CF-67B26F4B695D"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT|R_backLegDigitIV01_JNT": {
+        "matrix": [
+          0.25191732860393773,
+          0.13843257946478082,
+          -0.9577964713297829,
+          0.0,
+          -0.0426974461237904,
+          -0.9871623668017311,
+          -0.15390708126954644,
+          0.0,
+          -0.9668063858102933,
+          0.07966732399881338,
+          -0.2427725887395578,
+          0.0,
+          -3.9987,
+          0.08888990000000035,
+          3.5426,
+          1.0
+        ],
+        "jointOrient": [
+          -3.887340842815563e-15,
+          -1.908332808878109e-14,
+          23.027640645151234
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.5795385689005883,
+          -2.4327786309896737e-06,
+          -2.08546159674583e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT|R_backLegDigitIV01_JNT|R_backLegDigitIV02_JNT"
+        ],
+        "uuid": "BD38C04B-47CE-2FB2-5142-05BC77F4018A"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT": {
+        "matrix": [
+          0.24854579113173206,
+          0.5135551424408714,
+          -0.8212710304054552,
+          0.0,
+          0.05924864612073213,
+          -0.8543501818103655,
+          -0.5163093692481825,
+          0.0,
+          -0.9668063858102933,
+          0.07966732399881338,
+          -0.2427725887395578,
+          0.0,
+          -3.8546600000000004,
+          0.3865129999999998,
+          3.06664,
+          1.0
+        ],
+        "jointOrient": [
+          -6.216005806965461,
+          -3.124964212117249,
+          -9.585529810103393
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.05113121024332745,
+          -0.07045037463652148,
+          0.05283587127725298
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT|R_backLegDigitIV01_JNT"
+        ],
+        "uuid": "09D216F7-447A-C86E-8527-59BE30505DDF"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT|R_backLegDigitV01_JNT|R_backLegDigitV02_JNT": {
+        "matrix": [
+          0.5333446170938742,
+          0.07937476599458443,
+          -0.8421657591830092,
+          0.0,
+          -0.0579058416647143,
+          -0.9898264193921322,
+          -0.12996373715176096,
+          0.0,
+          -0.8439137591709771,
+          0.11808177673399016,
+          -0.5233223300082411,
+          0.0,
+          -4.48938,
+          0.09973619999999986,
+          3.3393800000000002,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.32514602797316705,
+          -1.275874799866461e-06,
+          -5.699525912561398e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT|R_backLegDigitV01_JNT"
+        ],
+        "children": [],
+        "uuid": "2DEDF7DB-4437-8AEE-5BDF-C68A693C8480"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT|R_backLegDigitV01_JNT": {
+        "matrix": [
+          0.5333446170938742,
+          0.07937476599458443,
+          -0.8421657591830092,
+          0.0,
+          -0.0579058416647143,
+          -0.9898264193921322,
+          -0.12996373715176096,
+          0.0,
+          -0.8439137591709771,
+          0.11808177673399016,
+          -0.5233223300082411,
+          0.0,
+          -4.315969999999999,
+          0.12554400000000016,
+          3.0655500000000004,
+          1.0
+        ],
+        "jointOrient": [
+          8.5377363692873e-07,
+          -3.498610156718963e-14,
+          29.84215214511259
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.3426286812329211,
+          4.905185071457652e-07,
+          -5.902939084201364e-07
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT|R_backLegDigitV01_JNT|R_backLegDigitV02_JNT"
+        ],
+        "uuid": "0E8DC7F9-403D-36D8-FED0-C7A4BFC39A65"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT": {
+        "matrix": [
+          0.4914375617848254,
+          0.5613993779865941,
+          -0.6658226950647231,
+          0.0,
+          0.21517130373006557,
+          -0.8190771834202255,
+          -0.5318024799222874,
+          0.0,
+          -0.8439137591709771,
+          0.11808177673399016,
+          -0.5233223300082411,
+          0.0,
+          -4.14759,
+          0.31789599999999985,
+          2.83742,
+          1.0
+        ],
+        "jointOrient": [
+          -14.553112159995571,
+          11.715569234827452,
+          -17.523072043488114
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.04338574886544455,
+          0.11112134272349405,
+          0.3708867192320495
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT|R_backLegDigitV01_JNT"
+        ],
+        "uuid": "A9BE0289-47A2-A342-6A68-25B163A285CD"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT|R_backLegDigitIII01_JNT|R_backLegDigitIII02_JNT": {
+        "matrix": [
+          0.06315731017310938,
+          0.29990915389161255,
+          -0.9518748098272773,
+          0.0,
+          0.058686076050067364,
+          -0.953244561139162,
+          -0.29644687742739423,
+          0.0,
+          -0.9962766175362862,
+          -0.03713901009213516,
+          -0.07780485383209007,
+          0.0,
+          -3.488059999999999,
+          0.007388460000000235,
+          4.000899999999999,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.3600372657882467,
+          1.0784867878754767e-06,
+          1.0820517828413756e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT|R_backLegDigitIII01_JNT"
+        ],
+        "children": [],
+        "uuid": "352E44F7-46BC-DACD-FB24-54897A28D744"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT|R_backLegDigitIII01_JNT": {
+        "matrix": [
+          0.06315731017310938,
+          0.29990915389161255,
+          -0.9518748098272773,
+          0.0,
+          0.058686076050067364,
+          -0.953244561139162,
+          -0.29644687742739423,
+          0.0,
+          -0.9962766175362862,
+          -0.03713901009213516,
+          -0.07780485383209007,
+          0.0,
+          -3.46532,
+          0.1153679999999998,
+          3.65819,
+          1.0
+        ],
+        "jointOrient": [
+          7.323754950556127e-16,
+          7.156248033292891e-15,
+          11.686694024175605
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.5948315917077784,
+          -2.112718235469657e-06,
+          1.710658969145129e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT|R_backLegDigitIII01_JNT|R_backLegDigitIII02_JNT"
+        ],
+        "uuid": "1957630B-42E0-922E-3422-5EA196C3B307"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT": {
+        "matrix": [
+          0.049960606799611035,
+          0.486781106359533,
+          -0.8720940845227677,
+          0.0,
+          0.07026264383490914,
+          -0.8727341224111531,
+          -0.48311314664430693,
+          0.0,
+          -0.9962766175362862,
+          -0.03713901009213516,
+          -0.07780485383209007,
+          0.0,
+          -3.4356000000000004,
+          0.4049189999999998,
+          3.1394400000000005,
+          1.0
+        ],
+        "jointOrient": [
+          -7.710524509376404,
+          -14.478825093565794,
+          -6.090676390094852
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.011895794581163077,
+          -0.15608080895524967,
+          -0.359407903469243
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT|R_backLegDigitIII01_JNT"
+        ],
+        "uuid": "FCF0200E-4215-9916-6972-BF94D8E3CA78"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT|R_backLegDigitII01_JNT|R_backLegDigitII02_JNT": {
+        "matrix": [
+          -0.18249589814824702,
+          0.08158643741934801,
+          -0.979815748183445,
+          0.0,
+          0.003934386626458133,
+          -0.9964826399516397,
+          -0.08370704197906359,
+          0.0,
+          -0.9831987427580134,
+          -0.019131165783348114,
+          0.1815330017788278,
+          0.0,
+          -2.8631399999999996,
+          0.012660799999999906,
+          3.59439,
+          1.0
+        ],
+        "jointOrient": [
+          8.537736462515938e-07,
+          8.293977766047071e-23,
+          -4.713329122474786e-20
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.13978147144122754,
+          3.670418846635215e-08,
+          -4.6245018570090224e-07
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT|R_backLegDigitII01_JNT"
+        ],
+        "children": [],
+        "uuid": "BF9F7A30-40EC-5E59-9AB0-DD8979A6FCA2"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT|R_backLegDigitII01_JNT": {
+        "matrix": [
+          -0.18249589814824702,
+          0.08158643741934801,
+          -0.979815748183445,
+          0.0,
+          0.003934386626458133,
+          -0.9964826399516397,
+          -0.08370704197906359,
+          0.0,
+          -0.9831987427580134,
+          -0.019131165783348114,
+          0.1815330017788278,
+          0.0,
+          -2.8886499999999997,
+          0.02406509999999945,
+          3.4574300000000004,
+          1.0
+        ],
+        "jointOrient": [
+          8.044505268092902e-13,
+          3.1646519080561977e-12,
+          28.524875425409725
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.5018014926436523,
+          9.965882104001622e-07,
+          2.9698285999302243e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT|R_backLegDigitII01_JNT|R_backLegDigitII02_JNT"
+        ],
+        "uuid": "F7094999-4185-E74B-412E-6AA35E1E595B"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT": {
+        "matrix": [
+          -0.16222152490957387,
+          0.5475432287610259,
+          -0.8209023020396299,
+          0.0,
+          -0.083692347888408,
+          -0.8365586716624968,
+          -0.5414473010101768,
+          0.0,
+          -0.9831987427580134,
+          -0.019131165783348114,
+          0.1815330017788278,
+          0.0,
+          -2.9700500000000005,
+          0.29882399999999976,
+          3.0455,
+          1.0
+        ],
+        "jointOrient": [
+          2.401757467259126,
+          -26.903176340722204,
+          -10.225900409315955
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          0.19213470137453204,
+          -0.06627388122494415,
+          -0.8024274598486141
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT|R_backLegDigitII01_JNT"
+        ],
+        "uuid": "63FAFA3D-478F-4550-B22E-8B801236F284"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT": {
+        "matrix": [
+          0.2890953023323928,
+          0.3564090004346281,
+          -0.8884798988038684,
+          0.0,
+          -0.09525263132243486,
+          -0.9127945572171731,
+          -0.3971561815468287,
+          0.0,
+          -0.9525496535065743,
+          0.1994460346156183,
+          -0.22993572336766407,
+          0.0,
+          -3.7962599999999993,
+          0.32989199999999996,
+          3.0053800000000006,
+          1.0
+        ],
+        "jointOrient": [
+          12.862271357495857,
+          -7.119433131987884,
+          28.492405267470822
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -0.9076758839529637,
+          -5.46873325069086e-06,
+          -2.073318370321431e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegTip_JNT",
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIV00_JNT",
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitV00_JNT",
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitIII00_JNT",
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT|R_backLegDigitII00_JNT"
+        ],
+        "uuid": "BBCD9F45-4EBF-6B85-FDFC-CF837BF69182"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT": {
+        "matrix": [
+          0.29873025860275804,
+          0.7574746709098259,
+          -0.5805104267153008,
+          0.0,
+          0.29775357812999104,
+          -0.6518994240240612,
+          -0.6974022853904949,
+          0.0,
+          -0.9066989794335917,
+          0.03548610836860831,
+          -0.4202828771279349,
+          0.0,
+          -3.5251100000000006,
+          1.0174300000000005,
+          2.4784600000000006,
+          1.0
+        ],
+        "jointOrient": [
+          -15.427439750532505,
+          11.085750863069963,
+          34.86712737167262
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.1877041203016296,
+          9.206359461444436e-07,
+          3.3410065345407247e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT|R_backLegPastern_JNT"
+        ],
+        "uuid": "EFC7E893-41B5-5690-A84E-91B8DFB18AD2"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT": {
+        "matrix": [
+          0.06394783439720386,
+          0.9965009357625317,
+          -0.05381969435352227,
+          0.0,
+          0.1004098517921804,
+          -0.06008119837576855,
+          -0.9931304603448655,
+          0.0,
+          -0.9928889848009093,
+          0.058104514679414805,
+          -0.10390057379480405,
+          0.0,
+          -3.32126,
+          4.19398,
+          2.3069,
+          1.0
+        ],
+        "jointOrient": [
+          -11.342393467767517,
+          6.242762585850382,
+          28.462531613743923
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.372767808164763,
+          2.2347557319946088e-07,
+          -2.7239687350189e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT|R_backLegFetlock_JNT"
+        ],
+        "uuid": "992C8593-4F8A-EA96-8B3B-75A4AE7A5FD2"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT": {
+        "matrix": [
+          0.007078069428130079,
+          0.90006201984444,
+          0.4357043279182773,
+          0.0,
+          -0.10629957547735894,
+          0.43392365771271535,
+          -0.8946567272035413,
+          0.0,
+          -0.9943089566057947,
+          -0.039982742661870435,
+          0.09874755238855695,
+          0.0,
+          -3.29739,
+          7.229680000000003,
+          3.77643,
+          1.0
+        ],
+        "jointOrient": [
+          18.258359701520636,
+          6.377393080807385,
+          -18.60765209335649
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -4.487943668055804,
+          -5.495569301405823e-06,
+          5.251491471014447e-06
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_backLegHip_JNT"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT|R_backLegHock_JNT"
+        ],
+        "uuid": "2253ACB9-4272-828E-4623-5D8C91DF83C8"
+      },
+      "|C_guides_GRP|R_backLegHip_JNT": {
+        "matrix": [
+          -0.029050360344386572,
+          0.9935328275703164,
+          0.10976610179829438,
+          0.0,
+          0.23196704609878288,
+          0.1135154002140284,
+          -0.9660774003352186,
+          0.0,
+          -0.9722897541823973,
+          -0.0026027782043775427,
+          -0.2337645384945124,
+          0.0,
+          -3.42776,
+          11.6886,
+          4.26905,
+          1.0
+        ],
+        "jointOrient": [
+          -103.60256708760295,
+          -6.301832543380394,
+          91.67482029395153
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.42776,
+          11.6886,
+          4.26905
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|R_backLegHip_JNT|R_backLegStifle_JNT"
+        ],
+        "uuid": "A9849063-472A-0CD6-2DE5-CAB197AE1281"
+      },
+      "|C_guides_GRP|R_eye_JNT|R_eyeEnd_JNT": {
+        "matrix": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          -0.9192389693282924,
+          0.0,
+          -0.3937000346307563,
+          0.0,
+          -0.3937000346307563,
+          0.0,
+          0.9192389693282924,
+          0.0,
+          -4.123009314817481,
+          21.8491,
+          21.950005367871498,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          -0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -1.6753549367037532e-16,
+          -1.4421498256656992e-15,
+          1.6188449549292794
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP|R_eye_JNT"
+        ],
+        "children": [],
+        "uuid": "9458C995-4776-5C67-B39F-399B050CD38A"
+      },
+      "|C_guides_GRP|R_eye_JNT": {
+        "matrix": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          -0.9192389693282924,
+          0.0,
+          -0.3937000346307563,
+          0.0,
+          -0.3937000346307563,
+          0.0,
+          0.9192389693282924,
+          0.0,
+          -3.48567,
+          21.8491,
+          20.4619,
+          1.0
+        ],
+        "jointOrient": [
+          -23.184923185398773,
+          0.0,
+          90.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          -3.48567,
+          21.8491,
+          20.4619
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [
+          "|C_guides_GRP|R_eye_JNT|R_eyeEnd_JNT"
+        ],
+        "uuid": "7DFAEF9D-47B1-45DB-B985-EFB71E9C4410"
+      },
+      "|C_guides_GRP|C_localHip_JNT": {
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          2.111829984663416e-06,
+          11.688576054645527,
+          4.269048444879551,
+          1.0
+        ],
+        "jointOrient": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "translate": [
+          2.111829984663416e-06,
+          11.688576054645527,
+          4.269048444879551
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotateOrder": 0,
+        "parent": [
+          "|C_guides_GRP"
+        ],
+        "children": [],
+        "uuid": "4D18DC07-43B3-BCD2-E8AE-AEBE98398CBD"
+      }
+    },
+    "settings": {
+      "RIG_SEP": 0,
+      "Rig_Type": 1,
+      "SOLVER_SEP": 0,
+      "solver_mode": 0,
+      "solver_front_leg": 3,
+      "solver_back_leg": 3,
+      "RECIPROCAL_SEP": 0,
+      "reciprocal_coupling": 0,
+      "FOOT_SEP": 0,
+      "foot_type": 1,
+      "SPINE_SEP": 0,
+      "spine_skinning_jnts": 8,
+      "spine_controllers": 3,
+      "NECK_SEP": 0,
+      "neck_skinning_jnts": 5,
+      "neck_controllers": 2,
+      "ARM_SEP": 0,
+      "arm_skinning_jnts": 5,
+      "LEG_SEP": 0,
+      "leg_skinning_jnts": 5,
+      "TAIL_SEP": 0,
+      "tail_skinning_jnts": 5,
+      "tail_controllers": 5,
+      "MGEAR_SEP": 0,
+      "mGear_integration": 0,
+      "spine_tangents": 1,
+      "authored_guide_orientation": 1
+    },
+    "meshes": [
+      "|chihuahua|Eyes|corneas|Cornea_L|Cornea_LShape",
+      "|chihuahua|Eyes|corneas|Cornea_R|Cornea_RShape",
+      "|chihuahua|Eyes|eyes|Eye_L|Eye_LShape",
+      "|chihuahua|Eyes|eyes|Eye_R|Eye_RShape",
+      "|xgen|SCALP_BODY|SCALP_BODYShape",
+      "|xgen|SCALP_face|SCALP_faceShape",
+      "|chihuahua|body_geo|body_geo_Shape",
+      "|chihuahua|collar_low|collar_lowShape",
+      "|chihuahua|mouth|encia_inf|encia_infShape",
+      "|chihuahua|mouth|encia_sup|encia_supShape",
+      "|chihuahua|nails|nailsShape",
+      "|chihuahua|Eyes|corneas|pasted__pasted__polySurfaceShape1",
+      "|xgen|scalp_princ|scalp_princShape",
+      "|chihuahua|mouth|tongue|tongueShape"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "result": {
+    "asset": "chihuahua",
+    "before": {
+      "spine_controllers": 5,
+      "spine_tangents": null
+    },
+    "after": {
+      "spine_controllers": 3,
+      "spine_tangents": 1
+    },
+    "selection_preserved": true,
+    "scene": "",
+    "scope": "Guide build settings only; current guides and geometry retained. Hidden tangents are created on CREATE RIG."
+  }
+}

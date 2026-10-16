@@ -1,0 +1,118 @@
+{
+  "success": true,
+  "result": {
+    "passed": true,
+    "candidate": "C:\\proyectos\\auto-rig\\tmp\\chihuahua_orientation_20261016\\candidate.mb",
+    "linear_unit": "cm",
+    "checks": [
+      "Artist model neutral world positions",
+      "Authored L/R eyes, ears, paw/digit skin frames and FK axes",
+      "All four legs IK/FK and PV edits",
+      "Head gaze and body/neck/tail motion",
+      "Global scale",
+      "DG/Serial/Parallel agreement",
+      "Native reopen and neutral reset"
+    ],
+    "neutral_geometry_max_cm": 0.0,
+    "compared_meshes": [
+      "Cornea_LShape",
+      "Cornea_RShape",
+      "Eye_LShape",
+      "Eye_RShape",
+      "SCALP_BODYShape",
+      "SCALP_faceShape",
+      "body_geo_Shape",
+      "collar_lowShape",
+      "encia_infShape",
+      "encia_supShape",
+      "nailsShape",
+      "scalp_princShape",
+      "tongueShape"
+    ],
+    "reference_mesh_count": 13,
+    "candidate_mesh_count": 13,
+    "unmatched_reference_meshes": [],
+    "unmatched_candidate_meshes": [],
+    "joint_count": 442,
+    "direct_frame_max": 2.0841472051502663e-06,
+    "direct_frame_count": 152,
+    "neutral_ik_fk_max": 4.949729959236038e-09,
+    "nonuniform_spine_scope": "Existing middle-control scale channels do not drive stretch joint outputs; invariance checked. Head non-uniform deformation has separate native eye regression.",
+    "evaluation_max_error": 0.0,
+    "poses": [
+      {
+        "pose": "neutral",
+        "max_matrix_change": 0.0
+      },
+      {
+        "pose": "L_frontLeg_lift",
+        "max_matrix_change": 1.4243897897934197
+      },
+      {
+        "pose": "L_frontLeg_reach",
+        "max_matrix_change": 1.6761436692041496
+      },
+      {
+        "pose": "L_frontLeg_fk",
+        "max_matrix_change": 2.1766591314278756
+      },
+      {
+        "pose": "L_backLeg_lift",
+        "max_matrix_change": 1.254044722304279
+      },
+      {
+        "pose": "L_backLeg_reach",
+        "max_matrix_change": 1.705899708167323
+      },
+      {
+        "pose": "L_backLeg_fk",
+        "max_matrix_change": 3.1683423816260845
+      },
+      {
+        "pose": "R_frontLeg_lift",
+        "max_matrix_change": 1.4243504282019703
+      },
+      {
+        "pose": "R_frontLeg_reach",
+        "max_matrix_change": 1.6710367803560597
+      },
+      {
+        "pose": "R_frontLeg_fk",
+        "max_matrix_change": 2.176667716269609
+      },
+      {
+        "pose": "R_backLeg_lift",
+        "max_matrix_change": 1.2540456358300878
+      },
+      {
+        "pose": "R_backLeg_reach",
+        "max_matrix_change": 1.7337715438043793
+      },
+      {
+        "pose": "R_backLeg_fk",
+        "max_matrix_change": 3.1683550592183387
+      },
+      {
+        "pose": "body_neck_tail",
+        "max_matrix_change": 1.000916178678266
+      },
+      {
+        "pose": "eyes",
+        "max_matrix_change": 0.25612504160224786
+      },
+      {
+        "pose": "jaw_open",
+        "max_matrix_change": 1.2369158255907529
+      },
+      {
+        "pose": "nonuniform_spine",
+        "max_matrix_change": 4.5382099591312885e-05
+      },
+      {
+        "pose": "scaled",
+        "max_matrix_change": 15.396553580530004
+      }
+    ],
+    "cycles": []
+  }
+}

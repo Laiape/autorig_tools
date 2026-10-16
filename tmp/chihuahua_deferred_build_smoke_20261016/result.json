@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "started": 1792157585.063993,
+  "success": true,
+  "results": [
+    {
+      "asset": "chihuahua",
+      "success": true,
+      "started": 1792157585.310337,
+      "build_seconds": 20.073199399994337,
+      "maya": "2026",
+      "batch": true,
+      "root_exists": true,
+      "root": "|chihuahua",
+      "nodes": 13138,
+      "joints": 907,
+      "skins": 10,
+      "optional_health_audit": false,
+      "timing_report": "C:\\proyectos\\auto-rig\\tmp\\chihuahua_deferred_build_smoke_20261016\\chihuahua\\buildtiming.json",
+      "completed": 1792157627.2441144,
+      "exit_code": 0
+    }
+  ],
+  "completed": 1792157627.3672302
+}

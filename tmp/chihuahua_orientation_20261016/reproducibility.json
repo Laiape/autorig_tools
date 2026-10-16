@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "first_build_seconds": 32.30144119262695,
+  "second_build_seconds": 26.750872373580933,
+  "entrypoint": "Normal CREATE RIG with authored guide orientation",
+  "compared_nodes": 545,
+  "max_matrix_error": 0.0,
+  "joint_names_match": true,
+  "controls_match": true
+}

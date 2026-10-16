@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "result": {
+    "standalone_tabs": [
+      "Layers / Paint",
+      "NURBS Skin"
+    ],
+    "stroke_dabs": 2,
+    "stroke_error": "",
+    "context": "ngNurbsSurfaceBrush1",
+    "standalone_tool_release": true,
+    "autorig_tabs": [
+      "Layers / Paint",
+      "Loop Rigger (Preview)",
+      "NURBS Skin"
+    ],
+    "autorig_tool_release": true,
+    "callbacks": 6,
+    "standalone_unhook": true
+  }
+}

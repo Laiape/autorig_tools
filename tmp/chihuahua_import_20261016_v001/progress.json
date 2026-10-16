@@ -1,0 +1,11 @@
+{
+  "pid": 42748,
+  "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\model_cache.py",
+  "source_path": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\models\\chihuahua_v001.ma",
+  "operation": "import",
+  "source_sha256": "43ec2ab71d712410af609c5599f5ec61bc3439e9c55e0e5ccebec6656b1c6df5",
+  "api": 20260303,
+  "samples": [],
+  "scope": "Interactive Maya, open command and explicit redraw measured separately; warm OS/plugin state.",
+  "phase": "warmup"
+}

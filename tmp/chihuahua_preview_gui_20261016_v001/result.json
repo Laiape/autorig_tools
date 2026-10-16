@@ -1,0 +1,38 @@
+{
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\models\\chihuahua_v002.mb",
+  "pid": 43724,
+  "samples": [
+    {
+      "cold": true,
+      "open_seconds": 2.360751200001687,
+      "redraw_seconds": 0.42229170000064187,
+      "total_seconds": 2.7830429000023287
+    },
+    {
+      "cold": false,
+      "open_seconds": 0.13039310000021942,
+      "redraw_seconds": 0.05036959999415558,
+      "total_seconds": 0.180762699994375
+    },
+    {
+      "cold": false,
+      "open_seconds": 0.1123202000017045,
+      "redraw_seconds": 0.03686060001200531,
+      "total_seconds": 0.1491808000137098
+    },
+    {
+      "cold": false,
+      "open_seconds": 0.1265558000013698,
+      "redraw_seconds": 0.036708900006487966,
+      "total_seconds": 0.16326470000785775
+    }
+  ],
+  "phase": "complete",
+  "median": {
+    "open_seconds": 0.1265558000013698,
+    "redraw_seconds": 0.03686060001200531,
+    "total_seconds": 0.16326470000785775
+  },
+  "groom_loaded": true,
+  "groom_visible": true
+}
