@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "accepted": true,
+    "differences": [],
+    "skc": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\Edward_exact_lossless_v002.skc",
+    "bytes": 28098019,
+    "mesh_entries": 34,
+    "skin_entries": 48,
+    "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_safe_full_skc_roundtrip_v002.mb",
+    "scope": "All exported polygon-skin weight/DQ replacement by index. Original PRX/corrective/wrinkle native graph retained; full deformer/preset rebuild is a separate gate."
+  }
+}

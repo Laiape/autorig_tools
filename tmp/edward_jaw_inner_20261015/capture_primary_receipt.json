@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "result": [
+    {
+      "mesh": "cabeza_high",
+      "skin": "C_mouth_local_SKC",
+      "skin_attrs": {
+        "normalizeWeights": 1,
+        "maintainMaxInfluences": true,
+        "maxInfluences": 5,
+        "skinningMethod": 0
+      }
+    },
+    {
+      "mesh": "cabeza_low",
+      "skin": "skinCluster41",
+      "skin_attrs": {
+        "normalizeWeights": 1,
+        "maintainMaxInfluences": true,
+        "maxInfluences": 5,
+        "skinningMethod": 0
+      }
+    }
+  ]
+}

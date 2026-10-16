@@ -1,0 +1,59 @@
+mayaUsdPlugin: AdskAssetResolver plugin found.
+// Bifrost: Pre-loaded mayaUsdPlugin to access proper Maya USD libraries.
+Loading Bifrost version 2.15.0.0-202510081557-e33c3fe
+Loading library: Amino, version: 2.15.0.11, from: Autodesk.
+Loading library: bif, version: 2.15.0.11, from: Autodesk.
+Loading library: geometries, version: 2.15.0.11, from: Autodesk.
+Loading library: fluids, version: 2.15.0.11, from: Autodesk.
+Loading library: particles, version: 2.15.0.11, from: Autodesk.
+Loading library: file, version: 2.15.0.11, from: Autodesk.
+Loading library: machine_learning, version: 2.15.0.11, from: Autodesk.
+Loading library: mpm, version: 2.15.0.11, from: Autodesk.
+Loading library: rigid_bodies, version: 2.15.0.11, from: Autodesk.
+Loading library: ocean, version: 2.15.0.11, from: Autodesk.
+Loading library: nucleus, version: 2.15.0.11, from: Autodesk.
+Loading library: scatter, version: 2.15.0.11, from: Autodesk.
+Loading library: simulation, version: 2.15.0.11, from: Autodesk.
+Loading library: rigging, version: 2.15.0.11, from: Autodesk.
+Loading library: fields, version: 2.15.0.11, from: Autodesk.
+Loading library: wedging, version: 2.15.0.11, from: Autodesk.
+Loading library: graphs, version: 2.15.0, from: Autodesk.
+Loading library: AminoMayaTranslation, from: Autodesk.
+Loading library: fcurveMayaTranslations, from: Autodesk.
+Loading library: bifrostObjectMayaTranslations, from: Autodesk.
+Loading library: riggingMayaTranslations, from: Autodesk.
+Loading library: usd_pack, version: 1.4.1, from: Autodesk.
+Initialized VP2.0 renderer {
+  Version : 2016.11.62.12. Feature Level 4.
+  Adapter : NVIDIA GeForce RTX 5060 Laptop GPU/PCIe/SSE2
+  Vendor ID: 4318. Device ID : 42888
+  Driver : .
+  API : OpenGL V.4.6.
+  Max texture size : 32768 * 32768.
+  Max texture coords : 8
+  Shader versions supported (Vertex: 4, Geometry: 4, Pixel 4).
+  Shader compiler profile : (Best card profile)
+  Active stereo support available : 0
+  GPU Memory Limit : 8151 MB.
+  CPU Memory Limit : 30776.9 MB.
+}
+OpenCL evaluator is attempting to initialize OpenCL.
+Detected 2 OpenCL Platforms: 
+ 0: NVIDIA Corporation. NVIDIA CUDA. OpenCL 3.0 CUDA 13.4.62.
+ Supported extensions: cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_fp64 cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_icd cl_khr_gl_sharing cl_nv_compiler_options cl_nv_device_attribute_query cl_nv_pragma_unroll cl_nv_d3d10_sharing cl_khr_d3d10_sharing cl_nv_d3d11_sharing cl_nv_copy_opts cl_nv_create_buffer cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_device_uuid cl_khr_pci_bus_info cl_khr_external_semaphore cl_khr_external_memory cl_khr_external_semaphore_win32 cl_khr_external_memory_win32 cl_khr_semaphore 
+ Selected matching OpenCL Platform: NVIDIA Corporation NVIDIA CUDA OpenCL 3.0 CUDA 13.4.62.
+ 1: Intel(R) Corporation. Intel(R) OpenCL Graphics. OpenCL 3.0 .
+ Supported extensions: cl_khr_byte_addressable_store cl_khr_device_uuid cl_khr_fp16 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_icd cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_intel_command_queue_families cl_intel_subgroups cl_intel_required_subgroup_size cl_intel_subgroups_short cl_khr_spir cl_intel_accelerator cl_intel_driver_diagnostics cl_khr_priority_hints cl_khr_throttle_hints cl_khr_create_command_queue cl_intel_subgroups_char cl_intel_subgroups_long cl_khr_il_program cl_intel_mem_force_host_memory cl_khr_subgroup_extended_types cl_khr_subgroup_non_uniform_vote cl_khr_subgroup_ballot cl_khr_subgroup_non_uniform_arithmetic cl_khr_subgroup_shuffle cl_khr_subgroup_shuffle_relative cl_khr_subgroup_clustered_reduce cl_intel_device_attribute_query cl_khr_expect_assume cl_khr_extended_bit_ops cl_khr_suggested_local_work_size cl_intel_split_work_group_barrier cl_intel_spirv_media_block_io cl_intel_spirv_subgroups cl_khr_spirv_linkonce_odr cl_khr_spirv_no_integer_wrap_decoration cl_intel_unified_shared_memory cl_khr_mipmap_image cl_khr_mipmap_image_writes cl_ext_float_atomics cl_khr_external_memory cl_intel_planar_yuv cl_intel_packed_yuv cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_image2d_from_buffer cl_khr_depth_images cl_khr_3d_image_writes cl_intel_media_block_io cl_intel_subgroup_local_block_io cl_khr_integer_dot_product cl_khr_gl_sharing cl_khr_gl_depth_images cl_khr_gl_event cl_khr_gl_msaa_sharing cl_intel_dx9_media_sharing cl_khr_dx9_media_sharing cl_khr_d3d10_sharing cl_khr_d3d11_sharing cl_intel_d3d11_nv12_media_sharing cl_intel_sharing_format_query cl_khr_pci_bus_info cl_intel_simultaneous_sharing  
+OpenCL evaluator choosing OpenCL platform NVIDIA Corporation.
+OpenCL evaluator is unable to find a GPU device that can share VBOs with OpenGL.
+Warning: Fragment BIFisoSurfaceVoxelFragmentVtt missing Cg implementation
+Warning: Fragment BIFisoSurfaceVoxelFragmentVttInteractive missing Cg implementation
+Warning: Fragment BIFvolumeVoxelFragmentVtt missing Cg implementation
+Bifrost: New GraphContainer added to the Workspace.
+Warning: Unrecognized node type for node 'hyperShadePrimaryNodeEditorSavedTabsInfo'; preserving node information during this session.
+Warning: Unrecognized node type for node 'MayaNodeEditorSavedTabsInfo'; preserving node information during this session.
+Warning: Errors have occurred while reading this scene that may result in data loss.
+File read in  29.5 seconds.
+Error: line 1: line 1: menuSet: There are no menuSets to query.
+Error: line 1: line 1: Error evaluating argument at position 1 in procedure "findMenuSetFromLabel".
+Error: line 1: Bifrost: The user's default publishing location does not exist: C:/Users/LaiaPeris/Autodesk/Bifrost/Compounds

@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "result": {
+    "meshes": [
+      {
+        "mesh": "cabeza_high",
+        "neutral_max_change_cm": 1.528856233776226e-05,
+        "outside_weight_max_change": 0.0,
+        "core_jaw_weight_max": 0.00123208,
+        "normalization_max_error": 9.998000000011054e-05
+      },
+      {
+        "mesh": "cabeza_low",
+        "neutral_max_change_cm": 1.5288678525932885e-05,
+        "outside_weight_max_change": 0.0,
+        "core_jaw_weight_max": 0.00071882,
+        "normalization_max_error": 0.00011003000000009422
+      }
+    ],
+    "bakes": [
+      {
+        "skin": "polySurface61_wrapBake_SKC",
+        "max_weight_change": 0.0
+      },
+      {
+        "skin": "polySurface62_wrapBake_SKC",
+        "max_weight_change": 0.0
+      },
+      {
+        "skin": "brazaletes1_wrapBake_SKC",
+        "max_weight_change": 0.0
+      }
+    ],
+    "wrap_count": 20
+  }
+}

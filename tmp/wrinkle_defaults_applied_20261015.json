@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "result": [
+    "C_eyebrowMid_CTL",
+    "C_lowerLip_CTL",
+    "C_noseMain_CTL",
+    "C_noseTip_CTL",
+    "C_upperLip_CTL",
+    "L_cheek_CTL",
+    "L_eyebrowIn_CTL",
+    "L_eyebrowMain_CTL",
+    "L_eyebrowMid_CTL",
+    "L_eyebrowOut_CTL",
+    "L_lipCorner_CTL",
+    "L_nose_CTL",
+    "R_cheek_CTL",
+    "R_eyebrowIn_CTL",
+    "R_eyebrowMain_CTL",
+    "R_eyebrowMid_CTL",
+    "R_eyebrowOut_CTL",
+    "R_lipCorner_CTL",
+    "R_nose_CTL"
+  ]
+}

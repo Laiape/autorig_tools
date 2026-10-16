@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "result": {
+    "controls": [
+      "R_lipCorner_CTL",
+      "L_lipCorner_CTL"
+    ],
+    "fixed_inputs": {
+      "R_lipAutoWideGain_MUL.input[1]": 1.0,
+      "L_lipAutoWideGain_MUL.input[1]": 1.0
+    },
+    "remaining_depth_attrs": []
+  }
+}

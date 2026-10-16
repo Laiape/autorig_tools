@@ -1,0 +1,220 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "modules": {
+      "maya_tools.scripts.utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "maya_tools.scripts.biped.autorig.eyelid_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\eyelid_module.py"
+    },
+    "direct": [
+      "L_eyeDirect_CTL",
+      "R_eyeDirect_CTL"
+    ],
+    "controls": [
+      "L_eyelidDown_CTL",
+      "L_eyelidInDown_CTL",
+      "L_eyelidInUp_CTL",
+      "L_eyelidIn_CTL",
+      "L_eyelidOutDown_CTL",
+      "L_eyelidOutUp_CTL",
+      "L_eyelidOut_CTL",
+      "L_eyelidUp_CTL",
+      "R_eyelidDown_CTL",
+      "R_eyelidInDown_CTL",
+      "R_eyelidInUp_CTL",
+      "R_eyelidIn_CTL",
+      "R_eyelidOutDown_CTL",
+      "R_eyelidOutUp_CTL",
+      "R_eyelidOut_CTL",
+      "R_eyelidUp_CTL"
+    ],
+    "details": {
+      "L": {
+        "attrs": {
+          "Upper_Blink": 0.0,
+          "Lower_Blink": 0.0,
+          "Blink_Height": 0.20000000298023224
+        },
+        "history": {
+          "L_eyelidUp_CRV": [
+            "L_eyelidUp_CRVShape"
+          ],
+          "L_eyelidDown_CRV": [
+            "L_eyelidDown_CRVShape"
+          ],
+          "L_eyelidUpRebuilded_CRV": [
+            "L_eyelidUpRebuilded_CRVShape",
+            "L_upperEyelidBlink_BLS",
+            "L_eyelidUpRebuilded_CRVShapeOrig",
+            "L_eyelidBlinkRef_CRVShape",
+            "L_eyelidBlink_BLS",
+            "L_eyelidBlinkRef_CRVShapeOrig",
+            "L_eyelidUpPose_CRVShape",
+            "L_upperEyelid_SKIN",
+            "L_eyelidInLocal_JNT",
+            "L_eyelidInLocal_MMX",
+            "L_eyelidIn_CTL",
+            "L_eyelidInUpLocal_JNT",
+            "L_eyelidInUpLocal_MMX",
+            "L_eyelidInUpLocal_MMT",
+            "L_eyelidInUp_CTL"
+          ],
+          "L_eyelidDownRebuilded_CRV": [
+            "L_eyelidDownRebuilded_CRVShape",
+            "L_lowerEyelidBlink_BLS",
+            "L_eyelidDownRebuilded_CRVShapeOrig",
+            "L_eyelidBlinkRef_CRVShape",
+            "L_eyelidBlink_BLS",
+            "L_eyelidBlinkRef_CRVShapeOrig",
+            "L_eyelidUpPose_CRVShape",
+            "L_upperEyelid_SKIN",
+            "L_eyelidUpRebuilded_CRVShapeOrig",
+            "L_eyelidInLocal_JNT",
+            "L_eyelidInLocal_MMX",
+            "L_eyelidIn_CTL",
+            "L_eyelidInUpLocal_JNT",
+            "L_eyelidInUpLocal_MMX",
+            "L_eyelidInUpLocal_MMT"
+          ]
+        },
+        "surface": true,
+        "locks": {
+          "L_eyelidDown_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidInDown_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidInUp_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidIn_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidOutDown_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidOutUp_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidOut_CTL": [
+            false,
+            false,
+            false
+          ],
+          "L_eyelidUp_CTL": [
+            false,
+            false,
+            false
+          ]
+        }
+      },
+      "R": {
+        "attrs": {
+          "Upper_Blink": 0.0,
+          "Lower_Blink": 0.0,
+          "Blink_Height": 0.20000000298023224
+        },
+        "history": {
+          "R_eyelidUp_CRV": [
+            "R_eyelidUp_CRVShape"
+          ],
+          "R_eyelidDown_CRV": [
+            "R_eyelidDown_CRVShape"
+          ],
+          "R_eyelidUpRebuilded_CRV": [
+            "R_eyelidUpRebuilded_CRVShape",
+            "R_upperEyelidBlink_BLS",
+            "R_eyelidUpRebuilded_CRVShapeOrig",
+            "R_eyelidBlinkRef_CRVShape",
+            "R_eyelidBlink_BLS",
+            "R_eyelidBlinkRef_CRVShapeOrig",
+            "R_eyelidUpPose_CRVShape",
+            "R_upperEyelid_SKIN",
+            "R_eyelidInLocal_JNT",
+            "R_eyelidInLocal_MMX",
+            "R_eyelidIn_CTL",
+            "R_eyelidInUpLocal_JNT",
+            "R_eyelidInUpLocal_MMX",
+            "R_eyelidInUpLocal_MMT",
+            "R_eyelidInUp_CTL"
+          ],
+          "R_eyelidDownRebuilded_CRV": [
+            "R_eyelidDownRebuilded_CRVShape",
+            "R_lowerEyelidBlink_BLS",
+            "R_eyelidDownRebuilded_CRVShapeOrig",
+            "R_eyelidBlinkRef_CRVShape",
+            "R_eyelidBlink_BLS",
+            "R_eyelidBlinkRef_CRVShapeOrig",
+            "R_eyelidUpPose_CRVShape",
+            "R_upperEyelid_SKIN",
+            "R_eyelidUpRebuilded_CRVShapeOrig",
+            "R_eyelidInLocal_JNT",
+            "R_eyelidInLocal_MMX",
+            "R_eyelidIn_CTL",
+            "R_eyelidInUpLocal_JNT",
+            "R_eyelidInUpLocal_MMX",
+            "R_eyelidInUpLocal_MMT"
+          ]
+        },
+        "surface": true,
+        "locks": {
+          "R_eyelidDown_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidInDown_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidInUp_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidIn_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidOutDown_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidOutUp_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidOut_CTL": [
+            false,
+            false,
+            false
+          ],
+          "R_eyelidUp_CTL": [
+            false,
+            false,
+            false
+          ]
+        }
+      }
+    }
+  }
+}

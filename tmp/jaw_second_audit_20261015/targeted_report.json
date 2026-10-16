@@ -1,0 +1,108 @@
+{
+  "purpose": "Targeted source candidate in disposable jaw fixture, DG all joint/control-group matrix queries; no mesh or viewport timings. Share corner frames and mirrored Roll; remove zero-weight corner blends.",
+  "samples": [
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 7.717037500090858,
+        "corner": 8.890779166752813,
+        "fine": 8.030425000015384,
+        "mixed": 11.173708333293083
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 8.49856249988079,
+        "corner": 19.75949166671853,
+        "fine": 6.87284583333773,
+        "mixed": 10.919933333298104
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 10.300925000137795,
+        "corner": 8.74260000000504,
+        "fine": 8.39141666665455,
+        "mixed": 10.640804166541784
+      }
+    },
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 8.569395833395296,
+        "corner": 10.374708333377688,
+        "fine": 8.381574999930308,
+        "mixed": 10.712795833266378
+      }
+    },
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 10.706941666740022,
+        "corner": 14.407508333382188,
+        "fine": 7.643000000067938,
+        "mixed": 26.09400000013314
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 19.565724999968854,
+        "corner": 12.877287499880671,
+        "fine": 12.836575000013303,
+        "mixed": 29.230491666718688
+      }
+    },
+    {
+      "kind": "after",
+      "ms": {
+        "jaw": 18.38084166668826,
+        "corner": 16.584162499990878,
+        "fine": 14.426979166576833,
+        "mixed": 25.081141666608648
+      }
+    },
+    {
+      "kind": "before",
+      "ms": {
+        "jaw": 11.010304166726806,
+        "corner": 13.714333333306664,
+        "fine": 10.652533333389632,
+        "mixed": 15.758362500037038
+      }
+    }
+  ],
+  "source_sha256": "9a1d09a289a936884247a7b7f8ac6f5aaedac9f6f34f59cd946ce43e592cb68b",
+  "before_nodes": 2931,
+  "after_nodes": 2891,
+  "poses": 278,
+  "unique_poses": 266,
+  "matrices_per_pose": 152,
+  "maximum_matrix_error": 3.885780586188048e-15,
+  "worst": {
+    "pose": "random_47",
+    "node": "R_lowerLip05_JNT"
+  },
+  "before_median_ms": {
+    "jaw": 9.63816875006766,
+    "corner": 12.044520833342176,
+    "fine": 8.205999999972846,
+    "mixed": 13.466035416665061
+  },
+  "after_median_ms": {
+    "jaw": 14.340883333413027,
+    "corner": 14.730724999935774,
+    "fine": 10.613995833333927,
+    "mixed": 18.000537499953374
+  },
+  "cycles": [],
+  "success": true,
+  "compatibility_passed": true,
+  "performance_improvement_demonstrated": false,
+  "artist_scene_changed": false,
+  "production_source_changed_by_audit": false,
+  "interpretation": "The candidate preserves fixture output matrices, but measured medians are slower and samples vary substantially. No production optimization applied. Further work should reduce repeated orientation calculations and validate Parallel evaluation with the actual deformed head.",
+  "live_scene_inventory": "../jaw_audit_live_20261015.json"
+}

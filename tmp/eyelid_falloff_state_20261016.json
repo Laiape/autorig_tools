@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "result": {
+    "undo": true,
+    "queue": "select -r L_eyelidDown_CTL ",
+    "pose": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "joined": "L_upperLidOrbit00_PMM.outputX",
+    "nodes": 11785
+  }
+}

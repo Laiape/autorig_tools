@@ -1,0 +1,30 @@
+{
+  "result": [
+    {
+      "wrap": "brazaletes1_PRX",
+      "accepted": false,
+      "reason": "Native Maya quantized candidate exceeded threshold",
+      "worst_max_cm": 0.10048233121612757,
+      "worst_rms_cm": 0.01970028425041789,
+      "held_out_max_cm": 0.10048233121612757
+    },
+    {
+      "wrap": "polySurface61_PRX",
+      "accepted": true,
+      "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface61|polySurface61_ShapeDeformed",
+      "skin": "polySurface61_wrapBake_SKC",
+      "worst_max_cm": 0.03149438681085791,
+      "worst_rms_cm": 0.012609075676743513,
+      "held_out_max_cm": 0.023055419347319923
+    },
+    {
+      "wrap": "polySurface62_PRX",
+      "accepted": true,
+      "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface62|polySurface62_ShapeDeformed",
+      "skin": "polySurface62_wrapBake_SKC",
+      "worst_max_cm": 0.043488388900422746,
+      "worst_rms_cm": 0.008095445576859978,
+      "held_out_max_cm": 0.03163622700121779
+    }
+  ]
+}

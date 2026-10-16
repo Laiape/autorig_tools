@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belt_blendshape_TEST_v001.ma",
+    "variants": {
+      "blendshape_only_shared": {
+        "cinturon3": {
+          "blendshape": "EdwardBelts_BLENDSHAPE_ONLY_SHARED_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturon3_blendshape_only_shared_TEST_ShapeDeformed",
+            "cinturones2_blendshape_only_shared_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0,
+            1
+          ]
+        },
+        "cinturones2": {
+          "blendshape": "EdwardBelts_BLENDSHAPE_ONLY_SHARED_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturon3_blendshape_only_shared_TEST_ShapeDeformed",
+            "cinturones2_blendshape_only_shared_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "blendshape_only_separate": {
+        "cinturon3": {
+          "blendshape": "cinturon3_BLENDSHAPE_ONLY_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturon3_blendshape_only_separate_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0
+          ]
+        },
+        "cinturones2": {
+          "blendshape": "cinturones2_BLENDSHAPE_ONLY_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturones2_blendshape_only_separate_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0
+          ]
+        }
+      },
+      "shared": {
+        "cinturon3": {
+          "blendshape": "EdwardBelts_SHARED_BLS_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturon3_SHARED_BS_TEST_ShapeDeformed",
+            "cinturones2_SHARED_BS_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0,
+            1
+          ]
+        },
+        "cinturones2": {
+          "blendshape": "EdwardBelts_SHARED_BLS_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturon3_SHARED_BS_TEST_ShapeDeformed",
+            "cinturones2_SHARED_BS_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0,
+            1
+          ]
+        }
+      },
+      "separate": {
+        "cinturon3": {
+          "blendshape": "cinturon3_SEPARATE_BLS_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturon3_SEPARATE_BS_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0
+          ]
+        },
+        "cinturones2": {
+          "blendshape": "cinturones2_SEPARATE_BLS_TEST",
+          "targets": 76,
+          "geometry": [
+            "cinturones2_SEPARATE_BS_TEST_ShapeDeformed"
+          ],
+          "geometry_indices": [
+            0
+          ]
+        }
+      }
+    },
+    "selector": 0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "result": [
+    {
+      "mesh": "cabeza_high",
+      "worst_max_cm": 0.03899635882426309,
+      "worst_rms_cm": 0.010274974701928688
+    },
+    {
+      "mesh": "cabeza_low",
+      "worst_max_cm": 0.08954800673664329,
+      "worst_rms_cm": 0.03784456386868305
+    }
+  ]
+}

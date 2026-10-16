@@ -1,0 +1,78 @@
+{
+  "success": true,
+  "result": {
+    "scope": "Standalone Maya 2026 DG CPU: set three control channels and force only the two belt outMesh outputs. No viewport, frame playback, GPU or full-rig FPS claim.",
+    "quality_gate_passed": false,
+    "summary": {
+      "PRX_reference": {
+        "median_ms": 12.30149999173591,
+        "p95_ms": 18.40819000644842,
+        "max_ms": 25.683200001367368,
+        "pass_medians_ms": [
+          14.259049996326212,
+          13.30029999371618,
+          13.206499999796506,
+          10.87454999651527,
+          11.882150000019465,
+          11.82754999899771
+        ],
+        "samples": 360
+      },
+      "shared": {
+        "median_ms": 5.746250004449394,
+        "p95_ms": 9.804829999484333,
+        "max_ms": 13.153599997167476,
+        "pass_medians_ms": [
+          7.030050001048949,
+          5.265350002446212,
+          5.400949994509574
+        ],
+        "samples": 180
+      },
+      "separate": {
+        "median_ms": 5.974099993181881,
+        "p95_ms": 9.571885001059837,
+        "max_ms": 16.550300002563745,
+        "pass_medians_ms": [
+          7.074099994497374,
+          5.860049997863825,
+          5.377899993618485
+        ],
+        "samples": 180
+      },
+      "blendshape_only_shared": {
+        "median_ms": 1.2734499905491248,
+        "p95_ms": 2.3773049986630213,
+        "max_ms": 7.071800006087869,
+        "pass_medians_ms": [
+          1.8845000086002983,
+          1.0837500012712553,
+          1.0483499936526641
+        ],
+        "samples": 180
+      },
+      "blendshape_only_separate": {
+        "median_ms": 1.343300005828496,
+        "p95_ms": 2.2675700063700774,
+        "max_ms": 3.6748999991687015,
+        "pass_medians_ms": [
+          1.6246999948634766,
+          1.2107999937143177,
+          1.101499998185318
+        ],
+        "samples": 180
+      },
+      "skin_only": {
+        "median_ms": 5.164900001545902,
+        "p95_ms": 8.726550002029388,
+        "max_ms": 14.822700002696365,
+        "pass_medians_ms": [
+          6.469649997598026,
+          4.706399995484389,
+          5.027499995776452
+        ],
+        "samples": 180
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "result": {
+    "pid": 55092,
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belts_SKIN_COMPARE_v001.ma",
+    "modified": true,
+    "selector": 1,
+    "viewport": [
+      1317,
+      750
+    ],
+    "visible_candidates": {
+      "cinturon3_SKIN_ONLY_TEST": true,
+      "cinturones2_SKIN_ONLY_TEST": true
+    },
+    "image": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\artist_window_55092.png",
+    "joints": 852
+  }
+}

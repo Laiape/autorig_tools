@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "result": {
+    "source": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_artist_current_before_DQ_export.ma",
+    "bytes": 199834053,
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": []
+    },
+    "after": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": []
+    }
+  }
+}

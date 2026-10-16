@@ -1,0 +1,69 @@
+{
+  "exports": 118,
+  "largest": [
+    {
+      "label": "model_all_display_outputs",
+      "kind": "baked_geometry_without_history_or_materials",
+      "nodes": 119,
+      "bytes": 48092344,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\model_all_display_outputs.mb",
+      "sha256": "983b157173c98afd04880781e10aaa8f6d6b2d0d077db327538b5ed48fdb7f34"
+    },
+    {
+      "label": "model_visible_outputs",
+      "kind": "baked_geometry_without_history_or_materials",
+      "nodes": 111,
+      "bytes": 46206216,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\model_visible_outputs.mb",
+      "sha256": "e8901433b663178683139ca324896f3606baab64eed8458c685695041d2fb762"
+    },
+    {
+      "label": "model_cabello_geo",
+      "kind": "baked_geometry_without_history_or_materials",
+      "nodes": 3,
+      "bytes": 13722888,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\model_cabello_geo.mb",
+      "sha256": "2d60c79dc42daf06a52236f70e9612de101a32563323007873b0c9cf9c748be1"
+    },
+    {
+      "label": "wrinkles",
+      "kind": "isolated_wrinkle_nodes_and_native_data",
+      "nodes": 6,
+      "bytes": 8321116,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\wrinkles.mb",
+      "sha256": "15b20650871ca8bc1763ead584c46de5436ee6ed5972daf375f0ebde573c9623"
+    },
+    {
+      "label": "all_skinClusters",
+      "kind": "isolated_skin_payload",
+      "nodes": 58,
+      "bytes": 5788920,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\all_skinClusters.mb",
+      "sha256": "205810f499fddcc0dbd1401d813f9cd884a75c9438bb9712e880f62bea5c9100"
+    },
+    {
+      "label": "model_cabeza_high",
+      "kind": "baked_geometry_without_history_or_materials",
+      "nodes": 3,
+      "bytes": 3261144,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\model_cabeza_high.mb",
+      "sha256": "16176b843af08a9db9327b8d62c3acdf629d62f974f6cf73a25818d39760dd43"
+    },
+    {
+      "label": "model_cuerpo_base",
+      "kind": "baked_geometry_without_history_or_materials",
+      "nodes": 3,
+      "bytes": 1808176,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\model_cuerpo_base.mb",
+      "sha256": "232031953765601c1fd95d608fe62a570ba486b1a4dc25f144ba3384ed11b7c5"
+    },
+    {
+      "label": "module_C_eyelid",
+      "kind": "module_exclusive_native_nodes",
+      "nodes": 3443,
+      "bytes": 1121560,
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\storage_payloads\\module_C_eyelid.mb",
+      "sha256": "59b06abd9efd899c446636bf3f78e046a1fa623ffc40f6daa6b4b33ab214d516"
+    }
+  ]
+}

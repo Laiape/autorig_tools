@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "asset": "Edward",
+  "status": "complete",
+  "phases": [
+    {
+      "name": "Creating basic structure...",
+      "seconds": 7.797381500000483
+    },
+    {
+      "name": "Preparing model data...",
+      "seconds": 1.8577044999983627
+    },
+    {
+      "name": "Building rig modules...",
+      "seconds": 0.17451250000158325
+    },
+    {
+      "name": "Loading rig settings\u2026",
+      "seconds": 0.002288399999088142
+    },
+    {
+      "name": "Building spine\u2026",
+      "seconds": 0.46303720000287285
+    },
+    {
+      "name": "Building legs\u2026",
+      "seconds": 0.8751515999974799
+    },
+    {
+      "name": "Building clavicles\u2026",
+      "seconds": 0.19386690000101225
+    },
+    {
+      "name": "Building arms\u2026",
+      "seconds": 0.8273217999958433
+    },
+    {
+      "name": "Building fingers\u2026",
+      "seconds": 0.8260740000041551
+    },
+    {
+      "name": "Building neck\u2026",
+      "seconds": 0.15774299999611685
+    },
+    {
+      "name": "Building jaw\u2026",
+      "seconds": 1.0404548000005889
+    },
+    {
+      "name": "Building eyebrows\u2026",
+      "seconds": 0.533047600001737
+    },
+    {
+      "name": "Building eyelids\u2026",
+      "seconds": 2.8811071000018273
+    },
+    {
+      "name": "Building tongue\u2026",
+      "seconds": 0.22818479999841657
+    },
+    {
+      "name": "Building teeth\u2026",
+      "seconds": 0.11918880000303034
+    },
+    {
+      "name": "Building ears\u2026",
+      "seconds": 0.2065937999941525
+    },
+    {
+      "name": "Building nose\u2026",
+      "seconds": 0.27246240000386024
+    },
+    {
+      "name": "Building cheekbones\u2026",
+      "seconds": 0.6178899000005913
+    },
+    {
+      "name": "Optimizing rig graph...",
+      "seconds": 0.02215260000230046
+    },
+    {
+      "name": "Labeling joints...",
+      "seconds": 0.046370299998670816
+    },
+    {
+      "name": "Hiding utility nodes...",
+      "seconds": 0.1000452000007499
+    },
+    {
+      "name": "Setting inherit transforms...",
+      "seconds": 0.011695199995301664
+    },
+    {
+      "name": "Importing skin weights...",
+      "seconds": 2.094303999998374
+    },
+    {
+      "name": "Localizing corrective skin...",
+      "seconds": 0.006342800006677862
+    },
+    {
+      "name": "Importing corrective blendshapes...",
+      "seconds": 0.023946699999214616
+    },
+    {
+      "name": "Importing facial wrinkles...",
+      "seconds": 9.503562599995348
+    },
+    {
+      "name": "Cleaning up node graph...",
+      "seconds": 0.29921570000442443
+    },
+    {
+      "name": "Storing scene evaluation profile...",
+      "seconds": 0.0019592999960877933
+    },
+    {
+      "name": "Restoring Maya state...",
+      "seconds": 0.11051700000098208
+    }
+  ],
+  "calls": [
+    {
+      "name": "Check model cache",
+      "seconds": 0.2090715000013006
+    },
+    {
+      "name": "Open source model",
+      "seconds": 7.473930000000109
+    },
+    {
+      "name": "Prepare binary model cache",
+      "seconds": 0.004672900002333336
+    },
+    {
+      "name": "Open model scene",
+      "seconds": 7.724521899996034
+    },
+    {
+      "name": "Load Bifrost plugin",
+      "seconds": 5.6009740000008605
+    },
+    {
+      "name": "Compile wrinkle graph",
+      "seconds": 0.027159299999766517
+    }
+  ],
+  "optimizations": {
+    "enabled": true,
+    "static_point_curves": 5451,
+    "shared_math_nodes": 0,
+    "new_skin_bindings": [
+      {
+        "skin": "C_eyebrows_local_SKC",
+        "before": 48,
+        "after": 34
+      },
+      {
+        "skin": "C_eyelids_local_SKC",
+        "before": 103,
+        "after": 85
+      },
+      {
+        "skin": "C_ear_nose_local_SKC",
+        "before": 13,
+        "after": 7
+      },
+      {
+        "skin": "C_nose_high_local_SKC",
+        "before": 7,
+        "after": 5
+      },
+      {
+        "skin": "C_eyelashes_local_SKC",
+        "before": 72,
+        "after": 42
+      },
+      {
+        "skin": "C_eyelashes_global_SKC",
+        "before": 49,
+        "after": 1
+      },
+      {
+        "skin": "C_pants_SKC",
+        "before": 24,
+        "after": 17
+      },
+      {
+        "skin": "C_guantes_SKC",
+        "before": 34,
+        "after": 26
+      },
+      {
+        "skin": "skinCluster13",
+        "before": 19,
+        "after": 16
+      },
+      {
+        "skin": "skinCluster41",
+        "before": 103,
+        "after": 76
+      },
+      {
+        "skin": "C_nose_local_SKC",
+        "before": 7,
+        "after": 5
+      },
+      {
+        "skin": "C_body_SKC_COPY_COPY",
+        "before": 388,
+        "after": 40
+      },
+      {
+        "skin": "collar1_BAKED_SKC",
+        "before": 10,
+        "after": 9
+      }
+    ]
+  },
+  "current_phase": "Complete",
+  "elapsed_seconds": 31.347302000001946,
+  "total_seconds": 31.348268300003838
+}

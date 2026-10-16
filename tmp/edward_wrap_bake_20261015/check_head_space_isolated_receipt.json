@@ -1,0 +1,40 @@
+{
+  "result": [
+    {
+      "mesh": "cabeza_high",
+      "axis": "X",
+      "angle": 25,
+      "max_cm": 1.5027320856828865e-05
+    },
+    {
+      "mesh": "cabeza_high",
+      "axis": "Y",
+      "angle": -20,
+      "max_cm": 1.5281165042835892e-05
+    },
+    {
+      "mesh": "cabeza_high",
+      "axis": "Z",
+      "angle": 30,
+      "max_cm": 1.4736522264772315e-05
+    },
+    {
+      "mesh": "cabeza_low",
+      "axis": "X",
+      "angle": 25,
+      "max_cm": 1.4193957853166444e-05
+    },
+    {
+      "mesh": "cabeza_low",
+      "axis": "Y",
+      "angle": -20,
+      "max_cm": 1.3877374283040414e-05
+    },
+    {
+      "mesh": "cabeza_low",
+      "axis": "Z",
+      "angle": 30,
+      "max_cm": 1.4131375348557752e-05
+    }
+  ]
+}

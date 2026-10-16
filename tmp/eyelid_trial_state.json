@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "result": {
+    "undo": true,
+    "queue": "selectionMaskResetAll",
+    "pose": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "joined": "L_upperLidJoined00_PMA.output3Dx",
+    "nodes": 11580
+  }
+}

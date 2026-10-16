@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-15",
+  "maya": "2026 / API 20260303",
+  "native_tests": {
+    "scene_evaluation": {
+      "tests": 8,
+      "passed": 8
+    },
+    "build_pipeline": {
+      "tests": 11,
+      "passed": 11
+    }
+  },
+  "standalone_fixture": {
+    "deformer_evaluator_loaded": true,
+    "registration_and_apply_seconds": 0.0012088000003132038,
+    "settings_only_apply_seconds": 0.00015679999341955408,
+    "reopen_seconds_including_file_io": [
+      0.03687489999720128,
+      0.023786699995980598
+    ],
+    "characters": [
+      "FirstCharacter",
+      "OtherCharacter:Root"
+    ],
+    "no_viewport_or_gpu_partition_query": true
+  },
+  "live_artist_scene": {
+    "loaded_helper": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\scene_evaluation.py",
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL"
+      ]
+    },
+    "artist_state_unchanged": true,
+    "configuration_samples": [
+      {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        },
+        "profile": "autorig:scene-evaluation:v1:posing_cpu",
+        "seconds": 0.0004667000030167401
+      },
+      {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        },
+        "profile": "autorig:scene-evaluation:v1:posing_cpu",
+        "seconds": 0.0005511999988812022
+      },
+      {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        },
+        "profile": "autorig:scene-evaluation:v1:posing_cpu",
+        "seconds": 0.00028500000189524144
+      }
+    ],
+    "callbacks": 1,
+    "geometry_queries": false,
+    "scene_saved": false,
+    "root_marker_added_to_artist_scene": false
+  },
+  "skill_validation": "3 skills passed official quick_validate in both project checkouts",
+  "canvas_typescript": "tsc --noEmit passed",
+  "source_sha256": {
+    "maya_tools/scripts/utils/scene_evaluation.py": "6838ca137b158ea2c76d3d9bdfec7a3159e03cb3584e39772e5cb9bfc6ee4474",
+    "maya_tools/scripts/utils/create_rig.py": "b567de0e8161fb38431a936d1748d0960feb5c390a5aa8a825cbc6c09259370f",
+    "maya_tools/scripts/userSetup.py": "31d8c992b32f595dac21b687accb49b4e12bfc28463871e40ea5736f219fd84d",
+    "maya_tools/scripts/tools/tests/test_scene_evaluation.py": "f71c27273dccdb86e0a6b7ae7e2baaa16ea7ed6f503918a493f235b3ec51c632",
+    "maya_tools/scripts/tools/tests/test_build_pipeline.py": "360c035c8436bd7b5fd3bbc61078ff556c796e467f8f747916b577dc2d70e350"
+  },
+  "limits": [
+    "Settings overhead excludes graph evaluation, final draw and a full rig rebuild.",
+    "Two generic reopen fixtures are not performance certification of every character.",
+    "Legacy unmarked scenes are opt-in. No source model or current artist scene was saved.",
+    "Automatic reopen needs AutoRig Tools installed; no executable scene scripts are embedded."
+  ]
+}

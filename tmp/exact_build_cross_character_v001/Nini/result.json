@@ -1,0 +1,16 @@
+{
+  "asset": "Nini",
+  "success": true,
+  "started": 1792091925.7173336,
+  "build_seconds": 11.5439056000032,
+  "maya": "2026",
+  "batch": true,
+  "root_exists": true,
+  "root": "|Nini",
+  "nodes": 7275,
+  "joints": 576,
+  "skins": 69,
+  "optional_health_audit": false,
+  "timing_report": "C:\\proyectos\\auto-rig\\tmp\\exact_build_cross_character_v001\\Nini\\buildtiming.json",
+  "completed": 1792091952.3060794
+}

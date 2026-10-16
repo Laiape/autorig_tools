@@ -1,0 +1,27 @@
+{
+  "completed": 23,
+  "total": 23,
+  "seconds": 99.43429040908813,
+  "last": {
+    "wrap": "tiras31_PRX",
+    "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras31|tiras31_ShapeDeformed",
+    "joints": [
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+      "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+    ],
+    "vertices": 2338,
+    "max_influences": 7,
+    "fit_max_cm": 2.931642658075737,
+    "held_out_max_cm": 1.6823163618177155,
+    "worst_rms_cm": 2.0869205001596454,
+    "worst_max_cm": 2.931642658075737,
+    "accepted_offline": false,
+    "worst_case": "L_hipFk_CTL.rotateZ_95"
+  }
+}

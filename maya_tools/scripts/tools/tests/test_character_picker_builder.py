@@ -12,12 +12,12 @@ from maya_tools.scripts.utils import module_guides
 class GuidePickerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        asset = builder.character_asset("thaiz")
-        cls.guides = json.loads(builder.latest(asset/"guides", "guides").read_text())["thaiz"]
+        asset = builder.character_asset("Thaiz")
+        cls.guides = json.loads(builder.latest(asset/"guides", "guides").read_text())["Thaiz"]
         cls.names = [v["transform"]["name"] for v in json.loads(builder.latest(asset/"curves", "curves").read_text()).values()]
 
     def plan(self, guides=None, **kwargs):
-        return builder.plan("thaiz", self.guides if guides is None else guides, self.names, **kwargs)
+        return builder.plan("Thaiz", self.guides if guides is None else guides, self.names, **kwargs)
 
     def test_thaiz_complete_exports(self):
         document, config, report = self.plan()

@@ -1,0 +1,203 @@
+{
+  "pages": 19,
+  "bytes": 56186,
+  "outside_page_words": [],
+  "page_headers": [
+    {
+      "page": 1,
+      "first_lines": [
+        "EDWARD",
+        "Rendimiento, peso",
+        "y opciones de mejora"
+      ]
+    },
+    {
+      "page": 2,
+      "first_lines": [
+        "LECTURA DE LAS CIFRAS",
+        "Qué se ha medido y cómo",
+        "Se distinguen tres magnitudes que no son intercambiables: tamaño nativo en disco (MiB/KiB); tiempo de pared por"
+      ]
+    },
+    {
+      "page": 3,
+      "first_lines": [
+        "GEOMETRÍA",
+        "Modelo y coste de visualización",
+        "El catálogo contiene 118 shapes de malla contando originales/intermedios. En geo_GRP hay 59 salidas no intermedias,"
+      ]
+    },
+    {
+      "page": 4,
+      "first_lines": [
+        "MODELO / DATOS NATIVOS ADICIONALES",
+        "Datos de pelo, XGen y materiales",
+        "Datos adicionales del modelo Nodos MiB nativos aislados"
+      ]
+    },
+    {
+      "page": 5,
+      "first_lines": [
+        "NODOS NATIVOS Y CPU INCLUSIVA",
+        "Desglose de los 18 módulos",
+        "Módulo Nodos propios KiB nativos CPU off ms/f CPU on ms/f"
+      ]
+    },
+    {
+      "page": 6,
+      "first_lines": [
+        "QUÉ AÑADE EL HIGH Y QUÉ AÑADE EL LOW",
+        "Skinning y capas faciales",
+        "Capa facial Res. Infl. Pesos no cero KiB Ahorro al puentear"
+      ]
+    },
+    {
+      "page": 7,
+      "first_lines": [
+        "APÉNDICE DE SKINNING / 1-20",
+        "Inventario completo de skinClusters",
+        "SkinCluster Salida Infl. Máx/v Pesos KiB CPU ms/f"
+      ]
+    },
+    {
+      "page": 8,
+      "first_lines": [
+        "APÉNDICE DE SKINNING / 21-40",
+        "Inventario completo de skinClusters",
+        "SkinCluster Salida Infl. Máx/v Pesos KiB CPU ms/f"
+      ]
+    },
+    {
+      "page": 9,
+      "first_lines": [
+        "APÉNDICE DE SKINNING / 41-58",
+        "Inventario completo de skinClusters",
+        "SkinCluster Salida Infl. Máx/v Pesos KiB CPU ms/f"
+      ]
+    },
+    {
+      "page": 10,
+      "first_lines": [
+        "PRX",
+        "Proximity Wrap: 23 deformadores",
+        "PRX Drivers KiB CPU ms/f Sin él ms/f Ahorro ms/f"
+      ]
+    },
+    {
+      "page": 11,
+      "first_lines": [
+        "BLENDSHAPES",
+        "Correctivas y rutas de geometría",
+        "BlendShape Targets Puntos guardados KiB nativos CPU off ms/f"
+      ]
+    },
+    {
+      "page": 12,
+      "first_lines": [
+        "MISMO WORKLOAD, UNA PERSPECTIVA",
+        "Comparación final de drivers",
+        "Variante / captura Wrinkles Mediana ms/f p95 ms/f Pasadas ms"
+      ]
+    },
+    {
+      "page": 13,
+      "first_lines": [
+        "SNAPSHOTS NATIVOS DE COMPARACIÓN",
+        "Peso de las variantes completas",
+        "Variante Archivo guardado Bytes MiB"
+      ]
+    },
+    {
+      "page": 14,
+      "first_lines": [
+        "CONTEXTO R1",
+        "Primera tanda y respuesta al cambiar poses",
+        "Variante Wrinkles Mediana ms/f p95 ms/f Pose completa ms"
+      ]
+    },
+    {
+      "page": 15,
+      "first_lines": [
+        "LA REFERENCIA CAMBIA LA DECISIÓN",
+        "Calidad de CPU, GPU y caché",
+        "La puerta inicial de caché comparaba C (GPU sin caché) con D (GPU y caché caliente), y encontró diferencias en los"
+      ]
+    },
+    {
+      "page": 16,
+      "first_lines": [
+        "USO DEL RIG",
+        "Wrinkles, modos de evaluación y caché",
+        "Escena Original Mediana ms/f p95 ms/f FPS derivados"
+      ]
+    },
+    {
+      "page": 17,
+      "first_lines": [
+        "TRAZABILIDAD",
+        "Registro de pasos, pruebas y resultados",
+        "Paso Prueba / resultado"
+      ]
+    },
+    {
+      "page": 18,
+      "first_lines": [
+        "APLICACIÓN PRÁCTICA",
+        "Soluciones priorizadas y límites",
+        "Prioridad Acción Evidencia / condición"
+      ]
+    },
+    {
+      "page": 19,
+      "first_lines": [
+        "ENTREGA VERIFICABLE",
+        "Archivos de evidencia y repetición",
+        "Los datos completos permiten revisar las cifras sin depender de este texto. Los exports aislados se usan para medición de"
+      ]
+    }
+  ],
+  "data_keys": [
+    "scene_bytes",
+    "node_count",
+    "modules",
+    "layers",
+    "components",
+    "routes",
+    "storage",
+    "state_tests",
+    "display_tests",
+    "gpu_quality",
+    "quality_resolution",
+    "model_extras",
+    "scalp",
+    "variant_files",
+    "hybrid_tests",
+    "decision",
+    "pdf_pages",
+    "created_local"
+  ],
+  "data_counts": {
+    "modules": 18,
+    "layers": 12,
+    "routes": 14,
+    "components": 77,
+    "quality_resolution": 8
+  },
+  "restoration": {
+    "success": true,
+    "result": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|deformers_GRP|cuerpo_base_poseCorrectives_BLS_driver"
+      ],
+      "evaluation": "Parallel CPU; cache OFF, GPU deformer OFF, conservative mode after collar quality comparison",
+      "wrinkle_final_source": "EdwardWrinkles_ToMaya.mayaMesh[0]",
+      "all_original_prx_and_head_routes_match": true,
+      "temporary_animation_remaining": false,
+      "original_file_overwritten": false,
+      "snapshot": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\driver_routing_20261015_v001\\Edward_baseline.mb"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "result": {
+    "backup": "C:\\proyectos\\auto-rig\\tmp\\edward_wrinkles_20261015\\Before_Edward_FourWrinkles.mb",
+    "active_regions": [
+      "Forehead (brow up and in)",
+      "Nose (brow down)",
+      "Cheeks (smile)"
+    ],
+    "removed_regions": [
+      "Eyes",
+      "Chin"
+    ],
+    "remaining_local_controls": 19,
+    "removed_controls": [
+      "L_eyelidOut_CTL",
+      "L_eyelidUp_CTL",
+      "L_eyelidDown_CTL",
+      "R_eyelidOut_CTL",
+      "R_eyelidUp_CTL",
+      "R_eyelidDown_CTL",
+      "C_jaw_CTL"
+    ],
+    "regional_vertices": 2268
+  }
+}

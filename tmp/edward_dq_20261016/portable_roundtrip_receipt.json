@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "result": {
+    "poses": 7,
+    "comparisons": 322,
+    "max_position_cm": 0.0,
+    "max_face_vertex_normal": 6.664001874625056e-08,
+    "max_weight_error": 0.0,
+    "tolerance_cm": 0.0001,
+    "passed": true
+  }
+}

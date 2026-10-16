@@ -1,0 +1,99 @@
+{
+  "result": {
+    "reports": [
+      {
+        "mesh": "cabeza_high",
+        "valid_mirror_vertices": 11466,
+        "unmatched_vertices": 9,
+        "skins": [
+          {
+            "skin": "C_mouth_local_SKC",
+            "changed_vertices": 3872,
+            "weight_asym_before": 0.64984,
+            "weight_asym_after": 2.220446049250313e-16,
+            "actual_max_influences": 27
+          }
+        ],
+        "targets": [
+          {
+            "index": 0,
+            "alias": "L_lipCorner_TX5_BLS",
+            "changed_vertices": 2561,
+            "endpoint_error_cm": 7.647998300717088e-06
+          },
+          {
+            "index": 2,
+            "alias": "L_lipCorner_TXm2_BLS",
+            "changed_vertices": 1705,
+            "endpoint_error_cm": 1.5290421242546047e-05
+          },
+          {
+            "index": 4,
+            "alias": "C_jaw_RX30_BLS",
+            "changed_vertices": 4151,
+            "endpoint_error_cm": 1.5290421242546047e-05
+          },
+          {
+            "index": 5,
+            "alias": "R_lipCorner_TX5_BLS",
+            "changed_vertices": 4116,
+            "endpoint_error_cm": 1.5295996601434175e-05
+          },
+          {
+            "index": 6,
+            "alias": "R_lipCorner_TXm2_BLS",
+            "changed_vertices": 2339,
+            "endpoint_error_cm": 1.5295996601434175e-05
+          },
+          {
+            "index": 7,
+            "alias": "L_lipCorner_TY3_BLS",
+            "changed_vertices": 3467,
+            "endpoint_error_cm": 1.5295996601434175e-05
+          },
+          {
+            "index": 8,
+            "alias": "R_lipCorner_TY3_BLS",
+            "changed_vertices": 3455,
+            "endpoint_error_cm": 1.5295996601434175e-05
+          },
+          {
+            "index": 9,
+            "alias": "L_lipCorner_TYm4_BLS",
+            "changed_vertices": 3466,
+            "endpoint_error_cm": 1.5295996601434175e-05
+          },
+          {
+            "index": 10,
+            "alias": "R_lipCorner_TYm4_BLS",
+            "changed_vertices": 3472,
+            "endpoint_error_cm": 1.5295996601434175e-05
+          }
+        ]
+      },
+      {
+        "mesh": "cabeza_low",
+        "valid_mirror_vertices": 3079,
+        "unmatched_vertices": 3,
+        "skins": [
+          {
+            "skin": "skinCluster41",
+            "changed_vertices": 914,
+            "weight_asym_before": 0.87409,
+            "weight_asym_after": 2.220446049250313e-16,
+            "actual_max_influences": 33
+          }
+        ],
+        "targets": [
+          {
+            "index": 0,
+            "alias": "C_jaw_RX30_BLS",
+            "changed_vertices": 1045,
+            "endpoint_error_cm": 7.645210621273024e-06
+          }
+        ]
+      }
+    ],
+    "seconds": 16.54394793510437
+  }
+}

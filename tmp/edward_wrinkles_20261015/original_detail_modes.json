@@ -1,0 +1,34 @@
+[
+  {
+    "version": 1,
+    "root": "|Edward",
+    "high": [
+      "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high"
+    ],
+    "low": [
+      "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low"
+    ],
+    "wrinkle_settings": [
+      "EdwardWrinkles_Settings"
+    ],
+    "original_values": {
+      "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low.visibility": false,
+      "EdwardWrinkles_Settings.Envelope": 1.0,
+      "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high.visibility": true
+    },
+    "compute_bypass": {
+      "nodes": [
+        "EdwardWrinklesGraphShape",
+        "EdwardWrinkles_ToMaya"
+      ],
+      "routes": [
+        {
+          "destination": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high|cabeza_high_Shape.inMesh",
+          "primary": "cabeza_high_poseCorrectives_BLS.outputGeometry[0]",
+          "detail": "EdwardWrinkles_ToMaya.mayaMesh[0]"
+        }
+      ],
+      "mechanism": "primary mesh routing at workflow boundaries"
+    }
+  }
+]

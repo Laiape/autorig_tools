@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "result": [
+    {
+      "candidate": "original",
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_original.mb",
+      "bytes": 171413264,
+      "nodes": 16546,
+      "head_source": "EdwardWrinkles_ToMaya.mayaMesh[0]"
+    },
+    {
+      "candidate": "zero_influences",
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_zero_influences.mb",
+      "bytes": 171306536,
+      "nodes": 16546,
+      "head_source": "EdwardWrinkles_ToMaya.mayaMesh[0]"
+    },
+    {
+      "candidate": "safe_full",
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_safe_full.mb",
+      "bytes": 169665824,
+      "nodes": 11078,
+      "head_source": "EdwardWrinkles_ToMaya.mayaMesh[0]"
+    },
+    {
+      "candidate": "math_static",
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_math_static.mb",
+      "bytes": 169773104,
+      "nodes": 11078,
+      "head_source": "EdwardWrinkles_ToMaya.mayaMesh[0]"
+    }
+  ]
+}

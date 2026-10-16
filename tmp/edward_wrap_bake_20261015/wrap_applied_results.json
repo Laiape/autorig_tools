@@ -1,0 +1,2900 @@
+[
+  {
+    "wrap": "brazaletes1_PRX",
+    "accepted": false,
+    "reason": "Native Maya quantized candidate exceeded threshold",
+    "worst_max_cm": 0.10048233121612757,
+    "worst_rms_cm": 0.01970028425041789,
+    "held_out_max_cm": 0.10048233121612757
+  },
+  {
+    "wrap": "polySurface61_PRX",
+    "accepted": true,
+    "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface61|polySurface61_ShapeDeformed",
+    "skin": "polySurface61_wrapBake_SKC",
+    "worst_max_cm": 0.03149438681085791,
+    "worst_rms_cm": 0.012609075676743513,
+    "held_out_max_cm": 0.023055419347319923,
+    "validation": [
+      {
+        "pose": "neutral",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateX_55",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateY_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateY_70",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateZ_-40",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateZ_100",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateY_-100",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateY_100",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateX_-60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateX_60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateX_45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateZ_-60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateZ_60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateY_-30",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateY_60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateZ_95",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateZ_-120",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateZ_120",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateX_-15",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateX_15",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateZ_45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ballFk_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_ballFk_CTL.rotateZ_40",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateX_55",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateY_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateY_70",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateZ_-40",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateZ_100",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateY_-100",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateY_100",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateX_-60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateX_60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateX_45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateZ_-60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateZ_60",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.0003961813334358876,
+        "max_cm": 0.002263323582293528
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00038796617802944617,
+        "max_cm": 0.002166067576089711
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateY_-30",
+        "set": "fit",
+        "rms_cm": 0.00045872506469310525,
+        "max_cm": 0.0013797793000740516
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateY_60",
+        "set": "fit",
+        "rms_cm": 0.0008346830849123655,
+        "max_cm": 0.0023543655449148773
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.0006440300262380687,
+        "max_cm": 0.0018739989086770264
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateZ_95",
+        "set": "fit",
+        "rms_cm": 0.0012726713494053197,
+        "max_cm": 0.004822690189242303
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateZ_-120",
+        "set": "fit",
+        "rms_cm": 0.0008467574921772766,
+        "max_cm": 0.004527284338050503
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateZ_120",
+        "set": "fit",
+        "rms_cm": 0.000759247818078089,
+        "max_cm": 0.0034832927970171223
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateX_-15",
+        "set": "fit",
+        "rms_cm": 0.00039511821474892716,
+        "max_cm": 0.0022577243070964078
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateX_15",
+        "set": "fit",
+        "rms_cm": 0.00039120398904795347,
+        "max_cm": 0.0022168988216251222
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.0060055820013903555,
+        "max_cm": 0.015254753294342376
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00584980855076319,
+        "max_cm": 0.015230015283254652
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.01231582303998381,
+        "max_cm": 0.03147636892530465
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.012609075676743513,
+        "max_cm": 0.03149438681085791
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateZ_45",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_ballFk_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_ballFk_CTL.rotateZ_40",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine03_CTL.rotateX_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine03_CTL.rotateX_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine03_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine03_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine03_CTL.rotateZ_-20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine03_CTL.rotateZ_35",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine07_CTL.rotateX_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine07_CTL.rotateX_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine07_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine07_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine07_CTL.rotateZ_-20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_spine07_CTL.rotateZ_35",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_neck_CTL.rotateX_-30",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_neck_CTL.rotateX_30",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_neck_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_neck_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_neck_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_neck_CTL.rotateZ_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_head_CTL.rotateX_-30",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_head_CTL.rotateX_30",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_head_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_head_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_head_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_head_CTL.rotateZ_25",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "C_jaw_CTL.rotateX_30",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateX_-2",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateX_5",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateY_-4",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateY_3",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateX_-2",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateX_5",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateY_-4",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateY_3",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_00",
+        "set": "fit",
+        "rms_cm": 0.00042336153282740386,
+        "max_cm": 0.00210839593120313
+      },
+      {
+        "pose": "combination_01",
+        "set": "fit",
+        "rms_cm": 0.000392321728847461,
+        "max_cm": 0.002228812995124187
+      },
+      {
+        "pose": "combination_02",
+        "set": "fit",
+        "rms_cm": 0.0008778711711749406,
+        "max_cm": 0.002261754102773672
+      },
+      {
+        "pose": "combination_03",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_04",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_05",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_06",
+        "set": "fit",
+        "rms_cm": 0.00039301733228016053,
+        "max_cm": 0.0022263547342159912
+      },
+      {
+        "pose": "combination_07",
+        "set": "fit",
+        "rms_cm": 0.0033393515778438222,
+        "max_cm": 0.008705675742138715
+      },
+      {
+        "pose": "combination_08",
+        "set": "fit",
+        "rms_cm": 0.006511736605571742,
+        "max_cm": 0.01653633703155291
+      },
+      {
+        "pose": "combination_09",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_10",
+        "set": "fit",
+        "rms_cm": 0.0004093936197613963,
+        "max_cm": 0.001998722659013955
+      },
+      {
+        "pose": "combination_11",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_12",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_13",
+        "set": "fit",
+        "rms_cm": 0.007243317803565843,
+        "max_cm": 0.01879249027130445
+      },
+      {
+        "pose": "combination_14",
+        "set": "fit",
+        "rms_cm": 0.0007220817148024928,
+        "max_cm": 0.002197159658631874
+      },
+      {
+        "pose": "combination_15",
+        "set": "fit",
+        "rms_cm": 0.00039020052378171586,
+        "max_cm": 0.002200232729774728
+      },
+      {
+        "pose": "combination_16",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_17",
+        "set": "fit",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ballFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_ballFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.0003940850486707731,
+        "max_cm": 0.002248703370962484
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0003893397057600565,
+        "max_cm": 0.002187874432887783
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00040153487676090514,
+        "max_cm": 0.002119206849632173
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0006207551934672542,
+        "max_cm": 0.0017407640582317067
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.0004037582898315956,
+        "max_cm": 0.0015810999826260034
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.000907395339700438,
+        "max_cm": 0.0026550409437340657
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00038515335303787563,
+        "max_cm": 0.0010988285797591901
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0005428029205413169,
+        "max_cm": 0.0015785899914988973
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.000392145659217172,
+        "max_cm": 0.002231672269251471
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039257257684353767,
+        "max_cm": 0.002230773879609625
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.002220053154004838,
+        "max_cm": 0.0055956646133055975
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.004202459849882751,
+        "max_cm": 0.010995320203662829
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.004481054474760103,
+        "max_cm": 0.011715524902730328
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00912668529007415,
+        "max_cm": 0.023055419347319923
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_ballFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_ballFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_C_jaw_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_18",
+        "set": "held_out",
+        "rms_cm": 0.000494880543626742,
+        "max_cm": 0.0013577309050487071
+      },
+      {
+        "pose": "combination_19",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_20",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_21",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_22",
+        "set": "held_out",
+        "rms_cm": 0.0022475925893210755,
+        "max_cm": 0.005754724727083027
+      },
+      {
+        "pose": "combination_23",
+        "set": "held_out",
+        "rms_cm": 0.004554243235561817,
+        "max_cm": 0.01163358681748421
+      },
+      {
+        "pose": "combination_24",
+        "set": "held_out",
+        "rms_cm": 0.00323483875608982,
+        "max_cm": 0.0084113539784054
+      },
+      {
+        "pose": "combination_25",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_26",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_27",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_28",
+        "set": "held_out",
+        "rms_cm": 0.00039467703402620564,
+        "max_cm": 0.0022534261126315553
+      },
+      {
+        "pose": "combination_29",
+        "set": "held_out",
+        "rms_cm": 0.0004919715507892341,
+        "max_cm": 0.0020482837492567414
+      },
+      {
+        "pose": "combination_30",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_31",
+        "set": "held_out",
+        "rms_cm": 0.0032850213279989656,
+        "max_cm": 0.008463615145310834
+      },
+      {
+        "pose": "combination_32",
+        "set": "held_out",
+        "rms_cm": 0.0018687410165848712,
+        "max_cm": 0.00472700957665223
+      },
+      {
+        "pose": "combination_33",
+        "set": "held_out",
+        "rms_cm": 0.00039165577047241913,
+        "max_cm": 0.0022249718969965344
+      },
+      {
+        "pose": "combination_34",
+        "set": "held_out",
+        "rms_cm": 0.0003925931531704432,
+        "max_cm": 0.0022317458659262763
+      },
+      {
+        "pose": "combination_35",
+        "set": "held_out",
+        "rms_cm": 0.0033114537777717283,
+        "max_cm": 0.008400659766161805
+      }
+    ]
+  },
+  {
+    "wrap": "polySurface62_PRX",
+    "accepted": true,
+    "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface62|polySurface62_ShapeDeformed",
+    "skin": "polySurface62_wrapBake_SKC",
+    "worst_max_cm": 0.043488388900422746,
+    "worst_rms_cm": 0.008095445576859978,
+    "held_out_max_cm": 0.03163622700121779,
+    "validation": [
+      {
+        "pose": "neutral",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateX_55",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateY_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateY_70",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateZ_-40",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_shoulderFk_CTL.rotateZ_100",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateY_-100",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateY_100",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateX_-60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_elbowFk_CTL.rotateX_60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateX_45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateZ_-60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_wristFk_CTL.rotateZ_60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateY_-30",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateY_60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_hipFk_CTL.rotateZ_95",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateZ_-120",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateZ_120",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateX_-15",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_kneeFk_CTL.rotateX_15",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ankleFk_CTL.rotateZ_45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ballFk_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_ballFk_CTL.rotateZ_40",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateX_55",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateY_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateY_70",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateZ_-40",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_shoulderFk_CTL.rotateZ_100",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateY_-100",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateY_100",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateX_-60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_elbowFk_CTL.rotateX_60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateX_-45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateX_45",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateZ_-60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_wristFk_CTL.rotateZ_60",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.00017828487679457522,
+        "max_cm": 0.0005277551292601002
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.00018596810589738454,
+        "max_cm": 0.0005591846527863972
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateY_-30",
+        "set": "fit",
+        "rms_cm": 0.000339550170103688,
+        "max_cm": 0.0010039977227150818
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateY_60",
+        "set": "fit",
+        "rms_cm": 0.0007625072287697031,
+        "max_cm": 0.0022265818047627743
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.0005447752870850645,
+        "max_cm": 0.0017164315020965642
+      },
+      {
+        "pose": "R_hipFk_CTL.rotateZ_95",
+        "set": "fit",
+        "rms_cm": 0.0011215627198328621,
+        "max_cm": 0.0034992586260972317
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateZ_-120",
+        "set": "fit",
+        "rms_cm": 0.0006375290635764082,
+        "max_cm": 0.0018102348846902273
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateZ_120",
+        "set": "fit",
+        "rms_cm": 0.000679256375821887,
+        "max_cm": 0.002405318823346795
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateX_-15",
+        "set": "fit",
+        "rms_cm": 0.00018043387338493179,
+        "max_cm": 0.0005336325520616276
+      },
+      {
+        "pose": "R_kneeFk_CTL.rotateX_15",
+        "set": "fit",
+        "rms_cm": 0.0001825714829904164,
+        "max_cm": 0.000555044392098435
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateX_-35",
+        "set": "fit",
+        "rms_cm": 0.0036420038825194486,
+        "max_cm": 0.02069539145990015
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateX_35",
+        "set": "fit",
+        "rms_cm": 0.003507153291131179,
+        "max_cm": 0.01886086315159595
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateY_-25",
+        "set": "fit",
+        "rms_cm": 0.008042624952352516,
+        "max_cm": 0.04077143895766304
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateY_25",
+        "set": "fit",
+        "rms_cm": 0.008095445576859978,
+        "max_cm": 0.043488388900422746
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateZ_-45",
+        "set": "fit",
+        "rms_cm": 0.00017908238773110745,
+        "max_cm": 0.0005174878417442287
+      },
+      {
+        "pose": "R_ankleFk_CTL.rotateZ_45",
+        "set": "fit",
+        "rms_cm": 0.0002324171580736138,
+        "max_cm": 0.0010087949608903165
+      },
+      {
+        "pose": "R_ballFk_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00017596217469163788,
+        "max_cm": 0.0004953935993178936
+      },
+      {
+        "pose": "R_ballFk_CTL.rotateZ_40",
+        "set": "fit",
+        "rms_cm": 0.00019839924179665744,
+        "max_cm": 0.0007467373424606493
+      },
+      {
+        "pose": "C_spine03_CTL.rotateX_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine03_CTL.rotateX_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine03_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine03_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine03_CTL.rotateZ_-20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine03_CTL.rotateZ_35",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine07_CTL.rotateX_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine07_CTL.rotateX_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine07_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine07_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine07_CTL.rotateZ_-20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_spine07_CTL.rotateZ_35",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_neck_CTL.rotateX_-30",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_neck_CTL.rotateX_30",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_neck_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_neck_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_neck_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_neck_CTL.rotateZ_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_head_CTL.rotateX_-30",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_head_CTL.rotateX_30",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_head_CTL.rotateY_-20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_head_CTL.rotateY_20",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_head_CTL.rotateZ_-25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_head_CTL.rotateZ_25",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "C_jaw_CTL.rotateX_30",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateX_-2",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateX_5",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateY_-4",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "L_lipCorner_CTL.translateY_3",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateX_-2",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateX_5",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateY_-4",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "R_lipCorner_CTL.translateY_3",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_00",
+        "set": "fit",
+        "rms_cm": 0.00019779461461648008,
+        "max_cm": 0.0007738761519759562
+      },
+      {
+        "pose": "combination_01",
+        "set": "fit",
+        "rms_cm": 0.00018149969205121763,
+        "max_cm": 0.0005461448932422993
+      },
+      {
+        "pose": "combination_02",
+        "set": "fit",
+        "rms_cm": 0.00048670020669516246,
+        "max_cm": 0.00242910831434981
+      },
+      {
+        "pose": "combination_03",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_04",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_05",
+        "set": "fit",
+        "rms_cm": 0.00018104814325687973,
+        "max_cm": 0.0005396010302106477
+      },
+      {
+        "pose": "combination_06",
+        "set": "fit",
+        "rms_cm": 0.00018263872569472143,
+        "max_cm": 0.0005630585255716162
+      },
+      {
+        "pose": "combination_07",
+        "set": "fit",
+        "rms_cm": 0.002017624165394751,
+        "max_cm": 0.011033370472080938
+      },
+      {
+        "pose": "combination_08",
+        "set": "fit",
+        "rms_cm": 0.0039949392447734084,
+        "max_cm": 0.022667711200415882
+      },
+      {
+        "pose": "combination_09",
+        "set": "fit",
+        "rms_cm": 0.00018417077286491502,
+        "max_cm": 0.0005805865927866103
+      },
+      {
+        "pose": "combination_10",
+        "set": "fit",
+        "rms_cm": 0.00022087484013868011,
+        "max_cm": 0.0006171522630471804
+      },
+      {
+        "pose": "combination_11",
+        "set": "fit",
+        "rms_cm": 0.0001942730972102698,
+        "max_cm": 0.000693071450231247
+      },
+      {
+        "pose": "combination_12",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_13",
+        "set": "fit",
+        "rms_cm": 0.004515814224568501,
+        "max_cm": 0.02425377805874687
+      },
+      {
+        "pose": "combination_14",
+        "set": "fit",
+        "rms_cm": 0.0006486534802682966,
+        "max_cm": 0.0019402247910252548
+      },
+      {
+        "pose": "combination_15",
+        "set": "fit",
+        "rms_cm": 0.00018377235053497292,
+        "max_cm": 0.0005558671906004686
+      },
+      {
+        "pose": "combination_16",
+        "set": "fit",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_17",
+        "set": "fit",
+        "rms_cm": 0.0001794051801171315,
+        "max_cm": 0.000513832473491362
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_shoulderFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_elbowFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_wristFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_hipFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_kneeFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ankleFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ballFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_ballFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_shoulderFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_elbowFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_wristFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018007757240659622,
+        "max_cm": 0.0005355475707788916
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018476114261554955,
+        "max_cm": 0.000562767476746456
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00019450272551005597,
+        "max_cm": 0.0005499720799518555
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0005759401626598487,
+        "max_cm": 0.001723511273527692
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00027454181330666003,
+        "max_cm": 0.0008010892640926397
+      },
+      {
+        "pose": "intermediate_R_hipFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0008348077945506243,
+        "max_cm": 0.002433781526674673
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.0003082554138308904,
+        "max_cm": 0.0009552770498393083
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0005226936395622461,
+        "max_cm": 0.0015136638115275862
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.0001809784507910517,
+        "max_cm": 0.0005438519586929613
+      },
+      {
+        "pose": "intermediate_R_kneeFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018255228468022828,
+        "max_cm": 0.0005539592450525752
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.0013213771549418687,
+        "max_cm": 0.007687730226119235
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0024898777715113844,
+        "max_cm": 0.01351093331893213
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.002729908222063397,
+        "max_cm": 0.014904973579998204
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0056909327388705855,
+        "max_cm": 0.03163622700121779
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.0001784990988525005,
+        "max_cm": 0.0004982361918721949
+      },
+      {
+        "pose": "intermediate_R_ankleFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.0002107692765434016,
+        "max_cm": 0.0008409893565708825
+      },
+      {
+        "pose": "intermediate_R_ballFk_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00017804980026109787,
+        "max_cm": 0.0004957307600843079
+      },
+      {
+        "pose": "intermediate_R_ballFk_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00019512098461201707,
+        "max_cm": 0.0007119630683000428
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine03_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_spine07_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_neck_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateZ_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_head_CTL.rotateZ_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_C_jaw_CTL.rotateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_L_lipCorner_CTL.translateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateX_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateX_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateY_0.37",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "intermediate_R_lipCorner_CTL.translateY_0.73",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_18",
+        "set": "held_out",
+        "rms_cm": 0.0004280337497967006,
+        "max_cm": 0.001289847559273061
+      },
+      {
+        "pose": "combination_19",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_20",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_21",
+        "set": "held_out",
+        "rms_cm": 0.00018001099426775489,
+        "max_cm": 0.0005247791694679193
+      },
+      {
+        "pose": "combination_22",
+        "set": "held_out",
+        "rms_cm": 0.001343538532350927,
+        "max_cm": 0.0069960903702436005
+      },
+      {
+        "pose": "combination_23",
+        "set": "held_out",
+        "rms_cm": 0.002731630604999944,
+        "max_cm": 0.015309082711906018
+      },
+      {
+        "pose": "combination_24",
+        "set": "held_out",
+        "rms_cm": 0.0019462981697553313,
+        "max_cm": 0.011296393418779633
+      },
+      {
+        "pose": "combination_25",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_26",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_27",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_28",
+        "set": "held_out",
+        "rms_cm": 0.0001982936157078759,
+        "max_cm": 0.0007331473264527998
+      },
+      {
+        "pose": "combination_29",
+        "set": "held_out",
+        "rms_cm": 0.0003235943655881362,
+        "max_cm": 0.0010166655773903093
+      },
+      {
+        "pose": "combination_30",
+        "set": "held_out",
+        "rms_cm": 0.00018172821185523825,
+        "max_cm": 0.0005519420487750744
+      },
+      {
+        "pose": "combination_31",
+        "set": "held_out",
+        "rms_cm": 0.0020362047183253625,
+        "max_cm": 0.011627999788658317
+      },
+      {
+        "pose": "combination_32",
+        "set": "held_out",
+        "rms_cm": 0.0011231197300368048,
+        "max_cm": 0.00651115473677555
+      },
+      {
+        "pose": "combination_33",
+        "set": "held_out",
+        "rms_cm": 0.00020076419660723635,
+        "max_cm": 0.0007540024410504563
+      },
+      {
+        "pose": "combination_34",
+        "set": "held_out",
+        "rms_cm": 0.0001811356861301643,
+        "max_cm": 0.0005330570248070171
+      },
+      {
+        "pose": "combination_35",
+        "set": "held_out",
+        "rms_cm": 0.0019803188636764338,
+        "max_cm": 0.011427755427984075
+      }
+    ]
+  }
+]

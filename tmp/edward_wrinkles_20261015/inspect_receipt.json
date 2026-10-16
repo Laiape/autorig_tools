@@ -1,0 +1,834 @@
+{
+  "success": true,
+  "result": {
+    "pid": 42096,
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/scenes/Edward_working_v003.mb",
+    "modified": true,
+    "module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\bifrost_wrinkles.py",
+    "selection": [],
+    "frame": 0.0,
+    "setups": [
+      {
+        "version": 1,
+        "prefix": "EdwardWrinkles",
+        "source": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high",
+        "vertices": 11475,
+        "topology": "4209f2e3561b26f515c96dbf535c0b31be44915a801e05d3019a693c2601a401",
+        "settings": {
+          "Envelope": 1.0,
+          "Depth": 1.2000000000000002,
+          "CompressionStart": 0.0,
+          "CompressionRange": 0.5900000000000001,
+          "ManualActivation": 0.0,
+          "Forehead": 3.0,
+          "Eyes": 1.0,
+          "Cheeks": 0.19999999999999996,
+          "Nose": 1.0,
+          "Chin": 1.0
+        },
+        "visible": true,
+        "in_place": true,
+        "compact": true,
+        "display_settings": {
+          "displaySmoothMesh": 0,
+          "smoothLevel": 2,
+          "useSmoothPreviewForRender": true,
+          "renderSmoothLevel": 2
+        },
+        "controls": [
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|C_eyebrowMid_GRP|C_eyebrowMid_OFF|C_eyebrowMid_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowMid_GRP|L_eyebrowMid_OFF|L_eyebrowMid_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowOut_GRP|L_eyebrowOut_OFF|L_eyebrowOut_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowIn_GRP|R_eyebrowIn_OFF|R_eyebrowIn_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowMid_GRP|R_eyebrowMid_OFF|R_eyebrowMid_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL|R_eyebrowOut_GRP|R_eyebrowOut_OFF|R_eyebrowOut_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Forehead"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidOut_GRP|L_eyelidOut_OFF|L_eyelidOut_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Eyes"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Eyes"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Eyes"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidOut_GRP|R_eyelidOut_OFF|R_eyelidOut_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Eyes"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidUp_GRP|R_eyelidUp_OFF|R_eyelidUp_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Eyes"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|R_eyelidDown_GRP|R_eyelidDown_OFF|R_eyelidDown_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Eyes"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL",
+            "values": {
+              "wrinkleDepth": 0.0,
+              "wrinkleValue": 0.0
+            },
+            "regions": [
+              "Cheeks"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL",
+            "values": {
+              "wrinkleDepth": 0.0,
+              "wrinkleValue": 0.0
+            },
+            "regions": [
+              "Cheeks"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|C_upperLip_GRP|C_upperLip_OFF|C_upperLip_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Cheeks"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|C_lowerLip_GRP|C_lowerLip_OFF|C_lowerLip_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Cheeks",
+              "Chin"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheek_GRP|L_cheek_ANM|L_cheek_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Cheeks"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheek_GRP|R_cheek_ANM|R_cheek_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Cheeks"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_noseMain_GRP|C_noseMain_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Nose"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|C_noseTip_GRP|C_noseTip_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Nose"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|L_nosetril_GRP|L_nosetril_CTL|L_nose_GRP|L_nose_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Nose"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_baseNose_GRP|C_baseNose_CTL|R_nosetril_GRP|R_nosetril_CTL|R_nose_GRP|R_nose_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Nose"
+            ]
+          },
+          {
+            "controller": "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL",
+            "values": {
+              "wrinkleDepth": 1.0,
+              "wrinkleValue": 1.0
+            },
+            "regions": [
+              "Chin"
+            ]
+          }
+        ],
+        "patterns": {
+          "Forehead": {
+            "count": 11475,
+            "active": 440,
+            "min": -0.8246506452560425,
+            "max": 0.2742624282836914
+          },
+          "Eyes": {
+            "count": 11475,
+            "active": 106,
+            "min": -0.3446773290634155,
+            "max": 0.15050935745239258
+          },
+          "Cheeks": {
+            "count": 11475,
+            "active": 1326,
+            "min": -0.4743584394454956,
+            "max": 0.23360824584960938
+          },
+          "Nose": {
+            "count": 11475,
+            "active": 173,
+            "min": -0.51401686668396,
+            "max": 0.2463393211364746
+          },
+          "Chin": {
+            "count": 11475,
+            "active": 287,
+            "min": -0.5341136455535889,
+            "max": 0.23445582389831543
+          }
+        }
+      }
+    ],
+    "controls": {
+      "C_eyebrowMid_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "L_eyebrowInTan_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {}
+      },
+      "L_eyebrowIn_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "artRigIndex": {
+            "value": 0,
+            "incoming": null
+          }
+        }
+      },
+      "L_eyebrowMain_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "EXTRA_ATTRIBUTES": {
+            "value": 0,
+            "incoming": null
+          },
+          "browCurve": {
+            "value": 0.699999988079071,
+            "incoming": null
+          },
+          "slide": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "autoTangent": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "Auto_Socket": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "L_eyebrowMid_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "L_eyebrowOutTan_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {}
+      },
+      "L_eyebrowOut_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "R_eyebrowInTan_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {}
+      },
+      "R_eyebrowIn_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "artRigIndex": {
+            "value": 0,
+            "incoming": null
+          }
+        }
+      },
+      "R_eyebrowMain_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "EXTRA_ATTRIBUTES": {
+            "value": 0,
+            "incoming": null
+          },
+          "browCurve": {
+            "value": 0.699999988079071,
+            "incoming": null
+          },
+          "slide": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "autoTangent": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "Auto_Socket": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "R_eyebrowMid_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "R_eyebrowOutTan_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {}
+      },
+      "R_eyebrowOut_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "L_lipCorner_CTL": {
+        "translate": [
+          [
+            4.566933318917332,
+            2.8215158892609096,
+            1.4929724123646793e-13
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "EXTRA_ATTRIBUTES": {
+            "value": 0,
+            "incoming": null
+          },
+          "Height": {
+            "value": 0.5,
+            "incoming": null
+          },
+          "autoNarrow": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "wrinkleDepth": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "artRigIndex": {
+            "value": 0,
+            "incoming": null
+          }
+        }
+      },
+      "R_lipCorner_CTL": {
+        "translate": [
+          [
+            4.566933318917332,
+            2.8215158892609096,
+            1.4929724123646793e-13
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "EXTRA_ATTRIBUTES": {
+            "value": 0,
+            "incoming": null
+          },
+          "Height": {
+            "value": 0.5,
+            "incoming": null
+          },
+          "autoNarrow": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "wrinkleDepth": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 0.0,
+            "incoming": null
+          },
+          "artRigIndex": {
+            "value": 0,
+            "incoming": null
+          }
+        }
+      },
+      "C_noseMain_CTL": {
+        "translate": [
+          [
+            0.0,
+            1.2325951644078315e-32,
+            4.440892098500627e-16
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      },
+      "C_noseTip_CTL": {
+        "translate": [
+          [
+            0.0,
+            1.2325951644078315e-32,
+            4.440892098500627e-16
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "custom": {
+          "wrinkleDepth": {
+            "value": 1.0,
+            "incoming": null
+          },
+          "wrinkleValue": {
+            "value": 1.0,
+            "incoming": null
+          }
+        }
+      }
+    },
+    "blendshapes": [],
+    "wrinkle_nodes": [
+      "EdwardWrinklesGraph",
+      "EdwardWrinklesGraphShape",
+      "EdwardWrinkles_GRP",
+      "EdwardWrinkles_PrimaryWorld",
+      "EdwardWrinkles_Settings",
+      "EdwardWrinkles_ToMaya",
+      "Edward_detailModes_wrinkleEnvelope"
+    ]
+  }
+}

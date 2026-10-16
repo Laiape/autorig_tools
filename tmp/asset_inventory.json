@@ -1,0 +1,744 @@
+{
+  "anne": {
+    ".": [
+      "anne.png"
+    ],
+    "build": [
+      "anne_v001.build"
+    ],
+    "curves": [
+      "anne_v001.curves"
+    ],
+    "guides": [
+      "anne_v001.guides",
+      "anne_v002.guides",
+      "anne_v003.guides",
+      "anne_v004.guides",
+      "anne_v005.guides",
+      "anne_v006.guides",
+      "anne_v007.guides",
+      "anne_v008.guides",
+      "anne_v009.guides",
+      "anne_v010.guides",
+      "anne_v011.guides"
+    ],
+    "models": [
+      "anne_v001.ma"
+    ],
+    "models\\.mayaSwatches": [
+      "anne_v001.ma.swatches"
+    ],
+    "skin_clusters": [
+      "anne_v001.skc",
+      "anne_v002.skc",
+      "anne_v003.skc",
+      "anne_v004.skc",
+      "anne_v005.skc",
+      "anne_v006.skc",
+      "anne_v007.skc",
+      "anne_v008.skc",
+      "anne_v009.skc",
+      "anne_v010.skc",
+      "anne_v011.skc",
+      "anne_v012.skc",
+      "anne_v013.skc",
+      "anne_v014.skc",
+      "anne_v015.skc",
+      "anne_v016.skc",
+      "anne_v017.skc",
+      "anne_v018.skc",
+      "anne_v019.skc",
+      "anne_v020.skc",
+      "anne_v021.skc",
+      "anne_v022.skc",
+      "anne_v023.skc",
+      "anne_v024.skc",
+      "anne_v025.skc",
+      "anne_v026.skc",
+      "anne_v027.skc",
+      "anne_v028.skc",
+      "anne_v029.skc",
+      "anne_v030.skc",
+      "anne_v031.skc",
+      "anne_v032.skc",
+      "anne_v033.skc",
+      "anne_v034.skc",
+      "anne_v035.skc",
+      "anne_v036.skc",
+      "anne_v037.skc",
+      "anne_v038.skc",
+      "anne_v039.skc",
+      "anne_v040.skc",
+      "anne_v041.skc",
+      "anne_v042.skc",
+      "anne_v043.skc",
+      "anne_v044.skc",
+      "anne_v045.skc",
+      "anne_v046.skc",
+      "anne_v047.skc",
+      "anne_v048.skc",
+      "anne_v049.skc",
+      "anne_v050.skc",
+      "anne_v051.skc",
+      "anne_v052.skc",
+      "anne_v053.skc",
+      "anne_v054.skc",
+      "anne_v055.skc",
+      "anne_v056.skc"
+    ]
+  },
+  "chihuahua": {
+    ".": [
+      "thumbnail.jpg"
+    ],
+    "build": [
+      "chihuahua_v001.build"
+    ],
+    "curves": [
+      "chihuahua_v001.curves"
+    ],
+    "guides": [
+      "chihuahua_v001.guides",
+      "chihuahua_v002.guides",
+      "chihuahua_v003.guides",
+      "chihuahua_v004.guides",
+      "chihuahua_v005.guides",
+      "chihuahua_v006.guides",
+      "chihuahua_v007.guides",
+      "chihuahua_v008.guides"
+    ],
+    "models": [
+      "chihuahua_v001.ma"
+    ],
+    "picker": [
+      "chihuahua_picker.json"
+    ]
+  },
+  "chihuahua_v001": {
+    "picker": [
+      "chihuahua_v001_picker.json"
+    ]
+  },
+  "Edward": {
+    ".": [
+      "Edward.png",
+      "portable_assets.json",
+      "workspace.mel"
+    ],
+    "build": [
+      "Edward_v001.build"
+    ],
+    "curves": [
+      "Edward_v001.curves",
+      "Edward_v002.curves"
+    ],
+    "guides": [
+      "Edward_v001.guides",
+      "Edward_v002.guides",
+      "Edward_v003.guides",
+      "Edward_v004.guides",
+      "Edward_v005.guides",
+      "Edward_v006.guides",
+      "Edward_v007.guides",
+      "Edward_v008.guides",
+      "Edward_v009.guides",
+      "Edward_v010.guides",
+      "Edward_v011.guides",
+      "Edward_v012.guides",
+      "Edward_v013.guides"
+    ],
+    "models": [
+      "Edward_v002.ma",
+      "Edward_v003.ma"
+    ],
+    "ng_skin_layers": [
+      "Edward_cabeza_low_v001.json"
+    ],
+    "picker": [
+      "Edward_Maya_Picker_2024_plus.zip",
+      "Edward_picker.json",
+      "Edward_Picker_Installer.py",
+      "Edward_Picker_Installer_README.txt",
+      "Edward_reference_picker_assets.zip",
+      "picker_profile.json"
+    ],
+    "picker\\generated": [
+      "build_report.json",
+      "character_picker_runtime.py",
+      "character_picker_scene.py",
+      "install_character_picker.py",
+      "picker.json",
+      "picker_config.json"
+    ],
+    "picker\\generated\\backgrounds": [
+      "body.svg",
+      "face.svg"
+    ],
+    "picker\\reference_workflow\\__pycache__": [
+      "edward_maya_picker.cpython-312.pyc",
+      "install_edward_picker.cpython-312.pyc",
+      "load_in_maya.cpython-312.pyc"
+    ],
+    "picker\\reference_workflow\\backgrounds": [
+      "body.png",
+      "body.svg",
+      "face.png",
+      "face.svg"
+    ],
+    "scenes": [
+      "Edward_working_v001.mb",
+      "Edward_working_v003.mb"
+    ],
+    "skin_clusters": [
+      "Edward_v002.skc",
+      "Edward_v003.skc",
+      "Edward_v004.skc",
+      "Edward_v005.skc",
+      "Edward_v006.skc",
+      "Edward_v007.skc",
+      "Edward_v008.skc",
+      "Edward_v009.skc",
+      "Edward_v010.skc",
+      "Edward_v011.skc",
+      "Edward_v012.skc",
+      "Edward_v013.skc",
+      "Edward_v014.skc",
+      "Edward_v015.skc",
+      "Edward_v016.skc",
+      "Edward_v017.skc",
+      "Edward_v018.skc",
+      "Edward_v019.skc",
+      "Edward_v020.skc",
+      "Edward_v021.skc",
+      "Edward_v022.skc",
+      "Edward_v023.skc",
+      "Edward_v024.skc",
+      "Edward_v025.skc",
+      "Edward_v026.skc",
+      "Edward_v027.skc",
+      "Edward_v028.skc",
+      "Edward_v029.skc",
+      "Edward_v030.skc",
+      "Edward_v031.skc",
+      "Edward_v032.skc",
+      "Edward_v033.skc",
+      "Edward_v034.skc",
+      "Edward_v035.skc",
+      "Edward_v036.skc",
+      "Edward_v037.skc",
+      "Edward_v038.skc",
+      "Edward_v039.skc",
+      "Edward_v040.skc",
+      "Edward_v041.skc",
+      "Edward_v042.skc",
+      "Edward_v043.skc",
+      "Edward_v044.skc",
+      "Edward_v045.skc",
+      "Edward_v046.skc",
+      "Edward_v047.skc",
+      "Edward_v048.skc",
+      "Edward_v049.skc",
+      "Edward_v050.skc",
+      "Edward_v051.skc",
+      "Edward_v052.skc",
+      "Edward_v053.skc",
+      "Edward_v054.skc",
+      "Edward_v055.skc",
+      "Edward_v056.skc",
+      "Edward_v057.skc",
+      "Edward_v058.skc",
+      "Edward_v059.skc",
+      "Edward_v060.skc",
+      "Edward_v061.skc",
+      "Edward_v062.skc",
+      "Edward_v063.skc",
+      "Edward_v064.skc",
+      "Edward_v065.skc",
+      "Edward_v069.skc"
+    ],
+    "sourceimages": [
+      "boca_low_boca_mtl_BaseColor.png",
+      "boca_low_boca_mtl_Normal.png",
+      "boca_low_boca_mtl_Roughness.png",
+      "Eduard_low_calcado_ojos_mtl_BaseColor.png",
+      "Eduard_low_calcado_ojos_mtl_Normal.png",
+      "Eduard_low_calcado_ojos_mtl_Roughness.png",
+      "Eduard_low_complementos_mtl_BaseColor.png",
+      "Eduard_low_complementos_mtl_Metalness.png",
+      "Eduard_low_complementos_mtl_Normal.png",
+      "Eduard_low_complementos_mtl_Roughness.png",
+      "Eduard_low_pelo_mtl_BaseColor.png",
+      "Eduard_low_pelo_mtl_Normal.png",
+      "Eduard_low_pelo_mtl_Roughness.png",
+      "Eduard_low_piel_mtl_BaseColor.png",
+      "Eduard_low_piel_mtl_Normal.png",
+      "Eduard_low_piel_mtl_Roughness.png",
+      "Eduard_low_ropa_mtl_BaseColor.png",
+      "Eduard_low_ropa_mtl_Normal.png",
+      "Eduard_low_ropa_mtl_Roughness.png"
+    ],
+    "validation": [
+      "Edward_v069_wrap_bake_lip_validation.json",
+      "performance_static_20261014.json"
+    ],
+    "wrinkles": [
+      "Edward_v001.wrinkles.json"
+    ]
+  },
+  "freya": {
+    ".": [
+      "thumbnail.jpg"
+    ],
+    "build": [
+      "freya_v001.build"
+    ],
+    "curves": [
+      "freya_v001.curves"
+    ],
+    "guides": [
+      "freya_v001.guides"
+    ],
+    "models": [
+      "CHAR_freya_v0001.ma",
+      "freya_v002.ma"
+    ],
+    "models\\.mayaSwatches": [
+      "CHAR_freya_v0001.ma.swatches",
+      "freya_v002.ma.swatches"
+    ],
+    "picker": [
+      "freya_picker.json"
+    ],
+    "skin_clusters": [
+      "freya_v002.skc",
+      "freya_v003.skc",
+      "freya_v004.skc",
+      "freya_v005.skc",
+      "freya_v006.skc",
+      "freya_v007.skc",
+      "freya_v008.skc",
+      "freya_v009.skc",
+      "freya_v010.skc",
+      "freya_v011.skc",
+      "freya_v012.skc",
+      "freya_v013.skc",
+      "freya_v014.skc",
+      "freya_v015.skc",
+      "freya_v016.skc",
+      "freya_v017.skc",
+      "freya_v018.skc",
+      "freya_v019.skc",
+      "freya_v020.skc",
+      "freya_v021.skc",
+      "freya_v022.skc",
+      "freya_v023.skc",
+      "freya_v024.skc",
+      "freya_v025.skc",
+      "freya_v026.skc",
+      "freya_v027.skc",
+      "freya_v028.skc",
+      "freya_v029.skc",
+      "freya_v030.skc",
+      "freya_v031.skc",
+      "freya_v032.skc",
+      "freya_v033.skc",
+      "freya_v034.skc",
+      "freya_v035.skc",
+      "freya_v036.skc",
+      "freya_v037.skc",
+      "freya_v038.skc",
+      "freya_v039.skc",
+      "freya_v040.skc",
+      "freya_v041.skc",
+      "freya_v042.skc",
+      "freya_v043.skc"
+    ]
+  },
+  "giraffe": {
+    ".": [
+      "giraffe.jpg"
+    ],
+    "build": [
+      "giraffe_v001.build"
+    ],
+    "curves": [
+      "giraffe_v001.curves"
+    ],
+    "guides": [
+      "giraffe_v001.guides"
+    ],
+    "models": [
+      "CHAR_giraffe_0001.ma"
+    ]
+  },
+  "horse": {
+    ".": [
+      "horse.png"
+    ],
+    "build": [
+      "horse_v001.build"
+    ],
+    "curves": [
+      "horse_v001.curves"
+    ],
+    "guides": [
+      "horse_v001.guides",
+      "horse_v002.guides",
+      "horse_v002.guides.bak",
+      "horse_v003.guides",
+      "horse_v004.guides",
+      "horse_v005.guides",
+      "horse_v005.guides.bak2",
+      "horse_v005.guides.bak3",
+      "horse_v006.guides",
+      "horse_v007.guides",
+      "horse_v008.guides",
+      "horse_v009.guides",
+      "horse_v010.guides",
+      "horse_v011.guides",
+      "horse_v012.guides",
+      "horse_v013.guides",
+      "horse_v014.guides",
+      "horse_v015.guides"
+    ],
+    "models": [
+      "CHAR_horse_v001.ma"
+    ],
+    "picker": [
+      "horse_picker.json"
+    ],
+    "skin_clusters": [
+      "horse_v002.skc",
+      "horse_v003.skc",
+      "horse_v004.skc",
+      "horse_v005.skc",
+      "horse_v006.skc"
+    ]
+  },
+  "jamal": {
+    ".": [
+      "jamal.png"
+    ],
+    "build": [
+      "jamal_v001.build"
+    ],
+    "curves": [
+      "jamal_v001.curves"
+    ],
+    "guides": [
+      "jamal_v001.guides"
+    ],
+    "models": [
+      "jamal.ma"
+    ],
+    "scenes": [
+      "CHAR_jamal_v001.ma"
+    ],
+    "skin_clusters": [
+      "facial_blendshapes.shp",
+      "jamal_v001.weights"
+    ]
+  },
+  "maui": {
+    ".": [
+      "maui.jpg"
+    ],
+    "build": [
+      "maui_v001.build"
+    ],
+    "curves": [
+      "maui_v001.curves"
+    ],
+    "guides": [
+      "maui_v001.guides",
+      "maui_v002.guides",
+      "maui_v003.guides"
+    ],
+    "models": [
+      "maui_v001.ma"
+    ],
+    "skin_clusters": [
+      "maui_v001.skc",
+      "maui_v002.skc",
+      "maui_v003.skc",
+      "maui_v004.skc",
+      "maui_v005.skc",
+      "maui_v006.skc",
+      "maui_v007.skc",
+      "maui_v008.skc",
+      "maui_v009.skc",
+      "maui_v010.skc",
+      "maui_v011.skc",
+      "maui_v012.skc",
+      "maui_v013.skc",
+      "maui_v014.skc",
+      "maui_v015.skc",
+      "maui_v016.skc",
+      "maui_v017.skc",
+      "maui_v018.skc"
+    ]
+  },
+  "mechanic": {
+    ".": [
+      "thumbnail.jpg"
+    ],
+    "build": [
+      "mechanic_v001.build"
+    ],
+    "curves": [
+      "mechanic_v001.curves"
+    ],
+    "guides": [
+      "mechanic_v001.guides"
+    ],
+    "models": [
+      "CHAR_mechanic_v0001.ma"
+    ],
+    "models\\.mayaSwatches": [
+      "CHAR_mechanic_v0001.ma.swatches",
+      "CHAR_yin_v0001.ma.swatches"
+    ],
+    "picker": [
+      "mechanic_picker.json"
+    ],
+    "skin_clusters": [
+      "mechanic_v001.skc",
+      "mechanic_v002.skc",
+      "mechanic_v003.skc",
+      "mechanic_v004.skc",
+      "mechanic_v005.skc",
+      "mechanic_v006.skc",
+      "mechanic_v007.skc",
+      "mechanic_v008.skc",
+      "mechanic_v009.skc"
+    ]
+  },
+  "moana": {
+    ".": [
+      "moana.jpg"
+    ],
+    "build": [
+      "moana_v001.build"
+    ],
+    "curves": [
+      "moana_v001.curves"
+    ],
+    "guides": [
+      "moana_v001.guides"
+    ],
+    "models": [
+      "CHAR_moana_0001.ma"
+    ],
+    "skin_clusters": [
+      "moana_v001.skc",
+      "moana_v002.skc",
+      "moana_v003.skc"
+    ]
+  },
+  "Nini": {
+    ".": [
+      "Nini_Modeling_QC_Feedback_v001.pdf",
+      "Nini_Modeling_QC_Feedback_v002.pdf"
+    ],
+    "build": [
+      "Nini_v001.build"
+    ],
+    "curves": [
+      "Nini_v001.curves",
+      "Nini_v002.curves",
+      "Nini_v003.curves",
+      "Nini_v004.curves",
+      "Nini_v005.curves",
+      "Nini_v006.curves"
+    ],
+    "guides": [
+      "Nini_v001.guides",
+      "Nini_v002.guides",
+      "Nini_v003.guides",
+      "Nini_v004.guides",
+      "Nini_v005.guides",
+      "Nini_v006.guides",
+      "Nini_v007.guides",
+      "Nini_v008.guides",
+      "Nini_v009.guides",
+      "Nini_v010.guides"
+    ],
+    "models": [
+      "Nini_v001.ma",
+      "Nini_v002.ma",
+      "Nini_v003.ma"
+    ],
+    "models\\feedback": [
+      "Nini_QC_v002.json",
+      "Nini_QC_v002.pdf"
+    ],
+    "models\\feedback\\_shots_v002": [
+      "arm_front.jpg",
+      "arm_top.jpg",
+      "body_guides_front.jpg",
+      "face_front.jpg",
+      "leg_front.jpg",
+      "leg_side.jpg",
+      "model_front.jpg",
+      "model_persp.jpg",
+      "model_side.jpg"
+    ],
+    "picker": [
+      "Nini_picker.json",
+      "Nini_Picker_Installer.py",
+      "picker_profile.json"
+    ],
+    "picker\\generated": [
+      "build_report.json",
+      "character_picker_runtime.py",
+      "character_picker_scene.py",
+      "install_character_picker.py",
+      "picker.json",
+      "picker_config.json"
+    ],
+    "picker\\generated\\backgrounds": [
+      "body.svg",
+      "face.svg"
+    ],
+    "skin_clusters": [
+      "Nini_v002.skc",
+      "Nini_v003.skc",
+      "Nini_v004.skc",
+      "Nini_v005.skc",
+      "Nini_v006.skc",
+      "Nini_v007.skc",
+      "Nini_v008.skc",
+      "Nini_v009.skc",
+      "Nini_v010.skc",
+      "Nini_v011.skc",
+      "Nini_v012.skc",
+      "Nini_v013.skc",
+      "Nini_v014.skc",
+      "Nini_v015.skc",
+      "Nini_v016.skc",
+      "Nini_v017.skc",
+      "Nini_v018.skc",
+      "Nini_v019.skc",
+      "Nini_v020.skc",
+      "Nini_v021.skc"
+    ]
+  },
+  "source": {
+    "models": [
+      "source.ma"
+    ],
+    "skin_clusters": [
+      "source_v001.skc",
+      "THAIZ_BODY_PLY.skinmap"
+    ]
+  },
+  "spot": {
+    ".": [
+      "thumbnail.jpg"
+    ],
+    "curves": [
+      "spot_v001.curves"
+    ],
+    "guides": [
+      "spot_v001.guides"
+    ]
+  },
+  "thaiz": {
+    ".": [
+      "thumbnail.jpg"
+    ],
+    "build": [
+      "thaiz_v001.build"
+    ],
+    "corrective_blendshapes": [
+      "thaiz_v001.json",
+      "thaiz_v002.json",
+      "thaiz_v003.json",
+      "thaiz_v004.json",
+      "thaiz_v005.json"
+    ],
+    "curves": [
+      "thaiz_v001.curves",
+      "thaiz_v002.curves"
+    ],
+    "guides": [
+      "thaiz_v001.guides"
+    ],
+    "models": [
+      "CHAR_Thaiz_v0001.ma"
+    ],
+    "models\\.mayaSwatches": [
+      "CHAR_Thaiz_v0001.ma.swatches"
+    ],
+    "picker": [
+      "picker_profile.json",
+      "README.md",
+      "thaiz_picker.json",
+      "thaiz_Picker_Installer.py",
+      "VALIDATION.md"
+    ],
+    "picker\\generated": [
+      "build_report.json",
+      "character_picker_runtime.py",
+      "character_picker_scene.py",
+      "install_character_picker.py",
+      "picker.json",
+      "picker_config.json"
+    ],
+    "picker\\generated\\backgrounds": [
+      "body.svg",
+      "face.svg"
+    ],
+    "skin_clusters": [
+      "thaiz_v002.skc",
+      "thaiz_v003.skc",
+      "thaiz_v004.skc",
+      "thaiz_v005.skc",
+      "thaiz_v006.skc",
+      "thaiz_v007.skc",
+      "thaiz_v008.skc",
+      "thaiz_v009.skc",
+      "thaiz_v010.skc",
+      "thaiz_v011.skc",
+      "thaiz_v012.skc",
+      "thaiz_v013.skc",
+      "thaiz_v014.skc",
+      "thaiz_v015.skc",
+      "thaiz_v016.skc",
+      "thaiz_v017.skc",
+      "thaiz_v018.skc",
+      "thaiz_v019.skc",
+      "thaiz_v020.skc",
+      "thaiz_v021.skc",
+      "thaiz_v022.skc",
+      "thaiz_v023.skc",
+      "thaiz_v024.skc",
+      "thaiz_v025.skc",
+      "thaiz_v026.skc",
+      "thaiz_v027.skc",
+      "thaiz_v028.skc",
+      "thaiz_v029.skc",
+      "thaiz_v030.skc",
+      "thaiz_v031.skc",
+      "thaiz_v032.skc",
+      "thaiz_v033.skc",
+      "thaiz_v034.skc",
+      "thaiz_v035.skc",
+      "thaiz_v036.skc",
+      "thaiz_v037.skc",
+      "thaiz_v038.skc",
+      "thaiz_v039.skc",
+      "thaiz_v040.skc",
+      "thaiz_v041.skc",
+      "thaiz_v042.skc",
+      "thaiz_v043.skc",
+      "thaiz_v044.skc",
+      "thaiz_v045.skc",
+      "thaiz_v046.skc",
+      "thaiz_v047.skc",
+      "thaiz_v048.skc",
+      "thaiz_v049.skc",
+      "thaiz_v050.skc"
+    ]
+  }
+}

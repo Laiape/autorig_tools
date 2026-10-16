@@ -14,6 +14,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import ui_utils
 from maya_tools.scripts.utils import model_qc
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 
 try:
     from PySide6 import QtWidgets, QtCore, QtGui
@@ -910,7 +911,7 @@ class AssetManagerUI(QtWidgets.QWidget):
             self.thumbnail.setText("NO IMAGE")
 
     def _restore_session(self):
-        last = self.settings.value("last_asset")
+        last = normalize_asset_name(self.settings.value("last_asset"))
         if last:
             items = self.asset_list.findItems(last, QtCore.Qt.MatchExactly)
             if items:
@@ -922,10 +923,11 @@ class AssetManagerUI(QtWidgets.QWidget):
         name, ok = QtWidgets.QInputDialog.getText(self, "New Asset", "Asset name:")
         if not ok or not name.strip():
             return
-        path = os.path.join(self.assets_path, name.strip())
+        name = normalize_asset_name(name)
+        path = os.path.join(self.assets_path, name)
         os.makedirs(path, exist_ok=True)
         self.refresh_assets()
-        items = self.asset_list.findItems(name.strip(), QtCore.Qt.MatchExactly)
+        items = self.asset_list.findItems(name, QtCore.Qt.MatchExactly)
         if items:
             self.asset_list.setCurrentItem(items[0])
 

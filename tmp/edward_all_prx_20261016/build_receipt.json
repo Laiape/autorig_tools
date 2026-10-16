@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "result": {
+    "shared_blendshape": "Edward_AllPRX_SHARED_BLS_TEST",
+    "targets": 119,
+    "blendshape_outputs": 23,
+    "skin_outputs": 23,
+    "seconds": 59.91450559999794
+  }
+}

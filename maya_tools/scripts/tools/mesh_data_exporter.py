@@ -27,6 +27,7 @@ Usage
 
 import os
 import json
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
@@ -78,7 +79,7 @@ class SourceSkinExporter:
     def export_all(self, uv_method=None, force=False, body_only=True):
         """
         Finds skinned meshes in the scene and exports .skc + .skinmap to
-        assets/source/skin_clusters/ (always, regardless of scene context).
+        assets/Source/skin_clusters/ (always, regardless of scene context).
 
         Args:
             uv_method  (str):  "skeleton" | "cylindrical" | "planar".
@@ -154,11 +155,11 @@ class SourceSkinExporter:
         method = uv_method or self.UV_METHOD
         _LOG(f"--- SourceSkinExporter: exporting '{mesh}' [{method}] ---")
 
-        # ── 1. Resolve paths — always write to assets/source/ ─────────
-        folder     = self._skin_clusters_folder("source")
+        # ── 1. Resolve paths — always write to assets/Source/ ─────────
+        folder     = self._skin_clusters_folder("Source")
         mesh_short = mesh.split("|")[-1].split(":")[-1]
         skinmap_path = os.path.join(folder, f"{mesh_short}.skinmap")
-        skc_path     = os.path.join(folder, "source_v001.skc")
+        skc_path     = os.path.join(folder, "Source_v001.skc")
 
         if os.path.exists(skinmap_path) and not force:
             _LOG(f"  .skinmap already exists (use force=True to overwrite): {skinmap_path}")
@@ -232,7 +233,7 @@ class SourceSkinExporter:
     # ── static query helpers ─────────────────────────────────────────────────
 
     @staticmethod
-    def find_skinmaps_for_char(source_char="source"):
+    def find_skinmaps_for_char(source_char="Source"):
         """
         Returns a dict  {mesh_short_name: skinmap_path}
         by scanning the source character's skin_clusters folder.
@@ -248,7 +249,7 @@ class SourceSkinExporter:
         return result
 
     @staticmethod
-    def find_skc_for_char(source_char="source"):
+    def find_skc_for_char(source_char="Source"):
         """Returns the latest .skc path for the source character, or None."""
         folder = SourceSkinExporter._skin_clusters_folder(source_char)
         if not os.path.exists(folder):
@@ -313,7 +314,7 @@ class SourceSkinExporter:
         --------
         1. Scene assemblies (most reliable when the source scene is open).
         2. Build cache (fallback, may point to a different character being rigged).
-        3. Literal "source".
+        3. Literal "Source".
 
         The build cache is intentionally checked LAST because during export the
         user has the source scene open, not a rig build scene.
@@ -335,7 +336,7 @@ class SourceSkinExporter:
             except Exception:
                 pass
 
-        return "source"
+        return "Source"
 
     @staticmethod
     def _skin_clusters_folder(char_name):
@@ -346,5 +347,5 @@ class SourceSkinExporter:
             os.path.dirname(os.path.dirname(script_path))
         )
         return os.path.normpath(
-            os.path.join(repo_root, "assets", char_name, "skin_clusters")
+            os.path.join(repo_root, "assets", normalize_asset_name(char_name), "skin_clusters")
         )

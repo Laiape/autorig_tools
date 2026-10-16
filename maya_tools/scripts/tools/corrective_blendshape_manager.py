@@ -5,6 +5,7 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import os
 import glob
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 
 try:
     from maya_tools.scripts.utils import data_manager
@@ -34,7 +35,7 @@ class CorrectiveBlendshapeManager:
     # ------------------------------------------------------------------
 
     def __init__(self):
-        self.asset_name = self._resolve_asset_name()
+        self.asset_name = normalize_asset_name(self._resolve_asset_name())
         self.folder_path = self._resolve_folder_path()
 
     def _resolve_asset_name(self):

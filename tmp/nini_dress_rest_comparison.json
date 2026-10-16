@@ -1,0 +1,153 @@
+{
+  "live": {
+    "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Nini/scenes/Nini_dress_chains_v004.ma",
+    "frame": 1.0,
+    "settings": {
+      "collisionEnable": true,
+      "collisionBlend": 1.0,
+      "collisionMargin": 0.0,
+      "showChains": true,
+      "showColliders": false,
+      "L_thighRadius": 6.8,
+      "L_calfRadius": 4.9,
+      "R_thighRadius": 6.8,
+      "R_calfRadius": 4.9
+    },
+    "controls": {
+      "L_ankleIk_CTL": [
+        1.7763568394002505e-15,
+        13.921919103903178,
+        -8.881784197001252e-16
+      ],
+      "R_ankleIk_CTL": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "live_vs_original": {
+    "c_tunic_GEO": {
+      "vertices": 2227,
+      "moved_vertices": 970,
+      "max_cm": 12.21292940740886,
+      "rms_cm": 2.096732713992865,
+      "max_vertex": 509
+    },
+    "c_embroider_GEO": {
+      "vertices": 231,
+      "moved_vertices": 68,
+      "max_cm": 0.13697304068347352,
+      "rms_cm": 0.025008213509595843,
+      "max_vertex": 165
+    },
+    "c_body_GEO": {
+      "vertices": 11956,
+      "moved_vertices": 1334,
+      "max_cm": 18.670935127157566,
+      "rms_cm": 4.0488349295075245,
+      "max_vertex": 1357
+    }
+  },
+  "saved_vs_live": {
+    "c_tunic_GEO": {
+      "vertices": 2227,
+      "moved_vertices": 974,
+      "max_cm": 11.097653515593846,
+      "rms_cm": 2.099328171350947,
+      "max_vertex": 896
+    },
+    "c_embroider_GEO": {
+      "vertices": 231,
+      "moved_vertices": 68,
+      "max_cm": 0.3966726656540451,
+      "rms_cm": 0.07080134984681281,
+      "max_vertex": 159
+    },
+    "c_body_GEO": {
+      "vertices": 11956,
+      "moved_vertices": 1334,
+      "max_cm": 18.670935127157566,
+      "rms_cm": 4.0488349295075245,
+      "max_vertex": 1357
+    }
+  },
+  "collision_displacement": {
+    "c_tunic_GEO": {
+      "vertices": 2227,
+      "moved_vertices": 820,
+      "max_cm": 3.8209062330779857,
+      "rms_cm": 1.5029240506575734,
+      "max_vertex": 416
+    },
+    "c_embroider_GEO": {
+      "vertices": 231,
+      "moved_vertices": 68,
+      "max_cm": 0.28786877036080366,
+      "rms_cm": 0.04952600919657885,
+      "max_vertex": 159
+    },
+    "c_body_GEO": {
+      "vertices": 11956,
+      "moved_vertices": 0,
+      "max_cm": 0.0,
+      "rms_cm": 0.0,
+      "max_vertex": 0
+    }
+  },
+  "collision_disabled_vs_original": {
+    "c_tunic_GEO": {
+      "vertices": 2227,
+      "moved_vertices": 630,
+      "max_cm": 0.0033109152970288887,
+      "rms_cm": 0.0007063755867555352,
+      "max_vertex": 118
+    },
+    "c_embroider_GEO": {
+      "vertices": 231,
+      "moved_vertices": 30,
+      "max_cm": 0.002443142924356525,
+      "rms_cm": 0.0005569555366428274,
+      "max_vertex": 189
+    },
+    "c_body_GEO": {
+      "vertices": 11956,
+      "moved_vertices": 0,
+      "max_cm": 0.0,
+      "rms_cm": 0.0,
+      "max_vertex": 0
+    }
+  },
+  "upper_vs_original": {
+    "c_tunic_GEO": {
+      "vertices": 1407,
+      "moved_vertices": 0,
+      "max_cm": 0.0,
+      "rms_cm": 0.0,
+      "max_vertex": 0
+    },
+    "c_embroider_GEO": {
+      "vertices": 163,
+      "moved_vertices": 0,
+      "max_cm": 0.0,
+      "rms_cm": 0.0,
+      "max_vertex": 0
+    }
+  },
+  "lower_vs_original": {
+    "c_tunic_GEO": {
+      "vertices": 820,
+      "moved_vertices": 820,
+      "max_cm": 3.821052131423394,
+      "rms_cm": 2.476931146752879,
+      "max_vertex": 154
+    },
+    "c_embroider_GEO": {
+      "vertices": 68,
+      "moved_vertices": 68,
+      "max_cm": 0.2877658072011403,
+      "rms_cm": 0.09128606944934886,
+      "max_vertex": 16
+    }
+  }
+}

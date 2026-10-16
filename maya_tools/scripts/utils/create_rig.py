@@ -14,7 +14,6 @@ from maya_tools.scripts.tools import skin_manager_api
 from maya_tools.scripts.tools import mesh_data_exporter
 from maya_tools.scripts.tools import auto_skin_transfer
 from maya_tools.scripts.tools import corrective_blendshape_manager
-from maya_tools.scripts.utils import picker as picker_generator
 
 
 reload(guides_manager)
@@ -27,7 +26,6 @@ reload(mesh_data_exporter)
 reload(auto_skin_transfer)
 reload(proxy_locator)
 reload(corrective_blendshape_manager)
-reload(picker_generator)
 
 
 
@@ -122,12 +120,6 @@ class AutoRig(object):
                 rig_validation.write_build_health(char_name, os.path.join(validation_dir, stamp + ".righealth.json"))
             except Exception as exc:
                 om.MGlobal.displayWarning("[Rig validation] Could not write build audit: " + str(exc))
-
-            progress._set_pct("Generating picker…", 99)
-            try:
-                picker_generator.generate_and_load(character=char_name)
-            except Exception as e:
-                om.MGlobal.displayWarning(f"[Picker] Could not generate picker: {e}")
 
         finally:
             self._end_fast_session(session)
@@ -460,7 +452,7 @@ class AutoRig(object):
         """Assign proxy locators to the rig controls based on the character's geometry."""
         proxy_locator.assign_all_proxy_locators(mesh_transform=None, ctl_suffix="_CTL", radius=10.0)
 
-    def _auto_transfer_from_source(self, source_char="source"):
+    def _auto_transfer_from_source(self, source_char="Source"):
         """
         Checks whether pre-computed .skinmap files exist for the source
         character and, if so, transfers skinning to every mesh in the scene

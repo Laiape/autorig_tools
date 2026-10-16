@@ -1,0 +1,209 @@
+{
+  "success": true,
+  "result": {
+    "cinturon3": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed",
+      "stack": [
+        [
+          "cinturon3_PRX",
+          "{'|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed'}"
+        ]
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "skins": {
+        "C_body_SKC_COPY_COPY": [
+          "C_freeze_ENV",
+          "C_localHip_ENV",
+          "C_spine01_ENV",
+          "C_spine02_ENV",
+          "C_spine03_ENV",
+          "C_spine04_ENV",
+          "C_spine05_ENV",
+          "C_spine06_ENV",
+          "C_spine07_ENV",
+          "C_spine08_ENV",
+          "C_localChest_ENV",
+          "L_clavicle_ENV",
+          "L_armUpper00_ENV",
+          "L_armUpper01_ENV",
+          "L_armUpper02_ENV",
+          "L_armUpper03_ENV",
+          "L_armUpper04_ENV",
+          "L_armLower00_ENV",
+          "L_armLower01_ENV",
+          "L_armLower02_ENV",
+          "L_armLower03_ENV",
+          "L_armLower04_ENV",
+          "L_bicepsCorrective_ENV",
+          "L_tricepsCorrective_ENV",
+          "R_clavicle_ENV",
+          "R_armUpper00_ENV",
+          "R_armUpper01_ENV",
+          "R_armUpper02_ENV",
+          "R_armUpper03_ENV",
+          "R_armUpper04_ENV",
+          "R_armLower00_ENV",
+          "R_armLower01_ENV",
+          "R_armLower02_ENV",
+          "R_armLower03_ENV",
+          "R_armLower04_ENV",
+          "R_bicepsCorrective_ENV",
+          "R_tricepsCorrective_ENV",
+          "C_neckSkinning00_ENV",
+          "C_neckSkinning01_ENV",
+          "C_neckSkinning02_ENV"
+        ]
+      },
+      "vertices": 5589
+    },
+    "cinturones2": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_ShapeDeformed",
+      "stack": [
+        [
+          "cinturones2_PRX",
+          "{'|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_ShapeDeformed'}"
+        ]
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "skins": {
+        "C_body_SKC_COPY_COPY": [
+          "C_freeze_ENV",
+          "C_localHip_ENV",
+          "C_spine01_ENV",
+          "C_spine02_ENV",
+          "C_spine03_ENV",
+          "C_spine04_ENV",
+          "C_spine05_ENV",
+          "C_spine06_ENV",
+          "C_spine07_ENV",
+          "C_spine08_ENV",
+          "C_localChest_ENV",
+          "L_clavicle_ENV",
+          "L_armUpper00_ENV",
+          "L_armUpper01_ENV",
+          "L_armUpper02_ENV",
+          "L_armUpper03_ENV",
+          "L_armUpper04_ENV",
+          "L_armLower00_ENV",
+          "L_armLower01_ENV",
+          "L_armLower02_ENV",
+          "L_armLower03_ENV",
+          "L_armLower04_ENV",
+          "L_bicepsCorrective_ENV",
+          "L_tricepsCorrective_ENV",
+          "R_clavicle_ENV",
+          "R_armUpper00_ENV",
+          "R_armUpper01_ENV",
+          "R_armUpper02_ENV",
+          "R_armUpper03_ENV",
+          "R_armUpper04_ENV",
+          "R_armLower00_ENV",
+          "R_armLower01_ENV",
+          "R_armLower02_ENV",
+          "R_armLower03_ENV",
+          "R_armLower04_ENV",
+          "R_bicepsCorrective_ENV",
+          "R_tricepsCorrective_ENV",
+          "C_neckSkinning00_ENV",
+          "C_neckSkinning01_ENV",
+          "C_neckSkinning02_ENV"
+        ]
+      },
+      "vertices": 4885
+    },
+    "controls": {
+      "C_spine03_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "scaleZ": 1.0
+      },
+      "C_spine07_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "scaleZ": 1.0
+      },
+      "C_localHip_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "scaleZ": 1.0
+      },
+      "C_character_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "scaleZ": 1.0
+      }
+    },
+    "correctives": {
+      "cuerpo_base_poseCorrectives_BLS": {
+        "aliases": null,
+        "weights": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "inputs": null
+      }
+    },
+    "joints_count": 852,
+    "runtime": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\proximity_bake.py"
+  }
+}

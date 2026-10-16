@@ -238,6 +238,7 @@ def create_basic_structure(character_name=None, in_scene=False):
         character_name = character_name or cmds.optionVar(q="currentAssetRigName")
     else:
         character_name, scene_assemblies = rig_manager.prepare_rig_scene()
+    character_name = rig_manager.normalize_asset_name(character_name)
     data_manager.DataExportBiped().append_data("basic_structure", {"character_name": character_name})
     mgear = data_manager.DataExportBiped().get_data("rig_settings", "mGear_integration")
 

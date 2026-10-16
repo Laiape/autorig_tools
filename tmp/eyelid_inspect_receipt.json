@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "modules": {
+      "maya_tools.scripts.utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "maya_tools.scripts.biped.autorig.eyelid_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\eyelid_module.py"
+    },
+    "direct": [
+      "L_eyeDirect_CTL",
+      "R_eyeDirect_CTL"
+    ],
+    "controls": [
+      "L_eyelidDown_CTL",
+      "L_eyelidInDown_CTL",
+      "L_eyelidInUp_CTL",
+      "L_eyelidIn_CTL",
+      "L_eyelidOutDown_CTL",
+      "L_eyelidOutUp_CTL",
+      "L_eyelidOut_CTL",
+      "L_eyelidUp_CTL",
+      "R_eyelidDown_CTL",
+      "R_eyelidInDown_CTL",
+      "R_eyelidInUp_CTL",
+      "R_eyelidIn_CTL",
+      "R_eyelidOutDown_CTL",
+      "R_eyelidOutUp_CTL",
+      "R_eyelidOut_CTL",
+      "R_eyelidUp_CTL"
+    ]
+  }
+}

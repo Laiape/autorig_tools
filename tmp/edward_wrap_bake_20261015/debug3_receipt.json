@@ -1,0 +1,58 @@
+{
+  "result": {
+    "ng": [
+      [
+        "ngSkinToolsData_C_cheeks_high_local_SKC",
+        [
+          "C_cheeks_high_local_SKC"
+        ]
+      ],
+      [
+        "ngSkinToolsData_C_cheeks_local_SKC",
+        [
+          "C_cheeks_local_SKC"
+        ]
+      ],
+      [
+        "ngSkinToolsData_C_nose_high_local_SKC",
+        [
+          "C_nose_high_local_SKC"
+        ]
+      ],
+      [
+        "ngSkinToolsData_C_nose_local_SKC",
+        [
+          "C_nose_local_SKC"
+        ]
+      ],
+      [
+        "ngSkinToolsData_C_sockets_high_local_SKC",
+        [
+          "C_sockets_high_local_SKC"
+        ]
+      ],
+      [
+        "ngSkinToolsData_C_sockets_local_SKC",
+        [
+          "C_sockets_local_SKC"
+        ]
+      ]
+    ],
+    "bs_group_attrs": [
+      "inputTarget[0].inputTargetGroup[4]",
+      "inputTarget[0].inputTargetGroup[4].inputTargetItem",
+      "inputTarget[0].inputTargetGroup[4].inputTargetItem.inputGeomTarget",
+      "inputTarget[0].inputTargetGroup[4].inputTargetItem.inputRelativePointsTarget",
+      "inputTarget[0].inputTargetGroup[4].inputTargetItem.inputRelativeComponentsTarget",
+      "inputTarget[0].inputTargetGroup[4].inputTargetItem.inputPointsTarget",
+      "inputTarget[0].inputTargetGroup[4].inputTargetItem.inputComponentsTarget",
+      "inputTarget[0].inputTargetGroup[4].targetWeights",
+      "inputTarget[0].inputTargetGroup[4].normalizationId",
+      "inputTarget[0].inputTargetGroup[4].postDeformersMode",
+      "inputTarget[0].inputTargetGroup[4].targetBindMatrix",
+      "inputTarget[0].inputTargetGroup[4].targetMatrix"
+    ],
+    "ng_loaded": true,
+    "ng_nodes": []
+  }
+}

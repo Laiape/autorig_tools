@@ -1,0 +1,16 @@
+{
+  "mode": "baseline",
+  "success": false,
+  "build": {
+    "asset": "Edward",
+    "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\validation\\20261015T191044318651Z.buildtiming.json",
+    "optimizations": {
+      "enabled": false
+    }
+  },
+  "build_seconds": 65.5888954999973,
+  "nodes": 16476,
+  "skins": 58,
+  "joints": 852,
+  "error": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\scripts\\edward_build_exact_integration.py\", line 39, in worker\n    cmds.file(rename=(folder/'built.mb').as_posix());cmds.file(save=True,type='mayaBinary')\n                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: This file contains unknown data which is preventing Maya from changing the file format.\nCheck if unsupported plug-ins are used in the scene. Remove the unsupported data and resave.\nSee this article for more detail.\nhttps://www.autodesk.com/maya-unknown-nodes-save-error\n\n"
+}

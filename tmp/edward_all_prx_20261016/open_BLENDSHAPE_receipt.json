@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "result": {
+    "success": true,
+    "pid": 7248,
+    "label": "BLENDSHAPE",
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/all_prx_bakes_20261016_v001/Edward_all_PRX_BLENDSHAPE_COMPARE_v001.ma",
+    "backup": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\Edward_belt_BLENDSHAPE_before_all_PRX_v001.ma",
+    "selector": 1,
+    "output_count": 23,
+    "visible_candidates": 23,
+    "joints": 852,
+    "restored_free_control_values": 2230,
+    "evaluation": [
+      "parallel",
+      "Evaluation graph is ready."
+    ],
+    "selection": [
+      "Edward_PRX_Review"
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "original_settings": {
+    "collisionEnable": true,
+    "collisionMargin": 3.0
+  },
+  "neutral_error_cm": {
+    "c_tunic_GEO": 0.0033109152970288887,
+    "c_embroider_GEO": 0.002443142924356525,
+    "c_body_GEO": 0.0
+  },
+  "poses": [
+    {
+      "pose": 0,
+      "contact": {
+        "minimum_signed_clearance_cm": 0.1397814623193897,
+        "minimum_surface_distance_cm": 0.1397814623193897,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "max_tunic_movement_cm": 0.0033109152970288887
+    },
+    {
+      "pose": 1,
+      "contact": {
+        "minimum_signed_clearance_cm": -0.15255670339708777,
+        "minimum_surface_distance_cm": 0.15255670339708777,
+        "penetrating_vertices": [
+          1218,
+          "edge_1216_1218",
+          "edge_1218_1220",
+          "triangle_2138",
+          "edge_1120_1218"
+        ],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "max_tunic_movement_cm": 20.009860726425362
+    },
+    {
+      "pose": 2,
+      "contact": {
+        "minimum_signed_clearance_cm": -0.06624273354683685,
+        "minimum_surface_distance_cm": 0.06624273354683685,
+        "penetrating_vertices": [
+          304
+        ],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "max_tunic_movement_cm": 21.83179108373132
+    },
+    {
+      "pose": 3,
+      "contact": {
+        "minimum_signed_clearance_cm": 0.09075815095659531,
+        "minimum_surface_distance_cm": 0.09075815095659531,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "max_tunic_movement_cm": 21.39745398369108
+    },
+    {
+      "pose": 4,
+      "contact": {
+        "minimum_signed_clearance_cm": 0.09219555594197805,
+        "minimum_surface_distance_cm": 0.09219555594197805,
+        "penetrating_vertices": [],
+        "uncertain_vertices": [],
+        "closed_target": true,
+        "checked_vertices": 820,
+        "checked_samples": 4976,
+        "measurement": "Vertices, triangle centers and edge midpoints"
+      },
+      "max_tunic_movement_cm": 5.832266608149532
+    }
+  ]
+}

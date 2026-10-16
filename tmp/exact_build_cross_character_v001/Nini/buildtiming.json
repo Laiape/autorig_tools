@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "asset": "Nini",
+  "status": "complete",
+  "phases": [
+    {
+      "name": "Creating basic structure...",
+      "seconds": 3.3766952000005404
+    },
+    {
+      "name": "Preparing model data...",
+      "seconds": 0.007112999999662861
+    },
+    {
+      "name": "Building rig modules...",
+      "seconds": 0.19051069999841275
+    },
+    {
+      "name": "Loading rig settings\u2026",
+      "seconds": 0.3147711000056006
+    },
+    {
+      "name": "Building spine\u2026",
+      "seconds": 0.3375520999979926
+    },
+    {
+      "name": "Building legs\u2026",
+      "seconds": 0.8194208999993862
+    },
+    {
+      "name": "Building clavicles\u2026",
+      "seconds": 0.1845201999967685
+    },
+    {
+      "name": "Building arms\u2026",
+      "seconds": 0.6133886000025086
+    },
+    {
+      "name": "Building fingers\u2026",
+      "seconds": 0.7861699999994016
+    },
+    {
+      "name": "Building neck\u2026",
+      "seconds": 0.17093649999878835
+    },
+    {
+      "name": "Building jaw\u2026",
+      "seconds": 0.7688713000025018
+    },
+    {
+      "name": "Building eyebrows\u2026",
+      "seconds": 0.48637330000201473
+    },
+    {
+      "name": "Building eyelids\u2026",
+      "seconds": 1.1418483999950695
+    },
+    {
+      "name": "Building tongue\u2026",
+      "seconds": 0.22373399999924004
+    },
+    {
+      "name": "Building teeth\u2026",
+      "seconds": 0.16208670000196435
+    },
+    {
+      "name": "Building ears\u2026",
+      "seconds": 0.20077280000259634
+    },
+    {
+      "name": "Building nose\u2026",
+      "seconds": 0.2400363999986439
+    },
+    {
+      "name": "Building cheekbones\u2026",
+      "seconds": 0.4662036000008811
+    },
+    {
+      "name": "Optimizing rig graph...",
+      "seconds": 0.01854730000195559
+    },
+    {
+      "name": "Labeling joints...",
+      "seconds": 0.03202239999518497
+    },
+    {
+      "name": "Hiding utility nodes...",
+      "seconds": 0.052632300001278054
+    },
+    {
+      "name": "Setting inherit transforms...",
+      "seconds": 0.005230599999777041
+    },
+    {
+      "name": "Importing skin weights...",
+      "seconds": 0.5598739999986719
+    },
+    {
+      "name": "Localizing corrective skin...",
+      "seconds": 0.00434030000178609
+    },
+    {
+      "name": "Importing corrective blendshapes...",
+      "seconds": 0.024052900000242516
+    },
+    {
+      "name": "Importing facial wrinkles...",
+      "seconds": 0.03731289999996079
+    },
+    {
+      "name": "Cleaning up node graph...",
+      "seconds": 0.22303069999907166
+    },
+    {
+      "name": "Storing scene evaluation profile...",
+      "seconds": 0.0016355000043404289
+    },
+    {
+      "name": "Restoring Maya state...",
+      "seconds": 0.04737699999532197
+    }
+  ],
+  "calls": [
+    {
+      "name": "Check model cache",
+      "seconds": 0.27094989999750396
+    },
+    {
+      "name": "Open cached binary model",
+      "seconds": 3.010478200005309
+    },
+    {
+      "name": "Open model scene",
+      "seconds": 3.2947195999950054
+    }
+  ],
+  "optimizations": {
+    "enabled": true,
+    "static_point_curves": 0,
+    "shared_math_nodes": 0,
+    "new_skin_bindings": [
+      {
+        "skin": "C_body_SKC",
+        "before": 246,
+        "after": 58
+      },
+      {
+        "skin": "skinCluster__c_tunic_GEO",
+        "before": 42,
+        "after": 40
+      },
+      {
+        "skin": "skinCluster__c_embroider_GEO",
+        "before": 24,
+        "after": 18
+      },
+      {
+        "skin": "skinCluster__c_bottomsSleeves_GEO",
+        "before": 23,
+        "after": 22
+      },
+      {
+        "skin": "skinCluster__l_glove_GEO",
+        "before": 6,
+        "after": 5
+      },
+      {
+        "skin": "skinCluster__r_glove_GEO",
+        "before": 6,
+        "after": 5
+      },
+      {
+        "skin": "skinCluster__c_pants_GEO",
+        "before": 32,
+        "after": 27
+      },
+      {
+        "skin": "skinCluster__c_bootCuffs_GEO",
+        "before": 22,
+        "after": 14
+      },
+      {
+        "skin": "skinCluster__c_legwarmers_GEO",
+        "before": 22,
+        "after": 18
+      },
+      {
+        "skin": "skinCluster__c_bootBase_GEO",
+        "before": 19,
+        "after": 6
+      },
+      {
+        "skin": "skinCluster__c_furBalls_GEO",
+        "before": 8,
+        "after": 2
+      },
+      {
+        "skin": "skinCluster__c_furCuffs_GEO",
+        "before": 21,
+        "after": 19
+      },
+      {
+        "skin": "skinCluster__c_armcuffs_GEO",
+        "before": 22,
+        "after": 17
+      },
+      {
+        "skin": "skinCluster__c_hood_GEO",
+        "before": 10,
+        "after": 1
+      }
+    ]
+  },
+  "current_phase": "Complete",
+  "elapsed_seconds": 11.53546649999771,
+  "total_seconds": 11.536388200001966
+}

@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "result": {
+    "targets_per_node": 76,
+    "variants": {
+      "blendshape_only_shared": {
+        "meshes": {
+          "cinturon3": "cinturon3_blendshape_only_shared_TEST",
+          "cinturones2": "cinturones2_blendshape_only_shared_TEST"
+        },
+        "nodes": [
+          "EdwardBelts_BLENDSHAPE_ONLY_SHARED_TEST"
+        ]
+      },
+      "blendshape_only_separate": {
+        "meshes": {
+          "cinturon3": "cinturon3_blendshape_only_separate_TEST",
+          "cinturones2": "cinturones2_blendshape_only_separate_TEST"
+        },
+        "nodes": [
+          "cinturon3_BLENDSHAPE_ONLY_TEST",
+          "cinturones2_BLENDSHAPE_ONLY_TEST"
+        ]
+      }
+    }
+  }
+}

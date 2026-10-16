@@ -1,0 +1,259 @@
+[
+  {
+    "gain": 1.02,
+    "poses": [
+      {
+        "pose": 0,
+        "minimum_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "minimum_cm": -0.1566892405208319,
+        "inside": [
+          1218,
+          "edge_1216_1218",
+          "edge_1218_1220",
+          "triangle_2138",
+          "edge_1120_1218"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "minimum_cm": -0.07083824188324131,
+        "inside": [
+          304
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "minimum_cm": 0.09075815095659531,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "minimum_cm": 0.08865008786710829,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "minimum_cm": 0.042568011709677646,
+        "inside": [],
+        "uncertain": []
+      }
+    ],
+    "passed": false
+  },
+  {
+    "gain": 1.05,
+    "poses": [
+      {
+        "pose": 0,
+        "minimum_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "minimum_cm": -0.16261920996149626,
+        "inside": [
+          1218,
+          "edge_1216_1218",
+          "edge_1218_1220",
+          "triangle_2138",
+          "edge_1120_1218"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "minimum_cm": -0.07752298819371847,
+        "inside": [
+          304
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "minimum_cm": 0.09075815095659531,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "minimum_cm": 0.08336297241719774,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "minimum_cm": 0.039134547133229385,
+        "inside": [],
+        "uncertain": []
+      }
+    ],
+    "passed": false
+  },
+  {
+    "gain": 1.1,
+    "poses": [
+      {
+        "pose": 0,
+        "minimum_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "minimum_cm": -0.17182522646263765,
+        "inside": [
+          1218,
+          "edge_1216_1218",
+          "edge_1218_1220",
+          "triangle_2138",
+          "edge_1120_1218",
+          "triangle_2140"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "minimum_cm": -0.08812951522918072,
+        "inside": [
+          304
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "minimum_cm": 0.09075815095659531,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "minimum_cm": 0.07463268892036942,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "minimum_cm": 0.033727563797665366,
+        "inside": [],
+        "uncertain": []
+      }
+    ],
+    "passed": false
+  },
+  {
+    "gain": 1.15,
+    "poses": [
+      {
+        "pose": 0,
+        "minimum_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "minimum_cm": -0.18023908339703054,
+        "inside": [
+          1218,
+          "edge_1216_1218",
+          "edge_1218_1220",
+          "triangle_2138",
+          "edge_1120_1218",
+          "triangle_2140"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "minimum_cm": -0.09809348259487673,
+        "inside": [
+          304,
+          "edge_304_306"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "minimum_cm": 0.09075815095659531,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "minimum_cm": 0.06600695105678882,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "minimum_cm": 0.02870526587059328,
+        "inside": [],
+        "uncertain": []
+      }
+    ],
+    "passed": false
+  },
+  {
+    "gain": 1.25,
+    "poses": [
+      {
+        "pose": 0,
+        "minimum_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "minimum_cm": -0.1949257532768339,
+        "inside": [
+          1218,
+          "edge_1216_1218",
+          "edge_1218_1220",
+          "triangle_2138",
+          "edge_1120_1218",
+          "edge_1118_1218",
+          "triangle_2140"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "minimum_cm": -0.11622167791171144,
+        "inside": [
+          304,
+          "edge_302_304",
+          "edge_304_306"
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "minimum_cm": 0.09075815095659531,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "minimum_cm": 0.04907465572625498,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "minimum_cm": 0.01976246091593875,
+        "inside": [],
+        "uncertain": []
+      }
+    ],
+    "passed": false
+  }
+]

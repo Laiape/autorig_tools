@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "kind": "tail",
+      "requested": 2,
+      "actual": 4,
+      "guides": 4
+    },
+    {
+      "kind": "tail",
+      "requested": 4,
+      "actual": 4,
+      "guides": 4
+    },
+    {
+      "kind": "tail",
+      "requested": 7,
+      "actual": 7,
+      "guides": 4
+    },
+    {
+      "kind": "spine",
+      "requested": 2,
+      "actual": 4,
+      "guides": 4
+    },
+    {
+      "kind": "spine",
+      "requested": 4,
+      "actual": 4,
+      "guides": 4
+    },
+    {
+      "kind": "spine",
+      "requested": 7,
+      "actual": 7,
+      "guides": 4
+    },
+    {
+      "kind": "neck",
+      "requested": 2,
+      "actual": 4,
+      "guides": 4
+    },
+    {
+      "kind": "neck",
+      "requested": 4,
+      "actual": 4,
+      "guides": 4
+    },
+    {
+      "kind": "neck",
+      "requested": 7,
+      "actual": 7,
+      "guides": 4
+    },
+    {
+      "kind": "tail",
+      "requested": 5,
+      "actual": 5,
+      "guides": 3
+    },
+    {
+      "kind": "spine",
+      "requested": 5,
+      "actual": 5,
+      "guides": 2
+    },
+    {
+      "kind": "neck",
+      "requested": 2,
+      "actual": 2,
+      "guides": 2
+    }
+  ],
+  "maya": "2026",
+  "guide_file": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\guides\\chihuahua_v009.guides",
+  "scope": "Native module methods with fixture guide loading and fallback curves; not a full-character rebuild",
+  "checks": [
+    "all authored guide anchors",
+    "ordered segment sampling",
+    "local tangent frames",
+    "neutral controller channels",
+    "live skin deformation",
+    "DG/Serial/Parallel agreement",
+    "global scale",
+    "two reproducible builds",
+    "native save and reopen",
+    "no cycles"
+  ]
+}

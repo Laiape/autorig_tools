@@ -1,0 +1,170 @@
+{
+  "result": {
+    "ng_layers": [
+      [
+        "C_mouth_local_SKC",
+        {
+          "error": "Maya command error"
+        }
+      ],
+      [
+        "skinCluster41",
+        {
+          "error": "Maya command error"
+        }
+      ]
+    ],
+    "head_skins": [
+      [
+        "C_head_global_SKC",
+        0,
+        5,
+        true
+      ],
+      [
+        "C_sockets_high_local_SKC",
+        0,
+        5,
+        true
+      ],
+      [
+        "C_nose_high_local_SKC",
+        0,
+        5,
+        true
+      ],
+      [
+        "C_cheeks_high_local_SKC",
+        0,
+        5,
+        true
+      ],
+      [
+        "C_mouth_local_SKC",
+        0,
+        5,
+        true
+      ],
+      [
+        "C_ear_nose_local_SKC",
+        0,
+        5,
+        true
+      ],
+      [
+        "C_eyelids_local_SKC",
+        1,
+        5,
+        true
+      ],
+      [
+        "C_eyebrows_local_SKC",
+        1,
+        5,
+        true
+      ]
+    ],
+    "targets": [
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 0,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "L_lipCorner_TX5_BLS_poseData",
+        "aliases": "L_lipCorner_TX5_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 2,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "L_lipCorner_TXm2_BLS_poseData",
+        "aliases": "L_lipCorner_TXm2_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 4,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "C_jaw_RX30_BLS_poseData",
+        "aliases": "C_jaw_RX30_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 5,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "R_lipCorner_TX5_BLS_poseData",
+        "aliases": "R_lipCorner_TX5_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 6,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "R_lipCorner_TXm2_BLS_poseData",
+        "aliases": "R_lipCorner_TXm2_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 7,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "L_lipCorner_TY3_BLS_poseData",
+        "aliases": "L_lipCorner_TY3_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 8,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "R_lipCorner_TY3_BLS_poseData",
+        "aliases": "R_lipCorner_TY3_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 9,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "L_lipCorner_TYm4_BLS_poseData",
+        "aliases": "L_lipCorner_TYm4_BLS"
+      },
+      {
+        "bs": "cabeza_high_poseCorrectives_BLS",
+        "index": 10,
+        "mode": 2,
+        "items": [
+          6000
+        ],
+        "record": "R_lipCorner_TYm4_BLS_poseData",
+        "aliases": "R_lipCorner_TYm4_BLS"
+      },
+      {
+        "bs": "cabeza_low_poseCorrectives_BLS",
+        "index": 0,
+        "mode": 1,
+        "items": [
+          6000
+        ],
+        "record": "C_jaw_RX30_BLS_poseData1",
+        "aliases": "C_jaw_RX30_BLS"
+      }
+    ]
+  }
+}

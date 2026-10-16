@@ -1,0 +1,113 @@
+{
+  "success": true,
+  "result": {
+    "tolerance": 0.0001,
+    "units": "cm",
+    "cases": 8,
+    "rows": 32,
+    "summary": {
+      "skin_only": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 0.10329042979061938,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 0.021908558161547673,
+            "max_face_vertex_normal": 0.010894201765479937,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.1392306369195014,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.03748586307784477,
+            "max_face_vertex_normal": 0.01928969502691556,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.4705103300823738,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.16553818332309111,
+            "max_face_vertex_normal": 0.023790302954175575,
+            "samples": 6
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 0.25977737647273047,
+            "worst_pose": "C_spine07_CTL_rotateZ_35",
+            "rms_at_worst": 0.029070555360554928,
+            "max_face_vertex_normal": 0.011788272527116624,
+            "samples": 6
+          },
+          "held_out": {
+            "max_position": 0.14056607043064176,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.01797411028749544,
+            "max_face_vertex_normal": 0.006070136258607018,
+            "samples": 4
+          },
+          "held_global": {
+            "max_position": 0.9925001547510052,
+            "worst_pose": "global_authored_scale",
+            "rms_at_worst": 0.15649748993882748,
+            "max_face_vertex_normal": 0.05139579467001819,
+            "samples": 6
+          }
+        }
+      }
+    },
+    "shared_separate_max": 0.0,
+    "invariants": {
+      "cinturon3": {
+        "reference": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "skin_only": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        }
+      },
+      "cinturones2": {
+        "reference": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "skin_only": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        }
+      }
+    },
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 1.492946900005336
+  }
+}

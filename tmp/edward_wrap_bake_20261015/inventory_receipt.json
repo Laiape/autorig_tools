@@ -1,0 +1,896 @@
+{
+  "result": {
+    "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Edward/scenes/Edward_working_v002.mb",
+    "wraps": [
+      {
+        "name": "brazaletes1_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "brazaletes1_ShapeDeformed"
+        ],
+        "connections": [
+          "brazaletes1_Shape.worldMesh",
+          "brazaletes1_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "cinturon3_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "cinturon3_ShapeDeformed"
+        ],
+        "connections": [
+          "cinturon3_Shape.worldMesh",
+          "cinturon3_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "polySurfaceShape1.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "cinturones2_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "cinturones2_ShapeDeformed"
+        ],
+        "connections": [
+          "cinturones2_Shape.worldMesh",
+          "cinturones2_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "collar2_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "collar2_ShapeDeformed"
+        ],
+        "connections": [
+          "collar2_Shape.worldMesh",
+          "collar2_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "cabeza_high_ShapeOrig.outMesh",
+          "EdwardWrinkles_PrimaryWorld.outputGeometry"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "collar3_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "collar3_ShapeDeformed"
+        ],
+        "connections": [
+          "collar3_Shape.worldMesh",
+          "collar3_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "cabeza_high_ShapeOrig.outMesh",
+          "EdwardWrinkles_PrimaryWorld.outputGeometry"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "harapo1_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "harapo1_ShapeDeformed"
+        ],
+        "connections": [
+          "harapo1_Shape.worldMesh",
+          "harapo1_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "harapo2_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "harapo2_ShapeDeformed"
+        ],
+        "connections": [
+          "harapo2_Shape.worldMesh",
+          "harapo2_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "pCube26_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "pCube26_ShapeDeformed"
+        ],
+        "connections": [
+          "pCube26_Shape.worldMesh",
+          "pCube26_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "pCylinder16_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "pCylinder16_ShapeDeformed"
+        ],
+        "connections": [
+          "pCylinder16_Shape.worldMesh",
+          "pCylinder16_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "pasted__brazaletes3_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "pasted__brazaletes3_ShapeDeformed"
+        ],
+        "connections": [
+          "pasted__brazaletes3_Shape.worldMesh",
+          "pasted__brazaletes3_Shape.outMesh",
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface32_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface32_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface32_Shape.worldMesh",
+          "polySurface32_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface33_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface33_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface33_Shape.worldMesh",
+          "polySurface33_Shape.outMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface48_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface48_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface48_Shape.worldMesh",
+          "polySurface48_Shape.outMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface49_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface49_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface49_Shape.worldMesh",
+          "polySurface49_Shape.outMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface58_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface58_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface58_Shape.worldMesh",
+          "polySurface58_Shape.outMesh",
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface61_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface61_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface61_Shape.worldMesh",
+          "polySurface61_Shape.outMesh",
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface62_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface62_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface62_Shape.worldMesh",
+          "polySurface62_Shape.outMesh",
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface889_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface889_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface889_Shape.worldMesh",
+          "polySurface889_Shape.outMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface892_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface892_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface892_Shape.worldMesh",
+          "polySurface892_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface900_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface900_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface900_Shape.worldMesh",
+          "polySurface900_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "polySurface905_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "polySurface905_ShapeDeformed"
+        ],
+        "connections": [
+          "polySurface905_Shape.worldMesh",
+          "polySurface905_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "tiras30_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "tiras30_ShapeDeformed"
+        ],
+        "connections": [
+          "tiras30_Shape.worldMesh",
+          "tiras30_Shape.outMesh",
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      },
+      {
+        "name": "tiras31_PRX",
+        "type": "proximityWrap",
+        "geometry": [
+          "tiras31_ShapeDeformed"
+        ],
+        "connections": [
+          "tiras31_Shape.worldMesh",
+          "tiras31_Shape.outMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ],
+        "envelope": 1.0
+      }
+    ],
+    "wrapped_meshes": [
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|brazaletes1|brazaletes1_ShapeDeformed",
+        "vertices": 1774,
+        "stack": [
+          [
+            "brazaletes1_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed",
+        "vertices": 5589,
+        "stack": [
+          [
+            "cinturon3_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_ShapeDeformed",
+        "vertices": 4885,
+        "stack": [
+          [
+            "cinturones2_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|collar2|collar2_ShapeDeformed",
+        "vertices": 1806,
+        "stack": [
+          [
+            "collar2_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|collar3|collar3_ShapeDeformed",
+        "vertices": 1806,
+        "stack": [
+          [
+            "collar3_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo1|harapo1_ShapeDeformed",
+        "vertices": 338,
+        "stack": [
+          [
+            "harapo1_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo2|harapo2_ShapeDeformed",
+        "vertices": 338,
+        "stack": [
+          [
+            "harapo2_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|pCube26|pCube26_ShapeDeformed",
+        "vertices": 416,
+        "stack": [
+          [
+            "pCube26_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|pCylinder16|pCylinder16_ShapeDeformed",
+        "vertices": 484,
+        "stack": [
+          [
+            "pCylinder16_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|botas_geo|pasted__brazaletes3|pasted__brazaletes3_ShapeDeformed",
+        "vertices": 1064,
+        "stack": [
+          [
+            "pasted__brazaletes3_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface32|polySurface32_ShapeDeformed",
+        "vertices": 1636,
+        "stack": [
+          [
+            "polySurface32_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface33|polySurface33_ShapeDeformed",
+        "vertices": 1636,
+        "stack": [
+          [
+            "polySurface33_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface48|polySurface48_ShapeDeformed",
+        "vertices": 1618,
+        "stack": [
+          [
+            "polySurface48_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface49|polySurface49_ShapeDeformed",
+        "vertices": 1618,
+        "stack": [
+          [
+            "polySurface49_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface58|polySurface58_ShapeDeformed",
+        "vertices": 1576,
+        "stack": [
+          [
+            "polySurface58_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface61|polySurface61_ShapeDeformed",
+        "vertices": 1404,
+        "stack": [
+          [
+            "polySurface61_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface62|polySurface62_ShapeDeformed",
+        "vertices": 1576,
+        "stack": [
+          [
+            "polySurface62_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface889|polySurface889_ShapeDeformed",
+        "vertices": 450,
+        "stack": [
+          [
+            "polySurface889_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface892|polySurface892_ShapeDeformed",
+        "vertices": 211,
+        "stack": [
+          [
+            "polySurface892_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface900|polySurface900_ShapeDeformed",
+        "vertices": 2161,
+        "stack": [
+          [
+            "polySurface900_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface905|polySurface905_ShapeDeformed",
+        "vertices": 105,
+        "stack": [
+          [
+            "polySurface905_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras30|tiras30_ShapeDeformed",
+        "vertices": 2962,
+        "stack": [
+          [
+            "tiras30_PRX",
+            "proximityWrap"
+          ]
+        ]
+      },
+      {
+        "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras31|tiras31_ShapeDeformed",
+        "vertices": 2338,
+        "stack": [
+          [
+            "tiras31_PRX",
+            "proximityWrap"
+          ]
+        ]
+      }
+    ],
+    "blendshapes": [
+      {
+        "node": "L_eyelidBlink_BLS",
+        "geometry": [
+          "L_eyelidBlinkRef_CRVShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "L_eyelidUp_CRV",
+          "weight[0]",
+          "L_eyelidDown_CRV",
+          "weight[1]"
+        ],
+        "weights": [
+          [
+            0,
+            0.20000000298023224,
+            [
+              "L_eyeDirect_CTL.Blink_Height"
+            ]
+          ],
+          [
+            1,
+            0.800000011920929,
+            [
+              "L_blinkHeight_REV.outputX"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "L_lowerEyelidBlink_BLS",
+        "geometry": [
+          "L_eyelidDownRebuilded_CRVShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "L_eyelidBlinkRef_CRV",
+          "weight[0]",
+          "L_eyelidDown_CRV",
+          "weight[1]"
+        ],
+        "weights": [
+          [
+            0,
+            0.0,
+            [
+              "L_eyeDirect_CTL.Lower_Blink"
+            ]
+          ],
+          [
+            1,
+            1.0,
+            [
+              "L_lowerBlink_REV.outputX"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "L_upperEyelidBlink_BLS",
+        "geometry": [
+          "L_eyelidUpRebuilded_CRVShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "L_eyelidBlinkRef_CRV",
+          "weight[0]",
+          "L_eyelidUp_CRV",
+          "weight[1]"
+        ],
+        "weights": [
+          [
+            0,
+            0.0,
+            [
+              "L_eyeDirect_CTL.Upper_Blink"
+            ]
+          ],
+          [
+            1,
+            1.0,
+            [
+              "L_upperBlink_REV.outputX"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "R_eyelidBlink_BLS",
+        "geometry": [
+          "R_eyelidBlinkRef_CRVShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "R_eyelidUp_CRV",
+          "weight[0]",
+          "R_eyelidDown_CRV",
+          "weight[1]"
+        ],
+        "weights": [
+          [
+            0,
+            0.20000000298023224,
+            [
+              "R_eyeDirect_CTL.Blink_Height"
+            ]
+          ],
+          [
+            1,
+            0.800000011920929,
+            [
+              "R_blinkHeight_REV.outputX"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "R_lowerEyelidBlink_BLS",
+        "geometry": [
+          "R_eyelidDownRebuilded_CRVShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "R_eyelidBlinkRef_CRV",
+          "weight[0]",
+          "R_eyelidDown_CRV",
+          "weight[1]"
+        ],
+        "weights": [
+          [
+            0,
+            0.0,
+            [
+              "R_eyeDirect_CTL.Lower_Blink"
+            ]
+          ],
+          [
+            1,
+            1.0,
+            [
+              "R_lowerBlink_REV.outputX"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "R_upperEyelidBlink_BLS",
+        "geometry": [
+          "R_eyelidUpRebuilded_CRVShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "R_eyelidBlinkRef_CRV",
+          "weight[0]",
+          "R_eyelidUp_CRV",
+          "weight[1]"
+        ],
+        "weights": [
+          [
+            0,
+            0.0,
+            [
+              "R_eyeDirect_CTL.Upper_Blink"
+            ]
+          ],
+          [
+            1,
+            1.0,
+            [
+              "R_upperBlink_REV.outputX"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "cabeza_high_poseCorrectives_BLS",
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "L_lipCorner_TX5_BLS",
+          "weight[0]",
+          "R_lipCorner_TYm4_BLS",
+          "weight[10]",
+          "L_lipCorner_TXm2_BLS",
+          "weight[2]",
+          "C_jaw_RX30_BLS",
+          "weight[4]",
+          "R_lipCorner_TX5_BLS",
+          "weight[5]",
+          "R_lipCorner_TXm2_BLS",
+          "weight[6]",
+          "L_lipCorner_TY3_BLS",
+          "weight[7]",
+          "R_lipCorner_TY3_BLS",
+          "weight[8]",
+          "L_lipCorner_TYm4_BLS",
+          "weight[9]"
+        ],
+        "weights": [
+          [
+            0,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_0_.output"
+            ]
+          ],
+          [
+            2,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_2_.output"
+            ]
+          ],
+          [
+            4,
+            1.6653345369377348e-16,
+            [
+              "C_jaw_RX30_BLS_poseData_orientationWeight.outputR"
+            ]
+          ],
+          [
+            5,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_5_.output"
+            ]
+          ],
+          [
+            6,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_6_.output"
+            ]
+          ],
+          [
+            7,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_7_.output"
+            ]
+          ],
+          [
+            8,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_8_.output"
+            ]
+          ],
+          [
+            9,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_9_.output"
+            ]
+          ],
+          [
+            10,
+            0.0,
+            [
+              "cabeza_high_poseCorrectives_BLS_weight_10_.output"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "cabeza_low_poseCorrectives_BLS",
+        "geometry": [
+          "cabeza_low_Shape"
+        ],
+        "envelope": 1.0,
+        "aliases": [
+          "C_jaw_RX30_BLS",
+          "weight[0]"
+        ],
+        "weights": [
+          [
+            0,
+            1.6653345369377348e-16,
+            [
+              "C_jaw_RX30_BLS_poseData1_orientationWeight.outputR"
+            ]
+          ]
+        ]
+      },
+      {
+        "node": "cuerpo_base_poseCorrectives_BLS",
+        "geometry": [
+          "polySurfaceShape1"
+        ],
+        "envelope": 1.0,
+        "aliases": null,
+        "weights": [
+          [
+            0,
+            1.0,
+            null
+          ],
+          [
+            1,
+            1.0,
+            null
+          ],
+          [
+            2,
+            1.0,
+            null
+          ],
+          [
+            3,
+            1.0,
+            null
+          ]
+        ]
+      }
+    ],
+    "controls": 318,
+    "unknown": [
+      "MayaNodeEditorSavedTabsInfo",
+      "hyperShadePrimaryNodeEditorSavedTabsInfo"
+    ]
+  }
+}

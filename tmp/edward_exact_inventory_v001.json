@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "result": {
+    "meshes": 60,
+    "prx": 23,
+    "modules": 18,
+    "skins": 58,
+    "wrinkles": [
+      {
+        "prefix": "EdwardWrinkles",
+        "compact": true,
+        "in_place": true,
+        "control_fields": 0
+      }
+    ]
+  }
+}

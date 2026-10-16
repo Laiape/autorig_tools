@@ -26,6 +26,8 @@ try:
         path=output/('build_%d.rigqa.json'%attempt)
         report=qa.run_report(root,meshes,str(path),baseline=str(output/'build_1.rigqa.json') if attempt==2 else None,repeats=1,captures=False)
         reports.append(report)
+        if report['missing_channels']:
+            raise ValueError('Rebuild validation has missing control channels.')
     if any(r['status']!='compared' for r in reports[1]['comparison']):raise ValueError('Rebuild pose definitions or topology differ.')
     rebuild_error=max(r['max'] for r in reports[1]['comparison'])
     scene=output/(manifest['asset']+'_validated.ma');cmds.file(rename=str(scene));cmds.file(save=True,type='mayaAscii')
@@ -36,6 +38,8 @@ try:
     validation={'success':rebuild_error<1e-4 and reopen_error<1e-4,'maya':cmds.about(version=True),'rebuild_max_difference':rebuild_error,
         'reopen_max_difference':reopen_error,'poses':len(reopen['poses']),'meshes':meshes,'scene':str(scene),
         'missing_channels':reopen['missing_channels'],'reports':[str(output/'build_1.rigqa.json'),str(output/'build_2.rigqa.json'),str(output/'reopened.rigqa.json')]}
+    if manifest.get('performance_policy'):
+        validation['performance_report'] = manifest['performance_policy']['report']
     rig_package.mark_validated(package,validation)
     (output/'result.json').write_text(json.dumps(validation,indent=2));exit_code=0
     print('PASS FROZEN RIG PACKAGE',json.dumps(validation),flush=True)

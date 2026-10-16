@@ -1,0 +1,15 @@
+{
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\review\\loop_rigger\\Nini_ManualLoops_v001.ma",
+  "backup": "C:\\proyectos\\auto-rig\\recovery\\Before_Nini_ManualLoops_20261014_154424.ma",
+  "removed_facial_layers": 9,
+  "removed_base_layer": true,
+  "removed_test_curves": 9,
+  "removed_metadata": 7,
+  "removed_review_camera": true,
+  "joints": 576,
+  "skin_influences": 246,
+  "skin_weights_max_delta": 0.0,
+  "dq_max_delta": 0.0,
+  "neutral_geometry_max_delta": 0.0,
+  "preserved_component_selection": []
+}

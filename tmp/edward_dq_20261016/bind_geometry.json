@@ -1,0 +1,120 @@
+{
+  "success": true,
+  "result": [
+    {
+      "wrap": "brazaletes1_PRX",
+      "skin": "brazaletes1_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0021310541330041067
+    },
+    {
+      "wrap": "cinturon3_PRX",
+      "skin": "cinturon3_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0024937399914525434
+    },
+    {
+      "wrap": "cinturones2_PRX",
+      "skin": "cinturones2_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0033684427910104175
+    },
+    {
+      "wrap": "collar2_PRX",
+      "skin": "collar2_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0014221080678359864
+    },
+    {
+      "wrap": "collar3_PRX",
+      "skin": "collar3_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0016572603028472612
+    },
+    {
+      "wrap": "harapo1_PRX",
+      "skin": "harapo1_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0017659090388667
+    },
+    {
+      "wrap": "harapo2_PRX",
+      "skin": "harapo2_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0015051101854183914
+    },
+    {
+      "wrap": "pCube26_PRX",
+      "skin": "pCube26_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.003427534491016185
+    },
+    {
+      "wrap": "pCylinder16_PRX",
+      "skin": "pCylinder16_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.004037219795967693
+    },
+    {
+      "wrap": "pasted__brazaletes3_PRX",
+      "skin": "pasted__brazaletes3_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0001753273336289117
+    },
+    {
+      "wrap": "polySurface32_PRX",
+      "skin": "polySurface32_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0012309593549811207
+    },
+    {
+      "wrap": "polySurface33_PRX",
+      "skin": "polySurface33_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0011737288533589336
+    },
+    {
+      "wrap": "polySurface48_PRX",
+      "skin": "polySurface48_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0006314946237026484
+    },
+    {
+      "wrap": "polySurface49_PRX",
+      "skin": "polySurface49_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0008742375944355461
+    },
+    {
+      "wrap": "polySurface58_PRX",
+      "skin": "polySurface58_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0006360366036853321
+    },
+    {
+      "wrap": "polySurface61_PRX",
+      "skin": "polySurface61_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0019738848570889336
+    },
+    {
+      "wrap": "polySurface62_PRX",
+      "skin": "polySurface62_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0005519420487750744
+    },
+    {
+      "wrap": "polySurface889_PRX",
+      "skin": "polySurface889_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0007937945280860833
+    },
+    {
+      "wrap": "polySurface892_PRX",
+      "skin": "polySurface892_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0023370399634468604
+    },
+    {
+      "wrap": "polySurface900_PRX",
+      "skin": "polySurface900_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.002211361663808762
+    },
+    {
+      "wrap": "polySurface905_PRX",
+      "skin": "polySurface905_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.001565928653728947
+    },
+    {
+      "wrap": "tiras30_PRX",
+      "skin": "tiras30_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.004701819382747988
+    },
+    {
+      "wrap": "tiras31_PRX",
+      "skin": "tiras31_PRX_BAKED_TEST_SKC",
+      "max_rest_offset": 0.0012209499238167423
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import maya.api.OpenMayaAnim as oma
 import os
 import json
 import re
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 
 try:
     from maya_tools.scripts.utils import data_manager
@@ -61,6 +62,10 @@ class SkinManager(object):
 
     def get_path_and_name(self):
         """Calcula la ruta del JSON basándose en la estructura del proyecto."""
+        from maya_tools.scripts.framework import context as framework_context
+        active = framework_context.service().snapshot()
+        if active.asset_path:
+            return str(active.asset_path / 'skin_clusters'), active.asset
         try:
             # assets vive junto a scripts: <...>/maya_tools/scripts -> <...>/maya_tools
             script_path = os.path.realpath(__file__)
@@ -85,6 +90,7 @@ class SkinManager(object):
                 if dm_name: char_name = dm_name
             except Exception: pass
 
+        char_name = normalize_asset_name(char_name)
         path = os.path.join(root_github, "assets", char_name, "skin_clusters")
         return os.path.normpath(path), char_name
 
@@ -930,6 +936,11 @@ class SkinManager(object):
                 created_count, len(pending), len(set(warnings))))
 
     def export_skins(self, in_path=None):
+        from maya_tools.scripts.tools import bifrost_wrinkles
+        with bifrost_wrinkles.primary_inputs_for_skin_export():
+            return self._export_skins_primary(in_path)
+
+    def _export_skins_primary(self, in_path=None):
         """
         Exporta los pesos. Si in_path es None, genera una NUEVA versión 
         basada en la más alta encontrada para no sobrescribir.

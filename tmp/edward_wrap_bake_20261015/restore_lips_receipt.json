@@ -1,0 +1,102 @@
+{
+  "result": [
+    {
+      "mesh": "cabeza_high",
+      "neutral_change_cm": 0.7422776453452684,
+      "neutral_change_count": 1236,
+      "stored_map_weight_asym": 2.220446049250313e-16,
+      "neutral_matrices": [
+        {
+          "name": "L_upperLip11_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "C_upperLip00_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "C_upperLip00NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip01_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip03_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip08_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip09_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip11_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip01NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip03NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        }
+      ],
+      "restore_error_cm": NaN
+    },
+    {
+      "mesh": "cabeza_low",
+      "neutral_change_cm": 0.015255198175393567,
+      "neutral_change_count": 178,
+      "stored_map_weight_asym": 2.220446049250313e-16,
+      "neutral_matrices": [
+        {
+          "name": "C_upperLip00_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "C_upperLip00NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip01_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip03_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip08_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip09_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip11_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip01NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip03NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        },
+        {
+          "name": "R_upperLip08NonRot_ENV",
+          "neutral_offset": 2.842170943040401e-14
+        }
+      ],
+      "restore_error_cm": 171.4546275221445
+    }
+  ]
+}

@@ -14,6 +14,7 @@ except ImportError:
     from shiboken2 import wrapInstance
 
 from maya_tools.scripts.utils import ui_utils
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 
 # ── Maya-grey palette ─────────────────────────────────────────────────────────
 C_WHITE  = "#b0b0b0"   # medium-dark grey — main bg
@@ -33,6 +34,7 @@ def _root_path():
 
 
 def _find_thumbnail(asset_name):
+    asset_name = normalize_asset_name(asset_name)
     d = os.path.join(_root_path(), "assets", asset_name)
     for name in ("thumbnail.jpg", "thumbnail.png",
                  f"{asset_name}.jpg", f"{asset_name}.png"):

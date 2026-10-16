@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "accepted": true,
+    "differences": [],
+    "meshes": 60,
+    "skins": 58,
+    "max_face_vertex_normal_error": 2.1542358837725164e-07,
+    "joints": 852,
+    "prx": 23,
+    "scope": "Native mesh topology/UVs/materials/hard edges/face-vertex normals, all skin positive weights/DQ/rest/methods incl curves/surfaces, PRX/corrective payloads, wrinkle presets, control/joint names."
+  }
+}

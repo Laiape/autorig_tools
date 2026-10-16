@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "result": {
+    "outputs": 23,
+    "vertices": 37791,
+    "fit": 150,
+    "held_out": 173,
+    "seconds": 72.85658820001117
+  }
+}

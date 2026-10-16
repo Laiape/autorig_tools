@@ -1,0 +1,13 @@
+{
+  "result": [
+    {
+      "wrap": "brazaletes1_PRX",
+      "accepted": true,
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|brazaletes1|brazaletes1_ShapeDeformed",
+      "skin": "brazaletes1_wrapBake_SKC",
+      "worst_max_cm": 0.09989359886261227,
+      "worst_rms_cm": 0.019670126141684015,
+      "held_out_max_cm": 0.09989359886261227
+    }
+  ]
+}

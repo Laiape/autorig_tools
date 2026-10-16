@@ -1,0 +1,2084 @@
+{
+  "fit": [
+    {
+      "name": "neutral",
+      "channels": {}
+    },
+    {
+      "name": "L_shoulderFk_CTL.rotateX_-45",
+      "channels": {
+        "L_shoulderFk_CTL.rotateX": -45
+      }
+    },
+    {
+      "name": "L_shoulderFk_CTL.rotateX_55",
+      "channels": {
+        "L_shoulderFk_CTL.rotateX": 55
+      }
+    },
+    {
+      "name": "L_shoulderFk_CTL.rotateY_-45",
+      "channels": {
+        "L_shoulderFk_CTL.rotateY": -45
+      }
+    },
+    {
+      "name": "L_shoulderFk_CTL.rotateY_70",
+      "channels": {
+        "L_shoulderFk_CTL.rotateY": 70
+      }
+    },
+    {
+      "name": "L_shoulderFk_CTL.rotateZ_-40",
+      "channels": {
+        "L_shoulderFk_CTL.rotateZ": -40
+      }
+    },
+    {
+      "name": "L_shoulderFk_CTL.rotateZ_100",
+      "channels": {
+        "L_shoulderFk_CTL.rotateZ": 100
+      }
+    },
+    {
+      "name": "L_elbowFk_CTL.rotateY_-100",
+      "channels": {
+        "L_elbowFk_CTL.rotateY": -100
+      }
+    },
+    {
+      "name": "L_elbowFk_CTL.rotateY_100",
+      "channels": {
+        "L_elbowFk_CTL.rotateY": 100
+      }
+    },
+    {
+      "name": "L_elbowFk_CTL.rotateX_-60",
+      "channels": {
+        "L_elbowFk_CTL.rotateX": -60
+      }
+    },
+    {
+      "name": "L_elbowFk_CTL.rotateX_60",
+      "channels": {
+        "L_elbowFk_CTL.rotateX": 60
+      }
+    },
+    {
+      "name": "L_wristFk_CTL.rotateX_-45",
+      "channels": {
+        "L_wristFk_CTL.rotateX": -45
+      }
+    },
+    {
+      "name": "L_wristFk_CTL.rotateX_45",
+      "channels": {
+        "L_wristFk_CTL.rotateX": 45
+      }
+    },
+    {
+      "name": "L_wristFk_CTL.rotateY_-25",
+      "channels": {
+        "L_wristFk_CTL.rotateY": -25
+      }
+    },
+    {
+      "name": "L_wristFk_CTL.rotateY_25",
+      "channels": {
+        "L_wristFk_CTL.rotateY": 25
+      }
+    },
+    {
+      "name": "L_wristFk_CTL.rotateZ_-60",
+      "channels": {
+        "L_wristFk_CTL.rotateZ": -60
+      }
+    },
+    {
+      "name": "L_wristFk_CTL.rotateZ_60",
+      "channels": {
+        "L_wristFk_CTL.rotateZ": 60
+      }
+    },
+    {
+      "name": "L_hipFk_CTL.rotateX_-35",
+      "channels": {
+        "L_hipFk_CTL.rotateX": -35
+      }
+    },
+    {
+      "name": "L_hipFk_CTL.rotateX_35",
+      "channels": {
+        "L_hipFk_CTL.rotateX": 35
+      }
+    },
+    {
+      "name": "L_hipFk_CTL.rotateY_-30",
+      "channels": {
+        "L_hipFk_CTL.rotateY": -30
+      }
+    },
+    {
+      "name": "L_hipFk_CTL.rotateY_60",
+      "channels": {
+        "L_hipFk_CTL.rotateY": 60
+      }
+    },
+    {
+      "name": "L_hipFk_CTL.rotateZ_-45",
+      "channels": {
+        "L_hipFk_CTL.rotateZ": -45
+      }
+    },
+    {
+      "name": "L_hipFk_CTL.rotateZ_95",
+      "channels": {
+        "L_hipFk_CTL.rotateZ": 95
+      }
+    },
+    {
+      "name": "L_kneeFk_CTL.rotateZ_-120",
+      "channels": {
+        "L_kneeFk_CTL.rotateZ": -120
+      }
+    },
+    {
+      "name": "L_kneeFk_CTL.rotateZ_120",
+      "channels": {
+        "L_kneeFk_CTL.rotateZ": 120
+      }
+    },
+    {
+      "name": "L_kneeFk_CTL.rotateX_-15",
+      "channels": {
+        "L_kneeFk_CTL.rotateX": -15
+      }
+    },
+    {
+      "name": "L_kneeFk_CTL.rotateX_15",
+      "channels": {
+        "L_kneeFk_CTL.rotateX": 15
+      }
+    },
+    {
+      "name": "L_ankleFk_CTL.rotateX_-35",
+      "channels": {
+        "L_ankleFk_CTL.rotateX": -35
+      }
+    },
+    {
+      "name": "L_ankleFk_CTL.rotateX_35",
+      "channels": {
+        "L_ankleFk_CTL.rotateX": 35
+      }
+    },
+    {
+      "name": "L_ankleFk_CTL.rotateY_-25",
+      "channels": {
+        "L_ankleFk_CTL.rotateY": -25
+      }
+    },
+    {
+      "name": "L_ankleFk_CTL.rotateY_25",
+      "channels": {
+        "L_ankleFk_CTL.rotateY": 25
+      }
+    },
+    {
+      "name": "L_ankleFk_CTL.rotateZ_-45",
+      "channels": {
+        "L_ankleFk_CTL.rotateZ": -45
+      }
+    },
+    {
+      "name": "L_ankleFk_CTL.rotateZ_45",
+      "channels": {
+        "L_ankleFk_CTL.rotateZ": 45
+      }
+    },
+    {
+      "name": "L_ballFk_CTL.rotateZ_-25",
+      "channels": {
+        "L_ballFk_CTL.rotateZ": -25
+      }
+    },
+    {
+      "name": "L_ballFk_CTL.rotateZ_40",
+      "channels": {
+        "L_ballFk_CTL.rotateZ": 40
+      }
+    },
+    {
+      "name": "R_shoulderFk_CTL.rotateX_-45",
+      "channels": {
+        "R_shoulderFk_CTL.rotateX": -45
+      }
+    },
+    {
+      "name": "R_shoulderFk_CTL.rotateX_55",
+      "channels": {
+        "R_shoulderFk_CTL.rotateX": 55
+      }
+    },
+    {
+      "name": "R_shoulderFk_CTL.rotateY_-45",
+      "channels": {
+        "R_shoulderFk_CTL.rotateY": -45
+      }
+    },
+    {
+      "name": "R_shoulderFk_CTL.rotateY_70",
+      "channels": {
+        "R_shoulderFk_CTL.rotateY": 70
+      }
+    },
+    {
+      "name": "R_shoulderFk_CTL.rotateZ_-40",
+      "channels": {
+        "R_shoulderFk_CTL.rotateZ": -40
+      }
+    },
+    {
+      "name": "R_shoulderFk_CTL.rotateZ_100",
+      "channels": {
+        "R_shoulderFk_CTL.rotateZ": 100
+      }
+    },
+    {
+      "name": "R_elbowFk_CTL.rotateY_-100",
+      "channels": {
+        "R_elbowFk_CTL.rotateY": -100
+      }
+    },
+    {
+      "name": "R_elbowFk_CTL.rotateY_100",
+      "channels": {
+        "R_elbowFk_CTL.rotateY": 100
+      }
+    },
+    {
+      "name": "R_elbowFk_CTL.rotateX_-60",
+      "channels": {
+        "R_elbowFk_CTL.rotateX": -60
+      }
+    },
+    {
+      "name": "R_elbowFk_CTL.rotateX_60",
+      "channels": {
+        "R_elbowFk_CTL.rotateX": 60
+      }
+    },
+    {
+      "name": "R_wristFk_CTL.rotateX_-45",
+      "channels": {
+        "R_wristFk_CTL.rotateX": -45
+      }
+    },
+    {
+      "name": "R_wristFk_CTL.rotateX_45",
+      "channels": {
+        "R_wristFk_CTL.rotateX": 45
+      }
+    },
+    {
+      "name": "R_wristFk_CTL.rotateY_-25",
+      "channels": {
+        "R_wristFk_CTL.rotateY": -25
+      }
+    },
+    {
+      "name": "R_wristFk_CTL.rotateY_25",
+      "channels": {
+        "R_wristFk_CTL.rotateY": 25
+      }
+    },
+    {
+      "name": "R_wristFk_CTL.rotateZ_-60",
+      "channels": {
+        "R_wristFk_CTL.rotateZ": -60
+      }
+    },
+    {
+      "name": "R_wristFk_CTL.rotateZ_60",
+      "channels": {
+        "R_wristFk_CTL.rotateZ": 60
+      }
+    },
+    {
+      "name": "R_hipFk_CTL.rotateX_-35",
+      "channels": {
+        "R_hipFk_CTL.rotateX": -35
+      }
+    },
+    {
+      "name": "R_hipFk_CTL.rotateX_35",
+      "channels": {
+        "R_hipFk_CTL.rotateX": 35
+      }
+    },
+    {
+      "name": "R_hipFk_CTL.rotateY_-30",
+      "channels": {
+        "R_hipFk_CTL.rotateY": -30
+      }
+    },
+    {
+      "name": "R_hipFk_CTL.rotateY_60",
+      "channels": {
+        "R_hipFk_CTL.rotateY": 60
+      }
+    },
+    {
+      "name": "R_hipFk_CTL.rotateZ_-45",
+      "channels": {
+        "R_hipFk_CTL.rotateZ": -45
+      }
+    },
+    {
+      "name": "R_hipFk_CTL.rotateZ_95",
+      "channels": {
+        "R_hipFk_CTL.rotateZ": 95
+      }
+    },
+    {
+      "name": "R_kneeFk_CTL.rotateZ_-120",
+      "channels": {
+        "R_kneeFk_CTL.rotateZ": -120
+      }
+    },
+    {
+      "name": "R_kneeFk_CTL.rotateZ_120",
+      "channels": {
+        "R_kneeFk_CTL.rotateZ": 120
+      }
+    },
+    {
+      "name": "R_kneeFk_CTL.rotateX_-15",
+      "channels": {
+        "R_kneeFk_CTL.rotateX": -15
+      }
+    },
+    {
+      "name": "R_kneeFk_CTL.rotateX_15",
+      "channels": {
+        "R_kneeFk_CTL.rotateX": 15
+      }
+    },
+    {
+      "name": "R_ankleFk_CTL.rotateX_-35",
+      "channels": {
+        "R_ankleFk_CTL.rotateX": -35
+      }
+    },
+    {
+      "name": "R_ankleFk_CTL.rotateX_35",
+      "channels": {
+        "R_ankleFk_CTL.rotateX": 35
+      }
+    },
+    {
+      "name": "R_ankleFk_CTL.rotateY_-25",
+      "channels": {
+        "R_ankleFk_CTL.rotateY": -25
+      }
+    },
+    {
+      "name": "R_ankleFk_CTL.rotateY_25",
+      "channels": {
+        "R_ankleFk_CTL.rotateY": 25
+      }
+    },
+    {
+      "name": "R_ankleFk_CTL.rotateZ_-45",
+      "channels": {
+        "R_ankleFk_CTL.rotateZ": -45
+      }
+    },
+    {
+      "name": "R_ankleFk_CTL.rotateZ_45",
+      "channels": {
+        "R_ankleFk_CTL.rotateZ": 45
+      }
+    },
+    {
+      "name": "R_ballFk_CTL.rotateZ_-25",
+      "channels": {
+        "R_ballFk_CTL.rotateZ": -25
+      }
+    },
+    {
+      "name": "R_ballFk_CTL.rotateZ_40",
+      "channels": {
+        "R_ballFk_CTL.rotateZ": 40
+      }
+    },
+    {
+      "name": "C_spine03_CTL.rotateX_-25",
+      "channels": {
+        "C_spine03_CTL.rotateX": -25
+      }
+    },
+    {
+      "name": "C_spine03_CTL.rotateX_25",
+      "channels": {
+        "C_spine03_CTL.rotateX": 25
+      }
+    },
+    {
+      "name": "C_spine03_CTL.rotateY_-20",
+      "channels": {
+        "C_spine03_CTL.rotateY": -20
+      }
+    },
+    {
+      "name": "C_spine03_CTL.rotateY_20",
+      "channels": {
+        "C_spine03_CTL.rotateY": 20
+      }
+    },
+    {
+      "name": "C_spine03_CTL.rotateZ_-20",
+      "channels": {
+        "C_spine03_CTL.rotateZ": -20
+      }
+    },
+    {
+      "name": "C_spine03_CTL.rotateZ_35",
+      "channels": {
+        "C_spine03_CTL.rotateZ": 35
+      }
+    },
+    {
+      "name": "C_spine07_CTL.rotateX_-25",
+      "channels": {
+        "C_spine07_CTL.rotateX": -25
+      }
+    },
+    {
+      "name": "C_spine07_CTL.rotateX_25",
+      "channels": {
+        "C_spine07_CTL.rotateX": 25
+      }
+    },
+    {
+      "name": "C_spine07_CTL.rotateY_-20",
+      "channels": {
+        "C_spine07_CTL.rotateY": -20
+      }
+    },
+    {
+      "name": "C_spine07_CTL.rotateY_20",
+      "channels": {
+        "C_spine07_CTL.rotateY": 20
+      }
+    },
+    {
+      "name": "C_spine07_CTL.rotateZ_-20",
+      "channels": {
+        "C_spine07_CTL.rotateZ": -20
+      }
+    },
+    {
+      "name": "C_spine07_CTL.rotateZ_35",
+      "channels": {
+        "C_spine07_CTL.rotateZ": 35
+      }
+    },
+    {
+      "name": "C_neck_CTL.rotateX_-30",
+      "channels": {
+        "C_neck_CTL.rotateX": -30
+      }
+    },
+    {
+      "name": "C_neck_CTL.rotateX_30",
+      "channels": {
+        "C_neck_CTL.rotateX": 30
+      }
+    },
+    {
+      "name": "C_neck_CTL.rotateY_-20",
+      "channels": {
+        "C_neck_CTL.rotateY": -20
+      }
+    },
+    {
+      "name": "C_neck_CTL.rotateY_20",
+      "channels": {
+        "C_neck_CTL.rotateY": 20
+      }
+    },
+    {
+      "name": "C_neck_CTL.rotateZ_-25",
+      "channels": {
+        "C_neck_CTL.rotateZ": -25
+      }
+    },
+    {
+      "name": "C_neck_CTL.rotateZ_25",
+      "channels": {
+        "C_neck_CTL.rotateZ": 25
+      }
+    },
+    {
+      "name": "C_head_CTL.rotateX_-30",
+      "channels": {
+        "C_head_CTL.rotateX": -30
+      }
+    },
+    {
+      "name": "C_head_CTL.rotateX_30",
+      "channels": {
+        "C_head_CTL.rotateX": 30
+      }
+    },
+    {
+      "name": "C_head_CTL.rotateY_-20",
+      "channels": {
+        "C_head_CTL.rotateY": -20
+      }
+    },
+    {
+      "name": "C_head_CTL.rotateY_20",
+      "channels": {
+        "C_head_CTL.rotateY": 20
+      }
+    },
+    {
+      "name": "C_head_CTL.rotateZ_-25",
+      "channels": {
+        "C_head_CTL.rotateZ": -25
+      }
+    },
+    {
+      "name": "C_head_CTL.rotateZ_25",
+      "channels": {
+        "C_head_CTL.rotateZ": 25
+      }
+    },
+    {
+      "name": "C_jaw_CTL.rotateX_30",
+      "channels": {
+        "C_jaw_CTL.rotateX": 30
+      }
+    },
+    {
+      "name": "L_lipCorner_CTL.translateX_-2",
+      "channels": {
+        "L_lipCorner_CTL.translateX": -2
+      }
+    },
+    {
+      "name": "L_lipCorner_CTL.translateX_5",
+      "channels": {
+        "L_lipCorner_CTL.translateX": 5
+      }
+    },
+    {
+      "name": "L_lipCorner_CTL.translateY_-4",
+      "channels": {
+        "L_lipCorner_CTL.translateY": -4
+      }
+    },
+    {
+      "name": "L_lipCorner_CTL.translateY_3",
+      "channels": {
+        "L_lipCorner_CTL.translateY": 3
+      }
+    },
+    {
+      "name": "R_lipCorner_CTL.translateX_-2",
+      "channels": {
+        "R_lipCorner_CTL.translateX": -2
+      }
+    },
+    {
+      "name": "R_lipCorner_CTL.translateX_5",
+      "channels": {
+        "R_lipCorner_CTL.translateX": 5
+      }
+    },
+    {
+      "name": "R_lipCorner_CTL.translateY_-4",
+      "channels": {
+        "R_lipCorner_CTL.translateY": -4
+      }
+    },
+    {
+      "name": "R_lipCorner_CTL.translateY_3",
+      "channels": {
+        "R_lipCorner_CTL.translateY": 3
+      }
+    },
+    {
+      "name": "combination_00",
+      "channels": {
+        "R_kneeFk_CTL.rotateX": 6.730406104214251,
+        "L_elbowFk_CTL.rotateX": 3.5325002220153183,
+        "C_spine07_CTL.rotateX": 11.93496947425673,
+        "R_ankleFk_CTL.rotateY": -0.4519849963258977,
+        "L_shoulderFk_CTL.rotateX": 33.82240725080814,
+        "R_shoulderFk_CTL.rotateZ": -3.178858834532695
+      }
+    },
+    {
+      "name": "combination_01",
+      "channels": {
+        "L_elbowFk_CTL.rotateX": -9.670753635607284,
+        "R_kneeFk_CTL.rotateX": 0.8085644456228686,
+        "C_head_CTL.rotateZ": -3.8925604633819053,
+        "L_shoulderFk_CTL.rotateY": 15.626170116946167,
+        "L_ankleFk_CTL.rotateX": 14.586491754081562,
+        "C_spine07_CTL.rotateX": 10.667213786219246
+      }
+    },
+    {
+      "name": "combination_02",
+      "channels": {
+        "R_ankleFk_CTL.rotateX": 5.147411234492352,
+        "R_shoulderFk_CTL.rotateZ": 47.883291771332885,
+        "R_wristFk_CTL.rotateX": -17.902905220130123,
+        "L_shoulderFk_CTL.rotateX": 14.960890756609162,
+        "C_neck_CTL.rotateZ": -15.095788434939797,
+        "L_shoulderFk_CTL.rotateY": 20.39306330974206
+      }
+    },
+    {
+      "name": "combination_03",
+      "channels": {
+        "C_spine03_CTL.rotateX": -14.286898853612705,
+        "L_wristFk_CTL.rotateY": 6.388889576323104,
+        "R_wristFk_CTL.rotateX": -20.88470123928185,
+        "R_shoulderFk_CTL.rotateX": 30.697847014890637,
+        "L_shoulderFk_CTL.rotateX": 1.9015394923036635,
+        "C_neck_CTL.rotateX": 18.230767278318
+      }
+    },
+    {
+      "name": "combination_04",
+      "channels": {
+        "R_wristFk_CTL.rotateZ": -13.923547281925716,
+        "L_kneeFk_CTL.rotateZ": -49.23422569287942,
+        "L_shoulderFk_CTL.rotateY": 17.11584692625744,
+        "L_ankleFk_CTL.rotateY": -4.417048959992547,
+        "L_shoulderFk_CTL.rotateX": -16.689056704203598,
+        "R_shoulderFk_CTL.rotateX": 19.19659309647242
+      }
+    },
+    {
+      "name": "combination_05",
+      "channels": {
+        "L_shoulderFk_CTL.rotateX": 24.45649518904474,
+        "L_ballFk_CTL.rotateZ": 6.566758939783669,
+        "C_head_CTL.rotateZ": 10.062790427193427,
+        "L_wristFk_CTL.rotateY": -9.578768298986162,
+        "C_spine03_CTL.rotateX": -0.09365869239106886,
+        "R_ballFk_CTL.rotateZ": -1.5913828929879734
+      }
+    },
+    {
+      "name": "combination_06",
+      "channels": {
+        "L_ankleFk_CTL.rotateX": 18.773246654660745,
+        "R_kneeFk_CTL.rotateX": 9.149100776834283,
+        "C_spine07_CTL.rotateX": 2.0578735728103226,
+        "R_ballFk_CTL.rotateZ": -0.04546152755668125,
+        "L_wristFk_CTL.rotateZ": -5.385220662176189,
+        "C_neck_CTL.rotateY": -6.304505185097102
+      }
+    },
+    {
+      "name": "combination_07",
+      "channels": {
+        "C_neck_CTL.rotateX": -10.993284683937764,
+        "L_ankleFk_CTL.rotateZ": -14.94499029551329,
+        "R_ankleFk_CTL.rotateY": -6.881271116644423,
+        "R_hipFk_CTL.rotateY": -7.310176478086996,
+        "R_elbowFk_CTL.rotateY": 14.191162668024107,
+        "C_head_CTL.rotateY": 9.993062797923772
+      }
+    },
+    {
+      "name": "combination_08",
+      "channels": {
+        "R_ankleFk_CTL.rotateY": 13.062074539991055,
+        "C_spine03_CTL.rotateX": -8.847203783773885,
+        "R_elbowFk_CTL.rotateY": 41.87765855212421,
+        "L_kneeFk_CTL.rotateZ": 35.70021113200459,
+        "R_elbowFk_CTL.rotateX": 34.489603351909516,
+        "C_spine07_CTL.rotateZ": -5.4039088073660375
+      }
+    },
+    {
+      "name": "combination_09",
+      "channels": {
+        "L_ankleFk_CTL.rotateZ": 6.518120519818887,
+        "R_wristFk_CTL.rotateX": 10.10636598948693,
+        "L_ballFk_CTL.rotateZ": 10.099170311175255,
+        "L_wristFk_CTL.rotateY": 5.793345852830055,
+        "L_hipFk_CTL.rotateZ": 19.06089074000163,
+        "R_ankleFk_CTL.rotateZ": 5.92312156657554
+      }
+    },
+    {
+      "name": "combination_10",
+      "channels": {
+        "L_kneeFk_CTL.rotateX": -4.8034271804077795,
+        "R_hipFk_CTL.rotateY": -15.521028086952242,
+        "C_head_CTL.rotateY": 1.5630082692891367,
+        "R_ankleFk_CTL.rotateZ": -13.197763489400637,
+        "L_ankleFk_CTL.rotateY": -10.645720223736173,
+        "C_spine03_CTL.rotateZ": 7.596974853536035
+      }
+    },
+    {
+      "name": "combination_11",
+      "channels": {
+        "R_wristFk_CTL.rotateZ": 20.44530474927015,
+        "R_ankleFk_CTL.rotateZ": 19.77245088339419,
+        "R_wristFk_CTL.rotateY": -13.383172349242084,
+        "L_shoulderFk_CTL.rotateY": 7.557941251278515,
+        "R_shoulderFk_CTL.rotateX": 12.043200163151974,
+        "C_spine07_CTL.rotateX": 9.385062899540067
+      }
+    },
+    {
+      "name": "combination_12",
+      "channels": {
+        "C_spine07_CTL.rotateY": -2.7093197653781727,
+        "C_neck_CTL.rotateX": 7.2064692433067945,
+        "C_neck_CTL.rotateZ": -7.900433462410713,
+        "R_elbowFk_CTL.rotateX": 13.969010646373732,
+        "C_spine07_CTL.rotateZ": 10.600965842976931,
+        "L_elbowFk_CTL.rotateY": -52.552775526007736
+      }
+    },
+    {
+      "name": "combination_13",
+      "channels": {
+        "L_hipFk_CTL.rotateY": -11.214151554738535,
+        "R_ankleFk_CTL.rotateZ": -28.272623216132367,
+        "C_spine07_CTL.rotateX": 3.7057843841868467,
+        "R_ankleFk_CTL.rotateY": -16.230906020873057,
+        "L_kneeFk_CTL.rotateX": 1.24919187814473,
+        "C_neck_CTL.rotateX": -7.984527306853417
+      }
+    },
+    {
+      "name": "combination_14",
+      "channels": {
+        "C_spine03_CTL.rotateY": -11.189186868691918,
+        "L_elbowFk_CTL.rotateX": 10.332362505422587,
+        "R_hipFk_CTL.rotateZ": 53.43839133158124,
+        "L_elbowFk_CTL.rotateY": 13.437179193151414,
+        "R_shoulderFk_CTL.rotateZ": -6.620151038044134,
+        "C_spine03_CTL.rotateX": -16.155080625342542
+      }
+    },
+    {
+      "name": "combination_15",
+      "channels": {
+        "R_shoulderFk_CTL.rotateX": 30.416106782574793,
+        "L_ankleFk_CTL.rotateX": -19.77096251482889,
+        "L_elbowFk_CTL.rotateY": -12.50665956369179,
+        "C_spine03_CTL.rotateX": -1.2020852400999966,
+        "L_shoulderFk_CTL.rotateY": 17.603005154756147,
+        "R_hipFk_CTL.rotateX": 19.4155708002572
+      }
+    },
+    {
+      "name": "combination_16",
+      "channels": {
+        "L_wristFk_CTL.rotateY": 7.181438730871431,
+        "C_head_CTL.rotateY": 10.08910069176864,
+        "L_ankleFk_CTL.rotateZ": 10.526507727879885,
+        "C_spine03_CTL.rotateX": -0.6584591218963791,
+        "L_shoulderFk_CTL.rotateX": 18.46919491125734,
+        "R_elbowFk_CTL.rotateY": -52.76310523383006
+      }
+    },
+    {
+      "name": "combination_17",
+      "channels": {
+        "R_ankleFk_CTL.rotateZ": -9.098378787223368,
+        "C_spine07_CTL.rotateY": -4.609254512413755,
+        "L_wristFk_CTL.rotateZ": -15.752327559827702,
+        "R_wristFk_CTL.rotateZ": 22.391254400108515,
+        "L_hipFk_CTL.rotateX": 12.092361731768142,
+        "L_wristFk_CTL.rotateX": 25.867282253905937
+      }
+    }
+  ],
+  "held_out": [
+    {
+      "name": "intermediate_L_shoulderFk_CTL.rotateX_0.37",
+      "channels": {
+        "L_shoulderFk_CTL.rotateX": -16.65
+      }
+    },
+    {
+      "name": "intermediate_L_shoulderFk_CTL.rotateX_0.73",
+      "channels": {
+        "L_shoulderFk_CTL.rotateX": 40.15
+      }
+    },
+    {
+      "name": "intermediate_L_shoulderFk_CTL.rotateY_0.37",
+      "channels": {
+        "L_shoulderFk_CTL.rotateY": -16.65
+      }
+    },
+    {
+      "name": "intermediate_L_shoulderFk_CTL.rotateY_0.73",
+      "channels": {
+        "L_shoulderFk_CTL.rotateY": 51.1
+      }
+    },
+    {
+      "name": "intermediate_L_shoulderFk_CTL.rotateZ_0.37",
+      "channels": {
+        "L_shoulderFk_CTL.rotateZ": -14.8
+      }
+    },
+    {
+      "name": "intermediate_L_shoulderFk_CTL.rotateZ_0.73",
+      "channels": {
+        "L_shoulderFk_CTL.rotateZ": 73.0
+      }
+    },
+    {
+      "name": "intermediate_L_elbowFk_CTL.rotateY_0.37",
+      "channels": {
+        "L_elbowFk_CTL.rotateY": -37.0
+      }
+    },
+    {
+      "name": "intermediate_L_elbowFk_CTL.rotateY_0.73",
+      "channels": {
+        "L_elbowFk_CTL.rotateY": 73.0
+      }
+    },
+    {
+      "name": "intermediate_L_elbowFk_CTL.rotateX_0.37",
+      "channels": {
+        "L_elbowFk_CTL.rotateX": -22.2
+      }
+    },
+    {
+      "name": "intermediate_L_elbowFk_CTL.rotateX_0.73",
+      "channels": {
+        "L_elbowFk_CTL.rotateX": 43.8
+      }
+    },
+    {
+      "name": "intermediate_L_wristFk_CTL.rotateX_0.37",
+      "channels": {
+        "L_wristFk_CTL.rotateX": -16.65
+      }
+    },
+    {
+      "name": "intermediate_L_wristFk_CTL.rotateX_0.73",
+      "channels": {
+        "L_wristFk_CTL.rotateX": 32.85
+      }
+    },
+    {
+      "name": "intermediate_L_wristFk_CTL.rotateY_0.37",
+      "channels": {
+        "L_wristFk_CTL.rotateY": -9.25
+      }
+    },
+    {
+      "name": "intermediate_L_wristFk_CTL.rotateY_0.73",
+      "channels": {
+        "L_wristFk_CTL.rotateY": 18.25
+      }
+    },
+    {
+      "name": "intermediate_L_wristFk_CTL.rotateZ_0.37",
+      "channels": {
+        "L_wristFk_CTL.rotateZ": -22.2
+      }
+    },
+    {
+      "name": "intermediate_L_wristFk_CTL.rotateZ_0.73",
+      "channels": {
+        "L_wristFk_CTL.rotateZ": 43.8
+      }
+    },
+    {
+      "name": "intermediate_L_hipFk_CTL.rotateX_0.37",
+      "channels": {
+        "L_hipFk_CTL.rotateX": -12.95
+      }
+    },
+    {
+      "name": "intermediate_L_hipFk_CTL.rotateX_0.73",
+      "channels": {
+        "L_hipFk_CTL.rotateX": 25.55
+      }
+    },
+    {
+      "name": "intermediate_L_hipFk_CTL.rotateY_0.37",
+      "channels": {
+        "L_hipFk_CTL.rotateY": -11.1
+      }
+    },
+    {
+      "name": "intermediate_L_hipFk_CTL.rotateY_0.73",
+      "channels": {
+        "L_hipFk_CTL.rotateY": 43.8
+      }
+    },
+    {
+      "name": "intermediate_L_hipFk_CTL.rotateZ_0.37",
+      "channels": {
+        "L_hipFk_CTL.rotateZ": -16.65
+      }
+    },
+    {
+      "name": "intermediate_L_hipFk_CTL.rotateZ_0.73",
+      "channels": {
+        "L_hipFk_CTL.rotateZ": 69.35
+      }
+    },
+    {
+      "name": "intermediate_L_kneeFk_CTL.rotateZ_0.37",
+      "channels": {
+        "L_kneeFk_CTL.rotateZ": -44.4
+      }
+    },
+    {
+      "name": "intermediate_L_kneeFk_CTL.rotateZ_0.73",
+      "channels": {
+        "L_kneeFk_CTL.rotateZ": 87.6
+      }
+    },
+    {
+      "name": "intermediate_L_kneeFk_CTL.rotateX_0.37",
+      "channels": {
+        "L_kneeFk_CTL.rotateX": -5.55
+      }
+    },
+    {
+      "name": "intermediate_L_kneeFk_CTL.rotateX_0.73",
+      "channels": {
+        "L_kneeFk_CTL.rotateX": 10.95
+      }
+    },
+    {
+      "name": "intermediate_L_ankleFk_CTL.rotateX_0.37",
+      "channels": {
+        "L_ankleFk_CTL.rotateX": -12.95
+      }
+    },
+    {
+      "name": "intermediate_L_ankleFk_CTL.rotateX_0.73",
+      "channels": {
+        "L_ankleFk_CTL.rotateX": 25.55
+      }
+    },
+    {
+      "name": "intermediate_L_ankleFk_CTL.rotateY_0.37",
+      "channels": {
+        "L_ankleFk_CTL.rotateY": -9.25
+      }
+    },
+    {
+      "name": "intermediate_L_ankleFk_CTL.rotateY_0.73",
+      "channels": {
+        "L_ankleFk_CTL.rotateY": 18.25
+      }
+    },
+    {
+      "name": "intermediate_L_ankleFk_CTL.rotateZ_0.37",
+      "channels": {
+        "L_ankleFk_CTL.rotateZ": -16.65
+      }
+    },
+    {
+      "name": "intermediate_L_ankleFk_CTL.rotateZ_0.73",
+      "channels": {
+        "L_ankleFk_CTL.rotateZ": 32.85
+      }
+    },
+    {
+      "name": "intermediate_L_ballFk_CTL.rotateZ_0.37",
+      "channels": {
+        "L_ballFk_CTL.rotateZ": -9.25
+      }
+    },
+    {
+      "name": "intermediate_L_ballFk_CTL.rotateZ_0.73",
+      "channels": {
+        "L_ballFk_CTL.rotateZ": 29.2
+      }
+    },
+    {
+      "name": "intermediate_R_shoulderFk_CTL.rotateX_0.37",
+      "channels": {
+        "R_shoulderFk_CTL.rotateX": -16.65
+      }
+    },
+    {
+      "name": "intermediate_R_shoulderFk_CTL.rotateX_0.73",
+      "channels": {
+        "R_shoulderFk_CTL.rotateX": 40.15
+      }
+    },
+    {
+      "name": "intermediate_R_shoulderFk_CTL.rotateY_0.37",
+      "channels": {
+        "R_shoulderFk_CTL.rotateY": -16.65
+      }
+    },
+    {
+      "name": "intermediate_R_shoulderFk_CTL.rotateY_0.73",
+      "channels": {
+        "R_shoulderFk_CTL.rotateY": 51.1
+      }
+    },
+    {
+      "name": "intermediate_R_shoulderFk_CTL.rotateZ_0.37",
+      "channels": {
+        "R_shoulderFk_CTL.rotateZ": -14.8
+      }
+    },
+    {
+      "name": "intermediate_R_shoulderFk_CTL.rotateZ_0.73",
+      "channels": {
+        "R_shoulderFk_CTL.rotateZ": 73.0
+      }
+    },
+    {
+      "name": "intermediate_R_elbowFk_CTL.rotateY_0.37",
+      "channels": {
+        "R_elbowFk_CTL.rotateY": -37.0
+      }
+    },
+    {
+      "name": "intermediate_R_elbowFk_CTL.rotateY_0.73",
+      "channels": {
+        "R_elbowFk_CTL.rotateY": 73.0
+      }
+    },
+    {
+      "name": "intermediate_R_elbowFk_CTL.rotateX_0.37",
+      "channels": {
+        "R_elbowFk_CTL.rotateX": -22.2
+      }
+    },
+    {
+      "name": "intermediate_R_elbowFk_CTL.rotateX_0.73",
+      "channels": {
+        "R_elbowFk_CTL.rotateX": 43.8
+      }
+    },
+    {
+      "name": "intermediate_R_wristFk_CTL.rotateX_0.37",
+      "channels": {
+        "R_wristFk_CTL.rotateX": -16.65
+      }
+    },
+    {
+      "name": "intermediate_R_wristFk_CTL.rotateX_0.73",
+      "channels": {
+        "R_wristFk_CTL.rotateX": 32.85
+      }
+    },
+    {
+      "name": "intermediate_R_wristFk_CTL.rotateY_0.37",
+      "channels": {
+        "R_wristFk_CTL.rotateY": -9.25
+      }
+    },
+    {
+      "name": "intermediate_R_wristFk_CTL.rotateY_0.73",
+      "channels": {
+        "R_wristFk_CTL.rotateY": 18.25
+      }
+    },
+    {
+      "name": "intermediate_R_wristFk_CTL.rotateZ_0.37",
+      "channels": {
+        "R_wristFk_CTL.rotateZ": -22.2
+      }
+    },
+    {
+      "name": "intermediate_R_wristFk_CTL.rotateZ_0.73",
+      "channels": {
+        "R_wristFk_CTL.rotateZ": 43.8
+      }
+    },
+    {
+      "name": "intermediate_R_hipFk_CTL.rotateX_0.37",
+      "channels": {
+        "R_hipFk_CTL.rotateX": -12.95
+      }
+    },
+    {
+      "name": "intermediate_R_hipFk_CTL.rotateX_0.73",
+      "channels": {
+        "R_hipFk_CTL.rotateX": 25.55
+      }
+    },
+    {
+      "name": "intermediate_R_hipFk_CTL.rotateY_0.37",
+      "channels": {
+        "R_hipFk_CTL.rotateY": -11.1
+      }
+    },
+    {
+      "name": "intermediate_R_hipFk_CTL.rotateY_0.73",
+      "channels": {
+        "R_hipFk_CTL.rotateY": 43.8
+      }
+    },
+    {
+      "name": "intermediate_R_hipFk_CTL.rotateZ_0.37",
+      "channels": {
+        "R_hipFk_CTL.rotateZ": -16.65
+      }
+    },
+    {
+      "name": "intermediate_R_hipFk_CTL.rotateZ_0.73",
+      "channels": {
+        "R_hipFk_CTL.rotateZ": 69.35
+      }
+    },
+    {
+      "name": "intermediate_R_kneeFk_CTL.rotateZ_0.37",
+      "channels": {
+        "R_kneeFk_CTL.rotateZ": -44.4
+      }
+    },
+    {
+      "name": "intermediate_R_kneeFk_CTL.rotateZ_0.73",
+      "channels": {
+        "R_kneeFk_CTL.rotateZ": 87.6
+      }
+    },
+    {
+      "name": "intermediate_R_kneeFk_CTL.rotateX_0.37",
+      "channels": {
+        "R_kneeFk_CTL.rotateX": -5.55
+      }
+    },
+    {
+      "name": "intermediate_R_kneeFk_CTL.rotateX_0.73",
+      "channels": {
+        "R_kneeFk_CTL.rotateX": 10.95
+      }
+    },
+    {
+      "name": "intermediate_R_ankleFk_CTL.rotateX_0.37",
+      "channels": {
+        "R_ankleFk_CTL.rotateX": -12.95
+      }
+    },
+    {
+      "name": "intermediate_R_ankleFk_CTL.rotateX_0.73",
+      "channels": {
+        "R_ankleFk_CTL.rotateX": 25.55
+      }
+    },
+    {
+      "name": "intermediate_R_ankleFk_CTL.rotateY_0.37",
+      "channels": {
+        "R_ankleFk_CTL.rotateY": -9.25
+      }
+    },
+    {
+      "name": "intermediate_R_ankleFk_CTL.rotateY_0.73",
+      "channels": {
+        "R_ankleFk_CTL.rotateY": 18.25
+      }
+    },
+    {
+      "name": "intermediate_R_ankleFk_CTL.rotateZ_0.37",
+      "channels": {
+        "R_ankleFk_CTL.rotateZ": -16.65
+      }
+    },
+    {
+      "name": "intermediate_R_ankleFk_CTL.rotateZ_0.73",
+      "channels": {
+        "R_ankleFk_CTL.rotateZ": 32.85
+      }
+    },
+    {
+      "name": "intermediate_R_ballFk_CTL.rotateZ_0.37",
+      "channels": {
+        "R_ballFk_CTL.rotateZ": -9.25
+      }
+    },
+    {
+      "name": "intermediate_R_ballFk_CTL.rotateZ_0.73",
+      "channels": {
+        "R_ballFk_CTL.rotateZ": 29.2
+      }
+    },
+    {
+      "name": "intermediate_C_spine03_CTL.rotateX_0.37",
+      "channels": {
+        "C_spine03_CTL.rotateX": -9.25
+      }
+    },
+    {
+      "name": "intermediate_C_spine03_CTL.rotateX_0.73",
+      "channels": {
+        "C_spine03_CTL.rotateX": 18.25
+      }
+    },
+    {
+      "name": "intermediate_C_spine03_CTL.rotateY_0.37",
+      "channels": {
+        "C_spine03_CTL.rotateY": -7.4
+      }
+    },
+    {
+      "name": "intermediate_C_spine03_CTL.rotateY_0.73",
+      "channels": {
+        "C_spine03_CTL.rotateY": 14.6
+      }
+    },
+    {
+      "name": "intermediate_C_spine03_CTL.rotateZ_0.37",
+      "channels": {
+        "C_spine03_CTL.rotateZ": -7.4
+      }
+    },
+    {
+      "name": "intermediate_C_spine03_CTL.rotateZ_0.73",
+      "channels": {
+        "C_spine03_CTL.rotateZ": 25.55
+      }
+    },
+    {
+      "name": "intermediate_C_spine07_CTL.rotateX_0.37",
+      "channels": {
+        "C_spine07_CTL.rotateX": -9.25
+      }
+    },
+    {
+      "name": "intermediate_C_spine07_CTL.rotateX_0.73",
+      "channels": {
+        "C_spine07_CTL.rotateX": 18.25
+      }
+    },
+    {
+      "name": "intermediate_C_spine07_CTL.rotateY_0.37",
+      "channels": {
+        "C_spine07_CTL.rotateY": -7.4
+      }
+    },
+    {
+      "name": "intermediate_C_spine07_CTL.rotateY_0.73",
+      "channels": {
+        "C_spine07_CTL.rotateY": 14.6
+      }
+    },
+    {
+      "name": "intermediate_C_spine07_CTL.rotateZ_0.37",
+      "channels": {
+        "C_spine07_CTL.rotateZ": -7.4
+      }
+    },
+    {
+      "name": "intermediate_C_spine07_CTL.rotateZ_0.73",
+      "channels": {
+        "C_spine07_CTL.rotateZ": 25.55
+      }
+    },
+    {
+      "name": "intermediate_C_neck_CTL.rotateX_0.37",
+      "channels": {
+        "C_neck_CTL.rotateX": -11.1
+      }
+    },
+    {
+      "name": "intermediate_C_neck_CTL.rotateX_0.73",
+      "channels": {
+        "C_neck_CTL.rotateX": 21.9
+      }
+    },
+    {
+      "name": "intermediate_C_neck_CTL.rotateY_0.37",
+      "channels": {
+        "C_neck_CTL.rotateY": -7.4
+      }
+    },
+    {
+      "name": "intermediate_C_neck_CTL.rotateY_0.73",
+      "channels": {
+        "C_neck_CTL.rotateY": 14.6
+      }
+    },
+    {
+      "name": "intermediate_C_neck_CTL.rotateZ_0.37",
+      "channels": {
+        "C_neck_CTL.rotateZ": -9.25
+      }
+    },
+    {
+      "name": "intermediate_C_neck_CTL.rotateZ_0.73",
+      "channels": {
+        "C_neck_CTL.rotateZ": 18.25
+      }
+    },
+    {
+      "name": "intermediate_C_head_CTL.rotateX_0.37",
+      "channels": {
+        "C_head_CTL.rotateX": -11.1
+      }
+    },
+    {
+      "name": "intermediate_C_head_CTL.rotateX_0.73",
+      "channels": {
+        "C_head_CTL.rotateX": 21.9
+      }
+    },
+    {
+      "name": "intermediate_C_head_CTL.rotateY_0.37",
+      "channels": {
+        "C_head_CTL.rotateY": -7.4
+      }
+    },
+    {
+      "name": "intermediate_C_head_CTL.rotateY_0.73",
+      "channels": {
+        "C_head_CTL.rotateY": 14.6
+      }
+    },
+    {
+      "name": "intermediate_C_head_CTL.rotateZ_0.37",
+      "channels": {
+        "C_head_CTL.rotateZ": -9.25
+      }
+    },
+    {
+      "name": "intermediate_C_head_CTL.rotateZ_0.73",
+      "channels": {
+        "C_head_CTL.rotateZ": 18.25
+      }
+    },
+    {
+      "name": "intermediate_C_jaw_CTL.rotateX_0.73",
+      "channels": {
+        "C_jaw_CTL.rotateX": 21.9
+      }
+    },
+    {
+      "name": "intermediate_L_lipCorner_CTL.translateX_0.37",
+      "channels": {
+        "L_lipCorner_CTL.translateX": -0.74
+      }
+    },
+    {
+      "name": "intermediate_L_lipCorner_CTL.translateX_0.73",
+      "channels": {
+        "L_lipCorner_CTL.translateX": 3.65
+      }
+    },
+    {
+      "name": "intermediate_L_lipCorner_CTL.translateY_0.37",
+      "channels": {
+        "L_lipCorner_CTL.translateY": -1.48
+      }
+    },
+    {
+      "name": "intermediate_L_lipCorner_CTL.translateY_0.73",
+      "channels": {
+        "L_lipCorner_CTL.translateY": 2.19
+      }
+    },
+    {
+      "name": "intermediate_R_lipCorner_CTL.translateX_0.37",
+      "channels": {
+        "R_lipCorner_CTL.translateX": -0.74
+      }
+    },
+    {
+      "name": "intermediate_R_lipCorner_CTL.translateX_0.73",
+      "channels": {
+        "R_lipCorner_CTL.translateX": 3.65
+      }
+    },
+    {
+      "name": "intermediate_R_lipCorner_CTL.translateY_0.37",
+      "channels": {
+        "R_lipCorner_CTL.translateY": -1.48
+      }
+    },
+    {
+      "name": "intermediate_R_lipCorner_CTL.translateY_0.73",
+      "channels": {
+        "R_lipCorner_CTL.translateY": 2.19
+      }
+    },
+    {
+      "name": "combination_18",
+      "channels": {
+        "R_shoulderFk_CTL.rotateX": -24.84727895830647,
+        "R_hipFk_CTL.rotateY": 30.3257371746992,
+        "L_ballFk_CTL.rotateZ": -6.240491606399109,
+        "L_wristFk_CTL.rotateZ": -17.932397999047545,
+        "L_shoulderFk_CTL.rotateZ": 46.902258765090785,
+        "L_ankleFk_CTL.rotateY": 0.7268337462109992
+      }
+    },
+    {
+      "name": "combination_19",
+      "channels": {
+        "C_spine03_CTL.rotateX": 11.576398803354849,
+        "L_wristFk_CTL.rotateX": -21.92254851986646,
+        "L_ankleFk_CTL.rotateZ": 28.103110236513793,
+        "C_head_CTL.rotateZ": 3.8882006648286427,
+        "R_wristFk_CTL.rotateX": 28.15609617269103,
+        "R_shoulderFk_CTL.rotateY": -20.854230802394955
+      }
+    },
+    {
+      "name": "combination_20",
+      "channels": {
+        "L_shoulderFk_CTL.rotateX": 8.253515072447266,
+        "C_spine03_CTL.rotateZ": -2.023988726263867,
+        "L_hipFk_CTL.rotateX": 11.814657105528417,
+        "R_shoulderFk_CTL.rotateX": -19.7693655849624,
+        "R_wristFk_CTL.rotateY": 13.428404899919444,
+        "R_shoulderFk_CTL.rotateY": -13.19784264071869
+      }
+    },
+    {
+      "name": "combination_21",
+      "channels": {
+        "R_ankleFk_CTL.rotateZ": -6.009279867289718,
+        "C_spine03_CTL.rotateY": 3.5600913146789637,
+        "L_elbowFk_CTL.rotateX": -34.67144809716198,
+        "C_spine07_CTL.rotateX": -12.853295827492534,
+        "C_head_CTL.rotateY": -9.730263906253887,
+        "R_elbowFk_CTL.rotateY": -43.96406376633295
+      }
+    },
+    {
+      "name": "combination_22",
+      "channels": {
+        "R_ankleFk_CTL.rotateY": 4.383660271479044,
+        "R_shoulderFk_CTL.rotateY": 37.11888928654664,
+        "R_hipFk_CTL.rotateZ": 43.29230149179839,
+        "C_neck_CTL.rotateZ": -1.959856706749766,
+        "L_hipFk_CTL.rotateZ": 0.5285487724560994,
+        "R_wristFk_CTL.rotateY": -1.071107594035722
+      }
+    },
+    {
+      "name": "combination_23",
+      "channels": {
+        "R_kneeFk_CTL.rotateZ": 52.86524086364654,
+        "R_wristFk_CTL.rotateX": 19.81037103088723,
+        "C_neck_CTL.rotateZ": 7.713291664379147,
+        "L_wristFk_CTL.rotateX": -0.9317296880871802,
+        "R_ankleFk_CTL.rotateY": 9.191663357847641,
+        "C_spine03_CTL.rotateY": -6.547158688755706
+      }
+    },
+    {
+      "name": "combination_24",
+      "channels": {
+        "R_hipFk_CTL.rotateX": 1.818353541012043,
+        "R_shoulderFk_CTL.rotateZ": -10.989393244274437,
+        "C_neck_CTL.rotateZ": -0.2167815339679466,
+        "R_shoulderFk_CTL.rotateY": 0.6641729598233728,
+        "R_hipFk_CTL.rotateY": -14.098764312639847,
+        "R_ankleFk_CTL.rotateY": 6.472394734247332
+      }
+    },
+    {
+      "name": "combination_25",
+      "channels": {
+        "L_kneeFk_CTL.rotateX": 1.975397634944806,
+        "L_ankleFk_CTL.rotateY": 3.298748906851912,
+        "C_spine07_CTL.rotateY": -1.3638529803521946,
+        "C_head_CTL.rotateZ": -4.264803688500299,
+        "R_shoulderFk_CTL.rotateZ": 3.7918889853301736,
+        "C_neck_CTL.rotateX": -11.89583439608959
+      }
+    },
+    {
+      "name": "combination_26",
+      "channels": {
+        "C_neck_CTL.rotateX": -10.398229548667993,
+        "R_shoulderFk_CTL.rotateX": -1.140429603447832,
+        "L_elbowFk_CTL.rotateX": 26.035171195089283,
+        "R_wristFk_CTL.rotateX": 20.61263565548921,
+        "L_wristFk_CTL.rotateZ": 4.113348098395841,
+        "L_ballFk_CTL.rotateZ": -1.0701558296146536
+      }
+    },
+    {
+      "name": "combination_27",
+      "channels": {
+        "R_shoulderFk_CTL.rotateY": -9.714404159743546,
+        "L_ankleFk_CTL.rotateZ": 6.8227382258176625,
+        "R_wristFk_CTL.rotateY": -3.364234428345958,
+        "R_wristFk_CTL.rotateX": -23.87523272195156,
+        "L_wristFk_CTL.rotateY": 1.716309674035898,
+        "C_neck_CTL.rotateY": 9.118188303137506
+      }
+    },
+    {
+      "name": "combination_28",
+      "channels": {
+        "L_ballFk_CTL.rotateZ": 19.210165764780882,
+        "R_shoulderFk_CTL.rotateY": -22.69042955784085,
+        "R_kneeFk_CTL.rotateX": -9.628558333307407,
+        "L_wristFk_CTL.rotateY": 3.9181654230876166,
+        "C_head_CTL.rotateX": 7.408599577962353,
+        "R_ankleFk_CTL.rotateZ": 24.209102875896104
+      }
+    },
+    {
+      "name": "combination_29",
+      "channels": {
+        "C_neck_CTL.rotateY": 0.356457066493077,
+        "L_elbowFk_CTL.rotateY": -16.14448341248171,
+        "R_hipFk_CTL.rotateZ": 24.475620578029154,
+        "R_shoulderFk_CTL.rotateY": 9.4456467527096,
+        "R_elbowFk_CTL.rotateX": 13.342963478910171,
+        "R_elbowFk_CTL.rotateY": 16.016317172649213
+      }
+    },
+    {
+      "name": "combination_30",
+      "channels": {
+        "R_shoulderFk_CTL.rotateY": 33.25969611771513,
+        "C_neck_CTL.rotateZ": -11.24121213916244,
+        "L_wristFk_CTL.rotateZ": 4.91401925520963,
+        "L_wristFk_CTL.rotateY": -0.7804665346236103,
+        "L_ankleFk_CTL.rotateX": 1.5022413820957419,
+        "L_hipFk_CTL.rotateY": 0.6437541408190566
+      }
+    },
+    {
+      "name": "combination_31",
+      "channels": {
+        "R_hipFk_CTL.rotateZ": -22.744227685701542,
+        "L_kneeFk_CTL.rotateX": -1.1393800174697006,
+        "R_ankleFk_CTL.rotateY": 6.564386499850486,
+        "R_wristFk_CTL.rotateX": 2.2872663715159707,
+        "R_ballFk_CTL.rotateZ": 22.26548786786263,
+        "L_shoulderFk_CTL.rotateX": 15.019452718949408
+      }
+    },
+    {
+      "name": "combination_32",
+      "channels": {
+        "L_elbowFk_CTL.rotateX": -32.31000772445406,
+        "R_hipFk_CTL.rotateZ": -8.207035874399121,
+        "L_ankleFk_CTL.rotateZ": 17.29248958052444,
+        "R_ankleFk_CTL.rotateX": -10.820442302801409,
+        "L_shoulderFk_CTL.rotateZ": 14.504047297665272,
+        "R_wristFk_CTL.rotateY": -6.013584365314932
+      }
+    },
+    {
+      "name": "combination_33",
+      "channels": {
+        "C_spine03_CTL.rotateY": 7.207501402410554,
+        "L_kneeFk_CTL.rotateX": 2.1383347282334215,
+        "R_ankleFk_CTL.rotateZ": 25.668258226998425,
+        "C_spine03_CTL.rotateX": 15.392568817775256,
+        "R_wristFk_CTL.rotateY": -10.292154663888494,
+        "R_shoulderFk_CTL.rotateX": 21.206065412096788
+      }
+    },
+    {
+      "name": "combination_34",
+      "channels": {
+        "L_wristFk_CTL.rotateX": 18.762449189362908,
+        "R_kneeFk_CTL.rotateX": 1.3118780399410583,
+        "L_hipFk_CTL.rotateX": 18.599954126411106,
+        "R_wristFk_CTL.rotateZ": 13.985666473994451,
+        "L_shoulderFk_CTL.rotateZ": -23.528742911937613,
+        "C_spine03_CTL.rotateY": 1.8509580334155455
+      }
+    },
+    {
+      "name": "combination_35",
+      "channels": {
+        "C_neck_CTL.rotateZ": 15.76220243139143,
+        "R_ankleFk_CTL.rotateX": -19.52688853063766,
+        "L_wristFk_CTL.rotateZ": -37.06018940735238,
+        "L_shoulderFk_CTL.rotateY": -25.83376187363013,
+        "R_elbowFk_CTL.rotateY": 29.017686057357245,
+        "L_ballFk_CTL.rotateZ": 24.173476646035937
+      }
+    }
+  ],
+  "joints": [
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV|L_armLower00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_bicepsCorrective_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_tricepsCorrective_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV|R_armLower00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_bicepsCorrective_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_tricepsCorrective_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV|L_legUpper03_ENV|L_legUpper04_ENV|L_legLower00_ENV",
+    "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV"
+  ],
+  "targets": {
+    "brazaletes1_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|brazaletes1|brazaletes1_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_armUpper03_ENV|L_armUpper04_ENV|L_armLower00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_bicepsCorrective_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV|L_tricepsCorrective_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_armUpper03_ENV|R_armUpper04_ENV|R_armLower00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_bicepsCorrective_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV|R_tricepsCorrective_ENV"
+      ]
+    },
+    "cinturon3_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV"
+      ]
+    },
+    "cinturones2_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV"
+      ]
+    },
+    "collar2_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|collar2|collar2_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV"
+      ]
+    },
+    "collar3_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|collar3|collar3_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV|C_neckSkinning03_ENV|C_neckSkinning04_ENV|C_head_ENV"
+      ]
+    },
+    "harapo1_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo1|harapo1_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV"
+      ]
+    },
+    "harapo2_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|harapo2|harapo2_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV"
+      ]
+    },
+    "pCube26_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|pCube26|pCube26_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV"
+      ]
+    },
+    "pCylinder16_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|pCylinder16|pCylinder16_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV"
+      ]
+    },
+    "pasted__brazaletes3_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|botas_geo|pasted__brazaletes3|pasted__brazaletes3_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV"
+      ]
+    },
+    "polySurface32_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface32|polySurface32_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV"
+      ]
+    },
+    "polySurface33_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface33|polySurface33_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV"
+      ]
+    },
+    "polySurface48_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface48|polySurface48_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+      ]
+    },
+    "polySurface49_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface49|polySurface49_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV|L_legUpper03_ENV|L_legUpper04_ENV|L_legLower00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV"
+      ]
+    },
+    "polySurface58_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface58|polySurface58_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV|R_legAnkle_ENV|R_legBall_ENV"
+      ]
+    },
+    "polySurface61_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface61|polySurface61_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV"
+      ]
+    },
+    "polySurface62_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|botas_geo|polySurface62|polySurface62_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV|R_legUpper03_ENV|R_legUpper04_ENV|R_legLower00_ENV|R_legLower01_ENV|R_legLower02_ENV|R_legLower03_ENV|R_legLower04_ENV"
+      ]
+    },
+    "polySurface889_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface889|polySurface889_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV"
+      ]
+    },
+    "polySurface892_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface892|polySurface892_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV"
+      ]
+    },
+    "polySurface900_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface900|polySurface900_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV"
+      ]
+    },
+    "polySurface905_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|polySurface905|polySurface905_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV"
+      ]
+    },
+    "tiras30_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras30|tiras30_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|L_clavicle_ENV|L_armUpper00_ENV|L_armUpper01_ENV|L_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|R_clavicle_ENV|R_armUpper00_ENV|R_armUpper01_ENV|R_armUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV|C_spine02_ENV|C_spine03_ENV|C_spine04_ENV|C_spine05_ENV|C_spine06_ENV|C_spine07_ENV|C_spine08_ENV|C_localChest_ENV|C_neckSkinning00_ENV|C_neckSkinning01_ENV|C_neckSkinning02_ENV"
+      ]
+    },
+    "tiras31_PRX": {
+      "shape": "|Edward|geo_GRP|FINAL|cuerpo_geo|tiras31|tiras31_ShapeDeformed",
+      "joints": [
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|L_legUpper00_ENV|L_legUpper01_ENV|L_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|R_legUpper00_ENV|R_legUpper01_ENV|R_legUpper02_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV",
+        "|Edward|rig_GRP|skeletonHierarchy_GRP|C_freeze_ENV|C_localHip_ENV|C_spine01_ENV"
+      ]
+    }
+  },
+  "original_pose": {
+    "L_shoulderFk_CTL.rotateX": 0.0,
+    "L_shoulderFk_CTL.rotateY": 0.0,
+    "L_shoulderFk_CTL.rotateZ": 0.0,
+    "L_elbowFk_CTL.rotateY": 0.0,
+    "L_elbowFk_CTL.rotateX": 0.0,
+    "L_wristFk_CTL.rotateX": 0.0,
+    "L_wristFk_CTL.rotateY": 0.0,
+    "L_wristFk_CTL.rotateZ": 0.0,
+    "L_hipFk_CTL.rotateX": 0.0,
+    "L_hipFk_CTL.rotateY": 0.0,
+    "L_hipFk_CTL.rotateZ": 0.0,
+    "L_kneeFk_CTL.rotateZ": 0.0,
+    "L_kneeFk_CTL.rotateX": 0.0,
+    "L_ankleFk_CTL.rotateX": 0.0,
+    "L_ankleFk_CTL.rotateY": 0.0,
+    "L_ankleFk_CTL.rotateZ": 0.0,
+    "L_ballFk_CTL.rotateZ": 0.0,
+    "R_shoulderFk_CTL.rotateX": 0.0,
+    "R_shoulderFk_CTL.rotateY": 0.0,
+    "R_shoulderFk_CTL.rotateZ": 0.0,
+    "R_elbowFk_CTL.rotateY": 0.0,
+    "R_elbowFk_CTL.rotateX": 0.0,
+    "R_wristFk_CTL.rotateX": 0.0,
+    "R_wristFk_CTL.rotateY": 0.0,
+    "R_wristFk_CTL.rotateZ": 0.0,
+    "R_hipFk_CTL.rotateX": 0.0,
+    "R_hipFk_CTL.rotateY": 0.0,
+    "R_hipFk_CTL.rotateZ": 0.0,
+    "R_kneeFk_CTL.rotateZ": 0.0,
+    "R_kneeFk_CTL.rotateX": 0.0,
+    "R_ankleFk_CTL.rotateX": 0.0,
+    "R_ankleFk_CTL.rotateY": 0.0,
+    "R_ankleFk_CTL.rotateZ": 0.0,
+    "R_ballFk_CTL.rotateZ": 0.0,
+    "C_spine03_CTL.rotateX": 0.0,
+    "C_spine03_CTL.rotateY": 0.0,
+    "C_spine03_CTL.rotateZ": 0.0,
+    "C_spine07_CTL.rotateX": 0.0,
+    "C_spine07_CTL.rotateY": 0.0,
+    "C_spine07_CTL.rotateZ": 0.0,
+    "C_neck_CTL.rotateX": 0.0,
+    "C_neck_CTL.rotateY": 0.0,
+    "C_neck_CTL.rotateZ": 0.0,
+    "C_head_CTL.rotateX": 0.0,
+    "C_head_CTL.rotateY": 0.0,
+    "C_head_CTL.rotateZ": 0.0,
+    "C_jaw_CTL.rotateX": 0.0,
+    "L_lipCorner_CTL.translateX": 0.0,
+    "L_lipCorner_CTL.translateY": 0.0,
+    "R_lipCorner_CTL.translateX": 0.0,
+    "R_lipCorner_CTL.translateY": 0.0
+  },
+  "original_switch": {
+    "L_armSettings_CTL.Ik_Fk": 1.0,
+    "L_legSettings_CTL.Ik_Fk": 0.0,
+    "R_armSettings_CTL.Ik_Fk": 1.0,
+    "R_legSettings_CTL.Ik_Fk": 0.0
+  }
+}

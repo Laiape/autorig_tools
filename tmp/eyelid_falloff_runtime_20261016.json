@@ -1,0 +1,271 @@
+{
+  "success": true,
+  "result": {
+    "modules": {
+      "maya_tools.scripts.tools.eyelid_corners": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_corners.py",
+      "maya_tools.scripts.tools.eyelid_rotation": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\eyelid_rotation.py",
+      "maya_tools.scripts.biped.autorig.eyelid_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\eyelid_module.py"
+    },
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "pose": {
+      "L_eyelidDown_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidInDown_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidInUp_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidIn_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidOutDown_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidOutUp_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidOut_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "L_eyelidUp_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidDown_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidInDown_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidInUp_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidIn_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidOutDown_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidOutUp_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidOut_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "R_eyelidUp_CTL": {
+        "translate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "rotate": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    "version": 2
+  }
+}

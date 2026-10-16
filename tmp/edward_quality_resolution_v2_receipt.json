@@ -1,0 +1,47 @@
+{
+  "success": true,
+  "result": {
+    "candidates": [
+      {
+        "label": "cpu_reference_w0_B_normal",
+        "max_error": 0.0,
+        "accepted": true
+      },
+      {
+        "label": "cpu_reference_w0_D_normal",
+        "max_error": 0.0,
+        "accepted": true
+      },
+      {
+        "label": "cpu_reference_w0_C_collars_cpu",
+        "max_error": 0.13631442526070692,
+        "accepted": false
+      },
+      {
+        "label": "cpu_reference_w0_D_collars_cpu",
+        "max_error": 0.0,
+        "accepted": true
+      },
+      {
+        "label": "cpu_reference_w1_B_normal",
+        "max_error": 0.0,
+        "accepted": true
+      },
+      {
+        "label": "cpu_reference_w1_D_normal",
+        "max_error": 0.0,
+        "accepted": true
+      },
+      {
+        "label": "cpu_reference_w1_C_collars_cpu",
+        "max_error": 0.13631442526070692,
+        "accepted": false
+      },
+      {
+        "label": "cpu_reference_w1_D_collars_cpu",
+        "max_error": 0.0,
+        "accepted": true
+      }
+    ]
+  }
+}

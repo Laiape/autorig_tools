@@ -1,0 +1,278 @@
+{
+  "mesh_checks": [
+    {
+      "mesh": "cabeza_high",
+      "neutral_max_change_cm": 1.528856233776226e-05,
+      "outside_weight_max_change": 0.0,
+      "core_jaw_weight_max": 0.00123208,
+      "normalization_max_error": 9.998000000011054e-05,
+      "pose_checks": [
+        {
+          "jaw": 0,
+          "pose": "neutral",
+          "asym_max_cm": 0.0,
+          "asym_rms_cm": 0.0
+        },
+        {
+          "jaw": 0,
+          "pose": "wide",
+          "asym_max_cm": 0.022634340280513348,
+          "asym_rms_cm": 0.005355525315956727
+        },
+        {
+          "jaw": 0,
+          "pose": "smile",
+          "asym_max_cm": 0.02248311750069629,
+          "asym_rms_cm": 0.00443571547792301
+        },
+        {
+          "jaw": 0,
+          "pose": "frown",
+          "asym_max_cm": 0.03005718563718896,
+          "asym_rms_cm": 0.006302753508137199
+        },
+        {
+          "jaw": 0,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.04419350302974852,
+          "asym_rms_cm": 0.009451320060869817
+        },
+        {
+          "jaw": 15,
+          "pose": "neutral",
+          "asym_max_cm": 0.0487564812474579,
+          "asym_rms_cm": 0.004888949524715824
+        },
+        {
+          "jaw": 15,
+          "pose": "wide",
+          "asym_max_cm": 0.05001254076450055,
+          "asym_rms_cm": 0.008110897252830113
+        },
+        {
+          "jaw": 15,
+          "pose": "smile",
+          "asym_max_cm": 0.049593625589405964,
+          "asym_rms_cm": 0.007345219789047352
+        },
+        {
+          "jaw": 15,
+          "pose": "frown",
+          "asym_max_cm": 0.04703127505340599,
+          "asym_rms_cm": 0.008702071031005783
+        },
+        {
+          "jaw": 15,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.05859242705347442,
+          "asym_rms_cm": 0.011697448352090455
+        },
+        {
+          "jaw": 30,
+          "pose": "neutral",
+          "asym_max_cm": 0.0969080012228092,
+          "asym_rms_cm": 0.009453862645470585
+        },
+        {
+          "jaw": 30,
+          "pose": "wide",
+          "asym_max_cm": 0.09997230945687839,
+          "asym_rms_cm": 0.012448807982135471
+        },
+        {
+          "jaw": 30,
+          "pose": "smile",
+          "asym_max_cm": 0.09904077281428861,
+          "asym_rms_cm": 0.011702660968965262
+        },
+        {
+          "jaw": 30,
+          "pose": "frown",
+          "asym_max_cm": 0.08820115396278223,
+          "asym_rms_cm": 0.012973640133332315
+        },
+        {
+          "jaw": 30,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.09873082636911451,
+          "asym_rms_cm": 0.015504925275266248
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "neutral",
+          "asym_max_cm": 0.14695306209765682,
+          "asym_rms_cm": 0.017595374050167263
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "wide",
+          "asym_max_cm": 0.1514355349064207,
+          "asym_rms_cm": 0.02046960832771261
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "smile",
+          "asym_max_cm": 0.1498093544991587,
+          "asym_rms_cm": 0.01971146426111932
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "frown",
+          "asym_max_cm": 0.13095693761746174,
+          "asym_rms_cm": 0.01923810299537994
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.1515809075618934,
+          "asym_rms_cm": 0.02274119940600996
+        }
+      ]
+    },
+    {
+      "mesh": "cabeza_low",
+      "neutral_max_change_cm": 1.5288678525932885e-05,
+      "outside_weight_max_change": 0.0,
+      "core_jaw_weight_max": 0.00071882,
+      "normalization_max_error": 0.00011003000000009422,
+      "pose_checks": [
+        {
+          "jaw": 0,
+          "pose": "neutral",
+          "asym_max_cm": 0.0,
+          "asym_rms_cm": 0.0
+        },
+        {
+          "jaw": 0,
+          "pose": "wide",
+          "asym_max_cm": 0.08460294972234685,
+          "asym_rms_cm": 0.03707526882977792
+        },
+        {
+          "jaw": 0,
+          "pose": "smile",
+          "asym_max_cm": 0.022750979242847892,
+          "asym_rms_cm": 0.010044869878986168
+        },
+        {
+          "jaw": 0,
+          "pose": "frown",
+          "asym_max_cm": 0.08949438740420722,
+          "asym_rms_cm": 0.03971307163898203
+        },
+        {
+          "jaw": 0,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.0844561299091186,
+          "asym_rms_cm": 0.036848978580407976
+        },
+        {
+          "jaw": 15,
+          "pose": "neutral",
+          "asym_max_cm": 0.04268144645401765,
+          "asym_rms_cm": 0.004777169791156863
+        },
+        {
+          "jaw": 15,
+          "pose": "wide",
+          "asym_max_cm": 0.08448848100948124,
+          "asym_rms_cm": 0.03707062636197565
+        },
+        {
+          "jaw": 15,
+          "pose": "smile",
+          "asym_max_cm": 0.03475832820991031,
+          "asym_rms_cm": 0.010398586389767392
+        },
+        {
+          "jaw": 15,
+          "pose": "frown",
+          "asym_max_cm": 0.11231165916060373,
+          "asym_rms_cm": 0.040546090024950306
+        },
+        {
+          "jaw": 15,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.08412374317122172,
+          "asym_rms_cm": 0.0366478667841703
+        },
+        {
+          "jaw": 30,
+          "pose": "neutral",
+          "asym_max_cm": 0.08456533513878835,
+          "asym_rms_cm": 0.009201858182736567
+        },
+        {
+          "jaw": 30,
+          "pose": "wide",
+          "asym_max_cm": 0.09730779654349002,
+          "asym_rms_cm": 0.03736249828384891
+        },
+        {
+          "jaw": 30,
+          "pose": "smile",
+          "asym_max_cm": 0.07506037597968575,
+          "asym_rms_cm": 0.011976351582318847
+        },
+        {
+          "jaw": 30,
+          "pose": "frown",
+          "asym_max_cm": 0.14823901363702402,
+          "asym_rms_cm": 0.04155350814808264
+        },
+        {
+          "jaw": 30,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.08440354043783604,
+          "asym_rms_cm": 0.03636034067600308
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "neutral",
+          "asym_max_cm": 0.12383408278998259,
+          "asym_rms_cm": 0.017010917724052263
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "wide",
+          "asym_max_cm": 0.1281687582310408,
+          "asym_rms_cm": 0.03877979875591705
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "smile",
+          "asym_max_cm": 0.11428093930113313,
+          "asym_rms_cm": 0.016924433411994268
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "frown",
+          "asym_max_cm": 0.18242357046605373,
+          "asym_rms_cm": 0.045440243858421596
+        },
+        {
+          "jaw": 44.41942630875321,
+          "pose": "wide_smile",
+          "asym_max_cm": 0.11421157128033836,
+          "asym_rms_cm": 0.03649434714299548
+        }
+      ]
+    }
+  ],
+  "bakes": [
+    {
+      "skin": "polySurface61_wrapBake_SKC",
+      "max_weight_change": 0.0
+    },
+    {
+      "skin": "polySurface62_wrapBake_SKC",
+      "max_weight_change": 0.0
+    },
+    {
+      "skin": "brazaletes1_wrapBake_SKC",
+      "max_weight_change": 0.0
+    }
+  ],
+  "wrap_count": 20,
+  "pose_restored": true
+}

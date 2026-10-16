@@ -1,0 +1,88 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "attrs": {
+      "C_eyebrowMid_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "C_lowerLip_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "C_noseMain_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "C_noseTip_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "C_upperLip_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "EdwardWrinkles_Settings": {
+        "wrinkleInPlace": true,
+        "wrinkleSetup": true
+      },
+      "L_cheek_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "L_eyebrowIn_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "L_eyebrowMain_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "L_eyebrowMid_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "L_eyebrowOut_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "L_lipCorner_CTL": {
+        "wrinkleDepth": 0.0,
+        "wrinkleValue": 1.0
+      },
+      "L_nose_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "R_cheek_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "R_eyebrowIn_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "R_eyebrowMain_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "R_eyebrowMid_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "R_eyebrowOut_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      },
+      "R_lipCorner_CTL": {
+        "wrinkleDepth": 0.0,
+        "wrinkleValue": 1.0
+      },
+      "R_nose_CTL": {
+        "wrinkleDepth": 1.0,
+        "wrinkleValue": 1.0
+      }
+    }
+  }
+}

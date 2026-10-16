@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": false,
+    "setups": [
+      {
+        "prefix": "EdwardWrinkles",
+        "settings": {
+          "Envelope": 1.0,
+          "Depth": 1.2000000000000002,
+          "CompressionStart": 0.0,
+          "CompressionRange": 0.5900000000000001,
+          "ManualActivation": 0.0,
+          "Forehead": 3.0,
+          "Eyes": 1.0,
+          "Cheeks": 0.19999999999999996,
+          "Nose": 1.0,
+          "Chin": 1.0
+        },
+        "controls": 26,
+        "zero_regions": []
+      }
+    ]
+  }
+}

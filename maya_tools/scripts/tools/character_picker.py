@@ -1,4 +1,4 @@
-"""Character picker entry point shared by rig completion, menu and shelf."""
+"""Character picker entry point for explicit generation, menu and shelf."""
 import json
 from pathlib import Path
 

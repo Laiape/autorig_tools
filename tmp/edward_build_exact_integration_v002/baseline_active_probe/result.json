@@ -1,0 +1,26 @@
+{
+  "mode": "baseline",
+  "success": false,
+  "native_reopen": true,
+  "build": {
+    "asset": "Edward",
+    "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\validation\\20261015T191305848947Z.buildtiming.json",
+    "optimizations": {
+      "enabled": false
+    }
+  },
+  "build_seconds": 17.358435800000734,
+  "nodes": 16475,
+  "skins": 58,
+  "joints": 852,
+  "unknown_source_nodes": [
+    "MayaNodeEditorSavedTabsInfo",
+    "hyperShadePrimaryNodeEditorSavedTabsInfo"
+  ],
+  "authored_wrinkle_settings": {
+    "Envelope": 1.0,
+    "Depth": 1.2000000000000002,
+    "ManualActivation": 0.0
+  },
+  "error": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\scripts\\edward_build_exact_integration.py\", line 83, in worker\n    for attr,value in {'Envelope':1.,'Depth':1.,'ManualActivation':1.}.items():cmds.setAttr(settings+'.'+attr,value)\n                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: setAttr: The attribute 'EdwardWrinkles_Settings.Envelope' is locked or connected and cannot be modified.\n\n"
+}

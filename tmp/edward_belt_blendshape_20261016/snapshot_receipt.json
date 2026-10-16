@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "result": {
+    "snapshot": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_artist_baseline.ma",
+    "bytes": 199709641,
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL"
+      ],
+      "frame": 0.0
+    },
+    "after": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL"
+      ],
+      "frame": 0.0
+    }
+  }
+}

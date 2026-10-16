@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "result": {
+    "candidate": "skc_native_roundtrip",
+    "change_counts": {},
+    "accepted": true,
+    "rows": [
+      {
+        "wrinkles": false,
+        "max_error": 0.0,
+        "max_normal_error": 0.0,
+        "matrix_error": 0.0,
+        "accepted": true,
+        "samples": 2040
+      },
+      {
+        "wrinkles": true,
+        "max_error": 0.0,
+        "max_normal_error": 0.0,
+        "matrix_error": 0.0,
+        "accepted": true,
+        "samples": 2040
+      }
+    ]
+  }
+}

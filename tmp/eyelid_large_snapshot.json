@@ -1,0 +1,120 @@
+{
+  "success": true,
+  "result": {
+    "snapshot": "C:\\proyectos\\auto-rig\\recovery\\eyelids_large_roll_before_20261016_v001.mb",
+    "controls": {
+      "L_eyelidDown_CTL": [
+        [
+          0.0,
+          0.0,
+          -25.241064150621913
+        ]
+      ],
+      "L_eyelidInDown_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "L_eyelidInUp_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "L_eyelidIn_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "L_eyelidOutDown_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "L_eyelidOutUp_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "L_eyelidOut_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "L_eyelidUp_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidDown_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidInDown_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidInUp_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidIn_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidOutDown_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidOutUp_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidOut_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "R_eyelidUp_CTL": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  }
+}

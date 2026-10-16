@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "result": {
+    "images": [
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_shared_corners_20261016\\final\\current_pose.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_shared_corners_20261016\\final\\minus60.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_shared_corners_20261016\\final\\plus60.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_shared_corners_20261016\\final\\closed60.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_shared_corners_20261016\\final\\minus90.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_shared_corners_20261016\\final\\plus90.png"
+    ],
+    "pose_restored": true
+  }
+}

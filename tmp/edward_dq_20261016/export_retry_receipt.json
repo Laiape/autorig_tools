@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "result": {
+    "skins_DQ": 23,
+    "all_skin_nodes": 81,
+    "staged_skc": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_DQ_staged.skc",
+    "native_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_DQ_canonical_v002.ma",
+    "wrinkles_present": true
+  }
+}

@@ -1,0 +1,117 @@
+{
+    "basic_structure": {
+        "character_name": "Edward",
+        "skel_GRP": "skel_GRP",
+        "modules_GRP": "modules_GRP",
+        "masterwalk_ctl": "C_masterwalk_CTL",
+        "character_ctl": "C_character_CTL",
+        "preferences_ctl": "C_settings_CTL",
+        "rig_GRP": "rig_GRP"
+    },
+    "rig_settings": {
+        "mGear_integration": 0
+    },
+    "spine_module": {
+        "local_hip_ctl": "C_localHip_CTL",
+        "body_ctl": "C_body_CTL",
+        "local_chest_ctl": "C_localChest_CTL",
+        "last_spine_jnt": "C_spine07_JNT"
+    },
+    "leg_module": {
+        "L_hip_JNT": "L_hip_JNT",
+        "L_knee_JNT": "L_knee_JNT",
+        "L_ankle_JNT": "L_ankle_JNT",
+        "L_legIk": "L_ankleIk_CTL",
+        "L_hipFk": "L_hipFk_CTL",
+        "L_legPv": "L_legPv_CTL",
+        "L_rootIk": "L_legRootIk_CTL",
+        "R_hip_JNT": "R_hip_JNT",
+        "R_knee_JNT": "R_knee_JNT",
+        "R_ankle_JNT": "R_ankle_JNT",
+        "R_legIk": "R_ankleIk_CTL",
+        "R_hipFk": "R_hipFk_CTL",
+        "R_legPv": "R_legPv_CTL",
+        "R_rootIk": "R_legRootIk_CTL"
+    },
+    "clavicle_module": {
+        "L_clavicle": "L_clavicle_CTL",
+        "R_clavicle": "R_clavicle_CTL"
+    },
+    "arm_module": {
+        "L_shoulder_JNT": "L_shoulder_JNT",
+        "L_wrist_JNT": "L_wristSkinning_JNT",
+        "L_armSettings": "L_armSettings_CTL",
+        "L_armIk": "L_armIkWrist_CTL",
+        "L_armPv": "L_armPv_CTL",
+        "L_shoulderFk": "L_shoulderFk_CTL",
+        "L_armIkRoot": "L_armIkRoot_CTL",
+        "L_skinningJoints": null,
+        "R_shoulder_JNT": "R_shoulder_JNT",
+        "R_wrist_JNT": "R_wristSkinning_JNT",
+        "R_armSettings": "R_armSettings_CTL",
+        "R_armIk": "R_armIkWrist_CTL",
+        "R_armPv": "R_armPv_CTL",
+        "R_shoulderFk": "R_shoulderFk_CTL",
+        "R_armIkRoot": "R_armIkRoot_CTL",
+        "R_skinningJoints": null
+    },
+    "neck_module": {
+        "head_ctl": "C_head_CTL",
+        "head_skinning_jnt": "C_headSkinning_JNT",
+        "neck_ctl": "C_neck_CTL",
+        "head_guide_matrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9985123829706208,
+            0.05452541659017626,
+            0.0,
+            0.0,
+            -0.05452541659017626,
+            0.9985123829706208,
+            0.0,
+            0.01619076728820796,
+            195.72495795567266,
+            -1.6735277128715258,
+            1.0
+        ],
+        "face_ctl": "C_face_CTL",
+        "head_squash_ctl": "C_face_CTL",
+        "face_controls_parent": "C_face_ANM"
+    },
+    "jaw_module": {
+        "jaw_ctl": "C_jaw_CTL",
+        "upper_jaw_ctl": "C_upperJaw_CTL",
+        "main_mouth_ctl": "C_mainMouth_CTL",
+        "local_jaw_mmx": "C_jawLocal_MMT",
+        "local_upper_jaw_mmx": "C_upperJawLocal_MMT"
+    },
+    "eyebrow_module": {
+        "L_main_eyebrow_ctl": "L_eyebrowMain_CTL",
+        "R_main_eyebrow_ctl": "R_eyebrowMain_CTL"
+    },
+    "eyelid_module": {
+        "L_iris_setup_grp": "L_irisSetup_GRP",
+        "L_iris_base_jnt": "L_irisBaseSkinning_JNT",
+        "L_iris_jnts": [
+            "L_iris00Skinning_JNT",
+            "L_iris01Skinning_JNT",
+            "L_iris02Skinning_JNT",
+            "L_iris03Skinning_JNT",
+            "L_iris04Skinning_JNT"
+        ],
+        "L_lower_socket_ctl": "L_lowerSocket_CTL",
+        "R_iris_setup_grp": "R_irisSetup_GRP",
+        "R_iris_base_jnt": "R_irisBaseSkinning_JNT",
+        "R_iris_jnts": [
+            "R_iris00Skinning_JNT",
+            "R_iris01Skinning_JNT",
+            "R_iris02Skinning_JNT",
+            "R_iris03Skinning_JNT",
+            "R_iris04Skinning_JNT"
+        ],
+        "R_lower_socket_ctl": "R_lowerSocket_CTL"
+    }
+}

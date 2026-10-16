@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "selection": [],
+    "frame": 0.0,
+    "jaw": {
+      "rotateX": 44.41942630875321,
+      "rotateY": 0.0,
+      "rotateZ": 0.0
+    },
+    "lip_controls": {
+      "L": [
+        4.566933318917332,
+        2.8215158892609096,
+        1.4929724123646793e-13
+      ],
+      "R": [
+        4.566933318917332,
+        2.8215158892609096,
+        1.4929724123646793e-13
+      ]
+    },
+    "layers": [],
+    "modules": {
+      "maya_tools.scripts.tools.pose_blendshapes": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\pose_blendshapes.py",
+      "maya_tools.scripts.tools.bifrost_wrinkles": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\bifrost_wrinkles.py"
+    },
+    "models": [
+      "modelPanel1",
+      "modelPanel2",
+      "modelPanel3",
+      "modelPanel4"
+    ]
+  }
+}

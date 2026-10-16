@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "result": {
+    "pid": 7248,
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/belt_blendshape_20261016_v001/Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+    "modified": true,
+    "selector": 1,
+    "viewport": [
+      357,
+      870
+    ],
+    "visible_candidates": {
+      "cinturon3_blendshape_only_separate_TEST": false,
+      "cinturon3_blendshape_only_shared_TEST": true,
+      "cinturones2_blendshape_only_separate_TEST": false,
+      "cinturones2_blendshape_only_shared_TEST": true
+    },
+    "image": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\artist_window_7248.png",
+    "joints": 852
+  }
+}

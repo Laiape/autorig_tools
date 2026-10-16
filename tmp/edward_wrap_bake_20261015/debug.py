@@ -1,0 +1,1 @@
+result={'headskins':headinfo,'lipjoints':lipjoints,'hist':headhist,'shapehist':cmds.listHistory('cabeza_high_Shape'),'allskins':[(s,cmds.deformer(s,q=True,g=True)) for s in cmds.ls(type='skinCluster')]}

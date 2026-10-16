@@ -1,0 +1,81 @@
+{
+  "success": true,
+  "result": {
+    "evaluators": [
+      "invisibility",
+      "dynamics",
+      "ikSystem",
+      "motionTrail",
+      "reference",
+      "transformFlattening",
+      "pruneRoots"
+    ],
+    "curve_manager_config": {
+      "status": "available",
+      "value": [
+        "forceAnimatedCurves=none: No curve will be forced in the evaluation graph\n",
+        "forceAnimatedCurves=controller: Curves connected to controller nodes will be forced in the evaluation graph\n",
+        "forceAnimatedCurves=keyed: Keyed static curves, i.e. curves with a single key or multiple keys with the same value, will be forced in the evaluation graph\n",
+        "forceAnimatedCurves=all: All curves will be forced in the evaluation graph\n",
+        "forceAnimatedNodes=none: No node will be forced in the evaluation graph\n",
+        "forceAnimatedNodes=forcedAnimatedAttribute: Nodes with the forced-animated attribute set to true will be forced in the evaluation graph\n",
+        "forcedAnimatedAttributeName=forcedAnimatedAttributeName: Name of the attribute that will force nodes in the evaluation graph\n",
+        "cluster=each: Create a unique cluster for every node\n",
+        "cluster=subgraph: Create a unique cluster for all connected nodes, favoring long clusters\n",
+        "cluster=flood: Create a unique cluster for all connected nodes, favoring big clusters and partitioning speed\n"
+      ]
+    },
+    "values": {
+      "forceAnimatedNodes": {
+        "status": "available",
+        "value": "none"
+      },
+      "forceAnimatedCurves": {
+        "status": "available",
+        "value": "none"
+      },
+      "forcedAnimatedAttributeName": {
+        "status": "available",
+        "value": "forcedAnimated"
+      },
+      "skipStaticEvaluation": {
+        "status": "available",
+        "value": ""
+      }
+    },
+    "viewport": {
+      "modelPanel1": {
+        "width": 640,
+        "height": 480,
+        "camera": "|top",
+        "renderer": "vp2Renderer",
+        "appearance": "smoothShaded",
+        "textures": false
+      },
+      "modelPanel2": {
+        "width": 100,
+        "height": 30,
+        "camera": "|side",
+        "renderer": "vp2Renderer",
+        "appearance": "smoothShaded",
+        "textures": false
+      },
+      "modelPanel3": {
+        "width": 100,
+        "height": 30,
+        "camera": "|front",
+        "renderer": "vp2Renderer",
+        "appearance": "smoothShaded",
+        "textures": false
+      },
+      "modelPanel4": {
+        "width": 1319,
+        "height": 797,
+        "camera": "|persp",
+        "renderer": "vp2Renderer",
+        "appearance": "smoothShaded",
+        "textures": false
+      }
+    }
+  }
+}

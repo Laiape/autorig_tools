@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\proyectos\\auto-rig\\scripts\\edward_final_audit.py\", line 373, in <module>\n    elif action=='gpu_quality':result=gpu_quality()\n                                                    \n  File \"C:\\proyectos\\auto-rig\\scripts\\edward_final_audit.py\", line 317, in weight_thresholds\n    comp,count=audit['component'](path);weights,ninf=fn.getWeights(path,comp)\n               ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\scripts\\edward_rig_audit.py\", line 45, in component\n    raise TypeError(path.fullPathName())\nTypeError: |Edward|deformers_GRP|EdwardWrinkles_GRP|EdwardWrinklesGraph|EdwardWrinklesGraphShape\n"
+}

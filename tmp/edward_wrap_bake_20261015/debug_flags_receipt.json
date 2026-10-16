@@ -1,0 +1,16 @@
+{
+  "result": [
+    {
+      "skin": "C_mouth_local_SKC",
+      "error_flags_off": 0.0,
+      "finite": true,
+      "error_flags_restored": 0.0
+    },
+    {
+      "skin": "skinCluster41",
+      "error_flags_off": 0.0,
+      "finite": true,
+      "error_flags_restored": 0.0
+    }
+  ]
+}

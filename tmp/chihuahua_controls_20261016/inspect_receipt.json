@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "controls": 318,
+    "modules": {
+      "maya_tools.scripts.utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "utils.curve_tool": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\curve_tool.py",
+      "utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+      "utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "maya_tools.scripts.utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+      "maya_tools.scripts.utils.curve_tool": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\curve_tool.py"
+    },
+    "panels": [
+      "modelPanel1",
+      "modelPanel2",
+      "modelPanel3",
+      "modelPanel4"
+    ],
+    "roots": [
+      "persp",
+      "top",
+      "front",
+      "side",
+      "Edward"
+    ]
+  }
+}

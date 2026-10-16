@@ -1,0 +1,295 @@
+{
+  "success": true,
+  "result": {
+    "pid": 23404,
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "selection": [
+      "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidUp_GRP|L_eyelidUp_OFF|L_eyelidUp_CTL"
+    ],
+    "frame": 0.0,
+    "evaluation": [
+      "parallel",
+      "Evaluation graph is ready."
+    ],
+    "wraps": {
+      "brazaletes1_PRX": {
+        "geometry": [
+          "brazaletes1_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "cinturon3_PRX": {
+        "geometry": [
+          "cinturon3_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "polySurfaceShape1.worldMesh"
+        ]
+      },
+      "cinturones2_PRX": {
+        "geometry": [
+          "cinturones2_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "collar2_PRX": {
+        "geometry": [
+          "collar2_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "cabeza_high_ShapeOrig.outMesh",
+          "EdwardWrinkles_PrimaryWorld.outputGeometry"
+        ]
+      },
+      "collar3_PRX": {
+        "geometry": [
+          "collar3_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "cabeza_high_ShapeOrig.outMesh",
+          "EdwardWrinkles_PrimaryWorld.outputGeometry"
+        ]
+      },
+      "harapo1_PRX": {
+        "geometry": [
+          "harapo1_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "harapo2_PRX": {
+        "geometry": [
+          "harapo2_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "pCube26_PRX": {
+        "geometry": [
+          "pCube26_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "pCylinder16_PRX": {
+        "geometry": [
+          "pCylinder16_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "pasted__brazaletes3_PRX": {
+        "geometry": [
+          "pasted__brazaletes3_ShapeDeformed"
+        ],
+        "drivers": [
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ]
+      },
+      "polySurface32_PRX": {
+        "geometry": [
+          "polySurface32_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "polySurface33_PRX": {
+        "geometry": [
+          "polySurface33_ShapeDeformed"
+        ],
+        "drivers": [
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "polySurface48_PRX": {
+        "geometry": [
+          "polySurface48_ShapeDeformed"
+        ],
+        "drivers": [
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "polySurface49_PRX": {
+        "geometry": [
+          "polySurface49_ShapeDeformed"
+        ],
+        "drivers": [
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "polySurface58_PRX": {
+        "geometry": [
+          "polySurface58_ShapeDeformed"
+        ],
+        "drivers": [
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ]
+      },
+      "polySurface61_PRX": {
+        "geometry": [
+          "polySurface61_ShapeDeformed"
+        ],
+        "drivers": [
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ]
+      },
+      "polySurface62_PRX": {
+        "geometry": [
+          "polySurface62_ShapeDeformed"
+        ],
+        "drivers": [
+          "polySurface92_ShapeOrig.outMesh",
+          "polySurface92_Shape.worldMesh"
+        ]
+      },
+      "polySurface889_PRX": {
+        "geometry": [
+          "polySurface889_ShapeDeformed"
+        ],
+        "drivers": [
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "polySurface892_PRX": {
+        "geometry": [
+          "polySurface892_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "polySurface900_PRX": {
+        "geometry": [
+          "polySurface900_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh",
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      },
+      "polySurface905_PRX": {
+        "geometry": [
+          "polySurface905_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "tiras30_PRX": {
+        "geometry": [
+          "tiras30_ShapeDeformed"
+        ],
+        "drivers": [
+          "cuerpo_base_ShapeOrig.outMesh",
+          "cuerpo_base_Shape.worldMesh"
+        ]
+      },
+      "tiras31_PRX": {
+        "geometry": [
+          "tiras31_ShapeDeformed"
+        ],
+        "drivers": [
+          "pantalon_geo_ShapeOrig.outMesh",
+          "pantalon_geo_Shape.worldMesh"
+        ]
+      }
+    },
+    "sys_path": [
+      "C:/Users/LaiaPeris/Documents/maya/2026/scripts/site-packages",
+      "C:\\Program Files\\Autodesk\\Maya2026",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\ATF\\scripts",
+      "C:\\Program Files\\Common Files\\Autodesk\\ApplicationPlugins\\mtoa\\Contents\\scripts",
+      "C:\\Program Files\\Autodesk\\Bifrost\\Maya2026\\2.15.0.0\\bifrost\\scripts",
+      "C:\\Program Files\\Common Files\\Autodesk\\ApplicationPlugins\\bifrost\\Contents\\scripts",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\BonusTools\\scripts",
+      "C:\\Program Files\\Autodesk\\ApplicationPlugins\\FlowRetopologyMaya2026\\Contents\\scripts",
+      "C:\\Program Files\\Autodesk\\LookdevX\\Maya\\2026\\1.10.0\\scripts",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\MASH\\scripts",
+      "C:\\Program Files\\Autodesk\\MayaUSD\\Maya2026\\0.34.5\\mayausd\\MayaUSD_0.24.11\\scripts",
+      "C:\\Program Files\\Autodesk\\ApplicationPlugins\\MayaFlow\\Contents\\scripts",
+      "C:\\Program Files\\Autodesk\\MayaUSD\\Maya2026\\0.34.5\\mayausd\\MayaUSD_0.24.11\\plugin\\adsk\\scripts",
+      "C:\\Program Files\\Autodesk\\MayaUSD\\Maya2026\\0.34.5\\mayausd\\MayaUSD_0.24.11\\lib\\scripts",
+      "C:\\Program Files\\Autodesk\\MayaUSD\\Maya2026\\0.34.5\\mayausd\\USD_0.24.11\\lib\\python",
+      "C:\\Users\\LaiaPeris\\Documents\\maya\\modules\\brSmoothWeights\\scripts",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\fbx\\scripts",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\camd\\scripts",
+      "C:\\Program Files\\Autodesk\\Arnold\\Maya2026\\scripts",
+      "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts",
+      "C:\\Users\\LaiaPeris\\Documents\\maya\\modules\\rampWeights\\scripts",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\sweep\\scripts",
+      "C:\\Program Files\\Autodesk\\Bifrost\\Maya2026\\2.15.0.0\\vnn\\scripts",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\xgen\\scripts",
+      "C:\\Program Files\\Autodesk\\Bifrost\\Maya2026\\2.15.0.0\\bifrost\\python\\site-packages",
+      "C:\\Program Files\\Autodesk\\Maya2026\\plug-ins\\BonusTools\\python",
+      "C:\\Program Files\\Autodesk\\LookdevX\\Maya\\2026\\1.10.0\\python",
+      "C:\\Program Files\\Autodesk\\ApplicationPlugins\\MayaFlow\\Contents",
+      "C:\\Program Files\\Autodesk\\MayaUSD\\Maya2026\\0.34.5\\mayausd\\MayaUSD_0.24.11\\lib\\python",
+      "C:\\Program Files\\Autodesk\\MayaUSD\\Maya2026\\0.34.5\\mayausd\\USD_0.24.11\\python",
+      "C:\\proyectos\\auto-rig\\autorig_tools",
+      "C:\\Program Files\\Autodesk\\Maya2026\\bin\\python311.zip",
+      "C:\\Program Files\\Autodesk\\Maya2026\\Python\\DLLs",
+      "C:\\Program Files\\Autodesk\\Maya2026\\Python\\Lib",
+      "C:\\Program Files\\Autodesk\\Maya2026\\bin",
+      "C:\\Program Files\\Autodesk\\Maya2026\\Python",
+      "C:\\Program Files\\Autodesk\\Maya2026\\Python\\Lib\\site-packages",
+      "C:\\Program Files\\Autodesk\\Maya2026\\bin\\python311.zip\\lib-tk",
+      "C:/Users/LaiaPeris/Documents/maya/2026/prefs/scripts",
+      "C:/Users/LaiaPeris/Documents/maya/2026/scripts",
+      "C:/Users/LaiaPeris/Documents/maya/scripts",
+      "C:\\Program Files\\Autodesk\\ApplicationPlugins\\MayaFlow\\Contents\\python-external-311",
+      "C:\\Program Files\\Autodesk\\Arnold\\Maya2026\\extensions",
+      "C:\\Program Files\\Autodesk\\Arnold\\Maya2026\\extensions"
+    ],
+    "belts": [
+      "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3",
+      "cinturon3_PRX",
+      "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_Shape",
+      "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed",
+      "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2",
+      "cinturones2_PRX",
+      "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_Shape",
+      "|Edward|geo_GRP|FINAL|cuerpo_geo|cinturones2|cinturones2_ShapeDeformed"
+    ],
+    "python_port": false
+  }
+}

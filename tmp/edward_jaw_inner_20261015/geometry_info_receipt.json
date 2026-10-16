@@ -1,0 +1,233 @@
+{
+  "success": true,
+  "result": {
+    "geometry": [
+      {
+        "mesh": "cabeza_high",
+        "path": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high|cabeza_high_Shape",
+        "vertices": 11475,
+        "visible": true,
+        "override": false,
+        "parents_visibility": [
+          [
+            "cabeza_high",
+            true
+          ],
+          [
+            "|Edward|geo_GRP|FINAL|cabeza_geo",
+            true
+          ]
+        ],
+        "smooth": 0,
+        "shapes": [
+          "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high|cabeza_high_Shape",
+          "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_high|cabeza_high_ShapeOrig"
+        ]
+      },
+      {
+        "mesh": "cabeza_low",
+        "path": "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low|cabeza_low_Shape",
+        "vertices": 3082,
+        "visible": false,
+        "override": false,
+        "parents_visibility": [
+          [
+            "cabeza_low",
+            false
+          ],
+          [
+            "|Edward|geo_GRP|FINAL|cabeza_geo",
+            true
+          ]
+        ],
+        "smooth": 0,
+        "shapes": [
+          "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low|cabeza_low_Shape",
+          "|Edward|geo_GRP|FINAL|cabeza_geo|cabeza_low|cabeza_low_ShapeOrig"
+        ]
+      }
+    ],
+    "jaw_controls": [
+      {
+        "node": "C_jaw_CTL",
+        "attrs": {
+          "translateX": 0.0,
+          "translateY": 0.0,
+          "translateZ": 0.0,
+          "rotateX": 44.41942630875321,
+          "rotateY": 0.0,
+          "rotateZ": 0.0,
+          "Auto_Collision": 1.0,
+          "mouthHeight": 0.5,
+          "stickyLips": 0.0,
+          "stickyFalloff": 0.20000000298023224,
+          "wrinkleDepth": 1.0,
+          "wrinkleValue": 1.0
+        }
+      },
+      {
+        "node": "C_upperLip_CTL",
+        "attrs": {
+          "translateX": -2.168404344971009e-19,
+          "translateY": 1.9096333711805755,
+          "translateZ": 0.0,
+          "rotateX": 0.0,
+          "rotateY": 0.0,
+          "rotateZ": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0,
+          "Roll": 0.0,
+          "wrinkleDepth": 1.0,
+          "wrinkleValue": 1.0
+        }
+      },
+      {
+        "node": "C_lowerLip_CTL",
+        "attrs": {
+          "translateX": 0.0,
+          "translateY": -2.6869382655856384,
+          "translateZ": 3.8817687134461e-15,
+          "rotateX": 0.0,
+          "rotateY": 0.0,
+          "rotateZ": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0,
+          "Roll": 0.0,
+          "wrinkleDepth": 1.0,
+          "wrinkleValue": 1.0
+        }
+      },
+      {
+        "node": "C_upperJaw_CTL",
+        "attrs": {
+          "translateX": 0.0,
+          "translateY": 0.0,
+          "translateZ": 0.0,
+          "rotateX": 0.0,
+          "rotateY": 0.0,
+          "rotateZ": 0.0
+        }
+      }
+    ],
+    "low_skin": {
+      "names": [
+        "C_jaw_ENV",
+        "C_upperJaw_ENV",
+        "C_upperLip00_ENV",
+        "C_upperLip00NonRot_ENV",
+        "C_lowerLip00_ENV",
+        "C_lowerLip00NonRot_ENV",
+        "R_upperLip00_ENV",
+        "R_upperLip01_ENV",
+        "R_upperLip02_ENV",
+        "R_upperLip03_ENV",
+        "R_upperLip04_ENV",
+        "R_upperLip05_ENV",
+        "R_upperLip06_ENV",
+        "R_upperLip07_ENV",
+        "R_upperLip08_ENV",
+        "R_upperLip09_ENV",
+        "R_upperLip10_ENV",
+        "R_upperLip11_ENV",
+        "R_upperLip00NonRot_ENV",
+        "R_upperLip01NonRot_ENV",
+        "R_upperLip02NonRot_ENV",
+        "R_upperLip03NonRot_ENV",
+        "R_upperLip04NonRot_ENV",
+        "R_upperLip05NonRot_ENV",
+        "R_upperLip06NonRot_ENV",
+        "R_upperLip07NonRot_ENV",
+        "R_upperLip08NonRot_ENV",
+        "R_upperLip09NonRot_ENV",
+        "R_upperLip10NonRot_ENV",
+        "R_upperLip11NonRot_ENV",
+        "R_lowerLip00_ENV",
+        "R_lowerLip01_ENV",
+        "R_lowerLip02_ENV",
+        "R_lowerLip03_ENV",
+        "R_lowerLip04_ENV",
+        "R_lowerLip05_ENV",
+        "R_lowerLip06_ENV",
+        "R_lowerLip07_ENV",
+        "R_lowerLip08_ENV",
+        "R_lowerLip09_ENV",
+        "R_lowerLip10_ENV",
+        "R_lowerLip11_ENV",
+        "R_lowerLip00NonRot_ENV",
+        "R_lowerLip01NonRot_ENV",
+        "R_lowerLip02NonRot_ENV",
+        "R_lowerLip03NonRot_ENV",
+        "R_lowerLip04NonRot_ENV",
+        "R_lowerLip05NonRot_ENV",
+        "R_lowerLip06NonRot_ENV",
+        "R_lowerLip07NonRot_ENV",
+        "R_lowerLip08NonRot_ENV",
+        "R_lowerLip09NonRot_ENV",
+        "R_lowerLip10NonRot_ENV",
+        "R_lowerLip11NonRot_ENV",
+        "L_upperLip11_ENV",
+        "L_upperLip10_ENV",
+        "L_upperLip09_ENV",
+        "L_upperLip08_ENV",
+        "L_upperLip07_ENV",
+        "L_upperLip06_ENV",
+        "L_upperLip05_ENV",
+        "L_upperLip04_ENV",
+        "L_upperLip03_ENV",
+        "L_upperLip02_ENV",
+        "L_upperLip01_ENV",
+        "L_upperLip00_ENV",
+        "L_upperLip11NonRot_ENV",
+        "L_upperLip10NonRot_ENV",
+        "L_upperLip09NonRot_ENV",
+        "L_upperLip08NonRot_ENV",
+        "L_upperLip07NonRot_ENV",
+        "L_upperLip06NonRot_ENV",
+        "L_upperLip05NonRot_ENV",
+        "L_upperLip04NonRot_ENV",
+        "L_upperLip03NonRot_ENV",
+        "L_upperLip02NonRot_ENV",
+        "L_upperLip01NonRot_ENV",
+        "L_upperLip00NonRot_ENV",
+        "L_lowerLip11_ENV",
+        "L_lowerLip10_ENV",
+        "L_lowerLip09_ENV",
+        "L_lowerLip08_ENV",
+        "L_lowerLip07_ENV",
+        "L_lowerLip06_ENV",
+        "L_lowerLip05_ENV",
+        "L_lowerLip04_ENV",
+        "L_lowerLip03_ENV",
+        "L_lowerLip02_ENV",
+        "L_lowerLip01_ENV",
+        "L_lowerLip00_ENV",
+        "L_lowerLip11NonRot_ENV",
+        "L_lowerLip10NonRot_ENV",
+        "L_lowerLip09NonRot_ENV",
+        "L_lowerLip08NonRot_ENV",
+        "L_lowerLip07NonRot_ENV",
+        "L_lowerLip06NonRot_ENV",
+        "L_lowerLip05NonRot_ENV",
+        "L_lowerLip04NonRot_ENV",
+        "L_lowerLip03NonRot_ENV",
+        "L_lowerLip02NonRot_ENV",
+        "L_lowerLip01NonRot_ENV",
+        "L_lowerLip00NonRot_ENV",
+        "C_freeze_ENV"
+      ],
+      "lip_influence_vertices": 402,
+      "jaw_cols": [
+        [
+          0,
+          "C_jaw_ENV"
+        ],
+        [
+          1,
+          "C_upperJaw_ENV"
+        ]
+      ]
+    }
+  }
+}

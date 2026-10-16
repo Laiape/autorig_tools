@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "result": {
+    "BLENDSHAPE": {
+      "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_BLENDSHAPE_COMPARE_v001.ma",
+      "bytes": 258076746,
+      "review_control": "Edward_BeltBlendshape_Review",
+      "attribute": "beltVariant",
+      "enum": "Original_PRX:Shared_BlendShape:Separate_BlendShapes",
+      "default": 1,
+      "variants": [
+        "blendshape_only_shared",
+        "blendshape_only_separate"
+      ],
+      "notes": "Experimental FK pose targets. New combinations, IK and scale are not certified. Use beltVariant to compare the original."
+    },
+    "SKIN": {
+      "path": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belts_SKIN_COMPARE_v001.ma",
+      "bytes": 204158343,
+      "review_control": "Edward_BeltBlendshape_Review",
+      "attribute": "beltVariant",
+      "enum": "Original_PRX:SkinClusters",
+      "default": 1,
+      "variants": [
+        "skin_only"
+      ],
+      "notes": "Experimental fitted LBS skinClusters, max eight nonzero weights per vertex. Use beltVariant to compare the original."
+    }
+  }
+}

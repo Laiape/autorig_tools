@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "result": {
+    "images": [
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_variants_20261016\\visual_roll\\open.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_variants_20261016\\visual_roll\\lower_roll.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_variants_20261016\\visual_roll\\closed_roll.png"
+    ],
+    "pose_restored": true
+  }
+}

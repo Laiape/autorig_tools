@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "result": {
+    "images": [
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_control_falloff_20261016\\visual\\current_pose.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_control_falloff_20261016\\visual\\minus60.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_control_falloff_20261016\\visual\\plus60.png",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\docs\\validation\\eyelid_control_falloff_20261016\\visual\\closed60.png"
+    ],
+    "pose_restored": true
+  }
+}

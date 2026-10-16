@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "result": {
+    "max_body_to_driver": 1.8278310640534021,
+    "max_body_to_skin": 0.0,
+    "weights": [
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "weight_connections": null
+  }
+}

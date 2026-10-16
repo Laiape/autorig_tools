@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "result": {
+    "C_masterwalk_CTL": {
+      "GLOBAL_SCALE_SEP": {
+        "value": 0,
+        "settable": false
+      },
+      "globalScale": {
+        "value": 1.0,
+        "settable": true
+      }
+    },
+    "C_character_CTL": {},
+    "Edward": {}
+  }
+}

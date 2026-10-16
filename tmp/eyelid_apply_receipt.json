@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "upgraded": [
+      "L",
+      "R"
+    ],
+    "current_joint_matrix_max_error": 5.684341886080802e-14,
+    "selection": [],
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "saved": false
+  }
+}

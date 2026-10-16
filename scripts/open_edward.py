@@ -28,10 +28,11 @@ def main():
     if cmds.file(query=True, modified=True):
         raise RuntimeError('Save the current scene before opening the included Edward rig.')
     asset = Path(__file__).resolve().parents[1] / 'maya_tools/assets/Edward'
-    scene = asset / 'scenes/Edward_working_v001.mb'
+    scene = asset / 'scenes/Edward_working_v005.mb'
     if not scene.is_file() or scene.stat().st_size < 1024:
         raise RuntimeError('Edward scene is missing; run git lfs pull before opening it.')
     cmds.workspace(str(asset), openWorkspace=True)
+    cmds.evaluator(name='cache', enable=False)
     cmds.file(str(scene), open=True)
     nodes = relink_scene_textures(asset)
     print('Edward opened; %d texture nodes resolved in this checkout.' % len(nodes))

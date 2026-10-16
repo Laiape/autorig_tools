@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "changed": [
+      "L",
+      "R"
+    ],
+    "backup": "C:/proyectos/auto-rig/recovery/eyelids_before_control_falloff_20261016_v001.mb",
+    "pose_preserved": true,
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "version": 3
+  }
+}

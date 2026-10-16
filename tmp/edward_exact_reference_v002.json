@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "poses_per_mode": 34,
+    "outputs": 60,
+    "joints": 852,
+    "missing": [
+      "C_character_CTL.scaleX",
+      "C_character_CTL.scaleY",
+      "C_character_CTL.scaleZ"
+    ]
+  }
+}

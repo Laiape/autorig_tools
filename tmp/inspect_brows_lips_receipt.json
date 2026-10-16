@@ -1,0 +1,146 @@
+{
+  "success": true,
+  "result": {
+    "pid": 40344,
+    "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Nini/scenes/Nini_dress_chains_v005.ma",
+    "modified": true,
+    "module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\eyebrow_module.py",
+    "wrinkle_module": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\bifrost_wrinkles.py",
+    "controls": {
+      "C_eyebrowMid_CTL": {},
+      "C_lowerLip00_CTL": {},
+      "C_lowerLip_CTL": {},
+      "C_upperLip00_CTL": {},
+      "C_upperLip_CTL": {},
+      "L_eyebrowInTan_CTL": {},
+      "L_eyebrowIn_CTL": {},
+      "L_eyebrowMain_CTL": {
+        "autoTangent": {
+          "value": 1.0,
+          "type": "float",
+          "default": [
+            1.0
+          ],
+          "minimum": [
+            0.0
+          ],
+          "maximum": [
+            1.0
+          ],
+          "keyable": true,
+          "lock": false,
+          "incoming": [],
+          "outgoing": [
+            "L_eyebrowOutTanAutoTan_BTA.attributesBlender",
+            "L_eyebrowInTanAutoTan_BTA.attributesBlender"
+          ]
+        }
+      },
+      "L_eyebrowMid_CTL": {},
+      "L_eyebrowOutTan_CTL": {},
+      "L_eyebrowOut_CTL": {},
+      "L_lipCorner_CTL": {},
+      "L_lowerLip00_CTL": {},
+      "L_lowerLip01_CTL": {},
+      "L_lowerLip02_CTL": {},
+      "L_lowerLip03_CTL": {},
+      "L_upperLip00_CTL": {},
+      "L_upperLip01_CTL": {},
+      "L_upperLip02_CTL": {},
+      "L_upperLip03_CTL": {},
+      "R_eyebrowInTan_CTL": {},
+      "R_eyebrowIn_CTL": {},
+      "R_eyebrowMain_CTL": {
+        "autoTangent": {
+          "value": 1.0,
+          "type": "float",
+          "default": [
+            1.0
+          ],
+          "minimum": [
+            0.0
+          ],
+          "maximum": [
+            1.0
+          ],
+          "keyable": true,
+          "lock": false,
+          "incoming": [],
+          "outgoing": [
+            "R_eyebrowOutTanAutoTan_BTA.attributesBlender",
+            "R_eyebrowInTanAutoTan_BTA.attributesBlender"
+          ]
+        }
+      },
+      "R_eyebrowMid_CTL": {},
+      "R_eyebrowOutTan_CTL": {},
+      "R_eyebrowOut_CTL": {},
+      "R_lipCorner_CTL": {},
+      "R_lowerLip00_CTL": {},
+      "R_lowerLip01_CTL": {},
+      "R_lowerLip02_CTL": {},
+      "R_lowerLip03_CTL": {},
+      "R_upperLip00_CTL": {},
+      "R_upperLip01_CTL": {},
+      "R_upperLip02_CTL": {},
+      "R_upperLip03_CTL": {}
+    },
+    "auto_nodes": [
+      "L_eyebrowAutoTanIn_RFM",
+      "L_eyebrowAutoTanOut_RFM",
+      "L_eyebrowInTanAutoTan00_RFM",
+      "L_eyebrowInTanAutoTan01_RFM",
+      "L_eyebrowInTanAutoTan02_RFM",
+      "L_eyebrowInTanAutoTanGRP_RFM",
+      "L_eyebrowInTanAutoTanInT_MUL",
+      "L_eyebrowInTanAutoTanLocalY_PMA",
+      "L_eyebrowInTanAutoTanManual_RFM",
+      "L_eyebrowInTanAutoTanOutT_MUL",
+      "L_eyebrowInTanAutoTanSum_PMA",
+      "L_eyebrowInTanAutoTanWorldY_PMA",
+      "L_eyebrowInTanAutoTan_BTA",
+      "L_eyebrowInTanAutoTan_FBF",
+      "L_eyebrowOutTanAutoTan00_RFM",
+      "L_eyebrowOutTanAutoTan01_RFM",
+      "L_eyebrowOutTanAutoTan02_RFM",
+      "L_eyebrowOutTanAutoTanGRP_RFM",
+      "L_eyebrowOutTanAutoTanInT_MUL",
+      "L_eyebrowOutTanAutoTanLocalY_PMA",
+      "L_eyebrowOutTanAutoTanManual_RFM",
+      "L_eyebrowOutTanAutoTanOutT_MUL",
+      "L_eyebrowOutTanAutoTanSum_PMA",
+      "L_eyebrowOutTanAutoTanWorldY_PMA",
+      "L_eyebrowOutTanAutoTan_BTA",
+      "L_eyebrowOutTanAutoTan_FBF",
+      "R_eyebrowAutoTanIn_RFM",
+      "R_eyebrowAutoTanOut_RFM",
+      "R_eyebrowInTanAutoTan00_RFM",
+      "R_eyebrowInTanAutoTan01_RFM",
+      "R_eyebrowInTanAutoTan02_RFM",
+      "R_eyebrowInTanAutoTanGRP_RFM",
+      "R_eyebrowInTanAutoTanInT_MUL",
+      "R_eyebrowInTanAutoTanLocalY_PMA",
+      "R_eyebrowInTanAutoTanManual_RFM",
+      "R_eyebrowInTanAutoTanOutT_MUL",
+      "R_eyebrowInTanAutoTanSum_PMA",
+      "R_eyebrowInTanAutoTanWorldY_PMA",
+      "R_eyebrowInTanAutoTan_BTA",
+      "R_eyebrowInTanAutoTan_FBF",
+      "R_eyebrowOutTanAutoTan00_RFM",
+      "R_eyebrowOutTanAutoTan01_RFM",
+      "R_eyebrowOutTanAutoTan02_RFM",
+      "R_eyebrowOutTanAutoTanGRP_RFM",
+      "R_eyebrowOutTanAutoTanInT_MUL",
+      "R_eyebrowOutTanAutoTanLocalY_PMA",
+      "R_eyebrowOutTanAutoTanManual_RFM",
+      "R_eyebrowOutTanAutoTanOutT_MUL",
+      "R_eyebrowOutTanAutoTanSum_PMA",
+      "R_eyebrowOutTanAutoTanWorldY_PMA",
+      "R_eyebrowOutTanAutoTan_BTA",
+      "R_eyebrowOutTanAutoTan_FBF"
+    ],
+    "selection": [
+      "L_ankleIk_CTL"
+    ]
+  }
+}

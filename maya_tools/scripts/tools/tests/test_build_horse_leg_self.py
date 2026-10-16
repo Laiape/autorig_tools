@@ -14,7 +14,7 @@ def check(label, ok, detail=""):
         fails.append(label)
 
 # ── contexto de personaje + estructura minima que el modulo lee del cache ──
-cmds.optionVar(sv=("currentAssetRigName", "horse"))
+cmds.optionVar(sv=("currentAssetRigName", "Horse"))
 cmds.file(new=True, force=True)
 
 modules_grp = cmds.createNode("transform", name="modules_GRP")
@@ -327,7 +327,7 @@ for side in ("L", "R"):
 
 # ── escápula automática: superficie de guías, hueso rígido, auto por compresión ──
 from maya_tools.scripts.utils import guides_manager as _gmv
-_, _gd = _gmv._load_guides_file("horse")
+_, _gd = _gmv._load_guides_file("Horse")
 for side in ("L", "R"):
     b = f"{side}_scapula"
     master = f"{b}Master_CTL"
@@ -336,7 +336,7 @@ for side in ("L", "R"):
     check(f"{side} escapula: nodos", all(cmds.objExists(n) for n in (master, ctl, jnt, f"{b}Surface_NURB")))
     check(f"{side} escapula: attrs", all(cmds.attributeQuery(a, node=ctl, exists=True)
           for a in ("Auto_Scapula", "Multiply_Amount", "TranslateValue", "RotateValue")))
-    gm = _gd["horse"][f"{side}_scapula_JNT"]["joint_matrix"]
+    gm = _gd["Horse"][f"{side}_scapula_JNT"]["joint_matrix"]
     guide_p = om.MVector(gm[12], gm[13], gm[14])
     d_rest = (_wpos(jnt) - guide_p).length()
     check(f"{side} escapula: reposo sobre la guia", d_rest < 1e-3, "d=%.4f" % d_rest)

@@ -1,0 +1,239 @@
+{
+  "success": true,
+  "result": [
+    {
+      "candidate": "original",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 35.5724541664434,
+        "median_ms": 35.07635000278242,
+        "p95_ms": 41.29099999408936,
+        "max_ms": 46.41570000239881,
+        "cv_percent": 7.767468085218175,
+        "samples": 120,
+        "derived_fps": 28.509237703486118
+      }
+    },
+    {
+      "candidate": "zero_influences",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 31.474517499918875,
+        "median_ms": 31.012399998871842,
+        "p95_ms": 37.416099999973085,
+        "max_ms": 40.5218000014429,
+        "cv_percent": 8.786186635408443,
+        "samples": 120,
+        "derived_fps": 32.245166450722216
+      }
+    },
+    {
+      "candidate": "safe_full",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 31.047933333563076,
+        "median_ms": 30.68715000335942,
+        "p95_ms": 35.28659999574302,
+        "max_ms": 38.829499993880745,
+        "cv_percent": 7.431419533288097,
+        "samples": 120,
+        "derived_fps": 32.58692970479588
+      }
+    },
+    {
+      "candidate": "math_static",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 35.5232583333418,
+        "median_ms": 35.146800000802614,
+        "p95_ms": 40.53420000127517,
+        "max_ms": 42.84950000146637,
+        "cv_percent": 6.900075130140136,
+        "samples": 120,
+        "derived_fps": 28.452092366222928
+      }
+    },
+    {
+      "candidate": "original",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 35.661447499902955,
+        "median_ms": 35.238100004789885,
+        "p95_ms": 41.45579999749316,
+        "max_ms": 44.669200004136655,
+        "cv_percent": 7.582375757983782,
+        "samples": 120,
+        "derived_fps": 28.378374539605453
+      }
+    },
+    {
+      "candidate": "math_static",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 35.1115575004466,
+        "median_ms": 35.016650002944516,
+        "p95_ms": 38.73429999657674,
+        "max_ms": 48.10930000530789,
+        "cv_percent": 6.714888262863135,
+        "samples": 120,
+        "derived_fps": 28.557843195048953
+      }
+    },
+    {
+      "candidate": "safe_full",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 31.457309166520037,
+        "median_ms": 31.340200002887286,
+        "p95_ms": 34.93029999663122,
+        "max_ms": 37.53359999973327,
+        "cv_percent": 6.502819280820516,
+        "samples": 120,
+        "derived_fps": 31.907901031514566
+      }
+    },
+    {
+      "candidate": "zero_influences",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 31.81123333361029,
+        "median_ms": 31.845450001128484,
+        "p95_ms": 34.854499994253274,
+        "max_ms": 37.35179999785032,
+        "cv_percent": 5.708566892647363,
+        "samples": 120,
+        "derived_fps": 31.40166020466232
+      }
+    },
+    {
+      "candidate": "original",
+      "wrinkles": false,
+      "timing": {
+        "mean_ms": 35.64047249989623,
+        "median_ms": 35.51874999902793,
+        "p95_ms": 39.62630000023637,
+        "max_ms": 42.61680000490742,
+        "cv_percent": 6.185031269152736,
+        "samples": 120,
+        "derived_fps": 28.1541439388314
+      }
+    },
+    {
+      "candidate": "original",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 113.42958999982027,
+        "median_ms": 113.93205000058515,
+        "p95_ms": 126.5373999995063,
+        "max_ms": 150.62410000246018,
+        "cv_percent": 8.97326494792829,
+        "samples": 120,
+        "derived_fps": 8.777161474711146
+      }
+    },
+    {
+      "candidate": "zero_influences",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 122.10236583268852,
+        "median_ms": 121.64080000002286,
+        "p95_ms": 137.5421999982791,
+        "max_ms": 151.35709999594837,
+        "cv_percent": 8.067124879825124,
+        "samples": 120,
+        "derived_fps": 8.220925873554037
+      }
+    },
+    {
+      "candidate": "safe_full",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 127.2667249998752,
+        "median_ms": 125.49239999862039,
+        "p95_ms": 148.1883000014932,
+        "max_ms": 162.3302000007243,
+        "cv_percent": 9.20688018956049,
+        "samples": 120,
+        "derived_fps": 7.968610051373578
+      }
+    },
+    {
+      "candidate": "math_static",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 128.2343333332392,
+        "median_ms": 126.99109999812208,
+        "p95_ms": 149.66160000039963,
+        "max_ms": 163.4838999962085,
+        "cv_percent": 9.4274844625569,
+        "samples": 120,
+        "derived_fps": 7.874567587923782
+      }
+    },
+    {
+      "candidate": "original",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 122.88549583299755,
+        "median_ms": 122.52784999873256,
+        "p95_ms": 138.32900000124937,
+        "max_ms": 144.01409999845782,
+        "cv_percent": 7.562456159096155,
+        "samples": 120,
+        "derived_fps": 8.161409834664887
+      }
+    },
+    {
+      "candidate": "math_static",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 102.43220000023332,
+        "median_ms": 99.85574999882374,
+        "p95_ms": 126.28110000514425,
+        "max_ms": 155.54030000203056,
+        "cv_percent": 12.722592259604676,
+        "samples": 120,
+        "derived_fps": 10.014445838239457
+      }
+    },
+    {
+      "candidate": "safe_full",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 96.57385999980761,
+        "median_ms": 94.67269999731798,
+        "p95_ms": 110.89029999857303,
+        "max_ms": 157.27330000663642,
+        "cv_percent": 10.981459136791493,
+        "samples": 120,
+        "derived_fps": 10.562707095375218
+      }
+    },
+    {
+      "candidate": "zero_influences",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 96.83168750004067,
+        "median_ms": 96.08079999452457,
+        "p95_ms": 117.28759999823524,
+        "max_ms": 123.37839999963762,
+        "cv_percent": 9.790590105615866,
+        "samples": 120,
+        "derived_fps": 10.407906679138682
+      }
+    },
+    {
+      "candidate": "original",
+      "wrinkles": true,
+      "timing": {
+        "mean_ms": 99.86766333331616,
+        "median_ms": 98.28919999927166,
+        "p95_ms": 116.80100000376115,
+        "max_ms": 129.7476999970968,
+        "cv_percent": 9.40286403737864,
+        "samples": 120,
+        "derived_fps": 10.174057780584338
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "result": {
+    "poses": {
+      "neutral": {
+        "primary_max_error_cm": 0.0,
+        "retained_area_max_error_cm": 0.0,
+        "expression_zone_max_wrinkle_cm": 3.159046173095703e-05,
+        "overall_max_wrinkle_cm": 3.159046173095703e-05
+      },
+      "brow_up": {
+        "primary_max_error_cm": 0.0,
+        "retained_area_max_error_cm": 0.0,
+        "expression_zone_max_wrinkle_cm": 0.3128177857125187,
+        "overall_max_wrinkle_cm": 0.3128177857125187
+      },
+      "brow_in": {
+        "primary_max_error_cm": 0.0,
+        "retained_area_max_error_cm": 0.0,
+        "expression_zone_max_wrinkle_cm": 1.30268733460153,
+        "overall_max_wrinkle_cm": 1.30268733460153
+      },
+      "brow_down": {
+        "primary_max_error_cm": 0.0,
+        "retained_area_max_error_cm": 0.0,
+        "expression_zone_max_wrinkle_cm": 0.42764766210373534,
+        "overall_max_wrinkle_cm": 0.42764766210373534
+      },
+      "smile": {
+        "primary_max_error_cm": 0.0,
+        "retained_area_max_error_cm": 0.0,
+        "expression_zone_max_wrinkle_cm": 0.024786495363868323,
+        "overall_max_wrinkle_cm": 0.024786495363868323
+      }
+    },
+    "retained_patterns_exact": true,
+    "retained_rest_exact": true,
+    "removed_patterns_zero": true,
+    "removed_controller_masks_absent": true
+  }
+}

@@ -1,0 +1,503 @@
+{
+  "success": true,
+  "result": {
+    "pid": 55092,
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/all_prx_bakes_20261016_v001/Edward_all_PRX_SKIN_COMPARE_v001.ma",
+    "modified": true,
+    "frame": 0.0,
+    "selection": [
+      "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_ANM|R_hipFk_CTL"
+    ],
+    "skins": {
+      "C_body_SKC_COPY_COPY": {
+        "method": 2,
+        "geometry": [
+          "cuerpo_base_Shape"
+        ]
+      },
+      "C_cheeks_high_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_cheeks_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "cabeza_low_Shape"
+        ]
+      },
+      "C_corneas_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "corneas_geo_Shape"
+        ]
+      },
+      "C_ear_nose_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_eyebrows_local_SKC": {
+        "method": 1,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_eyelashes_global_SKC": {
+        "method": 0,
+        "geometry": [
+          "pestanas_geo_Shape"
+        ]
+      },
+      "C_eyelashes_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "pestanas_geo_Shape"
+        ]
+      },
+      "C_eyelids_local_SKC": {
+        "method": 1,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_eyes_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "ojos_high_Shape"
+        ]
+      },
+      "C_guantes_SKC": {
+        "method": 0,
+        "geometry": [
+          "pasted__GUANTES2_Shape"
+        ]
+      },
+      "C_hair_SKC": {
+        "method": 0,
+        "geometry": [
+          "cabello_geo_Shape"
+        ]
+      },
+      "C_head_global_SKC": {
+        "method": 0,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_lowerLipOffset_SKIN": {
+        "method": 0,
+        "geometry": [
+          "C_lowerLipOffset_CRVShape"
+        ]
+      },
+      "C_lowerLip_SKIN": {
+        "method": 0,
+        "geometry": [
+          "C_lowerLip_CRVShape_CRV"
+        ]
+      },
+      "C_lowerNurbs_SKIN": {
+        "method": 0,
+        "geometry": [
+          "C_lowerLip_NURBShape"
+        ]
+      },
+      "C_mouth_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_nose_high_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_nose_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "cabeza_low_Shape"
+        ]
+      },
+      "C_pants_SKC": {
+        "method": 2,
+        "geometry": [
+          "pantalon_geo_Shape"
+        ]
+      },
+      "C_sockets_high_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "EdwardWrinklesGraphShape"
+        ]
+      },
+      "C_sockets_local_SKC": {
+        "method": 0,
+        "geometry": [
+          "cabeza_low_Shape"
+        ]
+      },
+      "C_upperLipOffset_SKIN": {
+        "method": 0,
+        "geometry": [
+          "C_upperLipOffset_CRVShape"
+        ]
+      },
+      "C_upperLip_SKIN": {
+        "method": 0,
+        "geometry": [
+          "C_upperLip_CRVShape_CRV"
+        ]
+      },
+      "C_upperNurbs_SKIN": {
+        "method": 0,
+        "geometry": [
+          "C_upperLip_NURBShape"
+        ]
+      },
+      "L_lowerEyelid_SKIN": {
+        "method": 0,
+        "geometry": [
+          "L_eyelidDownPose_CRVShape"
+        ]
+      },
+      "L_shin_guard_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface886_Shape"
+        ]
+      },
+      "L_shoe_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface887_Shape"
+        ]
+      },
+      "L_shoe_sole_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface885_Shape"
+        ]
+      },
+      "L_upperEyelid_SKIN": {
+        "method": 0,
+        "geometry": [
+          "L_eyelidUpPose_CRVShape"
+        ]
+      },
+      "R_lowerEyelid_SKIN": {
+        "method": 0,
+        "geometry": [
+          "R_eyelidDownPose_CRVShape"
+        ]
+      },
+      "R_shin_guard_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface92_Shape"
+        ]
+      },
+      "R_upperEyelid_SKIN": {
+        "method": 0,
+        "geometry": [
+          "R_eyelidUpPose_CRVShape"
+        ]
+      },
+      "brazaletes1_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "brazaletes1_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "cinturon3_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "cinturon3_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "cinturones2_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "cinturones2_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "collar1_BAKED_SKC": {
+        "method": 0,
+        "geometry": [
+          "collar1_Shape"
+        ]
+      },
+      "collar2_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "collar2_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "collar3_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "collar3_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "harapo1_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "harapo1_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "harapo2_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "harapo2_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "pCube26_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "pCube26_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "pCylinder16_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "pCylinder16_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "pasted__brazaletes3_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "pasted__brazaletes3_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface32_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "polySurface32_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface33_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface33_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface48_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface48_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface49_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface49_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface58_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface58_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface61_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface61_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface62_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "polySurface62_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface889_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "polySurface889_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface892_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "polySurface892_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface900_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "polySurface900_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "polySurface905_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "polySurface905_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "skinCluster1": {
+        "method": 0,
+        "geometry": [
+          "polySurface891_Shape"
+        ]
+      },
+      "skinCluster8": {
+        "method": 0,
+        "geometry": [
+          "HEBILLAsmun1_Shape"
+        ]
+      },
+      "skinCluster9": {
+        "method": 0,
+        "geometry": [
+          "tiras39_Shape"
+        ]
+      },
+      "skinCluster10": {
+        "method": 0,
+        "geometry": [
+          "braz3_Shape"
+        ]
+      },
+      "skinCluster13": {
+        "method": 0,
+        "geometry": [
+          "HEBILLAS1_Shape"
+        ]
+      },
+      "skinCluster20": {
+        "method": 1,
+        "geometry": [
+          "cables1_Shape"
+        ]
+      },
+      "skinCluster27": {
+        "method": 0,
+        "geometry": [
+          "pCube9_Shape"
+        ]
+      },
+      "skinCluster28": {
+        "method": 0,
+        "geometry": [
+          "polySurface72_Shape"
+        ]
+      },
+      "skinCluster29": {
+        "method": 0,
+        "geometry": [
+          "pCylinder10_Shape"
+        ]
+      },
+      "skinCluster30": {
+        "method": 0,
+        "geometry": [
+          "polySurface89_Shape"
+        ]
+      },
+      "skinCluster31": {
+        "method": 0,
+        "geometry": [
+          "polySurface79_Shape"
+        ]
+      },
+      "skinCluster32": {
+        "method": 0,
+        "geometry": [
+          "polySurface88_Shape"
+        ]
+      },
+      "skinCluster36": {
+        "method": 0,
+        "geometry": [
+          "polySurface87_Shape"
+        ]
+      },
+      "skinCluster37": {
+        "method": 0,
+        "geometry": [
+          "polySurface93_Shape"
+        ]
+      },
+      "skinCluster38": {
+        "method": 0,
+        "geometry": [
+          "polySurface84_Shape"
+        ]
+      },
+      "skinCluster39": {
+        "method": 0,
+        "geometry": [
+          "polySurface94_Shape"
+        ]
+      },
+      "skinCluster40": {
+        "method": 0,
+        "geometry": [
+          "polySurface82_Shape"
+        ]
+      },
+      "skinCluster41": {
+        "method": 0,
+        "geometry": [
+          "cabeza_low_Shape"
+        ]
+      },
+      "skinCluster42": {
+        "method": 0,
+        "geometry": [
+          "encia_sup_low_Shape"
+        ]
+      },
+      "skinCluster43": {
+        "method": 0,
+        "geometry": [
+          "Encia_inf_low_Shape"
+        ]
+      },
+      "skinCluster44": {
+        "method": 0,
+        "geometry": [
+          "LenguaLow2_Shape"
+        ]
+      },
+      "skinCluster45": {
+        "method": 0,
+        "geometry": [
+          "encia_sup_low_Shape"
+        ]
+      },
+      "skinCluster46": {
+        "method": 0,
+        "geometry": [
+          "Encia_inf_low_Shape"
+        ]
+      },
+      "skinCluster47": {
+        "method": 0,
+        "geometry": [
+          "LenguaLow2_Shape"
+        ]
+      },
+      "tiras30_PRX_BAKED_TEST_SKC": {
+        "method": 1,
+        "geometry": [
+          "tiras30_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      },
+      "tiras31_PRX_BAKED_TEST_SKC": {
+        "method": 0,
+        "geometry": [
+          "tiras31_ALLPRX_SKIN_TEST_ShapeDeformed"
+        ]
+      }
+    },
+    "method_enum": [
+      "Classic Linear:Dual Quaternion:Weight Blended"
+    ]
+  }
+}

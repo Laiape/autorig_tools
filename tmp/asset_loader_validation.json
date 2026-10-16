@@ -1,0 +1,27 @@
+{
+  "guides": {
+    "Anne": 157,
+    "Chihuahua": 115,
+    "Edward": 146,
+    "Freya": 92,
+    "Giraffe": 29,
+    "Horse": 56,
+    "Jamal": 170,
+    "Maui": 188,
+    "Mechanic": 90,
+    "Moana": 188,
+    "Nini": 142,
+    "Spot": 92,
+    "Thaiz": 170
+  },
+  "models": {
+    "Horse": {
+      "meshes": 176,
+      "model": "CHAR_Horse_v001.ma"
+    },
+    "Thaiz": {
+      "meshes": 20,
+      "model": "CHAR_Thaiz_v0001.ma"
+    }
+  }
+}

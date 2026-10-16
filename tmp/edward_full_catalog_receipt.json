@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "result": {
+    "nodes": 16547,
+    "modules": [
+      "C_cheekbone",
+      "C_ear",
+      "C_eyebrow",
+      "C_eyelid",
+      "C_jaw",
+      "C_neck",
+      "C_nose",
+      "C_spine",
+      "C_teeth",
+      "C_tongue",
+      "L_arm",
+      "L_clavicle",
+      "L_fingers",
+      "L_leg",
+      "R_arm",
+      "R_clavicle",
+      "R_fingers",
+      "R_leg"
+    ],
+    "skins": 58,
+    "meshes": 118,
+    "scene_bytes": 171412928,
+    "memory": {
+      "working_set_bytes": 2520182784,
+      "private_bytes": 7723220992,
+      "peak_working_set_bytes": 5660659712
+    }
+  }
+}

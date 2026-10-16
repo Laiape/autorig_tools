@@ -1,0 +1,235 @@
+{
+  "success": true,
+  "result": [
+    {
+      "label": "gpu_normal",
+      "wrinkles": false,
+      "max_error": 0.13634877817520413,
+      "accepted": false,
+      "query": {}
+    },
+    {
+      "label": "gpu_collars_on",
+      "wrinkles": false,
+      "max_error": 0.13631442526070692,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "on",
+          "on"
+        ],
+        "status": [
+          "Blocked",
+          "Blocked"
+        ]
+      }
+    },
+    {
+      "label": "gpu_collars_upstream_mesh",
+      "wrinkles": false,
+      "max_error": 0.13634877817520413,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "off",
+          "off"
+        ],
+        "status": [
+          "GPU Active",
+          "GPU Active"
+        ]
+      }
+    },
+    {
+      "label": "gpu_collar_outputs_upstream",
+      "wrinkles": false,
+      "max_error": 0.13634877817520413,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "upstream",
+          "upstream",
+          "upstream"
+        ],
+        "status": [
+          "Blocked",
+          "Blocked",
+          "Mesh too small|Blocked"
+        ]
+      }
+    },
+    {
+      "label": "gpu_all_prx_on",
+      "wrinkles": false,
+      "max_error": 0.13631442526070692,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on"
+        ],
+        "status": [
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Mesh too small|Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Mesh too small|Blocked",
+          "Mesh too small|Blocked",
+          "Mesh too small|Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked"
+        ]
+      }
+    },
+    {
+      "label": "gpu_normal",
+      "wrinkles": true,
+      "max_error": 0.13634877817520413,
+      "accepted": false,
+      "query": {}
+    },
+    {
+      "label": "gpu_collars_on",
+      "wrinkles": true,
+      "max_error": 0.13631442526070692,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "on",
+          "on"
+        ],
+        "status": [
+          "Blocked",
+          "Blocked"
+        ]
+      }
+    },
+    {
+      "label": "gpu_collars_upstream_mesh",
+      "wrinkles": true,
+      "max_error": 0.13634877817520413,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "off",
+          "off"
+        ],
+        "status": [
+          "GPU Active",
+          "GPU Active"
+        ]
+      }
+    },
+    {
+      "label": "gpu_collar_outputs_upstream",
+      "wrinkles": true,
+      "max_error": 0.13634877817520413,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "upstream",
+          "upstream",
+          "upstream"
+        ],
+        "status": [
+          "Blocked",
+          "Blocked",
+          "Mesh too small|Blocked"
+        ]
+      }
+    },
+    {
+      "label": "gpu_all_prx_on",
+      "wrinkles": true,
+      "max_error": 0.13631442526070692,
+      "accepted": false,
+      "query": {
+        "policy": [
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on",
+          "on"
+        ],
+        "status": [
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Mesh too small|Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Mesh too small|Blocked",
+          "Mesh too small|Blocked",
+          "Mesh too small|Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked",
+          "Blocked"
+        ]
+      }
+    }
+  ]
+}

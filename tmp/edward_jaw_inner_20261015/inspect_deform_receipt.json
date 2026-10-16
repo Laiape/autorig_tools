@@ -1,0 +1,239 @@
+{
+  "success": true,
+  "result": {
+    "wraps": [
+      "brazaletes1_PRX",
+      "cinturon3_PRX",
+      "cinturones2_PRX",
+      "collar2_PRX",
+      "collar3_PRX",
+      "harapo1_PRX",
+      "harapo2_PRX",
+      "pCube26_PRX",
+      "pCylinder16_PRX",
+      "pasted__brazaletes3_PRX",
+      "polySurface32_PRX",
+      "polySurface33_PRX",
+      "polySurface48_PRX",
+      "polySurface49_PRX",
+      "polySurface58_PRX",
+      "polySurface61_PRX",
+      "polySurface62_PRX",
+      "polySurface889_PRX",
+      "polySurface892_PRX",
+      "polySurface900_PRX",
+      "polySurface905_PRX",
+      "tiras30_PRX",
+      "tiras31_PRX"
+    ],
+    "skins": [
+      "C_body_SKC_COPY_COPY",
+      "C_cheeks_high_local_SKC",
+      "C_cheeks_local_SKC",
+      "C_corneas_local_SKC",
+      "C_ear_nose_local_SKC",
+      "C_eyebrows_local_SKC",
+      "C_eyelashes_global_SKC",
+      "C_eyelashes_local_SKC",
+      "C_eyelids_local_SKC",
+      "C_eyes_local_SKC",
+      "C_guantes_SKC",
+      "C_hair_SKC",
+      "C_head_global_SKC",
+      "C_lowerLipOffset_SKIN",
+      "C_lowerLip_SKIN",
+      "C_lowerNurbs_SKIN",
+      "C_mouth_local_SKC",
+      "C_nose_high_local_SKC",
+      "C_nose_local_SKC",
+      "C_pants_SKC",
+      "C_sockets_high_local_SKC",
+      "C_sockets_local_SKC",
+      "C_upperLipOffset_SKIN",
+      "C_upperLip_SKIN",
+      "C_upperNurbs_SKIN",
+      "L_lowerEyelid_SKIN",
+      "L_shin_guard_SKC",
+      "L_shoe_SKC",
+      "L_shoe_sole_SKC",
+      "L_upperEyelid_SKIN",
+      "R_lowerEyelid_SKIN",
+      "R_shin_guard_SKC",
+      "R_upperEyelid_SKIN",
+      "collar1_BAKED_SKC",
+      "skinCluster1",
+      "skinCluster8",
+      "skinCluster9",
+      "skinCluster10",
+      "skinCluster13",
+      "skinCluster20",
+      "skinCluster27",
+      "skinCluster28",
+      "skinCluster29",
+      "skinCluster30",
+      "skinCluster31",
+      "skinCluster32",
+      "skinCluster36",
+      "skinCluster37",
+      "skinCluster38",
+      "skinCluster39",
+      "skinCluster40",
+      "skinCluster41",
+      "skinCluster42",
+      "skinCluster43",
+      "skinCluster44",
+      "skinCluster45",
+      "skinCluster46",
+      "skinCluster47"
+    ],
+    "bs": [
+      {
+        "node": "cabeza_low_poseCorrectives_BLS",
+        "geometry": [
+          "cabeza_low_Shape"
+        ],
+        "aliases": [
+          "C_jaw_RX30_BLS",
+          "weight[0]"
+        ],
+        "targets": [
+          {
+            "index": 0,
+            "alias": "C_jaw_RX30_BLS",
+            "weight": 1.0,
+            "mode": 1,
+            "delta_count": 875,
+            "mask_entries": 0,
+            "mask_non_one": []
+          }
+        ]
+      },
+      {
+        "node": "cuerpo_base_poseCorrectives_BLS",
+        "geometry": [
+          "polySurfaceShape1"
+        ],
+        "aliases": null,
+        "targets": [
+          {
+            "index": 0,
+            "alias": null,
+            "weight": 1.0,
+            "mode": 1,
+            "delta_count": 829,
+            "mask_entries": 0,
+            "mask_non_one": []
+          },
+          {
+            "index": 1,
+            "alias": null,
+            "weight": 1.0,
+            "mode": 1,
+            "delta_count": 535,
+            "mask_entries": 0,
+            "mask_non_one": []
+          },
+          {
+            "index": 2,
+            "alias": null,
+            "weight": 1.0,
+            "mode": 1,
+            "delta_count": 809,
+            "mask_entries": 0,
+            "mask_non_one": []
+          },
+          {
+            "index": 3,
+            "alias": null,
+            "weight": 1.0,
+            "mode": 1,
+            "delta_count": 591,
+            "mask_entries": 0,
+            "mask_non_one": []
+          }
+        ]
+      }
+    ],
+    "lip_nodes": [
+      "C_lowerLip_NURBShape",
+      "C_lowerLip_NURBShapeOrig",
+      "C_upperLip_NURBShape",
+      "C_upperLip_NURBShapeOrig"
+    ],
+    "cameras": [
+      {
+        "panel": "modelPanel1",
+        "camera": "top",
+        "visible": false
+      },
+      {
+        "panel": "modelPanel2",
+        "camera": "side",
+        "visible": false
+      },
+      {
+        "panel": "modelPanel3",
+        "camera": "front",
+        "visible": false
+      },
+      {
+        "panel": "modelPanel4",
+        "camera": "persp",
+        "visible": true
+      }
+    ],
+    "history": {
+      "cabeza_high": [
+        "C_head_global_SKC",
+        "C_sockets_high_local_SKC",
+        "C_nose_high_local_SKC",
+        "C_cheeks_high_local_SKC",
+        "C_mouth_local_SKC",
+        "C_ear_nose_local_SKC",
+        "C_eyelids_local_SKC",
+        "C_eyebrows_local_SKC",
+        "R_upperEyelid_SKIN",
+        "R_upperEyelidBlink_BLS",
+        "R_eyelidBlink_BLS",
+        "R_lowerEyelid_SKIN",
+        "R_lowerEyelidBlink_BLS",
+        "L_upperEyelid_SKIN",
+        "L_upperEyelidBlink_BLS",
+        "L_eyelidBlink_BLS",
+        "L_lowerEyelid_SKIN",
+        "L_lowerEyelidBlink_BLS",
+        "C_upperNurbs_SKIN",
+        "C_upperLip_SKIN",
+        "C_upperLipOffset_SKIN",
+        "C_lowerNurbs_SKIN",
+        "C_lowerLip_SKIN",
+        "C_lowerLipOffset_SKIN"
+      ],
+      "cabeza_low": [
+        "C_sockets_local_SKC",
+        "C_nose_local_SKC",
+        "C_cheeks_local_SKC",
+        "cabeza_low_poseCorrectives_BLS",
+        "skinCluster41",
+        "C_upperNurbs_SKIN",
+        "C_upperLip_SKIN",
+        "C_upperLipOffset_SKIN",
+        "C_lowerNurbs_SKIN",
+        "C_lowerLip_SKIN",
+        "C_lowerLipOffset_SKIN",
+        "L_lowerEyelid_SKIN",
+        "L_lowerEyelidBlink_BLS",
+        "L_eyelidBlink_BLS",
+        "L_upperEyelid_SKIN",
+        "L_upperEyelidBlink_BLS",
+        "R_lowerEyelid_SKIN",
+        "R_lowerEyelidBlink_BLS",
+        "R_eyelidBlink_BLS",
+        "R_upperEyelid_SKIN",
+        "R_upperEyelidBlink_BLS"
+      ]
+    },
+    "backup": "C:\\proyectos\\auto-rig\\tmp\\edward_jaw_inner_20261015\\Before_Edward_JawInnerLips.mb",
+    "image": "C:\\proyectos\\auto-rig\\tmp\\edward_jaw_inner_20261015\\before_view.png"
+  }
+}

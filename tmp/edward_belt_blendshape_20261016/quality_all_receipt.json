@@ -1,0 +1,323 @@
+{
+  "success": true,
+  "result": {
+    "tolerance": 0.0001,
+    "units": "cm",
+    "cases": 180,
+    "rows": 2880,
+    "summary": {
+      "shared": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 7.864199877963372e-06,
+            "worst_pose": "C_localHip_CTL_rotateX_25",
+            "rms_at_worst": 1.8084208721021664e-06,
+            "max_face_vertex_normal": 1.4143549221357443e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.06521841461920304,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.031088002577677066,
+            "max_face_vertex_normal": 0.009023607144377988,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 17.097140412921263,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.968432075325664,
+            "max_face_vertex_normal": 0.05195477685370846,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 1.52587890625e-05,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 3.147553334347893e-07,
+            "max_face_vertex_normal": 1.5870800005073538e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.053642818630738616,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.009782236319083015,
+            "max_face_vertex_normal": 0.0021352324011157052,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 0.9950649910909783,
+            "worst_pose": "root_nonuniform_scale_probe",
+            "rms_at_worst": 0.2983324129695665,
+            "max_face_vertex_normal": 0.23667479445223083,
+            "samples": 10
+          }
+        }
+      },
+      "separate": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 7.864199877963372e-06,
+            "worst_pose": "C_localHip_CTL_rotateX_25",
+            "rms_at_worst": 1.8084208721021664e-06,
+            "max_face_vertex_normal": 1.4143549221357443e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.06521841461920304,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.031088002577677066,
+            "max_face_vertex_normal": 0.009023607144377988,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 17.097140412921263,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.968432075325664,
+            "max_face_vertex_normal": 0.05195477685370846,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 1.52587890625e-05,
+            "worst_pose": "C_spine03_CTL_rotateY_-20",
+            "rms_at_worst": 3.147553334347893e-07,
+            "max_face_vertex_normal": 1.5870800005073538e-05,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.053642818630738616,
+            "worst_pose": "held_combination_07",
+            "rms_at_worst": 0.009782236319083015,
+            "max_face_vertex_normal": 0.0021352324011157052,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 0.9950649910909783,
+            "worst_pose": "root_nonuniform_scale_probe",
+            "rms_at_worst": 0.2983324129695665,
+            "max_face_vertex_normal": 0.23667479445223083,
+            "samples": 10
+          }
+        }
+      },
+      "blendshape_only_shared": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 2.384185791015625e-07,
+            "worst_pose": "C_localHip_CTL_rotateY_-25",
+            "rms_at_worst": 8.533782674182438e-09,
+            "max_face_vertex_normal": 1.3328003749250113e-07,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.12833342727900485,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.02948957507966516,
+            "max_face_vertex_normal": 0.007095480238402417,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 16.630249501442215,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.482350726117021,
+            "max_face_vertex_normal": 0.5844544189142883,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 9.5367431640625e-07,
+            "worst_pose": "C_spine03_CTL_rotateX_25",
+            "rms_at_worst": 9.264796262807067e-08,
+            "max_face_vertex_normal": 6.344312657058807e-06,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.5379844152920037,
+            "worst_pose": "held_R_shoulderFk_CTL_rotateZ_73",
+            "rms_at_worst": 0.06778787755951594,
+            "max_face_vertex_normal": 0.01099306721181985,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 42.07678670393405,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 38.46845058389027,
+            "max_face_vertex_normal": 0.5902361800631369,
+            "samples": 10
+          }
+        }
+      },
+      "blendshape_only_separate": {
+        "cinturon3": {
+          "fit": {
+            "max_position": 2.384185791015625e-07,
+            "worst_pose": "C_localHip_CTL_rotateY_-25",
+            "rms_at_worst": 8.533782674182438e-09,
+            "max_face_vertex_normal": 1.3328003749250113e-07,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.12833342727900485,
+            "worst_pose": "held_combination_03",
+            "rms_at_worst": 0.02948957507966516,
+            "max_face_vertex_normal": 0.007095480238402417,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 16.630249501442215,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 15.482350726117021,
+            "max_face_vertex_normal": 0.5844544189142883,
+            "samples": 10
+          }
+        },
+        "cinturones2": {
+          "fit": {
+            "max_position": 9.5367431640625e-07,
+            "worst_pose": "C_spine03_CTL_rotateX_25",
+            "rms_at_worst": 9.264796262807067e-08,
+            "max_face_vertex_normal": 6.344312657058807e-06,
+            "samples": 202
+          },
+          "held_out": {
+            "max_position": 0.5379844152920037,
+            "worst_pose": "held_R_shoulderFk_CTL_rotateZ_73",
+            "rms_at_worst": 0.06778787755951594,
+            "max_face_vertex_normal": 0.01099306721181985,
+            "samples": 148
+          },
+          "held_global": {
+            "max_position": 42.07678670393405,
+            "worst_pose": "root_uniform_scale_probe",
+            "rms_at_worst": 38.46845058389027,
+            "max_face_vertex_normal": 0.5902361800631369,
+            "samples": 10
+          }
+        }
+      }
+    },
+    "shared_separate_max": 0.0,
+    "invariants": {
+      "cinturon3": {
+        "reference": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "shared": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "separate": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "blendshape_only_shared": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        },
+        "blendshape_only_separate": {
+          "topology": "ba65bfb8b82069c2af8498b903068a59dda09f9fb255614292de7d67e9a84e62",
+          "uv": {
+            "map1": "c2ad221b53098b246c6aaf46be58e5da178cf4b537f25e25e3ee91c84ce582e6"
+          },
+          "edge_smoothness": "45ca11e630f8171306c4c10e6c10b79c48340b5153a8fb065280ff669ea323a3",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "70f9ee481f6bdebe88201cf6b09b411a9a4a032a76faac56928ae9f86512d58d"
+        }
+      },
+      "cinturones2": {
+        "reference": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "shared": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "separate": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "blendshape_only_shared": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        },
+        "blendshape_only_separate": {
+          "topology": "992ab1f1aecd638380210d3d289fd93bb17c311eb9eb4fad6025d453b1c4a892",
+          "uv": {
+            "map1": "ca963aedf65320be0a5fde37445bdc22d467a992e966b3b9ab5793285a9a6f87"
+          },
+          "edge_smoothness": "9151d3ef266ff963cc0b149a9b9d9252f6ff472e99d463b025fbbecd0d5820a2",
+          "materials": [
+            "pasted__pasted__pasted__complementos_mtlSG"
+          ],
+          "material_assignment": "763e0f53f3cbb438b90fc14191d5d4a79fd1bd673004fdcb28cc8c3bb2837897"
+        }
+      }
+    },
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 57.63806179999665
+  }
+}

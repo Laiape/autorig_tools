@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "result": {
+    "cases": 10,
+    "mesh_comparisons": 460,
+    "tolerance_cm": 0.0001,
+    "invariants_match": true,
+    "passed": false,
+    "seconds": 5.789030999992974
+  }
+}

@@ -4,6 +4,7 @@ import os
 import json
 import sys
 from importlib import reload
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 
 # --- DEPENDENCIAS ---
 try:
@@ -40,6 +41,7 @@ class SkinManager(object):
             except: 
                 pass
         
+        char_name = normalize_asset_name(char_name) or "Asset"
         path = os.path.join(root_github, "assets", char_name, "skin_clusters")
         return os.path.normpath(path), char_name
 

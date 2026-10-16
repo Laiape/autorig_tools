@@ -24,6 +24,10 @@ class WrinkleRegionsUI(QtWidgets.QDialog):
         row.addWidget(self.button("Load mesh",self.load_mesh));layout.addLayout(row)
         row=QtWidgets.QHBoxLayout();self.setup=QtWidgets.QComboBox();row.addWidget(self.setup)
         row.addWidget(self.button("Refresh",self.refresh));layout.addLayout(row)
+        regional = self.button('Convert to regional in-place wrinkles', self.convert_regional)
+        regional.setToolTip('Preserve fields, controls and topology; compute only assigned regions with filter support.')
+        ui_utils.action(regional, 'success')
+        layout.addWidget(regional)
         row=QtWidgets.QHBoxLayout();self.prefix=QtWidgets.QLineEdit();self.prefix.setPlaceholderText("Setup prefix")
         row.addWidget(self.prefix);row.addWidget(self.button("Create empty regions",self.create));layout.addLayout(row)
         form=QtWidgets.QFormLayout();self.region=QtWidgets.QComboBox();self.region.addItems(wrinkles.REGIONS)
@@ -86,6 +90,14 @@ class WrinkleRegionsUI(QtWidgets.QDialog):
         result=self.setup.currentData()
         if not result:raise ValueError("Create or choose a wrinkle setup.")
         return result
+
+    def convert_regional(self):
+        settings = self.current_settings()
+        result = wrinkles.migrate_regional(settings, in_place=True)
+        self.refresh(result['settings'])
+        support = result['regional_support']
+        self.status.setText('Regional output: %d/%d active vertices. Review the character before saving a new version.' %
+                            (len(support['active']), support['source_vertices']))
 
     def create(self):
         setup=presets.create(self.mesh.text(),self.prefix.text().strip())

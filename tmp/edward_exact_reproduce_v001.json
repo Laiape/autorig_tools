@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "result": {
+    "accepted": true,
+    "differences": [],
+    "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_safe_full_repeat02.mb",
+    "sha256": "0f067b4b7a965e94477fcbae89dc668a099dcc8c3a47ae79d0ee14328ab14305",
+    "scope": "Second deterministic cleanup reconstruction from frozen native inputs; not a full CREATE RIG rebuild."
+  }
+}

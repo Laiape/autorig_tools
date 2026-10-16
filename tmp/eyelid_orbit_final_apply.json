@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "result": {
+    "changed": [
+      "L",
+      "R"
+    ],
+    "backup": "C:/proyectos/auto-rig/recovery/eyelids_before_orbit_final_20261016_v001.mb",
+    "pose": {
+      "LUp": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "LDown": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "RUp": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "RDown": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma"
+  }
+}

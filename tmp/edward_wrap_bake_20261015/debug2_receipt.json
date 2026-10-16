@@ -1,0 +1,84 @@
+{
+  "result": [
+    [
+      "C_head_global_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_sockets_high_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_nose_high_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_cheeks_high_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_mouth_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_ear_nose_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_eyelids_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ],
+    [
+      "C_eyebrows_local_SKC",
+      [
+        "EdwardWrinklesGraphShape",
+        "cabeza_high_Shape"
+      ],
+      {
+        "error": "object is incompatible with MFnMesh constructor"
+      }
+    ]
+  ]
+}

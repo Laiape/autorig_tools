@@ -1,0 +1,71 @@
+{
+  "success": true,
+  "result": {
+    "C_masterwalk_CTL": {
+      "translateX": {
+        "value": 0.0,
+        "settable": true
+      },
+      "rotateY": {
+        "value": 0.0,
+        "settable": true
+      },
+      "scaleX": {
+        "value": 1.0,
+        "settable": false
+      },
+      "scaleY": {
+        "value": 1.0,
+        "settable": false
+      },
+      "scaleZ": {
+        "value": 1.0,
+        "settable": false
+      }
+    },
+    "C_character_CTL": {
+      "translateX": {
+        "value": 0.0,
+        "settable": false
+      },
+      "rotateY": {
+        "value": 0.0,
+        "settable": false
+      },
+      "scaleX": {
+        "value": 1.0,
+        "settable": false
+      },
+      "scaleY": {
+        "value": 1.0,
+        "settable": false
+      },
+      "scaleZ": {
+        "value": 1.0,
+        "settable": false
+      }
+    },
+    "Edward": {
+      "translateX": {
+        "value": 0.0,
+        "settable": true
+      },
+      "rotateY": {
+        "value": 0.0,
+        "settable": true
+      },
+      "scaleX": {
+        "value": 1.0,
+        "settable": true
+      },
+      "scaleY": {
+        "value": 1.0,
+        "settable": true
+      },
+      "scaleZ": {
+        "value": 1.0,
+        "settable": true
+      }
+    }
+  }
+}

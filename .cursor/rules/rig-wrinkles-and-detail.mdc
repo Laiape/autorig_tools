@@ -1,0 +1,52 @@
+---
+description: Wrinkle evaluation, real LOD bypass and simulation isolation
+alwaysApply: true
+---
+
+# Wrinkles and detail
+Current criteria: `maya_tools/docs/rig_performance_criteria.md`.
+- Define Animation, Review and Final/Export evaluation contracts using the same
+  controls and animation. Specify visible output, enabled work and consumers.
+- Animation must bypass expensive wrinkle/detail branches, not just hide output
+  or multiply displacement by zero. Prove skipped work using Profiler and active
+  graph/consumer checks. Connected or animated visibility can prevent pruning.
+- `rig_performance.py` supports explicit primary/detail mesh routing. Install it
+  only on owned wrinkle outputs and verify skipped compute. Final geometry must
+  have visible ancestors; hidden utility groups invalidate display benchmarks.
+- Drive garments and attachments from validated low/primary proxy geometry in
+  Animation. Route every consumer before freezing/bypassing a high branch; never
+  freeze a source that an active garment, pin, export or simulation needs.
+- Do not change connections, build nodes or invalidate the Evaluation Graph every
+  frame. Mode changes are explicit, reversible transactions at workflow boundaries.
+- Wrinkle rest neighbors, edge lengths, flow maps, masks and topology signatures
+  are computed/stored once. Recompute only after a validated model/rest change.
+- Keep compression/displacement local-space consistent and independent of rigid
+  motion. Test global/nonuniform scale so scaling does not create false wrinkles.
+- Restrict runtime work to active regions where practical. Precompute sparse
+  supports and shared fields; validate smoothing halos and region boundaries.
+  A zero dense mask does not prove that its computation was skipped.
+- Store compact runtime arrays and full editing fields separately. Encode zero
+  indices so native Maya serialization preserves them; test reopen with active
+  wrinkles, not only a neutral result. Keep one displayed head mesh.
+- Reuse normals only when their deformation stage is correct. Profile the input
+  and output normal passes before removal; displacement needs posed normals and
+  the displayed result must retain correct shading.
+- Skin/Bifrost/Maya conversion is a separate boundary. Measure transfers and
+  residency; the output does not inherit upstream GPU eligibility.
+- Put silhouette-changing folds in geometric detail. Consider shader normal/bump
+  or displacement maps for microdetail, with camera/render/contact validation.
+  Shader microdetail cannot replace silhouette, export or collision geometry.
+- Prototype native blendShape pose wrinkles or cached final geometry when the
+  measured procedural cost warrants it. Keep the editable Bifrost source and
+  preset; train/fit on separate poses and validate held-out combinations.
+- Stateful simulation/cloth/muscles require ordered evaluation and explicit cache
+  invalidation. Keep them outside the base animation rig; validate cached delivery
+  and avoid claiming random-access correctness for an uncached simulation.
+- Cached speedups require an independent CPU/DG geometry/invalidation pass.
+  The earlier regional v002 cache failed; the 2026-10-15 artist snapshot's hot
+  cache matched CPU in 11 frame jumps and two key edits with wrinkles OFF/ON.
+  These are different scene lineages. Start uncached; opt in only within matching
+  tested scene/version/edit coverage. Export still needs an explicit final gate.
+- Preserve presets, controls, rest fields and SKC provenance. Restore full
+  quality without stale results. Skin export must expose the owned primary DAG
+  branch, then restore output and garment connections.

@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_SKIN_DQ_COMPARE_v001.ma",
+    "before_scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\all_prx_bakes_20261016_v001\\dq_20261016_v001\\Edward_all_PRX_SKIN_before_DQ_v001.ma",
+    "skins_changed": 23,
+    "method": "Dual Quaternion",
+    "weights_and_blend_weights_unchanged": true,
+    "other_skin_methods_unchanged": true,
+    "frame": 0.0,
+    "selection": []
+  }
+}

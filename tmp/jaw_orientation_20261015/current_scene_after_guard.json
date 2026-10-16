@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/proyectos/auto-rig/maya_tools/assets/Edward/experiments/driver_routing_20261015_v001/Edward_body_driver.mb",
+    "modified": true,
+    "selection": [],
+    "roots": [
+      "persp",
+      "top",
+      "front",
+      "side",
+      "Edward"
+    ],
+    "aim_count": 50,
+    "old_positions": 50,
+    "meshes": [
+      "cabeza_low",
+      "cabeza_high",
+      "cuerpo_base"
+    ]
+  }
+}

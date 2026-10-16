@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "result": {
+    "changed": [
+      "L_eyelidUp_CTL",
+      "L_eyelidDown_CTL",
+      "R_eyelidUp_CTL",
+      "R_eyelidDown_CTL"
+    ],
+    "corners": [
+      {
+        "side": "L",
+        "index": 0,
+        "gap": 8.79072319410925e-14
+      },
+      {
+        "side": "L",
+        "index": 20,
+        "gap": 2.914795352890198e-14
+      },
+      {
+        "side": "R",
+        "index": 0,
+        "gap": 6.028010073543578e-14
+      },
+      {
+        "side": "R",
+        "index": 20,
+        "gap": 2.8532515735351556e-14
+      }
+    ],
+    "pose": [
+      [
+        0.0,
+        0.0,
+        -25.241064150621913
+      ]
+    ]
+  }
+}

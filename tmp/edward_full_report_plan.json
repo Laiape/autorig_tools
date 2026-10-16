@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "user_request": "Desglose completo de rendimiento y peso del rig Edward, pruebas comparadas de drivers, skinning, capas faciales, PRX, correctivas y wrinkles; informe y soluciones.",
+  "pdf": "C:\\proyectos\\auto-rig\\output\\pdf\\edward-rig-audit.pdf",
+  "canvas": "C:/Users/LaiaPeris/.cursor/projects/c-proyectos/canvases/edward-driver-routing.canvas.tsx",
+  "data": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\report_data.json",
+  "visual_qa": "Latest 19 rendered pages inspected; no clipping, overlap or orphan pages.",
+  "canvas_typecheck": "tsc --noEmit: exit 0",
+  "result": "Parallel CPU without wrinkles: 40.81 ms/f. Hot Cached Playback: 20.62 ms/f OFF and 23.20 ms/f ON, exact against CPU in 11 jumps and 2 edits. Extra driver meshes show no stable benefit. Uncached GPU differs in collars; no hybrid adopted.",
+  "restoration": {
+    "success": true,
+    "result": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|deformers_GRP|cuerpo_base_poseCorrectives_BLS_driver"
+      ],
+      "evaluation": "Parallel CPU; cache OFF, GPU deformer OFF, conservative mode after collar quality comparison",
+      "wrinkle_final_source": "EdwardWrinkles_ToMaya.mayaMesh[0]",
+      "all_original_prx_and_head_routes_match": true,
+      "temporary_animation_remaining": false,
+      "original_file_overwritten": false,
+      "snapshot": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\driver_routing_20261015_v001\\Edward_baseline.mb"
+    }
+  },
+  "pending": [],
+  "production_modules_changed": false,
+  "git_commit_or_push": false
+}

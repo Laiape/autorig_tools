@@ -1,0 +1,2 @@
+from maya import cmds
+result={'scene':cmds.file(q=True,sn=True),'modified':cmds.file(q=True,modified=True),'selection':cmds.ls(sl=True,long=True),'roots':cmds.ls(assemblies=True),'aim_count':len(cmds.ls('*Lip*Vector_AMX',type='aimMatrix') or []),'old_positions':len(cmds.ls('*Lip*Position_CMX',type='composeMatrix') or []),'meshes':[n for n in ('cabeza_low','cabeza_high','cuerpo_base') if cmds.objExists(n)]}

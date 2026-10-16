@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "frame": 0.0,
+    "selection": [
+      "|Edward|deformers_GRP|cuerpo_base_poseCorrectives_BLS_driver"
+    ],
+    "evaluation": "Parallel CPU; cache OFF, GPU deformer OFF, conservative mode after collar quality comparison",
+    "wrinkle_final_source": "EdwardWrinkles_ToMaya.mayaMesh[0]",
+    "all_original_prx_and_head_routes_match": true,
+    "temporary_animation_remaining": false,
+    "original_file_overwritten": false,
+    "snapshot": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\driver_routing_20261015_v001\\Edward_baseline.mb"
+  }
+}

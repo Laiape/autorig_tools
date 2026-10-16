@@ -1,0 +1,16 @@
+{
+  "asset": "horse",
+  "success": true,
+  "started": 1792091952.6250994,
+  "build_seconds": 11.282340899997507,
+  "maya": "2026",
+  "batch": true,
+  "root_exists": true,
+  "root": "|horse",
+  "nodes": 9936,
+  "joints": 787,
+  "skins": 11,
+  "optional_health_audit": false,
+  "timing_report": "C:\\proyectos\\auto-rig\\tmp\\exact_build_cross_character_v001\\horse\\buildtiming.json",
+  "completed": 1792091982.5996702
+}

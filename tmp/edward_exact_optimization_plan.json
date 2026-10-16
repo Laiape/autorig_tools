@@ -1,0 +1,71 @@
+{
+  "status": "delivered_scoped_exact_cleanup",
+  "delivery": {
+    "file": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\scenes\\Edward_working_v004.mb",
+    "source": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\saved_variants\\Edward_safe_full.mb",
+    "sha256": "017fdbdfa2cea01fc8a6e4b333a1c814aee286eb39e2f989045cfd0f02ae5baf",
+    "bytes": 169665824,
+    "source_snapshot": "2cab775509387ecb2f82e47382eb60168dd980f470797edd243380131c79108b",
+    "coverage": {
+      "meshes": 60,
+      "clothing_outputs": 47,
+      "joints": 852,
+      "skins": 58,
+      "prx": 23,
+      "modules": 18
+    },
+    "quality": "Original final geometry preserved; full CPU native reopen and weight roundtrip pose checks passed.",
+    "settings": "Parallel CPU; cache/GPU override OFF through AutoRig Tools profile marker; authored wrinkles ON.",
+    "changes": {
+      "shared_identical_native_math": 17,
+      "static_point_curves_baked": 5451,
+      "exact_zero_influences_removed": 474
+    },
+    "not_done": "No live artist replacement; no automatic live cleanup; no full CREATE RIG or deformer rebuild certification; no global GPU/cache approval.",
+    "evidence_folder": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001"
+  },
+  "native_quality": "0 positions / vertex normals / joint matrices across4080 mesh samples per gate, OFF/ON.",
+  "max_rest_face_vertex_normal_error": 2.1542358837725164e-07,
+  "tests": {
+    "cleanup": "tmp/test_rig_exact_cleanup_final.log",
+    "skin_manager": "tmp/test_skin_manager_api_exact_v002.log",
+    "lossless": "tmp/test_skin_lossless_export_v004.log",
+    "sparse": "tmp/test_skin_sparse_exact.log",
+    "wrinkles": "tmp/test_wrinkle_skin_roundtrip_exact_final.log"
+  },
+  "code_sha256": {
+    "autorig_tools/maya_tools/scripts/tools/rig_exact_cleanup.py": "0199034d1e9b58ef580e988b961949c99e9698bec74b35b24fc488dbc6312a2a",
+    "autorig_tools/maya_tools/scripts/tools/skin_manager_api.py": "772df5debb593ea1285bdbe27086432d4df4f1e5c2bfd495d58c51d7d9476e89",
+    "autorig_tools/maya_tools/scripts/tools/bifrost_wrinkles.py": "44ea4bfd569da07412d02c268a07300333525b9091ee924fb82c0fc0b27ea476",
+    "scripts/edward_exact_worker.py": "e78d7ce5c98734f81c4b45a4f3d21fdf3f8720cdbfc09fed05bede7e7485c440",
+    "scripts/edward_exact_persistence.py": "c81bc5f22c7c57b0a9fc22d5e5777976ee3d872eb4f2b2805be16dca2f9c5ae3"
+  },
+  "typescript": "Canvas tsc strict check passed",
+  "artist": {
+    "success": true,
+    "result": {
+      "pid": 35132,
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL"
+      ],
+      "evaluation": {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        }
+      },
+      "node_count": 16546,
+      "read_only": true,
+      "note": "User UI/frame/selection may have changed since the snapshot; no stale values are forced back."
+    }
+  },
+  "owned_trial_state": "All owned trials ended; artist PID35132 remains. Native export failure retained.",
+  "remaining_roadmap": "Bifrost conversion/backend, deeper jaw/eyelid/eyebrow/garment refactors remain separate proposals. No stable wrinkles-ON gain or full CREATE RIG certification claimed.",
+  "report": "autorig_tools/maya_tools/docs/rig_exact_optimization_results_20261015.md",
+  "canvas": "C:/Users/LaiaPeris/.cursor/projects/c-proyectos/canvases/edward-driver-routing.canvas.tsx"
+}

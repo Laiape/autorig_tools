@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Nini/scenes/Nini_dress_chains_v004.ma",
+    "frame": 1.0,
+    "settings": {
+      "collisionEnable": true,
+      "collisionBlend": 1.0,
+      "collisionMargin": 0.0,
+      "showChains": true,
+      "showColliders": false,
+      "L_thighRadius": 6.8,
+      "L_calfRadius": 4.9,
+      "R_thighRadius": 6.8,
+      "R_calfRadius": 4.9
+    },
+    "controls": {
+      "L_ankleIk_CTL": [
+        1.7763568394002505e-15,
+        13.921919103903178,
+        -8.881784197001252e-16
+      ],
+      "R_ankleIk_CTL": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "result": [
+    {
+      "mesh": "cabeza_high",
+      "skin": "C_mouth_local_SKC",
+      "edited_weights": 898,
+      "jaw_mask_edited": 898,
+      "lip_sculpt_deltas_untouched": true,
+      "max_pose_change_cm": 1.1187033512612
+    },
+    {
+      "mesh": "cabeza_low",
+      "skin": "skinCluster41",
+      "edited_weights": 220,
+      "jaw_mask_edited": 229,
+      "lip_sculpt_deltas_untouched": true,
+      "max_pose_change_cm": 1.0437902889389141
+    }
+  ]
+}

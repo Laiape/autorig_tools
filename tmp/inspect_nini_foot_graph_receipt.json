@@ -1,0 +1,115 @@
+{
+  "success": true,
+  "result": {
+    "L": {
+      "nodes": {
+        "L_legIkIkHandleManager_MMX": [
+          "L_legIkIkHandleManager_MMX.matrixIn[1]",
+          "L_ballIk_CTL.worldMatrix"
+        ],
+        "L_ballIkSC_MMT": [
+          "L_ballIkSC_MMT.matrixIn[0]",
+          "L_ballIkCtlPosition_F4FX.output",
+          "L_ballIkSC_MMT.matrixIn[1]",
+          "L_ballIk_AMX.outputMatrix"
+        ],
+        "L_toeIkSC_MMT": [
+          "L_toeIkSC_MMT.matrixIn[0]",
+          "L_toeIkCtlPosition_F4FX.output",
+          "L_toeIkSC_MMT.matrixIn[1]",
+          "L_toeIk_AMX.outputMatrix"
+        ]
+      },
+      "matrices": {
+        "L_ankle_BM.outputMatrix": [
+          56.68768315248024,
+          33.779451692322404,
+          -2.923011336910858
+        ],
+        "L_ball_BM.outputMatrix": [
+          95.17599917344236,
+          1.771599517960774,
+          7.367726760340158
+        ],
+        "L_legToe_ENV.worldMatrix[0]": [
+          95.17599917344235,
+          -1.1375649750290622,
+          11.686784428199825
+        ],
+        "L_legBallBase_MMX.matrixSum": [
+          95.1759991734424,
+          7.911047823156453,
+          -3.172717344998235
+        ],
+        "L_legIkIkHandleManager_MMX.matrixSum": [
+          95.1759991734424,
+          7.911047823156453,
+          -3.1727173449982393
+        ]
+      },
+      "blend_sources": {
+        "L_ankle_BM": [
+          "L_legIkEffectorWM_MMT.matrixSum"
+        ],
+        "L_ball_BM": [
+          "L_ballIkSC_MMT.matrixSum"
+        ]
+      }
+    },
+    "R": {
+      "nodes": {
+        "R_legIkIkHandleManager_MMX": [
+          "R_legIkIkHandleManager_MMX.matrixIn[1]",
+          "R_ballIk_CTL.worldMatrix"
+        ],
+        "R_ballIkSC_MMT": [
+          "R_ballIkSC_MMT.matrixIn[0]",
+          "R_ballIkCtlPosition_F4FX.output",
+          "R_ballIkSC_MMT.matrixIn[1]",
+          "R_ballIk_AMX.outputMatrix"
+        ],
+        "R_toeIkSC_MMT": [
+          "R_toeIkSC_MMT.matrixIn[0]",
+          "R_toeIkCtlPosition_F4FX.output",
+          "R_toeIkSC_MMT.matrixIn[1]",
+          "R_toeIk_AMX.outputMatrix"
+        ]
+      },
+      "matrices": {
+        "R_ankle_BM.outputMatrix": [
+          -7.710980000000002,
+          7.911049999999982,
+          -3.1727200000000817
+        ],
+        "R_ball_BM.outputMatrix": [
+          -7.710980000000004,
+          1.7716000000000012,
+          7.367730000000002
+        ],
+        "R_legToe_ENV.worldMatrix[0]": [
+          -7.710980000000001,
+          -1.1375599999999935,
+          11.6868
+        ],
+        "R_legBallBase_MMX.matrixSum": [
+          -7.710980000000002,
+          7.911049999999986,
+          -3.1727200000000053
+        ],
+        "R_legIkIkHandleManager_MMX.matrixSum": [
+          -7.710980000000005,
+          7.911049999999982,
+          -3.1727200000000018
+        ]
+      },
+      "blend_sources": {
+        "R_ankle_BM": [
+          "R_legIkEffectorWM_MMT.matrixSum"
+        ],
+        "R_ball_BM": [
+          "R_ballIkSC_MMT.matrixSum"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "success": true,
+  "result": {
+    "pid": 23404,
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "frame": 0.0,
+    "selection": [
+      "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyelidControllers_GRP|L_eyelidDown_GRP|L_eyelidDown_OFF|L_eyelidDown_CTL"
+    ],
+    "wraps": {
+      "brazaletes1_PRX": [
+        "brazaletes1_ShapeDeformed"
+      ],
+      "cinturon3_PRX": [
+        "cinturon3_ShapeDeformed"
+      ],
+      "cinturones2_PRX": [
+        "cinturones2_ShapeDeformed"
+      ],
+      "collar2_PRX": [
+        "collar2_ShapeDeformed"
+      ],
+      "collar3_PRX": [
+        "collar3_ShapeDeformed"
+      ],
+      "harapo1_PRX": [
+        "harapo1_ShapeDeformed"
+      ],
+      "harapo2_PRX": [
+        "harapo2_ShapeDeformed"
+      ],
+      "pCube26_PRX": [
+        "pCube26_ShapeDeformed"
+      ],
+      "pCylinder16_PRX": [
+        "pCylinder16_ShapeDeformed"
+      ],
+      "pasted__brazaletes3_PRX": [
+        "pasted__brazaletes3_ShapeDeformed"
+      ],
+      "polySurface32_PRX": [
+        "polySurface32_ShapeDeformed"
+      ],
+      "polySurface33_PRX": [
+        "polySurface33_ShapeDeformed"
+      ],
+      "polySurface48_PRX": [
+        "polySurface48_ShapeDeformed"
+      ],
+      "polySurface49_PRX": [
+        "polySurface49_ShapeDeformed"
+      ],
+      "polySurface58_PRX": [
+        "polySurface58_ShapeDeformed"
+      ],
+      "polySurface61_PRX": [
+        "polySurface61_ShapeDeformed"
+      ],
+      "polySurface62_PRX": [
+        "polySurface62_ShapeDeformed"
+      ],
+      "polySurface889_PRX": [
+        "polySurface889_ShapeDeformed"
+      ],
+      "polySurface892_PRX": [
+        "polySurface892_ShapeDeformed"
+      ],
+      "polySurface900_PRX": [
+        "polySurface900_ShapeDeformed"
+      ],
+      "polySurface905_PRX": [
+        "polySurface905_ShapeDeformed"
+      ],
+      "tiras30_PRX": [
+        "tiras30_ShapeDeformed"
+      ],
+      "tiras31_PRX": [
+        "tiras31_ShapeDeformed"
+      ]
+    },
+    "pose": {
+      "C_spine03_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0
+      },
+      "C_spine07_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0
+      },
+      "C_localHip_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0
+      },
+      "C_head_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0
+      },
+      "C_masterwalk_CTL": {
+        "translateX": 0.0,
+        "translateY": 0.0,
+        "translateZ": 0.0,
+        "rotateX": 0.0,
+        "rotateY": 0.0,
+        "rotateZ": 0.0
+      }
+    },
+    "loaded_module": null
+  }
+}

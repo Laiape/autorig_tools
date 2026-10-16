@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Edward\\scenes\\Edward_working_v003.mb",
+  "removed_nodes": 71,
+  "geometry_errors": {
+    "cabeza_low": 2.9103830456733704e-11,
+    "cabeza_high": 2.384185791015625e-07,
+    "cuerpo_base": 0.0
+  },
+  "reopen_errors": {
+    "cabeza_low": 0.0,
+    "cabeza_high": 0.0,
+    "cuerpo_base": 0.0
+  },
+  "matrix_reopen_error": 0.0,
+  "original_snapshot": "C:\\proyectos\\auto-rig\\tmp\\jaw_orientation_20261015\\artist_before_orientation.mb",
+  "active_artist_scene_changed": false
+}

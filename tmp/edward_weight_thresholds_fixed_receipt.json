@@ -1,0 +1,497 @@
+{
+  "success": true,
+  "result": [
+    {
+      "skin": "C_cheeks_high_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 14176,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.2353812636165578,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 14176,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.2353812636165578,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 14176,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.2353812636165578,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 14038,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.223355119825708,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0002
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 13895,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.2108932461873638,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0015400000000000001
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_cheeks_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 3622,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.1752109020116808,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 3622,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.1752109020116808,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 3622,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.1752109020116808,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 3588,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.164179104477612,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0002
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 3577,
+          "maximum_per_vertex": 3,
+          "mean_per_vertex": 1.1606099935107073,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00043
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_ear_nose_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 16698,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.4551633986928105,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 16698,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.4551633986928105,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 16698,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.4551633986928105,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 16411,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.430152505446623,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00011
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 15849,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.3811764705882352,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0014199999999999998
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_eyebrows_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 12723,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1087581699346405,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 12723,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1087581699346405,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 12723,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1087581699346405,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 12575,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.0958605664488017,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00016
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 12442,
+          "maximum_per_vertex": 4,
+          "mean_per_vertex": 1.0842701525054466,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00108
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_eyelids_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 12787,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1143355119825709,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 12787,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1143355119825709,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 12787,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1143355119825709,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 12629,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.1005664488017428,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00017
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 12243,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.0669281045751633,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00198
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_head_global_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 21966,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.9142483660130718,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 21966,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.9142483660130718,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 21966,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.9142483660130718,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 20525,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.7886710239651415,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00027
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 18629,
+          "maximum_per_vertex": 6,
+          "mean_per_vertex": 1.623442265795207,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0022500000000000003
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_mouth_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 31610,
+          "maximum_per_vertex": 27,
+          "mean_per_vertex": 2.7546840958605663,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 31610,
+          "maximum_per_vertex": 27,
+          "mean_per_vertex": 2.7546840958605663,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 31610,
+          "maximum_per_vertex": 27,
+          "mean_per_vertex": 2.7546840958605663,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 29701,
+          "maximum_per_vertex": 25,
+          "mean_per_vertex": 2.588322440087146,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00037
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 26754,
+          "maximum_per_vertex": 21,
+          "mean_per_vertex": 2.331503267973856,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00445
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_nose_high_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 17460,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.5215686274509803,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 17460,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.5215686274509803,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 17460,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.5215686274509803,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 16920,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.4745098039215687,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00016
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 15955,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.39041394335512,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00166
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_nose_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 4518,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.4659312134977287,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 4518,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.4659312134977287,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 4518,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.4659312134977287,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 4393,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.4253731343283582,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00016
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 4168,
+          "maximum_per_vertex": 5,
+          "mean_per_vertex": 1.3523685918234913,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0014
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_sockets_high_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 17111,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.4911546840958605,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 17111,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.4911546840958605,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 17111,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.4911546840958605,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 16307,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.4210893246187364,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00023
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 15222,
+          "maximum_per_vertex": 8,
+          "mean_per_vertex": 1.3265359477124183,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0024300000000000003
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "C_sockets_local_SKC",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 4299,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.3948734587929916,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 4299,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.3948734587929916,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 4299,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.3948734587929916,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 4127,
+          "maximum_per_vertex": 9,
+          "mean_per_vertex": 1.3390655418559376,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00014000000000000001
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 3894,
+          "maximum_per_vertex": 8,
+          "mean_per_vertex": 1.263465282284231,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00196
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    },
+    {
+      "skin": "skinCluster41",
+      "thresholds": [
+        {
+          "threshold": 0,
+          "nonzero": 7178,
+          "maximum_per_vertex": 33,
+          "mean_per_vertex": 2.3290071382219337,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-08,
+          "nonzero": 7178,
+          "maximum_per_vertex": 33,
+          "mean_per_vertex": 2.3290071382219337,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 1e-06,
+          "nonzero": 7178,
+          "maximum_per_vertex": 33,
+          "mean_per_vertex": 2.3290071382219337,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0
+        },
+        {
+          "threshold": 0.0001,
+          "nonzero": 6576,
+          "maximum_per_vertex": 26,
+          "mean_per_vertex": 2.133679428942245,
+          "maximum_discarded_absolute_sum_per_vertex": 0.0006200000000000001
+        },
+        {
+          "threshold": 0.001,
+          "nonzero": 5903,
+          "maximum_per_vertex": 21,
+          "mean_per_vertex": 1.9153147306943543,
+          "maximum_discarded_absolute_sum_per_vertex": 0.00585
+        }
+      ],
+      "minimum_nonzero_absolute_weight": 2e-05
+    }
+  ]
+}

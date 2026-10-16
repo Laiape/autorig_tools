@@ -7,6 +7,7 @@ import re
 import pathlib
 
 from maya_tools.scripts.utils import matrix_manager
+from maya_tools.scripts.utils.asset_names import normalize_asset_name
 import maya.api.OpenMaya as om
 
 # Maya commands import
@@ -132,6 +133,7 @@ def asset_path(character_name, path):
         str: The full path to the asset folder.
     """
 
+    character_name = normalize_asset_name(character_name)
     complete_path = os.path.realpath(__file__)
     sep_token = os.sep + "scripts"
     if sep_token in complete_path:
@@ -183,7 +185,7 @@ def get_character_name_from_scene(avoid=None):
         str: The character name extracted from the scene filename.
     """
 
-    asset_name = cmds.optionVar(q="currentAssetRigName")
+    asset_name = normalize_asset_name(cmds.optionVar(q="currentAssetRigName"))
     return asset_name
 
 def get_character_name_from_build():
@@ -194,7 +196,7 @@ def get_character_name_from_build():
         str: The character name extracted from the build file name.
     """
 
-    asset_name = cmds.optionVar(q="currentAssetRigName")
+    asset_name = normalize_asset_name(cmds.optionVar(q="currentAssetRigName"))
     return asset_name
 
 def get_next_version_name(folder):
@@ -260,6 +262,7 @@ def execute_folder_creation(asset_name, window_id):
     Lógica de sistema de archivos para crear las carpetas.
     """
 
+    asset_name = normalize_asset_name(asset_name)
     main_folder = asset_path(asset_name, "")
     
     # Crear carpeta principal y subcarpetas
@@ -287,7 +290,7 @@ def prepare_rig_scene():
     4. Ejecuta el proceso de construcción del Rig.
     """
     
-    character_name = cmds.optionVar(q="currentAssetRigName")
+    character_name = get_character_name_from_build()
 
     cmds.file(new=True, force=True)
     
@@ -373,6 +376,7 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
     leg_solver — si se pasa, fuerza el preset de solver de las patas por
     encima del leg_solver de los rig settings (boton SELF MATH -> "nodes").
     """
+    character_name = normalize_asset_name(character_name)
     _step = [0]
     _TOTAL = 20
 
@@ -843,7 +847,7 @@ def test_rig_by_guide():
         return
     side, core = parts[0], "_".join(parts[1:-1])
 
-    character_name = cmds.optionVar(q="currentAssetRigName")
+    character_name = get_character_name_from_build()
 
     # settings del .build (contando lo que haya en los attrs de las guías)
     get_rig_data(character_name, "C_guides_GRP")
@@ -1037,6 +1041,7 @@ def get_rig_data(character_name, guides_transform):
     """
     Exporta la data del rig a un archivo JSON en la carpeta 'build' del asset.
     """
+    character_name = normalize_asset_name(character_name)
     # Asumimos que asset_path es una función externa ya definida
     build_path = asset_path(character_name, "build") 
     if not os.path.exists(build_path):

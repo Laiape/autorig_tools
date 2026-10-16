@@ -1,0 +1,69 @@
+{
+  "result": {
+    "reopen_errors_cm": {
+      "cabeza_high": 0.0,
+      "cabeza_low": 0.0,
+      "brazaletes1": 0.0,
+      "polySurface61": 0.0,
+      "polySurface62": 0.0
+    },
+    "serialized_weight_errors": [
+      {
+        "skin": "C_mouth_local_SKC",
+        "max": 0.0
+      },
+      {
+        "skin": "skinCluster41",
+        "max": 0.0
+      },
+      {
+        "skin": "polySurface61_wrapBake_SKC",
+        "max": 0.0
+      },
+      {
+        "skin": "polySurface62_wrapBake_SKC",
+        "max": 0.0
+      },
+      {
+        "skin": "brazaletes1_wrapBake_SKC",
+        "max": 0.0
+      }
+    ],
+    "wraps": [
+      {
+        "wrap": "polySurface61_PRX",
+        "skin": "polySurface61_wrapBake_SKC",
+        "worst_max_cm": 0.03149438681085791,
+        "worst_rms_cm": 0.012609075676743513,
+        "pose_count": 239
+      },
+      {
+        "wrap": "polySurface62_PRX",
+        "skin": "polySurface62_wrapBake_SKC",
+        "worst_max_cm": 0.043488388900422746,
+        "worst_rms_cm": 0.008095445576859978,
+        "pose_count": 239
+      },
+      {
+        "wrap": "brazaletes1_PRX",
+        "skin": "brazaletes1_wrapBake_SKC",
+        "worst_max_cm": 0.09989359886261227,
+        "worst_rms_cm": 0.019670126141684015,
+        "pose_count": 239
+      }
+    ],
+    "lip_combinations": [
+      {
+        "mesh": "cabeza_high",
+        "worst_max_cm": 0.03901160350962425,
+        "worst_rms_cm": 0.010274669874563238
+      },
+      {
+        "mesh": "cabeza_low",
+        "worst_max_cm": 0.0895479844071694,
+        "worst_rms_cm": 0.037844658553930655
+      }
+    ],
+    "wrap_count": 20
+  }
+}

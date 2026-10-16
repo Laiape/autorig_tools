@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modules": {
+      "maya_tools.scripts.biped.autorig.jaw_module_nurbs": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\biped\\autorig\\jaw_module_nurbs.py"
+    },
+    "attrs": {
+      "R_lipCorner_CTL.autoWideDepth": {
+        "value": 0.2,
+        "locked": false,
+        "referenced": false,
+        "incoming": [],
+        "outgoing": [
+          "R_lipAutoWideGain_MUL.input[1]"
+        ]
+      },
+      "L_lipCorner_CTL.autoWideDepth": {
+        "value": 1.0,
+        "locked": false,
+        "referenced": false,
+        "incoming": [],
+        "outgoing": [
+          "L_lipAutoWideGain_MUL.input[1]"
+        ]
+      }
+    }
+  }
+}

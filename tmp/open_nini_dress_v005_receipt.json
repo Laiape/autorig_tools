@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": {
+    "previous_scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "recovery": "C:\\proyectos\\auto-rig\\recovery\\Before_Nini_Dress_Rest_Fix_20261015_121948.ma",
+    "image": "C:/proyectos/auto-rig/tmp/Nini_dress_v005_neutral.png",
+    "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Nini/scenes/Nini_dress_chains_v005.ma",
+    "selection": [
+      "C_dressSettings_CTL"
+    ],
+    "joints": 72
+  }
+}

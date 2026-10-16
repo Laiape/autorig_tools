@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "result": {
+    "targets_per_blendshape": 76,
+    "fit": 101,
+    "held_out": 74,
+    "variants": {
+      "shared": {
+        "meshes": {
+          "cinturon3": "cinturon3_SHARED_BS_TEST",
+          "cinturones2": "cinturones2_SHARED_BS_TEST"
+        },
+        "nodes": [
+          "EdwardBelts_SHARED_BLS_TEST"
+        ]
+      },
+      "separate": {
+        "meshes": {
+          "cinturon3": "cinturon3_SEPARATE_BS_TEST",
+          "cinturones2": "cinturones2_SEPARATE_BS_TEST"
+        },
+        "nodes": [
+          "cinturones2_SEPARATE_BLS_TEST",
+          "cinturon3_SEPARATE_BLS_TEST"
+        ]
+      }
+    },
+    "seconds": 62.60491499998898
+  }
+}

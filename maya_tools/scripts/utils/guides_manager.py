@@ -39,6 +39,7 @@ def _load_guides_file(character_name):
     Devuelve (template_file, guides_data) para un personaje, cacheado.
     template_file/guides_data son None si no existe el archivo.
     """
+    character_name = rig_manager.normalize_asset_name(character_name)
     cached = _GUIDES_CACHE.get(character_name)
     if cached is not None:
         return cached
@@ -668,6 +669,7 @@ def read_guides_info(character_name, guide_name=None):
         bool: Si guide_name tiene valor, devuelve True/False.
         None: Si hay error.
     """
+    character_name = rig_manager.normalize_asset_name(character_name)
     try:
         guides_file, guides_info = _load_guides_file(character_name)
     except Exception as e:

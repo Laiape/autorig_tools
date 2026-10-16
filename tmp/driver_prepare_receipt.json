@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "result": {
+    "variants": [
+      "original",
+      "direct",
+      "shared",
+      "shared_wrinkles"
+    ]
+  }
+}

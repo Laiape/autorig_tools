@@ -1,0 +1,543 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modules": {
+      "maya_tools.scripts.tools.bifrost_wrinkles": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\bifrost_wrinkles.py"
+    },
+    "controls": {
+      "C_eyebrowMid_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local0Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local0Depth"
+          ]
+        }
+      },
+      "C_lowerLip_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local12Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 0.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local12Depth"
+          ]
+        }
+      },
+      "C_noseMain_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local15Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local15Depth"
+          ]
+        }
+      },
+      "C_noseTip_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local16Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local16Depth"
+          ]
+        }
+      },
+      "C_upperLip_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local11Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 0.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local11Depth"
+          ]
+        }
+      },
+      "L_cheek_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local13Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local13Depth"
+          ]
+        }
+      },
+      "L_eyebrowIn_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local2Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local2Depth"
+          ]
+        }
+      },
+      "L_eyebrowMain_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local1Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 0.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local1Depth"
+          ]
+        }
+      },
+      "L_eyebrowMid_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local3Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local3Depth"
+          ]
+        }
+      },
+      "L_eyebrowOut_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local4Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local4Depth"
+          ]
+        }
+      },
+      "L_lipCorner_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local9Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 0.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local9Depth"
+          ]
+        }
+      },
+      "L_nose_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local17Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local17Depth"
+          ]
+        }
+      },
+      "R_cheek_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local14Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local14Depth"
+          ]
+        }
+      },
+      "R_eyebrowIn_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local6Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local6Depth"
+          ]
+        }
+      },
+      "R_eyebrowMain_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local5Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 0.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local5Depth"
+          ]
+        }
+      },
+      "R_eyebrowMid_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local7Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local7Depth"
+          ]
+        }
+      },
+      "R_eyebrowOut_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local8Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local8Depth"
+          ]
+        }
+      },
+      "R_lipCorner_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local10Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 0.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local10Depth"
+          ]
+        }
+      },
+      "R_nose_CTL": {
+        "order": [
+          "wrinkleDepth",
+          "wrinkleValue"
+        ],
+        "wrinkleValue": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local18Value"
+          ]
+        },
+        "wrinkleDepth": {
+          "default": [
+            1.0
+          ],
+          "value": 1.0,
+          "locked": false,
+          "incoming": [],
+          "outgoing": [
+            "EdwardWrinklesGraphShape.Local18Depth"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2569 @@
+{
+  "success": true,
+  "result": {
+    "pid": 40344,
+    "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Nini/scenes/Nini_dress_chains_v005.ma",
+    "modified": true,
+    "selection": [
+      "L_ankleIk_CTL"
+    ],
+    "time": 1.0,
+    "nodes": {
+      "L_legAnkleSkinning_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            -8.881784197001252e-16,
+            0.0,
+            4.440892098500626e-16
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          56.68768315248024,
+          33.779451692322404,
+          -2.9230113369108577
+        ],
+        "inputs": [
+          "L_legAnkleSkinning_JNT.offsetParentMatrix",
+          "L_ankle_BM.outputMatrix"
+        ],
+        "attrs": {}
+      },
+      "L_legAnkle_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legLower04_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          56.68768315248023,
+          33.77945169232239,
+          -2.9230113369108626
+        ],
+        "inputs": [
+          "L_legAnkle_ENV.offsetParentMatrix",
+          "L_legAnkleEnv_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legBallSkinning_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          95.17599917344236,
+          1.771599517960774,
+          7.367726760340158
+        ],
+        "inputs": [
+          "L_legBallSkinning_JNT.offsetParentMatrix",
+          "L_ball_BM.outputMatrix"
+        ],
+        "attrs": {}
+      },
+      "L_legBall_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legAnkle_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          95.17599917344236,
+          1.7715995179607802,
+          7.367726760340158
+        ],
+        "inputs": [
+          "L_legBall_ENV.offsetParentMatrix",
+          "L_legBallEnv_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legLower00_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legUpper04_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          33.78514283909293,
+          49.17249061343863,
+          -2.774422931453303
+        ],
+        "inputs": [
+          "L_legLower00_ENV.offsetParentMatrix",
+          "L_legLower00Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legLower00_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          33.78514283909293,
+          49.17249061343863,
+          -2.7744229314533033
+        ],
+        "inputs": [
+          "L_legLower00_JNT.offsetParentMatrix",
+          "L_legLower_scale_0_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legLower01_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legLower00_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          39.510777917439746,
+          45.32423088315958,
+          -2.8115700328176865
+        ],
+        "inputs": [
+          "L_legLower01_ENV.offsetParentMatrix",
+          "L_legLower01Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legLower01_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          39.51077791743975,
+          45.32423088315957,
+          -2.811570032817692
+        ],
+        "inputs": [
+          "L_legLower01_JNT.offsetParentMatrix",
+          "L_legLower_scale_1_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legLower02_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legLower01_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          45.23641299578658,
+          41.47597115288052,
+          -2.8487171341820803
+        ],
+        "inputs": [
+          "L_legLower02_ENV.offsetParentMatrix",
+          "L_legLower02Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legLower02_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          45.23641299578658,
+          41.47597115288052,
+          -2.8487171341820807
+        ],
+        "inputs": [
+          "L_legLower02_JNT.offsetParentMatrix",
+          "L_legLower_scale_2_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legLower03_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legLower02_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          50.96204807413341,
+          37.627711422601465,
+          -2.8858642355464643
+        ],
+        "inputs": [
+          "L_legLower03_ENV.offsetParentMatrix",
+          "L_legLower03Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legLower03_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          50.962048074133406,
+          37.627711422601465,
+          -2.885864235546469
+        ],
+        "inputs": [
+          "L_legLower03_JNT.offsetParentMatrix",
+          "L_legLower_scale_3_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legLower04_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legLower03_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          55.542556136810866,
+          34.54910363837822,
+          -2.9155819166379744
+        ],
+        "inputs": [
+          "L_legLower04_ENV.offsetParentMatrix",
+          "L_legLower04Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legLower04_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          55.54255613681087,
+          34.54910363837822,
+          -2.9155819166379806
+        ],
+        "inputs": [
+          "L_legLower04_JNT.offsetParentMatrix",
+          "L_legLower_scale_4_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legToeSkinning_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            1.7763568394002505e-15,
+            8.881784197001252e-16,
+            8.881784197001252e-16
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          95.17599917344235,
+          -1.137564975029061,
+          11.686784428199825
+        ],
+        "inputs": [
+          "L_legToeSkinning_JNT.offsetParentMatrix",
+          "L_tip_BM.outputMatrix"
+        ],
+        "attrs": {}
+      },
+      "L_legToe_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legBall_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          95.17599917344235,
+          -1.1375649750290622,
+          11.686784428199825
+        ],
+        "inputs": [
+          "L_legToe_ENV.offsetParentMatrix",
+          "L_legToeEnv_MMX.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legUpper00_ENV": {
+        "type": "joint",
+        "parent": [
+          "C_localHip_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          7.710982525670116,
+          66.69720960546327,
+          -2.605258305898354
+        ],
+        "inputs": [
+          "L_legUpper00_ENV.offsetParentMatrix",
+          "L_legUpper00Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legUpper00_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          7.710982525670116,
+          66.69720960546327,
+          -2.605258305898354
+        ],
+        "inputs": [
+          "L_legUpper00_JNT.offsetParentMatrix",
+          "L_legUpper_scale_0_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legUpper01_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legUpper00_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          14.22952260402582,
+          62.31602985745712,
+          -2.647549462287091
+        ],
+        "inputs": [
+          "L_legUpper01_ENV.offsetParentMatrix",
+          "L_legUpper01Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legUpper01_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          14.229522604025817,
+          62.31602985745711,
+          -2.647549462287091
+        ],
+        "inputs": [
+          "L_legUpper01_JNT.offsetParentMatrix",
+          "L_legUpper_scale_1_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legUpper02_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legUpper01_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          20.748062682381523,
+          57.93485010945095,
+          -2.6898406186758277
+        ],
+        "inputs": [
+          "L_legUpper02_ENV.offsetParentMatrix",
+          "L_legUpper02Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legUpper02_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          20.748062682381523,
+          57.93485010945095,
+          -2.689840618675828
+        ],
+        "inputs": [
+          "L_legUpper02_JNT.offsetParentMatrix",
+          "L_legUpper_scale_2_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legUpper03_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legUpper02_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          27.26660276073723,
+          53.5536703614448,
+          -2.732131775064566
+        ],
+        "inputs": [
+          "L_legUpper03_ENV.offsetParentMatrix",
+          "L_legUpper03Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legUpper03_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          27.26660276073722,
+          53.553670361444794,
+          -2.732131775064566
+        ],
+        "inputs": [
+          "L_legUpper03_JNT.offsetParentMatrix",
+          "L_legUpper_scale_3_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "L_legUpper04_ENV": {
+        "type": "joint",
+        "parent": [
+          "L_legUpper03_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          32.48143482342178,
+          50.04872656303987,
+          -2.765964700175554
+        ],
+        "inputs": [
+          "L_legUpper04_ENV.offsetParentMatrix",
+          "L_legUpper04Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "L_legUpper04_JNT": {
+        "type": "joint",
+        "parent": [
+          "L_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          32.481434823421786,
+          50.04872656303987,
+          -2.765964700175556
+        ],
+        "inputs": [
+          "L_legUpper04_JNT.offsetParentMatrix",
+          "L_legUpper_scale_4_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legAnkleSkinning_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            1.7763568394002505e-15,
+            8.881784197001252e-16,
+            -4.440892098500626e-16
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000004,
+          7.911049999999983,
+          -3.172720000000082
+        ],
+        "inputs": [
+          "R_legAnkleSkinning_JNT.offsetParentMatrix",
+          "R_ankle_BM.outputMatrix"
+        ],
+        "attrs": {}
+      },
+      "R_legAnkle_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legLower04_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000003,
+          7.911049999999984,
+          -3.1727200000000817
+        ],
+        "inputs": [
+          "R_legAnkle_ENV.offsetParentMatrix",
+          "R_legAnkleEnv_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legBallSkinning_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            8.881784197001252e-16,
+            8.881784197001252e-16,
+            1.7763568394002505e-15
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000002,
+          1.771600000000001,
+          7.367730000000001
+        ],
+        "inputs": [
+          "R_legBallSkinning_JNT.offsetParentMatrix",
+          "R_ball_BM.outputMatrix"
+        ],
+        "attrs": {}
+      },
+      "R_legBall_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legAnkle_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000004,
+          1.7716000000000012,
+          7.36773
+        ],
+        "inputs": [
+          "R_legBall_ENV.offsetParentMatrix",
+          "R_legBallEnv_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legLower00_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legUpper04_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.790688502278225,
+          35.36161225592022,
+          -0.3519796548925192
+        ],
+        "inputs": [
+          "R_legLower00_ENV.offsetParentMatrix",
+          "R_legLower00Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legLower00_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.790688502278224,
+          35.36161225592023,
+          -0.35197965489251937
+        ],
+        "inputs": [
+          "R_legLower00_JNT.offsetParentMatrix",
+          "R_legLower_scale_0_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legLower01_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legLower00_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.770761376708669,
+          28.498971691940167,
+          -1.0571647411694103
+        ],
+        "inputs": [
+          "R_legLower01_ENV.offsetParentMatrix",
+          "R_legLower01Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legLower01_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.770761376708669,
+          28.498971691940167,
+          -1.0571647411694098
+        ],
+        "inputs": [
+          "R_legLower01_JNT.offsetParentMatrix",
+          "R_legLower_scale_1_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legLower02_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legLower01_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.750834251139115,
+          21.636331127960105,
+          -1.7623498274463008
+        ],
+        "inputs": [
+          "R_legLower02_ENV.offsetParentMatrix",
+          "R_legLower02Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legLower02_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.750834251139114,
+          21.636331127960105,
+          -1.7623498274463008
+        ],
+        "inputs": [
+          "R_legLower02_JNT.offsetParentMatrix",
+          "R_legLower_scale_2_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legLower03_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legLower02_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.73090712556956,
+          14.77369056398005,
+          -2.467534913723191
+        ],
+        "inputs": [
+          "R_legLower03_ENV.offsetParentMatrix",
+          "R_legLower03Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legLower03_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.730907125569557,
+          14.773690563980043,
+          -2.467534913723191
+        ],
+        "inputs": [
+          "R_legLower03_JNT.offsetParentMatrix",
+          "R_legLower_scale_3_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legLower04_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legLower03_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.714965425113913,
+          9.283578112795993,
+          -3.031682982744704
+        ],
+        "inputs": [
+          "R_legLower04_ENV.offsetParentMatrix",
+          "R_legLower04Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legLower04_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.714965425113913,
+          9.283578112795997,
+          -3.031682982744704
+        ],
+        "inputs": [
+          "R_legLower04_JNT.offsetParentMatrix",
+          "R_legLower_scale_4_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legToeSkinning_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            1.7763568394002505e-15,
+            8.881784197001252e-16,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000001,
+          -1.1375599999999932,
+          11.6868
+        ],
+        "inputs": [
+          "R_legToeSkinning_JNT.offsetParentMatrix",
+          "R_tip_BM.outputMatrix"
+        ],
+        "attrs": {}
+      },
+      "R_legToe_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legBall_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000001,
+          -1.1375599999999935,
+          11.6868
+        ],
+        "inputs": [
+          "R_legToe_ENV.offsetParentMatrix",
+          "R_legToeEnv_MMX.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legUpper00_ENV": {
+        "type": "joint",
+        "parent": [
+          "C_localHip_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000002,
+          66.69720000000002,
+          -2.6052600000000026
+        ],
+        "inputs": [
+          "R_legUpper00_ENV.offsetParentMatrix",
+          "R_legUpper00Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legUpper00_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000002,
+          66.69720000000002,
+          -2.6052600000000026
+        ],
+        "inputs": [
+          "R_legUpper00_JNT.offsetParentMatrix",
+          "R_legUpper_scale_0_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legUpper01_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legUpper00_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.730907125569558,
+          58.86330306398007,
+          -2.0419399137231307
+        ],
+        "inputs": [
+          "R_legUpper01_ENV.offsetParentMatrix",
+          "R_legUpper01Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legUpper01_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.730907125569557,
+          58.86330306398008,
+          -2.0419399137231315
+        ],
+        "inputs": [
+          "R_legUpper01_JNT.offsetParentMatrix",
+          "R_legUpper_scale_1_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legUpper02_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legUpper01_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.7508342511391115,
+          51.02940612796012,
+          -1.4786198274462599
+        ],
+        "inputs": [
+          "R_legUpper02_ENV.offsetParentMatrix",
+          "R_legUpper02Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legUpper02_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.750834251139113,
+          51.02940612796013,
+          -1.478619827446261
+        ],
+        "inputs": [
+          "R_legUpper02_JNT.offsetParentMatrix",
+          "R_legUpper_scale_2_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legUpper03_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legUpper02_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.770761376708668,
+          43.19550919194017,
+          -0.9152997411693887
+        ],
+        "inputs": [
+          "R_legUpper03_ENV.offsetParentMatrix",
+          "R_legUpper03Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legUpper03_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.770761376708668,
+          43.195509191940175,
+          -0.9152997411693901
+        ],
+        "inputs": [
+          "R_legUpper03_JNT.offsetParentMatrix",
+          "R_legUpper_scale_3_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "R_legUpper04_ENV": {
+        "type": "joint",
+        "parent": [
+          "R_legUpper03_ENV"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.786703077164312,
+          36.928391643124215,
+          -0.46464367214789365
+        ],
+        "inputs": [
+          "R_legUpper04_ENV.offsetParentMatrix",
+          "R_legUpper04Env_MMX.matrixSum"
+        ],
+        "attrs": {
+          "lockInfluenceWeights": false
+        }
+      },
+      "R_legUpper04_JNT": {
+        "type": "joint",
+        "parent": [
+          "R_legSkinning_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.786703077164313,
+          36.92839164312422,
+          -0.4646436721478937
+        ],
+        "inputs": [
+          "R_legUpper04_JNT.offsetParentMatrix",
+          "R_legUpper_scale_4_MM.matrixSum"
+        ],
+        "attrs": {}
+      },
+      "C_noseTip_CTL": {
+        "type": "transform",
+        "parent": [
+          "C_noseTip_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -4.648027123608969e-19,
+          115.22986602783206,
+          12.324205875396729
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "L_ankleFk_CTL": {
+        "type": "transform",
+        "parent": [
+          "L_ankleFk_ANM"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          7.710982525670128,
+          7.911047823156441,
+          -3.1727173449982313
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "L_ankleIk_CTL": {
+        "type": "transform",
+        "parent": [
+          "L_ankleIk_SDK"
+        ],
+        "t": [
+          [
+            87.4650166477723,
+            -8.881784197001252e-16,
+            -8.88178419700126e-16
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          95.1759991734424,
+          7.911047823156452,
+          -3.172717344998235
+        ],
+        "inputs": [],
+        "attrs": {
+          "STRETCHY____": 0,
+          "upperLengthMult": 1.0,
+          "lowerLengthMult": 1.0,
+          "Stretch": 0.0,
+          "SOFT____": 0,
+          "Soft": 0.0,
+          "Soft_Start": 0.8,
+          "EXTRA_ATTRIBUTES": 0,
+          "Ankle_Twist": 0.0,
+          "Ball_Twist": 0.0,
+          "Toe_Twist": 0.0,
+          "Heel_Twist": 0.0,
+          "Bank": 0.0,
+          "Roll": 0.0,
+          "Roll_Break_Angle": 45.0,
+          "Roll_Straight_Angle": 90.0,
+          "SpaceSwitchSep": 0,
+          "SpaceFollow": 0,
+          "TranslateValue": 0.0,
+          "RotateValue": 0.0
+        }
+      },
+      "L_ballFk_CTL": {
+        "type": "transform",
+        "parent": [
+          "L_ballFk_ANM"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          7.71098252567013,
+          1.7715995179607988,
+          7.367726760340162
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "L_ballIk_CTL": {
+        "type": "transform",
+        "parent": [
+          "L_ballIk_SDK"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          95.17599917344238,
+          1.7715995179607726,
+          7.367726760340163
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "L_legSettings_CTL": {
+        "type": "transform",
+        "parent": [
+          "L_legSettings_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          41.96359543659763,
+          60.92710172815302,
+          -4.480843313872384
+        ],
+        "inputs": [
+          "L_legSettings_CTL.matchFkControls[0]",
+          "L_hipFk_CTL.message",
+          "L_legSettings_CTL.matchFkControls[1]",
+          "L_kneeFk_CTL.message",
+          "L_legSettings_CTL.matchFkControls[2]",
+          "L_ankleFk_CTL.message",
+          "L_legSettings_CTL.matchFkControls[3]",
+          "L_ballFk_CTL.message",
+          "L_legSettings_CTL.matchIkMatrices[0]",
+          "L_hip_BM.message",
+          "L_legSettings_CTL.matchIkMatrices[1]",
+          "L_knee_BM.message",
+          "L_legSettings_CTL.matchIkMatrices[2]",
+          "L_ankle_BM.message",
+          "L_legSettings_CTL.matchIkMatrices[3]",
+          "L_ball_BM.message",
+          "L_legSettings_CTL.matchIkRoot",
+          "L_legRootIk_CTL.message",
+          "L_legSettings_CTL.matchIkEnd",
+          "L_ankleIk_CTL.message",
+          "L_legSettings_CTL.matchIkPv",
+          "L_legPv_CTL.message",
+          "L_legSettings_CTL.matchScaleControl",
+          "C_masterwalk_CTL.message",
+          "L_legSettings_CTL.matchFootControls[0]",
+          "L_ankleIk_CTL.message",
+          "L_legSettings_CTL.matchFootControls[1]",
+          "L_bankOut_CTL.message",
+          "L_legSettings_CTL.matchFootControls[2]",
+          "L_bankIn_CTL.message",
+          "L_legSettings_CTL.matchFootControls[3]",
+          "L_heel_CTL.message",
+          "L_legSettings_CTL.matchFootControls[4]",
+          "L_toeIk_CTL.message",
+          "L_legSettings_CTL.matchFootControls[5]",
+          "L_ballIk_CTL.message"
+        ],
+        "attrs": {
+          "Ik_Fk": 0.0,
+          "Match_Ik_To_Fk": 0,
+          "Match_Fk_To_Ik": 0,
+          "matchRestLength0": 31.41665527184652,
+          "matchRestLength1": 27.595182161884114,
+          "matchRestPvDirectionX": 2.5676893580529625,
+          "matchRestPvDirectionY": 29.393981607192554,
+          "matchRestPvDirectionZ": 2.029771539585161e-07,
+          "matchCustomFoot": true,
+          "matchRefineMiddle": true
+        }
+      },
+      "R_ankleFk_CTL": {
+        "type": "transform",
+        "parent": [
+          "R_ankleFk_ANM"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000004,
+          7.911050000000024,
+          -3.172720000000004
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "R_ankleIk_CTL": {
+        "type": "transform",
+        "parent": [
+          "R_ankleIk_SDK"
+        ],
+        "t": [
+          [
+            1.7763568394002505e-15,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000004,
+          7.911049999999982,
+          -3.1727200000000013
+        ],
+        "inputs": [],
+        "attrs": {
+          "STRETCHY____": 0,
+          "upperLengthMult": 1.0,
+          "lowerLengthMult": 1.0,
+          "Stretch": 0.0,
+          "SOFT____": 0,
+          "Soft": 0.0,
+          "Soft_Start": 0.8,
+          "EXTRA_ATTRIBUTES": 0,
+          "Ankle_Twist": 0.0,
+          "Ball_Twist": 0.0,
+          "Toe_Twist": 0.0,
+          "Heel_Twist": 0.0,
+          "Bank": 0.0,
+          "Roll": 0.0,
+          "Roll_Break_Angle": 45.0,
+          "Roll_Straight_Angle": 90.0,
+          "SpaceSwitchSep": 0,
+          "SpaceFollow": 0,
+          "TranslateValue": 0.0,
+          "RotateValue": 0.0
+        }
+      },
+      "R_ballFk_CTL": {
+        "type": "transform",
+        "parent": [
+          "R_ballFk_ANM"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.71098,
+          1.7716000000000172,
+          7.367730000000003
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "R_ballIk_CTL": {
+        "type": "transform",
+        "parent": [
+          "R_ballIk_SDK"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -7.710980000000002,
+          1.771599999999998,
+          7.36773
+        ],
+        "inputs": [],
+        "attrs": {}
+      },
+      "R_legSettings_CTL": {
+        "type": "transform",
+        "parent": [
+          "R_legSettings_GRP"
+        ],
+        "t": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "r": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "s": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "world": [
+          -22.000000000000895,
+          35.00000000000043,
+          -1.5262133071185442
+        ],
+        "inputs": [
+          "R_legSettings_CTL.matchFkControls[0]",
+          "R_hipFk_CTL.message",
+          "R_legSettings_CTL.matchFkControls[1]",
+          "R_kneeFk_CTL.message",
+          "R_legSettings_CTL.matchFkControls[2]",
+          "R_ankleFk_CTL.message",
+          "R_legSettings_CTL.matchFkControls[3]",
+          "R_ballFk_CTL.message",
+          "R_legSettings_CTL.matchIkMatrices[0]",
+          "R_hip_BM.message",
+          "R_legSettings_CTL.matchIkMatrices[1]",
+          "R_knee_BM.message",
+          "R_legSettings_CTL.matchIkMatrices[2]",
+          "R_ankle_BM.message",
+          "R_legSettings_CTL.matchIkMatrices[3]",
+          "R_ball_BM.message",
+          "R_legSettings_CTL.matchIkRoot",
+          "R_legRootIk_CTL.message",
+          "R_legSettings_CTL.matchIkEnd",
+          "R_ankleIk_CTL.message",
+          "R_legSettings_CTL.matchIkPv",
+          "R_legPv_CTL.message",
+          "R_legSettings_CTL.matchScaleControl",
+          "C_masterwalk_CTL.message",
+          "R_legSettings_CTL.matchFootControls[0]",
+          "R_ankleIk_CTL.message",
+          "R_legSettings_CTL.matchFootControls[1]",
+          "R_bankOut_CTL.message",
+          "R_legSettings_CTL.matchFootControls[2]",
+          "R_bankIn_CTL.message",
+          "R_legSettings_CTL.matchFootControls[3]",
+          "R_heel_CTL.message",
+          "R_legSettings_CTL.matchFootControls[4]",
+          "R_toeIk_CTL.message",
+          "R_legSettings_CTL.matchFootControls[5]",
+          "R_ballIk_CTL.message"
+        ],
+        "attrs": {
+          "Ik_Fk": 0.0,
+          "Match_Ik_To_Fk": 0,
+          "Match_Fk_To_Ik": 0,
+          "matchRestLength0": 31.41660107431262,
+          "matchRestLength1": 27.595224872115104,
+          "matchRestPvDirectionX": -2.567742648618414,
+          "matchRestPvDirectionY": -29.39397204177429,
+          "matchRestPvDirectionZ": -6.149291985388446e-08,
+          "matchCustomFoot": true,
+          "matchRefineMiddle": true
+        }
+      }
+    },
+    "skins": [
+      "C_body_SKC",
+      "C_lowerLipOffset_SKIN",
+      "C_lowerLip_SKIN",
+      "C_lowerNurbs_SKIN",
+      "C_upperLipOffset_SKIN",
+      "C_upperLip_SKIN",
+      "C_upperNurbs_SKIN",
+      "L_lowerEyelid_SKIN",
+      "L_upperEyelid_SKIN",
+      "R_lowerEyelid_SKIN",
+      "R_upperEyelid_SKIN",
+      "skinCluster1",
+      "skinCluster2",
+      "skinCluster3",
+      "skinCluster4",
+      "skinCluster5",
+      "skinCluster6",
+      "skinCluster7",
+      "skinCluster8",
+      "skinCluster9",
+      "skinCluster10",
+      "skinCluster11",
+      "skinCluster12",
+      "skinCluster13",
+      "skinCluster14",
+      "skinCluster15",
+      "skinCluster16",
+      "skinCluster17",
+      "skinCluster18",
+      "skinCluster19",
+      "skinCluster20",
+      "skinCluster21",
+      "skinCluster22",
+      "skinCluster23",
+      "skinCluster24",
+      "skinCluster25",
+      "skinCluster26",
+      "skinCluster27",
+      "skinCluster28",
+      "skinCluster29",
+      "skinCluster30",
+      "skinCluster31",
+      "skinCluster32",
+      "skinCluster33",
+      "skinCluster34",
+      "skinCluster35",
+      "skinCluster36",
+      "skinCluster37",
+      "skinCluster38",
+      "skinCluster__c_armcuffs_GEO",
+      "skinCluster__c_bangs_GEO",
+      "skinCluster__c_bootBase_GEO",
+      "skinCluster__c_bootCuffs_GEO",
+      "skinCluster__c_bottomsSleeves_GEO",
+      "skinCluster__c_circle_GEO",
+      "skinCluster__c_collar_GEO",
+      "skinCluster__c_embroider_GEO",
+      "skinCluster__c_ends_GEO",
+      "skinCluster__c_furBalls_GEO",
+      "skinCluster__c_furCuffs_GEO",
+      "skinCluster__c_hairties_GEO",
+      "skinCluster__c_hood_GEO",
+      "skinCluster__c_legwarmers_GEO",
+      "skinCluster__c_pants_GEO",
+      "skinCluster__c_ribbons_GEO",
+      "skinCluster__c_sidePieces_GEO",
+      "skinCluster__c_tunic_GEO",
+      "skinCluster__l_glove_GEO",
+      "skinCluster__r_glove_GEO"
+    ]
+  }
+}

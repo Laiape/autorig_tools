@@ -1,0 +1,138 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\belt_blendshape_20261016_v001\\Edward_belt_blendshape_TEST_v001.ma",
+    "control": "Edward_BeltBlendshape_Review",
+    "attribute": "beltVariant",
+    "default": 0,
+    "enum": "Original_PRX:Shared_BlendShape:Separate_BlendShapes:SkinPlusShared_BS:SkinPlusSeparate_BS",
+    "original_visibility": [
+      {
+        "mesh": "cinturon3",
+        "value": true,
+        "source": ""
+      },
+      {
+        "mesh": "cinturones2",
+        "value": true,
+        "source": ""
+      },
+      {
+        "mesh": "cinturon3_blendshape_only_shared_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturones2_blendshape_only_shared_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturon3_blendshape_only_separate_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturones2_blendshape_only_separate_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturon3_SHARED_BS_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturones2_SHARED_BS_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturon3_SEPARATE_BS_TEST",
+        "value": false,
+        "source": ""
+      },
+      {
+        "mesh": "cinturones2_SEPARATE_BS_TEST",
+        "value": false,
+        "source": ""
+      }
+    ],
+    "candidate_history": {
+      "shared": {
+        "cinturon3": {
+          "proximity_wraps": [],
+          "skins": [
+            "cinturon3_SHARED_BS_TEST_SKC"
+          ],
+          "blendshapes": [
+            "EdwardBelts_SHARED_BLS_TEST"
+          ]
+        },
+        "cinturones2": {
+          "proximity_wraps": [],
+          "skins": [
+            "cinturones2_SHARED_BS_TEST_SKC"
+          ],
+          "blendshapes": [
+            "EdwardBelts_SHARED_BLS_TEST"
+          ]
+        }
+      },
+      "separate": {
+        "cinturon3": {
+          "proximity_wraps": [],
+          "skins": [
+            "cinturon3_SEPARATE_BS_TEST_SKC"
+          ],
+          "blendshapes": [
+            "cinturon3_SEPARATE_BLS_TEST"
+          ]
+        },
+        "cinturones2": {
+          "proximity_wraps": [],
+          "skins": [
+            "cinturones2_SEPARATE_BS_TEST_SKC"
+          ],
+          "blendshapes": [
+            "cinturones2_SEPARATE_BLS_TEST"
+          ]
+        }
+      },
+      "blendshape_only_shared": {
+        "cinturon3": {
+          "proximity_wraps": [],
+          "skins": [],
+          "blendshapes": [
+            "EdwardBelts_BLENDSHAPE_ONLY_SHARED_TEST"
+          ]
+        },
+        "cinturones2": {
+          "proximity_wraps": [],
+          "skins": [],
+          "blendshapes": [
+            "EdwardBelts_BLENDSHAPE_ONLY_SHARED_TEST"
+          ]
+        }
+      },
+      "blendshape_only_separate": {
+        "cinturon3": {
+          "proximity_wraps": [],
+          "skins": [],
+          "blendshapes": [
+            "cinturon3_BLENDSHAPE_ONLY_TEST"
+          ]
+        },
+        "cinturones2": {
+          "proximity_wraps": [],
+          "skins": [],
+          "blendshapes": [
+            "cinturones2_BLENDSHAPE_ONLY_TEST"
+          ]
+        }
+      }
+    },
+    "approved": false,
+    "bytes": 321475373
+  }
+}

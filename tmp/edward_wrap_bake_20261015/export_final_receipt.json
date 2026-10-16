@@ -1,0 +1,10 @@
+{
+  "result": {
+    "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\scenes\\Edward_working_v003.mb",
+    "skc": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v069.skc",
+    "report": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\validation\\Edward_v069_wrap_bake_lip_validation.json",
+    "converted": 3,
+    "remaining": 20,
+    "skc_bytes": 24939248
+  }
+}

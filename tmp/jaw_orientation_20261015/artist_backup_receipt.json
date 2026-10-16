@@ -1,0 +1,168 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": false,
+    "mode": [
+      "parallel",
+      "Evaluation graph is ready."
+    ],
+    "time": 0.0,
+    "selection": [
+      "|Edward|deformers_GRP|cuerpo_base_poseCorrectives_BLS_driver"
+    ],
+    "controls": {
+      "C_jaw_CTL": {
+        "rx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "ty": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tz": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "stickyLips": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "stickyFalloff": {
+          "value": 0.20000000298023224,
+          "incoming": [],
+          "settable": true
+        }
+      },
+      "L_lipCorner_CTL": {
+        "rx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "ty": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tz": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "autoNarrow": {
+          "value": 1.0,
+          "incoming": [],
+          "settable": true
+        },
+        "autoWide": {
+          "value": 1.0,
+          "incoming": [],
+          "settable": true
+        }
+      },
+      "R_lipCorner_CTL": {
+        "rx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "ty": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tz": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "autoNarrow": {
+          "value": 1.0,
+          "incoming": [],
+          "settable": true
+        },
+        "autoWide": {
+          "value": 1.0,
+          "incoming": [],
+          "settable": true
+        }
+      },
+      "C_upperLip_CTL": {
+        "rx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "ty": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tz": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "Roll": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        }
+      },
+      "C_lowerLip_CTL": {
+        "rx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tx": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "ty": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "tz": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        },
+        "Roll": {
+          "value": 0.0,
+          "incoming": [],
+          "settable": true
+        }
+      }
+    },
+    "backup": "C:\\proyectos\\auto-rig\\tmp\\jaw_orientation_20261015\\artist_before_orientation.mb"
+  }
+}

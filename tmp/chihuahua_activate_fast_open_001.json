@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "result": {
+    "updated_modules": [
+      "maya_tools.scripts.utils.model_cache",
+      "utils.character_manager"
+    ],
+    "before": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": []
+    },
+    "after": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": []
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "result": {
+    "L_eyebrowMain_CTL": {
+      "EXTRA_ATTRIBUTES": 0,
+      "browCurve": 0.699999988079071,
+      "slide": 0.0,
+      "autoTangent": 1.0,
+      "Auto_Socket": 0.0
+    },
+    "L_eyebrowMid_CTL": {},
+    "C_upperLip_CTL": {
+      "EXTRA_ATTRIBUTES": 0,
+      "Roll": 0.0
+    },
+    "C_lowerLip_CTL": {
+      "EXTRA_ATTRIBUTES": 0,
+      "Roll": 0.0
+    },
+    "L_lipCorner_CTL": {
+      "EXTRA_ATTRIBUTES": 0,
+      "Height": 0.5,
+      "autoNarrow": 0.0
+    },
+    "C_face_CTL": {
+      "FACE_VIS": 0,
+      "Volume": 1.0,
+      "Jaw": 1,
+      "Lips": 2,
+      "Brows": 2,
+      "Eyes": 2,
+      "Sockets": 1,
+      "Tongue": 0,
+      "Teeth": 0,
+      "Ears": 1,
+      "Nose": 1,
+      "Cheekbones": 2,
+      "Cheek": 1
+    }
+  }
+}

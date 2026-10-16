@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "result": {
+    "scope": "Standalone Maya 2026 DG CPU. Set nine body/limb control channels and force all 23 garment outputs. No viewport or full-rig FPS claim.",
+    "channels": {
+      "C_spine03_CTL.rotateX": 15,
+      "C_localChest_CTL.rotateY": 20,
+      "C_neck_CTL.rotateY": 20,
+      "L_shoulderFk_CTL.rotateZ": 35,
+      "R_shoulderFk_CTL.rotateY": 25,
+      "L_hipFk_CTL.rotateX": 20,
+      "R_hipFk_CTL.rotateZ": 25,
+      "L_ankleFk_CTL.rotateX": 20,
+      "R_ankleFk_CTL.rotateZ": 25
+    },
+    "summary": {
+      "PRX": {
+        "median_ms": 78.9498999947682,
+        "p95_ms": 89.43832999430013,
+        "max_ms": 104.64080001111142,
+        "samples": 540,
+        "pass_medians_ms": [
+          80.7758000009926,
+          78.39009999588598,
+          80.09175000188407,
+          77.62729999376461,
+          81.43779999954859,
+          79.21850000275299,
+          77.89155000500614,
+          78.15979999577394,
+          77.69335000193678
+        ]
+      },
+      "BLENDSHAPE": {
+        "median_ms": 4.203899996355176,
+        "p95_ms": 6.024540000362319,
+        "max_ms": 6.812100007664412,
+        "samples": 180,
+        "pass_medians_ms": [
+          3.6202999981469475,
+          4.874250000284519,
+          3.9882499986561015
+        ]
+      },
+      "SKIN": {
+        "median_ms": 15.80844999261899,
+        "p95_ms": 18.530914992152233,
+        "max_ms": 21.803299998282455,
+        "samples": 180,
+        "pass_medians_ms": [
+          14.708499998960178,
+          16.554800000449177,
+          16.421799999079667
+        ]
+      }
+    },
+    "quality_gate_approved": false
+  }
+}

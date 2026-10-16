@@ -1,0 +1,32 @@
+{
+  "result": {
+    "fit_poses": 120,
+    "held_out_poses": 119,
+    "targets": {
+      "brazaletes1_PRX": 20,
+      "cinturon3_PRX": 9,
+      "cinturones2_PRX": 18,
+      "collar2_PRX": 9,
+      "collar3_PRX": 12,
+      "harapo1_PRX": 8,
+      "harapo2_PRX": 9,
+      "pCube26_PRX": 15,
+      "pCylinder16_PRX": 12,
+      "pasted__brazaletes3_PRX": 6,
+      "polySurface32_PRX": 12,
+      "polySurface33_PRX": 9,
+      "polySurface48_PRX": 8,
+      "polySurface49_PRX": 6,
+      "polySurface58_PRX": 6,
+      "polySurface61_PRX": 5,
+      "polySurface62_PRX": 4,
+      "polySurface889_PRX": 6,
+      "polySurface892_PRX": 13,
+      "polySurface900_PRX": 10,
+      "polySurface905_PRX": 13,
+      "tiras30_PRX": 22,
+      "tiras31_PRX": 8
+    },
+    "seconds": 68.50499606132507
+  }
+}

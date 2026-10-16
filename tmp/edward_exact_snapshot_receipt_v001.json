@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "result": {
+    "version": 1,
+    "pid": 35132,
+    "artist_state": {
+      "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+      "modified": true,
+      "frame": 0.0,
+      "selection": [
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL",
+        "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL"
+      ],
+      "evaluation": {
+        "mode": "parallel",
+        "evaluators": {
+          "cache": false,
+          "deformer": false
+        }
+      }
+    },
+    "snapshot": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\exact_optimization_20261015_v001\\Edward_artist_baseline.mb",
+    "bytes": 171414240,
+    "sha256": "2cab775509387ecb2f82e47382eb60168dd980f470797edd243380131c79108b",
+    "export_seconds": 6.559377799996582,
+    "node_count": 16546,
+    "native_plugin_version": 20260303,
+    "time_unit": "film",
+    "linear_unit": "cm",
+    "loaded_wrinkle_code": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\bifrost_wrinkles.py",
+    "scene_saved_over_original": false,
+    "artist_state_unchanged": true,
+    "contract": "Preserve all authored rig behavior, deformation, clothing, wrinkles, targets, weights and controls. No approximate replacement."
+  }
+}

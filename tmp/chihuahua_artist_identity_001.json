@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "result": {
+    "pid": 23404,
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "modules": {
+      "maya_tools.scripts.utils.model_cache": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\model_cache.py",
+      "maya_tools.scripts.utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py",
+      "maya_tools.scripts.utils.basic_structure": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\basic_structure.py",
+      "utils.create_rig": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\create_rig.py",
+      "maya_tools.scripts.utils.rig_manager": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\utils\\rig_manager.py"
+    },
+    "roots": [
+      "persp",
+      "top",
+      "front",
+      "side",
+      "Edward"
+    ],
+    "panels": [
+      "modelPanel1",
+      "modelPanel2",
+      "modelPanel3",
+      "modelPanel4"
+    ],
+    "api": 20260303
+  }
+}

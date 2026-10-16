@@ -1,0 +1,82 @@
+{
+  "result": [
+    {
+      "mesh": "cabeza_high",
+      "skin": "C_mouth_local_SKC",
+      "neutral_error_cm": 0.005685537548540688,
+      "changed_weight_vertices": 3790,
+      "weight_asym_after": 0.0,
+      "targets": [
+        {
+          "alias": "L_lipCorner_TX5_BLS",
+          "index": 0,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 2669
+        },
+        {
+          "alias": "L_lipCorner_TXm2_BLS",
+          "index": 2,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 2670
+        },
+        {
+          "alias": "C_jaw_RX30_BLS",
+          "index": 4,
+          "endpoint_error_cm": 1.5261117191327953e-05,
+          "delta_vertices": 4381
+        },
+        {
+          "alias": "R_lipCorner_TX5_BLS",
+          "index": 5,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 2669
+        },
+        {
+          "alias": "R_lipCorner_TXm2_BLS",
+          "index": 6,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 2666
+        },
+        {
+          "alias": "L_lipCorner_TY3_BLS",
+          "index": 7,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 3002
+        },
+        {
+          "alias": "R_lipCorner_TY3_BLS",
+          "index": 8,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 3001
+        },
+        {
+          "alias": "L_lipCorner_TYm4_BLS",
+          "index": 9,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 2673
+        },
+        {
+          "alias": "R_lipCorner_TYm4_BLS",
+          "index": 10,
+          "endpoint_error_cm": 7.647998300717088e-06,
+          "delta_vertices": 2672
+        }
+      ]
+    },
+    {
+      "mesh": "cabeza_low",
+      "skin": "skinCluster41",
+      "neutral_error_cm": 0.004768021958169858,
+      "changed_weight_vertices": 911,
+      "weight_asym_after": 0.0,
+      "targets": [
+        {
+          "alias": "C_jaw_RX30_BLS",
+          "index": 0,
+          "endpoint_error_cm": 1.52588181663027e-05,
+          "delta_vertices": 1180
+        }
+      ]
+    }
+  ]
+}

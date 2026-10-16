@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\scripts\\edward_belt_blendshape_trial.py\", line 50, in host\n    exec(compile(Path(request['script']).read_text(),request['script'],'exec'),namespace)\n  File \"C:\\proyectos\\auto-rig\\tmp\\edward_belt_blendshape_20261016\\inspect_owned.py\", line 8, in <module>\n    'joints':pb.candidate_joints(shape),'vertices':cmds.polyEvaluate(shape,vertex=True)}\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\proximity_bake.py\", line 88, in candidate_joints\n    raise RuntimeError(\"No se encontraron joints en los skins de los drivers de \" + shape)\nRuntimeError: No se encontraron joints en los skins de los drivers de |Edward|geo_GRP|FINAL|cuerpo_geo|cinturon3|cinturon3_ShapeDeformed\n"
+}

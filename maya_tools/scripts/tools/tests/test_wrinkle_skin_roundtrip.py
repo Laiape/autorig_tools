@@ -53,7 +53,7 @@ try:
         assert manager.export_skins(path) == path
         data = json.loads(Path(path).read_text())
         assert len(data[manager.WRINKLES_KEY]) == 1
-        cmds.delete(setup['group'], setup['converter'])
+        bw.remove_setup(setup['settings'])
         for control in controls:
             cmds.deleteAttr(control + '.wrinkleDepth'); cmds.deleteAttr(control + '.wrinkleValue')
         manager.import_skins(path)

@@ -1,0 +1,87 @@
+{
+  "accepted": true,
+  "max_errors": {
+    "p": 0.0,
+    "n": 0.0,
+    "j": 0.0
+  },
+  "inputs_unchanged": true,
+  "baseline_build_seconds": 31.354688599996734,
+  "optimized_build_seconds": 31.352052000002004,
+  "samples": 4080,
+  "meshes": 60,
+  "joints": 852,
+  "optimizations": {
+    "enabled": true,
+    "static_point_curves": 5451,
+    "shared_math_nodes": 0,
+    "new_skin_bindings": [
+      {
+        "skin": "C_eyebrows_local_SKC",
+        "before": 48,
+        "after": 34
+      },
+      {
+        "skin": "C_eyelids_local_SKC",
+        "before": 103,
+        "after": 85
+      },
+      {
+        "skin": "C_ear_nose_local_SKC",
+        "before": 13,
+        "after": 7
+      },
+      {
+        "skin": "C_nose_high_local_SKC",
+        "before": 7,
+        "after": 5
+      },
+      {
+        "skin": "C_eyelashes_local_SKC",
+        "before": 72,
+        "after": 42
+      },
+      {
+        "skin": "C_eyelashes_global_SKC",
+        "before": 49,
+        "after": 1
+      },
+      {
+        "skin": "C_pants_SKC",
+        "before": 24,
+        "after": 17
+      },
+      {
+        "skin": "C_guantes_SKC",
+        "before": 34,
+        "after": 26
+      },
+      {
+        "skin": "skinCluster13",
+        "before": 19,
+        "after": 16
+      },
+      {
+        "skin": "skinCluster41",
+        "before": 103,
+        "after": 76
+      },
+      {
+        "skin": "C_nose_local_SKC",
+        "before": 7,
+        "after": 5
+      },
+      {
+        "skin": "C_body_SKC_COPY_COPY",
+        "before": 388,
+        "after": 40
+      },
+      {
+        "skin": "collar1_BAKED_SKC",
+        "before": 10,
+        "after": 9
+      }
+    ]
+  },
+  "scope": "Two full CREATE RIG builds from the same current inputs. CPU quality, not viewport FPS."
+}

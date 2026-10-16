@@ -1,0 +1,1109 @@
+{
+  "success": true,
+  "result": [
+    {
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\final_profile_wrinkles0.txt",
+      "frames": 48,
+      "wrinkles": false,
+      "workload": {
+        "channels": {
+          "C_spine": [
+            [
+              "C_spine03_CTL.rotateZ",
+              -15,
+              15
+            ],
+            [
+              "C_localChest_CTL.rotateY",
+              -12,
+              12
+            ]
+          ],
+          "C_neck": [
+            [
+              "C_neck_CTL.rotateY",
+              -25,
+              25
+            ],
+            [
+              "C_head_CTL.rotateZ",
+              -10,
+              10
+            ]
+          ],
+          "C_jaw": [
+            [
+              "C_jaw_CTL.rotateX",
+              0,
+              30
+            ],
+            [
+              "L_lipCorner_CTL.translateX",
+              -2,
+              5
+            ],
+            [
+              "R_lipCorner_CTL.translateY",
+              -3,
+              3
+            ]
+          ],
+          "C_eyebrow": [
+            [
+              "L_eyebrowIn_CTL.translateY",
+              -2,
+              1
+            ],
+            [
+              "R_eyebrowMain_CTL.translateY",
+              -1,
+              1
+            ]
+          ],
+          "C_eyelid": [
+            [
+              "L_eyeDirect_CTL.Upper_Blink",
+              0,
+              1
+            ],
+            [
+              "R_eyeDirect_CTL.Lower_Blink",
+              0,
+              1
+            ]
+          ],
+          "C_cheekbone": [
+            [
+              "L_cheek_CTL.translateY",
+              -1,
+              1
+            ],
+            [
+              "R_cheek_CTL.translateY",
+              -1,
+              1
+            ]
+          ],
+          "C_ear": [
+            [
+              "L_ear00_CTL.rotateZ",
+              -15,
+              15
+            ],
+            [
+              "R_ear00_CTL.rotateZ",
+              -15,
+              15
+            ]
+          ],
+          "C_nose": [
+            [
+              "C_noseMain_CTL.translateY",
+              -0.4,
+              0.4
+            ]
+          ],
+          "C_teeth": [
+            [
+              "C_lowerTeeth_CTL.translateY",
+              -0.15,
+              0.15
+            ],
+            [
+              "C_upperTeeth_CTL.translateY",
+              -0.15,
+              0.15
+            ]
+          ],
+          "C_tongue": [
+            [
+              "C_tongue00_CTL.rotateY",
+              -10,
+              10
+            ],
+            [
+              "C_tongue02_CTL.rotateZ",
+              -10,
+              10
+            ]
+          ],
+          "L_arm": [
+            [
+              "L_shoulderFk_CTL.rotateZ",
+              0,
+              60
+            ],
+            [
+              "L_elbowFk_CTL.rotateY",
+              0,
+              70
+            ]
+          ],
+          "L_leg": [
+            [
+              "L_hipFk_CTL.rotateZ",
+              0,
+              55
+            ],
+            [
+              "L_kneeFk_CTL.rotateZ",
+              0,
+              70
+            ]
+          ],
+          "L_clavicle": [
+            [
+              "L_clavicle_CTL.rotateZ",
+              -10,
+              15
+            ]
+          ],
+          "L_fingers": [
+            [
+              "L_index01_CTL.rotateZ",
+              0,
+              35
+            ],
+            [
+              "L_middle01_CTL.rotateZ",
+              0,
+              35
+            ]
+          ],
+          "R_arm": [
+            [
+              "R_shoulderFk_CTL.rotateZ",
+              0,
+              60
+            ],
+            [
+              "R_elbowFk_CTL.rotateY",
+              0,
+              70
+            ]
+          ],
+          "R_leg": [
+            [
+              "R_hipFk_CTL.rotateZ",
+              0,
+              55
+            ],
+            [
+              "R_kneeFk_CTL.rotateZ",
+              0,
+              70
+            ]
+          ],
+          "R_clavicle": [
+            [
+              "R_clavicle_CTL.rotateZ",
+              -10,
+              15
+            ]
+          ],
+          "R_fingers": [
+            [
+              "R_index01_CTL.rotateZ",
+              0,
+              35
+            ],
+            [
+              "R_middle01_CTL.rotateZ",
+              0,
+              35
+            ]
+          ]
+        },
+        "workload": {
+          "animated_channels": [
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL.rotateX",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localChest_GRP|C_localChest_SPC|C_localChest_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_lowerTeeth_GRP|C_lowerTeeth_ANM|C_lowerTeeth_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_neck_GRP|C_neck_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_noseMain_GRP|C_noseMain_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_ANM|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_upperTeeth_GRP|C_upperTeeth_ANM|C_upperTeeth_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheek_GRP|L_cheek_ANM|L_cheek_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_clavicleControllers_GRP|L_clavicle_GRP|L_clavicle_OFF|L_clavicle_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_armControllers_GRP|L_armFkControllers_GRP|L_shoulderFk_GRP|L_shoulderFk_ANM|L_shoulderFk_CTL|L_elbowFk_GRP|L_elbowFk_ANM|L_elbowFk_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyeDirect_GRP|L_eyeDirect_OFF|L_eyeDirect_CTL.Upper_Blink",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_ANM|L_hipFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_SDK|L_index00_CTL|L_index01_GRP|L_index01_SDK|L_index01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_ANM|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_ANM|L_kneeFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL.translateX",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_SDK|L_middle00_CTL|L_middle01_GRP|L_middle01_SDK|L_middle01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_armControllers_GRP|L_armFkControllers_GRP|L_shoulderFk_GRP|L_shoulderFk_ANM|L_shoulderFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheek_GRP|R_cheek_ANM|R_cheek_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_clavicleControllers_GRP|R_clavicle_GRP|R_clavicle_OFF|R_clavicle_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_armControllers_GRP|R_armFkControllers_GRP|R_shoulderFk_GRP|R_shoulderFk_ANM|R_shoulderFk_CTL|R_elbowFk_GRP|R_elbowFk_ANM|R_elbowFk_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyeDirect_GRP|R_eyeDirect_OFF|R_eyeDirect_CTL.Lower_Blink",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_ANM|R_hipFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_SDK|R_index00_CTL|R_index01_GRP|R_index01_SDK|R_index01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_ANM|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_ANM|R_kneeFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_SDK|R_middle00_CTL|R_middle01_GRP|R_middle01_SDK|R_middle01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_armControllers_GRP|R_armFkControllers_GRP|R_shoulderFk_GRP|R_shoulderFk_ANM|R_shoulderFk_CTL.rotateZ"
+          ],
+          "curves": 34
+        }
+      },
+      "events": 2152659,
+      "buffer_mb": 256,
+      "buffer_not_exhausted": true,
+      "wall_seconds": 3.9544488999999885,
+      "meaning": "Diagnostic inclusive CPU events; overlapping events do not add to frame wall time.",
+      "environment": {
+        "root": "|Edward",
+        "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\driver_routing_20261015_v001\\Edward_baseline.mb",
+        "scene_sha256": "43c0374b9030a4959e73a39e28cc925d48fed34cc90e4960ccd2e3f0124365dc",
+        "code_sha256": "b1760cb4bf771c5666b595bbe7a208d5750976003d79a4e292b146d5a376fad5",
+        "code_files": {
+          "maya_tools/scripts/adonis/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "maya_tools/scripts/adonis/copyWeightsAdonis.py": "c3be18e58cedbbc240221eed8629f785ba1e174ef66684f32911a51184a0156c",
+          "maya_tools/scripts/biped/autorig/arm_module.py": "9cb93340d0c6c7d2dd5ba096c948c4a2a78c9666ad6e2f76fde22ed23c5c21e1",
+          "maya_tools/scripts/biped/autorig/arm_module_custom.py": "a81df30777fabd383b6f4f40df16482fe1af9735c354599b59c0a2f645c50c6d",
+          "maya_tools/scripts/biped/autorig/cheekbone_module.py": "6eb49e52375a403137c060045edf72d86225fd46b7f65089fbac9c039ce367cb",
+          "maya_tools/scripts/biped/autorig/clavicle_module.py": "1eeae6580f994943418c1f688e3c8e0a1ee76c92d20a9ff2164c7a029639fbb5",
+          "maya_tools/scripts/biped/autorig/ear_module.py": "679aa4cd672e854e7df84ab4695caddefa3fb08c14cc1be21de026a0621b5966",
+          "maya_tools/scripts/biped/autorig/eyebrow_module.py": "9f0d2246f75a11591993d1c4fdb3181b7e45c703cf0bec545b1bf036da9eac36",
+          "maya_tools/scripts/biped/autorig/eyelid_module.py": "bbc3e91ca4d369570109037577170153b46218f9929df2cd16d9256c6f7e0f57",
+          "maya_tools/scripts/biped/autorig/fingers_module.py": "2191bf1b5aedf37a27c2a989bfeba70398c581721b740cf843c28a45c07c703d",
+          "maya_tools/scripts/biped/autorig/jaw_module_bezier.py": "6924866eb84052dfd00d9a0eb65e674b815e16ec114ecee98a7a65e00355469c",
+          "maya_tools/scripts/biped/autorig/jaw_module_nurbs.py": "69dbb609ed1798c565528f0a02816834bc44f5e81130e137db1d3696ca84c767",
+          "maya_tools/scripts/biped/autorig/leg_module.py": "999771cb717e7ba18e046b9adf1c65355e1523bc56305272de437948697df35c",
+          "maya_tools/scripts/biped/autorig/leg_module_custom.py": "11344ce0ff44f1106ed66c72401b7b70362bd648ef3543791604080c751d8661",
+          "maya_tools/scripts/biped/autorig/neck_module_de_boor.py": "c2ca3823c84413ad7dc2f6294c2374d37ee34fddd25d09100285aabdf851db5b",
+          "maya_tools/scripts/biped/autorig/nose_module.py": "b2dd96f3a273e5e1050ca6c4c4c448f2edbf2cf0b159f0ce59f301041b6257fc",
+          "maya_tools/scripts/biped/autorig/spine_module.py": "0ea0217891acb559b044a9e6192d72b7e3a64fd9c9ebc48f18776e56cc90e65f",
+          "maya_tools/scripts/biped/autorig/teeth_module.py": "4e8285ca7811f8b9886157b16bc666dc103c842adbcea5219f38d387ff4a5a9a",
+          "maya_tools/scripts/biped/autorig/tongue_module.py": "a97342bf5ddeaa01a90f6ee503a0614dd9702d6845496c456d01c548b57d64b2",
+          "maya_tools/scripts/biped/autorig/wing_module.py": "c824ff7c264dcd8eea300572c495795c579ea340fdf517e026813047bc55319a",
+          "maya_tools/scripts/framework/__init__.py": "728964c8f02add7f9e7ae7deded676da1cd16c58145124efd8511b9140dd2609",
+          "maya_tools/scripts/framework/adapters.py": "3e57676b4d4bd4748abaae8716555eb8390fe6dd8fa083990bdc3c110e0b05a3",
+          "maya_tools/scripts/framework/context.py": "b6a1553cfffed051d7c41d854349cf580017a2022a2155663ed2355b11075c47",
+          "maya_tools/scripts/framework/execution.py": "1c1c0e80f10ac55d94e7b604fbe59e927369c5272eb78dbab6c74be37c0933e1",
+          "maya_tools/scripts/framework/registry.py": "212c71e7285c41b10f52835bb18054c23515c081b07eca50e4db787f22a055ad",
+          "maya_tools/scripts/framework/state.py": "afb2eb0029355b7119ce3bc58563c72bf934fb63e31c031230c4cc899ae3bf36",
+          "maya_tools/scripts/quadruped/autorig/digits_module.py": "ba73a19492265617df84c62201e4e217ffb0ad3ce428359a3f5e8e50958c8558",
+          "maya_tools/scripts/quadruped/autorig/leg_module.py": "3e647166f661420eb81688c92c80d7ada59a698da12e3a13f268739087315788",
+          "maya_tools/scripts/quadruped/autorig/leg_module_self.py": "49f0fc7c26f5e0beb6e9b7dbe1defc708a9217947af882c1e927315c001b9bc5",
+          "maya_tools/scripts/quadruped/autorig/neck_module.py": "2b4f4e0c2a61a8bcf9dc93b7f48e97d9ce3bb54d003d2d3b808c3f3f4883cef5",
+          "maya_tools/scripts/quadruped/autorig/spine_module.py": "866d14876d2e0b73e03a44fe50a87ffd036ebf234ab67680c6048bb11325bb4c",
+          "maya_tools/scripts/quadruped/autorig/tail_module.py": "ccdeebd910618d6d446f317045c1b2b8163ec350780ee5a3f4114693ef9098fd",
+          "maya_tools/scripts/tools/analysis/gallop_kinematics.py": "56804c697b12be4092e46bb97e1c0469f2a4972021ea4fec5a9aee7cac1c5939",
+          "maya_tools/scripts/tools/auto_collision.py": "66fd434f15cd5b973bc2c14abaac6fadd133b162583b20c9eefa0c6923364c41",
+          "maya_tools/scripts/tools/auto_skin_transfer.py": "ad3f63df23abd97fbd03c69288a61d23f8677096ace5bbcf554044e56f236bc2",
+          "maya_tools/scripts/tools/bifrost_wrinkles.py": "1c9f588fe6cc7e9b766fab34257476a45a2fa53f13aab8461d60d315e99da241",
+          "maya_tools/scripts/tools/build_edward_reference_picker.py": "cb3f517d474e98ec482622e8cba2f9860c4522f85eb186d4b08b21ca398483ee",
+          "maya_tools/scripts/tools/character_picker.py": "f0b81ba9724f6bcfc0f682d2c37167032352458a9f67fe98c300b5d4a99772e9",
+          "maya_tools/scripts/tools/character_picker_builder.py": "d3372166f2f21732b58c855df497ac4a0403c95d913beb5f3ad538bd0ed3c691",
+          "maya_tools/scripts/tools/character_picker_runtime.py": "d3828cc2aa501fe62ace2e073fccee1390836f15c88efa73991560b45aebd317",
+          "maya_tools/scripts/tools/character_picker_scene.py": "37026d980506d67097ca806da1a5cc98e9edf482576adcccb8c5a6223d13f126",
+          "maya_tools/scripts/tools/cloth_skin_transfer.py": "47229c1f5930e5a10073d7fca823dd768ce2f655a90fa45892040ac36b0f8647",
+          "maya_tools/scripts/tools/combination_correctives.py": "b714fb328e7c1c7612136cc202a6b6d27d6a34b10232fe5eb4d577e882cc34ef",
+          "maya_tools/scripts/tools/corrective_blendshape_manager.py": "14e3d9159ad43facdf6498b9eab57acb7cfbc32f0dd9282a42d7747686658b10",
+          "maya_tools/scripts/tools/corrective_transfer.py": "1cce1eb4e19f8c77c6e184df225e48964949324a55824c269acd119d7dc044fe",
+          "maya_tools/scripts/tools/curve_library.py": "d5da5cee10f9cb574ce4bd7b290aedb3e922fba15b71966ac01e0c5d1bf81160",
+          "maya_tools/scripts/tools/dress_keepout_chains.py": "abd5cd89c7f7b323bf356103c7faee0ca2f56366fba077dfdfc977c196ab2568",
+          "maya_tools/scripts/tools/edward_picker.py": "6b20b361491e1f04414d36e2395308b6bfca7e7a416905c61882ce916e01adc9",
+          "maya_tools/scripts/tools/efficient_cloth_skin.py": "50d5470bdb7bdde12a62fb920b69661da010541f275f40fca5b0b0fcee8d9a4c",
+          "maya_tools/scripts/tools/export_engine.py": "79e3da698a5bc79ff3f4323733de29c5a3e8d0e8ab4c654a4c38825532dc45f6",
+          "maya_tools/scripts/tools/facial_contact_validation.py": "950e6ee30ee7125e1bee4483d22bf255ed173b18d7f1ca644ee48c300a689de7",
+          "maya_tools/scripts/tools/facial_loop_riggers.py": "239d581198523f8ea7c878d852ba6fd5b7df371ad0d2b74836510f8f504863bf",
+          "maya_tools/scripts/tools/facial_loop_skinning.py": "c06c138933fc0533699eb1fe1b2a9352223ddf2cfe24650612bded4dc29b188e",
+          "maya_tools/scripts/tools/hybrid_bake.py": "158f9a4dcbe592436653669c0ce64e7580467b6148641d466ab0ed6e85f5c063",
+          "maya_tools/scripts/tools/ik_fk_match.py": "28e646f6d0a9393043f6ec575638e4e9626d71e9f3086131acc62fde2e6410f2",
+          "maya_tools/scripts/tools/install_character_picker.py": "395b1e058197a97d4a8764ceb7e5b3b7fe798ef7a2db2f796ca6c39eff242b54",
+          "maya_tools/scripts/tools/jaw_graph_optimizer.py": "cd26adf7f890b0e3435867836be4e0872e0030132879d74567cb1ffd0c7959bb",
+          "maya_tools/scripts/tools/joint_correctives.py": "2221b84d469aa99d1eb2d73b820673bed474926c17e0539fa18ad8bc809cfb4f",
+          "maya_tools/scripts/tools/mcp_listener.py": "2192a98c889b0671c271420bf27c55f8b9666f5c9eae21ba315f21bd923c58c5",
+          "maya_tools/scripts/tools/mesh_data_exporter.py": "98ec27e62eadc98c04bb7ff05e74ad5bec6019a8f4153e0e716abc247d213c80",
+          "maya_tools/scripts/tools/model_checker.py": "1ee1f74d3072f85278afdad7ecb1c82327845994a62b8ea8bc713e26a113425b",
+          "maya_tools/scripts/tools/model_checker_core.py": "e2d7b365c24d792f9607a1297756958fc9c78a599abd56b0b6ab07712e14cd0c",
+          "maya_tools/scripts/tools/muscle_keepout_skirt.py": "2d196e4fe7f159c05452791b47cee78b10024bee1a0697d44c07fc9e458cccc2",
+          "maya_tools/scripts/tools/orientation_correctives.py": "d3dfbe80634ece046a0994608a2e5396cd4b47497deb0d2363ab4586f59094ec",
+          "maya_tools/scripts/tools/pose_blendshapes.py": "62016048608233379eed13388b78f8adaa1554e25ee86a44dcf6adc2b3df9ce1",
+          "maya_tools/scripts/tools/pose_tester.py": "837effb0f6687038c78a754f10c0aa9a3190935fce0ac2fd0b751621cf62601b",
+          "maya_tools/scripts/tools/proximity_bake.py": "f2a34ead5b7cce17f0bb5820c8aae8de74eb1be256f08b1bb4f8b8999a7c46dc",
+          "maya_tools/scripts/tools/proximity_wrap.py": "9ea5b2906400ac4091acb5834c816892e6deedf78ffcff6bebf2631786bc9c0c",
+          "maya_tools/scripts/tools/proxy_locator.py": "5d6d4b12f8622ee332bc8c0546b88326b2025aed5283deb592569206857e9e46",
+          "maya_tools/scripts/tools/proxy_skinning.py": "97fa1c55e4085afe562747bc0fec33e5ac789824b89ddeb60c6696eea6efd8ec",
+          "maya_tools/scripts/tools/restore_node_visibility.py": "2d243b7cbe1017b75ea89080a2dbe573fa9b84564fd1d926e524f554a103dbbe",
+          "maya_tools/scripts/tools/rig_benchmark.py": "9e71d406fe7eb0adff8739d7184828f3d8cfe7ef7b553a3ca655c3e636551bce",
+          "maya_tools/scripts/tools/rig_migration.py": "fa8cc03ef8155cefbb83140396512c45698fa3e9181d46145810dd6f3b5a6409",
+          "maya_tools/scripts/tools/rig_package.py": "b468c0c43262315b4d303f530f353cde8262886c3e48ba14039c648229396afe",
+          "maya_tools/scripts/tools/rig_package_validate.py": "4efc15b8a9a4cc1a3f96eb4eb1aa30d576cb4c5259c29f2e0d44718f7f5917bb",
+          "maya_tools/scripts/tools/rig_performance.py": "a34c1e8b806049c28641cb6a1a183e0263efc6d7ec89db05bda2170dbfd3b9db",
+          "maya_tools/scripts/tools/rig_performance_policy.py": "9bbae1bbfc14f746ec9d3c4d53dd9080527010491525b99470e517d9c6772630",
+          "maya_tools/scripts/tools/rig_pose_library.py": "fa86317cfd947a62b1d5475eb2457ef63a60991ecae68c1604e273a2b3b0d649",
+          "maya_tools/scripts/tools/rig_profiles.py": "74b570739fa23241e72698c48491ad99272a7544d8bf101e983271279e3ccc71",
+          "maya_tools/scripts/tools/rig_roles.py": "20fab035e7a22814a77898b956ce52a08a0cc5b993ca3f25850452f24a0282da",
+          "maya_tools/scripts/tools/rig_surface_contact.py": "0d080117b9ab2bc7ecc3cce35196292fb9fc26f2c066da23192765a6bc536a8c",
+          "maya_tools/scripts/tools/rig_tools.py": "80bcf377a1c04a00b724acc2cee9c9d4bccf4299acea8683a84e365ca3356696",
+          "maya_tools/scripts/tools/rig_validation.py": "a5d912b132584bef5eaee26c6d6633e42e8f75e0ace52c2ebfd8cc8e52c201f9",
+          "maya_tools/scripts/tools/skin_manager_api.py": "f1f135b4ab1d2c1e9cc62454b7a87689ca894b1cb407086cf417170a592632aa",
+          "maya_tools/scripts/tools/skin_manager_ng.py": "5cfa79522f8f3cf7591509f66d0ec757f42f68079e5c791bb6bc4882304c62b5",
+          "maya_tools/scripts/tools/skinning_volume.py": "ddd5f885441b558bb798278a1f88e411ceb65eb3a15f9032dd14ec64e8421d9a",
+          "maya_tools/scripts/tools/skirt_collider.py": "8d0759d257c89b476bb9c8ac9f060c44dc9d1e88a1991f44f6171c36288f8337",
+          "maya_tools/scripts/tools/tests/fixtures/jaw_scene.py": "d9d7ec579efe542953290cf400725344daf93a010438667bee3d65fea9138b0a",
+          "maya_tools/scripts/tools/tests/test_autorig_muscle_correctives.py": "f7cfd9eb62346a74d1f92ae88273d7d71e89c77dba391c8282b61ad1a340405d",
+          "maya_tools/scripts/tools/tests/test_bifrost_wrinkles.py": "f06ca4ba57793d634a91370a0a3f9bafb0f996a261f5b0f158f626c8ef83e2fb",
+          "maya_tools/scripts/tools/tests/test_biped_foot_reach.py": "d77919e823547cd78ef196a55ff01324ac949f1d56bc9d1e4ec678bad08969d0",
+          "maya_tools/scripts/tools/tests/test_biped_spine_and_foot.py": "dd1c692d21e85212f3d749ea7fd5ce1d62395323c986248cc5fc5c37293cf2ae",
+          "maya_tools/scripts/tools/tests/test_build_horse_leg_self.py": "e73f5b12884bd9e41dabd9cf8a4f33a873c95e3851072f22a756e1ca9f63c63f",
+          "maya_tools/scripts/tools/tests/test_build_pipeline.py": "247a5de3f63d3c1a2f79d73ecc4cf6ee6039b17b6d53dd42f343512e3c2ee14f",
+          "maya_tools/scripts/tools/tests/test_character_picker_builder.py": "961b9af81a6f8819faa7aca631dc66176418d031a861234659995304c0458984",
+          "maya_tools/scripts/tools/tests/test_cloth_skin_transfer.py": "f33314c849c4846c35de80a781feebfeff638e32927caa7dcbebb89faf3e3377",
+          "maya_tools/scripts/tools/tests/test_combination_correctives.py": "84384e1615b4453a57c5215aabd0881234447bb00a66f4b0a23a1b0954477a08",
+          "maya_tools/scripts/tools/tests/test_combination_workflows.py": "64d0d70fb8829555a7b385f374bd52c3d368fdf0aded4869303fec9c215c8f9c",
+          "maya_tools/scripts/tools/tests/test_corrective_transfer.py": "1920eb17f4b07e12d2e09ce0bba71bf3a1543f6e9d052b8abf040952dbf05391",
+          "maya_tools/scripts/tools/tests/test_corrective_transfer_ui.py": "a4722080846c1a57e2cc17b35165120a750f6bd9cce4b56d475d63af4c5cfb83",
+          "maya_tools/scripts/tools/tests/test_deformation_bake.py": "fdd1e90e62dd2945b3ad1f7ff1f96d50fe169c464606dd4a178be26f3378fe2f",
+          "maya_tools/scripts/tools/tests/test_deformation_bake_ui.py": "899680592f926d39afd0ba2f350780868f15482cdabfbbfa803004df59eca0d0",
+          "maya_tools/scripts/tools/tests/test_edward_picker.py": "675529b1d40faf83a421eb4191e7610f8e996d26486095c020c945c3add4a649",
+          "maya_tools/scripts/tools/tests/test_eye_head_deformation.py": "05dd7b911b2c02ad153b630dca866cb245b665ca83fcfc486f84f3e9e89f5f93",
+          "maya_tools/scripts/tools/tests/test_face_squash_controls.py": "7d08670ad089ce335dd7c9a3ff85efb1664b00fff8ccff71e84a86a3807942a3",
+          "maya_tools/scripts/tools/tests/test_facial_contact_validation.py": "365d62c988ad87db77a72420fee6d52f8a52783105c846646ccef1d345cc3143",
+          "maya_tools/scripts/tools/tests/test_facial_loop_riggers.py": "a3d46807a942032eb679e0cc00bd8b52b2eecac40f4a5c69c0e7e935a0adb7ef",
+          "maya_tools/scripts/tools/tests/test_facial_loop_skinning.py": "89b458430893ff89976ae825d3f1e36e426dc3ea4c90ad71e2eac43e3f735fee",
+          "maya_tools/scripts/tools/tests/test_fingers_fit_rows.py": "f211e83e2e9757bfdaa02636e07e16c08aa62c400bc606b2e75363b48d729a59",
+          "maya_tools/scripts/tools/tests/test_general_rig_ui.py": "17cbdb448b60aedcf4f7ea348f8eba0024c0b1eb72355d05c64649e69574ff2c",
+          "maya_tools/scripts/tools/tests/test_hybrid_bake.py": "5a28e699d08ec54cbcb85eeaae24b9fa985dd6cc07489df8abfe7450e3fdd99b",
+          "maya_tools/scripts/tools/tests/test_ik_fk_settings_match.py": "de6a04cf72e1ea5bb31252cf46ed880b42181b0046ef35c9b4bd0c670cde107a",
+          "maya_tools/scripts/tools/tests/test_iris_setup.py": "edec0182881eb35d651b234e614d6e6bbd54b6b43a6afd3601d97ffb08a36b7f",
+          "maya_tools/scripts/tools/tests/test_jaw_auto_wide.py": "cee7f4c489f63ed769f213b77c6c1145beb1795130c763d9f2876e4bcc7e2e18",
+          "maya_tools/scripts/tools/tests/test_jaw_auto_wide_edward.py": "a47d3880741931fee9758103ce8b0579290c33e07d32602c34dc3230fbda122a",
+          "maya_tools/scripts/tools/tests/test_jaw_directional_defaults.py": "2f480270d5cfdad0b3770553c9021d403534394f9bb68254e0f34a41dd891ce9",
+          "maya_tools/scripts/tools/tests/test_jaw_lips.py": "30b7f69ca5e638c5586bb9a6b746f306d95f4bd2839296cd5549647f18ddd403",
+          "maya_tools/scripts/tools/tests/test_jaw_orientation.py": "cfd41a21e3cddc36f22cd4fae557801426d8ac59c045ce5b5b98f29d2fa1a45b",
+          "maya_tools/scripts/tools/tests/test_jaw_single_surface.py": "606e19f95a499eadfd32b018411b3230b5114b70a78902f066c2aaac103282e8",
+          "maya_tools/scripts/tools/tests/test_joint_correctives.py": "d3454b0b9e8fc0fb13d796a8519515143b739777652e0a72e3f23983df3afc78",
+          "maya_tools/scripts/tools/tests/test_joint_correctives_ui.py": "14c5273aeb4b888a982a090ae3f014a1528f9d0d389400e2c8104380ea5c6bdc",
+          "maya_tools/scripts/tools/tests/test_lip_surface_depth.py": "fc161b2a6a0dfd2c685a91f0fd911b0a25e4eb71ed3a6d5471fab6f9d6205e14",
+          "maya_tools/scripts/tools/tests/test_lip_u_response.py": "4a14de1ebcde7484ad7bb2629f5f11a6d8ea9fefad494fbd19455d632c8a4e26",
+          "maya_tools/scripts/tools/tests/test_model_checker.py": "f74d1a36734912d60cf0465a8ddd1d111e615f8763a9ce7dabf4046a4fbcd35b",
+          "maya_tools/scripts/tools/tests/test_module_nurbs.py": "5bd939f41a26f27692acd10de8b249b8c4616249ae2a89166bbef1dfd1e2460c",
+          "maya_tools/scripts/tools/tests/test_muscle_keepout_skirt.py": "09a0a5734ddba2a5fd249c61b366387584fc72f509593c384796c44cda390179",
+          "maya_tools/scripts/tools/tests/test_neck_stretch_squash.py": "ce8bff4659dc02254cfebc37058af0307cd54f34f4a89eb08299e65a845834aa",
+          "maya_tools/scripts/tools/tests/test_nini_real_loop_rig.py": "3315a3669754e6bcdd10db3a5c69597c8f24b2ebe13697c4f511e7f6122a8741",
+          "maya_tools/scripts/tools/tests/test_orientation_correctives.py": "879eb45c39bdc38ca261b1565c702be440f50e6811be8330b233c91ba36b4108",
+          "maya_tools/scripts/tools/tests/test_orientation_correctives_ui.py": "af0a9ad75ed6c1f2cc78064407e4328414f86134bf7652716c1d2d8c36a1287b",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes.py": "8d30e1e53f4643487107ed7aeb709cabffa53cc522792d60a774dbfebc84a7fe",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_mirror.py": "8fbd3b3add1755461e3c4b09e2185b8d1f155130c0b1174c456c492888be464b",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_mirror_shape.py": "41078b134506521d62f3abe76537724d107c9417d68fa0db7e9aacad505ca878",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_transform.py": "0705c2eb4ab5a41654c4b9a6b9cd6664642dd512cef8778604ccc8e77db28fb1",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_ui.py": "8b1ad5200b34a1ff9b6e85e3a58fcf5930d0e34daed27976601d80ef0b571b9f",
+          "maya_tools/scripts/tools/tests/test_pose_names_neutral.py": "065643c1ff000ff46e5f51d3b31031c55864b1950f9d76f84c3d21861d33fda5",
+          "maya_tools/scripts/tools/tests/test_proximity_bake.py": "2ed3296c0a01cb11117eee02853d5d83248627e116f7b8ae37d49216535e0846",
+          "maya_tools/scripts/tools/tests/test_regional_wrinkle_workflow.py": "79e3d0a49e60bf682bb20b8b765d180726f9f92ece6345b1fa76e5637291b253",
+          "maya_tools/scripts/tools/tests/test_rig_benchmark_protocol.py": "0bc4e97bf41ad67ffc5df37289a7e26d6900ccce601b9a4113cc819c30175661",
+          "maya_tools/scripts/tools/tests/test_rig_compute_bypass.py": "a2f2997843d02dfbe94cefce709f62d238977506f55829b58bfe82889b62d19b",
+          "maya_tools/scripts/tools/tests/test_rig_migration.py": "630fbff5fed29507f32856a570b9690d476111310da5d7d673bc2e69be3877d5",
+          "maya_tools/scripts/tools/tests/test_rig_migration_correctives.py": "5f7b1facd2e6d8e1128801b0c6e1706fa9c13542721ddc710bc0e828410c68e0",
+          "maya_tools/scripts/tools/tests/test_rig_package.py": "691c560d8290a9dd5edd2e66cedb261442bcb7147491f1cecb6893ce8277c724",
+          "maya_tools/scripts/tools/tests/test_rig_package_ui.py": "afd855786c49a7ccd0fb1ffaa5cf51422173d5a9d53fae6cd0e82b1bfa27f4a8",
+          "maya_tools/scripts/tools/tests/test_rig_performance.py": "1d276b1bb5ab2b90c8a8b3d7ce101f681e2a3cadd85147e8a3eba9057654823e",
+          "maya_tools/scripts/tools/tests/test_rig_performance_policy.py": "94fda6013f147bd179f1fffd5bef658a5d7ff9894126c88633cd38ccde7792b6",
+          "maya_tools/scripts/tools/tests/test_rig_pose_library.py": "26e67789af472ef108c12c03dfebfa1dd868083282a6c2ad4028101d6b9c7ddd",
+          "maya_tools/scripts/tools/tests/test_rig_profiles.py": "a2c0261ac2aed3a560ca20abaf3667926665cbdef1f7221b2cea8a86449d0c45",
+          "maya_tools/scripts/tools/tests/test_rig_roles.py": "e08c09020ba762cb330eddd1c8fa762c93c61f49e65100563e53b330ddb6fdb4",
+          "maya_tools/scripts/tools/tests/test_rig_surface_contact.py": "6db72be4db990c956b8d2ed97ae9029def3cde1af13f1cd3c268eea4e7faf0df",
+          "maya_tools/scripts/tools/tests/test_rig_validation.py": "67e165307bf377f2e1eec23fa94c665a989c52858487321ff3aa996b22eb3eec",
+          "maya_tools/scripts/tools/tests/test_rig_validation_ui.py": "aae80cc92510afacbdcee8c910d4e576539177a6ac8b545f94c4f04f6c5ac5ea",
+          "maya_tools/scripts/tools/tests/test_skin_manager_api.py": "967c225ee1f58bc8a675c54e43c00349abb4fe4d63a6e099964ea92c1c25a670",
+          "maya_tools/scripts/tools/tests/test_skin_sparse_influences.py": "71b5626ede3d4c0954c563e27bbefefdef50f0ac73c558f51fcb63818b56da36",
+          "maya_tools/scripts/tools/tests/test_skinning_manager_ui.py": "ea4be0940b9af293fab197b1abc4c9a464754340d2a88ea41bb58096534623e3",
+          "maya_tools/scripts/tools/tests/test_skinning_volume.py": "b42214b3c6677adbd76cb8301bb7bb53da1ad890c8eadefe3bb5ef4c2c2ae001",
+          "maya_tools/scripts/tools/tests/test_socket_fleshy.py": "d61f30a93d3ac20d21a785fd4c72a60c2019cd5aae9dd85a5dba6091a44ce6b7",
+          "maya_tools/scripts/tools/tests/test_spine_chest_stretch.py": "44bd2f0c93b130200ff002b26667d8cc129c914c4aa63f980093c709a352f430",
+          "maya_tools/scripts/tools/tests/test_tool_framework.py": "99e538c91df7da57a360a816612c239935939ccc735fbbf15bd416ce0d0014b5",
+          "maya_tools/scripts/tools/tests/test_tool_framework_live.py": "eba380191f1ac461cda5fdf3f222f2cbdcbb24fd44933a849c74e45e66f8419b",
+          "maya_tools/scripts/tools/tests/test_ui_theme.py": "b9af3be34c283c630af327d44aa904244b7dc1178cb65f2af039c9ddcbecf12d",
+          "maya_tools/scripts/tools/tests/test_wing_module.py": "0297c9587d8bda9f74d0206e07204ab41c947d1baa8082a8952d5c8aa843223e",
+          "maya_tools/scripts/tools/tests/test_wrinkle_presets.py": "54ad42b24aaeaf1c8e6b8b418f65f220a4e2bcda3b4676aeee91073cf2c0b9f9",
+          "maya_tools/scripts/tools/tests/test_wrinkle_regions_native.py": "d159b283a7664e487f1dde421244aeb7fbc9dd7c49ee738baa915fef9301a5b6",
+          "maya_tools/scripts/tools/tests/test_wrinkle_regions_ui.py": "4c15590f8f8ecaf32fff27eec7a34a7cf5b3e73279788649c1dfbaf428fe64d6",
+          "maya_tools/scripts/tools/tests/test_wrinkle_skin_roundtrip.py": "ebbb4a7fe1035460cc07968cfe0fcead7896015081a582f08a1f7e5dd4336bde",
+          "maya_tools/scripts/tools/wrinkle_presets.py": "b9c169cee44db82e5c49ed3a8ff1da31875a5a88a42a5e23a2f46e98927e1e29",
+          "maya_tools/scripts/tools/wrinkle_regions_core.py": "420248a8ca8375c0877d93f825eea120e0c5680b82c52b16f87e066e756db8a2",
+          "maya_tools/scripts/ui/auto_rig_shelf.py": "79c5aa62f91e46591cc10e0961837f8806d5c013afba85faaba2f3fe07b08a13",
+          "maya_tools/scripts/ui/auto_rig_UI.py": "d35a34c536e30788b437b0726442211a6f4de12c6a594f9e680ec3591d833568",
+          "maya_tools/scripts/ui/corrective_curve_UI.py": "db05070de02aed3bb2f82c8edf32aa7b732a6a7a61444709b1cadc4d634f1a5c",
+          "maya_tools/scripts/ui/deboor_tools_UI.py": "bb9c9c3194d5018b4964ed6a995e350971026d6719779c508be26478bfcf89df",
+          "maya_tools/scripts/ui/facial_loop_skinning_UI.py": "c8fd93860011b23b2569b3cf93241dd08414239e3f0af15aaf65dddda366ed24",
+          "maya_tools/scripts/ui/framework_panels.py": "0b473f4d135fdc484558a41fe9fdd1eeeb4c6123ef933825aa7b7373a7fef667",
+          "maya_tools/scripts/ui/joint_correctives_UI.py": "b8e2a331b752e85885408c1460356c0b622e3a8efd8c8b1dbfe6d1643b0448ec",
+          "maya_tools/scripts/ui/pose_blendshapes_UI.py": "73911a6649cda482484b54add309108e1688ebfe881f99f0287f9a420670198d",
+          "maya_tools/scripts/ui/pose_tester_UI.py": "40205ffb14c83f524d1081b48349e58aba576d7c13e867c51c7ef2ffc05ca955",
+          "maya_tools/scripts/ui/proximity_bake_UI.py": "1036bafa66c10aa97816d92c26277c23226509da226020d3ac07c6dd0a643d61",
+          "maya_tools/scripts/ui/rig_package_UI.py": "8a6ab5188a0e2802a53169b8aa0365ca3b1836724bf472f5b03ca8b476011fa0",
+          "maya_tools/scripts/ui/rig_progress.py": "2e92148ad6b7980e72fe637b30af78ab467ac3edaf9fa1f9431b096843e17be5",
+          "maya_tools/scripts/ui/rig_tools_panel.py": "e40d46859ba1e1b8c49f6d16d65e02962c28c4e43afc47a02227bbbb5d1e404d",
+          "maya_tools/scripts/ui/skin_transfer_UI.py": "3fb60e660848a66a8df0b08fa43facaf016dec59420220a2e15d3c07c14f21e1",
+          "maya_tools/scripts/ui/skinning_manager_UI.py": "0f80415ad6754e34176796c57f3516fa4649b7bac0c7b617622cc9cf89f2daa8",
+          "maya_tools/scripts/ui/skinning_tool_adapters.py": "e1e29c540667e3ef3f3167364ec916d931572028f5335f1522cd7cab4331ef93",
+          "maya_tools/scripts/ui/tool_framework_UI.py": "63182a293e5bdb6faf7d057c1703bbbfcba5da6d5f30884472d1ea77977b6d5d",
+          "maya_tools/scripts/ui/wrinkle_regions_UI.py": "2c239382f1683b9b6a9f46d6deb8380e12f1614ebd5fc19d9380f54d25c20f25",
+          "maya_tools/scripts/userSetup.py": "820d581e7f0b4be66ca2abea9a9b2d69648b92f224c8175f7493e61d91177b6e",
+          "maya_tools/scripts/utils/basic_structure.py": "bda839f48d773fe69387e5f9f06822dcd21272fc71fb5dbb2506982614530928",
+          "maya_tools/scripts/utils/blendshape.py": "81ba5a4c068b74947369c5813d0266e1dc5d1ba91f76c271992c60fee3b7e2e2",
+          "maya_tools/scripts/utils/build_timing.py": "f8492ba8a5e9e67348a835a6f2b41b94af1e8e2fb9ab84b68bdad2ff7d6ab853",
+          "maya_tools/scripts/utils/character_manager.py": "f789ff479f367417dc55052500cbf2f55086c165fb422a1024296dddfb7e8364",
+          "maya_tools/scripts/utils/correctives.py": "6ad9958009af5b19cad107e764455f897dea0f872c9ec0a942dc641991d55488",
+          "maya_tools/scripts/utils/create_rig.py": "2bf23a011209407fa0d415409b13aec340461f041a6d2c25de89e3ab8ad22206",
+          "maya_tools/scripts/utils/curve_tool.py": "a5a6f0fbdb52d543531632c2a22ccbec9126c3c974a9f5d651a54876df565054",
+          "maya_tools/scripts/utils/custom_ik_solver.py": "10e69e7e7b7c2203cbee5846520723eab0853195306a18f265b8dc92cb31c266",
+          "maya_tools/scripts/utils/data_manager.py": "a1b6f1ec1146b31f2062a4c55cdc1505faeed7ff5427fe8e92b96d9b3fb0d950",
+          "maya_tools/scripts/utils/de_boor_core.py": "6393d48fafeef22b2afe668b75aae4ba4cb1e6d8bea83a9209752024840916c1",
+          "maya_tools/scripts/utils/guides_manager.py": "4474bd4de39ae0092b7f6b7beb70f8dd6130a095d253bca4f9aa519599c205ab",
+          "maya_tools/scripts/utils/ik_fk_match.py": "207c0b0388ac7e062eb858789c216e823e4c73349887f0370d9a73a722c5944f",
+          "maya_tools/scripts/utils/lip_surface_depth.py": "1b95306e6d31999298c9b9a0f5ed8c6ebdd77af85e58eab8372a11200eea8c09",
+          "maya_tools/scripts/utils/matrix_manager.py": "f43f097ca61f0ba4eb1de28f7c8e633f51867e8ab36d0c223b31c0d9553ecd65",
+          "maya_tools/scripts/utils/model_cache.py": "bc83894f879c6ee68e6d196f3554fb2bf0baedb6dc2da0ab4e448efaff994c6a",
+          "maya_tools/scripts/utils/model_qc.py": "cd8a2f146d3291fcdc04b4d01470ddbc558b387d499be49735f9a11bbd76303d",
+          "maya_tools/scripts/utils/module_guides.py": "53bff563904ed67eaa007ac647a5245972eb6a22805b0f9dd32b80fc4bbe2984",
+          "maya_tools/scripts/utils/module_nurbs.py": "f7e5e845f83b87016a5a9ba31f56834820d89c949197841dbe9709101083063d",
+          "maya_tools/scripts/utils/picker.py": "65a07f08afcfe2a62d582a01d66ad56c0fa0188d1c7bc930013f3f37f4bc8cf8",
+          "maya_tools/scripts/utils/ribbon.py": "1fe4a1dd1342fa4833e0f7b585cbf9f9c02a33a62ff18bcc3ac8b0c86be2778c",
+          "maya_tools/scripts/utils/rig_manager.py": "7e07212e1a82356d16c66177575306645b592db0317a76661506759288378422",
+          "maya_tools/scripts/utils/skincluster_curve.py": "e110663e2c5bc63f65c8588016d3e0b1c715d9291f4a994090faad9c108ce701",
+          "maya_tools/scripts/utils/skincluster_surface.py": "4d6d18b135a552efccfc264adb386cce6105697e94a12a2e65448f993a52c4f7",
+          "maya_tools/scripts/utils/surface_pin.py": "b4fa1b11392b0cdff25800e603e261abca485035a24d39a4e224e528d160ae4f",
+          "maya_tools/scripts/utils/ui_theme.py": "71af6b631baa9191c20d5d2e771b76d21d78f1377c1912f092cd3e690e8c8f83",
+          "maya_tools/scripts/utils/ui_utils.py": "8f6a48804f0315d1b4805fa8afa5f341ae5e4ecc9977f539179b747ac239be8c"
+        },
+        "maya": "2026",
+        "api": 20260303,
+        "units": "cm",
+        "time_unit": "film",
+        "platform": "Windows-10-10.0.26300-SP0",
+        "logical_cpus": 32,
+        "plugins": {
+          "poseInterpolator": "dev",
+          "motionMaker": "3.0",
+          "matrixNodes": "1.0",
+          "cacheEvaluator": "1.0",
+          "deformerEvaluator": "1.0",
+          "xgenToolkit": "1.0",
+          "mayaUsdPlugin": "0.34.5",
+          "ufeSupport": "0.1",
+          "renderSetup": "1.0",
+          "GPUBuiltInDeformer": "1.0",
+          "mayaVnnPlugin": "2.1.0.219",
+          "stereoCamera": "10.0",
+          "lookdevKit": "1.0",
+          "quatNodes": "1.0",
+          "mtoa": "5.5.5.2",
+          "bifrostGraph": "2.15.0.0-202510081557-e33c3fe",
+          "modelingToolkit": "0.0.0.0"
+        },
+        "gpu_device": {
+          "status": "available",
+          "value": [
+            "  Version : 2016.11.62.12. Feature Level 5.\n",
+            "  Adapter : NVIDIA GeForce RTX 5060 Laptop GPU/PCIe/SSE2\n",
+            "  Vendor ID: 4318. Device ID : 42888\n",
+            "  Driver : C:\\Windows\\System32\\DriverStore\\FileRepository\\nvhmi.inf_amd64_feba0f789c2537f5\\nvoglv64.dll.dll:32.0.16.1656.\n",
+            "  API : OpenGL V.4.6.\n",
+            "  Max texture size : 16384 * 16384.\n",
+            "  Max texture coords : 32\n",
+            "  Shader versions supported (Vertex: 5, Geometry: 5, Pixel 5).\n",
+            "  Shader compiler profile : (Best card profile)\n",
+            "  Active stereo support available : 0\n",
+            "  GPU Memory Limit : 8151 MB.\n",
+            "  CPU Memory Limit : 30776.9 MB.\n"
+          ]
+        },
+        "viewports": {
+          "modelPanel1": {
+            "width": 640,
+            "height": 480,
+            "camera": "|top",
+            "appearance": "smoothShaded",
+            "textures": false
+          },
+          "modelPanel2": {
+            "width": 100,
+            "height": 30,
+            "camera": "|side",
+            "appearance": "smoothShaded",
+            "textures": false
+          },
+          "modelPanel3": {
+            "width": 100,
+            "height": 30,
+            "camera": "|front",
+            "appearance": "smoothShaded",
+            "textures": false
+          },
+          "modelPanel4": {
+            "width": 1319,
+            "height": 749,
+            "camera": "|persp",
+            "appearance": "smoothShaded",
+            "textures": false
+          }
+        }
+      }
+    },
+    {
+      "file": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\full_audit_20261015_v001\\final_profile_wrinkles1.txt",
+      "frames": 48,
+      "wrinkles": true,
+      "workload": {
+        "channels": {
+          "C_spine": [
+            [
+              "C_spine03_CTL.rotateZ",
+              -15,
+              15
+            ],
+            [
+              "C_localChest_CTL.rotateY",
+              -12,
+              12
+            ]
+          ],
+          "C_neck": [
+            [
+              "C_neck_CTL.rotateY",
+              -25,
+              25
+            ],
+            [
+              "C_head_CTL.rotateZ",
+              -10,
+              10
+            ]
+          ],
+          "C_jaw": [
+            [
+              "C_jaw_CTL.rotateX",
+              0,
+              30
+            ],
+            [
+              "L_lipCorner_CTL.translateX",
+              -2,
+              5
+            ],
+            [
+              "R_lipCorner_CTL.translateY",
+              -3,
+              3
+            ]
+          ],
+          "C_eyebrow": [
+            [
+              "L_eyebrowIn_CTL.translateY",
+              -2,
+              1
+            ],
+            [
+              "R_eyebrowMain_CTL.translateY",
+              -1,
+              1
+            ]
+          ],
+          "C_eyelid": [
+            [
+              "L_eyeDirect_CTL.Upper_Blink",
+              0,
+              1
+            ],
+            [
+              "R_eyeDirect_CTL.Lower_Blink",
+              0,
+              1
+            ]
+          ],
+          "C_cheekbone": [
+            [
+              "L_cheek_CTL.translateY",
+              -1,
+              1
+            ],
+            [
+              "R_cheek_CTL.translateY",
+              -1,
+              1
+            ]
+          ],
+          "C_ear": [
+            [
+              "L_ear00_CTL.rotateZ",
+              -15,
+              15
+            ],
+            [
+              "R_ear00_CTL.rotateZ",
+              -15,
+              15
+            ]
+          ],
+          "C_nose": [
+            [
+              "C_noseMain_CTL.translateY",
+              -0.4,
+              0.4
+            ]
+          ],
+          "C_teeth": [
+            [
+              "C_lowerTeeth_CTL.translateY",
+              -0.15,
+              0.15
+            ],
+            [
+              "C_upperTeeth_CTL.translateY",
+              -0.15,
+              0.15
+            ]
+          ],
+          "C_tongue": [
+            [
+              "C_tongue00_CTL.rotateY",
+              -10,
+              10
+            ],
+            [
+              "C_tongue02_CTL.rotateZ",
+              -10,
+              10
+            ]
+          ],
+          "L_arm": [
+            [
+              "L_shoulderFk_CTL.rotateZ",
+              0,
+              60
+            ],
+            [
+              "L_elbowFk_CTL.rotateY",
+              0,
+              70
+            ]
+          ],
+          "L_leg": [
+            [
+              "L_hipFk_CTL.rotateZ",
+              0,
+              55
+            ],
+            [
+              "L_kneeFk_CTL.rotateZ",
+              0,
+              70
+            ]
+          ],
+          "L_clavicle": [
+            [
+              "L_clavicle_CTL.rotateZ",
+              -10,
+              15
+            ]
+          ],
+          "L_fingers": [
+            [
+              "L_index01_CTL.rotateZ",
+              0,
+              35
+            ],
+            [
+              "L_middle01_CTL.rotateZ",
+              0,
+              35
+            ]
+          ],
+          "R_arm": [
+            [
+              "R_shoulderFk_CTL.rotateZ",
+              0,
+              60
+            ],
+            [
+              "R_elbowFk_CTL.rotateY",
+              0,
+              70
+            ]
+          ],
+          "R_leg": [
+            [
+              "R_hipFk_CTL.rotateZ",
+              0,
+              55
+            ],
+            [
+              "R_kneeFk_CTL.rotateZ",
+              0,
+              70
+            ]
+          ],
+          "R_clavicle": [
+            [
+              "R_clavicle_CTL.rotateZ",
+              -10,
+              15
+            ]
+          ],
+          "R_fingers": [
+            [
+              "R_index01_CTL.rotateZ",
+              0,
+              35
+            ],
+            [
+              "R_middle01_CTL.rotateZ",
+              0,
+              35
+            ]
+          ]
+        },
+        "workload": {
+          "animated_channels": [
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_jaw_GRP|C_jaw_OFF|C_jaw_CTL.rotateX",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_localChest_GRP|C_localChest_SPC|C_localChest_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_lowerTeeth_GRP|C_lowerTeeth_ANM|C_lowerTeeth_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_neck_GRP|C_neck_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_noseControllers_GRP|C_noseMain_GRP|C_noseMain_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_spineControllers_GRP|C_spine00_GRP|C_spine00_ANM|C_spine00_CTL|C_spine03_GRP|C_spine03_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_tongueControllers_GRP|C_tongue00_GRP|C_tongue00_ANM|C_tongue00_CTL|C_tongue01_GRP|C_tongue01_ANM|C_tongue01_CTL|C_tongue02_GRP|C_tongue02_ANM|C_tongue02_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_teethControllers_GRP|C_upperTeeth_GRP|C_upperTeeth_ANM|C_upperTeeth_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|L_cheek_GRP|L_cheek_ANM|L_cheek_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_clavicleControllers_GRP|L_clavicle_GRP|L_clavicle_OFF|L_clavicle_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|L_ear00_GRP|L_ear00_ANM|L_ear00_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_armControllers_GRP|L_armFkControllers_GRP|L_shoulderFk_GRP|L_shoulderFk_ANM|L_shoulderFk_CTL|L_elbowFk_GRP|L_elbowFk_ANM|L_elbowFk_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|L_eyeDirect_GRP|L_eyeDirect_OFF|L_eyeDirect_CTL.Upper_Blink",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|L_eyebrowMain_GRP|L_eyebrowMain_OFF|L_eyebrowMain_CTL|L_eyebrowIn_GRP|L_eyebrowIn_OFF|L_eyebrowIn_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_ANM|L_hipFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_index00_GRP|L_index00_SDK|L_index00_CTL|L_index01_GRP|L_index01_SDK|L_index01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_legControllers_GRP|L_legFkControllers_GRP|L_hipFk_GRP|L_hipFk_ANM|L_hipFk_CTL|L_kneeFk_GRP|L_kneeFk_ANM|L_kneeFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|L_lipCorner_GRP|L_lipCorner_OFF|L_lipCorner_CTL.translateX",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_fingersControllers_GRP|L_middle00_GRP|L_middle00_SDK|L_middle00_CTL|L_middle01_GRP|L_middle01_SDK|L_middle01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|L_armControllers_GRP|L_armFkControllers_GRP|L_shoulderFk_GRP|L_shoulderFk_ANM|L_shoulderFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_cheekboneControllers_GRP|R_cheek_GRP|R_cheek_ANM|R_cheek_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_clavicleControllers_GRP|R_clavicle_GRP|R_clavicle_OFF|R_clavicle_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_earControllers_GRP|R_ear00_GRP|R_ear00_ANM|R_ear00_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_armControllers_GRP|R_armFkControllers_GRP|R_shoulderFk_GRP|R_shoulderFk_ANM|R_shoulderFk_CTL|R_elbowFk_GRP|R_elbowFk_ANM|R_elbowFk_CTL.rotateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|R_eyeDirect_GRP|R_eyeDirect_OFF|R_eyeDirect_CTL.Lower_Blink",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_eyebrowControllers_GRP|R_eyebrowMain_GRP|R_eyebrowMain_OFF|R_eyebrowMain_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_ANM|R_hipFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_index00_GRP|R_index00_SDK|R_index00_CTL|R_index01_GRP|R_index01_SDK|R_index01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_legControllers_GRP|R_legFkControllers_GRP|R_hipFk_GRP|R_hipFk_ANM|R_hipFk_CTL|R_kneeFk_GRP|R_kneeFk_ANM|R_kneeFk_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|C_neckControllers_GRP|C_head_GRP|C_head_CTL|C_face_GRP|C_face_ANM|C_jawControllers_GRP|C_lipsControllers_GRP|C_primaryLipsControllers_GRP|R_lipCorner_GRP|R_lipCorner_OFF|R_lipCorner_CTL.translateY",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_fingersControllers_GRP|R_middle00_GRP|R_middle00_SDK|R_middle00_CTL|R_middle01_GRP|R_middle01_SDK|R_middle01_CTL.rotateZ",
+            "|Edward|controls_GRP|C_character_GRP|C_character_ANM|C_character_CTL|C_masterwalk_GRP|C_masterwalk_ANM|C_masterwalk_CTL|R_armControllers_GRP|R_armFkControllers_GRP|R_shoulderFk_GRP|R_shoulderFk_ANM|R_shoulderFk_CTL.rotateZ"
+          ],
+          "curves": 34
+        }
+      },
+      "events": 2155934,
+      "buffer_mb": 256,
+      "buffer_not_exhausted": true,
+      "wall_seconds": 7.576147100000526,
+      "meaning": "Diagnostic inclusive CPU events; overlapping events do not add to frame wall time.",
+      "environment": {
+        "root": "|Edward",
+        "scene": "C:\\proyectos\\auto-rig\\maya_tools\\assets\\Edward\\experiments\\driver_routing_20261015_v001\\Edward_baseline.mb",
+        "scene_sha256": "43c0374b9030a4959e73a39e28cc925d48fed34cc90e4960ccd2e3f0124365dc",
+        "code_sha256": "b1760cb4bf771c5666b595bbe7a208d5750976003d79a4e292b146d5a376fad5",
+        "code_files": {
+          "maya_tools/scripts/adonis/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "maya_tools/scripts/adonis/copyWeightsAdonis.py": "c3be18e58cedbbc240221eed8629f785ba1e174ef66684f32911a51184a0156c",
+          "maya_tools/scripts/biped/autorig/arm_module.py": "9cb93340d0c6c7d2dd5ba096c948c4a2a78c9666ad6e2f76fde22ed23c5c21e1",
+          "maya_tools/scripts/biped/autorig/arm_module_custom.py": "a81df30777fabd383b6f4f40df16482fe1af9735c354599b59c0a2f645c50c6d",
+          "maya_tools/scripts/biped/autorig/cheekbone_module.py": "6eb49e52375a403137c060045edf72d86225fd46b7f65089fbac9c039ce367cb",
+          "maya_tools/scripts/biped/autorig/clavicle_module.py": "1eeae6580f994943418c1f688e3c8e0a1ee76c92d20a9ff2164c7a029639fbb5",
+          "maya_tools/scripts/biped/autorig/ear_module.py": "679aa4cd672e854e7df84ab4695caddefa3fb08c14cc1be21de026a0621b5966",
+          "maya_tools/scripts/biped/autorig/eyebrow_module.py": "9f0d2246f75a11591993d1c4fdb3181b7e45c703cf0bec545b1bf036da9eac36",
+          "maya_tools/scripts/biped/autorig/eyelid_module.py": "bbc3e91ca4d369570109037577170153b46218f9929df2cd16d9256c6f7e0f57",
+          "maya_tools/scripts/biped/autorig/fingers_module.py": "2191bf1b5aedf37a27c2a989bfeba70398c581721b740cf843c28a45c07c703d",
+          "maya_tools/scripts/biped/autorig/jaw_module_bezier.py": "6924866eb84052dfd00d9a0eb65e674b815e16ec114ecee98a7a65e00355469c",
+          "maya_tools/scripts/biped/autorig/jaw_module_nurbs.py": "69dbb609ed1798c565528f0a02816834bc44f5e81130e137db1d3696ca84c767",
+          "maya_tools/scripts/biped/autorig/leg_module.py": "999771cb717e7ba18e046b9adf1c65355e1523bc56305272de437948697df35c",
+          "maya_tools/scripts/biped/autorig/leg_module_custom.py": "11344ce0ff44f1106ed66c72401b7b70362bd648ef3543791604080c751d8661",
+          "maya_tools/scripts/biped/autorig/neck_module_de_boor.py": "c2ca3823c84413ad7dc2f6294c2374d37ee34fddd25d09100285aabdf851db5b",
+          "maya_tools/scripts/biped/autorig/nose_module.py": "b2dd96f3a273e5e1050ca6c4c4c448f2edbf2cf0b159f0ce59f301041b6257fc",
+          "maya_tools/scripts/biped/autorig/spine_module.py": "0ea0217891acb559b044a9e6192d72b7e3a64fd9c9ebc48f18776e56cc90e65f",
+          "maya_tools/scripts/biped/autorig/teeth_module.py": "4e8285ca7811f8b9886157b16bc666dc103c842adbcea5219f38d387ff4a5a9a",
+          "maya_tools/scripts/biped/autorig/tongue_module.py": "a97342bf5ddeaa01a90f6ee503a0614dd9702d6845496c456d01c548b57d64b2",
+          "maya_tools/scripts/biped/autorig/wing_module.py": "c824ff7c264dcd8eea300572c495795c579ea340fdf517e026813047bc55319a",
+          "maya_tools/scripts/framework/__init__.py": "728964c8f02add7f9e7ae7deded676da1cd16c58145124efd8511b9140dd2609",
+          "maya_tools/scripts/framework/adapters.py": "3e57676b4d4bd4748abaae8716555eb8390fe6dd8fa083990bdc3c110e0b05a3",
+          "maya_tools/scripts/framework/context.py": "b6a1553cfffed051d7c41d854349cf580017a2022a2155663ed2355b11075c47",
+          "maya_tools/scripts/framework/execution.py": "1c1c0e80f10ac55d94e7b604fbe59e927369c5272eb78dbab6c74be37c0933e1",
+          "maya_tools/scripts/framework/registry.py": "212c71e7285c41b10f52835bb18054c23515c081b07eca50e4db787f22a055ad",
+          "maya_tools/scripts/framework/state.py": "afb2eb0029355b7119ce3bc58563c72bf934fb63e31c031230c4cc899ae3bf36",
+          "maya_tools/scripts/quadruped/autorig/digits_module.py": "ba73a19492265617df84c62201e4e217ffb0ad3ce428359a3f5e8e50958c8558",
+          "maya_tools/scripts/quadruped/autorig/leg_module.py": "3e647166f661420eb81688c92c80d7ada59a698da12e3a13f268739087315788",
+          "maya_tools/scripts/quadruped/autorig/leg_module_self.py": "49f0fc7c26f5e0beb6e9b7dbe1defc708a9217947af882c1e927315c001b9bc5",
+          "maya_tools/scripts/quadruped/autorig/neck_module.py": "2b4f4e0c2a61a8bcf9dc93b7f48e97d9ce3bb54d003d2d3b808c3f3f4883cef5",
+          "maya_tools/scripts/quadruped/autorig/spine_module.py": "866d14876d2e0b73e03a44fe50a87ffd036ebf234ab67680c6048bb11325bb4c",
+          "maya_tools/scripts/quadruped/autorig/tail_module.py": "ccdeebd910618d6d446f317045c1b2b8163ec350780ee5a3f4114693ef9098fd",
+          "maya_tools/scripts/tools/analysis/gallop_kinematics.py": "56804c697b12be4092e46bb97e1c0469f2a4972021ea4fec5a9aee7cac1c5939",
+          "maya_tools/scripts/tools/auto_collision.py": "66fd434f15cd5b973bc2c14abaac6fadd133b162583b20c9eefa0c6923364c41",
+          "maya_tools/scripts/tools/auto_skin_transfer.py": "ad3f63df23abd97fbd03c69288a61d23f8677096ace5bbcf554044e56f236bc2",
+          "maya_tools/scripts/tools/bifrost_wrinkles.py": "1c9f588fe6cc7e9b766fab34257476a45a2fa53f13aab8461d60d315e99da241",
+          "maya_tools/scripts/tools/build_edward_reference_picker.py": "cb3f517d474e98ec482622e8cba2f9860c4522f85eb186d4b08b21ca398483ee",
+          "maya_tools/scripts/tools/character_picker.py": "f0b81ba9724f6bcfc0f682d2c37167032352458a9f67fe98c300b5d4a99772e9",
+          "maya_tools/scripts/tools/character_picker_builder.py": "d3372166f2f21732b58c855df497ac4a0403c95d913beb5f3ad538bd0ed3c691",
+          "maya_tools/scripts/tools/character_picker_runtime.py": "d3828cc2aa501fe62ace2e073fccee1390836f15c88efa73991560b45aebd317",
+          "maya_tools/scripts/tools/character_picker_scene.py": "37026d980506d67097ca806da1a5cc98e9edf482576adcccb8c5a6223d13f126",
+          "maya_tools/scripts/tools/cloth_skin_transfer.py": "47229c1f5930e5a10073d7fca823dd768ce2f655a90fa45892040ac36b0f8647",
+          "maya_tools/scripts/tools/combination_correctives.py": "b714fb328e7c1c7612136cc202a6b6d27d6a34b10232fe5eb4d577e882cc34ef",
+          "maya_tools/scripts/tools/corrective_blendshape_manager.py": "14e3d9159ad43facdf6498b9eab57acb7cfbc32f0dd9282a42d7747686658b10",
+          "maya_tools/scripts/tools/corrective_transfer.py": "1cce1eb4e19f8c77c6e184df225e48964949324a55824c269acd119d7dc044fe",
+          "maya_tools/scripts/tools/curve_library.py": "d5da5cee10f9cb574ce4bd7b290aedb3e922fba15b71966ac01e0c5d1bf81160",
+          "maya_tools/scripts/tools/dress_keepout_chains.py": "abd5cd89c7f7b323bf356103c7faee0ca2f56366fba077dfdfc977c196ab2568",
+          "maya_tools/scripts/tools/edward_picker.py": "6b20b361491e1f04414d36e2395308b6bfca7e7a416905c61882ce916e01adc9",
+          "maya_tools/scripts/tools/efficient_cloth_skin.py": "50d5470bdb7bdde12a62fb920b69661da010541f275f40fca5b0b0fcee8d9a4c",
+          "maya_tools/scripts/tools/export_engine.py": "79e3da698a5bc79ff3f4323733de29c5a3e8d0e8ab4c654a4c38825532dc45f6",
+          "maya_tools/scripts/tools/facial_contact_validation.py": "950e6ee30ee7125e1bee4483d22bf255ed173b18d7f1ca644ee48c300a689de7",
+          "maya_tools/scripts/tools/facial_loop_riggers.py": "239d581198523f8ea7c878d852ba6fd5b7df371ad0d2b74836510f8f504863bf",
+          "maya_tools/scripts/tools/facial_loop_skinning.py": "c06c138933fc0533699eb1fe1b2a9352223ddf2cfe24650612bded4dc29b188e",
+          "maya_tools/scripts/tools/hybrid_bake.py": "158f9a4dcbe592436653669c0ce64e7580467b6148641d466ab0ed6e85f5c063",
+          "maya_tools/scripts/tools/ik_fk_match.py": "28e646f6d0a9393043f6ec575638e4e9626d71e9f3086131acc62fde2e6410f2",
+          "maya_tools/scripts/tools/install_character_picker.py": "395b1e058197a97d4a8764ceb7e5b3b7fe798ef7a2db2f796ca6c39eff242b54",
+          "maya_tools/scripts/tools/jaw_graph_optimizer.py": "cd26adf7f890b0e3435867836be4e0872e0030132879d74567cb1ffd0c7959bb",
+          "maya_tools/scripts/tools/joint_correctives.py": "2221b84d469aa99d1eb2d73b820673bed474926c17e0539fa18ad8bc809cfb4f",
+          "maya_tools/scripts/tools/mcp_listener.py": "2192a98c889b0671c271420bf27c55f8b9666f5c9eae21ba315f21bd923c58c5",
+          "maya_tools/scripts/tools/mesh_data_exporter.py": "98ec27e62eadc98c04bb7ff05e74ad5bec6019a8f4153e0e716abc247d213c80",
+          "maya_tools/scripts/tools/model_checker.py": "1ee1f74d3072f85278afdad7ecb1c82327845994a62b8ea8bc713e26a113425b",
+          "maya_tools/scripts/tools/model_checker_core.py": "e2d7b365c24d792f9607a1297756958fc9c78a599abd56b0b6ab07712e14cd0c",
+          "maya_tools/scripts/tools/muscle_keepout_skirt.py": "2d196e4fe7f159c05452791b47cee78b10024bee1a0697d44c07fc9e458cccc2",
+          "maya_tools/scripts/tools/orientation_correctives.py": "d3dfbe80634ece046a0994608a2e5396cd4b47497deb0d2363ab4586f59094ec",
+          "maya_tools/scripts/tools/pose_blendshapes.py": "62016048608233379eed13388b78f8adaa1554e25ee86a44dcf6adc2b3df9ce1",
+          "maya_tools/scripts/tools/pose_tester.py": "837effb0f6687038c78a754f10c0aa9a3190935fce0ac2fd0b751621cf62601b",
+          "maya_tools/scripts/tools/proximity_bake.py": "f2a34ead5b7cce17f0bb5820c8aae8de74eb1be256f08b1bb4f8b8999a7c46dc",
+          "maya_tools/scripts/tools/proximity_wrap.py": "9ea5b2906400ac4091acb5834c816892e6deedf78ffcff6bebf2631786bc9c0c",
+          "maya_tools/scripts/tools/proxy_locator.py": "5d6d4b12f8622ee332bc8c0546b88326b2025aed5283deb592569206857e9e46",
+          "maya_tools/scripts/tools/proxy_skinning.py": "97fa1c55e4085afe562747bc0fec33e5ac789824b89ddeb60c6696eea6efd8ec",
+          "maya_tools/scripts/tools/restore_node_visibility.py": "2d243b7cbe1017b75ea89080a2dbe573fa9b84564fd1d926e524f554a103dbbe",
+          "maya_tools/scripts/tools/rig_benchmark.py": "9e71d406fe7eb0adff8739d7184828f3d8cfe7ef7b553a3ca655c3e636551bce",
+          "maya_tools/scripts/tools/rig_migration.py": "fa8cc03ef8155cefbb83140396512c45698fa3e9181d46145810dd6f3b5a6409",
+          "maya_tools/scripts/tools/rig_package.py": "b468c0c43262315b4d303f530f353cde8262886c3e48ba14039c648229396afe",
+          "maya_tools/scripts/tools/rig_package_validate.py": "4efc15b8a9a4cc1a3f96eb4eb1aa30d576cb4c5259c29f2e0d44718f7f5917bb",
+          "maya_tools/scripts/tools/rig_performance.py": "a34c1e8b806049c28641cb6a1a183e0263efc6d7ec89db05bda2170dbfd3b9db",
+          "maya_tools/scripts/tools/rig_performance_policy.py": "9bbae1bbfc14f746ec9d3c4d53dd9080527010491525b99470e517d9c6772630",
+          "maya_tools/scripts/tools/rig_pose_library.py": "fa86317cfd947a62b1d5475eb2457ef63a60991ecae68c1604e273a2b3b0d649",
+          "maya_tools/scripts/tools/rig_profiles.py": "74b570739fa23241e72698c48491ad99272a7544d8bf101e983271279e3ccc71",
+          "maya_tools/scripts/tools/rig_roles.py": "20fab035e7a22814a77898b956ce52a08a0cc5b993ca3f25850452f24a0282da",
+          "maya_tools/scripts/tools/rig_surface_contact.py": "0d080117b9ab2bc7ecc3cce35196292fb9fc26f2c066da23192765a6bc536a8c",
+          "maya_tools/scripts/tools/rig_tools.py": "80bcf377a1c04a00b724acc2cee9c9d4bccf4299acea8683a84e365ca3356696",
+          "maya_tools/scripts/tools/rig_validation.py": "a5d912b132584bef5eaee26c6d6633e42e8f75e0ace52c2ebfd8cc8e52c201f9",
+          "maya_tools/scripts/tools/skin_manager_api.py": "f1f135b4ab1d2c1e9cc62454b7a87689ca894b1cb407086cf417170a592632aa",
+          "maya_tools/scripts/tools/skin_manager_ng.py": "5cfa79522f8f3cf7591509f66d0ec757f42f68079e5c791bb6bc4882304c62b5",
+          "maya_tools/scripts/tools/skinning_volume.py": "ddd5f885441b558bb798278a1f88e411ceb65eb3a15f9032dd14ec64e8421d9a",
+          "maya_tools/scripts/tools/skirt_collider.py": "8d0759d257c89b476bb9c8ac9f060c44dc9d1e88a1991f44f6171c36288f8337",
+          "maya_tools/scripts/tools/tests/fixtures/jaw_scene.py": "d9d7ec579efe542953290cf400725344daf93a010438667bee3d65fea9138b0a",
+          "maya_tools/scripts/tools/tests/test_autorig_muscle_correctives.py": "f7cfd9eb62346a74d1f92ae88273d7d71e89c77dba391c8282b61ad1a340405d",
+          "maya_tools/scripts/tools/tests/test_bifrost_wrinkles.py": "f06ca4ba57793d634a91370a0a3f9bafb0f996a261f5b0f158f626c8ef83e2fb",
+          "maya_tools/scripts/tools/tests/test_biped_foot_reach.py": "d77919e823547cd78ef196a55ff01324ac949f1d56bc9d1e4ec678bad08969d0",
+          "maya_tools/scripts/tools/tests/test_biped_spine_and_foot.py": "dd1c692d21e85212f3d749ea7fd5ce1d62395323c986248cc5fc5c37293cf2ae",
+          "maya_tools/scripts/tools/tests/test_build_horse_leg_self.py": "e73f5b12884bd9e41dabd9cf8a4f33a873c95e3851072f22a756e1ca9f63c63f",
+          "maya_tools/scripts/tools/tests/test_build_pipeline.py": "247a5de3f63d3c1a2f79d73ecc4cf6ee6039b17b6d53dd42f343512e3c2ee14f",
+          "maya_tools/scripts/tools/tests/test_character_picker_builder.py": "961b9af81a6f8819faa7aca631dc66176418d031a861234659995304c0458984",
+          "maya_tools/scripts/tools/tests/test_cloth_skin_transfer.py": "f33314c849c4846c35de80a781feebfeff638e32927caa7dcbebb89faf3e3377",
+          "maya_tools/scripts/tools/tests/test_combination_correctives.py": "84384e1615b4453a57c5215aabd0881234447bb00a66f4b0a23a1b0954477a08",
+          "maya_tools/scripts/tools/tests/test_combination_workflows.py": "64d0d70fb8829555a7b385f374bd52c3d368fdf0aded4869303fec9c215c8f9c",
+          "maya_tools/scripts/tools/tests/test_corrective_transfer.py": "1920eb17f4b07e12d2e09ce0bba71bf3a1543f6e9d052b8abf040952dbf05391",
+          "maya_tools/scripts/tools/tests/test_corrective_transfer_ui.py": "a4722080846c1a57e2cc17b35165120a750f6bd9cce4b56d475d63af4c5cfb83",
+          "maya_tools/scripts/tools/tests/test_deformation_bake.py": "fdd1e90e62dd2945b3ad1f7ff1f96d50fe169c464606dd4a178be26f3378fe2f",
+          "maya_tools/scripts/tools/tests/test_deformation_bake_ui.py": "899680592f926d39afd0ba2f350780868f15482cdabfbbfa803004df59eca0d0",
+          "maya_tools/scripts/tools/tests/test_edward_picker.py": "675529b1d40faf83a421eb4191e7610f8e996d26486095c020c945c3add4a649",
+          "maya_tools/scripts/tools/tests/test_eye_head_deformation.py": "05dd7b911b2c02ad153b630dca866cb245b665ca83fcfc486f84f3e9e89f5f93",
+          "maya_tools/scripts/tools/tests/test_face_squash_controls.py": "7d08670ad089ce335dd7c9a3ff85efb1664b00fff8ccff71e84a86a3807942a3",
+          "maya_tools/scripts/tools/tests/test_facial_contact_validation.py": "365d62c988ad87db77a72420fee6d52f8a52783105c846646ccef1d345cc3143",
+          "maya_tools/scripts/tools/tests/test_facial_loop_riggers.py": "a3d46807a942032eb679e0cc00bd8b52b2eecac40f4a5c69c0e7e935a0adb7ef",
+          "maya_tools/scripts/tools/tests/test_facial_loop_skinning.py": "89b458430893ff89976ae825d3f1e36e426dc3ea4c90ad71e2eac43e3f735fee",
+          "maya_tools/scripts/tools/tests/test_fingers_fit_rows.py": "f211e83e2e9757bfdaa02636e07e16c08aa62c400bc606b2e75363b48d729a59",
+          "maya_tools/scripts/tools/tests/test_general_rig_ui.py": "17cbdb448b60aedcf4f7ea348f8eba0024c0b1eb72355d05c64649e69574ff2c",
+          "maya_tools/scripts/tools/tests/test_hybrid_bake.py": "5a28e699d08ec54cbcb85eeaae24b9fa985dd6cc07489df8abfe7450e3fdd99b",
+          "maya_tools/scripts/tools/tests/test_ik_fk_settings_match.py": "de6a04cf72e1ea5bb31252cf46ed880b42181b0046ef35c9b4bd0c670cde107a",
+          "maya_tools/scripts/tools/tests/test_iris_setup.py": "edec0182881eb35d651b234e614d6e6bbd54b6b43a6afd3601d97ffb08a36b7f",
+          "maya_tools/scripts/tools/tests/test_jaw_auto_wide.py": "cee7f4c489f63ed769f213b77c6c1145beb1795130c763d9f2876e4bcc7e2e18",
+          "maya_tools/scripts/tools/tests/test_jaw_auto_wide_edward.py": "a47d3880741931fee9758103ce8b0579290c33e07d32602c34dc3230fbda122a",
+          "maya_tools/scripts/tools/tests/test_jaw_directional_defaults.py": "2f480270d5cfdad0b3770553c9021d403534394f9bb68254e0f34a41dd891ce9",
+          "maya_tools/scripts/tools/tests/test_jaw_lips.py": "30b7f69ca5e638c5586bb9a6b746f306d95f4bd2839296cd5549647f18ddd403",
+          "maya_tools/scripts/tools/tests/test_jaw_orientation.py": "cfd41a21e3cddc36f22cd4fae557801426d8ac59c045ce5b5b98f29d2fa1a45b",
+          "maya_tools/scripts/tools/tests/test_jaw_single_surface.py": "606e19f95a499eadfd32b018411b3230b5114b70a78902f066c2aaac103282e8",
+          "maya_tools/scripts/tools/tests/test_joint_correctives.py": "d3454b0b9e8fc0fb13d796a8519515143b739777652e0a72e3f23983df3afc78",
+          "maya_tools/scripts/tools/tests/test_joint_correctives_ui.py": "14c5273aeb4b888a982a090ae3f014a1528f9d0d389400e2c8104380ea5c6bdc",
+          "maya_tools/scripts/tools/tests/test_lip_surface_depth.py": "fc161b2a6a0dfd2c685a91f0fd911b0a25e4eb71ed3a6d5471fab6f9d6205e14",
+          "maya_tools/scripts/tools/tests/test_lip_u_response.py": "4a14de1ebcde7484ad7bb2629f5f11a6d8ea9fefad494fbd19455d632c8a4e26",
+          "maya_tools/scripts/tools/tests/test_model_checker.py": "f74d1a36734912d60cf0465a8ddd1d111e615f8763a9ce7dabf4046a4fbcd35b",
+          "maya_tools/scripts/tools/tests/test_module_nurbs.py": "5bd939f41a26f27692acd10de8b249b8c4616249ae2a89166bbef1dfd1e2460c",
+          "maya_tools/scripts/tools/tests/test_muscle_keepout_skirt.py": "09a0a5734ddba2a5fd249c61b366387584fc72f509593c384796c44cda390179",
+          "maya_tools/scripts/tools/tests/test_neck_stretch_squash.py": "ce8bff4659dc02254cfebc37058af0307cd54f34f4a89eb08299e65a845834aa",
+          "maya_tools/scripts/tools/tests/test_nini_real_loop_rig.py": "3315a3669754e6bcdd10db3a5c69597c8f24b2ebe13697c4f511e7f6122a8741",
+          "maya_tools/scripts/tools/tests/test_orientation_correctives.py": "879eb45c39bdc38ca261b1565c702be440f50e6811be8330b233c91ba36b4108",
+          "maya_tools/scripts/tools/tests/test_orientation_correctives_ui.py": "af0a9ad75ed6c1f2cc78064407e4328414f86134bf7652716c1d2d8c36a1287b",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes.py": "8d30e1e53f4643487107ed7aeb709cabffa53cc522792d60a774dbfebc84a7fe",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_mirror.py": "8fbd3b3add1755461e3c4b09e2185b8d1f155130c0b1174c456c492888be464b",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_mirror_shape.py": "41078b134506521d62f3abe76537724d107c9417d68fa0db7e9aacad505ca878",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_transform.py": "0705c2eb4ab5a41654c4b9a6b9cd6664642dd512cef8778604ccc8e77db28fb1",
+          "maya_tools/scripts/tools/tests/test_pose_blendshapes_ui.py": "8b1ad5200b34a1ff9b6e85e3a58fcf5930d0e34daed27976601d80ef0b571b9f",
+          "maya_tools/scripts/tools/tests/test_pose_names_neutral.py": "065643c1ff000ff46e5f51d3b31031c55864b1950f9d76f84c3d21861d33fda5",
+          "maya_tools/scripts/tools/tests/test_proximity_bake.py": "2ed3296c0a01cb11117eee02853d5d83248627e116f7b8ae37d49216535e0846",
+          "maya_tools/scripts/tools/tests/test_regional_wrinkle_workflow.py": "79e3d0a49e60bf682bb20b8b765d180726f9f92ece6345b1fa76e5637291b253",
+          "maya_tools/scripts/tools/tests/test_rig_benchmark_protocol.py": "0bc4e97bf41ad67ffc5df37289a7e26d6900ccce601b9a4113cc819c30175661",
+          "maya_tools/scripts/tools/tests/test_rig_compute_bypass.py": "a2f2997843d02dfbe94cefce709f62d238977506f55829b58bfe82889b62d19b",
+          "maya_tools/scripts/tools/tests/test_rig_migration.py": "630fbff5fed29507f32856a570b9690d476111310da5d7d673bc2e69be3877d5",
+          "maya_tools/scripts/tools/tests/test_rig_migration_correctives.py": "5f7b1facd2e6d8e1128801b0c6e1706fa9c13542721ddc710bc0e828410c68e0",
+          "maya_tools/scripts/tools/tests/test_rig_package.py": "691c560d8290a9dd5edd2e66cedb261442bcb7147491f1cecb6893ce8277c724",
+          "maya_tools/scripts/tools/tests/test_rig_package_ui.py": "afd855786c49a7ccd0fb1ffaa5cf51422173d5a9d53fae6cd0e82b1bfa27f4a8",
+          "maya_tools/scripts/tools/tests/test_rig_performance.py": "1d276b1bb5ab2b90c8a8b3d7ce101f681e2a3cadd85147e8a3eba9057654823e",
+          "maya_tools/scripts/tools/tests/test_rig_performance_policy.py": "94fda6013f147bd179f1fffd5bef658a5d7ff9894126c88633cd38ccde7792b6",
+          "maya_tools/scripts/tools/tests/test_rig_pose_library.py": "26e67789af472ef108c12c03dfebfa1dd868083282a6c2ad4028101d6b9c7ddd",
+          "maya_tools/scripts/tools/tests/test_rig_profiles.py": "a2c0261ac2aed3a560ca20abaf3667926665cbdef1f7221b2cea8a86449d0c45",
+          "maya_tools/scripts/tools/tests/test_rig_roles.py": "e08c09020ba762cb330eddd1c8fa762c93c61f49e65100563e53b330ddb6fdb4",
+          "maya_tools/scripts/tools/tests/test_rig_surface_contact.py": "6db72be4db990c956b8d2ed97ae9029def3cde1af13f1cd3c268eea4e7faf0df",
+          "maya_tools/scripts/tools/tests/test_rig_validation.py": "67e165307bf377f2e1eec23fa94c665a989c52858487321ff3aa996b22eb3eec",
+          "maya_tools/scripts/tools/tests/test_rig_validation_ui.py": "aae80cc92510afacbdcee8c910d4e576539177a6ac8b545f94c4f04f6c5ac5ea",
+          "maya_tools/scripts/tools/tests/test_skin_manager_api.py": "967c225ee1f58bc8a675c54e43c00349abb4fe4d63a6e099964ea92c1c25a670",
+          "maya_tools/scripts/tools/tests/test_skin_sparse_influences.py": "71b5626ede3d4c0954c563e27bbefefdef50f0ac73c558f51fcb63818b56da36",
+          "maya_tools/scripts/tools/tests/test_skinning_manager_ui.py": "ea4be0940b9af293fab197b1abc4c9a464754340d2a88ea41bb58096534623e3",
+          "maya_tools/scripts/tools/tests/test_skinning_volume.py": "b42214b3c6677adbd76cb8301bb7bb53da1ad890c8eadefe3bb5ef4c2c2ae001",
+          "maya_tools/scripts/tools/tests/test_socket_fleshy.py": "d61f30a93d3ac20d21a785fd4c72a60c2019cd5aae9dd85a5dba6091a44ce6b7",
+          "maya_tools/scripts/tools/tests/test_spine_chest_stretch.py": "44bd2f0c93b130200ff002b26667d8cc129c914c4aa63f980093c709a352f430",
+          "maya_tools/scripts/tools/tests/test_tool_framework.py": "99e538c91df7da57a360a816612c239935939ccc735fbbf15bd416ce0d0014b5",
+          "maya_tools/scripts/tools/tests/test_tool_framework_live.py": "eba380191f1ac461cda5fdf3f222f2cbdcbb24fd44933a849c74e45e66f8419b",
+          "maya_tools/scripts/tools/tests/test_ui_theme.py": "b9af3be34c283c630af327d44aa904244b7dc1178cb65f2af039c9ddcbecf12d",
+          "maya_tools/scripts/tools/tests/test_wing_module.py": "0297c9587d8bda9f74d0206e07204ab41c947d1baa8082a8952d5c8aa843223e",
+          "maya_tools/scripts/tools/tests/test_wrinkle_presets.py": "54ad42b24aaeaf1c8e6b8b418f65f220a4e2bcda3b4676aeee91073cf2c0b9f9",
+          "maya_tools/scripts/tools/tests/test_wrinkle_regions_native.py": "d159b283a7664e487f1dde421244aeb7fbc9dd7c49ee738baa915fef9301a5b6",
+          "maya_tools/scripts/tools/tests/test_wrinkle_regions_ui.py": "4c15590f8f8ecaf32fff27eec7a34a7cf5b3e73279788649c1dfbaf428fe64d6",
+          "maya_tools/scripts/tools/tests/test_wrinkle_skin_roundtrip.py": "ebbb4a7fe1035460cc07968cfe0fcead7896015081a582f08a1f7e5dd4336bde",
+          "maya_tools/scripts/tools/wrinkle_presets.py": "b9c169cee44db82e5c49ed3a8ff1da31875a5a88a42a5e23a2f46e98927e1e29",
+          "maya_tools/scripts/tools/wrinkle_regions_core.py": "420248a8ca8375c0877d93f825eea120e0c5680b82c52b16f87e066e756db8a2",
+          "maya_tools/scripts/ui/auto_rig_shelf.py": "79c5aa62f91e46591cc10e0961837f8806d5c013afba85faaba2f3fe07b08a13",
+          "maya_tools/scripts/ui/auto_rig_UI.py": "d35a34c536e30788b437b0726442211a6f4de12c6a594f9e680ec3591d833568",
+          "maya_tools/scripts/ui/corrective_curve_UI.py": "db05070de02aed3bb2f82c8edf32aa7b732a6a7a61444709b1cadc4d634f1a5c",
+          "maya_tools/scripts/ui/deboor_tools_UI.py": "bb9c9c3194d5018b4964ed6a995e350971026d6719779c508be26478bfcf89df",
+          "maya_tools/scripts/ui/facial_loop_skinning_UI.py": "c8fd93860011b23b2569b3cf93241dd08414239e3f0af15aaf65dddda366ed24",
+          "maya_tools/scripts/ui/framework_panels.py": "0b473f4d135fdc484558a41fe9fdd1eeeb4c6123ef933825aa7b7373a7fef667",
+          "maya_tools/scripts/ui/joint_correctives_UI.py": "b8e2a331b752e85885408c1460356c0b622e3a8efd8c8b1dbfe6d1643b0448ec",
+          "maya_tools/scripts/ui/pose_blendshapes_UI.py": "73911a6649cda482484b54add309108e1688ebfe881f99f0287f9a420670198d",
+          "maya_tools/scripts/ui/pose_tester_UI.py": "40205ffb14c83f524d1081b48349e58aba576d7c13e867c51c7ef2ffc05ca955",
+          "maya_tools/scripts/ui/proximity_bake_UI.py": "1036bafa66c10aa97816d92c26277c23226509da226020d3ac07c6dd0a643d61",
+          "maya_tools/scripts/ui/rig_package_UI.py": "8a6ab5188a0e2802a53169b8aa0365ca3b1836724bf472f5b03ca8b476011fa0",
+          "maya_tools/scripts/ui/rig_progress.py": "2e92148ad6b7980e72fe637b30af78ab467ac3edaf9fa1f9431b096843e17be5",
+          "maya_tools/scripts/ui/rig_tools_panel.py": "e40d46859ba1e1b8c49f6d16d65e02962c28c4e43afc47a02227bbbb5d1e404d",
+          "maya_tools/scripts/ui/skin_transfer_UI.py": "3fb60e660848a66a8df0b08fa43facaf016dec59420220a2e15d3c07c14f21e1",
+          "maya_tools/scripts/ui/skinning_manager_UI.py": "0f80415ad6754e34176796c57f3516fa4649b7bac0c7b617622cc9cf89f2daa8",
+          "maya_tools/scripts/ui/skinning_tool_adapters.py": "e1e29c540667e3ef3f3167364ec916d931572028f5335f1522cd7cab4331ef93",
+          "maya_tools/scripts/ui/tool_framework_UI.py": "63182a293e5bdb6faf7d057c1703bbbfcba5da6d5f30884472d1ea77977b6d5d",
+          "maya_tools/scripts/ui/wrinkle_regions_UI.py": "2c239382f1683b9b6a9f46d6deb8380e12f1614ebd5fc19d9380f54d25c20f25",
+          "maya_tools/scripts/userSetup.py": "820d581e7f0b4be66ca2abea9a9b2d69648b92f224c8175f7493e61d91177b6e",
+          "maya_tools/scripts/utils/basic_structure.py": "bda839f48d773fe69387e5f9f06822dcd21272fc71fb5dbb2506982614530928",
+          "maya_tools/scripts/utils/blendshape.py": "81ba5a4c068b74947369c5813d0266e1dc5d1ba91f76c271992c60fee3b7e2e2",
+          "maya_tools/scripts/utils/build_timing.py": "f8492ba8a5e9e67348a835a6f2b41b94af1e8e2fb9ab84b68bdad2ff7d6ab853",
+          "maya_tools/scripts/utils/character_manager.py": "f789ff479f367417dc55052500cbf2f55086c165fb422a1024296dddfb7e8364",
+          "maya_tools/scripts/utils/correctives.py": "6ad9958009af5b19cad107e764455f897dea0f872c9ec0a942dc641991d55488",
+          "maya_tools/scripts/utils/create_rig.py": "2bf23a011209407fa0d415409b13aec340461f041a6d2c25de89e3ab8ad22206",
+          "maya_tools/scripts/utils/curve_tool.py": "a5a6f0fbdb52d543531632c2a22ccbec9126c3c974a9f5d651a54876df565054",
+          "maya_tools/scripts/utils/custom_ik_solver.py": "10e69e7e7b7c2203cbee5846520723eab0853195306a18f265b8dc92cb31c266",
+          "maya_tools/scripts/utils/data_manager.py": "a1b6f1ec1146b31f2062a4c55cdc1505faeed7ff5427fe8e92b96d9b3fb0d950",
+          "maya_tools/scripts/utils/de_boor_core.py": "6393d48fafeef22b2afe668b75aae4ba4cb1e6d8bea83a9209752024840916c1",
+          "maya_tools/scripts/utils/guides_manager.py": "4474bd4de39ae0092b7f6b7beb70f8dd6130a095d253bca4f9aa519599c205ab",
+          "maya_tools/scripts/utils/ik_fk_match.py": "207c0b0388ac7e062eb858789c216e823e4c73349887f0370d9a73a722c5944f",
+          "maya_tools/scripts/utils/lip_surface_depth.py": "1b95306e6d31999298c9b9a0f5ed8c6ebdd77af85e58eab8372a11200eea8c09",
+          "maya_tools/scripts/utils/matrix_manager.py": "f43f097ca61f0ba4eb1de28f7c8e633f51867e8ab36d0c223b31c0d9553ecd65",
+          "maya_tools/scripts/utils/model_cache.py": "bc83894f879c6ee68e6d196f3554fb2bf0baedb6dc2da0ab4e448efaff994c6a",
+          "maya_tools/scripts/utils/model_qc.py": "cd8a2f146d3291fcdc04b4d01470ddbc558b387d499be49735f9a11bbd76303d",
+          "maya_tools/scripts/utils/module_guides.py": "53bff563904ed67eaa007ac647a5245972eb6a22805b0f9dd32b80fc4bbe2984",
+          "maya_tools/scripts/utils/module_nurbs.py": "f7e5e845f83b87016a5a9ba31f56834820d89c949197841dbe9709101083063d",
+          "maya_tools/scripts/utils/picker.py": "65a07f08afcfe2a62d582a01d66ad56c0fa0188d1c7bc930013f3f37f4bc8cf8",
+          "maya_tools/scripts/utils/ribbon.py": "1fe4a1dd1342fa4833e0f7b585cbf9f9c02a33a62ff18bcc3ac8b0c86be2778c",
+          "maya_tools/scripts/utils/rig_manager.py": "7e07212e1a82356d16c66177575306645b592db0317a76661506759288378422",
+          "maya_tools/scripts/utils/skincluster_curve.py": "e110663e2c5bc63f65c8588016d3e0b1c715d9291f4a994090faad9c108ce701",
+          "maya_tools/scripts/utils/skincluster_surface.py": "4d6d18b135a552efccfc264adb386cce6105697e94a12a2e65448f993a52c4f7",
+          "maya_tools/scripts/utils/surface_pin.py": "b4fa1b11392b0cdff25800e603e261abca485035a24d39a4e224e528d160ae4f",
+          "maya_tools/scripts/utils/ui_theme.py": "71af6b631baa9191c20d5d2e771b76d21d78f1377c1912f092cd3e690e8c8f83",
+          "maya_tools/scripts/utils/ui_utils.py": "8f6a48804f0315d1b4805fa8afa5f341ae5e4ecc9977f539179b747ac239be8c"
+        },
+        "maya": "2026",
+        "api": 20260303,
+        "units": "cm",
+        "time_unit": "film",
+        "platform": "Windows-10-10.0.26300-SP0",
+        "logical_cpus": 32,
+        "plugins": {
+          "poseInterpolator": "dev",
+          "motionMaker": "3.0",
+          "matrixNodes": "1.0",
+          "cacheEvaluator": "1.0",
+          "deformerEvaluator": "1.0",
+          "xgenToolkit": "1.0",
+          "mayaUsdPlugin": "0.34.5",
+          "ufeSupport": "0.1",
+          "renderSetup": "1.0",
+          "GPUBuiltInDeformer": "1.0",
+          "mayaVnnPlugin": "2.1.0.219",
+          "stereoCamera": "10.0",
+          "lookdevKit": "1.0",
+          "quatNodes": "1.0",
+          "mtoa": "5.5.5.2",
+          "bifrostGraph": "2.15.0.0-202510081557-e33c3fe",
+          "modelingToolkit": "0.0.0.0"
+        },
+        "gpu_device": {
+          "status": "available",
+          "value": [
+            "  Version : 2016.11.62.12. Feature Level 5.\n",
+            "  Adapter : NVIDIA GeForce RTX 5060 Laptop GPU/PCIe/SSE2\n",
+            "  Vendor ID: 4318. Device ID : 42888\n",
+            "  Driver : C:\\Windows\\System32\\DriverStore\\FileRepository\\nvhmi.inf_amd64_feba0f789c2537f5\\nvoglv64.dll.dll:32.0.16.1656.\n",
+            "  API : OpenGL V.4.6.\n",
+            "  Max texture size : 16384 * 16384.\n",
+            "  Max texture coords : 32\n",
+            "  Shader versions supported (Vertex: 5, Geometry: 5, Pixel 5).\n",
+            "  Shader compiler profile : (Best card profile)\n",
+            "  Active stereo support available : 0\n",
+            "  GPU Memory Limit : 8151 MB.\n",
+            "  CPU Memory Limit : 30776.9 MB.\n"
+          ]
+        },
+        "viewports": {
+          "modelPanel1": {
+            "width": 640,
+            "height": 480,
+            "camera": "|top",
+            "appearance": "smoothShaded",
+            "textures": false
+          },
+          "modelPanel2": {
+            "width": 100,
+            "height": 30,
+            "camera": "|side",
+            "appearance": "smoothShaded",
+            "textures": false
+          },
+          "modelPanel3": {
+            "width": 100,
+            "height": 30,
+            "camera": "|front",
+            "appearance": "smoothShaded",
+            "textures": false
+          },
+          "modelPanel4": {
+            "width": 1319,
+            "height": 797,
+            "camera": "|persp",
+            "appearance": "smoothShaded",
+            "textures": false
+          }
+        }
+      }
+    }
+  ]
+}

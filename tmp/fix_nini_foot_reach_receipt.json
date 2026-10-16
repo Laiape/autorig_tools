@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_dress_chains_v006.ma",
+    "backup": "C:\\proyectos\\auto-rig\\tmp\\nini_foot_reach_20261015\\Before_NiniFootReach.mb",
+    "before_lengths": {
+      "L": [
+        51.105306588762865,
+        5.207446320949471
+      ],
+      "R": [
+        12.198111841797546,
+        5.2074540392114805
+      ]
+    },
+    "after_lengths": {
+      "L": [
+        12.198105652667673,
+        5.20744632094947
+      ],
+      "R": [
+        12.198111841797546,
+        5.2074540392114805
+      ]
+    },
+    "reachable_matrix_error": 0.0,
+    "weights_unchanged": true,
+    "weights_sha256": {
+      "C_body_SKC": "362de319ca50b76c776c32efeb6797cbdc3bc9480a7da61c6b24e610e05342cf",
+      "skinCluster__c_bootBase_GEO": "b6288e96790b50a8c7c87fcb1d925fad822bc0c159f03d1546a6bede21aed13f"
+    }
+  }
+}

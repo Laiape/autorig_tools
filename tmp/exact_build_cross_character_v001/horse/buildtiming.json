@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "asset": "horse",
+  "status": "complete",
+  "phases": [
+    {
+      "name": "Creating basic structure...",
+      "seconds": 4.61530589999893
+    },
+    {
+      "name": "Preparing model data...",
+      "seconds": 0.023261300004378427
+    },
+    {
+      "name": "Building rig modules...",
+      "seconds": 0.3231152000007569
+    },
+    {
+      "name": "Loading rig settings\u2026",
+      "seconds": 0.0034937999953399412
+    },
+    {
+      "name": "Building spine\u2026",
+      "seconds": 0.3235170000043581
+    },
+    {
+      "name": "Building front legs\u2026",
+      "seconds": 1.2172543999986374
+    },
+    {
+      "name": "Building back legs\u2026",
+      "seconds": 0.8896476000008988
+    },
+    {
+      "name": "Building tail\u2026",
+      "seconds": 0.25381959999504033
+    },
+    {
+      "name": "Building neck\u2026",
+      "seconds": 0.22110120000434108
+    },
+    {
+      "name": "Building jaw\u2026",
+      "seconds": 0.9958910999994259
+    },
+    {
+      "name": "Building eyelids\u2026",
+      "seconds": 0.994003599997086
+    },
+    {
+      "name": "Building ears\u2026",
+      "seconds": 0.4433310000022175
+    },
+    {
+      "name": "Optimizing rig graph...",
+      "seconds": 0.02549189999990631
+    },
+    {
+      "name": "Labeling joints...",
+      "seconds": 0.0407204000002821
+    },
+    {
+      "name": "Hiding utility nodes...",
+      "seconds": 0.09239579999848502
+    },
+    {
+      "name": "Setting inherit transforms...",
+      "seconds": 0.005848599997989368
+    },
+    {
+      "name": "Importing skin weights...",
+      "seconds": 0.2592050000021118
+    },
+    {
+      "name": "Localizing corrective skin...",
+      "seconds": 0.00798439999925904
+    },
+    {
+      "name": "Importing corrective blendshapes...",
+      "seconds": 0.018948099997942336
+    },
+    {
+      "name": "Importing facial wrinkles...",
+      "seconds": 0.03454230000352254
+    },
+    {
+      "name": "Cleaning up node graph...",
+      "seconds": 0.3843466999969678
+    },
+    {
+      "name": "Storing scene evaluation profile...",
+      "seconds": 0.002011800002946984
+    },
+    {
+      "name": "Restoring Maya state...",
+      "seconds": 0.06537650000245776
+    }
+  ],
+  "calls": [
+    {
+      "name": "Check model cache",
+      "seconds": 0.33458420000533806
+    },
+    {
+      "name": "Open source model",
+      "seconds": 4.1068006999994395
+    },
+    {
+      "name": "Prepare binary model cache",
+      "seconds": 0.000676499999826774
+    },
+    {
+      "name": "Open model scene",
+      "seconds": 4.470309399999678
+    }
+  ],
+  "optimizations": {
+    "enabled": true,
+    "static_point_curves": 0,
+    "shared_math_nodes": 0,
+    "new_skin_bindings": [
+      {
+        "skin": "C_body_SKC",
+        "before": 55,
+        "after": 29
+      }
+    ]
+  },
+  "current_phase": "Complete",
+  "elapsed_seconds": 11.273172000001068,
+  "total_seconds": 11.274014599999646
+}

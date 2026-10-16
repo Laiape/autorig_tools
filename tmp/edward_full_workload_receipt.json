@@ -1,0 +1,605 @@
+{
+  "success": true,
+  "result": {
+    "cases": [
+      [
+        "all_neutral",
+        {
+          "C_spine03_CTL.rotateZ": 0,
+          "C_localChest_CTL.rotateY": 0,
+          "C_neck_CTL.rotateY": 0,
+          "C_head_CTL.rotateZ": 0,
+          "C_jaw_CTL.rotateX": 0,
+          "L_lipCorner_CTL.translateX": 0,
+          "R_lipCorner_CTL.translateY": 0,
+          "L_eyebrowIn_CTL.translateY": 0,
+          "R_eyebrowMain_CTL.translateY": 0,
+          "L_eyeDirect_CTL.Upper_Blink": 0,
+          "R_eyeDirect_CTL.Lower_Blink": 0,
+          "L_cheek_CTL.translateY": 0,
+          "R_cheek_CTL.translateY": 0,
+          "L_ear00_CTL.rotateZ": 0,
+          "R_ear00_CTL.rotateZ": 0,
+          "C_noseMain_CTL.translateY": 0,
+          "C_lowerTeeth_CTL.translateY": 0,
+          "C_upperTeeth_CTL.translateY": 0,
+          "C_tongue00_CTL.rotateY": 0,
+          "C_tongue02_CTL.rotateZ": 0,
+          "L_shoulderFk_CTL.rotateZ": 0,
+          "L_elbowFk_CTL.rotateY": 0,
+          "L_hipFk_CTL.rotateZ": 0,
+          "L_kneeFk_CTL.rotateZ": 0,
+          "L_clavicle_CTL.rotateZ": 0,
+          "L_index01_CTL.rotateZ": 0,
+          "L_middle01_CTL.rotateZ": 0,
+          "R_shoulderFk_CTL.rotateZ": 0,
+          "R_elbowFk_CTL.rotateY": 0,
+          "R_hipFk_CTL.rotateZ": 0,
+          "R_kneeFk_CTL.rotateZ": 0,
+          "R_clavicle_CTL.rotateZ": 0,
+          "R_index01_CTL.rotateZ": 0,
+          "R_middle01_CTL.rotateZ": 0
+        }
+      ],
+      [
+        "all_modules_00",
+        {
+          "C_spine03_CTL.rotateZ": 0.0,
+          "C_localChest_CTL.rotateY": 4.673020107703806,
+          "C_neck_CTL.rotateY": 9.040385799124053,
+          "C_head_CTL.rotateZ": 6.961352386273568,
+          "C_jaw_CTL.rotateX": 25.114318674422176,
+          "L_lipCorner_CTL.translateX": 4.680217236405592,
+          "R_lipCorner_CTL.translateY": 2.9985774918164374,
+          "L_eyebrowIn_CTL.translateY": 0.8435480285200718,
+          "R_eyebrowMain_CTL.translateY": 0.9981524724975481,
+          "L_eyeDirect_CTL.Upper_Blink": 0.99794042226882,
+          "R_eyeDirect_CTL.Lower_Blink": 0.9762880971357977,
+          "L_cheek_CTL.translateY": 0.9612752029752998,
+          "R_cheek_CTL.translateY": 0.7780731968879211,
+          "L_ear00_CTL.rotateZ": 11.948482083541304,
+          "R_ear00_CTL.rotateZ": 7.473924636177582,
+          "C_noseMain_CTL.translateY": 0.20961773667491046,
+          "C_lowerTeeth_CTL.translateY": 0.02708944018413495,
+          "C_upperTeeth_CTL.translateY": -0.03250126205810694,
+          "C_tongue00_CTL.rotateY": -1.872946635429031,
+          "C_tongue02_CTL.rotateZ": -5.550369171994238,
+          "L_shoulderFk_CTL.rotateZ": 14.104915772745198,
+          "L_elbowFk_CTL.rotateY": 6.3603011127456215,
+          "L_hipFk_CTL.rotateZ": 5.4816634901650145,
+          "L_kneeFk_CTL.rotateZ": 1.023143216959902,
+          "L_clavicle_CTL.rotateZ": -9.539136632166455,
+          "L_index01_CTL.rotateZ": 0.08330304903965274,
+          "L_middle01_CTL.rotateZ": 2.122305592256677,
+          "R_shoulderFk_CTL.rotateZ": 3.220569617152961,
+          "R_elbowFk_CTL.rotateY": 12.367226471033579,
+          "R_hipFk_CTL.rotateZ": 9.095903924902794,
+          "R_kneeFk_CTL.rotateZ": 23.55308147955908,
+          "R_clavicle_CTL.rotateZ": -1.9406694998505323,
+          "R_index01_CTL.rotateZ": 17.619256201308477,
+          "R_middle01_CTL.rotateZ": 24.424504986058288
+        }
+      ],
+      [
+        "all_modules_01",
+        {
+          "C_spine03_CTL.rotateZ": 11.72747223702045,
+          "C_localChest_CTL.rotateY": 11.554954169651154,
+          "C_neck_CTL.rotateY": 23.85966011963859,
+          "C_head_CTL.rotateZ": 9.953183851001928,
+          "C_jaw_CTL.rotateX": 29.966544066665318,
+          "L_lipCorner_CTL.translateX": 4.6255428699451775,
+          "R_lipCorner_CTL.translateY": 1.941803682536083,
+          "L_eyebrowIn_CTL.translateY": 0.8591640533356486,
+          "R_eyebrowMain_CTL.translateY": 0.6698410934791528,
+          "L_eyeDirect_CTL.Upper_Blink": 0.8459057405041985,
+          "R_eyeDirect_CTL.Lower_Blink": 0.6780050443833795,
+          "L_cheek_CTL.translateY": 0.3838801546062445,
+          "R_cheek_CTL.translateY": -0.006005211341390537,
+          "L_ear00_CTL.rotateZ": 0.35988675212026955,
+          "R_ear00_CTL.rotateZ": -5.508116013993037,
+          "C_noseMain_CTL.translateY": -0.13565700795860103,
+          "C_lowerTeeth_CTL.translateY": -0.09845642112837708,
+          "C_upperTeeth_CTL.translateY": -0.13475292319838994,
+          "C_tongue00_CTL.rotateY": -8.847723303500265,
+          "C_tongue02_CTL.rotateZ": -9.964073896353435,
+          "L_shoulderFk_CTL.rotateZ": 0.19743793242108176,
+          "L_elbowFk_CTL.rotateY": 1.4138987758239696,
+          "L_hipFk_CTL.rotateZ": 0.8907091792966684,
+          "L_kneeFk_CTL.rotateZ": 7.2477774300537785,
+          "L_clavicle_CTL.rotateZ": -7.635510786380323,
+          "L_index01_CTL.rotateZ": 7.974266237803875,
+          "L_middle01_CTL.rotateZ": 14.442985515847573,
+          "R_shoulderFk_CTL.rotateZ": 23.875733064027873,
+          "R_elbowFk_CTL.rotateY": 41.761657984479534,
+          "R_hipFk_CTL.rotateZ": 32.001004048041,
+          "R_kneeFk_CTL.rotateZ": 53.72218624943617,
+          "R_clavicle_CTL.rotateZ": 8.866695305144816,
+          "R_index01_CTL.rotateZ": 31.256088272259777,
+          "R_middle01_CTL.rotateZ": 34.38276038004046
+        }
+      ],
+      [
+        "all_modules_02",
+        {
+          "C_spine03_CTL.rotateZ": 14.623918682727354,
+          "C_localChest_CTL.rotateY": 9.735772063741287,
+          "C_neck_CTL.rotateY": 20.71212372169633,
+          "C_head_CTL.rotateZ": 5.450064867975907,
+          "C_jaw_CTL.rotateX": 23.548656514848147,
+          "L_lipCorner_CTL.translateX": 2.217270972960601,
+          "R_lipCorner_CTL.translateY": -0.577187905270474,
+          "L_eyebrowIn_CTL.translateY": -0.14869817590455803,
+          "R_eyebrowMain_CTL.translateY": -0.16287429119723917,
+          "L_eyeDirect_CTL.Upper_Blink": 0.4333969809487025,
+          "R_eyeDirect_CTL.Lower_Blink": 0.24568056256909904,
+          "L_cheek_CTL.translateY": -0.48258447990940523,
+          "R_cheek_CTL.translateY": -0.7855615729466481,
+          "L_ear00_CTL.rotateZ": -11.499710643999203,
+          "R_ear00_CTL.rotateZ": -14.342432960536456,
+          "C_noseMain_CTL.translateY": -0.37877925870062407,
+          "C_lowerTeeth_CTL.translateY": -0.14986258918623863,
+          "C_upperTeeth_CTL.translateY": -0.13553288471159156,
+          "C_tongue00_CTL.rotateY": -9.159983863371528,
+          "C_tongue02_CTL.rotateZ": -6.874627746692123,
+          "L_shoulderFk_CTL.rotateZ": 8.731897190460023,
+          "L_elbowFk_CTL.rotateY": 21.758515692316614,
+          "L_hipFk_CTL.rotateZ": 16.33709358703151,
+          "L_kneeFk_CTL.rotateZ": 34.37040128048961,
+          "L_clavicle_CTL.rotateZ": 1.9003614082918077,
+          "L_index01_CTL.rotateZ": 23.038301239058924,
+          "L_middle01_CTL.rotateZ": 29.065659697736372,
+          "R_shoulderFk_CTL.rotateZ": 49.142594425968525,
+          "R_elbowFk_CTL.rotateY": 66.06442312292576,
+          "R_hipFk_CTL.rotateZ": 51.51675631925408,
+          "R_kneeFk_CTL.rotateZ": 69.79310291048745,
+          "R_clavicle_CTL.rotateZ": 14.879808688449877,
+          "R_index01_CTL.rotateZ": 34.53430530113652,
+          "R_middle01_CTL.rotateZ": 31.627952862301534
+        }
+      ],
+      [
+        "all_modules_03",
+        {
+          "C_spine03_CTL.rotateZ": 6.5082560867633745,
+          "C_localChest_CTL.rotateY": 0.585355020276543,
+          "C_neck_CTL.rotateY": 1.9679357109894475,
+          "C_head_CTL.rotateZ": -3.1570641216988395,
+          "C_jaw_CTL.rotateX": 10.693456246536769,
+          "L_lipCorner_CTL.translateX": -0.7311205963247258,
+          "R_lipCorner_CTL.translateY": -2.6615452279207736,
+          "L_eyebrowIn_CTL.translateY": -1.421097843939891,
+          "R_eyebrowMain_CTL.translateY": -0.8729420125720496,
+          "L_eyeDirect_CTL.Upper_Blink": 0.07104165319282746,
+          "R_eyeDirect_CTL.Lower_Blink": 0.004863804311386388,
+          "L_cheek_CTL.translateY": -0.9856531581238744,
+          "R_cheek_CTL.translateY": -0.9735740475872908,
+          "L_ear00_CTL.rotateZ": -14.699791373839934,
+          "R_ear00_CTL.rotateZ": -12.376605355481049,
+          "C_noseMain_CTL.translateY": -0.33667300195229916,
+          "C_lowerTeeth_CTL.translateY": -0.08841917094715236,
+          "C_upperTeeth_CTL.translateY": -0.03425381966995565,
+          "C_tongue00_CTL.rotateY": -2.5745897445051558,
+          "C_tongue02_CTL.rotateZ": 1.3915533130781874,
+          "L_shoulderFk_CTL.rotateZ": 33.28167165431641,
+          "L_elbowFk_CTL.rotateY": 52.07424036954994,
+          "L_hipFk_CTL.rotateZ": 40.18937420552471,
+          "L_kneeFk_CTL.rotateZ": 61.96712580819013,
+          "L_clavicle_CTL.rotateZ": 11.887773692918337,
+          "L_index01_CTL.rotateZ": 33.931882446545785,
+          "L_middle01_CTL.rotateZ": 34.979156230766804,
+          "R_shoulderFk_CTL.rotateZ": 59.994691747390554,
+          "R_elbowFk_CTL.rotateY": 66.97504405105815,
+          "R_hipFk_CTL.rotateZ": 52.947401229521425,
+          "R_kneeFk_CTL.rotateZ": 59.66410342998449,
+          "R_clavicle_CTL.rotateZ": 11.570673627276467,
+          "R_index01_CTL.rotateZ": 24.985343001753797,
+          "R_middle01_CTL.rotateZ": 18.234508681531363
+        }
+      ],
+      [
+        "all_modules_04",
+        {
+          "C_spine03_CTL.rotateZ": -6.508256086763371,
+          "C_localChest_CTL.rotateY": -9.005846292522815,
+          "C_neck_CTL.rotateY": -18.258148028665254,
+          "C_head_CTL.rotateZ": -9.386859435362561,
+          "C_jaw_CTL.rotateX": 1.0811712620663394,
+          "L_lipCorner_CTL.translateX": -1.9994328500114857,
+          "R_lipCorner_CTL.translateY": -2.741704708318288,
+          "L_eyebrowIn_CTL.translateY": -1.9998920485166205,
+          "R_eyebrowMain_CTL.translateY": -0.9256665937081834,
+          "L_eyeDirect_CTL.Upper_Blink": 0.0317007097383899,
+          "R_eyeDirect_CTL.Lower_Blink": 0.13689470034493967,
+          "L_cheek_CTL.translateY": -0.7465049046107741,
+          "R_cheek_CTL.translateY": -0.42846540710336223,
+          "L_ear00_CTL.rotateZ": -6.830629378081159,
+          "R_ear00_CTL.rotateZ": -1.0909414810087803,
+          "C_noseMain_CTL.translateY": -0.041045107856223895,
+          "C_lowerTeeth_CTL.translateY": 0.03960568643753162,
+          "C_upperTeeth_CTL.translateY": 0.09281907023374064,
+          "C_tongue00_CTL.rotateY": 5.949522964033434,
+          "C_tongue02_CTL.rotateZ": 8.609866345586088,
+          "L_shoulderFk_CTL.rotateZ": 55.360280428570306,
+          "L_elbowFk_CTL.rotateY": 69.53271379748155,
+          "L_hipFk_CTL.rotateZ": 54.486297231196346,
+          "L_kneeFk_CTL.rotateZ": 69.2570545732064,
+          "L_clavicle_CTL.rotateZ": 14.806000911092767,
+          "L_index01_CTL.rotateZ": 32.45192102246674,
+          "L_middle01_CTL.rotateZ": 27.73049161222093,
+          "R_shoulderFk_CTL.rotateZ": 48.260174402820134,
+          "R_elbowFk_CTL.rotateY": 43.80780463671128,
+          "R_hipFk_CTL.rotateZ": 35.215633981573916,
+          "R_kneeFk_CTL.rotateZ": 30.962531010681243,
+          "R_clavicle_CTL.rotateZ": 1.43113631674181,
+          "R_index01_CTL.rotateZ": 9.799764748879747,
+          "R_middle01_CTL.rotateZ": 4.287964482321484
+        }
+      ],
+      [
+        "all_modules_05",
+        {
+          "C_spine03_CTL.rotateZ": -14.623918682727354,
+          "C_localChest_CTL.rotateY": -11.815461661267062,
+          "C_neck_CTL.rotateY": -24.735473904389302,
+          "C_head_CTL.rotateZ": -8.548158137161131,
+          "C_jaw_CTL.rotateX": 1.9500482096234233,
+          "L_lipCorner_CTL.translateX": -0.6326007922184822,
+          "R_lipCorner_CTL.translateY": -0.7573046227682791,
+          "L_eyebrowIn_CTL.translateY": -1.449236948338345,
+          "R_eyebrowMain_CTL.translateY": -0.2813453496246785,
+          "L_eyeDirect_CTL.Upper_Blink": 0.3449986834155788,
+          "R_eyeDirect_CTL.Lower_Blink": 0.5423512930170343,
+          "L_cheek_CTL.translateY": 0.05477676799918574,
+          "R_cheek_CTL.translateY": 0.4392864240308969,
+          "L_ear00_CTL.rotateZ": 6.1821358588194,
+          "R_ear00_CTL.rotateZ": 11.016223579813772,
+          "C_noseMain_CTL.translateY": 0.2854905896232044,
+          "C_lowerTeeth_CTL.translateY": 0.13780665412598378,
+          "C_upperTeeth_CTL.translateY": 0.14999730708744932,
+          "C_tongue00_CTL.rotateY": 9.993523532503538,
+          "C_tongue02_CTL.rotateZ": 9.344774410601111,
+          "L_shoulderFk_CTL.rotateZ": 58.342080784666024,
+          "L_elbowFk_CTL.rotateY": 60.98734939692234,
+          "L_hipFk_CTL.rotateZ": 48.46198802163428,
+          "L_kneeFk_CTL.rotateZ": 50.75072252803443,
+          "L_clavicle_CTL.rotateZ": 8.457558446542912,
+          "L_index01_CTL.rotateZ": 19.712858104864672,
+          "L_middle01_CTL.rotateZ": 12.77805814567532,
+          "R_shoulderFk_CTL.rotateZ": 22.775373293249928,
+          "R_elbowFk_CTL.rotateY": 14.008108684448958,
+          "R_hipFk_CTL.rotateZ": 11.673836975250648,
+          "R_kneeFk_CTL.rotateZ": 5.301255089693233,
+          "R_clavicle_CTL.rotateZ": -7.903524839453754,
+          "R_index01_CTL.rotateZ": 0.41262069627299697,
+          "R_middle01_CTL.rotateZ": 0.2903525043327823
+        }
+      ],
+      [
+        "all_modules_06",
+        {
+          "C_spine03_CTL.rotateZ": -11.727472237020448,
+          "C_localChest_CTL.rotateY": -5.727793407582907,
+          "C_neck_CTL.rotateY": -12.586483418393868,
+          "C_head_CTL.rotateZ": -1.272519411028867,
+          "C_jaw_CTL.rotateX": 12.645805025837825,
+          "L_lipCorner_CTL.translateX": 2.3401231592433263,
+          "R_lipCorner_CTL.translateY": 1.797361289925293,
+          "L_eyebrowIn_CTL.translateY": -0.18378706515630672,
+          "R_eyebrowMain_CTL.translateY": 0.5748346811254494,
+          "L_eyeDirect_CTL.Upper_Blink": 0.775015809931483,
+          "R_eyeDirect_CTL.Lower_Blink": 0.9159164982383641,
+          "L_cheek_CTL.translateY": 0.8148104170633226,
+          "R_cheek_CTL.translateY": 0.9762466180598732,
+          "L_ear00_CTL.rotateZ": 14.539626701439321,
+          "R_ear00_CTL.rotateZ": 14.827947595027979,
+          "C_noseMain_CTL.translateY": 0.39704605016963324,
+          "C_lowerTeeth_CTL.translateY": 0.13223640051411764,
+          "C_upperTeeth_CTL.translateY": 0.09422451231685405,
+          "C_tongue00_CTL.rotateY": 6.512197050269009,
+          "C_tongue02_CTL.rotateZ": 3.042876745774411,
+          "L_shoulderFk_CTL.rotateZ": 39.981716236821,
+          "L_elbowFk_CTL.rotateY": 32.87298085516002,
+          "L_hipFk_CTL.rotateZ": 26.65287428515147,
+          "L_kneeFk_CTL.rotateZ": 20.38377516306576,
+          "L_clavicle_CTL.rotateZ": -2.3770470402990433,
+          "L_index01_CTL.rotateZ": 5.307467900220389,
+          "L_middle01_CTL.rotateZ": 1.381343205496359,
+          "R_shoulderFk_CTL.rotateZ": 2.7308634493900295,
+          "R_elbowFk_CTL.rotateY": 0.015735049342732177,
+          "R_hipFk_CTL.rotateZ": 0.04946352145610233,
+          "R_kneeFk_CTL.rotateZ": 2.00373983015828,
+          "R_clavicle_CTL.rotateZ": -9.404119598308679,
+          "R_index01_CTL.rotateZ": 3.8926217783887047,
+          "R_middle01_CTL.rotateZ": 9.25195610341411
+        }
+      ],
+      [
+        "all_modules_07",
+        {
+          "C_spine03_CTL.rotateZ": -3.552713678800501e-15,
+          "C_localChest_CTL.rotateY": 4.673020107703806,
+          "C_neck_CTL.rotateY": 9.040385799124046,
+          "C_head_CTL.rotateZ": 6.961352386273568,
+          "C_jaw_CTL.rotateX": 25.114318674422176,
+          "L_lipCorner_CTL.translateX": 4.680217236405593,
+          "R_lipCorner_CTL.translateY": 2.9985774918164374,
+          "L_eyebrowIn_CTL.translateY": 0.8435480285200709,
+          "R_eyebrowMain_CTL.translateY": 0.9981524724975481,
+          "L_eyeDirect_CTL.Upper_Blink": 0.99794042226882,
+          "R_eyeDirect_CTL.Lower_Blink": 0.9762880971357977,
+          "L_cheek_CTL.translateY": 0.9612752029753002,
+          "R_cheek_CTL.translateY": 0.7780731968879215,
+          "L_ear00_CTL.rotateZ": 11.948482083541311,
+          "R_ear00_CTL.rotateZ": 7.473924636177593,
+          "C_noseMain_CTL.translateY": 0.20961773667491046,
+          "C_lowerTeeth_CTL.translateY": 0.02708944018413484,
+          "C_upperTeeth_CTL.translateY": -0.032501262058107105,
+          "C_tongue00_CTL.rotateY": -1.8729466354290292,
+          "C_tongue02_CTL.rotateZ": -5.550369171994239,
+          "L_shoulderFk_CTL.rotateZ": 14.104915772745228,
+          "L_elbowFk_CTL.rotateY": 6.360301112745645,
+          "L_hipFk_CTL.rotateZ": 5.481663490165017,
+          "L_kneeFk_CTL.rotateZ": 1.0231432169599057,
+          "L_clavicle_CTL.rotateZ": -9.539136632166453,
+          "L_index01_CTL.rotateZ": 0.0833030490396508,
+          "L_middle01_CTL.rotateZ": 2.1223055922566694,
+          "R_shoulderFk_CTL.rotateZ": 3.2205696171529574,
+          "R_elbowFk_CTL.rotateY": 12.367226471033572,
+          "R_hipFk_CTL.rotateZ": 9.095903924902807,
+          "R_kneeFk_CTL.rotateZ": 23.553081479559097,
+          "R_clavicle_CTL.rotateZ": -1.9406694998505358,
+          "R_index01_CTL.rotateZ": 17.61925620130846,
+          "R_middle01_CTL.rotateZ": 24.42450498605827
+        }
+      ],
+      [
+        "all_neutral",
+        {
+          "C_spine03_CTL.rotateZ": 0,
+          "C_localChest_CTL.rotateY": 0,
+          "C_neck_CTL.rotateY": 0,
+          "C_head_CTL.rotateZ": 0,
+          "C_jaw_CTL.rotateX": 0,
+          "L_lipCorner_CTL.translateX": 0,
+          "R_lipCorner_CTL.translateY": 0,
+          "L_eyebrowIn_CTL.translateY": 0,
+          "R_eyebrowMain_CTL.translateY": 0,
+          "L_eyeDirect_CTL.Upper_Blink": 0,
+          "R_eyeDirect_CTL.Lower_Blink": 0,
+          "L_cheek_CTL.translateY": 0,
+          "R_cheek_CTL.translateY": 0,
+          "L_ear00_CTL.rotateZ": 0,
+          "R_ear00_CTL.rotateZ": 0,
+          "C_noseMain_CTL.translateY": 0,
+          "C_lowerTeeth_CTL.translateY": 0,
+          "C_upperTeeth_CTL.translateY": 0,
+          "C_tongue00_CTL.rotateY": 0,
+          "C_tongue02_CTL.rotateZ": 0,
+          "L_shoulderFk_CTL.rotateZ": 0,
+          "L_elbowFk_CTL.rotateY": 0,
+          "L_hipFk_CTL.rotateZ": 0,
+          "L_kneeFk_CTL.rotateZ": 0,
+          "L_clavicle_CTL.rotateZ": 0,
+          "L_index01_CTL.rotateZ": 0,
+          "L_middle01_CTL.rotateZ": 0,
+          "R_shoulderFk_CTL.rotateZ": 0,
+          "R_elbowFk_CTL.rotateY": 0,
+          "R_hipFk_CTL.rotateZ": 0,
+          "R_kneeFk_CTL.rotateZ": 0,
+          "R_clavicle_CTL.rotateZ": 0,
+          "R_index01_CTL.rotateZ": 0,
+          "R_middle01_CTL.rotateZ": 0
+        }
+      ]
+    ],
+    "channels": {
+      "C_spine": [
+        [
+          "C_spine03_CTL.rotateZ",
+          -15,
+          15
+        ],
+        [
+          "C_localChest_CTL.rotateY",
+          -12,
+          12
+        ]
+      ],
+      "C_neck": [
+        [
+          "C_neck_CTL.rotateY",
+          -25,
+          25
+        ],
+        [
+          "C_head_CTL.rotateZ",
+          -10,
+          10
+        ]
+      ],
+      "C_jaw": [
+        [
+          "C_jaw_CTL.rotateX",
+          0,
+          30
+        ],
+        [
+          "L_lipCorner_CTL.translateX",
+          -2,
+          5
+        ],
+        [
+          "R_lipCorner_CTL.translateY",
+          -3,
+          3
+        ]
+      ],
+      "C_eyebrow": [
+        [
+          "L_eyebrowIn_CTL.translateY",
+          -2,
+          1
+        ],
+        [
+          "R_eyebrowMain_CTL.translateY",
+          -1,
+          1
+        ]
+      ],
+      "C_eyelid": [
+        [
+          "L_eyeDirect_CTL.Upper_Blink",
+          0,
+          1
+        ],
+        [
+          "R_eyeDirect_CTL.Lower_Blink",
+          0,
+          1
+        ]
+      ],
+      "C_cheekbone": [
+        [
+          "L_cheek_CTL.translateY",
+          -1,
+          1
+        ],
+        [
+          "R_cheek_CTL.translateY",
+          -1,
+          1
+        ]
+      ],
+      "C_ear": [
+        [
+          "L_ear00_CTL.rotateZ",
+          -15,
+          15
+        ],
+        [
+          "R_ear00_CTL.rotateZ",
+          -15,
+          15
+        ]
+      ],
+      "C_nose": [
+        [
+          "C_noseMain_CTL.translateY",
+          -0.4,
+          0.4
+        ]
+      ],
+      "C_teeth": [
+        [
+          "C_lowerTeeth_CTL.translateY",
+          -0.15,
+          0.15
+        ],
+        [
+          "C_upperTeeth_CTL.translateY",
+          -0.15,
+          0.15
+        ]
+      ],
+      "C_tongue": [
+        [
+          "C_tongue00_CTL.rotateY",
+          -10,
+          10
+        ],
+        [
+          "C_tongue02_CTL.rotateZ",
+          -10,
+          10
+        ]
+      ],
+      "L_arm": [
+        [
+          "L_shoulderFk_CTL.rotateZ",
+          0,
+          60
+        ],
+        [
+          "L_elbowFk_CTL.rotateY",
+          0,
+          70
+        ]
+      ],
+      "L_leg": [
+        [
+          "L_hipFk_CTL.rotateZ",
+          0,
+          55
+        ],
+        [
+          "L_kneeFk_CTL.rotateZ",
+          0,
+          70
+        ]
+      ],
+      "L_clavicle": [
+        [
+          "L_clavicle_CTL.rotateZ",
+          -10,
+          15
+        ]
+      ],
+      "L_fingers": [
+        [
+          "L_index01_CTL.rotateZ",
+          0,
+          35
+        ],
+        [
+          "L_middle01_CTL.rotateZ",
+          0,
+          35
+        ]
+      ],
+      "R_arm": [
+        [
+          "R_shoulderFk_CTL.rotateZ",
+          0,
+          60
+        ],
+        [
+          "R_elbowFk_CTL.rotateY",
+          0,
+          70
+        ]
+      ],
+      "R_leg": [
+        [
+          "R_hipFk_CTL.rotateZ",
+          0,
+          55
+        ],
+        [
+          "R_kneeFk_CTL.rotateZ",
+          0,
+          70
+        ]
+      ],
+      "R_clavicle": [
+        [
+          "R_clavicle_CTL.rotateZ",
+          -10,
+          15
+        ]
+      ],
+      "R_fingers": [
+        [
+          "R_index01_CTL.rotateZ",
+          0,
+          35
+        ],
+        [
+          "R_middle01_CTL.rotateZ",
+          0,
+          35
+        ]
+      ]
+    }
+  }
+}

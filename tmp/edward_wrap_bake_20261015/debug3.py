@@ -1,0 +1,1 @@
+result={'ng':[(n,cmds.listConnections(n,s=True,d=True)) for n in cmds.ls(type='ngst2SkinLayerData')],'bs_group_attrs':cmds.listAttr('cabeza_high_poseCorrectives_BLS.inputTarget[0].inputTargetGroup[4]'),'ng_loaded':cmds.pluginInfo('ngSkinTools2',q=True,loaded=True),'ng_nodes':[n for n in cmds.listHistory('C_mouth_local_SKC') or [] if cmds.nodeType(n)=='ngst2SkinLayerData']}

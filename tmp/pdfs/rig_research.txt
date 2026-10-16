@@ -1,0 +1,3509 @@
+=== PAGE 1 ===
+
+
+=== PAGE 2 ===
+
+
+=== PAGE 3 ===
+3
+
+=== PAGE 4 ===
+Resums
+Català
+Quin factor limita realment la interactivitat d’un rig de Maya: la densitat geomètrica o
+l’arquitectura del graf d’avaluació? Per respondre aquesta pregunta, s’han mesurat
+quatre rigs de producció amb arquitectures diferents, mitjançant un protocol únic i en
+una mateixa màquina.
+Els resultats contradiuen la premissa inicial. Amb l’avaluació paral·lela i GPU Override
+actius, entre el 96 % i el 100 % dels vèrtexs deformats resideixen a la targeta gràfica. El
+cost per fotograma es desacobla de la càrrega geomètrica: un personatge que deforma
+321.001 vèrtexs costa només un 9 % més que un que en deforma 56.102. La variació
+observada s’explica per un cost fix d’uns 16,4 ms, independent del rig, més el volum de
+nodes que la CPU recorre a cada fotograma.
+El treball aporta un protocol de mesura, eines d’auditoria en Python, la caracterització
+comparada dels quatre rigs i una verificació empírica del cost de les restriccions: el rig
+amb 610 constraints no presenta cicles d’avaluació ni nodes planificats en sèrie global.
+Español
+¿Qué factor limita realmente la interactividad de un rig de Maya: la densidad geométrica
+o la arquitectura del grafo de evaluación? Para responder a esta pregunta, se han
+medido cuatro rigs de producción con arquitecturas diferentes mediante un protocolo
+único y en una misma máquina.
+Los resultados contradicen la premisa inicial. Con la evaluación paralela y GPU Override
+activos, entre el 96 % y el 100 % de los vértices deformados residen en la tarjeta gráfica.
+El coste por fotograma se desacopla de la carga geométrica: un personaje que deforma
+321.001 vértices cuesta solo un 9 % más que uno que deforma 56.102. La variación
+observada se explica por un coste fijo de unos 16,4 ms, independiente del rig, más el
+volumen de nodos que la CPU recorre en cada fotograma.
+El trabajo aporta un protocolo de medición, herramientas de auditoría en Python, la
+caracterización comparada de los cuatro rigs y una verificación empírica del coste de
+las restricciones: el rig con 610 constraints no presenta ciclos de evaluación ni nodos
+planificados en serie global.
+English
+What actually limits the interactivity of a Maya rig: geometric density or the architecture
+of the evaluation graph? To answer this question, four production rigs with different
+architectures were measured using a single protocol on the same machine.
+The results contradict the initial premise. With parallel evaluation and GPU Override
+enabled, between 96% and 100% of deformed vertices reside on the graphics card. Per-
+frame cost becomes decoupled from geometric load: a character deforming 321,001
+vertices costs only 9% more than one deforming 56,102. The observed variation is
+explained by a fixed cost of roughly 16.4 ms, independent of the rig, plus the volume of
+nodes traversed by the CPU each frame.
+4
+
+=== PAGE 5 ===
+The work contributes a measurement protocol, Python auditing tools, a comparative
+characterisation of the four rigs and an empirical verification of constraint cost: the rig
+with 610 constraints exhibits no evaluation cycles and no globally serial nodes.
+5
+
+=== PAGE 6 ===
+Agraïments
+En primer lloc, vull agrair a la meva família el suport i la confiança que m’han brindat
+durant aquests anys, així com l’oportunitat de cursar uns estudis poc convencionals.
+També vull donar les gràcies als meus companys del TFG grupal Here be Dragons per
+la feina i les experiències compartides, i a Josep Maria Sàez i Sendra pel seu
+acompanyament durant tot el procés.
+Finalment, agraeixo a Roure Ossó González, María Güemes Ruiz i Enrique Velasco
+Mairal els coneixements de rigging que m’han transmès, la seva orientació i la
+disponibilitat que han mostrat, també fora de l’aula, al llarg de la meva formació.
+6
+
+=== PAGE 7 ===
+Índex
+Resums ........................................................................................................................ 3
+Català ................................................................................................................... 3
+Español ................................................................................................................ 3
+English .................................................................................................................. 3
+Agraïments ................................................................................................................... 5
+Acrònims ..................................................................................................................... 13
+Acrònims tècnics................................................................................................. 13
+Sufixos de nomenclatura .................................................................................... 14
+Glossari de termes en anglès ............................................................................. 15
+1. Introducció .............................................................................................................. 19
+1.1. Context: la necessitat de rendiment en temps real ........................................... 19
+1.2. Motivació i replantejament de la premissa........................................................ 20
+1.3. Objectius del treball ......................................................................................... 20
+1.4. Metodologia i eines utilitzades ......................................................................... 21
+1.4.1. CPU, nucli i fil: què vol dir tenir 28 fils ....................................................... 21
+1.5. Estructura de la memòria ................................................................................. 22
+1.6. Els quatre casos d'estudi ................................................................................. 23
+1.7. Abast i limitacions ............................................................................................ 24
+2. Fonaments de l'avaluació a Maya ........................................................................... 25
+2.1. Del Dependency Graph clàssic a l'avaluació paral·lela .................................... 25
+2.2. Concepte d'Evaluation Graph i Scheduling ...................................................... 26
+2.3. Diferència entre colls d'ampolla de CPU i GPU ................................................ 27
+2.3.1. Blocs buits: el que no s'arriba a avaluar .................................................... 27
+2.4. El paper de la targeta gràfica: GPU Override i deformadors ............................ 29
+2.5. Els avaluadors personalitzats........................................................................... 30
+2.6. Modes d'avaluació i configuració...................................................................... 31
+2.7. Cronologia de funcionalitats rellevants ............................................................. 31
+3. Diagnòstic i anàlisi de rendiment ............................................................................. 32
+3.1. Eines de perfilat: ús del Profiler ........................................................................ 32
+3.2. Interpretació de gràfics de rendiment ............................................................... 33
+3.3. Identificació de nodes problemàtics i clústers serials ....................................... 34
+3.3.1. Per què un node de Python atura tots els fils, i C++ no ............................. 34
+3.4. Ús de l'Evaluation Toolkit per a proves d'estabilitat .......................................... 36
+3.5. Referència d'ordres de diagnòstic .................................................................... 37
+3.5.1. dbpeek - inspecció del graf ....................................................................... 37
+3.5.2. dbtrace - rastreig de comportaments......................................................... 38
+3.5.3. Consultes d'escena rellevants ................................................................... 39
+3.6. Protocol de diagnòstic pas a pas ..................................................................... 39
+4. Arquitectura de rigs optimitzats ............................................................................... 41
+4.1. Optimització estructural.................................................................................... 41
+4.1.1. Simplificació de jerarquies i eliminació de nodes residuals ....................... 41
+4.1.2. Segmentació de malles: una estratègia que les dades no sostenen ......... 42
+4.2. Càlcul eficient: restriccions i càlcul matricial ..................................................... 43
+4.2.1. Els constraints i els blocs d’avaluació: documentació i mesura ................. 43
+4.2.2. El cost real del constraints: volum de graf ................................................. 45
+7
+
+=== PAGE 8 ===
+4.2.3. La solució matricial: flux unidireccional pur ............................................... 46
+4.2.4. Catàleg de nodes matricials ...................................................................... 48
+4.2.5. Taula de correspondència: constraint → equivalent matricial .................... 48
+4.3. Optimització de deformacions .......................................................................... 49
+4.3.1. Rigs compatibles amb GPU: requisits i realitat mesurada ......................... 49
+4.3.2. Estratègies per a skinClusters massius i blendShapes ............................. 51
+4.4. Gestió de visibilitat i proxy ................................................................................ 52
+4.4.1. Implementació de sistemes LOD i proxy rigs ............................................ 52
+4.4.2. Ús de l'Invisibility Evaluator: cas documentat ............................................ 53
+4.5. Convencions de nomenclatura i estructura d'escena ....................................... 53
+4.6. Catàleg d'antipatrons, revisat amb les mesures ............................................... 54
+5. Tècniques avançades i scripting ............................................................................. 56
+5.1. Automatització de la neteja de rigs .................................................................. 56
+5.2. Creació de benchmarks automàtics ................................................................. 56
+5.3. Cached Playback: configuració i mesura ......................................................... 57
+5.4. Eines d'auditoria .............................................................................................. 57
+5.5. Integració de les eines al flux de treball ........................................................... 58
+6. Desenvolupament del cas pràctic ........................................................................... 59
+6.1. Descripció de l'asset: reptes tècnics del drac ................................................... 59
+6.2. Fase 1: diagnòstic del rig base......................................................................... 60
+6.3. Fase 2: accions d'optimització identificades ..................................................... 61
+6.4. Fase 3: validació i comparativa ........................................................................ 62
+6.5. Registre d'incidències ...................................................................................... 62
+7. Resultats, anàlisi i discussió comparativa ............................................................... 64
+7.1. Rendiment dels quatre rigs .............................................................................. 64
+7.2. Caracterització de les escenes ........................................................................ 65
+7.3. Càrrega geomètrica real .................................................................................. 66
+7.4. Descomposició del cost per fotograma ............................................................ 67
+7.5. Avaluació contra dibuix .................................................................................... 68
+7.6. Cost dels subsistemes ..................................................................................... 69
+7.7. Captura del Profiler: què passa realment amb els constraints .......................... 69
+7.7.1. No hi ha cap tasca opaca.......................................................................... 69
+7.7.2. Concurrència efectiva ............................................................................... 70
+7.7.3. Conclusió sobre el cost dels constraints ................................................... 70
+7.8. Impacte en l'experiència de l'usuari.................................................................. 71
+7.9. Estabilitat i temps de càrrega ........................................................................... 71
+7.10. Tractament estadístic de les mesures ............................................................ 72
+8. Implicació i escalabilitat dels sistemes .................................................................... 74
+8.1. Modularitat i transferència ................................................................................ 74
+8.2. Aplicació en rigs de bípedes ............................................................................ 74
+8.3. Extrapolació a diferents rigs d'animals ............................................................. 75
+8.4. Cost d'adopció ................................................................................................. 75
+9. Aspectes extres de Here be dragons ...................................................................... 76
+9.1. Simulació amb Adonis FX i Houdini (CFX) ....................................................... 76
+9.2. Pipeline amb integració USD ........................................................................... 77
+9.2.1. La decisió...................................................................................................... 77
+9.2.2. Quan comença el procés .............................................................................. 77
+8
+
+=== PAGE 9 ===
+9.2.3. L'eina d'exportació ........................................................................................ 77
+9.3. Contracte de dades entre departaments .......................................................... 78
+10. Conclusions i línies futures ................................................................................... 79
+10.1. Resposta als criteris d'èxit.............................................................................. 79
+10.2. Conclusió principal ......................................................................................... 79
+10.3. Afirmacions de la documentació contrastades amb les mesures ................... 80
+10.3.1. El que les mesures confirmen ................................................................. 80
+10.3.2. El que no s'ha reproduït .......................................................................... 80
+10.3.3. El que queda obert .................................................................................. 81
+10.4. Limitacions actuals de l'optimització a Maya .................................................. 81
+10.5. Aportacions originals del treball ..................................................................... 82
+10.6. Limitacions de l'estudi .................................................................................... 82
+10.7. Línies de treball futures .................................................................................. 82
+11. Bibliografia ............................................................................................................ 84
+11.1. Fonts primàries .............................................................................................. 84
+11.2. Corpus d'afirmacions contrastades ................................................................ 85
+12. Annexos ................................................................................................................ 87
+12.1. Protocol de mesura complet........................................................................... 87
+12.2. Auditoria de planificació de nodes .................................................................. 88
+12.3. Càrrega geomètrica i repartiment GPU/CPU .................................................. 89
+12.4. Construcció del cicle d'estrès ......................................................................... 91
+12.5. Eina de neteja d'escena ................................................................................. 93
+12.6. Fitxa de l'entorn de proves ............................................................................. 94
+12.7. Resultats complets ......................................................................................... 94
+12.8. Participació en treballs finals de grau grupals i desenvolupament de
+gcElmoToolKit......................................................................................................... 95
+12.8.1. Here be Dragons..................................................................................... 95
+12.8.2. O'Paraiso ................................................................................................ 97
+12.8.3. Sprouts ................................................................................................... 98
+12.8.4. Desenvolupament de gcElmoToolKit .................................................... 100
+9
+
+=== PAGE 10 ===
+Índex de figures
+Figura 1. Temps per fotograma dels quatre rigs en l’estat C i llindar de 24 FPS. ........ 19
+Figura 2. Composició de vistes neutres dels quatre rigs analitzats: Varyndor, Oswald,
+OTO i Marcelo. ........................................................................................................... 23
+Figura 3. Comparació esquemàtica entre el model de petició del DG i l’avaluació cap
+endavant de l’Evaluation Manager. ............................................................................. 25
+Figura 4. Transformació conceptual d’una mateixa cadena des del Dependency Graph
+fins a l’Evaluation Graph i l’Scheduling Graph. ............................................................ 26
+Figura 5. Captura del Profiler amb les pistes de VP Evaluation, Qt i Evaluation dins d’un
+interval de la sessió enregistrada. ............................................................................... 28
+Figura 6. Comparació del flux tradicional de deformació amb el flux de GPU Override.
+................................................................................................................................... 29
+Figura 7. Vista general del Profiler amb esdeveniments d’avaluació i diversos processos
+ikHandleSolve identificats. .......................................................................................... 32
+Figura 8. Ampliació del Profiler amb blocs d’avaluació i processos ikHandleSolve
+distribuïts en l’interval enregistrat. ............................................................................... 33
+Figura 9. Evaluation Toolkit en mode Parallel: configuració de GPU Override i relació
+d’avaluadors personalitzats. ........................................................................................ 36
+Figura 10. Historial de modelatge mostrat al Node Editor, amb nodes polyExtrude,
+polyMirror, polyBevel, polyCloseBorder, deleteComponent i polyBridgeEdge. ............ 41
+Figura 11. Relació entre vèrtexs deformats i temps per fotograma dels quatre rigs. ... 42
+Figura 12. Hipòtesi de cicle d’un parentConstraint i resultat mesurat al Profiler. ......... 43
+Figura 13. Comparació al Node Editor entre una connexió amb parentConstraint i una
+cadena matricial amb multMatrix i offsetParentMatrix. ................................................ 46
+Figura 14. Repartiment dels vèrtexs deformats entre GPU i CPU. .............................. 49
+Figura 15. Pila de deformació de C_bodyMembrane al Node Editor, formada per quatre
+skinCluster consecutius. ............................................................................................. 51
+Figura 16. Oswald en wireframe amb els controls del rig visibles i composició de diverses
+poses del personatge. ................................................................................................. 53
+Figura 17. Vista lateral de Varyndor amb els controls del rig visibles. ......................... 59
+Figura 18. Sortida de scheduling_report(), deformation_split() i geometry_load()
+executats sobre Varyndor. .......................................................................................... 60
+Figura 19. Temps per fotograma dels quatre rigs en els estats A, B, C i D.................. 64
+Figura 20. Composició de la càrrega geomètrica dels quatre rigs. .............................. 66
+Figura 21. Ajust descriptiu del cost per fotograma i desviació d’Oswald. ..................... 67
+Figura 22. Descomposició del temps entre avaluació i dibuix de Viewport 2.0 en Marcelo
+i Oswald. ..................................................................................................................... 68
+Figura 23. Rang de FPS dels quatre estats i llindar d’interactivitat de 24 FPS. ........... 71
+Figura 24. Pressupost temporal del rig base i marge disponible per a Adonis FX; el marge
+no representa un cost de simulació mesurat. .............................................................. 76
+Figura 25. Resum de les afirmacions confirmades, no reproduïdes en el corpus i obertes.
+................................................................................................................................... 80
+Figura 26. Aplicació del sistema d'autorig als personatges Varyndor, Azhurean,
+Aychedral i Maiasaura de Here be Dragons, amb els controladors visibles................. 96
+Figura 27. Interfície de l'eina d'exportació USD emprada per transferir animacions de
+Maya a Houdini, amb selecció del rang, la càmera i els elements exportats. .............. 97
+Figura 28. Rigs corporals de Marcelo i Marcelo Hero a O'Paraiso, mostrats en pose
+neutra amb els controladors visibles. .......................................................................... 98
+10
+
+=== PAGE 11 ===
+Figura 29. Rigs d'Oto i Baby a Sprouts: vistes generals del cos i detalls dels sistemes de
+control facial.............................................................................................................. 100
+Figura 30. Arquitectura funcional de gcElmoToolKit i separació entre la lògica compartida
+i les dades de cada asset.......................................................................................... 101
+Figura 31. Flux de reconstrucció d'un asset amb gcElmoToolKit a partir de dades
+versionades. ............................................................................................................. 102
+11
+
+=== PAGE 12 ===
+Índex de taules
+Taula 1. Acrònims tècnics ........................................................................................... 14
+Taula 2. Sufixos de nomenclatura emprats als rigs ..................................................... 15
+Taula 3. Glossari operatiu de terminologia anglesa..................................................... 18
+Taula 4. Pressupostos temporals segons l'objectiu de FPS ........................................ 19
+Taula 5. Criteris d'èxit i resultats del treball ................................................................. 21
+Taula 6. Diferència entre CPU, nucli i fil a l'entorn de proves ...................................... 21
+Taula 7. Especificacions de l'entorn de proves............................................................ 22
+Taula 8. Arquitectura i funció dels quatre casos d'estudi ............................................. 23
+Taula 9. Tipus de planificació de l'Evaluation Manager observats ............................... 27
+Taula 10. Blocs d'avaluació omesos al Profiler ........................................................... 27
+Taula 11. Avaluadors personalitzats de l'Evaluation Manager ..................................... 30
+Taula 12. Modes d'avaluació emprats en les proves ................................................... 31
+Taula 13. Cronologia de funcionalitats de rendiment a Maya ...................................... 31
+Taula 14. Interpretació dels colors i processos del Profiler .......................................... 33
+Taula 15. Comparació de la planificació de nodes Python i C++ ................................. 34
+Taula 16. Distribució dels nodes segons el tipus de planificació ................................. 34
+Taula 17. Diagnòstic diferencial amb l'Evaluation Toolkit ............................................ 37
+Taula 18. Arguments disponibles de dbpeek per inspeccionar l'Evaluation Graph ...... 38
+Taula 19. Tipus de residus d'escena, detecció i correcció ........................................... 42
+Taula 20. Magnitud dels nodes residuals als quatre rigs ............................................. 42
+Taula 21. Esdeveniments de clúster mesurats a Oswald i Marcelo ............................. 44
+Taula 22. Cost mesurat dels constraints per rig .......................................................... 45
+Taula 23. Constraints, paral·lelisme i rendiment dels quatre rigs ................................ 47
+Taula 24. Funció dels nodes matricials emprats ......................................................... 48
+Taula 25. Correspondència entre constraints i equivalents matricials ......................... 49
+Taula 26. Deformadors compatibles amb GPU observats ........................................... 50
+Taula 27. Causes que poden desactivar GPU Override .............................................. 50
+Taula 28. Residència de la deformació a GPU i CPU ................................................. 50
+Taula 29. Atributs de skinCluster rellevants per al rendiment ...................................... 51
+Taula 30. Cost del sistema facial d'OTO amb i sense activació .................................. 52
+Taula 31. Nivells de detall proposats per a Varyndor .................................................. 52
+Taula 32. Convencions de nomenclatura i estructura d'escena ................................... 54
+Taula 33. Catàleg d'antipatrons i estat després de les mesures .................................. 55
+Taula 34. Configuració dels quatre estats del benchmark ........................................... 56
+Taula 35. Efecte i temps d'ompliment de Cached Playback ........................................ 57
+Taula 36. Funció de les eines d'auditoria desenvolupades ......................................... 58
+Taula 37. Característiques tècniques mesurades de Varyndor ................................... 60
+Taula 38. Diagnòstic de rendiment del rig base de Varyndor ...................................... 61
+Taula 39. Accions d'optimització identificades per a Varyndor .................................... 61
+Taula 40. Incidències detectades durant el benchmark ............................................... 63
+Taula 41. Rendiment dels quatre rigs als estats A, B, C i D ........................................ 64
+Taula 42. Guany de rendiment entre els estats d'avaluació ........................................ 65
+Taula 43. Caracterització arquitectònica dels quatre rigs ............................................ 65
+Taula 44. Distribució de la càrrega geomètrica dels quatre rigs .................................. 66
+Taula 45. Cost predit i real segons els vèrtexs deformats ........................................... 67
+12
+
+=== PAGE 13 ===
+Taula 46. Descomposició del temps d'avaluació i dibuix ............................................. 68
+Taula 47. Cost mesurat dels subsistemes facial i de roba ........................................... 69
+Taula 48. Esdeveniments opacs i transparents del Profiler ......................................... 69
+Taula 49. Concurrència efectiva d'Oswald i Marcelo ................................................... 70
+Taula 50. Rang de FPS i experiència de l'animador .................................................... 71
+Taula 51. Estabilitat i temps de càrrega de les escenes .............................................. 72
+Taula 52. Dispersió estadística dels quatre estats ...................................................... 72
+Taula 53. Transferibilitat de les tècniques d'optimització ............................................. 74
+Taula 54. Aportació dels rigs bípedes a l'estudi .......................................................... 74
+Taula 55. Tècniques prioritàries segons la tipologia animal ........................................ 75
+Taula 56. Comprovacions prèvies a l'exportació USD ................................................. 78
+Taula 57. Contracte de dades entre departaments ..................................................... 78
+Taula 58. Compliment dels criteris d'èxit ..................................................................... 79
+Taula 59. Afirmacions confirmades per les mesures ................................................... 80
+Taula 60. Afirmacions no reproduïdes en el corpus .................................................... 81
+Taula 61. Qüestions obertes després de les mesures ................................................. 81
+Taula 62. Fitxers de resultats complets per rig ............................................................ 94
+Taula 63. Síntesi de les aportacions als TFG grupals ................................................. 95
+Taula 64. Mòduls principals identificats a gcElmoToolKit .......................................... 103
+13
+
+=== PAGE 14 ===
+Acrònims
+Els acrònims emprats al document es defineixen a continuació.
+Acrònims tècnics
+Sigla Desplegament Definició operativa en aquest treball
+Application Conjunt de funcions que permet a Python interactuar amb
+API
+Programming Interface el nucli de Maya (OpenMaya). Vegeu 5.1.
+Departament de simulació de roba, pèl i secundaris sobre
+CFX Character Effects
+animació aprovada. Vegeu 9.1.
+Processador principal; recorre el graf del rig i en calcula les
+CPU Central Processing Unit
+posicions.
+Comma-Separated Format de text pla emprat per exportar els resultats de les
+CSV
+Values mesures. Vegeu 12.1.
+Desviació típica dividida per la mitjana; mesura la dispersió
+CV Coeficient de variació
+d'una sèrie de mesures. Vegeu 7.9.
+DAG Directed Acyclic Graph Graf jeràrquic de transformacions i formes de l'escena.
+Arquitectura clàssica d'avaluació, a nivell d'atribut i serial.
+DG Dependency Graph
+Vegeu 2.1.
+Mètode d'interpolació de skinCluster que preserva el volum
+DQ Dual Quaternion
+en torsió.
+Dependències a nivell de node, calculades abans
+EG Evaluation Graph
+d'avaluar. Vegeu 2.2.
+Motor que orquestra l'avaluació repartint-la entre nuclis.
+EM Evaluation Manager
+Vegeu 2.2.
+Deformació per gàbia; el node lattice de Maya n'és la
+FFD Free Form Deformation
+implementació.
+Mètrica de fluïdesa interactiva. 24 FPS equivalen a 41,7 ms
+FPS Frames Per Second
+per fotograma. Vegeu 1.1.
+Bloqueig de l'intèrpret de Python; impedeix l'execució
+GIL Global Interpreter Lock
+simultània de fils. Vegeu 3.3.
+Graphics Processing Targeta gràfica; assumeix la deformació amb GPU
+GPU
+Unit Override. Vegeu 2.4.
+Cinemàtica inversa: la cadena es resol a partir de la posició
+IK Inverse Kinematics
+de l'extrem.
+Cinemàtica directa: cada articulació es controla
+FK Forward Kinematics
+individualment.
+14
+
+=== PAGE 15 ===
+Sigla Desplegament Definició operativa en aquest treball
+JavaScript Object Format estructurat que retorna dbpeek i en què s'exporten
+JSON
+Notation els resultats.
+LBS Linear Blend Skinning Mètode clàssic de skinCluster (skinningMethod = 0).
+Versions simplificades de la malla d'un personatge. Vegeu
+LOD Level of Detail
+4.4.1.
+Maya Embedded
+MEL Llenguatge de programació natiu i heretat de Maya.
+Language
+Aprenentatge automàtic; base dels deformadors entrenats.
+ML Machine Learning
+Vegeu 10.7.
+Open Computing Estàndard obert de programació paral·lela emprat pel GPU
+OpenCL
+Language Override.
+Valor per sota del qual queden el 95 % de les mesures;
+P95 Percentil 95
+indica els pics que l'usuari percep com a salts.
+PAL Phase Alternating Line Estàndard de vídeo europeu, a 25 fotogrames per segon.
+Random Access
+RAM Memòria principal del sistema.
+Memory
+Interpolació emprada pels pose interpolators facials. Vegeu
+RBF Radial Basis Function
+4.3.2.
+Estructura que tradueix l'EG en tasques repartibles entre
+SG Scheduling Graph
+fils. Vegeu 2.2.
+TFG Treball Final de Grau Aquest document.
+Translation, Rotation, Els tres components d'una transformació; el node
+TRS
+Scale composeMatrix els converteix en matriu.
+Universal Scene
+USD Format d'intercanvi i composició d'escena. Vegeu 9.2.
+Description
+UV U-V coordinates Sistema de coordenades de textura d'una malla.
+Motor de visualització interactiva i renderitzat per
+VP2 Viewport 2.0
+maquinari.
+Video Random Access Memòria de la targeta gràfica; allotja geometria i el Cached
+VRAM
+Memory Playback accelerat.
+Taula 1. Acrònims tècnics
+15
+
+=== PAGE 16 ===
+Sufixos de nomenclatura
+Convencions de nomenclatura emprades als rigs. Apareixen com a sufix del nom de
+node i no es subratllen al text perquè hi consten sempre dins de noms propis de node o
+de blocs de codi.
+Sufix Significat Ús
+_ANM Animation Node intermedi que rep l'animació
+_BLS BlendShape Node deformador de formes
+_CRV Curve Corba NURBS
+_CTL Control Controlador manipulable per l'animador
+_DCM DecomposeMatrix Node que separa una matriu en TRS
+_GEO Geometry Malla poligonal
+_GRP Group Node de transformació agrupador
+_JNT Joint Articulació de l'esquelet
+_MMX MultMatrix Node de multiplicació de matrius
+_MSH Mesh Malla poligonal (variant)
+_PLY Polygon Malla poligonal (variant)
+_SKC SkinCluster Node deformador d'enveloppat
+_UVP UvPin Node d'adherència sobre superfície
+Taula 2. Sufixos de nomenclatura emprats als rigs
+Glossari de termes en anglès
+En aquest document es farà servir molta terminologia anglesa, ja que és com
+s’acostuma a treballar el rigging i a la interfície d’Autodesk Maya.
+Terme Equivalent Què vol dir aquí
+Qualsevol element reutilitzable d'una producció: un
+asset element de producció
+personatge, un decorat, una propietat.
+La mesura de referència contra la qual es
+baseline línia base
+comparen les altres. Aquí, el mode DG.
+Prova repetible que mesura quant triga una
+benchmark prova de rendiment
+operació.
+Fase inicial on l'animador posa les poses clau
+blocking primera fase d'animació
+sense refinar el moviment.
+El punt més lent d'un procés, que en limita la
+bottleneck coll d'ampolla
+velocitat total.
+16
+
+=== PAGE 17 ===
+Terme Equivalent Què vol dir aquí
+Guardar un resultat ja calculat per no haver-lo de
+cache memòria cau
+tornar a calcular.
+Grup de nodes que l'Evaluation Manager tracta
+chunk bloc d'avaluació com una unitat de treball. Sinònim pràctic de cluster
+en aquest context.
+Node que fa que un objecte segueixi la posició,
+constraint restricció
+rotació o escala d'un altre.
+core nucli Unitat de càlcul física dins del processador.
+Node que mou els vèrtexs d'una malla: skinCluster,
+deformer deformador
+blendShape, cluster, wrap…
+Mecanisme del DG: quan una dada canvia, es
+dirty propagació de dades
+marquen com a «brutes» totes les que en depenen
+propagation brutes
+perquè es recalculin. És serial i és el que l'EG evita.
+Clau que no depèn del temps sinó del valor d'un
+driven key clau conduïda
+altre atribut.
+Bloc d'avaluació que acaba sense res a calcular,
+empty chunk bloc buit normalment perquè el seu contingut és invisible o
+està exclòs.
+Valor flotant que controla Atribut de 0 a 1 que gradua l'efecte d'un
+envelope el pes global d’un deformador. A 0 el node segueix al graf però no
+deformador. deforma.
+Node que enganxa un objecte a la superfície d'una
+follicle fol·licle
+malla llegint-ne la posició deformada.
+Model on cada node es calcula només quan totes
+forward
+avaluació cap endavant les seves entrades ja estan calculades. És el que
+evaluation
+permet el paral·lelisme.
+Cadena de nodes de modelatge que queda
+history historial
+connectada a una malla després de construir-la.
+Forma addicional d'un blendShape que s'activa a
+inbetween forma intermèdia
+mig recorregut.
+Cada articulació que afecta els vèrtexs d'un
+influence influència
+skinCluster.
+intermediate Còpia sense deformar d'una malla que Maya
+objecte intermedi
+object guarda en aplicar-hi un deformador (sufix Orig).
+Marca a la línia de temps que fixa el value d'un
+key clau
+atribut en un fotograma.
+Deformador que mou la geometria amb una reixa
+lattice gàbia de deformació
+de punts de control.
+17
+
+=== PAGE 18 ===
+Terme Equivalent Què vol dir aquí
+Geometria poligonal, formada per vèrtexs, arestes i
+mesh malla
+cares.
+Prefix que separa els noms de node en importar o
+namespace espai de noms
+referenciar una escena.
+Non-Uniform Rational B-Splines: superfície definida
+NURBS /
+superfície NURBS matemàticament mitjançant corbes, en comptes de
+nurbsSurface
+polígons.
+opaque task avaluació de tasca Bloc que l'Evaluation Manager tracta com una caixa
+evaluation opaca negra i avalua en sèrie amb un sol fil.
+Substituir el comportament per defecte. A GPU
+override anul·lació Override, substituir el càlcul de deformació de la
+CPU pel de la targeta gràfica.
+Cost afegit que no forma part de la feina útil:
+overhead sobrecost
+preparar dades, transferir-les, sincronitzar fils.
+Cadena de passos i formats per la qual passa un
+pipeline flux de treball
+element entre departaments.
+Vídeo ràpid del visor que l'animador genera per
+playblast previsualització
+veure el moviment real quan el rig no va prou fluid.
+polish refinament Fase final d'animació on s'ajusten els detalls.
+pose Node que activa formes correctives segons la pose
+interpolador de poses
+interpolator de les articulacions, amb interpolació RBF.
+Versió simplificada d'una malla que es fa servir per
+proxy substitut lleuger
+guanyar velocitat.
+Model del DG: una dada es calcula només quan
+pull model model de petició
+algú la demana.
+Error que apareix quan dos fils accedeixen alhora a
+race condition condició de cursa la mateixa dada i el resultat depèn de qui hi arriba
+primer.
+Tornar a llegir des de la CPU una dada ja calculada
+read-back lectura de retorn
+a la GPU.
+L'estructura de controls, articulacions i deformadors
+rig / rigging esquelet i controls
+que permet animar un personatge.
+Tècnica per enganxar un objecte a una malla
+rivet reblo
+deformada, tradicionalment amb fol·licles.
+scheduling planificació Decidir quin node s'avalua, quan i en quin fil.
+Node que conté la geometria pròpiament dita,
+shape forma
+penjat d'un transform.
+18
+
+=== PAGE 19 ===
+Terme Equivalent Què vol dir aquí
+Procés d'assignar cada vèrtex de la malla a una o
+skin / skinning enveloppat més articulacions perquè la segueixi. El node que
+ho fa és el skinCluster.
+Cicle d'animació construït expressament per fer
+stress test prova de càrrega
+treballar el rig al màxim i poder mesurar-lo.
+Cadascuna de les formes que un blendShape pot
+target objectiu
+activar.
+Seqüència d'instruccions que el processador
+thread fil
+executa.
+Que un codi es pugui executar des de diversos fils
+thread safety seguretat de fils
+alhora sense corrompre dades.
+Els dos aspectes del moviment que l'animador jutja
+timing / spacing ritme i espaiat i que només es poden valorar veient l'animació en
+marxa.
+L'estructura de vèrtexs i cares d'una malla. Si
+topology topologia
+canvia durant l'animació, la GPU es desactiva.
+Bloc d'avaluació que l'Evaluation Manager pot obrir
+transparent per planificar-ne els nodes un a un. És el contrari
+bloc transparent
+cluster d'una tasca opaca, i és el que apareix realment als
+rigs mesurats.
+Cicle de retocar un paràmetre i tornar a veure el
+tweaking ajustament
+resultat.
+El nombre que pren un atribut. Una key fixa un
+value valor
+value en un instant concret.
+La finestra on es veu l'escena en 3D. A Maya
+viewport visor
+modern, Viewport 2.0.
+Primeres passades d'una mesura que es descarten
+warm-up escalfament perquè inclouen costos que només es paguen un
+cop.
+Els asteriscos de les cerques per nom, com
+wildcards comodins ls('*/*/*_GEO'). En escenes grans fan que la
+consulta trigui molt més.
+Deformador que fa que una malla segueixi la
+wrap embolcall
+deformació d'una altra. Marcelo l'usa per a la roba.
+Taula 3. Glossari operatiu de terminologia anglesa
+19
+
+=== PAGE 20 ===
+1. Introducció
+1.1. Context: la necessitat de rendiment en temps real
+Un animador necessita veure el personatge moure's mentre treballa. No és una
+comoditat: el timing i l'spacing d'una actuació només es poden jutjar si el moviment es
+veu seguit. Si el visor va a batzegades, l'animador treballa a cegues. I com més
+geometria té el personatge, més difícil és que Maya arribi a resoldre totes les
+deformacions dins del temps que dura un fotograma (vegeu Figura 1).
+Figura 1. Temps per fotograma dels quatre rigs en l’estat C i llindar de 24 FPS.
+El pressupost és concret i convé fixar-lo d'entrada, perquè és el criteri contra el qual es
+mesura tot el treball:
+Objectiu Pressupost per fotograma Equivalència
+24 FPS (objectiu del projecte) 41,7 ms Estàndard cinematogràfic
+25 FPS (referència PAL) 40,0 ms Habitual a produccions europeesVP
+30 FPS 33,3 ms Objectiu còmode
+Taula 4. Pressupostos temporals segons l'objectiu de FPS
+Aquests 41,7 ms inclouen tot: avaluació del rig, deformació i dibuix de VP2. La
+conseqüència metodològica és que no té sentit optimitzar el rig si el dibuix ja en
+consumeix la major part; per això el capítol 3 comença classificant el coll d'ampolla
+abans d'intervenir-hi.
+En el model DG clàssic, anterior a la introducció de l’avaluació paral·lela, una dada
+només es calculava si algun consumidor la demanava i si prèviament s’havia marcat
+com a bruta (dirty). El model és econòmic quant a càlculs redundants, però és
+inherentment serial. La transició cap al paral·lelisme i el precàlcul s’ha produït en etapes
+documentades.
+20
+
+=== PAGE 21 ===
+1.2. Motivació i replantejament de la premissa
+El treball parteix d’un problema concret de Here be dragons: el drac és un personatge
+amb molta geometria i el seu rig ha d’alimentar Adonis FX, el sistema de simulació
+muscular emprat al projecte. La hipòtesi inicial era que el conjunt no assoliria prou
+fluïdesa per animar-hi.
+La premissa inicial era optimitzar el rig perquè pogués assumir una malla de 50.000
+vèrtexs en un context en què un rig convencional no ho permetria. El model final va
+arribar als 371.250 vèrtexs; amb el 100 % dels vèrtexs deformats residents a la GPU, el
+rig assoleix 54,7 FPS. Per tant, en aquest cas, la càrrega geomètrica que es
+pressuposava problemàtica no és el factor limitant.
+Aquesta observació no invalida el treball: el reorienta. Si la geometria no és el factor
+limitant, la pregunta pertinent és què ho és. Per respondre-la calia comparar rigs
+d'arquitectures diferents sota una mateixa mesura, que és exactament el que fa aquest
+treball amb quatre casos de producció.
+Els dos imperatius originals es mantenen, amb matisos:
+1. Interactivitat al VP. Un personatge detallat es converteix en una estàtua si l'animador
+no el pot moure amb fluïdesa. Treballar a taxes baixes obliga a dependre de proxies o
+d'esperes a playblast, i tots dos camins emmascaren problemes.
+2. Eficiència de la simulació. Adonis FX actua com una capa que depèn directament de
+la deformació base de l’esquelet del mateix rig. El cost acumulat és proporcional al
+temps del rig per fotograma i al nombre d’iteracions de la simulació (x · y); no és un
+creixement exponencial. Reduir a la meitat el temps d’execució del rig redueix a la meitat
+el cost d’aquesta fase en cadascuna de les iteracions del procés.
+1.3. Objectius del treball
+Objectiu principal: determinar mitjançant mesura quins factors redueixen el rendiment
+d’un rig de Maya i convertir els resultats en criteris aplicables per perfils artístics sense
+especialització tècnica.
+Objectius específics:
+1. Entendre el motor d'avaluació. Establir per què determinades tècniques trenquen
+el paral·lelisme, no només constatar que ho fan.
+2. Establir una metodologia de diagnòstic de mesura, capaç de distingir càrrega
+d'avaluació de càrrega de renderitzat i de localitzar els nodes responsables per
+nom.
+3. Contrastar quatre arquitectures de rig reals sota un protocol de mesura idèntic.
+4. Identificar quines pràctiques de construcció tenen efecte mesurable i quines no.
+Criteris d'èxit mesurables i el seu resultat:
+21
+
+=== PAGE 22 ===
+# Criteri Mètrica Llindar Resultat
+Reproducció ms/frame a l'estat de Assolit als 4 rigs (15,4-22,8
+C1 ≤ 41,7 ms
+interactiva producció ms)
+Estabilitat del
+C2 Nodes GloballySerial 0 Assolit a 3 de 4
+paral·lelisme
+% de vèrtexs deformats
+C3 Residència a GPU > 90 % Assolit als 4 (96,1-100 %)
+a la GPU
+Desviació Serial vs tolerància Assolit (0; 1,5 × 10 ⁵;
+C4 Correcció geomètrica
+Parallel §6.4 3.495.636 mostres)
+⁻
+Assolit majoritàriament (4-
+C5 Reproductibilitat Coeficient de variació < 15 %
+18 %)
+Taula 5. Criteris d'èxit i resultats del treball
+1.4. Metodologia i eines utilitzades
+1.4.1. CPU, nucli i fil: què vol dir tenir 28 fils
+Tot el treball gira al voltant de repartir feina entre fils, val la pena deixar clars tres termes
+que sovint es fan servir com si fossin el mateix.
+A la màquina
+Terme Què és
+de proves
+CPU El xip sencer. És qui executa tot el codi de Maya que no va
+1
+(processador) a la targeta gràfica
+Unitat de càlcul física dins del xip. Cada nucli pot fer una
+Nucli (core) Diversos, físics
+operació a la vegada
+Seqüència d'instruccions que el sistema reparteix entre els
+Fil (thread) nuclis. Un nucli pot alternar entre dos fils quan un d'ells 28
+espera
+Taula 6. Diferència entre CPU, nucli i fil a l'entorn de proves
+La distinció importa perquè 28 fils no impliquen una velocitat 28 vegades superior. La
+concurrència efectiva queda limitada per les dependències entre nodes i per les tasques
+serials: un fil que espera una dada no fa feina útil i no totes les operacions es poden
+repartir. Per això la mètrica emprada al capítol 7 no és el nombre de fils, sinó la quantitat
+de feina acumulada que s’encabeix dins d’un fotograma real. Als rigs mesurats se situa
+entre 6,5 i 9,2, molt per sota de 28.
+Python per a eines, C++ per a nodes. Tot el codi d'aquest treball és Python, i per a
+eines d'auditoria i de mesura és la tria correcta: s'escriu ràpid, no cal compilar res i té
+accés a tota l'API de Maya.
+Ara bé, un node de deformació escrit en Python no pot anar en paral·lel. Maya els
+programa com a GloballySerial a causa del GIL, de manera que mentre s'avalua un
+22
+
+=== PAGE 23 ===
+node de Python la resta de fils esperen. Un node equivalent escrit en C++ es compila
+a codi màquina, no passa per cap intèrpret i Maya el pot planificar com a Parallel: pot
+executar-se en molts fils alhora i cada execució és, a més, força més ràpida.
+La regla pràctica que se'n deriva: Python per a tot el que s'executa un cop (construir el
+rig, netejar l'escena, mesurar) i C++ per a tot el que s'executa cada fotograma (nodes
+personalitzats dins del graf). Cap dels quatre rigs té nodes de Python al graf, i per això
+cap presenta el problema, però és una decisió que cal prendre conscientment, no per
+casualitat.
+S’han comparat quatre rigs sota un protocol idèntic de quatre estats d’avaluació, i cada
+escena s’ha caracteritzat amb eines d’auditoria pròpies.
+1. Diagnòstic i perfilat. Ús del Profiler natiu per desglossar el temps de còmput i distingir
+colls d'ampolla evaluation-bound de render-bound, amb dbpeek per inspeccionar la
+planificació del graf i dbtrace per rastrejar dependències no declarades.
+2. Mesura comparada. Quatre estats (DG, paral·lel sense GPU, paral·lel amb GPU,
+Cached Playback) sobre un cicle d'estrès sintètic idèntic, amb repeticions i tractament
+estadístic definit.
+3. Auditoria d'escena. Eines pròpies que responen preguntes que el Profiler no respon
+directament: quins nodes no són paral·lelitzables, quanta geometria es deforma
+realment, i quina part va a GPU i quina a CPU.
+4. Scripting. maya.cmds per a control i consulta; maya.api.OpenMaya (API 2.0) per a
+recorreguts massius sobre vèrtexs. S'eviten les consultes jeràrquiques pel creixement
+del temps d'execució en escenes denses.
+Entorn únic per a totes les mesures. Cap comparació entre màquines ni entre versions:
+Component Especificació
+Maya 2026.2 (API 20260200)
+CPU Intel, 28 fils
+GPU NVIDIA GeForce RTX 4070 SUPER, 12.282 MB VRAM
+RAM 30.840 MB
+API gràfica OpenGL 4.6, Feature Level 5, màx. textura 16384²
+Sistema operatiu Windows 11
+Rang de mesura Fotogrames 1-120, 24 fps
+Taula 7. Especificacions de l'entorn de proves
+23
+
+=== PAGE 24 ===
+1.5. Estructura de la memòria
+El document segueix la seqüència lògica del mètode aplicat:
+entendre (cap. 2), mesurar (cap. 3), dissenyar (cap. 4), automatitzar (cap. 5), aplicar
+(cap. 6), validar (cap. 7) i generalitzar (cap. 8).
+Els capítols 9 i 10 situen el treball dins la producció i n'extreuen conclusions. Els annexos
+contenen les eines completes que fan reproduïble tot el procés en una altra màquina i
+sobre un altre personatge.
+Els capítols 4 i 10 contenen els resultats més rellevants del treball, perquè és on les
+mesures contradiuen la documentació de referència i obliguen a revisar.
+1.6. Els quatre casos d'estudi
+Figura 2. Composició de vistes neutres dels quatre rigs analitzats: Varyndor, Oswald, OTO i Marcelo.
+Rig Arquitectura Paper en l'estudi
+Matricial, quadrúpede alat, alta densitat Cas principal de la producció
+Varyndor (drac)
+geomètrica Here be dragons
+OTO mGear combinat amb facial propi Híbrid: solució comercial +
+(humanoide) (blendShapes i pose interpolators RBF) desenvolupament propi
+Marcelo Cos i facial matricials purs, amb
+Mínim us de constraints
+(humanoide) deformadors de roba
+24
+
+=== PAGE 25 ===
+Rig Arquitectura Paper en l'estudi
+Oswald (ós Cos i facial amb constraints, sense Extrem oposat: màxim de
+estilitzat) plantejament matricial constraints
+Taula 8. Arquitectura i funció dels quatre casos d'estudi
+La tria és deliberada. Marcelo i Oswald constitueixen els dos extrems de l'eix
+arquitectònic que el treball vol contrastar, i tots dos han estat creats pel mateix autor,
+cosa que elimina l'autoria com a variable. Varyndor també ha estat desenvolupat pel
+mateix autor, incloent-hi el rigging, el skinning i les deformacions musculars. En el cas
+d'OTO, el rig corporal parteix de mGear i el passe de skinning va ser realitzat per Martina
+Pou, mentre que el sistema facial i la integració tècnica han estat desenvolupats pel
+mateix autor.
+1.7. Abast i limitacions
+Dins de l'abast: arquitectura del graf d'avaluació, deformació primària, compatibilitat i
+residència a GPU Override, Cached Playback, i mesura del rendiment interactiu al visor.
+Fora de l'abast: optimització del temps de render final; sistemes facials complets des del
+punt de vista artístic; disseny dels controls; i optimització interna d'Adonis FX.
+Limitacions reconegudes: Amb 4 rigs que difereixen en múltiples variables alhora, cosa
+que impedeix atribuir causalitat; cicle d'estrès que no reprodueix una actuació real;
+mesures d'una sola màquina i una sola versió de Maya.
+25
+
+=== PAGE 26 ===
+2. Fonaments de l'avaluació a Maya
+Per poder optimitzar un rig d'alta densitat i preparar-lo per rebre simulacions complexes,
+primer és imprescindible comprendre l'arquitectura interna de càlcul d'Autodesk Maya.
+Ignorar el funcionament del motor d'avaluació és el motiu principal pel qual molts rigs
+pateixen problemes de rendiment.
+2.1. Del Dependency Graph clàssic a l'avaluació paral·lela
+Figura 3. Comparació esquemàtica entre el model de petició del DG i l’avaluació cap endavant de l’Evaluation Manager.
+Abans de la introducció de l'avaluació paral·lela, Maya utilitzava exclusivament el
+Dependency Graph amb un model de petició (pull model). Quan el consumidor, el visor
+o el motor de render necessitava informació d'un node, li demanava el resultat. Si la
+dada estava marcada com a bruta (dirty), el node havia de recalcular-se.
+Aquest sistema requereix un mecanisme de propagació de dades brutes (dirty
+propagation): quan el temps avança o un animador mou un controlador, la propagació
+recorre tot el graf marcant quins nodes han quedat invalidats. El problema estructural és
+doble: el recorregut és serial, i les avaluacions basades en peticions poden causar
+conflictes de concurrència (race conditions). El DG clàssic és, inadequat per a
+l'avaluació en paral·lel.
+La resposta de Maya és el model d'avaluació cap endavant (forward evaluation). La idea
+és simple però potent: si totes les dependències d'un node s'han avaluat abans d'avaluar
+el propi node, no cal fer cap petició cap enrere. El càlcul es manté contingut al node,
+cosa que permet distribuir la càrrega entre múltiples nuclis de manera concurrent.
+Segons els resultats de l’apartat 7.1, el pas de DG a avaluació paral·lela amb GPU
+Override arriba a multiplicar el rendiment per 9,7 en els rigs mesurats. És el factor
+individual més gran de l’estudi, molt per damunt de qualsevol decisió de construcció
+del rig analitzada.
+26
+
+=== PAGE 27 ===
+2.2. Concepte d'Evaluation Graph i Scheduling
+Figura 4. Transformació conceptual d’una mateixa cadena des del Dependency Graph fins a l’Evaluation Graph i
+l’Scheduling Graph.
+Dos termes que convé no confondre: value i key. El value és el nombre que té un atribut
+en un moment donat, per exemple, rotateX = 30. La key és una marca a la línia de
+temps que fixa aquest valor en un fotograma concret.
+La diferència és important per a l'Evaluation Graph: l'EM exclou del graf les corbes que
+no canvien amb el temps. Això vol dir que un atribut amb un únic value constant no
+genera feina. Però quan l'animador afegeix una segona clau a un control que abans
+era estàtic, el graf s'invalida i s'ha de reconstruir sencer.
+Durant les mesures es va detectar un fet que podia invalidar l’estudi: els rigs publicats
+tenen corbes, però són driven keys sense rang temporal. Com que cap no depèn del
+temps, avançar el playhead no marca cap dada dependent com a bruta i el rig sembla
+molt més ràpid del que és.
+Per aplicar l'avaluació cap endavant, Maya necessita conèixer per endavant totes les
+dependències estructurals. Per això construeix l'Evaluation Graph, que captura quins
+atributs estan animats i com es connecten a nivell de node, a diferència del DG, que
+funciona a nivell de plug o atribut específic.
+Un cop construït l'EG, Maya desactiva la propagació de dades brutes per a cada
+fotograma i reutilitza l'EG fins que l'estructura de l'escena canviï i s'invalidi.
+L'EG s'ha de traduir en instruccions per a la CPU amb el Scheduling Graph, que divideix
+el treball en tasques. Aquí és on les decisions del rigger tenen un impacte absolut. Cada
+node rep un tipus de planificació:
+27
+
+=== PAGE 28 ===
+Implicació per al
+Tipus Comportament Observat a l'estudi
+rigger
+Múltiples instàncies simultànies 13,3 % a 97,1 % dels
+Parallel Situació desitjable
+en fils diferents nodes
+Instàncies del mateix tipus de Acceptable en Majoritàriament
+Serial
+node en sèrie entre elles volums baixos nodes no-rig
+S'avalua en solitari; res més Només 8 casos en 4
+GloballySerial Penalització severa
+s'executa alhora rigs
+Maya no pot garantir la seguretat Força mecanismes
+Untrusted Cap en cap rig
+de fils de protecció
+Taula 9. Tipus de planificació de l'Evaluation Manager observats
+Els Cycle Clusters mereixen menció a part: si l'arquitectura conté dependències
+circulars, l'Evaluation Manager agrupa els nodes implicats en un sol clúster que s'avalua
+en sèrie per un únic fil abans de poder continuar. Aquest mecanisme es descriu com la
+principal penalització dels constraints.
+Aquesta classificació és consultable per node amb dbpeek i és la dada més directament
+accionable de tot el diagnòstic, identifica per nom els nodes que impedeixen el
+paral·lelisme.
+2.3. Diferència entre colls d'ampolla de CPU i GPU
+2.3.1. Blocs buits: el que no s'arriba a avaluar
+No tota la feina que apareix al graf s'acaba fent. L'Evaluation Manager reparteix el treball
+en blocs, i alguns acaben buits, no tenen res a calcular perquè el seu contingut no és
+visible, està exclòs per un avaluador o no ha canviat.
+Això es pot veure al Profiler, i és una de les poques maneres directes de comprovar que
+els mecanismes funcionen de debò. En una captura de 21 fotogrames:
+Esdeveniment Què indica Oswald Marcelo
+SkipAll Bloc que se salta sencer 924 1.722
+InvisibilitySkipEvaluationBlock Bloc omès per invisibilitat - 2.688
+NodePostEvaluationLeaveDirty Node que es deixa sense recalcular 924 1.722
+Taula 10. Blocs d'avaluació omesos al Profiler
+Marcelo té gairebé el doble de blocs saltats que Oswald i 2.688 omissions per
+invisibilitat, mentre que Oswald pràcticament no en té, cosa coherent amb el fet que la
+seva geometria oculta sí que s'avalua.
+28
+
+=== PAGE 29 ===
+Figura 5. Captura del Profiler amb les pistes de VP Evaluation, Qt i Evaluation dins d’un interval de la sessió
+enregistrada.
+Cada vegada que Maya actualitza un fotograma ha de fer dues coses: calcular la
+matemàtica i dibuixar la geometria. Un coll d'ampolla es classifica en:
+● Evaluation-bound (límit d'avaluació). La CPU triga massa a fer la matemàtica que
+determina les posicions actualitzades. En rigging sol donar-se per excés de nodes,
+expressions obsoletes, scripts de Python (que pateixen del GIL i forcen l'execució
+en sèrie) o clústers de cicles.
+● Render-bound (límit de renderitzat). El coll d'ampolla prové del temps que triga la
+targeta gràfica a dibuixar els polígons al visor, desenes de milers d'objectes,
+canvis de topologia en temps real, materials complexos, o esperes de
+transferència de dades.
+Regla de decisió pràctica: si en amagar la geometria el temps per fotograma cau molt,
+el problema és de dibuix; si es manté, és d'avaluació. És una prova de deu segons que
+evita hores d'optimització mal dirigida.
+Mesura directa de la proporció. Repetint el recorregut amb i sense refresh forçat, el
+dibuix representa 2,56 ms (15,9 %) a Marcelo i 2,48 ms (10,9 %) a Oswald. La pràctica
+coincidència de la xifra absoluta en dos rigs de densitat molt diferent valida el mètode
+i indica que, en aquests casos, el problema és sempre d'avaluació, mai de renderitzat.
+L'ús del Profiler és indispensable per a aquesta classificació, ja que separa els
+processos per colors i pistes.
+29
+
+=== PAGE 30 ===
+2.4. El paper de la targeta gràfica: GPU Override i deformadors
+La documentació estableix que una malla ha de tenir una densitat mínima perquè
+compensi enviar-la a la targeta: per sota d'aquest llindar, el temps de transferir les
+dades supera el que s'estalvia en el càlcul. Les xifres per defecte són 500 vèrtexs en
+targetes AMD i 2.000 en NVIDIA.
+Figura 6. Comparació del flux tradicional de deformació amb el flux de GPU Override.
+En els sistemes antics, la deformació, el càlcul d'un skinCluster, per exemple, es feia a
+la CPU i posteriorment s'enviava la malla resultant a la GPU per ser dibuixada. Això
+consumia molt de temps a causa de la transferència de dades.
+Amb GPU Override actiu, Maya envia la geometria sense deformar directament a la
+memòria de la targeta gràfica. Les deformacions s'executen massivament en paral·lel
+amb instruccions OpenCL i les dades es passen directament a Viewport 2.0, sense patir
+les demores de lectura i transferència (read-back).
+Residència mesurada als quatre rigs: 100 % dels vèrtexs deformats a Varyndor, OTO
+i Oswald; 96,1 % a Marcelo. La deformació és, a la pràctica, gratuïta en temps de CPU
+a tots quatre.
+El repte de desenvolupar rigs optimitzats és mantenir la malla dins de la GPU sense que
+la cadena es trenqui.
+Qualsevol auditoria a GPU s'ha de fer amb un cicle d'animació actiu. En una escena
+estàtica encara no existeixen, i consultar-los dona un resultat enganyosament curt: al
+drac, una consulta en escena estàtica retorna una sola malla, mentre que amb el rig
+embrutant-se en retorna divuit.
+30
+
+=== PAGE 31 ===
+2.5. Els avaluadors personalitzats
+L'Evaluation Manager delega part de la feina en avaluadors especialitzats, activables i
+desactivables individualment. Conèixer-los és el que permet intervenir amb precisió en
+comptes de per assaig i error:
+Estat per defecte
+Avaluador Funció
+observat
+GPU Override: deriva la deformació a
+deformer Actiu
+la targeta gràfica
+cache Cached Playback Desactivat
+Suport de sistemes dinàmics dins de
+dynamics Actiu
+l'EM
+invisibility Evita avaluar objectes no visibles Actiu
+Exclou nodes marcats explícitament
+frozen Desactivat
+com a congelats
+Resolució de cadenes de cinemàtica
+ikSystem Actiu
+inversa
+hik HumanIK Actiu
+Aplanament de cadenes de
+transformFlattening Actiu
+transformacions
+Poda de branques no necessàries del
+pruneRoots Actiu
+graf
+Gestió de nodes procedents de
+reference Actiu
+referències
+motionTrail Traces de moviment al visor Actiu
+curveManager,
+Avaluadors específics de corbes Desactivats
+timeEditorCurveEvaluator
+cycle Gestió de cicles d'avaluació Desactivat
+disabling, bifrostGraph Utilitats de depuració i integració Desactivats
+Taula 11. Avaluadors personalitzats de l'Evaluation Manager
+Consulta i control exactes:
+import maya.cmds as cmds
+# Llistar tots els avaluadors i el seu estat
+for name in cmds.evaluator(query=True):
+enabled = cmds.evaluator(name=name, query=True, enable=True)
+print(f"{name:35} {'ON' if enabled else 'off'}")
+# Activar / desactivar el GPU Override
+cmds.evaluator(name='deformer', enable=True)
+31
+
+=== PAGE 32 ===
+# Quines malles té residents a GPU (requereix el rig embrutant-se)
+cmds.evaluator(name='deformer', query=True, info=True)
+2.6. Modes d'avaluació i configuració
+Mode Ordre Ús
+DG clàssic cmds.evaluationManager(mode='off') Línia base de comparació
+Serial cmds.evaluationManager(mode='serial') Depuració: EG nou, un sol fil
+Parallel cmds.evaluationManager(mode='parallel') Mode de producció
+Taula 12. Modes d'avaluació emprats en les proves
+# Consultar el mode actiu; retorna també l'estat del graf
+cmds.evaluationManager(query=True, mode=True)
+# -> ['parallel', 'Evaluation graph is ready.']
+La distinció entre DG i Serial és essencial i sovint es confon: tots dos utilitzen un sol fil,
+però Serial construeix l'Evaluation Graph i DG no.
+2.7. Cronologia de funcionalitats rellevants
+Versió Funcionalitat rellevant per a aquest treball
+2016 Introducció de l'avaluació paral·lela (Evaluation Manager)
+2019 Cached Playback
+2020 offsetParentMatrix; nodes uvPin i proximityWrap; dinàmiques a Cached Playback
+Ampliació del conjunt de nodes matricials (aimMatrix, blendMatrix, parentMatrix,
+2022
+pickMatrix)
+2024 Millores de GPU read-back i gestió dinàmica de clústers de deformació
+2026 Versió emprada en totes les mesures d'aquest treball
+Taula 13. Cronologia de funcionalitats de rendiment a Maya
+32
+
+=== PAGE 33 ===
+3. Diagnòstic i anàlisi de rendiment
+Optimitzar a cegues basant-se únicament en la caiguda dels FPS condueix a solucions
+ineficients, perquè els FPS només són el símptoma d'un problema subjacent. Aquest
+capítol detalla la metodologia i les eines per localitzar, visualitzar i interpretar els colls
+d'ampolla estructurals.
+3.1. Eines de perfilat: ús del Profiler
+Figura 7. Vista general del Profiler amb esdeveniments d’avaluació i diversos processos ikHandleSolve identificats.
+El Profiler enregistra tots els processos que ocorren durant un interval i els mostra amb
+un gràfic de barres horitzontals: com més llarga és la barra, més temps triga aquell
+procés.
+La funció determinant per a l'anàlisi de rigs és Show Critical Path, que ressalta la
+seqüència de tasques que representen el temps mínim d'avaluació d'un fotograma.
+Encara que l'ordinador tingués recursos infinits, l'escena mai no podria avaluar-se més
+ràpid que aquest camí crític.
+Conseqüència operativa: optimitzar qualsevol node que no estigui al camí crític no
+millora els FPS. És l'error més comú i el més car en hores de feina.
+Control per codi, imprescindible per automatitzar la captura:
+import maya.cmds as cmds
+cmds.profiler(bufferSize=20) # MB de memòria per a la captura
+cmds.profiler(sampling=True) # inicia
+# ... reproduir el rang
+cmds.profiler(sampling=False) # atura
+cmds.profiler(output='D:/uni/TFG_individual/profiles/base.json')
+33
+
+=== PAGE 34 ===
+3.2. Interpretació de gràfics de rendiment
+Figura 8. Ampliació del Profiler amb blocs d’avaluació i processos ikHandleSolve distribuïts en l’interval enregistrat.
+Color Procés Lectura diagnòstica Acció
+Maya usa el model serial per
+Rosa i Comprovar que l'EM és actiu
+Dirty propagation invalidar connexions a cada
+porpra i no en Safe Mode
+fotograma
+Barres apilades verticalment =
+Avaluació Cercar
+Taronja paral·lelisme real; una sola barra
+paral·lela de l'EM opaqueTaskEvaluation
+llarga = avaluació serial forçada
+Preparació de l'enviament a
+GPU Override / Confirmar quines malles hi
+Groc GPU, o restauració massiva des
+cache restore són
+de memòria cau
+Blau clar Actualitzacions i Temps de traduir i dibuixar la Si domina: densitat o
+i fosc dibuix de VP2 geometria materials, no rig
+Blanc i Avaluador Verificar que el LOD ocult
+Objectes exclosos del càlcul
+grisenc d'invisibilitat realment no s'avalua
+Taula 14. Interpretació dels colors i processos del Profiler
+Als rigs estudiat, el bloc blau representa entre el 10,9 % i el 15,9 % del temps de
+fotograma, en cap dels casos el problema és de renderitzat.
+34
+
+=== PAGE 35 ===
+3.3. Identificació de nodes problemàtics i clústers serials
+3.3.1. Per què un node de Python atura tots els fils, i C++ no
+L'intèrpret de Python té un bloqueig global, el GIL, que fa que només un fil pugui executar
+codi de Python a la vegada. No és un problema de com estigui escrit el node, és una
+limitació de l'intèrpret.
+Maya ho sap, i per això quan un node personalitzat està escrit en Python el programa
+com a GloballySerial, mentre s'avalua, la resta de fils queden aturats, encara que
+tinguessin feina pendent i independent. Al Profiler es veu com una tasca llarga envoltada
+de fils sense fer res.
+Node en Python Node en C++
+Planificació que li assigna Maya GloballySerial Parallel
+Fils que poden executar-lo alhora 1 Tants com calgui
+Efecte sobre la resta del graf Els altres fils esperen Cap
+Velocitat per execució Interpretada Compilada a codi màquina
+Taula 15. Comparació de la planificació de nodes Python i C++
+El llenguatge més accessible per a un perfil artístic és precisament el que no es pot fer
+servir per a nodes que s'avaluïn cada fotograma. Als quatre rigs no hi ha cap node de
+Python al graf, el recompte de GloballySerial és 0 a tres d'ells i 8 a Varyndor, i aquests
+vuit són ikHandle, no scripts.
+L'arquitectura moderna de Maya castiga certs hàbits del rigging clàssic. Les dues
+anomalies crítiques a cercar són:
+● Clústers de cicles. Al Profiler s'identifiquen perquè apareixen etiquetats com a
+opaqueTaskEvaluation. La solució no és un ajust de paràmetres sinó un redisseny
+arquitectònic.
+● Conflictes de bloqueig i scripts de Python. Els nodes de deformació creats amb
+Python estan programats nativament com a GloballySerial a causa del GIL,
+obliguen tots els fils a esperar el seu torn. Al Profiler apareix com múltiples fils
+aturats al voltant d'una única tasca llarga.
+Detecció automatitzada. L'eina de l'annex 12.2 recorre l'Evaluation Graph i llista per nom
+tots els nodes que no siguin Parallel, agrupats per tipus. Resultat als quatre rigs:
+Rig Parallel Serial GloballySerial Untrusted % Parallel
+Varyndor 17.756 115.894 8 (ikHandle dels dits) 0 13,3 %
+OTO 9.231 16.039 0 0 36,5 %
+Marcelo 7.321 219 0 0 97,1 %
+Oswald 4.902 1.343 0 0 78,5 %
+Taula 16. Distribució dels nodes segons el tipus de planificació
+35
+
+=== PAGE 36 ===
+El bloc Serial de Varyndor està dominat per nodes que no formen part del camí
+d'avaluació del rig: 100.662 nodeGraphEditorInfo, 7.680 polyUnite i 4.816 groupId.
+Convé no confondre volum de nodes serials amb cost real.
+El percentatge de nodes paral·lelitzables resulta ser l'indicador que millor discrimina
+l'arquitectura, del 13,3 % al 97,1 %, encara que, no sigui el que millor prediu el temps
+de fotograma en producció.
+3.4. Ús de l'Evaluation Toolkit per a proves d'estabilitat
+Figura 9. Evaluation Toolkit en mode Parallel: configuració de GPU Override i relació d’avaluadors personalitzats.
+Windows > General Editors > Evaluation Toolkit. La velocitat no serveix de res si el càlcul
+geomètric és erroni, aquestes eines validen el procés d'optimització amb mesures.
+Entre les comprovacions disponibles s’inclou la detecció de cicles, emprada com a
+contrast visual del diagnòstic obtingut amb les eines de consulta.
+● La prova del Mode Serial. Per saber si les deformacions errònies són un defecte
+de com s'ha estructurat el graf o un problema de gestió de fils (thread safety), es
+força el mode a Serial. Aquest mode utilitza la nova arquitectura d'avaluació cap
+endavant però limita el càlcul a un sol nucli. Si el rig falla en paral·lel però funciona
+en Serial, es tracta d'un problema de sincronització.
+● Mode d'Anàlisi i dependències ocultes. Una de les causes més comunes
+d'avaluació incorrecta és que els nodes accedeixin a informació sense
+dependències explícitament connectades (per exemple, amb getAttr dins
+d'expressions). L'ordre dbtrace -k evalMgrGraphValid rastreja aquests
+comportaments en temps real i registra els nodes on falten dependències o
+s'accedeix a dades fora de l'ordre estricte.
+36
+
+=== PAGE 37 ===
+● Safe Mode. Si l'Evaluation Manager detecta inestabilitats, diversos fils accedint a
+la mateixa instància d'un node, commuta forçosament tot el rig d'avaluació
+paral·lela a serial. Comprovar que el Safe Mode no s'està activant de fons és el
+primer requisit de qualsevol diagnòstic, mentre hi estigui, cap optimització serà
+mesurable.
+Taula de diagnòstic diferencial, el nucli del protocol de validació:
+DG Serial Parallel Diagnòstic Acció
+OK OK OK Rig correcte Cap
+EG mal construït: dependències no
+OK Falla Falla dbtrace -k evalMgrGraphValid
+declarades
+Problema de concurrència / seguretat Revisar nodes Untrusted i
+OK OK Falla
+de fils plugins
+Error de construcció del rig, no
+Falla Falla Falla Depurar el rig
+d'avaluació
+Taula 17. Diagnòstic diferencial amb l'Evaluation Toolkit
+3.5. Referència d'ordres de diagnòstic
+Aquesta secció recull la sintaxi exacta necessària per reproduir el diagnòstic. És material
+de consulta, no de lectura lineal.
+3.5.1. dbpeek - inspecció del graf
+dbpeek és l'ordre que deixa mirar dins de l'EG. Amb op='graph' se li ha d'indicar sempre
+què vols veure, i només accepta quatre arguments:
+Quan s'utilitza
+Argument Què retorna
+Els nodes agrupats per tipus Per trobar els que no són Parallel. És la
+scheduling
+de planificació consulta més útil de totes
+Per saber què s'avalua realment, que no és tot
+nodes Els nodes que formen el graf
+el que hi ha a l'escena
+connections Les connexions entre nodes Per seguir una dependència concreta
+Detall fi, quan cal saber quin atribut concret
+plugs Els atributs de cada node
+entra o surt
+Taula 18. Arguments disponibles de dbpeek per inspeccionar l'Evaluation Graph
+No hi ha cap argument per consultar cicles ni clústers, encara que algunes fonts ho
+donin per fet. Per veure si un rig en té cal anar al Profiler i buscar-hi els esdeveniments
+de clúster.
+37
+
+=== PAGE 38 ===
+import json
+import maya.cmds as cmds
+# Tipus de planificació per node - la consulta més útil del diagnòstic
+raw = cmds.dbpeek(op='graph', argument='scheduling', all=True)
+sched = json.loads(raw)['scheduling']
+print({k: len(v) for k, v in sched.items()})
+# Estructura de nodes i connexions
+cmds.dbpeek(op='graph', argument='nodes', all=True)
+cmds.dbpeek(op='graph', argument='connections', all=True)
+cmds.dbpeek(op='graph', argument='plugs', all=True)
+# Bolcat a fitxer per a l'anàlisi posterior
+cmds.dbpeek(op='graph', argument='scheduling', all=True,
+outputFile='D:/uni/TFG_individual/reports/scheduling.txt')
+3.5.2. dbtrace - rastreig de comportaments
+Si dbpeek fa una foto de com és el graf, dbtrace el vigila mentre s'avalua i va escrivint a
+un fitxer tot el que troba estrany.
+La clau evalMgrGraphValid detecta el problema més comú i més difícil de veure a ull,
+nodes que llegeixen dades sense haver declarat que en depenen, típicament un getAttr
+dins d'una expressió, i que per tant es poden acabar avaluant en un ordre equivocat. El
+rig sembla que funcioni, i només falla en paral·lel o de manera intermitent.
+S'activa, es reprodueix el rang i es desactiva. Si el fitxer de sortida surt buit, el graf està
+ben declarat; si té contingut, cada línia és un node que cal revisar.
+# Detectar dependències no declarades / accessos fora d'ordre
+cmds.dbtrace(keyword='evalMgrGraphValid',
+output='D:/uni/TFG_individual/reports/graphvalid.txt')
+# ... reproduir el rang
+cmds.dbtrace(keyword='evalMgrGraphValid', off=True)
+3.5.3. Consultes d'escena rellevants
+Aquestes no són ordres de diagnòstic pròpiament dites, sinó les consultes emprades
+cada cop que obro un rig que no conec, per saber amb què estic tractant abans de
+mesurar res.
+from collections import Counter
+import maya.cmds as cmds
+# Malles i el seu recompte de vèrtexs
+for mesh in (cmds.ls(type='mesh', noIntermediate=True, long=True) or []):
+print(mesh, cmds.polyEvaluate(mesh, vertex=True))
+# Formes intermèdies
+cmds.ls(type='mesh', intermediateObjects=True)
+# Restriccions presents, agrupades per tipus
+Counter(cmds.nodeType(c) for c in (cmds.ls(type='constraint') or []))
+# Nodes desconeguts (plugins absents)
+cmds.ls(type='unknown')
+# Cicles d'avaluació
+cmds.cycleCheck(all=True, list=True, evaluation=True)
+38
+
+=== PAGE 39 ===
+# Malles residents a GPU (només fiable amb el rig embrutant-se)
+cmds.evaluator(name='deformer', query=True, info=True)
+3.6. Protocol de diagnòstic pas a pas
+El cicle emprat a tot el capítol és: detectar, plantejar, avaluar i escollir.
+1. Detectar l'error. Localitzar on es perd el temps, amb el Profiler i amb les eines
+d'auditoria.
+2. Plantejar solucions. Normalment n'hi ha més d'una, i sovint apunten a llocs diferents,
+canviar el rig, canviar la geometria, o canviar només una opció.
+3. Avaluar-les. Mesurar cadascuna per separat amb el mateix protocol, perquè siguin
+comparables.
+4. Escollir. Quedar-se amb la que dona més guany pel cost que té, i deixar constància
+de les que s'han descartat i per què.
+Llista de verificació aplicable a qualsevol rig:
+1. Confirmar el mode d'avaluació: cmds.evaluationManager(q=True, mode=True) →
+ha de ser parallel.
+2. Confirmar que Safe Mode no està actiu.
+3. Enumerar avaluadors actius i confirmar deformer i cache.
+4. Verificar que l'escena té animació temporal, o fer servir una generada amb codi.
+5. Construir el cicle d'estrès si no n'hi ha, i comprovar que el temps per fotograma
+puja.
+6. Classificar el coll d'ampolla: mesurar amb i sense refresh forçat.
+7. Extreure la planificació per node i llistar els no-Parallel.
+8. Localitzar opaqueTaskEvaluation al camí crític amb el Profiler.
+9. Executar dbtrace -k evalMgrGraphValid i revisar el registre.
+10. Auditar la càrrega geomètrica real i el repartiment GPU/CPU.
+11. Apuntar tots els resultats a la fitxa de rendiment abans de modificar res.
+L'últim pas no és obligatori: el diagnòstic inicial no és reproduïble un cop optimitzat el
+rig, i és la referència contra la qual es mesura tot el treball posterior.
+39
+
+=== PAGE 40 ===
+4. Arquitectura de rigs optimitzats
+L'optimització d'un rig no s'aconsegueix activant opcions dins de les preferències de
+Maya; requereix dissenyar l'estructura del personatge des de la base per ser compatible
+amb el processament en paral·lel i l'acceleració per maquinari.
+4.1. Optimització estructural
+4.1.1. Simplificació de jerarquies i eliminació de nodes residuals
+Figura 10. Historial de modelatge mostrat al Node Editor, amb nodes polyExtrude, polyMirror, polyBevel,
+polyCloseBorder, deleteComponent i polyBridgeEdge.
+Durant el modelatge i la construcció del rig, Maya acumula nodes d'historial, formes
+intermèdies i connexions no utilitzades. L'avaluació ha de recórrer aquestes cadenes
+obsoletes abans d'arribar a la deformació final.
+Residu Com detectar-lo Cost Solució
+Historial de
+modelatge
+Nodes avaluats cmds.delete(mesh,
+(polyUnite, cmds.listHistory(mesh)
+sense efecte útil constructionHistory=True)
+polyBridgeEdge,
+polyExtrude…)
+Formes
+Memòria i
+intermèdies Eliminar les no
+cmds.ls(type='mesh', intermediateObjects=True) recorregut del
+(…OrigShape) connectades
+graf
+òrfenes
+Bloquegen la
+Nodes cmds.delete després de
+cmds.ls(type='unknown') neteja i
+desconeguts desbloquejar
+l'exportació
+Espais de noms Mida de fitxer i
+cmds.namespaceInfo(listOnlyNamespaces=True, Fusionar amb l'arrel i
+residuals confusió de
+recurse=True) eliminar
+d'importacions selecció
+Topologia Inhabilita el GPU Eliminar l'animació de
+Revisar entrades animades a inMesh
+animada Override topologia
+Controls no Reconstruccions
+cmds.ls(type='controller') Ordre controller
+etiquetats extra del graf
+Taula 19. Tipus de residus d'escena, detecció i correcció
+40
+
+=== PAGE 41 ===
+Magnitud real observada. La disparitat entre rigs és extrema i il·lustra fins a quin punt
+aquesta higiene s'abandona en escenes de producció:
+Nodes Controls
+Rig nodeGraphEditorInfo Historial de modelatge Namespaces
+totals etiquetats
+7.680 polyUnite +
+Varyndor 133.715 100.662 (75 %) - 0
+2.172 polyBridgeEdge
+5.512
+OTO 25.416 969 - 694
+(mGear)
+Marcelo 7.622 7 - 0 0
+Oswald 6.231 141 - 0 0
+Taula 20. Magnitud dels nodes residuals als quatre rigs
+4.1.2. Segmentació de malles: una estratègia que les dades no sostenen
+Figura 11. Relació entre vèrtexs deformats i temps per fotograma dels quatre rigs.
+Un dels arguments més citats en produccions de gran escala (Lin et al., 2015;
+Zimmermann et al., 2014) és que les malles geomètriques úniques i massives creen un
+coll d'ampolla d'avaluació: molts fils de la CPU queden en espera mentre un sol fil
+processa tota la malla densa. La recomanació derivada és segmentar la geometria en
+peces per permetre que l'Evaluation Manager distribueixi el càlcul.
+En els quatre rigs mesurats, aquesta recomanació no produeix el benefici esperat amb
+GPU Override: entre el 96 % i el 100 % dels vèrtexs deformats resideixen a la targeta
+gràfica. En aquests casos, la deformació no es reparteix entre els fils de la CPU, sinó
+que s’executa massivament en paral·lel a la GPU; per tant, les dades no mostren un
+efecte de la granularitat de la malla sobre el temps de deformació.
+41
+
+=== PAGE 42 ===
+La prova directa: Varyndor deforma 321.001 vèrtexs i costa 18,29 ms, Marcelo en
+deforma 56.102 i costa 16,75 ms. Cinc vegades i mitja més geometria, un 9 % més de
+temps.
+En els quatre casos analitzats, la segmentació conserva sentit per altres motius -
+organització de l’escena, assignació de materials, gestió de LOD o aïllament de regions
+per a CFX-, però les dades no en demostren un benefici com a estratègia de rendiment
+quan la deformació resideix a la GPU. Cada peça addicional també és un objecte més
+a dibuixar i pot desplaçar càrrega cap al bloc render-bound.
+L'argument original procedeix d'una època anterior a la generalització del GPU Override,
+quan la deformació es calculava a la CPU. Continua sent vàlid per a rigs on la cadena
+de deformació estigui trencada i el càlcul torni al processador.
+4.2. Càlcul eficient: restriccions i càlcul matricial
+4.2.1. Els constraints i els blocs d’avaluació: documentació i mesura
+Figura 12. Hipòtesi de cicle d’un parentConstraint i resultat mesurat al Profiler.
+L'explicació que es repeteix a tota la documentació de rigging és aquesta. Al
+Dependency Graph les connexions es fan atribut a atribut, però l'Evaluation Manager
+organitza les dependències a nivell de node sencer. Quan crea un parentConstraint
+passa el següent:
+1. El constraint llegeix dades del fill. Per calcular la posició relativa necessita atributs
+del propi objecte que ha de moure, com la seva parentInverseMatrix.
+2. El constraint escriu dades al fill. Un cop calculat, envia els valors als atributs de
+transformació del mateix objecte.
+A nivell d'atribut no hi ha cap cicle matemàtic. A nivell de node sí, el constraint depèn
+del fill i el fill depèn del constraint. L'Evaluation Manager ho llegeix com una dependència
+circular i, com que no pot decidir quin dels dos calcular primer, els agrupa tots dos en
+un cycle cluster que s'avalua en sèrie amb un sol fil. Segons aquesta explicació, un rig
+amb desenes de constraints encadenats acaba amb un clúster gegant que deixa la resta
+de nuclis sense feina.
+42
+
+=== PAGE 43 ===
+És una explicació coherent amb l’arquitectura i, per aquest motiu, es va sotmetre a
+comprovació.
+Procediment
+Es va capturar el Profiler per codi sobre els dos rigs dels extrems: Oswald, amb 610
+constraints, i Marcelo, amb 4. Es van comptar els esdeveniments un a un: 797.448 i
+610.017, respectivament, sobre el mateix cicle de 21 fotogrames. El símptoma cercat
+està documentat: un cycle cluster apareix al Profiler etiquetat com a
+opaqueTaskEvaluation.
+Resultats
+Esdeveniment Oswald (610 constraints) Marcelo (4 constraints)
+opaqueTaskEvaluation 0 0
+EvaluateNodesInTransparentCluster 11.088 252
+CustomEvaluateCluster 1.785 2.457
+Taula 21. Esdeveniments de clúster mesurats a Oswald i Marcelo
+Els blocs es formen, però no són opacs. En 1,4 milions d'esdeveniments no apareix ni
+una sola opaqueTaskEvaluation. Les úniques coincidències amb la paraula “opaque”
+són opaqueGeometry i opaqueUIList, que són noms de llistes de dibuix i no tenen res
+a veure amb l'avaluació.
+El que hi ha són blocs transparents, agrupacions que l'Evaluation Manager pot obrir
+per planificar-ne els nodes un a un, en comptes de tractar-les com una caixa negra.
+Hi ha una segona prova que apunta al mateix i que no depèn de la primera: 602 dels
+610 constraints d'Oswald surten al Profiler com a esdeveniments propis amb el seu nom
+(C_tail01_GRP_parentConstraint1, L_hipIk_GRP_parentConstraint1…). Si estiguessin
+tancats dins d'una tasca opaca no serien visibles: quedarien engolits en un sol bloc
+sense detall.
+Llavors, els constraints són gratis?
+No, i aquesta és la part important. El cost hi és i és enorme:
+Per fotograma Oswald Marcelo Factor
+Temps acumulat en constraints 26,98 ms 0,12 ms 233×
+Crides a Compute 34.860 3.803 9,2×
+Feina total de nodes 124,5 ms 116,9 ms 1,06×
+Temps real del fotograma 19,06 ms 12,67 ms 1,50×
+Concurrència efectiva 6,5× 9,2× -
+Taula 22. Cost mesurat dels constraints per rig
+43
+
+=== PAGE 44 ===
+Els dos rigs fan pràcticament la mateixa feina (124,5 contra 116,9 ms de nodes). La
+diferència és com de bé la reparteixen: Marcelo n'aconsegueix un 42 % més de
+concurrència.
+El cost dels constraints no ve d'una serialització, ve del volum. Són 610 nodes més per
+recórrer, planificar i avaluar cada fotograma, cadascun amb les seves crides i els seus
+missatges de canvi d'atribut.
+La conseqüència pràctica per a un rigger no canvia, val la pena fer servir matrius, però
+el motiu sí, i això canvia què cal vigilar, no cal anar a caçar cicles, cal comptar nodes. I
+també canvia el diagnòstic: buscar opaqueTaskEvaluation al Profiler d'un rig modern
+probablement no trobarà res, encara que el rig tingui un problema real de constraints.
+Fins on arriba aquesta conclusió. És vàlida per a Maya 2026.2 i per als dos rigs
+mesurats. No demostra que el mecanisme dels cycle clusters no existeixi -pot ser que
+Autodesk l'hagi anat mitigant entre versions, o que calgui una construcció concreta per
+disparar-lo que aquests rigs no tenen. El que sí que demostra és que amb 610
+constraints reals, en un rig de producció, no apareix.
+4.2.2. El cost real del constraints: volum de graf
+Els constraints sí que costen rendiment, però per una via més simple que la dels cicles:
+cada restricció és un node més que la CPU ha de recórrer cada fotograma.
+Oswald se situa 5,5 ms per damunt del que li correspondria per càrrega geomètrica.
+Aquest excés no s'explica ni per vèrtexs ni per malles ni per nodes totals, Oswald és, de
+fet, el rig amb menys nodes totals dels quatre, sinó pel que hi ha al camí d'avaluació:
+610 restriccions i 302 motionPath.
+44
+
+=== PAGE 45 ===
+4.2.3. La solució matricial: flux unidireccional pur
+Figura 13. Comparació al Node Editor entre una connexió amb parentConstraint i una cadena matricial amb multMatrix i
+offsetParentMatrix.
+La substitució de constraints per càlcul matricial canvia la topologia del graf de dades.
+En lloc d'un node intermedi que llegeix dades de l'objecte destí, s'utilitza una cadena
+unidireccional:
+1. multMatrix rep la matriu del controlador (driver.worldMatrix[0]) i la multiplica per la
+matriu inversa de la jerarquia pare del fill (childParent.worldInverseMatrix[0]).
+2. Càlcul aïllat: el node calcula la transformació sense consultar cap atribut del node
+fill.
+3. Injecció directa: el resultat es connecta a l'atribut offsetParentMatrix del fill (Maya
+2020+), cosa que elimina fins i tot la necessitat d'un decomposeMatrix.
+import maya.cmds as cmds
+from maya.api import OpenMaya as om
+def _mult(mat_a, mat_b):
+"""Multiplicació de matrius 4 × 4 retornada com una llista de 16 floats."""
+return list(om.MMatrix(mat_a) * om.MMatrix(mat_b))
+def matrix_parent(driver, driven, maintain_offset=True):
+"""Equivalent a un parentConstraint sense generar cicles a l'EG."""
+mult = cmds.createNode('multMatrix', name=f"{driven}_MMX", ss=True)
+index = 0
+45
+
+=== PAGE 46 ===
+if maintain_offset:
+offset = cmds.getAttr(f"{driven}.worldMatrix[0]")
+driver_inv = cmds.getAttr(f"{driver}.worldInverseMatrix[0]")
+cmds.setAttr(f"{mult}.matrixIn[0]", _mult(offset, driver_inv), type='matrix')
+index = 1
+cmds.connectAttr(f"{driver}.worldMatrix[0]", f"{mult}.matrixIn[{index}]")
+cmds.connectAttr(f"{driven}.parentInverseMatrix[0]", f"{mult}.matrixIn[{index + 1}]")
+cmds.connectAttr(f"{mult}.matrixSum", f"{driven}.offsetParentMatrix")
+for attr in ('translate', 'rotate'):
+cmds.setAttr(f"{driven}.{attr}", 0, 0, 0)
+cmds.setAttr(f"{driven}.scale", 1, 1, 1)
+return mult
+Avantatges estructurals:
+● Absència total de cicles: el flux de dades viatja en una sola direcció (driver →
+multMatrix → fill), de manera que l'EM no troba cap dependència circular a nivell
+de node.
+● Execució en paral·lel multinucli: en no generar-se cap Cycle Cluster, l'EM
+programa cada node com una tasca independent.
+● Reducció del pes de l'escena: un parentConstraint crea múltiples connexions
+internes, atributs extra i nodes d'àlgebra d'Euler; un sistema matricial redueix el
+graf a la mínima expressió matemàtica.
+Benefici mesurat.
+Rig Constraints % Parallel Estat C (producció) Estat A (mode degradat)
+Marcelo (matricial pur) 4 97,1 % 16,75 ms 74,83 ms · 13,4 fps
+Oswald (restriccions) 610 78,5 % 22,83 ms 80,06 ms · 12,5 fps
+Varyndor 8 13,3 % 18,29 ms 126,66 ms · 7,9 fps
+OTO 131 36,5 % 15,43 ms 148,84 ms · 6,7 fps
+Taula 23. Constraints, paral·lelisme i rendiment dels quatre rigs
+En producció, la diferència entre el rig més net i el més carregat és de 6 ms, i tots dos
+estan molt per sota del pressupost. En mode degradat -quan l'avaluació paral·lela cau
+per Safe Mode, per un plugin que la trenca o per una versió antiga- l'arquitectura neta
+continua sent utilitzable a 13,4 FPS mentre que altres baixen a 6,7.
+L'argument defensable a favor del càlcul matricial és la robustesa, no la velocitat
+màxima.
+Contrapartides que cal documentar honestament, el sistema és menys llegible per a qui
+hagi de mantenir el rig; l'offset fixat en el moment de construcció no segueix
+automàticament els canvis de jerarquia; i amb offsetParentMatrix els canals locals han
+de quedar a zero, cosa que altera els hàbits de l'animador si els utilitzava.
+46
+
+=== PAGE 47 ===
+4.2.4. Catàleg de nodes matricials
+Node Funció Substitueix Ús al rig
+Multiplicació 2.557 · 1.150 ·
+multMatrix Nucli de tota conversió
+encadenada de matrius 1.044 · 148
+Matriu → translació / Necessari si no s'usa 824 · 371 · 448
+decomposeMatrix
+rotació / escala offsetParentMatrix · 120
+composeMatrix TRS → matriu Construcció de transformacions -
+inverseMatrix Inversa d'una matriu Càlculs d'espai relatiu -
+Filtra components (T, pointConstraint, 464 · 88 · 164 ·
+pickMatrix
+R, S, shear) orientConstraint, scaleConstraint 0
+Interpolació entre Canvis IK/FK, restriccions amb 667 · 139 · 219
+blendMatrix
+matrius pesos · 0
+Orientació cap a un 1.710 · 236 ·
+aimMatrix aimConstraint
+objectiu 279 · 116
+Múltiples pares amb parentConstraint amb diversos 604 · 640 · 209
+parentMatrix
+pesos objectius · 0
+Taula 24. Funció dels nodes matricials emprats
+Ús al rig: Varyndor · OTO · Marcelo · Oswald.
+Els totals de nodes matricials són 6.002, 2.624, 2.363 i 384 respectivament. Oswald no
+utilitza cap pickMatrix, blendMatrix ni parentMatrix, cosa que confirma la seva
+classificació com a extrem no matricial.
+4.2.5. Taula de correspondència: constraint → equivalent matricial
+Constraint Equivalent matricial Observació
+parentConstraint (1
+multMatrix → offsetParentMatrix Conversió directa
+objectiu)
+parentConstraint (n
+parentMatrix o blendMatrix Manté els pesos
+objectius)
+multMatrix → pickMatrix (només
+pointConstraint -
+T)
+multMatrix → pickMatrix (només
+orientConstraint -
+R)
+multMatrix → pickMatrix (només
+scaleConstraint -
+S)
+aimConstraint aimMatrix Substitució directa
+Es manté; no genera el mateix
+poleVectorConstraint -
+patró
+Taula 25. Correspondència entre constraints i equivalents matricials
+47
+
+=== PAGE 48 ===
+La pràctica confirma l’última fila: als dos rigs matricials, els únics constraints
+supervivents són poleVectorConstraint (8 a Varyndor i 2 a Marcelo). La possible
+substitució matricial d’aquest node no s’ha avaluat en el treball.
+4.3. Optimització de deformacions
+4.3.1. Rigs compatibles amb GPU: requisits i realitat mesurada
+Figura 14. Repartiment dels vèrtexs deformats entre GPU i CPU.
+Tres condicions han de complir-se simultàniament: tots els deformadors de la cadena
+compatibles, cadena sense lectura de retorn, i malla acceptada per l'avaluador.
+Deformadors compatibles i el seu ús al rig:
+Deformador Ús observat
+skinCluster Deformació primària
+blendShape Correctius i formes facials
+deltaMush Relaxació del skinning
+cluster, softMod Ajustos locals i esculpits
+lattice / ffd Deformació volumètrica
+nonLinear (bend, flare, sine, squash, twist, wave) Deformacions procedurals
+proximityWrap Adherència de peces properes
+tension Compensació de compressió
+wire Deformació per corbes
+48
+
+=== PAGE 49 ===
+Deformador Ús observat
+sculpt Deformació per volum esculpit
+Taula 26. Deformadors compatibles amb GPU observats
+Condicions que desactiven l'acceleració:
+Causa Detecció Mitigació
+Deformador no suportat a la Substituir o reordenar la
+Auditoria de listHistory
+cadena pila
+Eliminar l'animació de
+Topologia animada Entrades animades a inMesh
+topologia
+Atributs no convencionals al
+Consulta d'atributs Ajustar la configuració
+skinCluster
+Lectura de retorn (fol·licles, Cercar consumidors de posició
+uvPin o skin rivet
+rivets) deformada
+Taula 27. Causes que poden desactivar GPU Override
+Residència mesurada:
+Rig Vèrtexs deformats A GPU A CPU % a GPU Malles a GPU
+Varyndor 321.001 321.001 0 100 % 18
+OTO 64.882 64.882 0 100 % 15
+Marcelo 56.102 53.902 2.200 96,1 % 25
+Oswald 158.350 158.350 0 100 % 28
+Taula 28. Residència de la deformació a GPU i CPU
+Sobre el llindar mínim de densitat. La documentació esmenta (Wardlaw, s. f.) que per
+sota d'un cert recompte de vèrtexs Maya manté el càlcul a CPU perquè la transferència
+no compensa. Les dades no permeten confirmar-ho com a regla de recompte, a OTO
+hi ha malles de 48 vèrtexs residents a GPU i a Varyndor de 61, mentre que a Marcelo
+malles de 287 (queixals i dents) es queden a CPU. Una malla sis vegades més petita
+puja a GPU en un rig i una de més gran no ho fa en un altre.
+Adherència sense trencar la cadena. Cap dels tres rigs matricials utilitza fol·licles;
+empren uvPin (66 a Varyndor, 87 a OTO, 79 a Marcelo). Oswald, en canvi, conserva
+2 fol·licles i cap uvPin.
+49
+
+=== PAGE 50 ===
+4.3.2. Estratègies per a skinClusters massius i blendShapes
+Figura 15. Pila de deformació de C_bodyMembrane al Node Editor, formada per quatre skinCluster consecutius.
+Atributs del skinCluster rellevants per al rendiment:
+Atribut Valors Efecte
+0 = lineal (LBS) · 1 = dual El valor 2 requereix un mapa de
+skinningMethod
+quaternion · 2 = weight blended pesos addicional i encareix el càlcul
+Menys influències = menys càlcul per
+maxInfluences Enter
+vèrtex
+maintainMaxInfluences Booleà Força el límit en pintar pesos
+0 = cap · 1 = interactiva · 2 =
+normalizeWeights Afecta cost i estabilitat
+post
+weightDistribution 0 = distance · 1 = neighbors Comportament en redistribuir pesos
+Valor flotant que controla el pes A 0 el deformador segueix a la
+envelope
+global d’un deformador. cadena però sense efecte
+Taula 29. Atributs de skinCluster rellevants per al rendiment
+BlendShapes: cost mesurat. El facial d'OTO, 11 objectius sobre una malla de 16.759
+vèrtexs, conduïts per 9 controls a través de 2 pose interpolators RBF i nodes de weight
+driver, es va mesurar animant els controls:
+Configuració ms/frame CV
+Cicle d'estrès de cos només 15,43 13,8 %
+Cicle de cos + facial complet 14,83 9,4 %
+Taula 30. Cost del sistema facial d'OTO amb i sense activació
+50
+
+=== PAGE 51 ===
+La diferència és negativa i el coeficient de variació és del 9 %. La conclusió correcta
+no és que el facial acceleri res, sinó que el seu cost queda per sota del marge de
+mesura. Un facial complet basat en blendShapes i interpolació RBF pot ser, en termes
+de rendiment interactiu, indistingible de zero.
+Recomanacions per a sistemes pesats:
+● Emmagatzemar objectius com malles reduides, no com a còpies completes de la
+malla.
+● Evitar la proliferació d'inbetweens: els objectius s'indexen dins de inputTargetItem,
+on l'índex codifica el pes.
+● Desactivar topologyCheck quan el pipeline garanteix topologia idèntica. Aixi es
+podra treballar amb meshes reduides
+● Agrupar formes que sempre s'activen conjuntament en un únic objectiu combinat.
+4.4. Gestió de visibilitat i proxy
+4.4.1. Implementació de sistemes LOD i proxy rigs
+Nivell Contingut Densitat objectiu Fase d'ús
+LOD 0 - Malla lleugera, skinCluster als ~160.500 vèrtexs Blocking,
+Proxy mateixos ossos, sense correctius deformats mecànica de cos
+LOD 1 - Malla completa, deformació primària, ~321.000 vèrtexs
+Refinament i polish
+Animació sense simulació deformats
+Malla completa amb correctius i Validació i entrega
+LOD 2 - Final ídem + musculatura
+entrada a Adonis FX a CFX
+Taula 31. Nivells de detall proposats per a Varyndor
+Requisit de disseny: els tres nivells comparteixen el mateix esquelet i els mateixos
+controls. La commutació ha de ser transparent i no ha d'invalidar el treball fet. El proxy
+no és un actiu separat sinó una sortida més del mateix rig.
+51
+
+=== PAGE 52 ===
+4.4.2. Ús de l'Invisibility Evaluator: cas documentat
+Figura 16. Oswald en wireframe amb els controls del rig visibles i composició de diverses poses del personatge.
+L'avaluador invisibility identifica objectes no visibles i n'evita l'avaluació, la commutació
+de LOD estalvia temps de CPU, no només de dibuix. Perquè l'estalvi sigui real cal que
+es compleixin dues condicions:
+● La invisibilitat ha de ser detectable per l'avaluador, visibilitat de node o capa de
+visualització, no un simple aïllament de vista.
+● Cap consumidor posterior no pot necessitar la dada de l'objecte amagat. Si la
+geometria oculta alimenta una simulació, un uvPin o un constraint actiu, s'avaluarà
+igualment.
+Oswald il·lustra la segona condició amb dades. Deforma 158.350 vèrtexs i només
+n'ensenya 29.752: el 81,2 % de la seva deformació és invisible. Són 11 còpies del cos,
+cadascuna de 12.993 vèrtexs amb skinCluster i blendShape, amagades però
+avaluades perquè alimenten la cadena facial per capes de la còpia visible.
+És l'única pràctica del rig amb un cost clarament atribuïble i alhora clarament evitable:
+una arquitectura facial que no requerís còpies completes del cos eliminaria el 81 % de
+la deformació d'aquest rig.
+52
+
+=== PAGE 53 ===
+4.5. Convencions de nomenclatura i estructura d'escena
+Les convencions no són cosmètica, condicionen la fiabilitat de les eines dels annexos,
+que seleccionen nodes per patró, i determinen si el cicle d'estrès del protocol de mesura
+troba controls representatius.
+Element Convenció proposada Exemple
+Costat L_, R_, C_ L_wing_…
+Controls Sufix _CTL C_masterWalk_CTL
+Articulacions / grups _JNT, _GRP, _ANM C_spine01_GRP
+Nodes matricials Sufix del tipus _MMX, _DCM
+Deformadors _SKC, _BLS C_body_SKC
+Geometria / LOD _MSH, _GEO, _PLY + nivell dragon_body_LOD0_GEO
+Grup arrel Un únic node arrel per actiu varyndor, marcelo
+Taula 32. Convencions de nomenclatura i estructura d'escena
+Regla derivada del rendiment: evitar consultes amb comodins jeràrquics (ls('*/*/*_GEO'))
+i preferir seleccions per tipus i espai de noms, que no degraden en escenes denses.
+Regla derivada de la mesura: una nomenclatura consistent permet que el cicle d'estrès
+seleccioni controls representatius per paraula clau i que els resultats siguin comparables
+entre rigs.
+53
+
+=== PAGE 54 ===
+4.6. Catàleg d'antipatrons, revisat amb les mesures
+Antipatró Símptoma Estat després de les mesures
+Constraints encadenades Refutat com a mecanisme. Cost
+opaqueTaskEvaluation
+generen cycle clusters real: volum de graf
+Node de deformació en Python Fils aturats, GloballySerial No observat al corpus
+No observat (0 expressions als 4
+Expressions amb getAttr Registre de dbtrace
+rigs)
+La malla no apareix a la Vigent, evitat amb uvPin a 3 de 4
+Fol·licle sobre malla densa
+GPU rigs
+Historial de modelatge no Present (9.852 nodes) però sense
+Nodes inútils al graf
+eliminat efecte demostrat en FPS
+Topologia animada Sense càlcul a GPU No observat
+Malla única massiva sense Una barra llarga, fils No reproduït al corpus amb GPU
+segmentar ociosos Override
+Fragmentació excessiva Augment del bloc de VP2 Vigent com a cost de dibuix
+Dos skinCluster a la mateixa
+Malla fora de GPU Refutat: 4 i 6 apilats, tots dos a GPU
+malla
+Eines que creen nodes durant
+Reconstruccions de l'EG Vigent
+la reproducció
+Geometria oculta que s'avalua Deformats ocults > 0 81,2 % de la deformació d'Oswald
+Cached Playback activat sense
+Temps superior a l'estat C Empitjora OTO un 22 % (§5.3)
+mesurar
+Taula 33. Catàleg d'antipatrons i estat després de les mesures
+54
+
+=== PAGE 55 ===
+5. Tècniques avançades i scripting
+5.1. Automatització de la neteja de rigs
+La neteja manual no és reproduïble, cada iteració del model obligaria a repetir-la. Les
+operacions a cobrir són l'eliminació d'historial, les formes intermèdies òrfenes, els nodes
+sense connexions i els desconeguts, la normalització de noms i espais de noms, la
+verificació de topologia no animada, i un informe dels deformadors que impedeixen
+l'avaluació a GPU.
+Criteri d'implementació. maya.api.OpenMaya per a tot recorregut sobre vèrtexs o grans
+conjunts de nodes, cap comodí en consultes jeràrquiques. En un model de centenars de
+milers de vèrtexs, això determina si l'eina és utilitzable dins del cicle de treball.
+5.2. Creació de benchmarks automàtics
+El comptador d'FPS del visor no és admissible com a evidència: fluctua, depèn de la
+mida de la finestra i barreja avaluació amb dibuix. El protocol emprat compara quatre
+estats:
+Estat Configuració Què aïlla
+A - Baseline DG evaluationManager(mode='off') Referència històrica
+B - Parallel (CPU) mode='parallel', deformer OFF Guany del paral·lelisme
+C - Parallel + GPU mode='parallel', deformer ON Guany del maquinari (producció)
+D - Cached Playback + cache ON Reproducció i temps d'ompliment
+Taula 34. Configuració dels quatre estats del benchmark
+Mètriques recollides: ms/frame mitjà, mediana, màxim, percentil 95, FPS derivat,
+coeficient de variació, nombre de malles residents a GPU, i a l'estat D el temps
+d'ompliment de la memòria cau.
+Cal construir un cicle d'estrès, animar un conjunt representatiu de controls, i verificar
+que el temps per fotograma puja. Al cas de Varyndor, de 9,8 a 16,9 ms. Sense aquesta
+comprovació, tot l'estudi hauria estat invàlid.
+Condicions de validesa: sense elles la comparació no és defensable:
+1. El mateix cicle d'estrès a tots els estats i a tots els rigs.
+2. Descartar les primeres passades i els primers fotogrames de cada passada
+(construcció de l'EG, ompliment de buffers).
+3. Repetir cada mesura un mínim de 3 vegades i reportar-ne la dispersió.
+4. Mateixa mida de finestra de visor i mateixa configuració de visualització.
+5. Sense altres aplicacions competint per la GPU.
+55
+
+=== PAGE 56 ===
+5.3. Cached Playback: configuració i mesura
+Les capes rellevants (Autodesk, 2026a) són la memòria cau d'avaluació i la memòria
+cau de maquinari de VP2, resident a VRAM.
+import maya.cmds as cmds
+cmds.evaluator(name='cache', query=True, enable=True)
+cmds.evaluator(name='cache', enable=True)
+Els quatre rigs donen tres comportaments diferents.
+Rig Estat C Estat D Efecte Ompliment
+Oswald 22,83 ms 15,29 ms −33 % 4,2 s
+Varyndor 18,29 ms 13,16 ms −28 % 5,3 s
+Marcelo 16,75 ms 16,19 ms −3 % (dins del soroll) 3,3 s
+OTO 15,43 ms 18,80 ms +22 % (empitjora) 3,7 s
+Taula 35. Efecte i temps d'ompliment de Cached Playback
+El patró coherent és que ajuda quan l'avaluació és cara i estorba quan ja és barata, per
+sota d'uns 17 ms, el cost de restaurar des de la memòria cau supera el de recalcular.
+Cached Playback ha de mesurar-se cas per cas i no activar-se per defecte com a bona
+pràctica universal.
+Aspectes crítics per a un rig que alimenta simulació:
+● Ompliment en segon pla: la cau s'omple mentre l'artista treballa.
+● Rangs d'invalidació: en modificar una clau només s'haurien de recalcular els
+fotogrames afectats. Amb simulació encadenada, una invalidació mal definida
+obliga a recalcular la seqüència sencera a cada retoc.
+● Dinàmiques: tenen dependència temporal (el fotograma n depèn del n−1) i no
+admeten avaluació aleatòria; la capa de simulació ha d'operar sobre l'animació ja
+emmagatzemada.
+● Pressupost de memòria: superat el límit, Maya descarta fotogrames.
+Estat per defecte observat: l'avaluador cache està desactivat a les quatre escenes
+publicades. Dos dels quatre rigs hi guanyarien entre un 28 % i un 33 % sense tocar res
+més.
+56
+
+=== PAGE 57 ===
+5.4. Eines d'auditoria
+Tres eines desenvolupades per respondre preguntes que el Profiler no respon
+directament:
+Eina Pregunta que respon Annex
+scheduling_report() Quins nodes concrets no s'avaluen en paral·lel i de quin tipus són 12.2
+Quanta geometria es deforma realment, i quanta d'aquesta és
+geometry_load() 12.3
+invisible
+deformation_split() Quants vèrtexs deformats van a GPU i quants queden a CPU 12.3
+Taula 36. Funció de les eines d'auditoria desenvolupades
+5.5. Integració de les eines al flux de treball
+Les eines s'agrupen en un menú propi de Maya per fer-les accessibles a la resta de
+l'equip, seguint el patró documentat en TFG previs de l'escola. La distinció rellevant és:
+● Eines d'artista (visibles al menú): commutació de LOD, verificació prèvia a la
+publicació, informe ràpid de rendiment.
+● Eines de procés (no visibles): neteja automàtica en publicar, auditoria en
+integració, i registre de mesures per detectar regressions entre versions del rig.
+El protocol de mesura (annex 12.1) està dissenyat per executar-se un estat per crida,
+cosa que evita bloquejos prolongats de la interfície i permet integrar-lo en processos
+automatitzats sense timeouts.
+57
+
+=== PAGE 58 ===
+6. Desenvolupament del cas pràctic
+6.1. Descripció de l'asset: reptes tècnics del drac
+Varyndor és l'asset principal del cas pràctic; la vista del rig permet situar-ne la geometria
+i el conjunt de controladors abans de presentar-ne les mètriques (vegeu Figura 17).
+Figura 17. Vista lateral de Varyndor amb els controls del rig visibles.
+Camp Valor mesurat
+Escena Varyndor_PUBLISH_v0019.ma
+Vèrtexs a l'escena 371.250
+Vèrtexs deformats 321.001
+Vèrtexs estàtics (musculatura d'Adonis) 50.249
+Triangles 739.830
+Malles (no intermèdies) / intermèdies 83 / 18
+Malla més densa CH_varyndorSkelHigh - 201.898 vèrtexs
+Segona i tercera C_bodyMembrane 49.598 · C_mouth 39.807
+Articulacions / controls 2.517 / 443
+skinCluster / blendShape / uvPin 37 / 4 / 66
+Constraints 8, totes poleVectorConstraint
+Nodes matricials 6.002
+Nodes totals 133.715
+Taula 37. Característiques tècniques mesurades de Varyndor
+58
+
+=== PAGE 59 ===
+Regions amb requisits diferenciats:
+● Ales. Membrana entre dits; combina rotacions de gran amplitud amb estirament.
+És la regió amb més risc de dependències creuades entre la cadena dels dits i la
+de la membrana. La malla C_bodyMembrane concentra quatre skinCluster apilats.
+● Cua. Cadena llarga, candidata a sistemes automàtics de seguiment, precisament
+els que introduirien cicles si es resolguessin amb constraints.
+● Pell. Deformació primària que serveix de base a la simulació muscular; no ha
+d'introduir soroll d'alta freqüència que la simulació amplifiqui.
+● Dits. Resolts amb cadenes d'IK: són l'única font de nodes globalment serials del
+rig.
+6.2. Fase 1: diagnòstic del rig base
+Figura 18. Sortida de scheduling_report(), deformation_split() i geometry_load() executats sobre Varyndor.
+Aplicació íntegra del protocol.
+Mesura Resultat
+ms/frame en producció (estat C) 18,29 ms · 54,7 FPS
+Classificació del coll d'ampolla Avaluació (el dibuix són ~2,5 ms)
+Nodes GloballySerial 8, tots ikHandle dels dits
+Nodes Untrusted 0
+% de nodes en Parallel 13,3 % (17.756 de 133.658)
+Malles / vèrtexs a GPU 18 malles · 321.001 vèrtexs (100 %)
+59
+
+=== PAGE 60 ===
+Mesura Resultat
+Geometria oculta avaluada 0
+Cached Playback Desactivat
+Safe Mode No actiu
+Nodes residuals 100.662 nodeGraphEditorInfo + 9.852 d'historial
+Animació temporal preexistent Cap (112 corbes, totes driven keys)
+Taula 38. Diagnòstic de rendiment del rig base de Varyndor
+Els 8 ikHandle dels dits són els únics bloquejadors de paral·lelisme del rig. Són pocs,
+estan localitzats i constitueixen l'única acció d'optimització amb objectiu clar identificada
+pel diagnòstic.
+6.3. Fase 2: accions d'optimització identificades
+Acció Justificació Guany
+Activar Cached Playback Mesurat a apartat anterior −28 % (18,29 → 13,16 ms)
+Netejar ~110.000 nodes Mida de fitxer, càrrega,
+Nul en FPS
+residuals mantenibilitat
+Conversió a sistemes de Ja feta: 8 restriccions, 6.002 nodes
+-
+matrius matricials
+Segmentar malles per
+- Descartat per apartats anteriors
+paral·lelisme
+Aplicat amb dues malles de
+Sistema LOD / proxy -
+diferentes resolucions
+Taula 39. Accions d'optimització identificades per a Varyndor
+La taula il·lustra el valor pràctic del diagnòstic de mesura: de cinc accions candidates,
+tres resulten innecessàries o descartables, una ja estava feta, i la de major guany,
+activar una casella, no requereix tocar el rig. Un pla d'optimització basat en la intuïció
+hauria començat per segmentar malles i construir un proxy, les dues accions sense
+benefici demostrable.
+6.4. Fase 3: validació i comparativa
+Validació geomètrica. Condició necessària, un rig ràpid amb deformació incorrecta no
+és un resultat. El procediment consisteix a mostrejar les posicions de tots els vèrtexs en
+N fotogrames sota mode Serial i sota mode Parallel, i comparar-les.
+from maya.api import OpenMaya as om
+import maya.cmds as cmds
+def sample_points(mesh, frames):
+60
+
+=== PAGE 61 ===
+"""Retorna les posicions de tots els vèrtexs per fotograma."""
+sel = om.MSelectionList().add(mesh)
+fn = om.MFnMesh(sel.getDagPath(0))
+out = {}
+for frame in frames:
+cmds.currentTime(frame, edit=True)
+out[frame] = list(fn.getPoints(om.MSpace.kWorld))
+return out
+def max_deviation(mesh, frames):
+"""Desviació màxima entre el mode Serial i el mode Parallel."""
+cmds.evaluationManager(mode='serial')
+ref = sample_points(mesh, frames)
+cmds.evaluationManager(mode='parallel')
+test = sample_points(mesh, frames)
+worst = 0.0
+for frame in frames:
+for a, b in zip(ref[frame], test[frame]):
+worst = max(worst, (om.MVector(a) - om.MVector(b)).length())
+return worst
+6.5. Registre d'incidències
+Incidències detectades durant el diagnòstic i la mesura, amb causa i resolució.
+Documenta el procés real i no només el resultat.
+# Incidència Causa Resolució
+Construir un cicle
+L'escena publicada no
+d'estrès sobre 70
+El benchmark inicial donava 9,8 ms (102 té animació temporal,
+1 canals de 24 controls.
+FPS), xifra implausible avançar el playhead no
+la mesura puja a 16,9
+embruta el rig
+ms
+Els grups de l'avaluador
+de deformació es Consultar sempre amb
+L'auditoria reportava una sola malla
+2 construeixen sota el rig embrutant-se, en
+resident a GPU
+demanda, en escena resulten 18
+estàtica no existeixen
+cmds.ls(intermediateObjects=True) El flag sense filtre de Combinar-lo amb
+3 retornava 128.627 nodes en una escena de tipus no retorna només type='mesh': la xifra
+5.125 nodes DAG formes intermèdies correcta és 18
+La detecció de
+Derivar la llista de la
+deformadors filtrava per
+Malles de roba classificades com a classe base
+4 la llista de compatibles
+estàtiques a Marcelo geometryFilter (57
+amb GPU, que exclou
+tipus)
+wrap
+El mode DG triga ~127
+Executar un estat per
+ms/frame, tres
+El benchmark de 4 estats seguits excedia crida i reduir a 2
+6 repeticions de 120
+el temps d'espera del procés repeticions en mode
+fotogrames superen el
+DG
+minut
+61
+
+=== PAGE 62 ===
+# Incidència Causa Resolució
+Ja estan connectats, els
+Animar els 9 controls
+Els pesos de blendShape1 d'OTO no condueixen els controls
+7 facials en comptes
+admetien claus facials via pose
+dels pesos
+interpolators
+Taula 40. Incidències detectades durant el benchmark
+62
+
+=== PAGE 63 ===
+7. Resultats, anàlisi i discussió comparativa
+Totes les xifres d’aquest capítol s’han obtingut amb el protocol de l’apartat 5.2 i en
+l’entorn de l’apartat 1.4: rang 1-120, 8 fotogrames d’escalfament descartats, 3
+repeticions (2 en mode DG) i un cicle d’estrès idèntic. L’estadístic reportat és la mediana
+de les medianes de cada repetició.
+7.1. Rendiment dels quatre rigs
+Figura 19. Temps per fotograma dels quatre rigs en els estats A, B, C i D.
+Estat Varyndor OTO Marcelo Oswald
+A - DG clàssic 126,66 ms · 7,9 fps 148,84 · 6,7 74,83 · 13,4 80,06 · 12,5
+B - Parallel (CPU) 34,11 · 29,3 27,27 · 36,7 24,61 · 40,6 32,46 · 30,8
+C - Parallel + GPU 18,29 · 54,7 15,43 · 64,8 16,75 · 59,7 22,83 · 43,8
+D - Cached Playback 13,16 · 76,0 18,80 · 53,2 16,19 · 61,8 15,29 · 65,4
+Taula 41. Rendiment dels quatre rigs als estats A, B, C i D
+Els quatre rigs compleixen el pressupost de 41,7 ms a l'estat de producció. El pitjor
+dels quatre, Oswald, dona 43,8 FPS: 1,8× el requisit de 24 FPS. El criteri C1 està assolit
+abans de començar cap optimització.
+Guany Varyndor OTO Marcelo Oswald
+Paral·lelisme (A→B) 3,71× 5,46× 3,04× 2,47×
+GPU Override (B→C) 1,87× 1,77× 1,47× 1,42×
+Total (A→C) 6,93× 9,65× 4,47× 3,51×
+63
+
+=== PAGE 64 ===
+Guany Varyndor OTO Marcelo Oswald
+Cached Playback (C→D) −28 % +22 % −3 % −33 %
+Taula 42. Guany de rendiment entre els estats d'avaluació
+Observació rellevant: els rigs amb menor guany total (Marcelo 4,47×, Oswald 3,51×) són
+precisament els que millor es comporten en mode DG. No tenen tant a guanyar perquè
+parteixen d'una situació millor.
+7.2. Caracterització de les escenes
+Varyndor OTO Marcelo Oswald
+Arquitectura matricial mGear híbrid matricial pur constraints
+constraints 8 131 4 610
+- parentConstraint 0 68 0 340
+- aimConstraint 0 16 0 108
+- pointConstraint 0 28 0 93
+- scaleConstraint 0 8 0 48
+- orientConstraint 0 11 2 15
+- poleVectorConstraint 8 0 2 4
+Nodes matricials 6.002 2.624 2.363 384
+Nodes totals 133.715 25.416 7.622 6.231
+% en Parallel 13,3 % 36,5 % 97,1 % 78,5 %
+GloballySerial 8 0 0 0
+Controls / articulacions 443 / 2.517 451 / 607 292 / 745 274 / 676
+skinCluster 37 24 47 53
+blendShape 4 5 5 7
+Altres deformadors - - 5 wrap 4 cluster
+uvPin / follicle 66 / 0 87 / 0 79 / 0 0 / 2
+motionPath 356 10 0 302
+Taula 43. Caracterització arquitectònica dels quatre rigs
+64
+
+=== PAGE 65 ===
+7.3. Càrrega geomètrica real
+Figura 20. Composició de la càrrega geomètrica dels quatre rigs.
+Varyndor OTO Marcelo Oswald
+Vèrtexs a l'escena 371.250 265.990 80.527 158.350
+Vèrtexs deformats 321.001 64.882 56.102 158.350
+Vèrtexs estàtics 50.249 201.108 24.425 0
+Deformats ocults 0 0 0 128.598 (81,2 %)
+Deformats visibles 321.001 64.882 56.102 29.752
+Triangles 739.830 527.286 158.138 314.732
+Malles (no intermèdies) 83 27 44 28
+% deformat a GPU 100 % 100 % 96,1 % 100 %
+Estat C 18,29 ms 15,43 16,75 22,83
+Taula 44. Distribució de la càrrega geomètrica dels quatre rigs
+Ordre per càrrega deformada: Marcelo → OTO → Oswald → Varyndor.
+Ordre per temps a l'estat C: OTO → Marcelo → Varyndor → Oswald.
+65
+
+=== PAGE 66 ===
+7.4. Descomposició del cost per fotograma
+Figura 21. Ajust descriptiu del cost per fotograma i desviació d’Oswald.
+La càrrega geomètrica no explica el rendiment.
+• Varyndor deforma 5,7× més vèrtexs que Marcelo i té 4,7× més triangles, i és només
+un 9 % més lent.
+• Oswald deforma la meitat que Varyndor, amb menys de la meitat de triangles, i és un
+25 % més lent.
+El motiu és el de l’apartat 2.4: la deformació està descarregada a la GPU als quatre rigs,
+i un vèrtex deformat per maquinari no consumeix temps de CPU. La densitat geomètrica
+deixa de ser la variable que determina els mil·lisegons per fotograma.
+Ajustant una recta amb Varyndor i Marcelo com a punts d'ancoratge:
+temps ≈ 16,4 ms fixos + 0,0058 µs per vèrtex deformat
+Rig Vèrtexs deformats Predit Real Desviació
+Marcelo 56.102 16,75 16,75 ancoratge
+Varyndor 321.001 18,29 18,29 ancoratge
+OTO 64.882 16,80 15,43 −1,4 ms
+Oswald 158.350 17,34 22,83 +5,5 ms
+Taula 45. Cost predit i real segons els vèrtexs deformats
+66
+
+=== PAGE 67 ===
+La geometria explica menys de 2 ms de tota la variació observada al rig. L'excés de 5,5
+ms d'Oswald correspon al seu graf de rig: 610 constraints i 302 motionPath que la CPU
+recorre cada fotograma. OTO, per la seva banda, queda 1,4 ms per sota del model, cosa
+que el model no explica.
+7.5. Avaluació contra dibuix
+Figura 22. Descomposició del temps entre avaluació i dibuix de Viewport 2.0 en Marcelo i Oswald.
+Mesurat repetint el recorregut amb i sense cmds.refresh(force=True):
+Rig Amb dibuix Avaluació pura Cost VP2 % dibuix
+Marcelo 16,14 ms 13,58 ms 2,56 ms 15,9 %
+Oswald 22,68 ms 20,20 ms 2,48 ms 10,9 %
+Taula 46. Descomposició del temps d'avaluació i dibuix
+La pràctica coincidència del cost de dibuix (2,5 ms) en dos rigs de densitat molt diferent,
+158.138 i 314.732 triangles, valida el mètode de mesura i confirma que tota la variació
+entre rigs és d'avaluació.
+67
+
+=== PAGE 68 ===
+7.6. Cost dels subsistemes
+Subsistema Rig Sense Amb Cost Conclusió
+Facial complet (11 blendShapes + 15,43 14,83 Sota el
+OTO −0,60 ms
+2 RBF) ms ms soroll
+16,17 16,45 +0,28 ms (1,7 Sota el
+Roba (5 wrap en cascada) Marcelo
+ms ms %) soroll
+Taula 47. Cost mesurat dels subsistemes facial i de roba
+Limitació de la prova de roba: envelope = 0 curtcircuita el càlcul però no treu el node del
+graf. Mesura el cost de computació, no el de presència.
+Les dues mesures apunten en la mateixa direcció: els subsistemes que intuïtivament
+semblarien cars, un facial complet o cinc wraps, tenen un cost indistingible del soroll
+quan la deformació és resident a GPU.
+7.7. Captura del Profiler: què passa realment amb els constraints
+Les mesures de temps indiquen quant costa un rig, però no n’expliquen la causa. Per
+respondre aquesta qüestió, es va capturar el Profiler per codi sobre els dos rigs dels
+extrems i es van comptar els esdeveniments un a un: 797.448 a Oswald i 610.017 a
+Marcelo, sobre el mateix cicle de 21 fotogrames.
+7.7.1. No hi ha cap tasca opaca
+Esdeveniment Oswald (610 constraints) Marcelo (4 constraints)
+opaqueTaskEvaluation 0 0
+EvaluateNodesInTransparentCluster 11.088 252
+CustomEvaluateCluster 1.785 2.457
+EvaluateCluster 42 0
+Taula 48. Esdeveniments opacs i transparents del Profiler
+En 1,4 milions d'esdeveniments no apareix ni una sola opaqueTaskEvaluation. Els
+únics esdeveniments que contenen la paraula “opaque” són opaqueGeometry i
+opaqueUIList, que són terminologia de llistes de dibuix i no tenen res a veure amb
+l'avaluació.
+Els blocs d'avaluació sí que es formen, Oswald en té 11.088, però són transparents.
+l'Evaluation Manager hi pot mirar a dins i planificar-ne els nodes un a un, en comptes
+de tractar-los com una caixa negra que s'avalua en sèrie.
+Hi ha una segona prova, independent de la primera: 602 dels 610 constraints d'Oswald
+apareixen al Profiler com a esdeveniments propis amb el seu nom
+(C_tail01_GRP_parentConstraint1, L_hipIk_GRP_parentConstraint1…). Si estiguessin
+68
+
+=== PAGE 69 ===
+dins d'una tasca opaca no serien visibles: quedarien engolits dins d'un sol bloc sense
+detall.
+7.7.2. Concurrència efectiva
+Mesura (per fotograma) Oswald Marcelo
+EvaluationGraphExecution (rellotge real) 19,06 ms 12,67 ms
+Suma de tots els EvaluateNode (feina total) 124,5 ms 116,9 ms
+Concurrència efectiva 6,5× 9,2×
+Temps acumulat en constraints 26,98 ms 0,12 ms
+Temps en blocs transparents 4,80 ms 1,86 ms
+Crides a Compute 34.860 3.803
+sendAttributeChangedMsg 34.902 3.950
+Taula 49. Concurrència efectiva d'Oswald i Marcelo
+Els dos rigs fan pràcticament la mateixa quantitat de feina (124,5 contra 116,9 ms de
+nodes per fotograma). La diferència no és quanta feina fan sinó com de bé la
+reparteixen: Marcelo aconsegueix un 42 % més de concurrència.
+Aquest és l'argument del càlcul matricial expressat en un sol número, i és el que
+substitueix l'explicació dels cicles.
+Els 19,06 i els 12,67 ms de EvaluationGraphExecution coincideixen amb els 20,2 i 13,58
+ms d'avaluació pura que havia mesurat abans amb un mètode completament diferent.
+Les dues vies es validen mútuament.
+7.7.3. Conclusió sobre el cost dels constraints
+El cost és real i és enorme: 26,98 contra 0,12 ms per fotograma, un factor de 233. Però
+no ve de cap serialització. Ve del volum: 610 nodes més que la CPU ha de recórrer,
+planificar i avaluar cada fotograma, cadascun amb les seves crides a Compute i els seus
+missatges de canvi d'atribut.
+Dit d'una altra manera, el mecanisme que descriu la documentació no s'observa, i el
+cost que prediu sí que hi és, però per una altra via.
+69
+
+=== PAGE 70 ===
+7.8. Impacte en l'experiència de l'usuari
+Figura 23. Rang de FPS dels quatre estats i llindar d’interactivitat de 24 FPS.
+La traducció de les xifres a conseqüències pràctiques per a l'animador:
+Rang de
+Estat Experiència
+FPS
+Inviable. Obliga a playblasts constants i a treballar sobre
+A - DG 6,7-13,4
+proxies
+B - Parallel (CPU) 26,4-41,3 Utilitzable. Ja per sobre del llindar de 24 FPS
+C - Parallel + GPU 43,6-68,2 Còmoda. Marge per a càrrega addicional
+D - Cached
+53,1-76,0 Fluida, amb un cost d'ompliment de 3-5 s
+Playback
+Taula 50. Rang de FPS i experiència de l'animador
+El llindar a partir del qual l'animador deixa de necessitar playblasts se supera ja a l'estat
+B als quatre rigs. La conseqüència és que la commutació a proxy deixa de ser
+necessària per a la mecànica de cos, cosa que elimina l'error més comú de treballar
+amb LOD baix: no veure els contactes i les penetracions sobre la malla final.
+El percentil 95 és rellevant per a l'experiència real, perquè els pics són el que l'animador
+percep com a salts. A l'estat C oscil·la entre 17,1 ms (OTO) i 25,9 ms (Oswald): cap dels
+quatre rigs produeix pics que superin el pressupost de 41,7 ms.
+70
+
+=== PAGE 71 ===
+7.9. Estabilitat i temps de càrrega
+Mesura Varyndor OTO Marcelo Oswald
+Nodes totals a l'escena 133.715 25.416 7.622 6.231
+Incidències de Safe Mode 0 0 0 0
+Nodes Untrusted 0 0 0 0
+Temps d'ompliment de la cau (120 f) 5,3 s 3,7 s 3,3 s 4,2 s
+Taula 51. Estabilitat i temps de càrrega de les escenes
+Cap dels quatre rigs entra en Safe Mode ni conté nodes no fiables, cosa que indica que
+les quatre arquitectures són sòlides des del punt de vista de la seguretat de fils,
+independentment de les seves diferències de disseny. Aquesta és una observació
+positiva que convé destacar: el problema del rigging modern no és la inestabilitat sinó
+l'eficiència.
+El temps d'ompliment de la memòria cau correlaciona amb el cost d'avaluació de l'estat
+C, com era d'esperar, i és el preu que es paga una sola vegada a canvi del guany de
+l'estat D.
+7.10. Tractament estadístic de les mesures
+Requisit per al criteri C5. Una sola execució no és una mesura.
+● Repeticions: 3 execucions per estat (2 en mode DG pel seu cost temporal), en la
+mateixa sessió de Maya.
+● Estadístic principal: la mediana, no la mitjana. El primer fotograma de cada
+passada i els pics de recol·lecció de memòria distorsionen la mitjana de manera
+asimètrica.
+● Escalfament: es descarten els primers 8 fotogrames de cada passada.
+● Percentil 95: reportat perquè és el que l'usuari percep com a salts.
+● Dispersió: es reporta el coeficient de variació de cada passada.
+Coeficients de variació observats:
+Rang de
+Estat Interpretació
+CV
+El més estable: uniformement lent, sense variabilitat de
+A - DG 4,2-7,2 %
+planificació
+B - Parallel (CPU) 5,8-18,6 % El més dispers: la planificació entre fils introdueix variabilitat
+C - Parallel + GPU 5,5-14,0 % Moderat
+D - Cached
+3,7-8,9 % Estable: la restauració des de memòria és predictible
+Playback
+Taula 52. Dispersió estadística dels quatre estats
+71
+
+=== PAGE 72 ===
+Amb aquestes dispersions, diferències inferiors a ~1,5 ms entre estats o entre rigs no
+són concloents. És el criteri que s'ha aplicat per qualificar de «sota el soroll» els resultats
+de l’apartat 7.6.
+72
+
+=== PAGE 73 ===
+8. Implicació i escalabilitat dels sistemes
+8.1. Modularitat i transferència
+Tècnica Efecte demostrat Transferibilitat Dependència
+Activar avaluació
+3,5× a 9,7× Universal Maya 2016+ / 2019+
+paral·lela + GPU Override
+Mesurar cas per
+Cached Playback −33 % a +22 % Maya 2019+
+cas
+Robustesa en mode Maya 2020+ per a
+Càlcul matricial Alta
+degradat offsetParentMatrix
+Evitar geometria oculta Fins al 81 % de la
+Alta Cap
+avaluada deformació
+Substituir fol·licles per
+No quantificat al rig Alta Maya 2020+
+uvPin
+Protocol de mesura i eines - Alta Cap
+Per
+Neteja de nodes residuals Nul en FPS Cap
+mantenibilitat
+Segmentació de malles Contraindicat - -
+Taula 53. Transferibilitat de les tècniques d'optimització
+Aquesta separació és el que permet defensar el treball com a metodologia i no com a
+solució puntual per a un drac, les cinc primeres files són aplicables a qualsevol
+personatge de qualsevol producció.
+8.2. Aplicació en rigs de bípedes
+Tres dels quatre casos són bípedes, cosa que permet contrastar el quadrúpede alat amb
+arquitectures diverses sobre la mateixa mètrica:
+Cas Aportació a l'estudi
+Demostra que una solució comercial combinada amb desenvolupament propi
+OTO (mGear + pot ser la més ràpida del rig (15,43 ms), i que un facial complet de 11 objectius
+facial custom) amb interpolació RBF pot tenir un cost indetectable. També mostra que un rig
+pot tenir 131 constraints sense penalització mesurable.
+Extrem de netedat: 97,1 % de paral·lelisme, 0 geometria oculta, 7 nodes
+Marcelo
+d'editor, i el millor comportament en mode degradat (13,4 fps). És el cas que
+(matricial pur)
+millor sosté l'argument arquitectònic del treball.
+Extrem oposat: quantifica el cost del volum de graf (+5,5 ms sobre el model)
+Oswald
+i aporta l'únic cas de geometria oculta avaluada (81,2 %), que resulta ser
+(constraints)
+l'antipatró amb el cost més gran i més evitable de tot l'estudi.
+Taula 54. Aportació dels rigs bípedes a l'estudi
+73
+
+=== PAGE 74 ===
+La conclusió transversal és que la morfologia del personatge no determina el rendiment,
+el quadrúpede alat més dens del rig queda al mig de la taula, per davant d'un bípede
+amb la meitat de geometria.
+8.3. Extrapolació a diferents rigs d'animals
+Tipologia Repte dominant Tècnica prioritària segons les dades
+Cadenes llargues, sistemes de
+Quadrúpede Matrius per robustesa
+seguiment automàtic
+Au / criatura Superfície deformable extensa No segmentar; verificar residència a GPU
+alada entre dits de la membrana
+Cadena molt llarga amb blendMatrix i aimMatrix; evitar acumular
+Serpentiforme
+seguiment encadenat constraints
+El facial no és el problema (apartat 7.6);
+Bípede Facial complex
+vigilar capes ocultes (apartat A11)
+Personatge amb Deformadors encadenats sobre Cascada de wrap viable: cost mesurat 1,7
+roba el cos %
+Taula 55. Tècniques prioritàries segons la tipologia animal
+La recomanació transversal, derivada de l’aparata 7.4, és la mateixa per a totes les
+tipologies: comptar nodes al camí d'avaluació, no vèrtexs.
+8.4. Cost d'adopció
+Anàlisi del que costa aplicar la metodologia, necessària perquè les conclusions siguin
+creïbles:
+● Corba d'aprenentatge del càlcul matricial per a perfils artístics, és el principal
+obstacle, i l'objectiu de democratització del treball hi topa directament.
+● Temps de conversió d'un rig existent enfront de construir-lo optimitzat des de zero.
+Convertir Oswald a matrius implicaria substituir 610 nodes.
+● Manteniment: menor llegibilitat a canvi de robustesa.
+● Dependència de versió: un rig que fa servir offsetParentMatrix i els nodes
+matricials moderns no és retrocompatible amb versions anteriors a 2020/2022.
+Un cop mesurat que en producció la diferència entre l'extrem net i l'extrem carregat és
+de 6 ms i que tots dos estan molt per sota del pressupost, el cost d'adopció del càlcul
+matricial s'ha de justificar per robustesa i mantenibilitat, no per rendiment. Aquesta és
+una conclusió que contradiu la motivació habitual amb què es presenta la tècnica.
+74
+
+=== PAGE 75 ===
+9. Aspectes extres de Here be dragons
+En aquest capítol, el disseny i l'aplicació del sistema muscular d'Adonis FX a Varyndor,
+així com la definició tècnica del flux entre Maya i Houdini i la seva integració al projecte,
+corresponen al treball de l'autor. L'eina principal d'exportació USD va ser implementada
+per Karol Ch. Mori sota la supervisió tècnica de l'autor. La resta de decisions de
+producció, animació, efectes i renderització es van desenvolupar conjuntament amb
+l'equip de Here be Dragons. Les mesures de rendiment i les conclusions que se'n
+deriven corresponen exclusivament a aquest TFG individual.
+9.1. Simulació amb Adonis FX i Houdini (CFX)
+Figura 24. Pressupost temporal del rig base i marge disponible per a Adonis FX; el marge no representa un cost de
+simulació mesurat.
+La musculatura d'Adonis és present a l'escena publicada com a 50.249 vèrtexs de
+geometria estàtica, fàscia, greix, pell i musculatura per regions (C_adonisFascia,
+C_adonisFat, C_adonisSkin de 12.216 vèrtexs cadascuna, més les malles musculars
+per grup) no deformada pel rig i per tant sense cost d'avaluació al visor fins que s’evalua
+la simulacio.
+Pressupost disponible per a la simulació. El rig base disposa de 23,4 ms de marge
+sobre el pressupost de 41,7 ms a l'estat C, i de 28,5 ms si s'activa Cached Playback.
+Aquest marge és el que la capa d'Adonis FX pot consumir sense trencar la interactivitat.
+Contracte de sortida. Quina geometria s'entrega, en quin format, amb quina jerarquia i
+amb quina garantia de topologia estable. És la interfície que fa que l'optimització es
+conservi a la pipeline en comptes de perdre's en la conversió.
+Interacció amb Cached Playback. La simulació ha d'operar sobre l'animació ja
+emmagatzemada. Les dinàmiques tenen dependència temporal i no admeten avaluació
+aleatòria.
+75
+
+=== PAGE 76 ===
+9.2. Pipeline amb integració USD
+9.2.1. La decisió
+Al projecte Here be dragons, USD s’utilitza com a mitjà de transport entre programes,
+no com a format de treball. Cada departament continua treballant amb l’eina que li
+correspon: el rig i l’animació a Maya, i els efectes de personatge a Maya i Houdini.
+USD permet que el resultat viatgi entre aquestes eines sense que cada departament
+hagi d’interpretar el format natiu de la resta.
+USD permet muntar pipelines molt més ambicioses, amb capes, variants i composició,
+però per a una producció d'aquesta mida el que calia resoldre era una cosa concreta:
+que el que surt de Maya arribi a Houdini sense sorpreses.
+9.2.2. Quan comença el procés
+L'exportació no comença fins que l'animació és final amb efectes de personatge si son
+creats a Maya. Això no és un detall d'organització: condiciona tot el que hi ha pipeline
+aballl i també delimita l'abast d'aquest treball.
+Exportar amb l'animació tancada vol dir que el que viatja per USD és geometria
+deformada, no el rig. L'estructura de controls, els nodes matricials, els deformadors i tota
+l'arquitectura que ocupa els capítols 4 i 7 es queden a Maya. USD rep el resultat, no el
+mecanisme.
+D'aquí en surten tres conseqüències que val la pena deixar dites:
+Tot el que mesura aquest treball passa abans de l'USD. Els 18,29 ms per fotograma del
+drac, la residència a GPU i el repartiment entre fils són problemes de la fase d'autoria.
+Un cop exportat, el cost de reproduir la geometria a Houdini no té res a veure amb com
+estigui construït el rig.
+No hi ha anada i tornada. És un lliurament d'una sola direcció. Si l'animació canvia, es
+reexporta, no s'edita al costat de Houdini i es torna.
+L'estabilitat de topologia passa a ser un requisit dur. Mentre es treballa a Maya, un canvi
+en el nombre de vèrtexs és una molèstia, un cop s'exporta una seqüència, trenca el
+fitxer.
+9.2.3. L'eina d'exportació
+L'exportació es fa amb una eina pròpia en comptes d'utilitzar directament l'exportador
+d'USD de Maya. Una eina pròpia permet imposar comprovacions abans d'escriure res,
+que és el que evita que els errors arribin al departament següent en comptes de detectar-
+se abans de sortir.
+76
+
+=== PAGE 77 ===
+Les comprovacions que hauria de fer, derivades del que mesura aquest treball, són
+aquestes:
+Comprovació Per què
+Recompte de vèrtexs constant a
+Un canvi de topologia invalida la seqüència exportada
+tot el rang
+Cap malla amb topologia
+Mateix motiu
+animada
+Jerarquia de malles estable És la que es converteix en jerarquia de prims dins de l'USD
+Els noms de node passen a ser camins dins de l'USD i
+Nomenclatura consistent
+deixen de ser fàcils de canviar
+Taula 56. Comprovacions prèvies a l'exportació USD
+Això vol dir que la decisió de com dividir la geometria deixa de ser una decisió de
+rendiment i passa a ser una decisió de pipeline: quines peces vol poder aïllar el
+departament següent, quines han d'anar juntes, i quines convé poder amagar o substituir
+per separat. És un criteri diferent del que fèiem servir al capítol 4, i probablement millor.
+9.3. Contracte de dades entre departaments
+De → A Dada Format Garantia requerida
+Modelatge → Geometria Maya Topologia final, sense historial de modelatge, UV,
+Rigging base ASCII sense namespaces residuals
+≥ 24 FPS a l'estat C verificat amb el protocol de
+Rigging → Maya
+Rig publicat l’apartat 5.2; Cached Playback mesurat; 0 nodes
+Animació ASCII
+GloballySerial
+Animació → Deformació Topologia estable, sense canvis de recompte de
+USD
+CFX base vèrtexs
+CFX → Geometria Jerarquia igualitaria a la feta servir en l’apartat de
+USD
+Lighting simulada lookdev per poder fer un override de la mesh
+Taula 57. Contracte de dades entre departaments
+La fila Rigging → Animació és la que aquest treball permet formular amb precisió: en
+comptes d'un requisit qualitatiu, un criteri verificable i reproduïble amb una eina concreta.
+77
+
+=== PAGE 78 ===
+10. Conclusions i línies futures
+10.1. Resposta als criteris d'èxit
+# Criteri Llindar Resultat Estat
+Reproducció 15,43-22,83 ms als 4 rigs; Varyndor
+C1 ≤ 41,7 ms Assolit
+interactiva 18,29 ms (54,7 FPS)
+0 nodes globalment 3 de 4 rigs. Varyndor: 8 ikHandle dels
+C2 0 Parcial
+serials dits
+C3 Residència a GPU > 90 % 96,1-100 % als 4 rigs Assolit
+Correcció ≤ 1 × 10 ⁴ 0 (Parallel vs Serial) i 1,5 × 10 ⁵ (DG vs
+C4 Assolit
+geomètrica unitats Serial), sobre 3.495.636 mostres
+⁻ ⁻
+Assolit amb
+C5 Reproductibilitat CV < 15 % 4,2-18,6 %; majoria per sota del 15 %
+reserves
+Taula 58. Compliment dels criteris d'èxit
+10.2. Conclusió principal
+Amb avaluació paral·lela i GPU Override actius, el cost per fotograma d'un rig es
+desacobla de la seva càrrega geomètrica.
+Un personatge que deforma 321.001 vèrtexs costa un 9 % més que un que en deforma
+56.102. El que continua costant és el nombre de nodes que la CPU ha de recórrer: el
+rig amb 610 constraints se situa 5,5 ms per damunt del que li correspondria per
+geometria, tot i ser el que menys nodes totals té de tot els rigs.
+En el corpus analitzat, la conseqüència pràctica és directa: amb la deformació resident
+a la GPU, l’optimització rendible no s’ha trobat en la reducció de geometria ni en la
+segmentació de malles, sinó en la reducció del nombre de nodes del camí d’avaluació
+de la CPU.
+Les recomanacions de segmentació citades s’han d’interpretar segons el context tècnic
+de cada font. Poden continuar sent vàlides quan la cadena de deformació no resideix a
+la GPU; per això, abans d’aplicar-les, cal verificar la residència efectiva de les malles en
+els casos estudiats.
+78
+
+=== PAGE 79 ===
+10.3. Afirmacions de la documentació contrastades amb les
+mesures
+No es qualifica cap afirmació de refutada sense una mesura que ho sustenti; es
+distingeix el que s'ha pogut comprovar, el que no s'ha reproduït i el que queda obert
+(vegeu Figura 25).
+Figura 25. Resum de les afirmacions confirmades, no reproduïdes en el corpus i obertes.
+10.3.1. El que les mesures confirmen
+Afirmació Mesura Font
+Els constraints generen blocs 11.088 blocs a Oswald contra 252 a Autodesk
+d'avaluació agrupats Marcelo (2026b)
+Els nodes de Python són Cap rig en té; els 8 GloballySerial de Autodesk
+GloballySerial pel GIL Varyndor són ikHandle (2026b)
+L'avaluació paral·lela i el GPU Kahwaty et al.
+Milloren el rendiment entre 3,5× i 9,7×
+Override són el factor dominant (2019)
+Cal evitar fol·licles sobre malla Els 3 rigs matricials fan servir uvPin;
+Wardlaw (s. f.)
+deformada cap no té fol·licles
+Taula 59. Afirmacions confirmades per les mesures
+10.3.2. El que no s'ha reproduït
+Mesura obtinguda
+Afirmació Ref.
+Els cycle clusters dels
+0 opaqueTaskEvaluation en 1,4 milions
+constraints s'avaluen com a Apartat
+d'esdeveniments; 602 de 610 constraints visibles
+tasca opaca i serialitzen el 4.2.1
+com a tasques pròpies; concurrència de 6,5×
+processador
+79
+
+=== PAGE 80 ===
+Mesura obtinguda
+Afirmació Ref.
+Single Shape Rule: un
+deformador connectat a dues Oswald té deformadors que en governen fins a 18 Apartat
+malles desactiva la GPU de tot i manté el 100 % dels vèrtexs a la GPU 4.3.1
+el grup
+Cal segmentar les malles
+Varyndor deforma 5,7× més vèrtexs que Marcelo i Apartat
+massives per aprofitar el
+només és un 9 % més lent 4.1.2
+paral·lelisme
+Cached Playback millora el Millora 2 rigs, és neutre en 1 i empitjora OTO un 22 Apartat
+rendiment % 5.3
+L'historial i els nodes residuals Varyndor té 110.000 nodes residuals i és més ràpid Apartat
+degraden l'avaluació que Oswald, que en té 6.231 en total 4.1.1
+Taula 60. Afirmacions no reproduïdes en el corpus
+10.3.3. El que queda obert
+Qüestió Estat
+No s'ha pogut reproduir: hi ha malles de 76 vèrtexs a la GPU i
+El llindar mínim de densitat per
+de 287 a la CPU, amb atributs idèntics. Totes les excloses
+pujar a la GPU. La
+tenen una sola influència, però algunes de les incloses també.
+documentació dona 500
+S'han descartat el recompte de vèrtexs, els atributs del
+vèrtexs en AMD i 2.000 en
+skinCluster i la Single Shape Rule, no s'ha identificat el factor
+NVIDIA
+determinant
+El cost fix de ~16,4 ms que no
+depèn de cap variable És el 70-90 % del temps de fotograma dels quatre rigs.
+mesurada
+Taula 61. Qüestions obertes després de les mesures
+Aquestes afirmacions no es consideren falses: procedeixen de fonts rellevants i poden
+ser vàlides en el context en què es van formular. La conclusió d’aquest treball és més
+acotada: no es compleixen en cap dels quatre rigs mesurats amb Maya 2026.2. En una
+altra versió, amb una altra arquitectura de rig o en condicions no reproduïdes pels
+quatre casos, poden continuar sent vàlides.
+Una regla d'optimització no verificada pot costar setmanes de treball: no perquè sigui
+falsa, sinó perquè pot no aplicar-se al cas concret, i això només es pot saber mesurant.
+10.4. Limitacions actuals de l'optimització a Maya
+● Els nodes personalitzats escrits en Python són GloballySerial pel GIL, penalitza
+l'extensibilitat precisament en el llenguatge més accessible per a perfils artístics.
+● El comportament de la residència a GPU no és predictible a partir de criteris
+documentats, malles similars reben tractaments diferents sense explicació
+aparent.
+80
+
+=== PAGE 81 ===
+● Les cadenes d'IK continuen sent font de nodes globalment serials (els 8 casos de
+Varyndor).
+● El guany depèn del maquinari, cosa que erosiona la reproductibilitat entre
+estacions de treball d'un mateix equip.
+● Les funcionalitats recents lliguen el rig a una versió concreta, dificultant la
+reutilització entre produccions.
+● Existeix un cost fix per fotograma que cap ajust de rig no redueix.
+10.5. Aportacions originals del treball
+1. Un protocol de mesura reproduïble de quatre estats, amb cicle d'estrès sintètic,
+tractament estadístic definit i restauració automàtica de l'escena, aplicable a
+qualsevol rig (annex 12.1).
+2. La observació que un rig publicat sovint no té animació temporal, i que mesurar-
+lo sense construir un cicle d'estrès produeix xifres falses. És un error que hauria
+invalidat tot l'estudi si no s'hagués detectat, i que no apareix advertit a la
+documentació consultada.
+3. La caracterització comparada de quatre arquitectures reals sota una mateixa
+mètrica, incloent-hi els dos extrems de l'eix matrius/constraints construïts pel
+mateix autor, cosa que elimina l'autoria com a variable.
+4. La descomposició del cost per fotograma en component fix, geomètrica i de graf
+(apartat 7.4), que permet atribuir cada mil·lisegon a una causa.
+5. La refutació amb dades de sis afirmacions àmpliament repetides a la
+documentació de rigging (apartat 10.3).
+6. Tres eines d'auditoria que responen preguntes que el Profiler no respon:
+planificació per node, càrrega geomètrica real amb separació de visible i ocult, i
+repartiment GPU/CPU dels vèrtexs deformats.
+7. La identificació de l'antipatró de geometria oculta avaluada (A11), amb un cas
+quantificat al 81,2 % de la deformació d'un rig.
+10.6. Limitacions de l'estudi
+● n = 4, amb rigs que difereixen en múltiples variables alhora (densitat, nombre de
+malles, arquitectura, framework): no es pot atribuir causalitat, només descartar
+hipòtesis.
+● Cicle d'estrès sintètic que no reprodueix una actuació real ni exercita les mateixes
+regions anatòmiques a tots els rigs.
+● Una sola màquina i una sola versió de Maya, cosa que impedeix separar el que
+és propi de l'arquitectura del que és propi de la implementació de 2026.2.
+● L'ajust lineal de l’apartat 7.4 és de dos punts: descriu, no prediu.
+10.7. Línies de treball futures
+La línia més valuosa: aïllar el cost fix de ~16,4 ms. Representa entre el 70 % i el 90
+% del temps de fotograma dels quatre rigs i no l'explica cap variable mesurada, ni
+vèrtexs, ni triangles, ni nodes, ni constraints, ni malles, ni el dibuix del visor, que s'ha
+mesurat i representa només 2,5 ms.
+Mentre no s'aïlli, qualsevol optimització per sota d'aquest llindar és invisible, cosa que
+explica per què bona part de les pràctiques d'optimització documentades no
+81
+
+=== PAGE 82 ===
+produeixen efecte mesurable. Determinar-ne l'origen, cost de currentTime, recorregut
+de l'EG, sincronització de fils, sobrecàrrega de la infraestructura d'avaluació,
+requeriria una anàlisi amb el Profiler centrada no en la deformació sinó en la
+infraestructura.
+● Resoldre els 8 ikHandle globalment serials del drac i mesurar-ne l'efecte real.
+● Determinar què governa la residència a GPU, atès que no és el recompte de
+vèrtexs (apartat 4.3.1).
+● Mesurar el cost d'Adonis FX actiu contra el marge de 23,4 ms disponible (apartat
+9.1).
+● Verificar el mecanisme dels cycle clusters amb captura del Profiler.
+● Ampliar el corpus per poder fer inferència estadística amb control de variables.
+● Automatitzar la conversió restricció a matriu sobre rigs existents.
+● Integrar les mesures en un procés que detecti regressions de rendiment en
+publicar un rig (apartat 5.5).
+● Deformadors basats en aprenentatge automàtic (Allard i Rijpkema, 2024):
+plantegen substituir cadenes costoses per un model entrenat que aproxima el
+resultat amb un cost d’avaluació constant i predictible, independent de la
+complexitat del sistema original. Encaixa amb l’argument d’aquest treball -
+desplaçar cost del temps d’avaluació al de precàlcul-, però els compromisos
+oberts són l’exactitud de l’aproximació, el cost i la reproductibilitat de
+l’entrenament, i el comportament fora del rang de poses entrenat. Cal verificar
+l’estat de la implementació d’ML Deformer a la versió emprada abans d’afirmar-
+ne la disponibilitat.
+82
+
+=== PAGE 83 ===
+11. Bibliografia
+11.1. Fonts primàries
+Allard, E., & Rijpkema, H. (2024). Rigging fast deformation estimation with neural
+computation in Maya [Material de classe, FTV3252]. Autodesk University.
+https://static.au-uw2-prd.autodesk.com/ClassHandout-FTV3252-Allard-
+Au2024_1727754260614001Ahbm.pdf
+Autodesk. (s. f.). profiler command (Python). Maya Technical Documentation.
+https://help.autodesk.com/cloudhelp/2026/ENU/Maya-Tech-
+Docs/CommandsPython/profiler.html
+Autodesk. (2019). Using Parallel Maya 2019 [Llibre blanc].
+https://download.autodesk.com/us/company/files/2019/UsingParallelMaya.pdf
+Autodesk. (2020). Using Parallel Maya 2020 [Llibre blanc].
+https://download.autodesk.com/us/company/files/UsingParallelMaya/2020/Usin
+gParallelMaya.pdf
+Autodesk. (2025). Using Parallel Maya 2025 [Llibre blanc].
+https://damassets.autodesk.net/content/dam/autodesk/www/html/using-parallel-
+maya/2025/UsingParallelMaya.pdf
+Autodesk. (2026a). Maya 2026: Cached Playback [Llibre blanc].
+https://damassets.autodesk.net/content/dam/autodesk/www/html/maya-cached-
+playback/2026/MayaCachedPlaybackWhitePaper.pdf
+Autodesk. (2026b). Using Parallel Maya.
+https://damassets.autodesk.net/content/dam/autodesk/www/html/using-parallel-
+maya/2026/UsingParallelMaya.html
+Autodesk Maya. (s. f.). Maya Quick Tip: Investigating scene slowdown with the Profiler
+[Vídeo]. YouTube. https://www.youtube.com/watch?v=HG9QJ2QJRxM
+González, G. (2026). gcElmoToolKit [Programari informàtic]. GitHub.
+https://github.com/guidogonzalezc/gcElmoToolKit
+Hahn, F. (2015). Optimization methods for character animation using rig spaces [Tesi
+doctoral, ETH Zurich]. ETH Zurich.
+https://cgl.ethz.ch/Downloads/Publications/Dissertations/Hahn15b.pdf
+Kahwaty, J., Yoder, W., Lin, A., Lee, G. S., & Suroviec, D. (2019). Optimizing rig
+manipulation with GPU and parallel evaluation. En SIGGRAPH 2019 Talks.
+ACM.
+https://media.disneyanimation.com/technology/publications/2019/RealTimeRig
+Manip.pdf
+Liang, S. Y. [SonicTK]. (2016, 4 de setembre). stk-debug-plugin-example [Codi font].
+GitHub. https://github.com/sonictk/stk-debug-plugin-example
+83
+
+=== PAGE 84 ===
+Lin, A., Lee, G. S., Longson, J., Steele, J., Goldberg, E., & Stefanovic, R. (2015).
+Achieving real-time playback with production rigs. En ACM SIGGRAPH 2015
+Talks. ACM.
+https://media.disneyanimation.com/uploads/production/publication_asset/161/a
+sset/realTime.pdf
+Zimmermann, G., Ochs, K., & Helms, R. (2014). Building highly parallel character rigs.
+En SIGGRAPH 2014 Talks. ACM. https://research.dreamworks.com/wp-
+content/uploads/2018/07/highly_parallel_characters-Edited.pdf
+11.2. Corpus d'afirmacions contrastades
+Les fonts següents recullen recomanacions, experiències i folklore tècnic que el treball
+sotmet a contrast. S'empren com a objecte d'anàlisi, no com a autoritat equivalent a la
+documentació oficial o a la recerca publicada.
+FlippedNormals. (2018, 5 de novembre). Ultimate guide to clean scenes in Maya
+[Vídeo]. YouTube. https://www.youtube.com/watch?v=ToWRH4IXF7A
+Johnson, D., Estela, M., Ark, & Ng, G. (2012, agost). maya.cmds vs Python OpenMaya
+performance for thousands of objects [Fil de fòrum]. Google Groups.
+https://groups.google.com/g/maya_he3d/c/T2-Ttp8NcYg
+Lesterbanks. (2015, 5 de març). Masterclass in using the Maya Profiler tools to debug
+problems with your scenes. https://lesterbanks.com/2015/03/using-maya-
+profiler-tools-debug-scenes/
+Lesterbanks. (2017, 6 de juliol). How to use Maya’s native matrix nodes in place of
+constraints. https://lesterbanks.com/2017/07/maya-native-matrix-nodes-
+constraints/
+Lesterbanks. (2018, 28 de novembre). How to use Maya’s Evaluation Toolkit to test rig
+speeds. https://lesterbanks.com/2018/11/maya-evaluation-toolkit-test-rig-
+speeds/
+r/Maya. (2016). Maya playback choppy, and laggy [Publicació en un fòrum]. Reddit.
+https://www.reddit.com/r/Maya/comments/4djin4/maya_playback_choppy_and_l
+aggy/
+r/Maya. (2020). How to optimize rig speed in Maya 2020 [Publicació en un fòrum].
+Reddit.
+https://www.reddit.com/r/Maya/comments/qfp4lh/how_to_optimize_rig_speed_i
+n_maya_2020/
+r/Maya. (2021). Help: Maya becomes unresponsive while animating [Publicació en un
+fòrum]. Reddit.
+https://www.reddit.com/r/Maya/comments/mapg9q/help_maya_becomes_unres
+ponsive_while_animating/
+r/Maya. (2023). Heavy rigs optimization tips [Publicació en un fòrum]. Reddit.
+https://www.reddit.com/r/Maya/comments/147p5br/heavy_rigs_optimization_tip
+s/
+Rigging Dojo. (s. f.). Optimizing rigs for parallel evaluation [Curs en línia].
+https://ondemand.riggingdojo.com/OptimizingRigsforParallelEvaluation
+84
+
+=== PAGE 85 ===
+Rigging Dojo. (2021, 22 de gener). Blazing fast character rigs with Maya.
+https://www.riggingdojo.com/2021/01/22/blazing-fast-character-rigs-with-maya-
+2016/
+Rigging Dojo. (2022, 21 de desembre). Optimizing rigs for parallel evaluation: Success
+story “Goro”. https://www.riggingdojo.com/2022/12/21/optimizing-rigs-for-
+parallel-evaluation/
+Tech-Artists.Org. (2018, 17 de setembre). Parallel evaluation wisdom [Fil de fòrum].
+https://www.tech-artists.org/t/parallel-evaluation-wisdom/10340
+Wardlaw, C. (2017, 25 de novembre). Deformation layering in Maya’s parallel GPU
+world. Medium. https://medium.com/@kattkieru/deformation-layering-in-mayas-
+parallel-gpu-world-15c2e3d66d82
+Wikipedia contributors. (2026). Dependency graph. A Wikipedia.
+https://en.wikipedia.org/wiki/Dependency_graph
+85
+
+=== PAGE 86 ===
+12. Annexos
+12.1. Protocol de mesura complet
+Implementació a tools/tfg_rig_benchmark.py. Ús recomanat, un estat per crida per evitar
+bloquejos prolongats:
+import sys
+sys.path.append(r'D:/uni/TFG_individual/tools')
+import tfg_rig_benchmark as tfg
+tfg.save_state() # 1. guardar estat original
+print(tfg.scene_report()) # 2. inventari complet
+tfg.build_stress_cycle() # 3. imprescindible
+tfg.run_state('C'); tfg.run_state('B') # 4. un estat per crida
+tfg.run_state('A'); tfg.run_state('D')
+tfg.export('D:/uni/TFG_individual/reports', 'nom_del_rig')
+tfg.restore_state() # 5. deixar-ho tot com estava
+Nucli de la mesura:
+import csv, json, os, statistics, time
+import maya.cmds as cmds
+FRAME_START, FRAME_END = 1, 120
+WARMUP_FRAMES = 8
+REPETITIONS = 3
+REPETITIONS_DG = 2 # el mode DG es ~7x mes lent
+STATES = {
+'A': ('A_DG', 'off', True, False),
+'B': ('B_parallel_cpu', 'parallel', False, False),
+'C': ('C_parallel_gpu', 'parallel', True, False),
+'D': ('D_cached', 'parallel', True, True),
+}
+def _play_once():
+times = []
+for frame in range(FRAME_START, FRAME_END + 1):
+t0 = time.perf_counter()
+cmds.currentTime(frame, edit=True)
+cmds.refresh(force=True)
+times.append((time.perf_counter() - t0) * 1000.0)
+return times[WARMUP_FRAMES:]
+def _stats(times):
+ordered = sorted(times)
+mean = statistics.mean(times)
+median = statistics.median(times)
+return {
+'mitja': round(mean, 2),
+'mediana': round(median, 2),
+'p95': round(ordered[int(len(ordered) * 0.95) - 1], 2),
+'max': round(max(times), 2),
+'fps': round(1000.0 / median, 1),
+'cv_pct': round(statistics.pstdev(times) / mean * 100, 1),
+}
+def run_state(state, verbose=True):
+"""Mesura un unic estat. Una crida per estat evita timeouts."""
+label, mode, gpu, cache = STATES[state]
+86
+
+=== PAGE 87 ===
+cmds.evaluationManager(mode=mode)
+cmds.evaluator(name='deformer', enable=gpu)
+cmds.evaluator(name='cache', enable=cache)
+out = {'estat': label}
+if cache:
+# La primera passada omple la cau i no es representativa.
+t0 = time.perf_counter()
+out['ompliment'] = _stats(_play_once())
+out['ompliment_s'] = round(time.perf_counter() - t0, 1)
+reps = REPETITIONS_DG if state == 'A' else REPETITIONS
+runs = [_stats(_play_once()) for _ in range(reps)]
+out['runs'] = runs
+out['mediana_de_medianes'] = round(
+statistics.median([r['mediana'] for r in runs]), 2)
+out['fps'] = round(1000.0 / out['mediana_de_medianes'], 1)
+out['malles_a_gpu'] = len(gpu_meshes())
+_RESULTS[label] = out
+if verbose:
+print('%s: %s ms (%s FPS)' % (label, out['mediana_de_medianes'], out['fps']))
+return out
+def export(directory, rig_name):
+"""Escriu JSON complet i CSV resum per al capitol 7."""
+if not os.path.isdir(directory):
+os.makedirs(directory)
+payload = {'rig': rig_name, 'escena': cmds.file(q=True, sceneName=True),
+'protocol': {'rang': [FRAME_START, FRAME_END],
+'escalfament': WARMUP_FRAMES,
+'repeticions': REPETITIONS},
+'resultats': _RESULTS}
+with open(os.path.join(directory, '%s_benchmark.json' % rig_name),
+'w', encoding='utf-8') as handle:
+json.dump(payload, handle, indent=2, ensure_ascii=False)
+base = _RESULTS.get('A_DG', {}).get('mediana_de_medianes')
+with open(os.path.join(directory, '%s_benchmark.csv' % rig_name),
+'w', encoding='utf-8') as handle:
+handle.write('rig,estat,ms_mediana,fps,cv_pct,malles_gpu,guany_vs_DG\n')
+for label in ('A_DG', 'B_parallel_cpu', 'C_parallel_gpu', 'D_cached'):
+r = _RESULTS.get(label)
+if not r:
+continue
+cv = round(statistics.mean([x['cv_pct'] for x in r['runs']]), 1)
+gain = round(base / r['mediana_de_medianes'], 2) if base else ''
+handle.write('%s,%s,%s,%s,%s,%s,%s\n' % (
+rig_name, label, r['mediana_de_medianes'], r['fps'], cv,
+r['malles_a_gpu'], gain))
+12.2. Auditoria de planificació de nodes
+def scheduling_report():
+"""Recompte per tipus de planificacio i nodes no-Parallel per tipus.
+Genera la taula de diagnostic de 6.2. La sortida de dbpeek d'un rig
+complet pot superar els 7 MB: es processa amb json.loads, mai s'imprimeix.
+"""
+try:
+87
+
+=== PAGE 88 ===
+data = json.loads(cmds.dbpeek(op='graph', argument='scheduling', all=True))
+except Exception as exc:
+return 'n/a: %s' % exc
+sched = data.get('scheduling', {})
+out = {'recompte': {k: len(v) for k, v in sched.items() if isinstance(v, list)}}
+detail = {}
+for key, nodes in sched.items():
+if key.startswith('Parallel') or not isinstance(nodes, list) or not nodes:
+continue
+by_type = {}
+for node in nodes:
+try:
+node_type = cmds.nodeType(node)
+except Exception:
+node_type = 'unknown'
+by_type[node_type] = by_type.get(node_type, 0) + 1
+detail[key] = dict(sorted(by_type.items(), key=lambda kv: -kv[1])[:12])
+out['no_parallel_per_tipus'] = detail
+return out
+12.3. Càrrega geomètrica i repartiment GPU/CPU
+def deformer_types():
+"""Tots els tipus de deformador, no nomes els compatibles amb GPU.
+Filtrar per la llista de compatibles amb GPU per decidir si una malla es
+deforma es un error: deixa fora wrap, cluster i companyia, i marca com a
+estatiques malles que si que s'avaluen. Es deriva de 'geometryFilter',
+que es la classe base de tots els deformadors (57 tipus a Maya 2026.2).
+"""
+derived = cmds.nodeType('geometryFilter', isTypeName=True, derived=True)
+if derived:
+return set(derived)
+return {'skinCluster', 'blendShape', 'cluster', 'wrap', 'deltaMush',
+'lattice', 'ffd', 'softMod', 'wire', 'tension', 'nonLinear',
+'proximityWrap', 'sculpt', 'shrinkWrap', 'jiggle'}
+def _visible(shape):
+"""Visibilitat efectiva: recorre tota la cadena de pares."""
+parent = cmds.listRelatives(shape, parent=True, fullPath=True)
+node = parent[0] if parent else None
+while node:
+try:
+if not cmds.getAttr(node + '.visibility'):
+return False
+except Exception:
+pass
+parent = cmds.listRelatives(node, parent=True, fullPath=True)
+node = parent[0] if parent else None
+return True
+def geometry_load():
+"""Carrega geometrica real: el que es deforma cada fotograma.
+El recompte de vertexs de l'escena no serveix per comparar rigs, perque
+inclou targets de blendShape, malles base i geometria estatica que no
+s'avalua. La xifra que cal ponderar es 'vertexs_deformats'.
+'vertexs_deformats_ocults' es especialment revelador: geometria que es
+calcula cada fotograma sense que ningu la vegi, tipicament perque
+88
+
+=== PAGE 89 ===
+alimenta una cadena posterior (capes facials, inputs de blendShape).
+"""
+types = deformer_types()
+stats = {'vertexs_deformats': 0, 'vertexs_estatics': 0,
+'vertexs_deformats_visibles': 0, 'vertexs_deformats_ocults': 0,
+'cares_deformades': 0, 'triangles_totals': 0}
+rows = []
+for shape in (cmds.ls(type='mesh', noIntermediate=True, long=True) or []):
+verts = cmds.polyEvaluate(shape, vertex=True)
+faces = cmds.polyEvaluate(shape, face=True)
+tris = cmds.polyEvaluate(shape, triangle=True)
+if not isinstance(verts, int):
+continue
+hist = cmds.listHistory(shape, pruneDagObjects=True) or []
+defs = sorted({cmds.nodeType(n) for n in hist if cmds.nodeType(n) in types})
+visible = _visible(shape)
+if isinstance(tris, int):
+stats['triangles_totals'] += tris
+if defs:
+stats['vertexs_deformats'] += verts
+if isinstance(faces, int):
+stats['cares_deformades'] += faces
+key = 'visibles' if visible else 'ocults'
+stats['vertexs_deformats_' + key] += verts
+else:
+stats['vertexs_estatics'] += verts
+rows.append({'malla': shape.split('|')[-1], 'vertexs': verts,
+'deformadors': defs, 'visible': visible})
+stats['vertexs_totals'] = stats['vertexs_deformats'] + stats['vertexs_estatics']
+if stats['vertexs_deformats']:
+stats['pct_deformat_ocult'] = round(
+stats['vertexs_deformats_ocults'] / stats['vertexs_deformats'] * 100, 1)
+rows.sort(key=lambda r: r['vertexs'], reverse=True)
+stats['top10'] = rows[:10]
+return stats
+def gpu_meshes():
+"""Malles que l'avaluador de deformacio te residents a la GPU.
+NOMES es fiable amb el rig embrutant-se: en una escena estatica els grups
+encara no s'han construit i el resultat surt enganyosament curt.
+"""
+try:
+info = json.loads(cmds.evaluator(name='deformer', q=True, info=True))
+except Exception:
+return []
+out = []
+for group in info.get('deformerEvaluator', {}).get('groups', []):
+out.extend([f for f in group.get('filters', []) if 'Shape' in f])
+return sorted(set(out))
+def deformation_split():
+"""Reparteix els vertexs deformats entre GPU i CPU.
+Aquesta es la mesura que explica el cost real: un vertex deformat a la GPU
+es gairebe gratis, un a la CPU no. El recompte brut de vertexs de l'escena
+no distingeix els dos casos i per aixo no correlaciona amb els ms/frame.
+"""
+resident = set()
+89
+
+=== PAGE 90 ===
+for entry in gpu_meshes():
+node = entry.split('.')[0]
+try:
+if cmds.nodeType(node) == 'mesh':
+resident.add(node.split('|')[-1])
+except Exception:
+continue
+types = deformer_types()
+out = {'verts_gpu': 0, 'verts_cpu': 0, 'malles_gpu': 0, 'malles_cpu': 0,
+'cpu_pesades': []}
+for shape in (cmds.ls(type='mesh', noIntermediate=True, long=True) or []):
+verts = cmds.polyEvaluate(shape, vertex=True)
+if not isinstance(verts, int):
+continue
+hist = cmds.listHistory(shape, pruneDagObjects=True) or []
+if not any(cmds.nodeType(n) in types for n in hist):
+continue # no es deforma
+short = shape.split('|')[-1]
+if short in resident:
+out['verts_gpu'] += verts
+out['malles_gpu'] += 1
+else:
+out['verts_cpu'] += verts
+out['malles_cpu'] += 1
+out['cpu_pesades'].append((short, verts, _visible(shape)))
+total = out['verts_gpu'] + out['verts_cpu']
+if total:
+out['pct_verts_a_gpu'] = round(out['verts_gpu'] / total * 100, 1)
+out['cpu_pesades'] = sorted(out['cpu_pesades'], key=lambda r: -r[1])[:10]
+return out
+12.4. Construcció del cicle d'estrès
+CONTROL_KEYWORDS = [
+'masterwalk', 'global', 'world', 'root', 'cog', 'hip', 'pelvis',
+'spine', 'chest', 'torso', 'neck', 'head', 'jaw',
+'tail', 'wing', 'arm', 'leg', 'foot', 'hand', 'shoulder', 'clavicle',
+]
+KEY_FRAMES = [1, 30, 60, 90, 120]
+ROT_VALUES = [0, 18, -12, 15, 0]
+TRA_VALUES = [0, 12, -8, 10, 0]
+MAX_CONTROLS = 24
+def _controls():
+"""Transforms que tenen una nurbsCurve com a shape."""
+found = []
+for crv in (cmds.ls(type='nurbsCurve', noIntermediate=True, long=True) or []):
+parent = cmds.listRelatives(crv, parent=True, fullPath=True)
+if parent:
+found.append(parent[0])
+return sorted(set(found))
+def build_stress_cycle(verbose=True):
+"""Anima un conjunt representatiu de controls perque el rig s'embruti.
+Sense aixo, avancar el playhead en un rig publicat sense animacio no
+recalcula res i el benchmark mesura nomes el dibuix del viewport.
+"""
+90
+
+=== PAGE 91 ===
+global _TEMP_CURVES
+before = set(cmds.ls(type='animCurve') or [])
+controls = _controls()
+# Un control per paraula clau, per cobrir tota la jerarquia en comptes
+# de concentrar-se en una sola regio anatomica.
+chosen, seen = [], set()
+for keyword in CONTROL_KEYWORDS:
+for ctrl in controls:
+if keyword in ctrl.split('|')[-1].lower() and ctrl not in seen:
+chosen.append(ctrl)
+seen.add(ctrl)
+break
+if len(chosen) >= MAX_CONTROLS:
+break
+for ctrl in controls: # completar si en falten
+if len(chosen) >= MAX_CONTROLS:
+break
+if ctrl not in seen:
+chosen.append(ctrl)
+seen.add(ctrl)
+keyed = []
+for ctrl in chosen:
+for attr, values in (('rotateX', ROT_VALUES), ('rotateZ', ROT_VALUES),
+('translateY', TRA_VALUES)):
+plug = '%s.%s' % (ctrl, attr)
+try:
+if cmds.getAttr(plug, lock=True):
+continue
+if cmds.listConnections(plug, s=True, d=False):
+continue
+base = cmds.getAttr(plug)
+for frame, value in zip(KEY_FRAMES, values):
+cmds.setKeyframe(ctrl, attribute=attr, time=frame,
+value=base + value)
+keyed.append(plug)
+except Exception:
+continue
+_TEMP_CURVES = sorted(set(cmds.ls(type='animCurve') or []) - before)
+if not keyed:
+raise RuntimeError('cap canal animable: revisa la nomenclatura')
+return {'controls': len(chosen), 'canals': len(keyed),
+'corbes': len(_TEMP_CURVES)}
+def save_state():
+"""Guarda mode d'avaluacio, avaluadors i temps actual."""
+global _STATE
+_STATE = {'eval_mode': cmds.evaluationManager(q=True, mode=True)[0],
+'current_time': cmds.currentTime(q=True), 'evaluators': {}}
+for name in cmds.evaluator(q=True):
+try:
+_STATE['evaluators'][name] = bool(
+cmds.evaluator(name=name, q=True, enable=True))
+except Exception:
+pass
+return _STATE
+def restore_state():
+"""Esborra el cicle d'estres i retorna l'escena a l'estat guardat."""
+report = {}
+alive = [c for c in _TEMP_CURVES if cmds.objExists(c)]
+91
+
+=== PAGE 92 ===
+if alive:
+cmds.delete(alive)
+report['corbes_esborrades'] = len(alive)
+for name, was_on in _STATE.get('evaluators', {}).items():
+try:
+if bool(cmds.evaluator(name=name, q=True, enable=True)) != was_on:
+cmds.evaluator(name=name, enable=was_on)
+except Exception:
+pass
+cmds.evaluationManager(mode=_STATE['eval_mode'])
+cmds.currentTime(_STATE['current_time'], edit=True)
+report['recordatori'] = 'NO DESAR L ESCENA'
+return report
+12.5. Eina de neteja d'escena
+def clean_scene(dry_run=True):
+"""Neteja previa a la publicacio del rig.
+Per defecte nomes informa (dry_run=True). Passar dry_run=False nomes
+despres de revisar la llista: esborra nodes de manera irreversible.
+"""
+actions = []
+orphans = []
+for shape in (cmds.ls(type='mesh', intermediateObjects=True, long=True) or []):
+if not cmds.listConnections(shape, source=False, destination=True):
+orphans.append(shape)
+actions.append(('Formes intermedies orfenes', orphans))
+unknown = cmds.ls(type='unknown') or []
+actions.append(('Nodes desconeguts', unknown))
+plugins = cmds.unknownPlugin(query=True, list=True) or []
+actions.append(('Plugins desconeguts', plugins))
+editor_info = cmds.ls(type='nodeGraphEditorInfo') or []
+actions.append(('nodeGraphEditorInfo', editor_info))
+namespaces = [n for n in (cmds.namespaceInfo(listOnlyNamespaces=True,
+recurse=True) or [])
+if n not in ('UI', 'shared')]
+actions.append(('Espais de noms', namespaces))
+for label, items in actions:
+print('{0}: {1}'.format(label, len(items)))
+for item in items[:20]:
+print(' ', item)
+if not dry_run:
+for node in orphans + unknown:
+if cmds.objExists(node):
+cmds.lockNode(node, lock=False)
+cmds.delete(node)
+for plugin in plugins:
+cmds.unknownPlugin(plugin, remove=True)
+return actions
+92
+
+=== PAGE 93 ===
+12.6. Fitxa de l'entorn de proves
+import platform, os
+def environment_report():
+"""Genera la taula d'entorn de 1.4."""
+info = {
+'Maya': cmds.about(installedVersion=True),
+'API': cmds.about(apiVersion=True),
+'Sistema operatiu': '%s %s' % (platform.system(), platform.release()),
+'Processador': platform.processor(),
+'Fils': os.cpu_count(),
+'Mode d avaluacio': cmds.evaluationManager(query=True, mode=True),
+'Escena': cmds.file(query=True, sceneName=True),
+'FPS': cmds.currentUnit(query=True, time=True),
+}
+try:
+info['GPU'] = [l.strip() for l in cmds.ogs(query=True, deviceInformation=True)
+if 'Adapter' in l or 'GPU Memory' in l]
+except Exception:
+info['GPU'] = 'n/a'
+for key, value in info.items():
+print('{0:22} {1}'.format(key, value))
+return info
+93
+
+=== PAGE 94 ===
+12.7. Participació en treballs finals de grau grupals i
+desenvolupament de gcElmoToolKit
+Aquest apartat recull la meva participació en tres treballs finals de grau grupals
+desenvolupats durant la carrera: Here be Dragons, O'Paraiso i Sprouts. En aquests
+projectes vaig assumir principalment tasques de rigging i CFX, desenvolupament d'eines
+i supervisió tècnica. Paral·lelament, vaig desenvolupar gcElmoToolKit, un conjunt
+d'eines per a Autodesk Maya que inclou un sistema propi d'autorig i utilitats orientades
+a reduir el cost tècnic de les iteracions. El codi font de gcElmoToolKit es pot consultar
+al repositori referenciat a la bibliografia.
+El sistema es va desenvolupar a partir de necessitats reals detectades durant els tres
+projectes. En lloc de crear una eina limitada a un únic personatge, es va plantejar una
+arquitectura modular que permetés reutilitzar sistemes corporals i facials, però
+mantenint separades les dades particulars de cada asset.
+Projecte Personatges Responsabilitats principals
+Autorig, rigging, skinning, deformació muscular,
+Here be Varyndor, Azhurean,
+CFX, pipeline USD, supervisió tècnica i gestió
+Dragons Aychedral i Maiasaura
+de renderització.
+Rigging corporal i facial, skinning,
+Marcelo, Marcelo Hero
+O'Paraiso deformacions, adaptació de l'autorig a bípedes
+i Ze
+i seguiment dels personatges.
+Sistemes facials sobre mGear, revisió de
+Sprouts Oto i Baby skinning, suport als animadors, integració
+d'actualitzacions i manteniment tècnic.
+Construcció modular, gestió d'assets,
+Desenvolupam persistència de guies, controladors, settings i
+gcElmoToolKit
+ent transversal dades de skinning, eines USD i preparació
+d'AdonisFX.
+Taula 63. Síntesi de les aportacions als TFG grupals
+12.7.1. Here be Dragons
+A Here be Dragons vaig desenvolupar la primera versió funcional del sistema d'autorig.
+El sistema estava format per un conjunt de mòduls de rigging reutilitzables i permetia
+reconstruir un rig des de zero a partir d'un model, una configuració de guies i diferents
+fitxers amb les dades específiques del personatge.
+Aquest procés permetia recuperar la posició de les guies, les formes dels controladors,
+els atributs personalitzats i les dades de skinning. D'aquesta manera, era possible
+incorporar noves versions dels models sense haver de repetir manualment tot el procés
+de rigging, skinning i deformació.
+Vaig aplicar aquest sistema als personatges Varyndor, Azhurean i Aychedral. En els
+casos de Varyndor i Azhurean, em vaig encarregar de la construcció dels sistemes de
+rigging, del skinning i de les deformacions de CFX basades en simulacions musculars.
+En el cas d'Aychedral, vaig desenvolupar el sistema de rigging i vaig supervisar el
+94
+
+=== PAGE 95 ===
+treball de skinning, deformació i simulació muscular. També vaig desenvolupar el
+sistema de rigging i el skinning del Maiasaura.
+El sistema d'autorig va facilitar la realització d'iteracions ràpides. Quan es rebia una nova
+versió d'un model, es podia reconstruir el rig utilitzant els mateixos mòduls i recuperar
+posteriorment les configuracions de la versió anterior. Això permetia reutilitzar guies,
+controladors, atributs i deformadors sense perdre la feina feta, alhora que reduïa els
+errors associats a una reconstrucció manual.
+El repositori conserva configuracions específiques per a Varyndor, Azhurean,
+Aychedral i Maiasaura. Cada asset disposa d'una estructura pròpia formada per
+carpetes de models, guies, controladors i skinning. Aquesta separació permet que els
+mòduls de construcció siguin compartits, mentre que les dades artístiques i tècniques
+continuen sent específiques de cada personatge.
+En el cas de Varyndor, la configuració registrada inclou mòduls de columna, coll, cua,
+extremitats davanteres i posteriors, falanges, dits, membranes, parpelles i mandíbula.
+Això exemplifica la intenció del sistema: combinar mòduls independents per construir un
+personatge complex sense concentrar tota la lògica en un únic script.
+Figura 26. Aplicació del sistema d'autorig als personatges Varyndor, Azhurean, Aychedral i Maiasaura de Here be
+Dragons, amb els controladors visibles.
+A més de les tasques relacionades amb els personatges, també em vaig encarregar del
+desenvolupament i la supervisió del pipeline USD entre Maya i Houdini. L'eina
+d'exportació principal va ser desenvolupada per Karol Ch. Mori sota la meva supervisió
+tècnica, amb l'objectiu d'adaptar-ne el funcionament a les necessitats de la producció.
+El toolkit incorpora una interfície d'exportació USD que permet llegir la seqüència i el pla
+a partir del nom de l'escena, determinar el rang de fotogrames, separar l'exportació de
+personatges i càmeres i generar carpetes versionades. Per als personatges, l'eina
+identifica els elements mitjançant display layers, elimina els namespaces durant
+95
+
+=== PAGE 96 ===
+l'exportació i genera fitxers USD diferenciats. En el cas de les càmeres, crea una còpia
+temporal, forneja l'animació, exporta el resultat i elimina els elements auxiliars.
+Figura 27. Interfície de l'eina d'exportació USD emprada per transferir animacions de Maya a Houdini, amb selecció del
+rang, la càmera i els elements exportats.
+També vaig participar en la supervisió general del projecte, especialment en els
+aspectes relacionats amb el modelatge, la retopologia, la preparació dels personatges i
+els ajustos finals. L'objectiu era mantenir la coherència tècnica entre departaments i
+assegurar que els assets fossin compatibles amb els processos posteriors de rigging,
+animació, CFX i renderització.
+Finalment, vaig gestionar diferents aspectes de la granja de renderització, com
+l'enviament i seguiment dels renders, l'aprofitament dels recursos disponibles,
+l'optimització dels temps de renderització i l'organització general del projecte i del
+pipeline.
+12.7.2. O'Paraiso
+A O'Paraiso vaig treballar principalment en els personatges Marcelo, Marcelo Hero i
+Ze. El desenvolupament de Ze es va realitzar en col·laboració amb Marc Tragant. En
+aquest personatge vaig crear els sistemes de rigging corporal i facial, mentre que Marc
+Tragant es va encarregar del skinning i de les deformacions.
+En el cas de Marcelo, vaig assumir el procés complet de preparació del personatge.
+Vaig desenvolupar els sistemes de rigging corporal i facial, el skinning i les
+deformacions. Durant el disseny vaig intentar mantenir una estructura modular i tan
+optimitzada com fos possible.
+Una part important de l'estudi d'optimització desenvolupat en aquest TFG individual es
+basa en Marcelo i Varyndor, ja que van ser els dos personatges en què vaig disposar
+de més llibertat per dissenyar i implementar els sistemes de rigging.
+Marcelo necessitava un sistema facial més complet que la resta de personatges. Per
+aquest motiu, es va desenvolupar una combinació de controladors, joints, corbes i
+deformacions específiques que permetia obtenir un ventall ampli d'expressions. També
+es va realitzar el skinning de la roba per obtenir un primer passe de les deformacions
+abans de la fase de CFX.
+Durant el desenvolupament es van rebre diverses actualitzacions del model. Com que
+el sistema d'autorig ja havia estat desenvolupat per a Here be Dragons, es va adaptar
+96
+
+=== PAGE 97 ===
+la seva estructura, concebuda inicialment per a quadrúpedes, a les necessitats d'un
+personatge bípede.
+El repositori reflecteix aquesta adaptació mitjançant la coexistència de mòduls
+diferenciats per a anatomies bípedes i quadrúpedes. Conté versions específiques dels
+sistemes de columna i coll per a cada tipus d'anatomia, a més de mòduls genèrics
+d'extremitats que poden construir braços, cames i diferents variants de potes.
+Marcelo Hero era una variació del personatge principal i conservava la major part de
+les característiques tècniques de Marcelo. Com que portava un vestit complet i una
+màscara, no es va considerar necessari implementar el mateix sistema facial. Les
+modificacions visibles s'havien de resoldre principalment mitjançant blend shapes, per
+exemple per canviar la posició o la forma dels ulls i d'altres elements visibles a través
+de la màscara.
+El repositori conté configuracions separades per a Marcelo, Marcelo Hero i Ze. Tot i
+que comparteixen una part de l'arquitectura, cadascun conserva els seus fitxers de
+model, guies, controladors, skinning i atributs específics.
+Figura 28. Rigs corporals de Marcelo i Marcelo Hero a O'Paraiso, mostrats en pose neutra amb els controladors
+visibles.
+12.7.3. Sprouts
+A Sprouts vaig treballar en els personatges Oto i Baby. En tots dos casos, el rig corporal
+es va construir amb mGear i el passe de skinning va ser realitzat per Martina Pou.
+Posteriorment, vaig revisar el resultat, vaig proporcionar feedback sobre les
+deformacions i vaig fer el seguiment tècnic necessari per comprovar que el cos fos
+compatible amb la resta del rig.
+Sobre la base generada amb mGear, vaig desenvolupar un sistema facial específic per
+a cada personatge. Aquest sistema combinava joints i blend shapes i es va dissenyar
+a partir de les necessitats expressades pels animadors del projecte.
+97
+
+=== PAGE 98 ===
+Com que Sprouts disposava d'un equip d'animació ampli, es va intentar que els controls
+fossin accessibles, previsibles i compatibles amb diferents maneres de treballar. Em
+vaig encarregar del desenvolupament complet del sistema facial i en vaig fer el
+seguiment durant tota la producció per corregir errors i adaptar els controls quan es
+detectaven noves necessitats.
+El sistema facial incloïa mòduls per a la mandíbula i els llavis, les parpelles, les celles,
+els ulls, el nas, les galtes i els pòmuls. La combinació d'aquests mòduls permetia
+construir una base comuna i ajustar posteriorment la resposta de cada zona a les
+proporcions i expressions dels personatges.
+El mòdul de mandíbula genera els controladors principals, els joints de deformació i els
+sistemes necessaris per distribuir el moviment dels llavis. També incorpora paràmetres
+que regulen el seguiment horitzontal i vertical, la influència de cada mandíbula sobre els
+llavis i la resposta del gest de protrusió.
+Aquests valors no són iguals per a tots els personatges. Els fitxers del repositori mostren
+configuracions diferents per a Marcelo, Oto i Baby en els atributs de seguiment dels
+llavis i en el pes de les mandíbules. Aquesta separació permet conservar el caràcter
+particular de cada boca sense crear una versió diferent del mòdul per a cada personatge.
+El sistema de parpelles utilitza corbes, blend shapes, matrius i joints per generar el
+parpelleig i distribuir-ne la deformació. Els mòduls de celles, galtes i nas parteixen del
+mateix principi: una base reutilitzable controlada mitjançant dades pròpies de cada
+asset.
+El sistema d'autorig també va tenir un paper important en la integració amb mGear. El
+rig corporal i el sistema facial es desenvolupaven de manera paral·lela, de manera que
+les actualitzacions del cos podien afectar el treball facial ja completat.
+Cada vegada que Martina Pou generava una nova versió del cos o del skinning, el
+sistema permetia reconstruir el personatge i recuperar els sistemes facials, els
+controladors i les dades específiques. Això va reduir el temps necessari per integrar les
+actualitzacions i va evitar haver de reconstruir manualment el rig facial després de cada
+canvi.
+El constructor identifica específicament els assets Oto i Baby i adapta la jerarquia del
+rig a l'estructura procedent de mGear. Això permet integrar els mòduls facials propis
+sobre una base corporal externa sense substituir el sistema utilitzat per l'equip.
+98
+
+=== PAGE 99 ===
+Figura 29. Rigs d'Oto i Baby a Sprouts: vistes generals del cos i detalls dels sistemes de control facial.
+12.7.4. Desenvolupament de gcElmoToolKit
+Tot i que gcElmoToolKit no estava vinculat exclusivament a un únic TFG, el seu
+desenvolupament va sorgir de la necessitat de completar els tres projectes de manera
+eficient i mantenir els rigs actualitzats durant les iteracions de producció.
+La versió analitzada del repositori conté 49 fitxers Python, dels quals 23 formen part
+directa de l'autorig. En conjunt, el codi supera les 21.000 línies i inclou el constructor
+principal, els mòduls corporals i facials, les utilitats de persistència, les interfícies i
+diverses eines complementàries de producció.
+L'objectiu no era desenvolupar un autorig completament automàtic que prengués totes
+les decisions artístiques, sinó establir una solució intermèdia entre el rigging manual i
+l'automatització total. El rigger continuava definint les guies, les proporcions, les formes
+dels controladors i els atributs específics, mentre que el sistema automatitzava la
+construcció repetitiva i la recuperació de dades.
+99
+
+=== PAGE 100 ===
+Figura 30. Arquitectura funcional de gcElmoToolKit i separació entre la lògica compartida i les dades de cada asset.
+Gestió i versionament dels assets
+El projecte incorpora un Asset Manager que permet crear, carregar i organitzar els
+assets. En crear un personatge nou, l'eina genera una estructura formada per les
+carpetes de models, guies, controladors i skinning, a més d'un fitxer de configuració amb
+les rutes corresponents.
+Les rutes poden ser relatives al repositori o apuntar a directoris externs. Quan es carrega
+un asset, el gestor busca automàticament la versió més alta de cada tipus de fitxer. Això
+permet utilitzar el model, les guies, els controladors i el skinning més recents sense
+substituir manualment totes les rutes.
+La configuració activa es conserva mitjançant el DataManager, que centralitza el nom
+de l'asset i les rutes necessàries per a la construcció. Un build cache registra les sortides
+creades pels diferents mòduls perquè els sistemes construïts posteriorment puguin
+localitzar-ne les dependències.
+Sistema de guies i construcció modular
+La posició i l'orientació de les guies es desa en fitxers estructurats. Cada guia registra
+la seva transformació, l'element pare, el tipus de mòdul que ha de construir i paràmetres
+opcionals, com el nombre de joints de torsió o de controladors.
+El sistema també pot emmagatzemar guies basades en corbes i superfícies NURBS. En
+aquests casos es registren els CV, el grau, els knots i la forma. Aquesta funcionalitat és
+necessària per a mòduls com les membranes, els llavis o les celles, que no es poden
+definir únicament amb una cadena de transforms.
+Durant la construcció, el rig_builder llegeix aquestes dades i selecciona el mòdul
+corresponent. Primer crea els sistemes corporals principals. A continuació construeix els
+100
+
+=== PAGE 101 ===
+elements que depenen dels anteriors, com els dits, les membranes, les punxes i els
+sistemes facials. Finalment, genera la jerarquia de l'esquelet, importa el skinning i
+recupera els atributs específics del personatge.
+Figura 31. Flux de reconstrucció d'un asset amb gcElmoToolKit a partir de dades versionades.
+Mòduls corporals i facials
+Els mòduls d'extremitats construeixen sistemes FK i IK, controladors de pole vector,
+joints de skinning, comportaments d'estirament i paràmetres de torsió. La mateixa base
+es pot especialitzar per crear un braç, una cama o les extremitats d'un quadrúpede.
+Una part important d'aquests sistemes es basa en nodes matricials de Maya, com
+multMatrix, blendMatrix, parentMatrix, aimMatrix i offsetParentMatrix. Aquesta
+arquitectura permet calcular relacions espacials i offsets sense dependre exclusivament
+de constraints tradicionals. L'objectiu era obtenir xarxes de dependències més
+explícites, reutilitzables i adequades per a l'avaluació en paral·lel.
+Els mòduls de columna i coll disposen de versions específiques per a bípedes i
+quadrúpedes. El mòdul de cua genera una cadena controlable a partir de les guies. Els
+sistemes de dits i falanges permeten construir cadenes individuals i connectar-les amb
+controls generals de curvatura.
+El mòdul de membrana va ser desenvolupat per a estructures com les ales de Varyndor.
+Utilitza superfícies NURBS, joints i sistemes de skinning per distribuir la deformació entre
+les falanges. El mòdul de punxes permet afegir cadenes secundàries dependents de
+l'estructura principal.
+101
+
+=== PAGE 102 ===
+Àrea Mòduls Intenció principal
+Construir sistemes FK i IK, pole vectors,
+Braç, cama, pota davantera,
+Extremitats stretch, torsió i joints de skinning per a
+pota posterior, falanges i dits
+bípedes i quadrúpedes.
+Columna bípeda i Adaptar una metodologia comuna a
+Eix corporal quadrúpeda, coll bípede i anatomies diferents i generar cadenes
+quadrúpede i cua distribuïdes i controlables.
+Connectar elements dependents de les
+Sistemes
+Membranes i punxes extremitats i distribuir-ne la deformació
+secundaris
+mitjançant superfícies i joints.
+Crear una base facial modular amb
+Mandíbula, llavis, ulls,
+controladors, corbes, blend shapes,
+Cara parpelles, celles, nas, galtes,
+matrius i joints adaptables a cada
+pòmuls i llengua
+personatge.
+Gestió d'assets, controladors, Conservar dades, reconstruir assets i
+Pipeline skinning, blend shapes, USD i connectar el rigging amb la resta de la
+AdonisFX producció.
+Taula 64. Mòduls principals identificats a gcElmoToolKit
+El sistema facial inclou mòduls per a la mandíbula i els llavis, els ulls, les parpelles, les
+celles, el nas, les galtes, els pòmuls i la llengua. Aquests mòduls comparteixen una
+estructura comuna, però les formes, proporcions i configuracions finals es conserven als
+fitxers particulars de cada personatge.
+Persistència del skinning i dels deformadors
+Una de les funcionalitats principals del toolkit és l'exportació i importació del skinning. El
+gestor utilitza l'API de Maya per obtenir les influències, els atributs i els pesos de cada
+skinCluster.
+Els pesos es desen de manera dispersa. En lloc d'emmagatzemar tots els valors de tots
+els vèrtexs, el fitxer conserva únicament els índexs amb una influència superior a una
+tolerància determinada. Això redueix la quantitat de dades necessàries i evita registrar
+milers de valors nuls.
+El sistema és compatible amb malles, corbes i superfícies NURBS. També permet
+tractar més d'un skinCluster sobre una mateixa geometria, conservar atributs com el
+mètode de skinning, la normalització i el nombre màxim d'influències, i recuperar els
+blend weights utilitzats en Dual Quaternion.
+Durant la importació, l'eina comprova que el nombre de components de la geometria
+coincideixi amb el registrat. Si la topologia ha canviat, atura la transferència per evitar
+pesos incorrectes. També comprova l'existència de les influències i identifica la shape
+exacta generada per cada skinCluster.
+Quan una geometria disposa de diversos skinCluster, el gestor reconstrueix l'ordre en
+què han de ser avaluats dins de l'stack de deformadors. Aquesta funcionalitat va ser
+102
+
+=== PAGE 103 ===
+especialment rellevant en assets amb capes de deformació independents, com la
+membrana de Varyndor.
+El repositori incorpora un gestor de blend shapes que pot extreure els deltes dels
+targets connectats a geometries externes i dels targets emmagatzemats internament.
+També conserva els in-betweens, els índexs i els valors dels targets. Els deltes es desen
+de manera dispersa, registrant només els vèrtexs modificats.
+La versió pública consultada mostra de manera explícita la persistència de skinCluster
+i blend shapes. L'arquitectura general es va plantejar perquè es poguessin incorporar
+altres deformadors, com deltaMush i sistemes basats en mapes de tensió. Perquè la
+compatibilitat completa amb aquests elements sigui verificable des del repositori, encara
+caldria publicar-ne els gestors específics d'exportació i reconstrucció.
+Controladors i atributs específics
+El toolkit permet exportar les formes dels controladors a fitxers JSON. Per a cada corba
+es conserven la posició dels CV, el grau, els knots, el tipus de forma, el color, el gruix
+de línia i l'opció de dibuixar-la per sobre de la geometria.
+A partir d'aquestes dades es poden reconstruir els controladors després de tornar a
+generar el rig. Això permet mantenir les decisions visuals aplicades manualment pel
+rigger i evita que totes les iteracions recuperin una forma genèrica.
+El sistema també desa els atributs configurables dels mòduls. Durant l'exportació
+localitza els transforms de settings i registra els atributs editables. Durant la importació
+comprova que el transform i l'atribut continuïn existint i evita sobreescriure canals
+bloquejats o amb connexions d'entrada.
+Aquesta funcionalitat permet conservar diferències com els valors de curvatura dels dits,
+la distribució del seguiment dels llavis o la influència de la mandíbula superior i inferior.
+Els fitxers de Marcelo, Oto i Baby contenen valors diferents per al comportament de la
+boca, tot i que utilitzen el mateix mòdul base.
+Eines complementàries i resultat
+A més del constructor de rigs, el repositori inclou un Asset Manager, una interfície
+integrada al menú de Maya, una biblioteca de controladors, eines per reflectir o substituir
+shapes, transferència de múltiples skinCluster, gestió de blend shapes, creació de
+rivets, exportació USD, eines i utilitats de preparació d'AdonisFX.
+L'eina d'AdonisFX permet definir relacions entre joints i sensors de rotació o distància.
+Aquestes relacions es poden generar des d'una interfície tabulada i organitzar dins de
+la jerarquia de sistemes musculars del personatge.
+La separació entre mòduls reutilitzables i dades específiques va permetre generar
+primeres versions amb rapidesa, aplicar el feedback dels equips i reconstruir els
+sistemes després d'una actualització. Aquesta metodologia va resultar especialment útil
+a Sprouts, però també es va aplicar a Here be Dragons i O'Paraiso.
+El toolkit no elimina la intervenció del rigger. Les decisions relacionades amb les
+proporcions, la col·locació de les guies, la forma dels controladors, el skinning i la
+resposta de les deformacions continuen requerint una revisió artística i tècnica. L'eina
+automatitza principalment la reconstrucció, la connexió dels sistemes i la recuperació de
+dades.
+103
+
+=== PAGE 104 ===
+104

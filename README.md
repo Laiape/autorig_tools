@@ -27,7 +27,7 @@ to load the **AutoRig Tools** menu and **AutoRig** shelf.
 
 Character assets, guides, curves, build settings, skins and picker installers
 are included. Large Maya scenes and skin files use Git LFS. The current Edward
-working rig is `maya_tools/assets/Edward/scenes/Edward_working_v001.mb`.
+working rig is `maya_tools/assets/Edward/scenes/Edward_working_v005.mb`.
 Open it through `scripts/open_edward.py` inside Maya to resolve this clone's
 textures automatically (see the setup guide).
 

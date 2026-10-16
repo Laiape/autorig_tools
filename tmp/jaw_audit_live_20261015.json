@@ -1,0 +1,232 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "evaluation_mode": [
+      "parallel",
+      "Evaluation graph is ready."
+    ],
+    "groups": {
+      "C_jawModule_GRP": {
+        "nodes": 55,
+        "types": {
+          "nurbsCurve": 10,
+          "transform": 11,
+          "locator": 1,
+          "joint": 28,
+          "nurbsSurface": 5
+        }
+      },
+      "C_jawSkinning_GRP": {
+        "nodes": 103,
+        "types": {
+          "joint": 102,
+          "transform": 1
+        }
+      },
+      "C_jawControllers_GRP": {
+        "nodes": 99,
+        "types": {
+          "nurbsCurve": 24,
+          "transform": 75
+        }
+      },
+      "C_lipsSkinning_GRP": {
+        "nodes": 100,
+        "types": {
+          "joint": 100
+        }
+      }
+    },
+    "jaw_upstream": {
+      "outputs": 100,
+      "nodes": 2063,
+      "types": {
+        "multiply": 170,
+        "plusMinusAverage": 56,
+        "multMatrix": 118,
+        "blendColors": 50,
+        "composeMatrix": 100,
+        "multiplyDivide": 192,
+        "distanceBetween": 50,
+        "condition": 150,
+        "fourByFourMatrix": 2,
+        "blendWeighted": 46,
+        "translationFromMatrix": 108,
+        "blendMatrix": 74,
+        "remapValue": 67,
+        "sum": 213,
+        "pickMatrix": 50,
+        "vectorProduct": 372,
+        "subtract": 50,
+        "aimMatrix": 50,
+        "unitConversion": 52,
+        "divide": 27,
+        "wtAddMatrix": 27,
+        "clamp": 28,
+        "parentMatrix": 2,
+        "motionPath": 2,
+        "uvPin": 4,
+        "reverse": 3
+      }
+    },
+    "deformers": {
+      "cabeza_low": [
+        {
+          "node": "C_sockets_local_SKC",
+          "type": "skinCluster",
+          "envelope": 1.0
+        },
+        {
+          "node": "C_nose_local_SKC",
+          "type": "skinCluster",
+          "envelope": 1.0
+        },
+        {
+          "node": "C_cheeks_local_SKC",
+          "type": "skinCluster",
+          "envelope": 1.0
+        },
+        {
+          "node": "cabeza_low_poseCorrectives_BLS",
+          "type": "blendShape",
+          "envelope": 1.0
+        },
+        {
+          "node": "skinCluster41",
+          "type": "skinCluster",
+          "envelope": 1.0
+        }
+      ],
+      "cabeza_high": []
+    },
+    "node_types": {
+      "time": 1,
+      "sequenceManager": 1,
+      "hardwareRenderingGlobals": 1,
+      "partition": 2,
+      "renderGlobalsList": 1,
+      "defaultLightList": 1,
+      "defaultShaderList": 1,
+      "postProcessList": 1,
+      "defaultRenderUtilityList": 1,
+      "defaultRenderingList": 1,
+      "lightList": 1,
+      "defaultTextureList": 1,
+      "lambert": 4,
+      "standardSurface": 1,
+      "openPBRSurface": 1,
+      "particleCloud": 1,
+      "shadingEngine": 15,
+      "materialInfo": 14,
+      "shaderGlow": 1,
+      "dof": 1,
+      "renderGlobals": 1,
+      "renderQuality": 1,
+      "resolution": 1,
+      "objectSet": 2,
+      "viewColorManager": 1,
+      "colorManagementGlobals": 1,
+      "hardwareRenderGlobals": 1,
+      "hwRenderGlobals": 1,
+      "ikSystem": 1,
+      "hyperGraphInfo": 1,
+      "hyperLayout": 1,
+      "globalCacheControl": 1,
+      "strokeGlobals": 1,
+      "dynController": 1,
+      "transform": 1135,
+      "camera": 4,
+      "mesh": 118,
+      "xgmSplineDescription": 4,
+      "lightLinker": 1,
+      "shapeEditorManager": 1,
+      "poseInterpolatorManager": 1,
+      "displayLayerManager": 1,
+      "displayLayer": 1,
+      "renderLayerManager": 1,
+      "renderLayer": 1,
+      "script": 6,
+      "aiStandardSurface": 9,
+      "file": 32,
+      "place2dTexture": 32,
+      "bump2d": 7,
+      "aiOptions": 1,
+      "aiAOVFilter": 1,
+      "aiAOVDriver": 2,
+      "aiImagerDenoiserOidn": 1,
+      "xgmSplineBase": 4,
+      "groupId": 4,
+      "animCurveTL": 5451,
+      "aiStandardHair": 1,
+      "nodeGraphEditorInfo": 2,
+      "nurbsCurve": 547,
+      "condition": 263,
+      "plusMinusAverage": 89,
+      "reverse": 49,
+      "joint": 852,
+      "fourByFourMatrix": 517,
+      "rowFromMatrix": 373,
+      "normalize": 6,
+      "length": 7,
+      "multiply": 889,
+      "blendMatrix": 170,
+      "multMatrix": 1360,
+      "composeMatrix": 172,
+      "parentMatrix": 202,
+      "ikEffector": 10,
+      "ikSCsolver": 1,
+      "ikRPsolver": 1,
+      "ikSplineSolver": 1,
+      "hikSolver": 1,
+      "ikHandle": 10,
+      "pickMatrix": 265,
+      "inverseMatrix": 60,
+      "curveInfo": 2,
+      "floatConstant": 58,
+      "divide": 148,
+      "clamp": 66,
+      "blendTwoAttr": 126,
+      "nearestPointOnCurve": 1,
+      "remapValue": 108,
+      "subtract": 186,
+      "sum": 391,
+      "network": 17,
+      "distanceBetween": 70,
+      "unitConversion": 325,
+      "poleVectorConstraint": 4,
+      "aimMatrix": 251,
+      "power": 184,
+      "negate": 8,
+      "min": 2,
+      "decomposeMatrix": 12,
+      "quatNormalize": 8,
+      "wtAddMatrix": 351,
+      "orientConstraint": 2,
+      "animCurveUA": 146,
+      "blendWeighted": 96,
+      "max": 85,
+      "multiplyDivide": 294,
+      "nurbsSurface": 8,
+      "locator": 1,
+      "motionPath": 106,
+      "closestPointOnSurface": 36,
+      "translationFromMatrix": 126,
+      "skinCluster": 58,
+      "dagPose": 17,
+      "vectorProduct": 408,
+      "uvPin": 4,
+      "blendColors": 54,
+      "blendShape": 9,
+      "rotationFromMatrix": 10,
+      "pairBlend": 2,
+      "proximityWrap": 23,
+      "poseInterpolator": 1,
+      "animCurveUU": 8,
+      "bifrostGraphShape": 1,
+      "bifrostGeoToMaya": 1,
+      "transformGeometry": 1
+    },
+    "dgtimer_help": "\n\nSynopsis: dgtimer [flags]\nFlags:\n   -q -query\n  -ct -combineType   \n   -h -hierarchy     \n  -hi -hide           String (multi-use)\n   -m -maxDisplay     Int\n   -n -name           String\n  -nh -noHeader      \n   -o -outputFile     String (Query Arg Mandatory)\n -off -timerOff      \n  -oh -overhead       on|off\n  -on -timerOn       \n   -r -reset         \n  -rc -returnCode     String\n -rgl -rangeLower     Float\n -rgu -rangeUpper     Float\n  -rt -returnType     String\n  -sh -show           String (multi-use)\n  -sm -sortMetric     String\n  -st -sortType       String\n   -t -type           String\n  -th -threshold      Float\n  -tr -trace          on|off\n -uhm -updateHeatMap  Int\n  -un -uniqueName    \n\n\nCommand Type: Command\n"
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "mesh": "cabeza_high",
+    "skin": "C_mouth_local_SKC",
+    "changed_vertices": 898,
+    "inner_core_vertices": 257,
+    "jaw_weight_before_mean": 0.1820516035634744,
+    "jaw_weight_after_mean": 0.10744833414408696,
+    "maximum_weight_change": 0.28512940052529295,
+    "edit_bounds": [
+      [
+        -4.1053972244262695,
+        187.0141143798828,
+        8.740445137023926
+      ],
+      [
+        4.106483459472656,
+        191.54556274414062,
+        12.079678535461426
+      ]
+    ],
+    "unchanged_outside": true
+  },
+  {
+    "mesh": "cabeza_low",
+    "skin": "skinCluster41",
+    "changed_vertices": 220,
+    "inner_core_vertices": 62,
+    "jaw_weight_before_mean": 0.12292117903930132,
+    "jaw_weight_after_mean": 0.08094971514893905,
+    "maximum_weight_change": 0.25992855151052513,
+    "edit_bounds": [
+      [
+        -3.9830639362335205,
+        187.02027893066406,
+        8.742631912231445
+      ],
+      [
+        3.9834563732147217,
+        191.54556274414062,
+        12.079678535461426
+      ]
+    ],
+    "unchanged_outside": true
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "result": [
+    {
+      "skin": "C_mouth_local_SKC",
+      "weight_diff_backup": 0.0,
+      "sum_min": 0.99992,
+      "sum_max": 1.0000300000000002,
+      "support": 27,
+      "rest_before_diff": 0.0,
+      "blend_backup_minmax": [
+        0.0,
+        0.0
+      ],
+      "same_weight_write_rest_change": NaN
+    },
+    {
+      "skin": "skinCluster41",
+      "weight_diff_backup": 0.0,
+      "sum_min": 0.9999199999999999,
+      "sum_max": 1.00003,
+      "support": 33,
+      "rest_before_diff": 0.0,
+      "blend_backup_minmax": [
+        0.0,
+        0.0
+      ],
+      "same_weight_write_rest_change": 171.4546275221445
+    }
+  ]
+}

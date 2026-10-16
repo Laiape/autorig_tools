@@ -4,6 +4,62 @@ Parent: `how_it_works.md`.
 Vision (required): `modulos/vision/how_it_works.md`.
 UI: `maya_tools/criterios-ui.md`.
 
+Performance requirements and the phased Autorig/Edward optimization plan:
+`maya_tools/docs/rig_performance_plan.md`. Persistent measurement, graph and
+wrinkle/detail rules live in `.cursor/rules/rig-performance-measurement.mdc`,
+`.cursor/rules/rig-evaluation-architecture.mdc` and
+`.cursor/rules/rig-wrinkles-and-detail.mdc`. This policy does not implement
+runtime optimizations; planned changes require measured acceptance.
+
+Current exact Edward delivery and complete 47-piece clothing/accessory audit:
+`maya_tools/docs/rig_exact_optimization_results_20261015.md`. The active runtime
+is the nested `autorig_tools/` checkout. Its new native `Edward_working_v004.mb`
+is a validated saved-copy cleanup; the artist scene and source models remain.
+Normal CREATE RIG now includes initial-bind/static-data optimization; current
+behavior and full-build evidence: `maya_tools/docs/rig_exact_build_integration_20261015.md`.
+Edward belt shared/per-mesh blendshape prototypes, held-out/scale rejection and
+isolated DG timings are documented in the active checkout:
+`autorig_tools/maya_tools/docs/rig_belt_blendshape_trial_20261016.md`.
+The all-23-PRX comparison extension is in
+`autorig_tools/maya_tools/docs/rig_all_prx_bakes_20261016.md`.
+The requested 23-garment DQ export in active Edward v072 is documented in
+`autorig_tools/maya_tools/docs/rig_prx_dq_export_20261016.md`.
+
+The 2026-10-15 Edward audit is stored under
+`assets/Edward/experiments/driver_routing_20261015_v001/` and
+`assets/Edward/experiments/full_audit_20261015_v001/`. The outer workspace's
+`scripts/edward_driver_routing_trial.py`, `edward_rig_audit.py` and
+`edward_final_audit.py` run versioned snapshot experiments through
+`scripts/maya_trial_client.py`; `finish_edward_full_audit.py` serializes them.
+`summarize_edward_audit.py` attributes inclusive native CPU events without
+calling them wall time. `build_edward_audit_report.py` and
+`build_edward_audit_canvas.py` generate the Spanish PDF and managed canvas.
+`refine_edward_module_ownership.py` includes native SDK curves in exclusive
+module ownership. `edward_module_storage_worker.py`,
+`edward_model_storage_worker.py` and `inspect_edward_scalp_payload.py` measure
+supplementary native payloads in disposable processes. Final geometry and
+cache invalidation checks are in `edward_quality_resolution.py`;
+`restore_edward_artist_state.py` restores original routes, frame and selection.
+The delivered PDF is `output/pdf/edward-rig-audit.pdf` in the outer workspace.
+GPU without cache differs from Parallel CPU in the two collars. Normal hot
+Cached Playback matches CPU in the tested jumps and edits, with wrinkles both
+off and on; this does not certify every shot or control. The attempted collar
+GPU block did not establish a verified node partition or fix the discrepancy.
+Native strict payload exports are not independent functional rigs or RAM
+measurements. Prototype body routing changes the artistic result relative to
+the original and is validated against the Direct prototype, not implicitly
+approved for production. Mass-freezing the jaw stalled a diagnostic and is not
+used as evidence of a module's runtime cost. No production rig modules are
+changed by these experiment scripts. The original artist `.ma` is preserved.
+
+Current engineering criteria and improvement order are in
+`maya_tools/docs/rig_performance_criteria.md` and
+`maya_tools/docs/rig_optimization_roadmap_20261015.md`; reusable skills are under
+`.agents/skills/`. The active Maya runtime is the nested `autorig_tools/` checkout,
+where `utils/scene_evaluation.py`, CREATE RIG and startup now apply the conservative
+Parallel CPU/cache-OFF profile to newly built and marked reopened rigs. The older
+outer runtime files were not overwritten. No source model was bulk re-saved.
+
 ## 1. Overview
 
 Maya module named `self_module`. Load via `maya_tools/self_module.mod`.
@@ -53,6 +109,17 @@ maya_tools/
 |-- assets/
 |-- cache/               biped.cache during build
 ```
+
+Character folders and character-specific filenames use an initial capital
+(Anne, Chihuahua, Edward, Freya, Giraffe, Horse, Jamal, Maui, Mechanic,
+Moana, Nini, Source, Spot, Thaiz). Technical subfolders keep their existing
+names. Guide document keys, curve DAG roots, picker metadata, portable picker
+payloads and source paths use the same character identity.
+`maya_tools/scripts/utils/asset_names.py` normalizes new assets and names read
+from existing Maya preferences. The asset tree retains current inputs and
+explicitly referenced historical inputs; superseded versions, duplicate picker
+exports and regenerable caches are archived outside assets under `recovery/`.
+Validation: `maya_tools/scripts/tools/tests/test_asset_dependencies.py`.
 
 ## 3. Menu vs tools
 
@@ -290,8 +357,15 @@ Preset provenance persists in the scene and `.skc` wrinkle snapshots.
 Backend: `maya_tools/scripts/tools/wrinkle_presets.py`; UI: `maya_tools/scripts/ui/wrinkle_regions_UI.py`.
 Tests: `maya_tools/scripts/tools/tests/test_wrinkle_presets.py` in Maya 2024/2026, plus Qt and existing
 `maya_tools/scripts/tools/tests/test_wrinkle_skin_roundtrip.py` regression validation in Maya 2026.
-Edward's portable preset is `maya_tools/assets/Edward/wrinkles/Edward_v001.wrinkles.json`.
-It retains 26 local controls, including lip-corner depth 7.4. Five expression
+Edward's current portable preset is `maya_tools/assets/Edward/wrinkles/Edward_v002.wrinkles.json`.
+It keeps four expressions: inward brows and raised brows in Forehead, lowered
+brows on the upper nose in Nose, and smile in Cheeks. Eyes and Chin fields are
+zeroed, their local masks removed, and seven unused controller attribute pairs
+removed. The 19 remaining local controls, three retained fields and rest data
+are preserved. The saved scene is `maya_tools/assets/Edward/scenes/Edward_working_v005.mb`;
+`Edward_v071.skc` preserves all v070 skin/corrective data and updates only wrinkles.
+The earlier `Edward_v001.wrinkles.json` retains 26 local controls, including
+lip-corner depth 7.4. Five historical expression
 comparisons have zero geometry error after preset replacement, SKC restore
 and native scene reopen. Approved skin and sculpt data are preserved when
 adding preset provenance; validation JSON is under the research application
@@ -520,11 +594,13 @@ capture/restoration is additionally checked in a separate Maya 2026 GUI session.
 ## 7. Edward photo picker
 
 The current shared pipeline for **all characters** is documented in
-`scripts/tools/CHARACTER_PICKER.md`. CREATE RIG now uses actual built controls,
+`scripts/tools/CHARACTER_PICKER.md`. Picker generation uses actual built controls,
 shared module guide prerequisites, per-character guide proportions and
 `assets/<character>/picker/picker_profile.json`. Its entry is Animation >
 Character Picker / the CharacterPicker shelf button. Thaiz has its generated
-bundle and portable single-file installer under `assets/thaiz/picker`.
+bundle and portable single-file installer under `assets/Thaiz/picker`.
+CREATE RIG does not generate, embed or open the picker. Open it manually from
+the menu or shelf; opening generates a bundle if it is missing.
 The Edward photo workflow below remains a separately distributable reference.
 
 The separate DWPicker photo design and individual SVG/PNG controller assets

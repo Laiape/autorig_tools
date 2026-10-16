@@ -20,7 +20,7 @@ class RigPackageUI(QtWidgets.QDialog):
         choose=QtWidgets.QPushButton('Choose package...');choose.clicked.connect(self.choose);row.addWidget(choose);layout.addLayout(row)
         for label,callback in (('Create frozen candidate from current asset',self.create),('Verify hashes and publish status',self.verify),('Validate candidate in isolated Maya',self.validate),('Rebuild validated package in a fresh scene',self.build)):
             button=QtWidgets.QPushButton(label);button.clicked.connect(lambda checked=False,f=callback:self.run(f));layout.addWidget(button)
-        note=QtWidgets.QLabel('A candidate must pass two rebuild comparisons and native scene reopen before it is marked validated. Save your current scene before rebuilding.')
+        note=QtWidgets.QLabel('Publish requires an approved Animation performance report, two rebuild comparisons and native scene reopen. Save your current scene before rebuilding.')
         note.setWordWrap(True);layout.addWidget(note)
         self.status=QtWidgets.QLabel('Choose an existing package or create a frozen candidate.');self.status.setWordWrap(True);layout.addWidget(self.status)
         ui_utils.apply_maya_style(self)
@@ -42,7 +42,15 @@ class RigPackageUI(QtWidgets.QDialog):
         while (Path(parent)/('%s_v%03d'%(asset,version))).exists():version+=1
         destination=Path(parent)/('%s_v%03d'%(asset,version))
         source=Path(__file__).resolve().parents[3]
-        rig_package.create(source,asset,destination)
+        report_path,_=QtWidgets.QFileDialog.getOpenFileName(self,'Approved Animation benchmark','','Performance (*.performance.json)')
+        if not report_path:return
+        from maya_tools.scripts.tools import rig_performance_policy
+        report=json.loads(Path(report_path).read_text(encoding='utf-8'))
+        policy={'shot_fps':24,'state':'C','detail':0,
+                'scene_sha256':report['environment']['scene_sha256'],
+                'report':'validation/'+Path(report_path).name}
+        rig_performance_policy.validate(report,policy)
+        rig_package.create(source,asset,destination,reports=[report_path],performance_policy=policy)
         self.path.setText(str(destination));self.status.setText('Frozen candidate created. Hashes verified; publish validation is pending.')
 
     def verify(self):

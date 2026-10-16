@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "result": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "shapes": {
+      "C_head_CTL": 1,
+      "L_eyeDirect_CTL": 2,
+      "R_eyeDirect_CTL": 2
+    }
+  }
+}

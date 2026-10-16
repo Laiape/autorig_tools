@@ -1,0 +1,3 @@
+from maya import cmds
+import sys
+result={'scene':cmds.file(q=True,sn=True),'modified':cmds.file(q=True,modified=True),'selection':cmds.ls(sl=True,long=True),'frame':cmds.currentTime(q=True),'jaw':{a:cmds.getAttr('C_jaw_CTL.'+a) for a in ['rotateX','rotateY','rotateZ']},'lip_controls':{s:cmds.getAttr(s+'_lipCorner_CTL.translate')[0] for s in ['L','R']},'layers':[(n,cmds.listConnections(n,s=True,d=True)) for n in cmds.ls(type='ngst2SkinLayerData')],'modules':{k:getattr(v,'__file__',None) for k,v in sys.modules.items() if k in ['tools.pose_blendshapes','maya_tools.scripts.tools.pose_blendshapes','maya_tools.scripts.tools.bifrost_wrinkles']},'models':cmds.getPanel(type='modelPanel')}

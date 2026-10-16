@@ -3,10 +3,10 @@
 Parent: `how_it_works.md`.
 Detail lives in each `SKILL.md`. This file only says which to open.
 
-Skills live here (versioned with the repo), not in a global Cursor folder.
+Project skills are versioned under `.agents/skills/` for Codex discovery.
+This index also routes Cursor readers to the same maintained instructions.
 
-Do not copy skill packs from another product. Add a row when the user
-places a `SKILL.md` in this folder.
+Do not copy skill packs from another product or duplicate their instructions.
 
 ---
 
@@ -14,4 +14,6 @@ places a `SKILL.md` in this folder.
 
 | Task | Skill |
 |---|---|
-| none yet | `.cursor/skills/{name}/SKILL.md` |
+| Large rig/system/deformation changes and predicted impact | `.agents/skills/rig-change-impact/SKILL.md` |
+| Reproducible timing, profiling and serialized-data audit | `.agents/skills/rig-performance-audit/SKILL.md` |
+| Quality, contacts, GPU/cache equivalence and persistence | `.agents/skills/rig-deformation-equivalence/SKILL.md` |

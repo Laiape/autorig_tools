@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\tmp\\trial_eyelid_tangent_axis.py\", line 10, in <module>\n    exec(compile(code[start:end],'angular_setup','exec'))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"angular_setup\", line 1\n    for side in ('L','R'):\nIndentationError: unexpected indent\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\proyectos\\auto-rig\\tmp\\trial_eyelid_tangent_axis.py\", line 42, in <module>\n    cmds.undoInfo(closeChunk=True);cmds.undo();cmds.refresh(force=True)\n                                   ^^^^^^^^^^^\nRuntimeError: The undo queue is turned off.\n\n"
+}

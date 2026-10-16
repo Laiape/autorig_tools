@@ -1,0 +1,83 @@
+{
+  "success": true,
+  "result": {
+    "pid": 40344,
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Edward_v001.ma",
+    "modified": true,
+    "batch": false,
+    "modules": [
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\rig_benchmark.py",
+      "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\tools\\pose_blendshapes.py"
+    ],
+    "mode": [
+      "parallel",
+      "Evaluation graph is ready."
+    ],
+    "prx": [
+      "brazaletes1_PRX",
+      "cinturon3_PRX",
+      "cinturones2_PRX",
+      "collar2_PRX",
+      "collar3_PRX",
+      "harapo1_PRX",
+      "harapo2_PRX",
+      "pCube26_PRX",
+      "pCylinder16_PRX",
+      "pasted__brazaletes3_PRX",
+      "polySurface32_PRX",
+      "polySurface33_PRX",
+      "polySurface48_PRX",
+      "polySurface49_PRX",
+      "polySurface58_PRX",
+      "polySurface61_PRX",
+      "polySurface62_PRX",
+      "polySurface889_PRX",
+      "polySurface892_PRX",
+      "polySurface900_PRX",
+      "polySurface905_PRX",
+      "tiras30_PRX",
+      "tiras31_PRX"
+    ],
+    "meshes": [
+      "C_lowerLip00Driver_JNT",
+      "C_neckStretchDriver_TRN",
+      "C_upperLip00Driver_JNT",
+      "EdwardWrinklesGraph",
+      "EdwardWrinkles_GRP",
+      "EdwardWrinkles_Settings",
+      "L_lowerLip00Driver_JNT",
+      "L_lowerLip01Driver_JNT",
+      "L_lowerLip02Driver_JNT",
+      "L_lowerLip03Driver_JNT",
+      "L_upperLip00Driver_JNT",
+      "L_upperLip01Driver_JNT",
+      "L_upperLip02Driver_JNT",
+      "L_upperLip03Driver_JNT",
+      "R_lowerLip00Driver_JNT",
+      "R_lowerLip01Driver_JNT",
+      "R_lowerLip02Driver_JNT",
+      "R_lowerLip03Driver_JNT",
+      "R_upperLip00Driver_JNT",
+      "R_upperLip01Driver_JNT",
+      "R_upperLip02Driver_JNT",
+      "R_upperLip03Driver_JNT",
+      "cabeza_geo",
+      "cabeza_high",
+      "cabeza_low",
+      "cinturon3",
+      "cinturones2",
+      "cuerpo_base_poseCorrectives_BLS_driver"
+    ],
+    "blendShapes": [
+      "L_eyelidBlink_BLS",
+      "L_lowerEyelidBlink_BLS",
+      "L_upperEyelidBlink_BLS",
+      "R_eyelidBlink_BLS",
+      "R_lowerEyelidBlink_BLS",
+      "R_upperEyelidBlink_BLS",
+      "cabeza_high_poseCorrectives_BLS",
+      "cabeza_low_poseCorrectives_BLS",
+      "cuerpo_base_poseCorrectives_BLS"
+    ]
+  }
+}

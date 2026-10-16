@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n  File \"<frozen runpy>\", line 291, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\proyectos\\auto-rig\\tmp\\edward_wrinkles_20261015\\save_four_wrinkles.py\", line 15, in <module>\n    raise RuntimeError('Choose unused asset versions.')\nRuntimeError: Choose unused asset versions.\n"
+}

@@ -1,0 +1,87 @@
+[
+  {
+    "method": "rebind",
+    "poses": [
+      {
+        "pose": 0,
+        "min_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "min_cm": -0.11562311554481561,
+        "inside": [
+          504,
+          1218
+        ],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "min_cm": 0.03971093345954191,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "min_cm": 0.040233963586262245,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "min_cm": 0.11626226230630006,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "min_cm": 0.0993822813413381,
+        "inside": [],
+        "uncertain": []
+      }
+    ]
+  },
+  {
+    "method": "translation",
+    "poses": [
+      {
+        "pose": 0,
+        "min_cm": 0.1397814623193897,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 1,
+        "min_cm": 0.09151466134785109,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 2,
+        "min_cm": 0.08694518115536352,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 3,
+        "min_cm": 0.09075815095659531,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 4,
+        "min_cm": 0.11626226230630006,
+        "inside": [],
+        "uncertain": []
+      },
+      {
+        "pose": 5,
+        "min_cm": 0.1088986009643903,
+        "inside": [],
+        "uncertain": []
+      }
+    ]
+  }
+]

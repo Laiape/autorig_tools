@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "character": "Thaiz",
+  "panels": [
+    {
+      "size": [
+        750,
+        1000
+      ],
+      "world_bounds": [
+        -50.445912860277545,
+        -22.525736986047036,
+        50.44591823701248,
+        111.99670447700632
+      ],
+      "projection": "XY",
+      "background": "backgrounds/body.svg"
+    },
+    {
+      "size": [
+        750,
+        1000
+      ],
+      "world_bounds": [
+        -13.483269751271319,
+        66.17883549032221,
+        13.483255696717038,
+        102.13420275430668
+      ],
+      "projection": "XY",
+      "background": "backgrounds/face.svg"
+    }
+  ],
+  "enabled_modules": {
+    "spine": true,
+    "leg": true,
+    "front_leg": false,
+    "front_limb": false,
+    "back_leg": false,
+    "clavicle": true,
+    "arm": true,
+    "fingers": true,
+    "tail": false,
+    "neck": true,
+    "jaw": true,
+    "eyebrow": true,
+    "eye": true,
+    "tongue": true,
+    "teeth": true,
+    "ear": true,
+    "nose": true,
+    "cheekbone": true,
+    "facial_correctives": true,
+    "basic": true,
+    "face": true
+  },
+  "module_measurements": {
+    "arm": {
+      "guide_span": 56.940590597836675,
+      "projected_span": 423.2794913514518,
+      "primary_size": 32
+    },
+    "basic": {
+      "guide_span": 0.0,
+      "projected_span": 0.0,
+      "primary_size": 12
+    },
+    "cheekbone": {
+      "guide_span": 14.226699199295052,
+      "projected_span": 395.67664807433505,
+      "primary_size": 32
+    },
+    "clavicle": {
+      "guide_span": 2.6431027158996763,
+      "projected_span": 19.64804301166066,
+      "primary_size": 12
+    },
+    "ear": {
+      "guide_span": 20.429185945445724,
+      "projected_span": 568.1818181818181,
+      "primary_size": 32
+    },
+    "eye": {
+      "guide_span": 15.393717164382934,
+      "projected_span": 428.13405440590253,
+      "primary_size": 32
+    },
+    "eyebrow": {
+      "guide_span": 15.025095303702663,
+      "projected_span": 417.8818476081288,
+      "primary_size": 32
+    },
+    "face": {
+      "guide_span": 0.0,
+      "projected_span": 0.0,
+      "primary_size": 12
+    },
+    "fingers": {
+      "guide_span": 73.82600781553467,
+      "projected_span": 548.80068345928,
+      "primary_size": 32
+    },
+    "jaw": {
+      "guide_span": 6.0424959135055545,
+      "projected_span": 168.0554635735333,
+      "primary_size": 16.805546357353332
+    },
+    "leg": {
+      "guide_span": 48.25768290300802,
+      "projected_span": 358.73332641128144,
+      "primary_size": 32
+    },
+    "neck": {
+      "guide_span": 9.188190315834873,
+      "projected_span": 68.30228633903,
+      "primary_size": 12
+    },
+    "nose": {
+      "guide_span": 5.073278099060062,
+      "projected_span": 141.09932633456447,
+      "primary_size": 14.109932633456447
+    },
+    "spine": {
+      "guide_span": 13.684999999999995,
+      "projected_span": 101.73023810126568,
+      "primary_size": 12
+    },
+    "teeth": {
+      "guide_span": 1.5126800537109375,
+      "projected_span": 42.071049993866936,
+      "primary_size": 12
+    },
+    "tongue": {
+      "guide_span": 0.6179275512696023,
+      "projected_span": 17.18596132624026,
+      "primary_size": 12
+    }
+  },
+  "size_policy": {
+    "primary": "10% projected module guide span, clamped 12..32 px",
+    "secondary": "1.2% panel width, clamped 7..14 px",
+    "fine": "0.8% panel width, minimum 5 px"
+  }
+}
