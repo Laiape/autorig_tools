@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "delivery": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_skirt_contact_v006.ma",
+  "modes": {
+    "off": {
+      "neutral": 0.0,
+      "left_step": 0.0,
+      "right_step": 0.0,
+      "cross_left": 0.0
+    },
+    "parallel": {
+      "neutral": 0.0,
+      "left_step": 0.0,
+      "right_step": 0.0,
+      "cross_left": 0.0
+    }
+  },
+  "project_python_imports": [],
+  "unknown_nodes": [],
+  "script_nodes": [
+    "L_armSettings_IkFkMatch_SCRIPT",
+    "L_legSettings_IkFkMatch_SCRIPT",
+    "R_armSettings_IkFkMatch_SCRIPT",
+    "R_legSettings_IkFkMatch_SCRIPT",
+    "sceneConfigurationScriptNode",
+    "uiConfigurationScriptNode"
+  ]
+}

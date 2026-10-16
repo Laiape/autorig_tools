@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils import guide_frames
 from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
@@ -43,6 +44,7 @@ class NeckModule(object):
 
         """
         self.side = side
+        self.authored_orientation = guide_frames.enabled()
         self.controllers_number = controllers_number
 
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_neckModule_GRP", ss=True, p=self.modules)
@@ -76,6 +78,11 @@ class NeckModule(object):
         self.neck_guides_matrices = guides_manager.sample_chain_matrices(
             self.neck_chain, self.controllers_number,
             self.primary_axis, self.secondary_axis)
+        self.solver_guides_matrices = self.neck_guides_matrices
+        if self.authored_orientation:
+            self.neck_guides_matrices = guides_manager.sample_chain_matrices(
+                self.neck_chain, len(self.solver_guides_matrices),
+                self.primary_axis, self.secondary_axis, preserve_orientation=True)
         self.controllers_number = len(self.neck_guides_matrices)
         cmds.delete(self.neck_chain[0])
 
@@ -167,12 +174,15 @@ class NeckModule(object):
         cmds.connectAttr(f"{factor_div}.output", f"{factor_blend}.input[1]")
         cmds.connectAttr(f"{self.neck_ctls[0]}.Stretch_Activate", f"{factor_blend}.attributesBlender")
 
-        self.stretch_drivers = [self.neck_ctls[0]]
-        prev_plug = f"{self.neck_ctls[0]}.worldMatrix[0]"
+        solve_controls = (guide_frames.control_drivers(self.neck_ctls, self.neck_guides_matrices,
+                           self.solver_guides_matrices, f"{self.side}_neck")
+                          if self.authored_orientation else self.neck_ctls)
+        self.stretch_drivers = [solve_controls[0]]
+        prev_plug = guide_frames.matrix_plug(solve_controls[0])
 
         for i in range(1, len(self.neck_ctls)):
 
-            target_plug = f"{self.neck_ctls[i]}.worldMatrix[0]"
+            target_plug = guide_frames.matrix_plug(solve_controls[i])
 
             # Longitud uniforme de este segmento = rest_length * factor
             seg_len = cmds.createNode("multiply", name=f"{self.side}_neck{str(i).zfill(2)}StretchLen_MUL", ss=True)
@@ -212,6 +222,8 @@ class NeckModule(object):
         sel = tuple(self.stretch_drivers)
         self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number, d=3, tangent_cvs=0, tangent_axis="x", param_from_length=True) # Do the ribbon setup, with the created controllers (tangent_cvs=0 -> stretch uniforme)
 
+        if self.authored_orientation:
+            guide_frames.orient_outputs(self.output_joints, self.neck_guides_matrices, f"{self.side}_neck")
         for t in temp:
             cmds.delete(t)
 
@@ -252,5 +264,3 @@ class NeckModule(object):
         cmds.setAttr(f"{blend_matrix_head}.target[0].shearWeight", 0)
         cmds.connectAttr(f"{reverse_follow}.outputX", f"{blend_matrix_head}.target[0].weight")
         cmds.connectAttr(f"{blend_matrix_head}.outputMatrix", f"{self.head_nodes[0]}.offsetParentMatrix")
-
-        

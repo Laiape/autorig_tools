@@ -224,7 +224,18 @@ class VersionTab(QtWidgets.QWidget):
             self.btn_qc_run.clicked.connect(self.qc_run)
             qrow.addWidget(self.btn_qc_setup)
             qrow.addWidget(self.btn_qc_run)
+            self.btn_show_groom = _btn("SHOW GROOM", C_BG1, C_TEXT, bold=True, letter_spacing=1)
+            self.btn_show_groom.setToolTip("Load and show the optional groom of the open model")
+            self.btn_show_groom.clicked.connect(self.show_groom)
+            qrow.addWidget(self.btn_show_groom)
             lay.addLayout(qrow)
+
+    def show_groom(self):
+        from maya_tools.scripts.utils import model_cache
+        try:
+            model_cache.show_groom(os.path.basename(self.asset_path))
+        except (ValueError, RuntimeError) as error:
+            QtWidgets.QMessageBox.warning(self, "Show Groom", str(error))
 
     def refresh(self):
         self.table.setRowCount(0)

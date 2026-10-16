@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-16",
+  "maya": "2026",
+  "passed": true,
+  "source": "Artist authored guides and neutral model in native recovery snapshot",
+  "candidate": "chihuahua_oriented_v001.mb",
+  "intentional_changes": [
+    "Retain authored guide orientations including eyes, jaw and local hip",
+    "Three spine primary controls with two initially hidden tangents",
+    "Paw roll follows the foot instead of lower IK solver twist"
+  ],
+  "scope": [
+    "13 neutral meshes retain identical world positions",
+    "152 directly mapped guide frames, 442 generated joint pose outputs",
+    "All four legs IK/FK and PV edits, gaze/head, jaw, body/neck/tail, global scale",
+    "4812 forward/reverse paw lift samples from 0 to 10 cm at 0.05 cm steps",
+    "DG/Serial/Parallel, native save/reopen and two complete builds"
+  ],
+  "limits": [
+    "No body skin binding or geometry reshaping added",
+    "Middle spine control nonuniform scale retains existing joint-output invariance",
+    "No performance, GPU, or cache acceptance claim"
+  ],
+  "files": {
+    "autorig_tools/maya_tools/assets/chihuahua/guides/chihuahua_v012.guides": {
+      "bytes": 156933,
+      "sha256": "ea37eba4fbdc8a6f882b3a5ce47b6ba7f5053e3b8bf026696e301c343daff71e"
+    },
+    "autorig_tools/maya_tools/assets/chihuahua/build/chihuahua_v001.build": {
+      "bytes": 480,
+      "sha256": "aefcad7018f5e026a6a9519c6658ce564274869482ef8a5977fbedf3b23b0702"
+    },
+    "autorig_tools/maya_tools/assets/chihuahua/scenes/chihuahua_oriented_v001.mb": {
+      "bytes": 276446476,
+      "sha256": "561c358c5b257d796217ea8b9fd0c594fb48fd0cfad9bcb9aa41b869831c62b2"
+    },
+    "recovery/chihuahua_guides_orientation_before_20261016_v001.mb": {
+      "bytes": 272064068,
+      "sha256": "2afe523e35361f0c68f63301c577448fa71792d45660faa1cf67020cc5553741"
+    },
+    "autorig_tools/maya_tools/scripts/quadruped/autorig/digits_module.py": {
+      "bytes": 14415,
+      "sha256": "d658994846daeb223c06269267ddb840beebecf4d8938cb22f5f6b75663b18ad"
+    },
+    "autorig_tools/maya_tools/scripts/quadruped/autorig/leg_module.py": {
+      "bytes": 99258,
+      "sha256": "929000c0cee64cf8ebf42358a04518907007dda647758fe12c82d7d3b729ffc7"
+    },
+    "autorig_tools/maya_tools/scripts/quadruped/autorig/leg_module_self.py": {
+      "bytes": 112937,
+      "sha256": "cb3eb2fa646b0a2201ead70fb9e80260f379e64b8efa34117549bcb305150717"
+    },
+    "autorig_tools/maya_tools/scripts/quadruped/autorig/neck_module.py": {
+      "bytes": 14828,
+      "sha256": "dc5b35841fabe13a9064b36e51f482b0127f2977421d3421c71acc188012ecf7"
+    },
+    "autorig_tools/maya_tools/scripts/quadruped/autorig/spine_module.py": {
+      "bytes": 23688,
+      "sha256": "ef81e2dc925c06bae3fd5eeaec51fcf6117737044e82488543cc25ff6ba1f73c"
+    },
+    "autorig_tools/maya_tools/scripts/quadruped/autorig/tail_module.py": {
+      "bytes": 10688,
+      "sha256": "8e0929bbec320fb03fbde91d0cad05f3aecf0fd8e2ae85aa378a50fa8ddb3327"
+    },
+    "autorig_tools/maya_tools/scripts/utils/guide_frames.py": {
+      "bytes": 4703,
+      "sha256": "1fd108e404bad4090d4632fa6617a0294116d1b38bdfeef743bf973c45a5e857"
+    },
+    "autorig_tools/maya_tools/scripts/utils/guides_manager.py": {
+      "bytes": 41649,
+      "sha256": "15c1b9aba525873c2c1221099cd64bf51363a67250e44822791fa46e8fd4fa0b"
+    },
+    "autorig_tools/maya_tools/scripts/utils/rig_manager.py": {
+      "bytes": 56596,
+      "sha256": "466b996dc2132f4f7594c6ad4f1573d4b9885999c1c86c0663d04be40d78c892"
+    },
+    "autorig_tools/maya_tools/scripts/biped/autorig/eyelid_module.py": {
+      "bytes": 83273,
+      "sha256": "615d884787689fd38df16e3faee1c6f8eab7a41feea69c6768930fac63089f42"
+    },
+    "autorig_tools/maya_tools/scripts/biped/autorig/jaw_module_nurbs.py": {
+      "bytes": 122126,
+      "sha256": "e5bd133397656a9bac9681c85a5c2f5e665ea880adaa089957b94d0add2087d9"
+    }
+  }
+}

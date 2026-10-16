@@ -76,11 +76,22 @@ class NGPanel(QtWidgets.QWidget):
         loop_scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
         loop_scroll.setWidget(self.loop_rigger)
         self.editor_tabs.addTab(loop_scroll, 'Loop Rigger (Preview)')
+        self.ensure_nurbs_tab()
         self.editor_tabs.currentChanged.connect(self.change_editor_tab)
         layout.addWidget(self.editor_tabs, 1)
         self.skin_cluster.activated.connect(lambda _: owner.run_action(self.choose_cluster))
         ui_utils.apply_maya_style(self)
         self.refresh()
+
+    def ensure_nurbs_tab(self):
+        """The same dependency-free package also attaches to standalone NG."""
+        if hasattr(self, 'nurbs_skin'):
+            return self.nurbs_skin
+        from ng_nurbs_bridge.ui import build_panel
+        self.nurbs_scroll = build_panel(self.editor_tabs)
+        self.nurbs_skin = self.nurbs_scroll.nurbs_panel
+        self.editor_tabs.addTab(self.nurbs_scroll, 'NURBS Skin')
+        return self.nurbs_skin
 
     def install_rigger_actions(self):
         """Extend the native layer context menu without patching vendor files."""
@@ -120,6 +131,8 @@ class NGPanel(QtWidgets.QWidget):
     def refresh_rigger_actions(self):
         skin = self.skin_cluster.currentData() or self.session.state.selectedSkinCluster
         available = bool(skin and cmds.objExists(skin))
+        if hasattr(self, 'editor_tabs') and self.editor_tabs.currentIndex() == 2:
+            available = False
         for actions in getattr(self, 'rigger_actions', {}).values():
             for action in actions:
                 action.setEnabled(available)
@@ -139,11 +152,14 @@ class NGPanel(QtWidgets.QWidget):
         return result
 
     def change_editor_tab(self, index):
+        self.deactivate()
+        self.skin_cluster.setEnabled(index != 2 and bool(self.last_skins))
         if index == 1:
-            from ngSkinTools2.api import PaintTool
-            if PaintTool.is_painting():
-                cmds.setToolTo('selectSuperContext')
             self.loop_rigger.refresh_review()
+        elif index == 2:
+            self.nurbs_skin.run(lambda: self.nurbs_skin.load_selection(required=False))
+            self.nurbs_skin.refresh()
+        self.refresh_rigger_actions()
 
     def select_cluster(self, cluster):
         """NG resolves the last selected node, including skinCluster nodes.
@@ -205,12 +221,18 @@ class NGPanel(QtWidgets.QWidget):
         self.refresh()
 
     def deactivate(self):
+        if hasattr(self, 'nurbs_skin'):
+            self.nurbs_skin.deactivate()
         from ngSkinTools2.api import PaintTool
         if PaintTool.is_painting():
             cmds.setToolTo('selectSuperContext')
 
     def refresh(self):
         if self.busy:
+            return
+        if hasattr(self, 'nurbs_skin') and self.editor_tabs.currentIndex() == 2:
+            self.nurbs_skin.refresh()
+            self.refresh_rigger_actions()
             return
         self.busy = True
         try:

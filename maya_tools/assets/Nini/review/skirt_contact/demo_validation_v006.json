@@ -1,0 +1,276 @@
+{
+  "passed": true,
+  "demo": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_skirt_contact_demo_v006.ma",
+  "samples": [
+    {
+      "frame": 1,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001281233564,
+      "max_lift_cm_local": 1.393083156386865e-06,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.1397814623193897
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.552024852116595
+        }
+      }
+    },
+    {
+      "frame": 25,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001354112422,
+      "max_lift_cm_local": 4.945348034623684,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.06285134851753275
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.41008441287645153
+        }
+      }
+    },
+    {
+      "frame": 49,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001268381087,
+      "max_lift_cm_local": 13.017945538285815,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.03775542159745153
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.41409430226470567
+        }
+      }
+    },
+    {
+      "frame": 73,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001054674235,
+      "max_lift_cm_local": 5.405663738969388,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.06282772916914957
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.40889740123413765
+        }
+      }
+    },
+    {
+      "frame": 97,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001054674226,
+      "max_lift_cm_local": 12.773479710343906,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.04404233151595102
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.5060264368258018
+        }
+      }
+    },
+    {
+      "frame": 121,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001357890957,
+      "max_lift_cm_local": 5.310948620561199,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.06303875296782996
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.41874396633297584
+        }
+      }
+    },
+    {
+      "frame": 145,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001151671587,
+      "max_lift_cm_local": 2.023795376542637,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.06895630744752718
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.4964619043816124
+        }
+      }
+    },
+    {
+      "frame": 169,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001363768363,
+      "max_lift_cm_local": 2.0290577514205665,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.07486433265535229
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.5155138634685102
+        }
+      }
+    },
+    {
+      "frame": 193,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001773727203,
+      "max_lift_cm_local": 1.6404793365035673,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.11626226230630006
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.552024852116595
+        }
+      }
+    },
+    {
+      "frame": 217,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001205785662,
+      "max_lift_cm_local": 3.5194866759811063,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.06921011049903518
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.47469317589926713
+        }
+      }
+    },
+    {
+      "frame": 241,
+      "passed": true,
+      "max_stretch_ratio": 1.000000128023613,
+      "max_lift_cm_local": 6.386134396318042,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.06194776972759529
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.42602125083714815
+        }
+      }
+    },
+    {
+      "frame": 253,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001054674246,
+      "max_lift_cm_local": 5.203349362138333,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.0630196411747871
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.43651652420055886
+        }
+      }
+    },
+    {
+      "frame": 265,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001054674226,
+      "max_lift_cm_local": 2.437438259843411,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.0689209986036609
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.49721797061658873
+        }
+      }
+    },
+    {
+      "frame": 277,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001281233564,
+      "max_lift_cm_local": 1.12449194026334,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.1262682238001644
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.552024852116595
+        }
+      }
+    },
+    {
+      "frame": 289,
+      "passed": true,
+      "max_stretch_ratio": 1.0000001281233564,
+      "max_lift_cm_local": 1.393083156386865e-06,
+      "contacts": {
+        "c_tunic_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.1397814623193897
+        },
+        "c_embroider_GEO": {
+          "inside": [],
+          "uncertain": [],
+          "minimum_cm": 0.552024852116595
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+---
+description: Use the established Autorig module and scene structure for every rig request
+alwaysApply: true
+---
+
+# Rig module and hierarchy convention
+
+Whenever the user asks to create, build or adapt a rig, use the project's
+existing module architecture. Resolve the loaded checkout, read the area
+index and inspect `maya_tools/scripts/biped/autorig/arm_module.py` or the
+closest existing module before implementation.
+
+- Use `utils/create_rig.AutoRig` and `utils/basic_structure` for the build.
+- Keep one asset-named main transform, such as `flower`.
+- Keep `rig_GRP`, `controls_GRP`, `geo_GRP` and `deformers_GRP` below it.
+- Keep `modules_GRP`, `skel_GRP` and `skeletonHierarchy_GRP` under `rig_GRP`.
+- Follow the existing class pattern: `__init__` reads shared build data;
+  `make` creates the module groups and calls explicit guide, chain, control,
+  setup and data-export stages. Use shared curve/matrix/guide tools.
+- Each module owns its `*_Module_GRP`/`*Module_GRP`, `*Skinning_GRP` and
+  `*Controllers_GRP` using the existing naming convention. Controller groups
+  belong to the master control hierarchy; deformation groups belong to
+  `skel_GRP`; mechanics belong to the module under `modules_GRP`.
+- Populate the native `_ENV` skeleton below `skeletonHierarchy_GRP` with
+  correct module attachment branches using the shared hierarchy helpers.
+  An empty skeleton hierarchy is not a completed rig.
+- Preserve standard guides, controller templates, skin data, visibility and
+  build lifecycle. Check the actual native scene after build and reopen.
+- Animator-facing PV and eye aim lines stay under their controls; never move
+  them below hidden module/construction groups.
+- Honor the requested settings drawing. Flower uses an F-shaped
+  `C_settings_CTL`, with its existing transform and channels preserved.
+

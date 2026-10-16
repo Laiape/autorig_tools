@@ -6,12 +6,14 @@
     "reciprocal_coupling": 0,
     "foot_type": 1,
     "spine_skinning_jnts": 8,
-    "spine_controllers": 5,
+    "spine_controllers": 3,
     "neck_skinning_jnts": 5,
     "neck_controllers": 2,
     "arm_skinning_jnts": 5,
     "leg_skinning_jnts": 5,
     "tail_skinning_jnts": 5,
     "tail_controllers": 5,
-    "mGear_integration": 0
+    "mGear_integration": 0,
+    "spine_tangents": 1,
+    "authored_guide_orientation": 1
 }

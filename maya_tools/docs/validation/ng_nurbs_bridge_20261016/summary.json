@@ -1,0 +1,240 @@
+{
+  "status": "design_pending_validation_no_runtime_implementation",
+  "date": "2026-10-16",
+  "maya": "2026",
+  "ng": "2.4.0",
+  "source_sha256": {
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\api\\target_info.py": "d47352b2da485a47e49997cfe2f8d40a1cc6a7560c1e8de21fb4ae0e6916281b",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\api\\plugin.py": "f0592fd31372ec2d27845c41fef057902d95e047b6c92bff7017a5a85fef14d7",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\api\\events.py": "ec6a134c839738697a395843291d99fc4a96d372263bdc5100662b7c51e586b8",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\api\\layers.py": "ffbea5980d08f8d2619af55c2dac87c242089d7d9ea88c959fd55e8a0f13c926",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\api\\paint.py": "a16df8a309bed466f06c3748a48c3f633c48e307f34303a2925a8baec9ec58d2",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\ui\\mainwindow.py": "a6a56705d7cc9c8b52bc2c5fbc6f4adba783e31456242efececddfa971e805a0",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\ui\\targetui.py": "eb8ec252bad04fbece43d302d7c206ffb9e03413706ce185215f7cb46628e3bb",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\ui\\actions.py": "465fd947b49fef0629a07d04a21856d2c93c683b93e66becccbe0a353a40edeb",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\ui\\paintContextCallbacks.py": "9c72c5debfcab30892f335fa702c572a4f0b2731ecb1a64a72892ce3d8ffa977",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\pluginCallbacks.py": "258bce2e5ea5475c29746b48030ad1c6b214c64dd332d7452b3dd4bdb8b8d9cc",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\operations\\layers.py": "18d2cdf3e7a2e54c0e50495f090a7a5160ecfbe9d4cf4bd7ab04312c274f85da",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\scripts\\ngSkinTools2\\operations\\paint.py": "ecca66a7491bf69440d6ac19bda9723772ca454f51c2d82d70a5b47567134a2e",
+    "C:\\ProgramData\\Autodesk\\ApplicationPlugins\\ngskintools2\\Contents\\plug-ins\\2026\\ngSkinTools2.mll": "d1bf40e46f9a7fc158b2c814a6ef1c9586de6678a5417e6ec28e09f0dd3fdf43",
+    "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\ui\\skinning_tool_adapters.py": "e1e29c540667e3ef3f3167364ec916d931572028f5335f1522cd7cab4331ef93",
+    "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\ui\\skinning_manager_UI.py": "0f80415ad6754e34176796c57f3516fa4649b7bac0c7b617622cc9cf89f2daa8",
+    "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\scripts\\framework\\context.py": "b6a1553cfffed051d7c41d854349cf580017a2022a2155663ed2355b11075c47"
+  },
+  "cases": [
+    {
+      "kind": "open",
+      "nu": 5,
+      "nv": 7,
+      "forms": [
+        1,
+        1
+      ],
+      "requested_closed_form_retained": null,
+      "degrees": [
+        3,
+        3
+      ],
+      "grid_count": 35,
+      "weight_array_length": 70,
+      "ng_target_transform": {
+        "ok": true,
+        "value": null
+      },
+      "ng_target_shape": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_target_skin": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_init_surface": {
+        "ok": true,
+        "value": "ngSkinToolsData_skinCluster1"
+      },
+      "ng_nurbs_layer": {
+        "ok": true,
+        "value": {
+          "layer": 1,
+          "initial_weights_count": 0,
+          "set_weights": {
+            "ok": false,
+            "error": "Maya command error"
+          }
+        }
+      },
+      "proxy_init": {
+        "skin": "skinCluster2",
+        "data": "ngSkinToolsData_skinCluster2",
+        "layer": 1
+      },
+      "parent_weightList_connection": {
+        "ok": true,
+        "value": "Connected skinCluster2.weightList to skinCluster1.weightList."
+      },
+      "ng_edit_transfer": {
+        "max_delta_from_proxy": 0.0,
+        "before_first": [
+          0.027777777,
+          0.972222223,
+          0.055555555,
+          0.944444445
+        ],
+        "after_first": [
+          0.25,
+          0.75,
+          0.25,
+          0.75
+        ],
+        "source_first": [
+          0.25,
+          0.75,
+          0.25,
+          0.75
+        ],
+        "undo_name": ""
+      },
+      "undo_transfer_error": 0.0,
+      "redo_transfer_error": 0.0,
+      "open_linear_pose_cv_error": 0.0,
+      "reopen_transfer_error": 0.0
+    },
+    {
+      "kind": "closed_u",
+      "nu": 5,
+      "nv": 3,
+      "forms": [
+        1,
+        1
+      ],
+      "requested_closed_form_retained": false,
+      "degrees": [
+        1,
+        1
+      ],
+      "grid_count": 15,
+      "weight_array_length": 30,
+      "ng_target_transform": {
+        "ok": true,
+        "value": null
+      },
+      "ng_target_shape": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_target_skin": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_init_surface": {
+        "ok": true,
+        "value": "ngSkinToolsData_skinCluster1"
+      },
+      "ng_nurbs_layer": {
+        "ok": true,
+        "value": {
+          "layer": 1,
+          "initial_weights_count": 0,
+          "set_weights": {
+            "ok": false,
+            "error": "Maya command error"
+          }
+        }
+      }
+    },
+    {
+      "kind": "periodic_v",
+      "nu": 6,
+      "nv": 11,
+      "forms": [
+        1,
+        3
+      ],
+      "requested_closed_form_retained": null,
+      "degrees": [
+        3,
+        3
+      ],
+      "grid_count": 66,
+      "weight_array_length": 96,
+      "ng_target_transform": {
+        "ok": true,
+        "value": null
+      },
+      "ng_target_shape": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_target_skin": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_init_surface": {
+        "ok": true,
+        "value": "ngSkinToolsData_skinCluster1"
+      },
+      "ng_nurbs_layer": {
+        "ok": true,
+        "value": {
+          "layer": 1,
+          "initial_weights_count": 0,
+          "set_weights": {
+            "ok": false,
+            "error": "Maya command error"
+          }
+        }
+      }
+    },
+    {
+      "kind": "periodic_uv",
+      "nu": 9,
+      "nv": 11,
+      "forms": [
+        3,
+        3
+      ],
+      "requested_closed_form_retained": null,
+      "degrees": [
+        3,
+        3
+      ],
+      "grid_count": 99,
+      "weight_array_length": 96,
+      "ng_target_transform": {
+        "ok": true,
+        "value": null
+      },
+      "ng_target_shape": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_target_skin": {
+        "ok": true,
+        "value": "skinCluster1"
+      },
+      "ng_init_surface": {
+        "ok": true,
+        "value": "ngSkinToolsData_skinCluster1"
+      },
+      "ng_nurbs_layer": {
+        "ok": true,
+        "value": {
+          "layer": 1,
+          "initial_weights_count": 0,
+          "set_weights": {
+            "ok": false,
+            "error": "Maya command error"
+          }
+        }
+      }
+    }
+  ],
+  "limits": [
+    "No GUI brush or VP2 validation",
+    "No performance measurement",
+    "kClosed fixture did not retain kClosed",
+    "Periodic and sparse-influence live transfer not validated",
+    "Artist session queried read-only; fixtures created in separate mayapy"
+  ]
+}

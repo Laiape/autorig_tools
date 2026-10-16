@@ -32,12 +32,17 @@ Do not reorder groups unless the user asks.
 | 6 | DEFORMERS | Skinning, Blendshapes, Correctives, Wrinkles, Wrap, Bake |
 | 7 | SIMULATION | AdonisFX Copy Weights |
 
+ANIMATION also exposes Release Selected Flower Petals and Attach Selected
+Flower Petals. These registry actions match selected petal roots to World/Head
+space and key the switch; they share the existing menu and Tool Framework.
+
 Rigging > Guides: Create New Guides, Import Guides, Export Guides, Mirror Guides.
 Rigging > Build: CREATE RIG, CREATE RIG SELF, CREATE RIG SELF MATH,
 BUILD LEG (disabled legacy entry), Test Rig by Guide, De Boor Ribbon.
 Rigging > Controllers: Export All Controllers, Mirror Controllers,
 Replace Controller Shapes, Controller Shape Library.
-Rigging > Utilities: Rig Utilities.
+Rigging > Utilities: Rig Utilities, Restore PV / Eye Lines. The restore action
+repairs misplaced display indicators in loaded rigs using the shared organizer.
 
 Deformers > Skinning: Skinning Manager, skin import/export/copy, Proxy Skinning,
 Export Source Skin Data, Auto Skin Transfer (Clothes), Skin Along Curve/Surface.
@@ -119,6 +124,11 @@ RIGGER. These same actions are available on the native initialization page.
 They use the selected loop and the active skin's joints without an extra dialog.
 Inside NG, Layers / Paint keeps the native editor; Loop Rigger (Preview)
 contains the requested lip/eye/brow complete-loop skinning prototype.
+NURBS Skin follows Loop Rigger as the third NG editor tab. It loads its own
+NURBS target, exposes NG layers/masks and a surface-aware brush, and releases
+that brush on editor/page changes or hide. The independent package also attaches
+NURBS Skin to standalone NG after Layers / Paint, without an AutoRig dependency
+or edits to vendor files. See `docs/ng_nurbs_bridge.md`.
 Its controls scroll within the existing dock and include a Nini review-region
 selector for region/layer solo validation. Lips uses exactly one parent and
 two children, Rotate above Non Rotate; joints are influences within those

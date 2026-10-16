@@ -15,6 +15,7 @@ SCRIPTS = Path(__file__).resolve().parents[2]
 UTILITY = runpy.run_path(str(SCRIPTS / 'utils/module_nurbs.py'))
 organize = UTILITY['organize_nurbs']
 decorate = UTILITY['organize_module_nurbs']
+restore_indicators = UTILITY['restore_animator_indicators']
 
 
 def world_points(shape):
@@ -36,6 +37,123 @@ class ModuleNurbsTests(unittest.TestCase):
     def assertPointsEqual(self, expected, actual):
         self.assertEqual(len(expected), len(actual))
         self.assertLess(max(abs(a - b) for p, q in zip(expected, actual) for a, b in zip(p, q)), 1e-8)
+
+    def indicator(self, name='L_armPv', control=None):
+        cmds.loadPlugin('lookdevKit', quiet=True)
+        control = cmds.createNode('transform', name=control or name+'_CTL')
+        joint = cmds.createNode('joint', name=name+'Endpoint_JNT')
+        curve = cmds.curve(name=name+'_CRV', degree=1, point=[(0,0,0),(0,0,1)])
+        cmds.parent(curve, control, relative=True)
+        cmds.setAttr(curve+'.inheritsTransform', 0)
+        cmds.setAttr(curve+'.overrideEnabled', 1)
+        cmds.setAttr(curve+'.overrideDisplayType', 2)
+        for index, driver in enumerate((joint, control)):
+            row = cmds.createNode('rowFromMatrix', name=name+'Row%d_RFM'%index)
+            cmds.setAttr(row+'.input', 3)
+            cmds.connectAttr(driver+'.worldMatrix[0]',row+'.matrix')
+            for axis, channel in zip('XYZ',('xValue','yValue','zValue')):
+                cmds.connectAttr(row+'.output'+axis,'%s.controlPoints[%d].%s'%(curve,index,channel))
+        return control,joint,curve
+
+    def visible(self, curve):
+        selection=om.MSelectionList();selection.add(curve)
+        return selection.getDagPath(0).isVisible()
+
+    def test_animator_lines_stay_with_controls_while_construction_is_hidden(self):
+        for name in ('L_armPv','R_legPv','L_frontLegPv','R_backLegPv','L_eyeAim','R_eyeAim'):
+            control,joint,curve=self.indicator(name, name.replace('eyeAim','eye')+'_CTL')
+            shape=cmds.listRelatives(curve,shapes=True,fullPath=True)[0]
+            self.assertEqual(organize(self.module,[shape]),[])
+            cmds.setAttr(self.module+'.visibility',0)
+            self.assertEqual(cmds.listRelatives(curve,parent=True),[control])
+            self.assertTrue(self.visible(curve))
+            cmds.setAttr(control+'.tx',4)
+            cmds.setAttr(joint+'.ty',3)
+            self.assertPointsEqual([(0,3,0),(4,0,0)],world_points(curve))
+            cmds.setAttr(control+'.visibility',0)
+            self.assertFalse(self.visible(curve))
+
+    def test_existing_rig_repair_is_undoable_idempotent_and_reopens(self):
+        import tempfile
+        modules=cmds.createNode('transform',name='modules_GRP')
+        cmds.parent(self.module,modules)
+        cmds.setAttr(modules+'.visibility',0)
+        control,joint,curve=self.indicator('L_eyeAim','L_eye_CTL')
+        legacy=cmds.createNode('transform',name='legacy_NurbsSpace_GRP',parent=self.module)
+        cmds.connectAttr(control+'.worldMatrix[0]',legacy+'.offsetParentMatrix')
+        cmds.parent(curve,legacy,relative=True)
+        cmds.setAttr(control+'.translate',3,2,-1)
+        before=world_points(curve)
+        cmds.select(control)
+        cmds.undoInfo(state=True)
+        result=restore_indicators()
+        self.assertEqual(len(result['restored']),1)
+        self.assertTrue(self.visible(curve))
+        self.assertPointsEqual(before,world_points(curve))
+        self.assertEqual(cmds.ls(selection=True),[control])
+        self.assertFalse(cmds.getAttr(modules+'.visibility'))
+        self.assertEqual(cmds.getAttr(curve+'.overrideDisplayType'),2)
+        cmds.undo()
+        self.assertEqual(cmds.listRelatives(curve,parent=True),[legacy])
+        self.assertFalse(self.visible(curve))
+        restore_indicators()
+        self.assertEqual(restore_indicators()['restored'],[])
+        with tempfile.TemporaryDirectory() as folder:
+            path=str(Path(folder)/'indicators.mb')
+            cmds.file(rename=path);cmds.file(save=True,type='mayaBinary',force=True)
+            cmds.file(path,open=True,force=True)
+            self.assertTrue(self.visible(curve))
+            for mode in ('off','serial','parallel'):
+                cmds.evaluationManager(mode=mode)
+                cmds.setAttr(control+'.tx',7)
+                cmds.setAttr(joint+'.ty',5)
+                self.assertPointsEqual([(0,5,0),(7,2,-1)],world_points(curve))
+
+    def test_reference_driver_curve_with_consumers_stays_in_mechanics(self):
+        control,joint,curve=self.indicator()
+        shape=cmds.listRelatives(curve,shapes=True,fullPath=True)[0]
+        consumer=cmds.createNode('pointOnCurveInfo')
+        cmds.connectAttr(shape+'.worldSpace[0]',consumer+'.inputCurve')
+        self.assertEqual(len(organize(self.module,[shape])),1)
+        self.assertTrue(cmds.ls(curve,long=True)[0].startswith('|'+self.module+'|'))
+
+    def test_analytic_pv_line_keeps_computed_bone_endpoint(self):
+        control,joint,curve=self.indicator('R_frontLegPv')
+        matrix=cmds.createNode('composeMatrix')
+        cmds.connectAttr(matrix+'.outputMatrix','R_frontLegPvRow0_RFM.matrix',force=True)
+        shape=cmds.listRelatives(curve,shapes=True,fullPath=True)[0]
+        self.assertEqual(organize(self.module,[shape]),[])
+        cmds.setAttr(matrix+'.inputTranslate',2,3,4,type='double3')
+        cmds.setAttr(control+'.tx',7)
+        self.assertPointsEqual([(2,3,4),(7,0,0)],world_points(curve))
+
+    def test_namespaced_repair_is_scoped_to_requested_character(self):
+        roots=[]
+        for namespace in ('alice','bob'):
+            cmds.namespace(add=namespace)
+            root=cmds.createNode('transform',name=namespace+':Character')
+            modules=cmds.createNode('transform',name=namespace+':modules_GRP',parent=root)
+            control,joint,curve=self.indicator(namespace+':L_legPv')
+            cmds.parent(control,root)
+            cmds.parent(curve,modules,relative=True)
+            cmds.setAttr(modules+'.visibility',0)
+            roots.append((root,control,curve))
+        result=restore_indicators(roots[0][0])
+        self.assertEqual(len(result['restored']),1)
+        self.assertTrue(self.visible(roots[0][2]))
+        self.assertFalse(self.visible(roots[1][2]))
+
+    def test_repair_preserves_selection_of_reparented_curve_component(self):
+        modules=cmds.createNode('transform',name='modules_GRP')
+        control,joint,curve=self.indicator()
+        cmds.parent(curve,modules,relative=True)
+        cmds.select(curve+'.cv[0]')
+        before=cmds.ls(curve,uuid=True)[0]
+        self.assertEqual(len(restore_indicators()['restored']),1)
+        selected=cmds.ls(selection=True,long=True)
+        self.assertEqual(len(selected),1)
+        self.assertTrue(selected[0].endswith('.cv[0]'))
+        self.assertEqual(cmds.ls(selected[0].split('.')[0],uuid=True)[0],before)
 
     def test_root_curve_connected_opm_and_locked_channels(self):
         curve = cmds.curve(name='C_driver_CRV', degree=1, point=[(0, 0, 0), (2, 3, 4)])

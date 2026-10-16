@@ -1,0 +1,12 @@
+{
+  "tabs": [
+    "Layers / Paint",
+    "NURBS Skin"
+  ],
+  "no_autorig_imports": true,
+  "package": "C:\\proyectos\\auto-rig\\tmp\\ng_nurbs_audit_20261016\\gui_portable_preferences\\ngNurbsBridge\\scripts\\ng_nurbs_bridge\\__init__.py",
+  "layers": 1,
+  "paint_context": "ngNurbsSurfaceBrush1",
+  "repeat_drop_single_tab": true,
+  "success": true
+}

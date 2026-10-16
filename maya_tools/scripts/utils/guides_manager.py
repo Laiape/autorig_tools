@@ -153,9 +153,11 @@ def get_guides_info(path=None):
                     "name": shp.split("|")[-1],
                     "curve": {
                         "cvs": cvs,
+                        "world_matrix": cmds.xform(crv, query=True, worldSpace=True, matrix=True),
                         "degree": curve_fn.degree,
                         "knots": list(curve_fn.knots()),
-                        "form": str(curve_fn.form)
+                        "form": {om.MFnNurbsCurve.kOpen: "open", om.MFnNurbsCurve.kClosed: "closed",
+                                 om.MFnNurbsCurve.kPeriodic: "periodic"}[curve_fn.form]
                     }
                 })
 
@@ -338,6 +340,8 @@ def load_guides_info(filePath=None, new_scene=True, load_settings=False):
 
                     
                     curve_info = data["curve_data"]
+                    if "world_matrix" in curve_info:
+                        cmds.xform(transform_fn.fullPathName(), worldSpace=True, matrix=curve_info["world_matrix"])
                     cvs = curve_info["cvs"]
                     degree = curve_info["degree"]
                     knots = curve_info["knots"]
@@ -528,6 +532,8 @@ def get_guides(guide_export, parent=None):
 
                 # Retrieve curve data from the loaded guides_data
                 curve_info = guides_data[name][curve_name]["curve_data"]
+                if "world_matrix" in curve_info:
+                    cmds.xform(transform_fn.fullPathName(), worldSpace=True, matrix=curve_info["world_matrix"])
                 cvs = curve_info["cvs"]
                 degree = curve_info["degree"]
                 knots = curve_info["knots"]
@@ -826,13 +832,16 @@ def _with_translation(matrix, pos):
 
 
 def sample_chain_matrices(guides, count, primary_axis=(1, 0, 0),
-                          secondary_axis=(0, 1, 0), spacing_bias=1.0):
+                          secondary_axis=(0, 1, 0), spacing_bias=1.0,
+                          preserve_orientation=False):
     """Sample each ordered segment, retaining a control at every guide.
 
     The requested count is a minimum: longer chains increase it so no authored
     corner is discarded. Extra samples split the longest remaining spans; bias
     affects spacing inside each segment only. Frames aim at the next guide
     using the authored secondary axis as up. The tip inherits the last frame.
+    With preserve_orientation=True, interpolate the authored rotations instead
+    and retain the terminal guide's own frame. Solver frames remain separate.
     No DG nodes are created.
     """
     if int(count) != count or count < 2:
@@ -847,6 +856,8 @@ def sample_chain_matrices(guides, count, primary_axis=(1, 0, 0),
             raise ValueError("Guide path must be one ordered, unbranched chain.")
 
     positions = [om.MVector(cmds.xform(g, q=True, ws=True, t=True)) for g in guides]
+    authored = [om.MTransformationMatrix(om.MMatrix(cmds.xform(g, q=True, ws=True, m=True)))
+                for g in guides] if preserve_orientation else None
     lengths = [(b - a).length() for a, b in zip(positions, positions[1:])]
     if any(not math.isfinite(length) or length < 1e-6 for length in lengths):
         raise ValueError("Consecutive path guides must have distinct positions.")
@@ -865,8 +876,14 @@ def sample_chain_matrices(guides, count, primary_axis=(1, 0, 0),
         for sample in range(divisions_in_segment):
             weight = (sample / float(divisions_in_segment)) ** spacing_bias
             position = positions[i] * (1.0 - weight) + positions[i + 1] * weight
-            matrices.append(list(_with_translation(frame, position)))
-    matrices.append(list(_with_translation(frame, positions[-1])))
+            sample_frame = frame
+            if authored:
+                rotation = om.MQuaternion.slerp(authored[i].rotation(asQuaternion=True),
+                                               authored[i + 1].rotation(asQuaternion=True), weight)
+                sample_frame = rotation.asMatrix()
+            matrices.append(list(_with_translation(sample_frame, position)))
+    tip_frame = authored[-1].asMatrix() if authored else frame
+    matrices.append(list(_with_translation(tip_frame, positions[-1])))
     return matrices
 
 
@@ -883,7 +900,8 @@ def _scale_rotation(matrix, weight):
     return om.MQuaternion(axis.x * s, axis.y * s, axis.z * s, math.cos(half)).asMatrix()
 
 
-def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0), ribbon=False):
+def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 0), ribbon=False,
+                  preserve_orientation=False):
 
     """
     Orienta las guías. Cada guía se orienta hacia la siguiente (la última hereda
@@ -928,7 +946,9 @@ def orient_guides(guides, primaryInputAxis=(1, 0, 0), secondaryInputAxis=(0, 1, 
                 return _aim_joint(tuple(-v for v in sec_axis))
             return matrix
 
-        if i == count - 1:
+        if preserve_orientation:
+            matrix = om.MMatrix(cmds.xform(guide, q=True, ws=True, m=True))
+        elif i == count - 1:
             if ribbon:
                 matrix = _with_translation(om.MMatrix.kIdentity, pos)
             else:

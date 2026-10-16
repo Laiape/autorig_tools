@@ -48,12 +48,14 @@ def setup():
                        {'create_controller','lock_attributes'}, curve_scope)
     sys.path.insert(0, str(ROOT))
     from maya_tools.scripts.utils import ribbon
+    from maya_tools.scripts.utils import guide_frames
     from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
-    return guides, curves, ribbon, organize_module_nurbs
+    frames = SimpleNamespace(**{**vars(guide_frames), 'enabled': lambda: False})
+    return guides, curves, ribbon, organize_module_nurbs, frames
 
 
-def module(kind, positions, count, helpers):
-    guides,curves,ribbon,organize = helpers
+def module(kind, positions, count, helpers, spine_tangents=False):
+    guides,curves,ribbon,organize,frames = helpers
     cmds.file(new=True,force=True)
     roots={k:cmds.createNode('transform',name=k) for k in ('modules_GRP','skel_GRP','masterwalk_ctl','preferences_ctl')}
     cmds.addAttr(roots['masterwalk_ctl'],ln='globalScale',at='double',dv=1,k=True)
@@ -74,13 +76,17 @@ def module(kind, positions, count, helpers):
     cls=next(n for n in source_ast.body if isinstance(n,ast.ClassDef))
     scope=dict(cmds=cmds,om=om,math=math,curve_tool=curves,guides_manager=guide_api,
                data_manager=SimpleNamespace(DataExportBiped=lambda:data),ribbon=ribbon,
+               guide_frames=frames,
                organize_module_nurbs=organize)
     exec(compile(ast.Module(body=[cls],type_ignores=[]),str(path),'exec'),scope)
     rig=scope[cls.name]()
-    rig.make('C',8,count)
+    if kind == 'spine':
+        rig.make('C',8,count,spine_tangents=spine_tangents)
+    else:
+        rig.make('C',8,count)
     controls=rig.tail_controllers if kind=='tail' else rig.neck_ctls if kind=='neck' else rig.spine_ctls
     matrices=rig.tail_guides_matrices if kind=='tail' else rig.neck_guides_matrices if kind=='neck' else rig.spine_guides_matrices
-    assert len(controls)==max(count,len(positions))
+    assert len(controls)==max(count+(2 if spine_tangents else 0),len(positions))
     for ctl,m in zip(controls,matrices):
         close(cmds.xform(ctl,q=True,ws=True,m=True),m)
         close(cmds.getAttr(ctl+'.translate')[0],(0,0,0))
@@ -143,7 +149,9 @@ def module(kind, positions, count, helpers):
     assert all(math.isfinite(x) for x in scaled)
     state=[v for j in joints for v in cmds.xform(j,q=True,ws=True,m=True)] + cmds.xform(mesh+'.vtx[*]',q=True,ws=True,t=True)
     return dict(kind=kind,requested=count,actual=len(controls),guides=len(positions),
-                controls=controls,joints=joints,mesh=mesh,state=state,rest=measured)
+                controls=controls,joints=joints,mesh=mesh,state=state,rest=measured,neutral=neutral,
+                primary_controls=getattr(rig,'primary_spine_ctls',controls),
+                tangent_controls=getattr(rig,'tangent_ctls',[]))
 
 
 def run():

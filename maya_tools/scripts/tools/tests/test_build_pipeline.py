@@ -172,6 +172,79 @@ class BuildTests(unittest.TestCase):
         opened.assert_called_once_with(os.path.join(self.temp.name, 'Model.ma'))
         warning.assert_not_called()
 
+    def test_model_import_preserves_guides_scene_and_rejects_stale_cache(self):
+        root = Path(self.temp.name)
+        source = root/'Model.ma'
+        cmds.polyCube(name='Model')
+        cmds.file(rename=str(source))
+        cmds.file(save=True, type='mayaAscii')
+        with mock.patch.dict(os.environ, {'AUTORIG_MODEL_CACHE_DIR': str(root/'cache')}):
+            model_cache.open_model(source)
+            def import_into_guides():
+                cmds.file(new=True, force=True)
+                cmds.file(rename=str(root/'Guides.ma'))
+                cmds.createNode('transform', name='C_guides_GRP')
+                cmds.setAttr('C_guides_GRP.translateX', 12)
+                scene = cmds.file(q=True, sceneName=True)
+                imported = model_cache.import_model(source, namespace=':')
+                self.assertEqual(cmds.file(q=True, sceneName=True), scene)
+                self.assertEqual(cmds.getAttr('C_guides_GRP.translateX'), 12)
+                self.assertTrue(cmds.objExists('Model'))
+                self.assertTrue(cmds.file(q=True, modified=True))
+                return imported
+            self.assertTrue(import_into_guides()['cache_hit'])
+            source.write_text(source.read_text()+'\n// Source changed\n')
+            self.assertFalse(import_into_guides()['cache_hit'])
+
+    def test_guide_import_loads_latest_model_once(self):
+        from maya_tools.scripts.utils import rig_manager
+        root = Path(self.temp.name)
+        (root/'Model_v001.ma').write_text('old')
+        (root/'Model_v002.mb').write_text('new')
+        (root/'notes.txt').write_text('not a model')
+        with mock.patch.object(rig_manager, 'asset_path', return_value=str(root)), \
+             mock.patch.object(model_cache, 'import_model') as imported:
+            paths = rig_manager.import_meshes_for_guides('Example')
+        self.assertEqual(paths, [str(root/'Model_v002.mb')])
+        imported.assert_called_once_with(paths[0], ignoreVersion=True, mergeNamespacesOnClash=False, namespace=':')
+
+    def test_optional_groom_loads_explicitly_and_adopts_rig_parent_space(self):
+        root = Path(self.temp.name)
+        groom = root/'Groom.mb'
+        cmds.polyCube(name='xgen')
+        cmds.setAttr('xgen.translateX', 3)
+        cmds.setAttr('xgen.visibility', False)
+        cmds.file(rename=str(groom))
+        cmds.file(save=True, type='mayaBinary')
+        cmds.file(new=True, force=True)
+        character = cmds.createNode('transform', name='Example')
+        final = cmds.createNode('transform', name='FINAL', parent=character)
+        cmds.setAttr(character+'.translateX', 5)
+        cmds.setAttr(character+'.scale', 2, 2, 2)
+        cmds.file(str(groom), reference=True, namespace=':', referenceNode='OptionalGroomRN')
+        cmds.addAttr(character, longName=model_cache.GROOM_ATTRIBUTE, attributeType='message')
+        cmds.connectAttr('OptionalGroomRN.message', character+'.'+model_cache.GROOM_ATTRIBUTE)
+        cmds.file(unloadReference='OptionalGroomRN')
+        self.assertFalse(cmds.objExists('xgen'))
+        preview = root/'Preview.mb'
+        cmds.file(rename=str(preview))
+        cmds.file(save=True, type='mayaBinary')
+        cmds.file(new=True, force=True)
+        cmds.createNode('transform', name='C_guides_GRP')
+        model_cache.import_model(preview, namespace=':')
+        self.assertTrue(cmds.objExists('C_guides_GRP'))
+        self.assertFalse(cmds.referenceQuery('OptionalGroomRN', isLoaded=True))
+        self.assertFalse(cmds.objExists('xgen'))
+        self.assertEqual(model_cache.show_groom('Example'), 'OptionalGroomRN')
+        self.assertTrue(cmds.referenceQuery('OptionalGroomRN', isLoaded=True))
+        self.assertTrue(cmds.getAttr('xgen.visibility'))
+        self.assertEqual(cmds.listRelatives('xgen', parent=True), [final])
+        self.assertAlmostEqual(cmds.xform('xgen', query=True, translation=True, worldSpace=True)[0], 11)
+        # A second click must not load duplicates or change the authored offset.
+        model_cache.show_groom('Example')
+        self.assertEqual(len(cmds.ls('xgen', type='transform')), 1)
+        self.assertAlmostEqual(cmds.getAttr('xgen.translateX'), 3)
+
     def test_sticky_lips_accept_unequal_upper_and_lower_guide_counts(self):
         from maya_tools.scripts.biped.autorig.jaw_module_nurbs import JawModule
         for counts in ((3, 5), (5, 3), (3, 3)):

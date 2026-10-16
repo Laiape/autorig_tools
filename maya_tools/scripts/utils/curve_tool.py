@@ -2,6 +2,7 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import json
 import os
+import math
 
 # Intentamos importar tus utilidades. Si fallan, el script no se romperá inmediatamente,
 # pero necesitarás que existan para que funcione la lógica de rutas automática.
@@ -485,6 +486,10 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
             ctl = cmds.circle(name=f"{name}_CTL", ch=False)
         else:
             ctl = [ctl[0]]  # make sure ctl is a list with one element for consistency
+            # Saved CVs already include the artist's final placement. Modules
+            # must not apply offsets intended only for their fallback shape.
+            cmds.addAttr(ctl[0], longName='autorigTemplateShape', attributeType='bool',
+                         defaultValue=True, hidden=True)
         
         lock_attributes(ctl[0], locked_attrs or [])
 
@@ -508,7 +513,70 @@ def create_controller(name, offset=["GRP"], parent=None, locked_attrs=[], match=
         return created_grps, ctl[0]
     
 
-def text_curve(ctl_name):
+def create_text_shape(text, name="C_text_CTL", height=1.0, font=None):
+    """Create a centered XY text controller with identity transform channels.
+
+    All glyph outlines (including holes) become NURBS shapes on one transform.
+    Height is the visible text height in scene units; spaces retain their layout.
+    No character/build context is required. Return the actual unique Maya name.
+    """
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("Enter a letter or word.")
+    height = float(height)
+    if not math.isfinite(height) or height <= 0:
+        raise ValueError("Text height must be a positive finite number.")
+    if not isinstance(name, str) or not name.strip() or any(c in name for c in "|.\n\r"):
+        raise ValueError("Enter a valid controller name without a DAG path.")
+
+    previous_selection = cmds.ls(selection=True, long=True) or []
+    root = None
+    cmds.undoInfo(openChunk=True, chunkName="Create Text Controller")
+    try:
+        options = {"text": text, "constructionHistory": False}
+        if font:
+            options["font"] = font
+        root = cmds.textCurves(**options)[0]
+        root = cmds.rename(root, name.strip())
+        shapes = cmds.listRelatives(root, allDescendents=True, type="nurbsCurve",
+                                    fullPath=True) or []
+        if not shapes:
+            raise ValueError("The text/font produced no curve outlines.")
+        bounds = cmds.exactWorldBoundingBox(root)
+        visible_height = bounds[4] - bounds[1]
+        if visible_height <= 1e-10:
+            raise ValueError("The text/font produced no visible height.")
+        center = [(bounds[i] + bounds[i + 3]) * 0.5 for i in range(3)]
+        scale = height / visible_height
+        for index, shape in enumerate(shapes, 1):
+            # Keep each glyph's placement when removing its parent transform.
+            positions = cmds.xform(shape + ".cv[*]", query=True, worldSpace=True,
+                                   translation=True)
+            shape = cmds.parent(shape, root, shape=True, relative=True)[0]
+            shape = cmds.rename(shape, root.rsplit("|", 1)[-1] + "Shape%02d" % index)
+            for cv in range(len(positions) // 3):
+                point = [(positions[3 * cv + axis] - center[axis]) * scale
+                         for axis in range(3)]
+                cmds.xform("%s.cv[%d]" % (shape, cv), objectSpace=True,
+                           translation=point)
+        children = cmds.listRelatives(root, children=True, type="transform",
+                                      fullPath=True) or []
+        if children:
+            cmds.delete(children)
+        cmds.select(root, replace=True)
+        return root
+    except Exception:
+        if root and cmds.objExists(root):
+            cmds.delete(root)
+        if previous_selection:
+            cmds.select(previous_selection, replace=True)
+        else:
+            cmds.select(clear=True)
+        raise
+    finally:
+        cmds.undoInfo(closeChunk=True)
+
+
+def text_curve(ctl_name, letter=None):
     """
     Creates a text curve for a given controller name and letter.
 
@@ -520,7 +588,7 @@ def text_curve(ctl_name):
         str: The name of the created text curve.
     """
     CHARACTER_NAME = rig_manager.get_character_name_from_build()
-    letter = CHARACTER_NAME[0].upper()
+    letter = letter or CHARACTER_NAME[0].upper()
     text_curve = cmds.textCurves(ch=False, t=letter)
     text_curve = cmds.rename(text_curve, ctl_name)
     relatives = cmds.listRelatives(text_curve, allDescendents=True, type="nurbsCurve")

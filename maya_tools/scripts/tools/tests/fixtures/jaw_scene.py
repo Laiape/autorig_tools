@@ -56,6 +56,7 @@ def build(source=SOURCE):
     matrices = {'cmds': cmds, 'om': om}
     exec(compile(ast.Module(body=functions, type_ignores=[]), '<matrix>', 'exec'), matrices)
     scope = dict(cmds=cmds, om=om, math=math, os=os,
+                 guide_frames=SimpleNamespace(enabled=lambda: False),
                  curve_tool=SimpleNamespace(create_controller=controller, lock_attributes=lock),
                  guides_manager=SimpleNamespace(get_guides=guides),
                  data_manager=SimpleNamespace(DataExportBiped=lambda: SimpleNamespace(append_data=lambda *a: None)),

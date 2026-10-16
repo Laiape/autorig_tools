@@ -1,0 +1,51 @@
+{
+  "passed": false,
+  "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_dress_chains_v005.ma",
+  "delivery": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_skirt_contact_v005.ma",
+  "quality_reference": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\experiments\\skirt_contact\\validation_v003.json",
+  "code_sha256": {
+    "skirt_contact.py": "6e3d22c4d669a4c01959d2cea4196aea2712a09dac67792e32e4df8039b0730c",
+    "dress_keepout_chains.py": "07bb80948e27b036a31522260eadbc5c6797415d86dd1e261082cf8be2e1e885",
+    "skirt_surface_contact.py": "b14acebe59cd1c784bb5d4bdc5c6f41797f174cc05ba8f7f5c798ad29164fe8e"
+  },
+  "build_seconds": 4.686900100001367,
+  "equivalence": {
+    "neutral": 0.0,
+    "left_step": 0.0,
+    "right_step": 0.0,
+    "both_up": 0.0,
+    "spread": 0.0,
+    "held_left": 0.0,
+    "cross_left": 0.0,
+    "cross_right": 0.0
+  },
+  "hierarchy": {
+    "root": "|Nini|rig_GRP",
+    "mechanics": "|Nini|rig_GRP|modules_GRP|NiniDress_Module_GRP|NiniDress_Contact_Module_GRP",
+    "controllers": "|Nini|controls_GRP|NiniDress_Contact_Controllers_GRP",
+    "skeleton": "|Nini|rig_GRP|skel_GRP|NiniDress_Chains_GRP",
+    "env_joint_count": 258
+  },
+  "global_transforms": [
+    {
+      "scale": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "max_error_cm": 1.9852082433968514,
+      "per_mesh_error_cm": {
+        "c_tunic_GEO": 1.9852082433968514,
+        "c_embroider_GEO": 1.9852043512124058,
+        "c_body_GEO": 1.9852043512124058
+      }
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"C:\\proyectos\\auto-rig\\autorig_tools\\scripts\\finalize_skirt_contact.py\", line 102, in <module>\n    assert difference <= 1e-4, report['global_transforms'][-1]\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: {'scale': 0.5, 'rotation': (0, 0, 0), 'translation': (0, 0, 0), 'max_error_cm': 1.9852082433968514, 'per_mesh_error_cm': {'c_tunic_GEO': 1.9852082433968514, 'c_embroider_GEO': 1.9852043512124058, 'c_body_GEO': 1.9852043512124058}}\n"
+}

@@ -1,5 +1,12 @@
 # Autorig project guidance
 
+For every rig creation/build/adaptation request, follow the existing module
+class and native scene hierarchy described in
+`.cursor/rules/rig-module-structure.mdc`. Inspect `arm_module.py` or the closest
+existing module; use the shared builder, per-module mechanics/skin/control
+groups and a populated `_ENV` skeleton under `rig_GRP/skeletonHierarchy_GRP`.
+The flower settings controller uses an F drawing.
+
 Read `how_it_works.md` and the affected area's index before changes. Product
 code/docs are English ASCII; user chat is Spanish. Preserve existing local
 edits and resolve the loaded Maya checkout before editing runtime code.

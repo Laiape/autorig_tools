@@ -1,0 +1,119 @@
+{
+  "passed": true,
+  "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_dress_chains_v005.ma",
+  "delivery": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_skirt_contact_v006.ma",
+  "quality_reference": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\experiments\\skirt_contact\\validation_v003.json",
+  "code_sha256": {
+    "skirt_contact.py": "6e3d22c4d669a4c01959d2cea4196aea2712a09dac67792e32e4df8039b0730c",
+    "dress_keepout_chains.py": "07bb80948e27b036a31522260eadbc5c6797415d86dd1e261082cf8be2e1e885",
+    "skirt_surface_contact.py": "b14acebe59cd1c784bb5d4bdc5c6f41797f174cc05ba8f7f5c798ad29164fe8e"
+  },
+  "source_uniform_scale_error_cm": 1.9852043512124058,
+  "build_seconds": 5.063783100005821,
+  "equivalence": {
+    "neutral": 0.0,
+    "left_step": 0.0,
+    "right_step": 0.0,
+    "both_up": 0.0,
+    "spread": 0.0,
+    "held_left": 0.0,
+    "cross_left": 0.0,
+    "cross_right": 0.0
+  },
+  "hierarchy": {
+    "root": "|Nini|rig_GRP",
+    "mechanics": "|Nini|rig_GRP|modules_GRP|NiniDress_Module_GRP|NiniDress_Contact_Module_GRP",
+    "controllers": "|Nini|controls_GRP|NiniDress_Contact_Controllers_GRP",
+    "skeleton": "|Nini|rig_GRP|skel_GRP|NiniDress_Chains_GRP",
+    "env_joint_count": 258
+  },
+  "global_transforms": [
+    {
+      "scale": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "max_error_cm": 1.9852082433968514,
+      "per_mesh_error_cm": {
+        "c_tunic_GEO": 1.9852082433968514,
+        "c_embroider_GEO": 1.9852043512124058,
+        "c_body_GEO": 1.9852043512124058
+      },
+      "accepted": false
+    },
+    {
+      "scale": 2,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "max_error_cm": 3.970424047146518,
+      "per_mesh_error_cm": {
+        "c_tunic_GEO": 3.970424047146518,
+        "c_embroider_GEO": 3.9704087344271035,
+        "c_body_GEO": 3.97040879843173
+      },
+      "accepted": false
+    },
+    {
+      "scale": 1,
+      "rotation": [
+        0,
+        35,
+        0
+      ],
+      "translation": [
+        12,
+        4,
+        -7
+      ],
+      "max_error_cm": 0.0005787255096337542,
+      "per_mesh_error_cm": {
+        "c_tunic_GEO": 0.0005787255096337542,
+        "c_embroider_GEO": 1.1715873378797744e-06,
+        "c_body_GEO": 7.715717767344817e-06
+      },
+      "accepted": false
+    },
+    {
+      "scale": 1,
+      "rotation": [
+        12,
+        0,
+        -8
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "max_error_cm": 7.614078002233566e-06,
+      "per_mesh_error_cm": {
+        "c_tunic_GEO": 7.32450031241774e-06,
+        "c_embroider_GEO": 7.118111328374446e-06,
+        "c_body_GEO": 7.614078002233566e-06
+      },
+      "accepted": true
+    }
+  ],
+  "delivery_scope": "Recorded Nini global transform and scale 1. Global changes with failed covariance are not accepted; base-rig error is recorded separately.",
+  "test_rig_profile": {
+    "cases": 6,
+    "missing": [],
+    "skipped": []
+  },
+  "delivery_sha256": "699efb53db03507859dd50178a71fc79ec74d21f4ed6b36473408f2d354bc043"
+}

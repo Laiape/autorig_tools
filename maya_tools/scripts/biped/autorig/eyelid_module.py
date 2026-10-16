@@ -390,7 +390,7 @@ class EyelidModule(object):
         """
 
         self.eye_direct_nodes, self.eye_direct_ctl = curve_tool.create_controller(name=f"{self.side}_eyeDirect", offset=["GRP", "OFF"])
-        if self.surface:
+        if self.surface and not cmds.attributeQuery('autorigTemplateShape', node=self.eye_direct_ctl, exists=True):
             cmds.move(0, 0, 2, f"{self.eye_direct_ctl}.cv[*]", relative=True, objectSpace=True, worldSpaceDistance=True)
         cmds.parent(self.eye_direct_nodes[0], self.head_ctl)
         # Use the final head frame: bounded neck endpoint + head squash + global
@@ -452,7 +452,10 @@ class EyelidModule(object):
         cmds.setAttr(f"{aim_eye_matrix}.primaryInputAxis", 0, 0, 1)
         cmds.setAttr(f"{aim_eye_matrix}.secondaryMode", 2)
         cmds.setAttr(f"{aim_eye_matrix}.secondaryInputAxis", 0, 1, 0)
-        cmds.setAttr(f"{aim_eye_matrix}.secondaryTargetVector", 0, 1, 0)
+        # Retain the authored eye roll in head-local space. An eye can use X
+        # as its visual up axis; forcing global Y rotates its rest frame.
+        authored_up = om.MVector(eye_local_matrix[4], eye_local_matrix[5], eye_local_matrix[6]).normal()
+        cmds.setAttr(f"{aim_eye_matrix}.secondaryTargetVector", *authored_up, type="double3")
 
 
         mult_matrix = cmds.createNode("multMatrix", name=f"{self.side}_eyeDirectEye_MMX", ss=True)

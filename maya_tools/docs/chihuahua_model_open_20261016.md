@@ -1,5 +1,8 @@
 # Chihuahua model opening
 
+Current optional-groom delivery: `chihuahua_deferred_groom_20261016.md`.
+That later version supersedes the full-binary recommendation below.
+
 Parent: `maya_tools/how_it_works.md`.
 Evidence: `docs/validation/chihuahua_open_20261016/`.
 

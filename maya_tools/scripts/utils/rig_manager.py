@@ -346,11 +346,14 @@ def import_meshes_for_guides(character_name):
 
     models_path = asset_path(character_name, "models")
 
-    mesh_files = glob.glob(os.path.join(models_path, "*.mb")) + glob.glob(os.path.join(models_path, "*.ma"))
+    # Match CREATE RIG: load the latest model version once, not every old file.
+    mesh_files = sorted(str(path) for path in pathlib.Path(models_path).iterdir()
+                        if path.is_file() and path.suffix.lower() in ('.ma', '.mb'))[-1:]
 
     for mesh_file in mesh_files:
         try:
-            cmds.file(mesh_file, i=True, type="mayaBinary" if mesh_file.endswith(".mb") else "mayaAscii", ignoreVersion=True, mergeNamespacesOnClash=False, namespace=":")
+            from maya_tools.scripts.utils import model_cache
+            model_cache.import_model(mesh_file, ignoreVersion=True, mergeNamespacesOnClash=False, namespace=":")
             om.MGlobal.displayInfo(f"Imported mesh: {os.path.basename(mesh_file)}")
         except Exception as e:
             om.MGlobal.displayError(f"Failed to import {os.path.basename(mesh_file)}: {str(e)}")
@@ -405,6 +408,14 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
 
     # --- Acceso a los datos del diccionario ---
     rig_type            = rig_settings.get("Rig_Type", 0)
+    if rig_type == 2:
+        from maya_tools.scripts.flower.autorig import flower_module
+        step("Building flower modules...")
+        data_manager.DataExportBiped().append_data('rig_settings', {'Rig_Type': 2, 'mGear_integration': 0})
+        result = flower_module.make(character_name, rig_settings, all_guides_data, on_step=on_step)
+        skeleton_hierarchy(module_chains=result['skeleton_chains'])
+        apply_character_extras(rig_settings)
+        return result
     spine_skinning_jnts = rig_settings.get("spine_skinning_jnts", 8)
     spine_controllers   = rig_settings.get("spine_controllers", 5)
     neck_skinning_jnts  = rig_settings.get("neck_skinning_jnts", 5)
@@ -444,7 +455,8 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
             UNIFORM_SPINE_CHARS = {"giraffe"}
             if str(character_name).lower() in UNIFORM_SPINE_CHARS:
                 spine.SAGITTAL_BIAS = 1.0
-            spine.make("C", spine_skinning_jnts, spine_controllers)
+            spine.make("C", spine_skinning_jnts, spine_controllers,
+                       spine_tangents=rig_settings.get("spine_tangents", 0))
 
     
 
@@ -463,7 +475,9 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
         # Patas Delanteras — implementación elegida por leg_impl
         if module_guides.enabled(all_guides_data, "front_leg"):
             step("Building front legs…")
-            if leg_impl == "reference":
+            # Authored frames and non-planar rest offsets use the calibrated
+            # native leg graph, including the normal CREATE RIG entry point.
+            if leg_impl == "reference" and not rig_settings.get("authored_guide_orientation", 0):
                 reload(quad_leg_module)
                 quad_leg_module.FrontLegModule().make("L", solver=front_leg_solver, skinning_jnts=leg_skinning_jnts)
                 quad_leg_module.FrontLegModule().make("R", solver=front_leg_solver, skinning_jnts=leg_skinning_jnts)
@@ -488,7 +502,7 @@ def build_rig(character_name, on_step=None, leg_impl="self", leg_solver=None):
         # Patas Traseras — implementación elegida por leg_impl
         if module_guides.enabled(all_guides_data, "back_leg"):
             step("Building back legs…")
-            if leg_impl == "reference":
+            if leg_impl == "reference" and not rig_settings.get("authored_guide_orientation", 0):
                 reload(quad_leg_module)
                 quad_leg_module.BackLegModule().make("L", solver=back_leg_solver, skinning_jnts=leg_skinning_jnts)
                 quad_leg_module.BackLegModule().make("R", solver=back_leg_solver, skinning_jnts=leg_skinning_jnts)
@@ -867,7 +881,8 @@ def test_rig_by_guide():
         "scapula": (lambda s_: leg_module_self.FrontLegModule().make(
             s_, solver=front_leg_solver, skinning_joints_number=leg_jnts), "frontLeg"),
         "spine00": (lambda s_: quad_spine_module.SpineModule().make(
-            "C", settings.get("spine_skinning_jnts", 8), settings.get("spine_controllers", 5)), "spine"),
+            "C", settings.get("spine_skinning_jnts", 8), settings.get("spine_controllers", 5),
+            spine_tangents=settings.get("spine_tangents", 0)), "spine"),
         "tail00": (lambda s_: tail_module.TailModule().make(
             "C", settings.get("tail_skinning_jnts", 5), settings.get("tail_controllers", 5)), "tail"),
         "neck00": (lambda s_: neck_module_quad.NeckModule().make(
@@ -941,7 +956,8 @@ def create_rig_settings(guides_transform, load=False):
     # Inicializamos valores por defecto
     defaults = {
         "Rig_Type": 0,
-        "spine_skinning_jnts": 8, "spine_controllers": 5,
+        "spine_skinning_jnts": 8, "spine_controllers": 5, "spine_tangents": 0,
+        "authored_guide_orientation": 0,
         "neck_skinning_jnts": 5, "neck_controllers": 2,
         "arm_skinning_jnts": 5, "leg_skinning_jnts": 5,
         "tail_skinning_jnts": 5, "tail_controllers": 5,
@@ -957,7 +973,7 @@ def create_rig_settings(guides_transform, load=False):
             defaults.update(loaded_values)
 
     rig_settings_config = {
-        "Rig_Type": ("biped", "quadruped"),
+        "Rig_Type": ("biped", "quadruped", "flower"),
         "solver_mode": ("maya solvers", "custom solvers"),
         "solver_front_leg": LEG_SOLVER_OPTIONS,
         "solver_back_leg": LEG_SOLVER_OPTIONS,
@@ -965,6 +981,8 @@ def create_rig_settings(guides_transform, load=False):
         "foot_type": ("hoof", "paw"),
         "spine_skinning_jnts": defaults["spine_skinning_jnts"],
         "spine_controllers": defaults["spine_controllers"],
+        "spine_tangents": ("off", "on"),
+        "authored_guide_orientation": ("solver frames", "authored guides"),
         "neck_skinning_jnts": defaults["neck_skinning_jnts"],
         "neck_controllers": defaults["neck_controllers"],
         "arm_skinning_jnts": defaults["arm_skinning_jnts"],
@@ -1022,7 +1040,8 @@ def load_rig_settings(guides_transform):
 
     # Lista de atributos que queremos intentar leer
     attrs_to_read = [
-        "Rig_Type", "spine_skinning_jnts", "spine_controllers",
+        "Rig_Type", "spine_skinning_jnts", "spine_controllers", "spine_tangents",
+        "authored_guide_orientation",
         "neck_skinning_jnts", "neck_controllers", "arm_skinning_jnts",
         "leg_skinning_jnts", "leg_solver", "tail_skinning_jnts", "tail_controllers",
         "solver_mode", "solver_front_leg", "solver_back_leg",
@@ -1144,7 +1163,7 @@ def parented_chain(skinning_joints, parent=None, hand_value=False):
     return [env for _, env in created]
 
 
-def skeleton_hierarchy():
+def skeleton_hierarchy(module_chains=None):
 
     """
     Construye el esqueleto de export (_ENV) a partir de los _JNT de skinning.
@@ -1169,6 +1188,31 @@ def skeleton_hierarchy():
 
     if not cmds.objExists("skel_GRP"):
         return
+
+    if module_chains is not None:
+        # Explicit module branches use the same native parented_chain helper.
+        # Resolve the complete dependency map before creating any export joints.
+        pending = list(module_chains)
+        known = {'C_freeze_JNT'}
+        ordered = []
+        while pending:
+            ready = [entry for entry in pending if entry['parent'] in known]
+            if not ready:
+                raise ValueError('Unresolved export skeleton module attachments.')
+            for entry in ready:
+                if not entry['joints'] or any(joint in known or not cmds.objExists(joint) for joint in entry['joints']):
+                    raise ValueError('Invalid or duplicate module skinning joints.')
+                ordered.append(entry)
+                known.update(entry['joints'])
+                pending.remove(entry)
+        root = parented_chain(cmds.ls('C_freeze_JNT', long=True), parent=skel_grp)[0]
+        mapping = {'C_freeze_JNT': root}
+        for entry in ordered:
+            joints = [cmds.ls(joint, long=True)[0] for joint in entry['joints']]
+            parented_chain(joints, parent=mapping[entry['parent']])
+            for joint in entry['joints']:
+                mapping[joint] = joint.replace('Skinning_JNT', '_ENV').replace('_JNT', '_ENV')
+        return mapping
 
     # Joint "freeze": raíz / padre de TODO el esqueleto _ENV.
     if cmds.objExists("C_freeze_ENV"):

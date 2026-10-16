@@ -1,0 +1,36 @@
+{
+  "maya": "2026",
+  "date": "2026-10-16",
+  "intent": "Rebase artist curve CVs from previous solver frames to authored guide frames, preserving controller and joint transforms and drawing visibility.",
+  "reference_frames": "chihuahua_controls_v002.mb",
+  "source_curve_preset": "chihuahua_v004.curves",
+  "checks": [
+    "290 curve controllers; 1197 unchanged joint/control matrices",
+    "Full CREATE RIG matches the adjusted CV positions exactly",
+    "Native save/reopen retains exact world CV positions and shape visibility",
+    "Three primary spine controls and two initially hidden tangents",
+    "Native head/eye deformation regression passes"
+  ],
+  "files": {
+    "maya_tools/assets/chihuahua/curves/chihuahua_v004.curves": {
+      "bytes": 1344132,
+      "sha256": "b6b7bb092c19a2ff902742b81ccffa18f7e4fc8e7d295c8125332743e4e1ddb0"
+    },
+    "maya_tools/assets/chihuahua/curves/chihuahua_v005.curves": {
+      "bytes": 1347186,
+      "sha256": "c27f2b528e006bf74da974caa6a734ed0d4d7b37f10494ac2af7ac04534f11c7"
+    },
+    "maya_tools/assets/chihuahua/scenes/chihuahua_oriented_v002.mb": {
+      "bytes": 276479708,
+      "sha256": "7838e28cc654e01b19393711c8d1a6b29ebca3974729d73589f05d6ea0ca8076"
+    },
+    "maya_tools/scripts/utils/curve_tool.py": {
+      "bytes": 24439,
+      "sha256": "7b7ef0eba126c04eb34862bea833e0eb4f07795516ad1598db735cb9b8ecee81"
+    },
+    "maya_tools/scripts/biped/autorig/eyelid_module.py": {
+      "bytes": 83364,
+      "sha256": "fd3720b3f208fb7ceb9f94b47ec591dff965e70c22499c3fef3c85feca3e4278"
+    }
+  }
+}

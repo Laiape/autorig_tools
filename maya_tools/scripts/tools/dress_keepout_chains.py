@@ -18,7 +18,11 @@ from maya_tools.scripts.tools import muscle_keepout_skirt as core
 def mesh_path(mesh):
     selection=om.MSelectionList();selection.add(mesh)
     path=selection.getDagPath(0)
-    if path.node().hasFn(om.MFn.kTransform): path.extendToShape()
+    if path.node().hasFn(om.MFn.kTransform):
+        shapes=cmds.listRelatives(mesh,shapes=True,noIntermediate=True,fullPath=True,type='mesh') or []
+        if len(shapes)!=1:
+            raise ValueError('Expected one visible mesh shape on '+mesh)
+        path=om.MSelectionList().add(shapes[0]).getDagPath(0)
     return path
 
 
@@ -401,11 +405,14 @@ def _inside_point(fn,point,acceleration):
     return None
 
 
-def signed_mesh_clearance(source,vertices,target,closed=True,surface_samples=False):
+def signed_mesh_clearance(source,vertices,target,closed=True,surface_samples=False,
+                          penetration_tolerance=.05):
     """Vertex sampling; three agreeing ray parities for a closed body mesh.
 
     An open garment such as the pants only supports unsigned proximity.
     """
+    if not math.isfinite(penetration_tolerance) or penetration_tolerance < 0:
+        raise ValueError('A finite nonnegative penetration tolerance is required.')
     from maya_tools.scripts.tools import rig_surface_contact as audit
     source_points=mesh_points(source)
     owner,target_object,target_fn=audit._target_data(om.MFnMesh(mesh_path(target)))
@@ -426,17 +433,19 @@ def signed_mesh_clearance(source,vertices,target,closed=True,surface_samples=Fal
                 if edge in edges: continue
                 edges.add(edge)
                 samples.append(('edge_{}_{}'.format(*edge),om.MPoint(*[(source_points[a][axis]+source_points[b][axis])/2 for axis in range(3)])))
-    minimum=float('inf');inside=[];uncertain=[]
+    minimum=float('inf');surface_minimum=float('inf');inside=[];uncertain=[]
     for sample,point in samples:
         hit=intersector.getClosestPoint(point)
         distance=(point-om.MPoint(hit.point)).length()
-        containment=_inside_point(target_fn,point,acceleration) if closed and distance>.05 else False
+        containment=_inside_point(target_fn,point,acceleration) if closed and distance>penetration_tolerance else False
         if containment is None: uncertain.append(sample)
         signed=distance*(-1 if containment else 1)
         minimum=min(minimum,signed)
-        if signed<-.05: inside.append(sample)
+        surface_minimum=min(surface_minimum,distance)
+        if signed < -penetration_tolerance: inside.append(sample)
     return {'minimum_signed_clearance_cm':minimum if closed else None,
-            'minimum_surface_distance_cm':abs(minimum),
+            'minimum_surface_distance_cm':surface_minimum,
+            'penetration_tolerance_cm':penetration_tolerance,
             'penetrating_vertices':inside,'uncertain_vertices':uncertain,
             'closed_target':closed,'checked_vertices':len(vertices),'checked_samples':len(samples),
             'measurement':'Vertices, triangle centers and edge midpoints' if surface_samples else 'Vertices'}

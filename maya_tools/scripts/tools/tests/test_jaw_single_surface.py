@@ -32,6 +32,7 @@ def guides(name,parent=None):
  return n
 scope={'cmds':cmds,'om':om,'math':math,'os':os,'curve_tool':SimpleNamespace(create_controller=create_controller,lock_attributes=lock_attributes),'guides_manager':SimpleNamespace(get_guides=guides),'data_manager':SimpleNamespace(DataExportBiped=lambda:SimpleNamespace(append_data=lambda *a:None))}
 scope['organize_module_nurbs']=runpy.run_path(str(scripts/'utils/module_nurbs.py'))['organize_module_nurbs']
+scope['guide_frames']=SimpleNamespace(enabled=lambda:False)
 mt=ast.parse((scripts/'utils/matrix_manager.py').read_text(encoding='utf-8'))
 f=[n for n in mt.body if isinstance(n,ast.FunctionDef) and n.name=='getClosestParamsToPositionSurface'];ms={'cmds':cmds,'om':om};exec(compile(ast.Module(body=f,type_ignores=[]),'<matrix>','exec'),ms);scope['matrix_manager']=SimpleNamespace(getClosestParamsToPositionSurface=ms['getClosestParamsToPositionSurface'])
 tree=ast.parse((scripts/'biped/autorig/jaw_module_nurbs.py').read_text(encoding='utf-8'));cl=next(n for n in tree.body if isinstance(n,ast.ClassDef));exec(compile(ast.Module(body=[cl],type_ignores=[]),'<jaw>','exec'),scope)

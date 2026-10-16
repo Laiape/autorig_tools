@@ -12,6 +12,7 @@ from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import rig_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils import guide_frames
 from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
@@ -90,6 +91,7 @@ class LegModule(object):
              bendys=True, config=None):
         """Punto de entrada. Construye la pierna entera."""
         self.side = side
+        self.authored_orientation = guide_frames.enabled()
         self.solver = solver
         self.skinning_joints_number = skinning_joints_number
         self.bendys = bendys
@@ -166,6 +168,7 @@ class LegModule(object):
         lat = om.MVector(*self.primary_axis) ^ om.MVector(*self.secondary_axis)
         self.lateral_axis = (lat.x, lat.y, lat.z)
         self.aim_letter = "xyz"[max(range(3), key=lambda k: abs(self.primary_axis[k]))]
+        self.authored_guide_matrices = [cmds.xform(joint, q=True, ws=True, m=True) for joint in self.leg_chain]
 
         self.guides_matrices, self.point_matrices = guides_manager.orient_guides(
             guides=self.leg_chain,
@@ -190,6 +193,12 @@ class LegModule(object):
     def ctl_matrix(self, matrix, world_frame=False):
         """Frame de colocación de un control; en el lado R los controles van espejados."""
         m = om.MMatrix(matrix)
+        if getattr(self, 'authored_orientation', False):
+            if not world_frame:
+                for solver, authored in zip(self.guides_matrices, self.authored_guide_matrices):
+                    if max(abs(a - b) for a, b in zip(m, cmds.getAttr(solver))) < 1e-8:
+                        return om.MMatrix(authored)
+            return m
         if self.side != "R":
             return m
         if world_frame:
@@ -925,11 +934,19 @@ class LegModule(object):
         for i, jnt in enumerate(self.leg_joints):
             blend_matrix = cmds.createNode("blendMatrix", name=jnt.replace("_JNT", "Blend_BLM"), ss=True)
             ik_src = getattr(self, "nodes_ik_world", None)
-            cmds.connectAttr(ik_src[i] if ik_src else f"{self.ik_chain[i]}.worldMatrix[0]",
-                             f"{blend_matrix}.inputMatrix")
+            ik_driver = ik_src[i] if ik_src else f"{self.ik_chain[i]}.worldMatrix[0]"
+            if self.authored_orientation:
+                # A planar IK solve cannot reproduce an authored non-planar
+                # model at rest. Retain the local residual on the output frame.
+                ik_driver = guide_frames.calibrated_output(
+                    ik_driver, self.authored_guide_matrices[i],
+                    jnt.replace('_JNT', 'IkAuthoredRest'), scale_plug=f"{self.masterwalk_ctl}.globalScale")
+            cmds.connectAttr(ik_driver, f"{blend_matrix}.inputMatrix")
             fk_wm = f"{self.fk_controllers[i]}.worldMatrix[0]"
             fk_rest = om.MMatrix(cmds.getAttr(fk_wm))
             guide_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[i]))
+            if self.authored_orientation:
+                guide_rest = om.MMatrix(self.authored_guide_matrices[i])
             fk_frame_mmx = cmds.createNode("multMatrix", name=jnt.replace("_JNT", "FkFrame_MMX"), ss=True)
             cmds.setAttr(f"{fk_frame_mmx}.matrixIn[0]", list(guide_rest * fk_rest.inverse()), type="matrix")
             cmds.connectAttr(fk_wm, f"{fk_frame_mmx}.matrixIn[1]")
@@ -1106,6 +1123,9 @@ class LegModule(object):
                 )
                 for t in temp:
                     cmds.delete(t)
+                if self.authored_orientation:
+                    guide_frames.orient_outputs(segment_jnts, self.authored_guide_matrices[i:i + 2],
+                                                 name, parameters=params)
                 self.skinning_joints.extend(segment_jnts)
 
             cmds.setAttr(f"{self.leg_chain[0]}.visibility", 0)
@@ -1118,6 +1138,9 @@ class LegModule(object):
             tip_jnt = cmds.createNode("joint", name=self.tip_joint.replace("_JNT", "Skinning_JNT"), ss=True, parent=self.skeleton_grp)
             tip_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[-1]))
             plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
+            if self.authored_orientation:
+                tip_rest = om.MMatrix(self.authored_guide_matrices[-1])
+                plant_rest = om.MMatrix(self.authored_guide_matrices[self.plant_index])
             tip_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}TipSkinning_MMX", ss=True)
             cmds.setAttr(f"{tip_mmx}.matrixIn[0]", list(tip_rest * plant_rest.inverse()), type="matrix")
             cmds.connectAttr(self.blend_plugs[self.plant_index], f"{tip_mmx}.matrixIn[1]")
@@ -1243,6 +1266,7 @@ class FrontLegModule(LegModule):
             guides=scapula_chain,
             primaryInputAxis=self.primary_axis,
             secondaryInputAxis=self.secondary_axis,
+            preserve_orientation=self.authored_orientation,
         )
         self.scapula_wm = scapula_matrices[0]
         self.scapula_point_wm = scapula_point_matrices
@@ -1747,8 +1771,23 @@ class PawFoot(FootBase):
             cmds.connectAttr(input_plug, f"{amx}.inputMatrix")
             cmds.connectAttr(target_plug, f"{amx}.primary.primaryTargetMatrix")
             cmds.setAttr(f"{amx}.primaryInputAxis", *leg.primary_axis, type="double3")
-            cmds.connectAttr(f"{amx}.outputMatrix",
-                             f"{leg.blend_matrices[blend_index]}.inputMatrix", force=True)
+            # A paw's roll belongs to the foot control, not the lower IK bone.
+            # Inheriting that bone's roll becomes singular while lifting the
+            # fetlock and can rotate the whole hand and all digits abruptly.
+            rest = (om.MMatrix(leg.authored_guide_matrices[blend_index]) if leg.authored_orientation
+                    else om.MMatrix(cmds.getAttr(leg.guides_matrices[blend_index])))
+            up_world = om.MVector(*leg.lateral_axis) * rest
+            up_local = (up_world * ball_rest_inv).normal()
+            cmds.setAttr(f"{amx}.secondaryInputAxis", *leg.lateral_axis, type="double3")
+            cmds.setAttr(f"{amx}.secondaryTargetVector", *up_local, type="double3")
+            cmds.connectAttr(f"{ball_ctl}.worldMatrix[0]", f"{amx}.secondaryTargetMatrix")
+            cmds.setAttr(f"{amx}.secondaryMode", 2)
+            output = f"{amx}.outputMatrix"
+            if leg.authored_orientation:
+                output = guide_frames.calibrated_output(
+                    output, leg.authored_guide_matrices[blend_index], f"{n}{label}AuthoredRest",
+                    scale_plug=f"{leg.masterwalk_ctl}.globalScale")
+            cmds.connectAttr(output, f"{leg.blend_matrices[blend_index]}.inputMatrix", force=True)
             return amx
 
         _sc("Fetlock", end_src, follow["Plant"], leg.leg_end_index)
@@ -1778,6 +1817,7 @@ class PawFoot(FootBase):
                 guides=data["chain"],
                 primaryInputAxis=leg.primary_axis,
                 secondaryInputAxis=leg.secondary_axis,
+                preserve_orientation=leg.authored_orientation,
             )
 
             local_matrices = []

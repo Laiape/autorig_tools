@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils import guide_frames
 from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
@@ -42,6 +43,7 @@ class TailModule(object):
 
         """
         self.side = side
+        self.authored_orientation = guide_frames.enabled()
         self.skinning_joints_number = skinning_joints_number
         self.controllers_number = controllers_number
 
@@ -72,6 +74,11 @@ class TailModule(object):
         self.tail_guides_matrices = guides_manager.sample_chain_matrices(
             self.tail_chain, self.controllers_number,
             self.primary_axis, self.secondary_axis)
+        self.solver_guides_matrices = self.tail_guides_matrices
+        if self.authored_orientation:
+            self.tail_guides_matrices = guides_manager.sample_chain_matrices(
+                self.tail_chain, len(self.solver_guides_matrices),
+                self.primary_axis, self.secondary_axis, preserve_orientation=True)
         self.controllers_number = len(self.tail_guides_matrices)
 
     def fk_setup(self):
@@ -218,7 +225,16 @@ class TailModule(object):
         if self.tail_chain and cmds.objExists(self.tail_chain[0]):
             cmds.delete(self.tail_chain[0])
 
+        if self.authored_orientation:
+            solver = self.solver_guides_matrices
+            solver_frames = ([solver[0], guide_frames.interpolate(solver[:2], 0.5)] +
+                             solver[1:-1] + [guide_frames.interpolate(solver[-2:], 0.5), solver[-1]])
+            rest_frames = [cmds.getAttr(guide_frames.matrix_plug(node)) for node in ribbon_drivers]
+            ribbon_drivers = guide_frames.control_drivers(ribbon_drivers, rest_frames, solver_frames,
+                                                         f"{self.side}_tailRibbon")
         skinning_jnts, temp = ribbon.de_boor_ribbon(cvs=ribbon_drivers, name=f"{self.side}_tail", num_joints=self.skinning_joints_number, skeleton_grp=self.skeleton_grp)
+        if self.authored_orientation:
+            guide_frames.orient_outputs(skinning_jnts, self.tail_guides_matrices, f"{self.side}_tail")
 
         for t in temp:
             cmds.delete(t)

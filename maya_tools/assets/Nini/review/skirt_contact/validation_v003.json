@@ -1,0 +1,586 @@
+{
+  "source": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_dress_chains_v005.ma",
+  "candidate": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\experiments\\skirt_contact\\validated_candidate_v003.ma",
+  "delivery": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_skirt_contact_v003.ma",
+  "passed": true,
+  "cases": {
+    "neutral_and_original_data": {
+      "passed": true,
+      "max_error_cm": 9.5367431640625e-07,
+      "skin_bind_DQ_unchanged": true,
+      "topology_UV_materials_unchanged": true,
+      "normals_unchanged": true,
+      "idempotent": true,
+      "build_seconds": 7.559312899989891,
+      "owned_nodes": 11001
+    },
+    "pose_transitions": {
+      "passed": true,
+      "coverage": [
+        {
+          "pose": "neutral_1.0",
+          "stretch": 1.0000001281233564,
+          "lift_cm": 1.393083156386865e-06,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.1397814623193897,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "left_step_0.25",
+          "stretch": 1.0000001391325646,
+          "lift_cm": 1.8113587005172462,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.07859386061351169,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5196500473471961,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "left_step_0.5",
+          "stretch": 1.0000001354112422,
+          "lift_cm": 4.945348034623684,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.06285134851753275,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.41008441287645153,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "left_step_0.75",
+          "stretch": 1.0000001054674235,
+          "lift_cm": 8.791976223710613,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.09632058193428952,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5486042059856076,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "left_step_1.0",
+          "stretch": 1.0000001268381087,
+          "lift_cm": 13.017945538285815,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.03775542159745153,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.41409430226470567,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "right_step_0.25",
+          "stretch": 1.0000001054674235,
+          "lift_cm": 1.8931114776168698,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.07880693195502914,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.520688244001927,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "right_step_0.5",
+          "stretch": 1.0000001054674235,
+          "lift_cm": 5.405663738969388,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.06306592501328427,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.41798747154071086,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "right_step_0.75",
+          "stretch": 1.0000001054674243,
+          "lift_cm": 9.453004132035794,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.09661438737466982,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5443437127941767,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "right_step_1.0",
+          "stretch": 1.0000001054674226,
+          "lift_cm": 12.773479710343906,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.04404233151595102,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5060264368258018,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "both_up_0.25",
+          "stretch": 1.00000016730917,
+          "lift_cm": 1.6477902038131376,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.08303932298903627,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5284643872481073,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "both_up_0.5",
+          "stretch": 1.0000001180591285,
+          "lift_cm": 4.548329602006504,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.06419832932058372,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.44067832952152036,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "both_up_0.75",
+          "stretch": 1.000000141322317,
+          "lift_cm": 7.862447033647129,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.07110730707453003,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.44923130374491543,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "both_up_1.0",
+          "stretch": 1.0000001456591836,
+          "lift_cm": 12.46488500666959,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.09075815095659531,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "spread_0.25",
+          "stretch": 1.0000001252264394,
+          "lift_cm": 0.6794560058150907,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.13029526816083145,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "spread_0.5",
+          "stretch": 1.0000001205785662,
+          "lift_cm": 1.0690052611861915,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.12438066432507965,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "spread_0.75",
+          "stretch": 1.0000001372218648,
+          "lift_cm": 1.376595745805325,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.11989563055300177,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "spread_1.0",
+          "stretch": 1.0000001773727203,
+          "lift_cm": 1.6404793365035673,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.11626226230630006,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "held_left_0.25",
+          "stretch": 1.0000001281233564,
+          "lift_cm": 1.12449194026334,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.1262682238001644,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "held_left_0.5",
+          "stretch": 1.0000001054674226,
+          "lift_cm": 2.437438259843411,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.0689209986036609,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.49721797061658873,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "held_left_0.75",
+          "stretch": 1.000000136794206,
+          "lift_cm": 4.4268829925094195,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.06308459054567793,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.43442671721372456,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "held_left_1.0",
+          "stretch": 1.000000128023613,
+          "lift_cm": 6.386134396318042,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.06194776972759529,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.42602125083714815,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_left_0.25",
+          "stretch": 1.000000113230183,
+          "lift_cm": 0.6393997771774025,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.133143932809125,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_left_0.5",
+          "stretch": 1.0000001228639792,
+          "lift_cm": 1.0627796752486915,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.1293208295772347,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_left_0.75",
+          "stretch": 1.0000001656622755,
+          "lift_cm": 1.5608666045699806,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.08178408633536322,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5212071960244388,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_left_1.0",
+          "stretch": 1.0000001151671587,
+          "lift_cm": 2.023795376542637,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.06895630744752718,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.4964619043816124,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_right_0.25",
+          "stretch": 1.0000001677511652,
+          "lift_cm": 0.6726105315719408,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.13260511520087992,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_right_0.5",
+          "stretch": 1.000000112028244,
+          "lift_cm": 1.07621313166959,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.12852055959308212,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.552024852116595,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_right_0.75",
+          "stretch": 1.0000001054674226,
+          "lift_cm": 1.5879433257613726,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.08282596698546683,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.5228197511503646,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        },
+        {
+          "pose": "cross_right_1.0",
+          "stretch": 1.0000001054674226,
+          "lift_cm": 2.087332974198901,
+          "passed": true,
+          "contacts": {
+            "c_tunic_GEO": {
+              "minimum_cm": 0.0689352690850002,
+              "inside": [],
+              "uncertain": []
+            },
+            "c_embroider_GEO": {
+              "minimum_cm": 0.4985477669286386,
+              "inside": [],
+              "uncertain": []
+            }
+          }
+        }
+      ]
+    },
+    "evaluators_and_reverse_access": {
+      "passed": true,
+      "modes": {
+        "serial": {
+          "max_error_cm": 0,
+          "fallback": false
+        },
+        "parallel": {
+          "max_error_cm": 0,
+          "fallback": false
+        }
+      }
+    },
+    "manual_controls_and_baseline_switch": {
+      "passed": true
+    },
+    "presets_and_recalibration": {
+      "passed": true
+    },
+    "lossless_SKC_roundtrip": {
+      "passed": true,
+      "path": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\experiments\\skirt_contact\\roundtrip_v003.skc",
+      "skin_count": 2
+    },
+    "native_reopen": {
+      "passed": true
+    },
+    "two_reproducible_builds": {
+      "passed": true
+    },
+    "namespace_and_renamed_controls": {
+      "passed": true
+    }
+  },
+  "contact_tolerance_cm": 0.01,
+  "length_ratio_limit": 1.05,
+  "reference_sha256": "4869dc1ec38f2a88fec83df3129bf406c004f66ed06a1261fdba54a56854444a",
+  "code_sha256": {
+    "skirt_contact.py": "2948fc0e775d0ed01444f1d326f3c001c81eddf1260a45a7f7e034d92ee5f2df",
+    "dress_keepout_chains.py": "07bb80948e27b036a31522260eadbc5c6797415d86dd1e261082cf8be2e1e885",
+    "skirt_surface_contact.py": "b14acebe59cd1c784bb5d4bdc5c6f41797f174cc05ba8f7f5c798ad29164fe8e"
+  }
+}

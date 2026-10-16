@@ -1,0 +1,31 @@
+{
+  "model_geometry_normals_uvs_materials_exact": true,
+  "world_matrices_exact": true,
+  "groom_names_and_direct_connections_exact": true,
+  "unloaded_primary_geometry_exact": true,
+  "mesh_count_loaded": 14,
+  "mesh_count_unloaded": 11,
+  "groom_description_count": 4,
+  "ownership": "The deferred reference restores xgen below the character root; compare its real world matrices/data with that declared path change. Show Groom uses FINAL space if the rig has been built.",
+  "intentional_behavior": "Groom is unloaded at open. Show Groom explicitly loads and displays it.",
+  "scope": "Static native source model and native save/reopen/reload; no new full-rig deformation or external texture-availability certification.",
+  "failures_retained": [
+    "Full groom interactive import trial cancelled after preference changed.",
+    "Owned diagnostic GUI stalled on file(new), no samples accepted.",
+    "Standalone reference teardown crashed after some quality captures; final interactive open/load/show/unload passed."
+  ],
+  "files": {
+    "models/chihuahua_v001.ma": {
+      "bytes": 375291207,
+      "sha256": "43ec2ab71d712410af609c5599f5ec61bc3439e9c55e0e5ccebec6656b1c6df5"
+    },
+    "models/chihuahua_v002.mb": {
+      "bytes": 12388840,
+      "sha256": "51895a9ec24cfb0113f884b4b4910ab054961a670d509390020e746a6117f89b"
+    },
+    "groom/Chihuahua_groom_v001.mb": {
+      "bytes": 259592084,
+      "sha256": "2c49c87a2767de77653a79db0cf388bc1aa30c72ec4347786462fd3bf78b69f2"
+    }
+  }
+}

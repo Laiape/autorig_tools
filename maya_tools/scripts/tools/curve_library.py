@@ -417,8 +417,8 @@ class CurveLibraryUI(QtWidgets.QWidget):
         super().__init__(parent)
         self.setWindowFlags(QtCore.Qt.Window)
         self.setWindowTitle("Curve Library  —  AutoRig Tools")
-        self.resize(520, 600)
-        self.setMinimumSize(400, 480)
+        self.resize(520, 760)
+        self.setMinimumSize(400, 640)
 
         self._selected_name    = None
         self._selected_builtin = True
@@ -443,7 +443,39 @@ class CurveLibraryUI(QtWidgets.QWidget):
         body.addWidget(self._options_panel())
         root.addLayout(body, 1)
 
+        root.addWidget(self._text_panel())
         root.addWidget(self._footer())
+
+    def _text_panel(self):
+        panel = QtWidgets.QGroupBox("Text Controller")
+        layout = QtWidgets.QFormLayout(panel)
+        self.text_input = QtWidgets.QLineEdit("F")
+        self.text_input.setPlaceholderText("Letter or word")
+        layout.addRow("Text", self.text_input)
+        self.text_name = QtWidgets.QLineEdit("C_text_CTL")
+        layout.addRow("Name", self.text_name)
+        self.text_height = QtWidgets.QDoubleSpinBox()
+        self.text_height.setRange(0.001, 10000.0)
+        self.text_height.setDecimals(3)
+        self.text_height.setValue(1.0)
+        self.text_height.setToolTip("Visible text height in scene units. Created in the XY plane.")
+        row = QtWidgets.QHBoxLayout()
+        row.addWidget(self.text_height)
+        self.create_text_button = QtWidgets.QPushButton("Create Text Controller")
+        ui_utils.action(self.create_text_button, "primary", "controller")
+        self.create_text_button.clicked.connect(self._create_text)
+        row.addWidget(self.create_text_button)
+        layout.addRow("Height", row)
+        return panel
+
+    def _create_text(self):
+        from maya_tools.scripts.utils import curve_tool
+        try:
+            return curve_tool.create_text_shape(self.text_input.text(),
+                                                name=self.text_name.text(),
+                                                height=self.text_height.value())
+        except (ValueError, RuntimeError) as error:
+            cmds.warning(str(error))
 
     def _header(self):
         w = QtWidgets.QWidget()
@@ -743,7 +775,7 @@ class CurveLibraryUI(QtWidgets.QWidget):
 
 
 # ── Launch ────────────────────────────────────────────────────────────────────
-def show():
+def show(focus_text=False):
     global _curve_lib_ui
     try:
         _curve_lib_ui.close()
@@ -752,3 +784,7 @@ def show():
         pass
     _curve_lib_ui = CurveLibraryUI()
     _curve_lib_ui.show()
+    if focus_text:
+        _curve_lib_ui.text_input.setFocus()
+        _curve_lib_ui.text_input.selectAll()
+    return _curve_lib_ui

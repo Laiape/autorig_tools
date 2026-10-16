@@ -1,0 +1,18 @@
+test_analytic_pv_line_keeps_computed_bone_endpoint (module_nurbs_regression.ModuleNurbsTests.test_analytic_pv_line_keeps_computed_bone_endpoint) ... ok
+test_animator_lines_stay_with_controls_while_construction_is_hidden (module_nurbs_regression.ModuleNurbsTests.test_animator_lines_stay_with_controls_while_construction_is_hidden) ... ok
+test_decorator_handles_subclass_build_controls_and_existing_shapes (module_nurbs_regression.ModuleNurbsTests.test_decorator_handles_subclass_build_controls_and_existing_shapes) ... ok
+test_every_module_with_a_module_group_uses_the_decorator (module_nurbs_regression.ModuleNurbsTests.test_every_module_with_a_module_group_uses_the_decorator) ... ok
+test_existing_rig_repair_is_undoable_idempotent_and_reopens (module_nurbs_regression.ModuleNurbsTests.test_existing_rig_repair_is_undoable_idempotent_and_reopens) ... Undo: Restore PV and eye indicator curves
+File read in  0.011 seconds.
+ok
+test_namespaced_repair_is_scoped_to_requested_character (module_nurbs_regression.ModuleNurbsTests.test_namespaced_repair_is_scoped_to_requested_character) ... ok
+test_preserves_skin_and_inherits_transform_false (module_nurbs_regression.ModuleNurbsTests.test_preserves_skin_and_inherits_transform_false) ... ok
+test_reference_driver_curve_with_consumers_stays_in_mechanics (module_nurbs_regression.ModuleNurbsTests.test_reference_driver_curve_with_consumers_stays_in_mechanics) ... ok
+test_repair_preserves_selection_of_reparented_curve_component (module_nurbs_regression.ModuleNurbsTests.test_repair_preserves_selection_of_reparented_curve_component) ... ok
+test_root_curve_connected_opm_and_locked_channels (module_nurbs_regression.ModuleNurbsTests.test_root_curve_connected_opm_and_locked_channels) ... ok
+test_surface_preserves_animated_parent_space_and_uv_output (module_nurbs_regression.ModuleNurbsTests.test_surface_preserves_animated_parent_space_and_uv_output) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.913s
+
+OK

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\scenes\\chihuahua_oriented_v002.mb",
+  "curve_version": "chihuahua_v005.curves",
+  "controllers": 290,
+  "compared_joints_and_controls": 1197,
+  "matrix_max_error": 0.0,
+  "world_shape_cv_max_error": 0.0,
+  "native_reopen_matrix_max_error": 0.0,
+  "native_shape_data_exact": true,
+  "visibility_preserved": true,
+  "spine_tangents_hidden": true
+}

@@ -4,6 +4,11 @@ Parent: `how_it_works.md`.
 Vision (required): `modulos/vision/how_it_works.md`.
 UI: `maya_tools/criterios-ui.md`.
 
+NURBS painting in NG, the adjacent NURBS Skin tab and an independent
+drag-and-drop installer: `maya_tools/docs/ng_nurbs_bridge.md`.
+The approved architecture and original audit are retained in
+`maya_tools/docs/ng_nurbs_bridge_design_20261016.md`.
+
 Performance requirements and the phased Autorig/Edward optimization plan:
 `maya_tools/docs/rig_performance_plan.md`. Persistent measurement, graph and
 wrinkle/detail rules live in `.cursor/rules/rig-performance-measurement.mdc`,
@@ -32,6 +37,8 @@ Edward Maya/custom limb-module compatibility and interactive timing comparison:
 Chihuahua verified binary opening through Character Manager, direct binary
 model delivery and measured load/redraw scope:
 `maya_tools/docs/chihuahua_model_open_20261016.md`.
+Chihuahua's current lightweight model, optional groom reference and explicit
+SHOW GROOM action: `maya_tools/docs/chihuahua_deferred_groom_20261016.md`.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 
@@ -69,6 +76,12 @@ On start (`maya_tools/scripts/userSetup.py`, deferred):
 Autorig build: `maya_tools/scripts/utils/create_rig.py` class `AutoRig`.
 Biped modules under `maya_tools/scripts/biped/autorig/`.
 Quadruped modules under `maya_tools/scripts/quadruped/autorig/`.
+Flower modules under `maya_tools/scripts/flower/autorig/` use `Rig_Type = 2`
+in the same CREATE RIG pipeline. Asset recipe, petal release actions and native
+validation: `maya_tools/scripts/flower/how_it_works.md`.
+Its modules follow the ArmModule class/group convention. The shared skeleton
+helper accepts explicit module-chain attachments for its branched `_ENV`
+hierarchy under `rig_GRP/skeletonHierarchy_GRP`. The flower settings drawing is F.
 Quadruped tail, spine and neck controls follow every authored guide segment in
 order. `guides_manager.sample_chain_matrices` retains one control at each guide,
 adds any requested extra controls inside the segments and aims frames at the
@@ -84,6 +97,44 @@ module methods with fixture guide loading and fallback controller circles,
 all guide anchors, local frames, DG/Serial/Parallel poses, skin deformation,
 two reproducible builds and native scene reopen. It also loads Chihuahua's
 saved guide positions into the fixtures; this is not a full-character rebuild.
+Quadruped builds may opt into `spine_tangents` (off by default). It adds two
+endpoint-following tangent controls to the configured primary spine count,
+with `tanVisibility` on the first spine control OFF by default. Chihuahua uses
+three primary controls (`C_spine00_CTL`, `C_spine02_CTL`, `C_spine04_CTL`) and
+two hidden tangents (`C_spine01Tan_CTL`, `C_spine03Tan_CTL`). The five ribbon
+anchors and eight configured skin joints retain the previous neutral positions.
+The guide settings and `.build` export both persist the optional setting.
+Native regression: `scripts/tools/tests/test_quadruped_spine_tangents.py` checks
+neutral agreement with the five-control layout, endpoint following, visibility,
+live deformation, DG/Serial/Parallel, global scale, reproducible builds and reopen.
+Chihuahua also enables `authored_guide_orientation` in its build settings.
+Spine, neck, tail, jaw, paw digits and FK controls retain the authored guide
+rotations; terminal frames are not replaced by their parent's orientation.
+Static matrix adapters keep the ribbon/IK solver's required axes separate.
+The native leg graph retains each non-planar rest offset instead of moving the
+model or flattening its guide positions. The normal CREATE RIG entry uses that
+graph when this optional setting is enabled. Other assets default to their
+existing solver frames. This affects new builds, not existing bound scenes.
+`C_localHip_JNT` is the optional pelvis guide: both its position and orientation
+drive the new pelvis frame. It is not part of the spine guide chain.
+The eye aim preserves the authored roll in head-local space. Jaw collision
+continues to use its anatomical hinge after the animator frame is changed.
+Paw fetlock and pastern aims take their roll reference from the foot control.
+Lower IK bone twist cannot flip the paw when the fetlock is lifted. Regression:
+`scripts/tools/tests/test_paw_fetlock_roll.py`.
+Guide curve exports now save their world transform together with local CVs;
+both guide import paths restore it. Old guide files without it remain valid.
+Native source regressions: `scripts/tools/tests/test_authored_guide_frames.py`.
+Chihuahua full-build and reopen evidence is under
+`docs/validation/chihuahua_guide_orientation_20261016/`.
+Chihuahua curve preset `chihuahua_v005.curves` adapts the saved shapes to the
+authored control frames and names both spine tangents. The updated native rig
+is `assets/chihuahua/scenes/chihuahua_oriented_v002.mb`. Saved template shapes
+are tagged with hidden `autorigTemplateShape`; the eyelid builder applies its
+default eye-direct CV offset only to a fallback shape, preventing cumulative
+offsets after export/rebuild. Shape placement, visibility, unchanged joint and
+control matrices, full rebuild and native reopen evidence is under
+`docs/validation/chihuahua_shapes_20261016/`.
 PawFoot and the alternate quadruped digit module place their settings above
 the complete digit set. `utils/controller_display.py` creates a native paw
 follow offset and a `Controllers_Visibility` channel, OFF by default, on each
@@ -91,6 +142,12 @@ settings control. It hides the digit FK root groups without hiding settings
 or changing joint evaluation. Regression: `test_digit_controller_display.py`.
 PV indicator lines in the biped/quadruped limb builders and both eye aim lines
 use Reference display (type 2), so they remain visible without being selectable.
+The shared module NURBS organizer recognizes their two world-driven CVs and
+keeps them under animator controls, outside hidden `modules_GRP`. Existing
+scenes can use Rigging > Utilities > Restore PV / Eye Lines to reparent only
+misplaced display lines. Reference/locked nodes are reported as skipped. The
+operation preserves CV connections, rig output and authored visibility, is
+undoable and supports namespaces. Regression: `tools/tests/test_module_nurbs.py`.
 Eyebrow builds keep manual InTan/OutTan controls and `browCurve`; they no longer
 create the `autoTangent` channel or its automatic tangent utility network.
 Eyelids skin separate pose curves before the blink blend. Upper and lower lids
@@ -127,6 +184,12 @@ rotation, scale and visibility locked and hidden from the Channel Box. Its
 custom collision settings remain editable; the parent group follows the hip.
 `showChains` and `showColliders` are created last and remain visible in the
 Channel Box with keyable disabled.
+
+The opt-in calibrated skirt upgrade in `tools/skirt_contact.py` adds panel/hem
+controls, bounded lift/length correction and sparse final surface contact while
+retaining existing skin data. Build, rest recalibration, presets and explicit
+contact checks use the existing Framework. Architecture, native acceptance and
+rollback: `maya_tools/docs/skirt_contact_rig.md`.
 
 Language of this file: English ASCII. Some existing Maya `inViewMessage`
 strings are Spanish; do not bulk-rewrite them unless asked.

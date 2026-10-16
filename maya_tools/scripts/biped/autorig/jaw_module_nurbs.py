@@ -6,6 +6,7 @@ import math
 
 from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
+from maya_tools.scripts.utils import guide_frames
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
@@ -100,6 +101,9 @@ class JawModule(object):
         # Matriz horneada (solo posición) de la guía del jaw, sin transform _GUIDE vivo
         jaw_pos = cmds.xform(self.jaw_guides[0], q=True, ws=True, t=True)
         self.jaw_guide_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, jaw_pos[0], jaw_pos[1], jaw_pos[2], 1]
+        self.authored_orientation = guide_frames.enabled()
+        if self.authored_orientation:
+            self.jaw_guide_matrix = cmds.xform(self.jaw_guides[0], q=True, ws=True, m=True)
 
         self.jaw_nodes, self.jaw_ctl = curve_tool.create_controller("C_jaw", offset=["GRP", "OFF"], parent=self.controllers_grp)
         jaw_skinning = cmds.createNode("joint", name="C_jawSkinning_JNT", ss=True, p=self.skeleton_grp)
@@ -141,8 +145,20 @@ class JawModule(object):
 
         # Create nodes for collision detection
         sum_matrix_jaw = cmds.createNode("sum", name=f"{self.module_name}_collisionJaw_SMM")
-        cmds.connectAttr(f"{self.jaw_ctl}.rotateX", f"{sum_matrix_jaw}.input[0]")
-        cmds.connectAttr(f"{self.upper_jaw_ctl}.rotateX", f"{sum_matrix_jaw}.input[1]")
+        for index, ctl in enumerate((self.jaw_ctl, self.upper_jaw_ctl)):
+            rotation = f"{ctl}.rotateX"
+            if self.authored_orientation:
+                # Collision measures the anatomical hinge in its original
+                # world frame, independently of the animator's authored axes.
+                frame = om.MTransformationMatrix(om.MMatrix(self.jaw_guide_matrix)).rotation(asQuaternion=True).asMatrix()
+                mmx = cmds.createNode('multMatrix', name=ctl.replace('_CTL', 'CollisionFrame_MMX'))
+                cmds.setAttr(mmx + '.matrixIn[0]', list(frame.inverse()), type='matrix')
+                cmds.connectAttr(ctl + '.matrix', mmx + '.matrixIn[1]')
+                cmds.setAttr(mmx + '.matrixIn[2]', list(frame), type='matrix')
+                dcm = cmds.createNode('decomposeMatrix', name=ctl.replace('_CTL', 'CollisionFrame_DCM'))
+                cmds.connectAttr(mmx + '.matrixSum', dcm + '.inputMatrix')
+                rotation = dcm + '.outputRotateX'
+            cmds.connectAttr(rotation, f"{sum_matrix_jaw}.input[{index}]")
 
 
         clamp_jaw = cmds.createNode("clamp", name=f"{self.module_name}_collisionJaw_CLP")
@@ -155,7 +171,14 @@ class JawModule(object):
         cmds.connectAttr(f"{clamp_jaw}.outputR", f"{attribute_blender}.input[1]")
         self.compose_matrix_jaw = cmds.createNode("composeMatrix", name=f"{self.module_name}_collisionJaw_CMP")
         cmds.connectAttr(f"{attribute_blender}.output", f"{self.compose_matrix_jaw}.inputRotateX")
-        cmds.connectAttr(f"{self.compose_matrix_jaw}.outputMatrix", f"{self.upper_jaw_ctl}.offsetParentMatrix")  # Connect the output of the blendTwoAttr to the rotateX of the upper jaw controller
+        collision_output = f"{self.compose_matrix_jaw}.outputMatrix"
+        if self.authored_orientation:
+            mmx = cmds.createNode('multMatrix', name='C_upperJawCollisionAuthored_MMX')
+            cmds.setAttr(mmx + '.matrixIn[0]', list(frame), type='matrix')
+            cmds.connectAttr(collision_output, mmx + '.matrixIn[1]')
+            cmds.setAttr(mmx + '.matrixIn[2]', list(frame.inverse()), type='matrix')
+            collision_output = mmx + '.matrixSum'
+        cmds.connectAttr(collision_output, f"{self.upper_jaw_ctl}.offsetParentMatrix")
 
 
     @staticmethod

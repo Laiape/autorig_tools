@@ -1,0 +1,40 @@
+{
+  "status": "implemented_and_validated",
+  "date": "2026-10-16",
+  "maya": "2026.3.3",
+  "ng": "2.4.0",
+  "native_tests": 16,
+  "native_success": true,
+  "viewport_stroke_dabs": 2,
+  "viewport_undo_redo": true,
+  "autorig_adjacent_tab": true,
+  "standalone_ng_tab": true,
+  "independent_install_and_reinstall": true,
+  "no_autorig_imports": true,
+  "automatic_attachment_after_restart": true,
+  "native_scene_reopen": true,
+  "vendor_sources_and_binary_unchanged": true,
+  "security_policy_unchanged": true,
+  "security_note": "Maya can request native Allow for brush_plugin.py under Secure Plugin Loading; this prompt was not automatically approved.",
+  "source_sha256": {
+    "maya_tools\\scripts\\ng_nurbs_bridge\\brush.py": "d04c4587bd49b87dac31253071b15dd7739f9435e4a8f086e1572fd7c600e2f8",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\brush_plugin.py": "452a23e1c9a1d5f7b63c6fc39f9f058a2e66cb8d2701c8dd9b063c823bca38e1",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\core.py": "b3e9ac1a72ca300c204bd19f562ac5ea084bf89a070f4151cd48c954dc43ab5c",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\ng_host.py": "73ccfc59b06be4864115686ff967be8b736db1fe2606f98627aa52e838350f16",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\qt.py": "885fac312e395c01270e2f3f77ca8a7d03d7fb131872a6784f7c954dfaaac1c7",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\topology.py": "cea3c38e5c00f73c21543a7691eeb97368c596796d1c5d95ce75f39daf5314f8",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\ui.py": "c7f1f910e22e881758aa72bd4c64be8618ae4320e1a83b5bea837ee22c339569",
+    "maya_tools\\scripts\\ng_nurbs_bridge\\__init__.py": "04bd94a38daf70456d96829bcaef9d42b62234d7a501774a8042efa44c769a8e",
+    "maya_tools\\scripts\\ui\\skinning_tool_adapters.py": "0e84c7f7f78b41011e10bcf20ef8aad59e6af16fa7aa39f3094caa4d74cef73f",
+    "maya_tools\\scripts\\tools\\tests\\test_ng_nurbs_bridge.py": "33533c5f8b9f0570394e4ede011cc6a892e705978958046bc9cd695be37e51a1",
+    "maya_tools\\scripts\\tools\\tests\\test_ng_nurbs_bridge_ui.py": "d3ebd23500069a6639ec61a9dc348fadd552527706134845f3408bb430a97a3f",
+    "scripts\\build_ng_nurbs_bridge_installer.py": "7917807ad0fec2c1d507be33a7247b5532b834119da7377aad7b52332a9bc35a",
+    "dist\\install_ng_nurbs_bridge.py": "a0666a22811c35c9fac6928cdc9f9c32bfafaf17e06a735cc1d4eec9990103ba"
+  },
+  "limits": [
+    "Maya 2026 / NG 2.4.0 validated; other versions not validated",
+    "Untrimmed local surface with one skinCluster; no referenced/stacked/driven destination weights",
+    "Local tangent metric brush footprint; sampled 24 x 24 display",
+    "No performance measurement or full-character build regression claimed"
+  ]
+}

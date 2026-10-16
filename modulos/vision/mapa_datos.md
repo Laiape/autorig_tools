@@ -63,5 +63,10 @@ Read this map, pick the row that matches the meaning, and put it there.
 | Unreal production rigging notes | `ue_tools/docs/` | Unreal rigger | `ue_tools/docs/unreal_fest_chicago_2026_rigging_produccion.md` |
 
 Wrong: a new dump window because the map had no row. Add a row with the user, or leave TODO.
+Flower petal release/attachment uses the existing ANIMATION menu and Tool
+Framework actions. Its guide matrices, controller curves and skin use the
+existing Character Manager formats; shell membership is
+`maya_tools/assets/<asset>/rig_data/flower.json`. Implementation and validation:
+`maya_tools/scripts/flower/how_it_works.md`.
 Wrong: putting Unreal notes behind a Maya menu item.
 Wrong: a second Character Manager.

@@ -122,6 +122,13 @@ def mirror_controllers():
     reload(curve_tool)
     return curve_tool.mirror_shapes()
 
+def create_text_controller():
+    from tools import curve_library
+    reload(curve_tool)
+    reload(curve_library)
+    return curve_library.show(focus_text=True)
+
+
 def open_library():
     print("Funcionalidad para abrir la librería de controladores.")
 

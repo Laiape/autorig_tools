@@ -9,6 +9,7 @@ from maya_tools.scripts.utils import guides_manager
 from maya_tools.scripts.utils import curve_tool
 from maya_tools.scripts.utils import matrix_manager
 from maya_tools.scripts.utils import ribbon
+from maya_tools.scripts.utils import guide_frames
 from maya_tools.scripts.utils.module_nurbs import organize_module_nurbs
 
 reload(data_manager)
@@ -78,7 +79,7 @@ class SpineModule(object):
         self.secondary_input_axis = (0, 1, 0)
 
     @organize_module_nurbs
-    def make(self, side, spine_joints, spine_controllers):
+    def make(self, side, spine_joints, spine_controllers, spine_tangents=False):
 
         """ 
         Create the spine module structure and controllers. Call this method with the side ('L' or 'R') to create the respective spine module.
@@ -86,11 +87,16 @@ class SpineModule(object):
             side (str): The side of the spine ('L' or 'R').
             spine_joints (int): The number of spine joints.
             spine_controllers (int): The number of spine controllers.
+            spine_tangents (bool): Add two endpoint tangent controls, hidden by default.
 
         """
 
         self.spine_joints = spine_joints
         self.spine_controllers = spine_controllers
+        self.spine_tangents = bool(spine_tangents)
+        self.authored_orientation = guide_frames.enabled()
+        if self.spine_tangents and spine_controllers < 3:
+            raise ValueError("A tangent spine requires at least three primary controls.")
         self.side = side
         self.module_trn = cmds.createNode("transform", name=f"{self.side}_spineModule_GRP", ss=True, p=self.modules)
         self.skeleton_grp = cmds.createNode("transform", name=f"{self.side}_spineSkinning_GRP", ss=True, p=self.skel_grp)
@@ -126,9 +132,15 @@ class SpineModule(object):
         Create the logic for spine guides.
         """
         self.spine_guides_matrices = guides_manager.sample_chain_matrices(
-            self.spine_chain, self.spine_controllers,
+            self.spine_chain, self.spine_controllers + (2 if self.spine_tangents else 0),
             self.primary_input_axis, self.secondary_input_axis,
             spacing_bias=self.SAGITTAL_BIAS)
+        self.solver_guides_matrices = self.spine_guides_matrices
+        if self.authored_orientation:
+            self.spine_guides_matrices = guides_manager.sample_chain_matrices(
+                self.spine_chain, len(self.solver_guides_matrices),
+                self.primary_input_axis, self.secondary_input_axis,
+                spacing_bias=self.SAGITTAL_BIAS, preserve_orientation=True)
         self.spine_controllers = len(self.spine_guides_matrices)
         base_matrix = om.MMatrix(self.spine_guides_matrices[0])
         cmds.delete(self.spine_chain[0])
@@ -138,9 +150,12 @@ class SpineModule(object):
         self.local_hip_matrix = self.spine_guides_matrices[0]
         hip_guide = guides_manager.get_guides(f"{self.side}_localHip_JNT")
         if hip_guide:
+            hip_matrix = cmds.xform(hip_guide[0], q=True, ws=True, m=True)
             hip_pos = om.MVector(cmds.xform(hip_guide[0], q=True, ws=True, t=True))
             cmds.delete(hip_guide[0])
             self.local_hip_matrix = list(guides_manager._with_translation(base_matrix, hip_pos))
+            if self.authored_orientation:
+                self.local_hip_matrix = hip_matrix
 
 
     def controller_creation(self):
@@ -159,12 +174,14 @@ class SpineModule(object):
         # Create the spine controllers
         self.spine_nodes = []
         self.spine_ctls = []
+        self.tangent_indices = {1, self.spine_controllers - 2} if self.spine_tangents else set()
 
         body_rest_inverse = om.MMatrix(self.spine_guides_matrices[0]).inverse()
 
         for i, matrix in enumerate(self.spine_guides_matrices):
 
-            spine_node, spine_ctl = curve_tool.create_controller(name=f"{self.side}_spine0{i}", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
+            name = f"{self.side}_spine0{i}" + ("Tan" if i in self.tangent_indices else "")
+            spine_node, spine_ctl = curve_tool.create_controller(name=name, offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
             local_matrix = om.MMatrix(matrix) * body_rest_inverse
             cmds.setAttr(f"{spine_node[0]}.offsetParentMatrix", list(local_matrix), type="matrix")
             cmds.xform(spine_node[0], m=om.MMatrix.kIdentity)
@@ -176,6 +193,24 @@ class SpineModule(object):
         cmds.setAttr(f"{self.spine_nodes[0][0]}.inheritsTransform", 0)
         for i in range(1, len(self.spine_nodes)):
             cmds.setAttr(f"{self.spine_nodes[i][0]}.offsetParentMatrix", self.spine_guides_matrices[i], type="matrix")
+
+        self.primary_spine_ctls = [ctl for i, ctl in enumerate(self.spine_ctls)
+                                   if i not in self.tangent_indices]
+        self.tangent_ctls = [self.spine_ctls[i] for i in sorted(self.tangent_indices)]
+        if self.tangent_indices:
+            cmds.addAttr(self.spine_ctls[0], longName="tanVisibility",
+                         niceName="Tangent Controllers Visibility", attributeType="bool",
+                         defaultValue=False, keyable=False)
+            cmds.setAttr(f"{self.spine_ctls[0]}.tanVisibility", channelBox=True)
+            for i in sorted(self.tangent_indices):
+                endpoint = 0 if i == 1 else len(self.spine_ctls) - 1
+                parent = self.spine_ctls[endpoint]
+                root = self.spine_nodes[i][0]
+                local_rest = (om.MMatrix(self.spine_guides_matrices[i]) *
+                              om.MMatrix(self.spine_guides_matrices[endpoint]).inverse())
+                cmds.parent(root, parent, relative=True)
+                cmds.setAttr(f"{root}.offsetParentMatrix", list(local_rest), type="matrix")
+                cmds.connectAttr(f"{self.spine_ctls[0]}.tanVisibility", f"{root}.visibility")
 
         # ----- Stretch setup (UNIFORME) -----
         # El stretch multiplica por IGUAL la distancia entre joints: factor único =
@@ -221,12 +256,15 @@ class SpineModule(object):
         cmds.connectAttr(f"{factor_div}.output", f"{factor_blend}.input[1]")
         cmds.connectAttr(f"{self.body_ctl}.Stretch_Activate", f"{factor_blend}.attributesBlender")
 
-        self.stretch_drivers = [self.spine_ctls[0]]
-        prev_plug = f"{self.spine_ctls[0]}.worldMatrix[0]"
+        solve_controls = (guide_frames.control_drivers(self.spine_ctls, self.spine_guides_matrices,
+                           self.solver_guides_matrices, f"{self.side}_spine")
+                          if self.authored_orientation else self.spine_ctls)
+        self.stretch_drivers = [solve_controls[0]]
+        prev_plug = guide_frames.matrix_plug(solve_controls[0])
 
         for i in range(1, len(self.spine_ctls)):
 
-            target_plug = f"{self.spine_ctls[i]}.worldMatrix[0]"
+            target_plug = guide_frames.matrix_plug(solve_controls[i])
 
             # Longitud uniforme de este segmento = rest_length * factor
             seg_len = cmds.createNode("multiply", name=f"{self.side}_spine0{i}StretchLen_MUL", ss=True)
@@ -342,6 +380,8 @@ class SpineModule(object):
 
         sel = tuple(self.stretch_drivers)
         output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="x", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp, d=3, tangent_cvs=0, tangent_axis="x", param_from_length=True)
+        if self.authored_orientation:
+            guide_frames.orient_outputs(output_joints, self.spine_guides_matrices, f"{self.side}_spine")
         for t in temp:
             cmds.delete(t)
     
