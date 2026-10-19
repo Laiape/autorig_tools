@@ -1,0 +1,22 @@
+---
+description: Publish completed project changes to the user's GitHub repository
+alwaysApply: true
+---
+
+# Git publishing
+
+- The user has authorized committing and pushing completed project changes to
+  `https://github.com/Laiape/autorig_tools.git` by default. Do this after the
+  appropriate checks, unless the user explicitly requests local-only work.
+- On this machine use `C:/proyectos/auto-rig/autorig_tools`. The parent checkout
+  ignores this nested repository; checking the parent misses active changes.
+  On other machines resolve the active checkout from the Maya module and Git.
+- Verify the working directory, repository root, origin URL and branch before
+  publishing. The current shared branch is `main`; honor explicit branch/PR
+  instructions in the task.
+- Include relevant code, documentation and character assets. Respect ignore
+  rules for caches, credentials and temporary output; do not force-add them.
+- Preserve existing local edits. Do not discard work, force-push or overwrite
+  remote history. If a push fails, resolve safely or report the blocker.
+- Verify the remote branch points to the published commit and report the hash.
+  When there are no changes, do not create an empty commit.

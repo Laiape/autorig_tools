@@ -1,5 +1,13 @@
 # Autorig project guidance
 
+## Git publishing
+
+Standing user instruction: commit and push completed project changes to
+`https://github.com/Laiape/autorig_tools.git` unless the user says otherwise.
+Follow `.cursor/rules/git-publishing.mdc`. On this machine the active checkout
+is `C:/proyectos/auto-rig/autorig_tools`; the parent is a separate repository
+that ignores this checkout and must not be used to infer its Git status.
+
 For every rig creation/build/adaptation request, follow the existing module
 class and native scene hierarchy described in
 `.cursor/rules/rig-module-structure.mdc`. Inspect `arm_module.py` or the closest
