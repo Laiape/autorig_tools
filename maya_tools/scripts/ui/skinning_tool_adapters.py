@@ -247,9 +247,15 @@ class NGPanel(QtWidgets.QWidget):
                 choice = shared.skin
             if explicit and not shared.root:
                 self.choices[mesh] = explicit
-            # Keep an explicit choice when the user returns to mesh/vertex
-            # selection; NG otherwise resolves the first skin in its history.
-            if choice in skins and not explicit and any(self.mesh_for(node) == mesh for node in selected):
+            # Object selection belongs to the viewport. Only a visible editor
+            # may retain an explicit stacked-skin target for a component mask.
+            # Never replace a selected mesh with its remembered skinCluster.
+            self.session.events.nodeSelectionChanged.emit()
+            components = cmds.ls(selection=True, long=True) or []
+            component_mask = any(any(token in item for token in ('.vtx[', '.e[', '.f['))
+                                 and self.mesh_for(item) == mesh for item in components)
+            if (self.isVisible() and component_mask and choice in skins and not explicit
+                    and self.session.state.selectedSkinCluster != choice):
                 self.select_cluster(choice)
             self.session.events.nodeSelectionChanged.emit()
             active = self.session.state.selectedSkinCluster

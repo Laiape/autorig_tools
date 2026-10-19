@@ -1,0 +1,241 @@
+{
+  "success": true,
+  "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\scenes\\Nini_reconstructed_from_exports_20261019_v001.mb",
+  "defaults": {
+    "SpaceFollow": [
+      1.0
+    ],
+    "TranslateValue": [
+      1.0
+    ],
+    "RotateValue": [
+      1.0
+    ]
+  },
+  "report": {
+    "asset": "Nini",
+    "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\Nini\\validation\\20261019T094335479892Z.buildtiming.json",
+    "optimizations": {
+      "enabled": true,
+      "static_point_curves": 0,
+      "shared_math_nodes": 0,
+      "new_skin_bindings": []
+    }
+  },
+  "skins": [
+    "C_body_SKC",
+    "C_lowerLipOffset_SKIN",
+    "C_lowerLip_SKIN",
+    "C_lowerNurbs_SKIN",
+    "C_upperLipOffset_SKIN",
+    "C_upperLip_SKIN",
+    "C_upperNurbs_SKIN",
+    "L_lowerEyelid_SKIN",
+    "L_upperEyelid_SKIN",
+    "R_lowerEyelid_SKIN",
+    "R_upperEyelid_SKIN"
+  ],
+  "joint_count": 576,
+  "scope": "Reconstruction from exported model, guides, curves and latest skin data; not an exact recovery of unsaved edits.",
+  "reopen_defaults_verified": true,
+  "incident": {
+    "action": "Cleanup in a temporary live-scene native default-value fixture deleted pre-existing scene nodes with undo recording disabled.",
+    "cause": "cmds.ls(uuid=True) without explicit names returned node names. The cleanup compared those names against UUIDs queried for individual nodes and misidentified existing nodes as fixture nodes.",
+    "responsibility": "Agent test script error; not a Maya rig or artist error.",
+    "safeguard": "Removed scene-wide deletion discovery from this fixture. Cleanup is restricted to its verified unique localHipSpaceTrial prefix.",
+    "exact_recovery": false,
+    "autosave_enabled": false,
+    "original_scene_file_exists": false,
+    "source_model": "maya_tools/assets/Nini/models/Nini_v003.ma",
+    "source_guides": "maya_tools/assets/Nini/guides/Nini_v010.guides",
+    "source_skin": "maya_tools/assets/Nini/skin_clusters/Nini_v024.skc",
+    "limitation": "Unsaved artist edits and any data absent from the exported source files cannot be claimed recovered."
+  },
+  "before_incident_native_motion_checks": {
+    "scene": "C:/Users/LaiaPeris/Documents/maya/projects/default/scenes/CHAR_Nini_v001.ma",
+    "space": [
+      "body:spine00"
+    ],
+    "default_space": [
+      0.0
+    ],
+    "translate_default": [
+      1.0
+    ],
+    "rotate_default": [
+      1.0
+    ],
+    "initial_joint_matrix_error": 1.617594946878853e-13,
+    "initial_mesh_point_error": 1.9410372444092716e-14,
+    "motion_checks": [
+      {
+        "mode": "off",
+        "edit": "C_spine00_CTL.translateX",
+        "space": "spine00",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "off",
+        "edit": "C_spine00_CTL.translateX",
+        "space": "body",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "off",
+        "weights": [
+          0,
+          0
+        ],
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "off",
+        "edit": "C_spine00_CTL.rotateZ",
+        "space": "spine00",
+        "translation_error": 0.0,
+        "rotation_error": 1.1102230246251565e-16
+      },
+      {
+        "mode": "off",
+        "edit": "C_spine00_CTL.rotateZ",
+        "space": "body",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "off",
+        "weights": [
+          0,
+          0
+        ],
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "serial",
+        "edit": "C_spine00_CTL.translateX",
+        "space": "spine00",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "serial",
+        "edit": "C_spine00_CTL.translateX",
+        "space": "body",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "serial",
+        "weights": [
+          0,
+          0
+        ],
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "serial",
+        "edit": "C_spine00_CTL.rotateZ",
+        "space": "spine00",
+        "translation_error": 0.0,
+        "rotation_error": 1.1102230246251565e-16
+      },
+      {
+        "mode": "serial",
+        "edit": "C_spine00_CTL.rotateZ",
+        "space": "body",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "serial",
+        "weights": [
+          0,
+          0
+        ],
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "parallel",
+        "edit": "C_spine00_CTL.translateX",
+        "space": "spine00",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "parallel",
+        "edit": "C_spine00_CTL.translateX",
+        "space": "body",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "parallel",
+        "weights": [
+          0,
+          0
+        ],
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "parallel",
+        "edit": "C_spine00_CTL.rotateZ",
+        "space": "spine00",
+        "translation_error": 0.0,
+        "rotation_error": 1.1102230246251565e-16
+      },
+      {
+        "mode": "parallel",
+        "edit": "C_spine00_CTL.rotateZ",
+        "space": "body",
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      },
+      {
+        "mode": "parallel",
+        "weights": [
+          0,
+          0
+        ],
+        "translation_error": 0.0,
+        "rotation_error": 0.0
+      }
+    ],
+    "selection_preserved": true,
+    "future_build_fix_loaded": true
+  },
+  "opened_reconstruction": {
+    "success": true,
+    "result": {
+      "scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/Nini/scenes/Nini_reconstructed_from_exports_20261019_v001.mb",
+      "enum": [
+        "body:spine00"
+      ],
+      "values": {
+        "SpaceFollow": 1,
+        "TranslateValue": 1.0,
+        "RotateValue": 1.0
+      },
+      "defaults": {
+        "SpaceFollow": [
+          1.0
+        ],
+        "TranslateValue": [
+          1.0
+        ],
+        "RotateValue": [
+          1.0
+        ]
+      },
+      "joint_count": 576,
+      "skin_count": 11,
+      "source": "Reconstructed from exported data. Unsaved edits are not guaranteed recovered."
+    }
+  }
+}

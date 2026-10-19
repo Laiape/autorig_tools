@@ -54,11 +54,10 @@ class NeckModule(object):
         self.load_guides()
         self.controller_creation()
         self.ribbon_setup(skinning_joints_number)
-        self.local_head()
 
         data_manager.DataExportBiped().append_data("neck_module",
                             {
-                                "head_ctl": self.neck_ctls[-1],
+                                "head_ctl": self.head_ctl,
                                 "neck_ctl": self.neck_ctls[0],
                                 "head_guide_matrix": self.head_guide_matrix,
                                 "face_ctl": self.face_ctl,
@@ -108,6 +107,9 @@ class NeckModule(object):
             self.neck_nodes.append(corner_nodes[0])
             self.neck_ctls.append(corner_ctl)
 
+        self.parent_neck_controls()
+        self.control_follow_setup()
+
         # # Make hierarchy
         # for i, node in enumerate(self.neck_nodes):
         #     print(node)
@@ -128,6 +130,7 @@ class NeckModule(object):
         self.head_nodes, self.head_ctl = curve_tool.create_controller(name=f"{self.side}_head", offset=["GRP", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
         cmds.parent(face_nodes[0], self.head_ctl)
         cmds.setAttr(f"{self.head_nodes[0]}.inheritsTransform", 0)
+        self.local_head()
 
 
         # ----- Stretch setup -----
@@ -156,7 +159,8 @@ class NeckModule(object):
         for i in range(1, len(self.neck_ctls)):
             dbt = cmds.createNode("distanceBetween", name=f"{self.side}_neck{str(i).zfill(2)}StretchDist_DBT", ss=True)
             cmds.connectAttr(f"{self.neck_ctls[i - 1]}.worldMatrix[0]", f"{dbt}.inMatrix1")
-            cmds.connectAttr(f"{self.neck_ctls[i]}.worldMatrix[0]", f"{dbt}.inMatrix2")
+            endpoint = self.head_ctl if i == len(self.neck_ctls) - 1 else self.neck_ctls[i]
+            cmds.connectAttr(f"{endpoint}.worldMatrix[0]", f"{dbt}.inMatrix2")
             cmds.connectAttr(f"{dbt}.distance", f"{total_dist}.input1D[{i - 1}]")
 
         # Factor uniforme = (longitud real / globalScale) / longitud de reposo
@@ -174,9 +178,10 @@ class NeckModule(object):
         cmds.connectAttr(f"{factor_div}.output", f"{factor_blend}.input[1]")
         cmds.connectAttr(f"{self.neck_ctls[0]}.Stretch_Activate", f"{factor_blend}.attributesBlender")
 
-        solve_controls = (guide_frames.control_drivers(self.neck_ctls, self.neck_guides_matrices,
+        endpoint_controls = self.neck_ctls[:-1] + [self.head_ctl]
+        solve_controls = (guide_frames.control_drivers(endpoint_controls, self.neck_guides_matrices,
                            self.solver_guides_matrices, f"{self.side}_neck")
-                          if self.authored_orientation else self.neck_ctls)
+                          if self.authored_orientation else endpoint_controls)
         self.stretch_drivers = [solve_controls[0]]
         prev_plug = guide_frames.matrix_plug(solve_controls[0])
 
@@ -208,6 +213,10 @@ class NeckModule(object):
             self.stretch_drivers.append(mmx)
             prev_plug = f"{mmx}.matrixSum"
 
+        # A pinned head is an endpoint target, including when stretch is off.
+        # Internal neck points can retain their normal fixed-length behavior.
+        self.stretch_drivers[-1] = solve_controls[-1]
+
     def ribbon_setup(self, skinning_joints_number):
 
         """
@@ -221,7 +230,7 @@ class NeckModule(object):
 
         sel = tuple(self.stretch_drivers)
         self.output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_neck", aim_axis="x", up_axis="y", skeleton_grp=self.skeleton_grp, num_joints=skinning_joints_number, d=3, tangent_cvs=0, tangent_axis="x", param_from_length=True) # Do the ribbon setup, with the created controllers (tangent_cvs=0 -> stretch uniforme)
-
+        self.volume_setup(self.output_joints)
         if self.authored_orientation:
             guide_frames.orient_outputs(self.output_joints, self.neck_guides_matrices, f"{self.side}_neck")
         for t in temp:
@@ -230,7 +239,8 @@ class NeckModule(object):
         for jnt in self.output_joints:
             cmds.setAttr(f"{jnt}.inheritsTransform", 1)
 
-        cmds.rename(self.output_joints[-1], f"{self.side}_headSkinning_JNT")
+        self.output_joints[-1] = cmds.rename(self.output_joints[-1], f"{self.side}_headSkinning_JNT")
+        self.head_skinning_setup(self.output_joints[-1])
 
     
     def local_head(self):
@@ -239,28 +249,56 @@ class NeckModule(object):
         Create the local head setup to have the head follow the neck's movement.
         """
 
-        cmds.addAttr(self.head_ctl, longName="NECK_FOLLOW", niceName="LOCAL HEAD -----", attributeType="enum", enumName="-----")
-        cmds.setAttr(f"{self.head_ctl}.NECK_FOLLOW", lock=True, keyable=False, channelBox=True)
-        cmds.addAttr(self.head_ctl, longName="HEAD_FOLLOW", niceName="Head Follow", attributeType="float", minValue=0, maxValue=1, defaultValue=1, keyable=True)
+        cmds.addAttr(self.head_ctl, longName="SpaceFollow", niceName="Head Space",
+                     attributeType="enum", enumName="Local:Global", defaultValue=0, keyable=True)
 
         head_neck_offset = om.MMatrix(self.head_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]")).inverse()
         neck_space_mmx = cmds.createNode("multMatrix", name=f"{self.side}_headNeckSpace_MMX", ss=True)
         cmds.setAttr(f"{neck_space_mmx}.matrixIn[0]", list(head_neck_offset), type="matrix")
         cmds.connectAttr(f"{self.neck_ctls[-1]}.worldMatrix[0]", f"{neck_space_mmx}.matrixIn[1]")
 
-        head_world_offset = om.MMatrix(self.head_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]")).inverse()
-        world_space_mmx = cmds.createNode("multMatrix", name=f"{self.side}_headWorldSpace_MMX", ss=True)
-        cmds.setAttr(f"{world_space_mmx}.matrixIn[0]", list(head_world_offset), type="matrix")
-        cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{world_space_mmx}.matrixIn[1]")
-
-        reverse_follow = cmds.createNode("reverse", name=f"{self.side}_headFollow_REV", ss=True)
-        cmds.connectAttr(f"{self.head_ctl}.HEAD_FOLLOW", f"{reverse_follow}.inputX")
-
         blend_matrix_head = cmds.createNode("blendMatrix", name=f"{self.side}_headLocal_BLM", ss=True)
         cmds.connectAttr(f"{neck_space_mmx}.matrixSum", f"{blend_matrix_head}.inputMatrix")
-        cmds.connectAttr(f"{world_space_mmx}.matrixSum", f"{blend_matrix_head}.target[0].targetMatrix")
-        cmds.setAttr(f"{blend_matrix_head}.target[0].translateWeight", 0)  # solo rotación, como el orientConstraint
+        cmds.setAttr(f"{blend_matrix_head}.target[0].targetMatrix", self.head_guide_matrix, type="matrix")
         cmds.setAttr(f"{blend_matrix_head}.target[0].scaleWeight", 0)
         cmds.setAttr(f"{blend_matrix_head}.target[0].shearWeight", 0)
-        cmds.connectAttr(f"{reverse_follow}.outputX", f"{blend_matrix_head}.target[0].weight")
-        cmds.connectAttr(f"{blend_matrix_head}.outputMatrix", f"{self.head_nodes[0]}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.head_ctl}.SpaceFollow", f"{blend_matrix_head}.target[0].weight")
+        cmds.connectAttr(f"{blend_matrix_head}.outputMatrix", f"{self.head_nodes[0]}.offsetParentMatrix", force=True)
+
+    def parent_neck_controls(self):
+        """Make local neck/head follow the neck root's selected body space."""
+        for i in range(1, len(self.neck_ctls)):
+            cmds.parent(self.neck_nodes[i], self.neck_ctls[0], relative=True)
+            rest = om.MMatrix(self.neck_guides_matrices[i]) * om.MMatrix(self.neck_guides_matrices[0]).inverse()
+            cmds.setAttr(self.neck_nodes[i] + '.offsetParentMatrix', list(rest), type='matrix')
+            cmds.xform(self.neck_nodes[i], matrix=list(om.MMatrix.kIdentity))
+
+    def head_skinning_setup(self, joint, rest=None):
+        """Move the actual head skin with the animator control, preserving bind."""
+        rest = rest if rest is not None else cmds.getAttr(joint + '.worldMatrix[0]')
+        driver = guide_frames.calibrated_output(self.head_ctl + '.worldMatrix[0]', rest,
+                                                f'{self.side}_headControlSkin',
+                                                scale_plug=self.masterwalk_ctl + '.globalScale')
+        cmds.connectAttr(driver, joint + '.offsetParentMatrix', force=True)
+
+    def control_follow_setup(self):
+        """Let each non-root neck control opt out of following the neck root."""
+        from maya_tools.scripts.utils.matrix_manager import control_follow_switch
+        for ctl in self.neck_ctls[1:]:
+            parent = cmds.listRelatives(ctl.replace('_CTL', '_GRP'), parent=True)[0]
+            control_follow_switch(ctl, parent, self.masterwalk_ctl)
+
+    def volume_setup(self, joints, drivers=None, connect=True):
+        """Keep neck volume in the solver frame independently of the head."""
+        from maya_tools.scripts.utils.ribbon_volume import create_volume_matrix
+        drivers = drivers or [cmds.connectionInfo(j + '.offsetParentMatrix', sourceFromDestination=True) for j in joints]
+        volume = create_volume_matrix(drivers, self.neck_ctls[0], self.masterwalk_ctl, f'{self.side}_neckVolume')
+        result = []
+        for i, (joint, plug) in enumerate(zip(joints, drivers)):
+            node = cmds.createNode('multMatrix', name=f'{self.side}_neckVolume{i:02d}_MMX', ss=True)
+            cmds.connectAttr(volume, node + '.matrixIn[0]')
+            cmds.connectAttr(plug, node + '.matrixIn[1]')
+            result.append(node + '.matrixSum')
+            if connect:
+                cmds.connectAttr(result[-1], joint + '.offsetParentMatrix', force=True)
+        return result

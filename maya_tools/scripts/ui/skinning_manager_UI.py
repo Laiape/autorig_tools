@@ -163,7 +163,7 @@ class SkinningManager(QtWidgets.QWidget):
             self._refresh_timer.start(50)
 
     def scene_changed(self, *args):
-        if self.disposed:
+        if self.disposed or not self.isVisible():
             return
         self.run_action(lambda: self.load_selection(required=False), quiet=True)
         if self.current_mesh and not cmds.objExists(self.current_mesh):
@@ -179,6 +179,8 @@ class SkinningManager(QtWidgets.QWidget):
             self.active_page().refresh()
 
     def refresh_scene(self):
+        if self.disposed or not self.isVisible():
+            return
         self.scene_changed()
         self.correctives_page.refresh()
 
@@ -198,6 +200,11 @@ class SkinningManager(QtWidgets.QWidget):
     def hideEvent(self, event):
         self.release_brushes()
         super(SkinningManager, self).hideEvent(event)
+
+    def showEvent(self, event):
+        super(SkinningManager, self).showEvent(event)
+        if hasattr(self, '_refresh_timer'):
+            self.queue_refresh()
 
     def load_selection(self, required=True):
         shared = framework_context.service().snapshot()

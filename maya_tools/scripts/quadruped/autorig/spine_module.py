@@ -105,14 +105,16 @@ class SpineModule(object):
         self.load_guides()
         self.create_guides_logic()
         self.controller_creation()
-        self.local_hip_chest_setup()
         self.ribbon_setup()
+        self.local_hip_chest_setup()
 
         data_manager.DataExportBiped().append_data("spine_module",
                             {
                                 "local_hip_ctl": self.local_hip_ctl,
                                 "body_ctl": self.body_ctl,
                                 "local_chest_ctl": self.local_chest_ctl,
+                                "spine_ctl": self.spine_ctls[0],
+                                "body_pivot_ctl": self.body_pivot_ctl,
                             })
         
 
@@ -166,10 +168,11 @@ class SpineModule(object):
 
         self.body_nodes, self.body_ctl = curve_tool.create_controller(name=f"{self.side}_body", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
         self.local_hip_nodes, self.local_hip_ctl = curve_tool.create_controller(name=f"{self.side}_pelvis", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
-        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["sx", "sy", "sz", "v"])
+        self.local_chest_nodes, self.local_chest_ctl = curve_tool.create_controller(name=f"{self.side}_localChest", offset=["GRP", "SPC", "ANM"], parent=self.controllers_grp, locked_attrs=["v"])
         
         cmds.setAttr(f"{self.body_nodes[0]}.offsetParentMatrix", self.spine_guides_matrices[0], type="matrix")
         cmds.setAttr(f"{self.local_hip_nodes[0]}.offsetParentMatrix", self.local_hip_matrix, type="matrix")
+        self.movable_body_pivot()
 
         # Create the spine controllers
         self.spine_nodes = []
@@ -197,6 +200,7 @@ class SpineModule(object):
         self.primary_spine_ctls = [ctl for i, ctl in enumerate(self.spine_ctls)
                                    if i not in self.tangent_indices]
         self.tangent_ctls = [self.spine_ctls[i] for i in sorted(self.tangent_indices)]
+        self.parent_spine_controls()
         if self.tangent_indices:
             cmds.addAttr(self.spine_ctls[0], longName="tanVisibility",
                          niceName="Tangent Controllers Visibility", attributeType="bool",
@@ -212,6 +216,8 @@ class SpineModule(object):
                 cmds.setAttr(f"{root}.offsetParentMatrix", list(local_rest), type="matrix")
                 cmds.connectAttr(f"{self.spine_ctls[0]}.tanVisibility", f"{root}.visibility")
 
+        self.control_follow_setup()
+
         # ----- Stretch setup (UNIFORME) -----
         # El stretch multiplica por IGUAL la distancia entre joints: factor único =
         # longitud real total de la cadena de controles / longitud de reposo. Cada
@@ -220,6 +226,8 @@ class SpineModule(object):
         cmds.addAttr(self.body_ctl, longName="Stretch", niceName="STRETCH ------", attributeType="enum", enumName="------", keyable=True)
         cmds.setAttr(f"{self.body_ctl}.Stretch", lock=True, keyable=False, channelBox=True)
         cmds.addAttr(self.body_ctl, longName="Stretch_Activate", niceName="Stretch", attributeType="float", minValue=0, maxValue=1, defaultValue=0, keyable=True)
+
+        self.chest_drivers = self.chest_spine_curve_drivers()
 
         if self.primary_input_axis == (1, 0, 0):
             translate_attr = "inputTranslateX"
@@ -237,8 +245,8 @@ class SpineModule(object):
         cmds.setAttr(f"{total_dist}.operation", 1)  # sum
         for i in range(1, len(self.spine_ctls)):
             dbt = cmds.createNode("distanceBetween", name=f"{self.side}_spine0{i}StretchDist_DBT", ss=True)
-            cmds.connectAttr(f"{self.spine_ctls[i - 1]}.worldMatrix[0]", f"{dbt}.inMatrix1")
-            cmds.connectAttr(f"{self.spine_ctls[i]}.worldMatrix[0]", f"{dbt}.inMatrix2")
+            cmds.connectAttr(guide_frames.matrix_plug(self.chest_drivers[i - 1]), f"{dbt}.inMatrix1")
+            cmds.connectAttr(guide_frames.matrix_plug(self.chest_drivers[i]), f"{dbt}.inMatrix2")
             cmds.connectAttr(f"{dbt}.distance", f"{total_dist}.input1D[{i - 1}]")
 
         # Factor uniforme = (longitud real / globalScale) / longitud de reposo
@@ -256,9 +264,9 @@ class SpineModule(object):
         cmds.connectAttr(f"{factor_div}.output", f"{factor_blend}.input[1]")
         cmds.connectAttr(f"{self.body_ctl}.Stretch_Activate", f"{factor_blend}.attributesBlender")
 
-        solve_controls = (guide_frames.control_drivers(self.spine_ctls, self.spine_guides_matrices,
+        solve_controls = (guide_frames.control_drivers(self.chest_drivers, self.spine_guides_matrices,
                            self.solver_guides_matrices, f"{self.side}_spine")
-                          if self.authored_orientation else self.spine_ctls)
+                          if self.authored_orientation else self.chest_drivers)
         self.stretch_drivers = [solve_controls[0]]
         prev_plug = guide_frames.matrix_plug(solve_controls[0])
 
@@ -335,16 +343,35 @@ class SpineModule(object):
         cmds.setAttr(f"{self.local_hip_nodes[0]}.inheritsTransform", 0)
         cmds.parent(local_hip_skinning_jnt, self.skeleton_grp)
 
-        # ----- Local chest setup ------
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{self.local_chest_nodes[0]}.offsetParentMatrix")
+        self.local_chest_setup()
+
+    def local_chest_setup(self):
+        """Follow the solved tip without feeding solved motion into the ribbon."""
+        chest_frame = cmds.createNode("blendMatrix", name=f"{self.side}_localChest_BLM", ss=True)
+        cmds.connectAttr(self.ribbon_tip_plug, f"{chest_frame}.inputMatrix")
+        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{chest_frame}.target[0].targetMatrix")
+        cmds.setAttr(f"{chest_frame}.target[0].translateWeight", 0)
+        cmds.setAttr(f"{chest_frame}.target[0].shearWeight", 0)
+        untranslate = cmds.createNode("composeMatrix", name=f"{self.side}_localChestUntranslate_CMX", ss=True)
+        negate = cmds.createNode("multiplyDivide", name=f"{self.side}_localChestUntranslate_MDV", ss=True)
+        cmds.connectAttr(f"{self.local_chest_ctl}.translate", f"{negate}.input1")
+        cmds.setAttr(f"{negate}.input2", -1, -1, -1)
+        cmds.connectAttr(f"{negate}.output", f"{untranslate}.inputTranslate")
+        chest_parent = cmds.createNode("multMatrix", name=f"{self.side}_localChestParent_MMX", ss=True)
+        cmds.connectAttr(f"{untranslate}.outputMatrix", f"{chest_parent}.matrixIn[0]")
+        cmds.connectAttr(f"{chest_frame}.outputMatrix", f"{chest_parent}.matrixIn[1]")
+        cmds.connectAttr(f"{chest_parent}.matrixSum", f"{self.local_chest_nodes[0]}.offsetParentMatrix", force=True)
         cmds.setAttr(f"{self.local_chest_nodes[0]}.inheritsTransform", 0)
         cmds.select(clear=True)
-        local_chest_skinning_jnt = cmds.joint(name=f"{self.side}_localChestSkinning_JNT")
+        local_chest_skinning_jnt = f"{self.side}_localChestSkinning_JNT"
+        if not cmds.objExists(local_chest_skinning_jnt):
+            local_chest_skinning_jnt = cmds.joint(name=local_chest_skinning_jnt)
         cmds.setAttr(f"{local_chest_skinning_jnt}.inheritsTransform", 0)
-        cmds.connectAttr(f"{self.local_chest_ctl}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix")
+        cmds.connectAttr(f"{self.local_chest_ctl}.worldMatrix[0]", f"{local_chest_skinning_jnt}.offsetParentMatrix", force=True)
         cmds.select(clear=True)
         
-        cmds.parent(local_chest_skinning_jnt, self.skeleton_grp)
+        if cmds.listRelatives(local_chest_skinning_jnt, parent=True) != [self.skeleton_grp]:
+            cmds.parent(local_chest_skinning_jnt, self.skeleton_grp)
 
     def ribbon_setup(self):
 
@@ -380,6 +407,8 @@ class SpineModule(object):
 
         sel = tuple(self.stretch_drivers)
         output_joints, temp = ribbon.de_boor_ribbon(sel, name=f"{self.side}_spine", aim_axis="x", up_axis="y", num_joints=self.spine_joints, skeleton_grp=self.skeleton_grp, d=3, tangent_cvs=0, tangent_axis="x", param_from_length=True)
+        self.ribbon_tip_plug = cmds.connectionInfo(output_joints[-1] + '.offsetParentMatrix', sourceFromDestination=True)
+        self.volume_setup(output_joints)
         if self.authored_orientation:
             guide_frames.orient_outputs(output_joints, self.spine_guides_matrices, f"{self.side}_spine")
         for t in temp:
@@ -404,3 +433,122 @@ class SpineModule(object):
                 
                 cmds.connectAttr(f"{self.fk_controllers[i]}.worldMatrix[0]", f"{jnt}.offsetParentMatrix", force=True)
                 jnt_connections.append(jnt_connection)
+
+    def movable_body_pivot(self):
+        """Move the body rotation center without moving the neutral body."""
+        nodes, self.body_pivot_ctl = curve_tool.create_controller(
+            name=f"{self.side}_bodyPivot", offset=["GRP"], parent=self.controllers_grp,
+            locked_attrs=["rx", "ry", "rz", "sx", "sy", "sz", "v"])
+        cmds.setAttr(nodes[0] + '.offsetParentMatrix', self.spine_guides_matrices[0], type='matrix')
+        cmds.setAttr(self.body_nodes[0] + '.inheritsTransform', 0)
+        cmds.connectAttr(self.body_pivot_ctl + '.worldMatrix[0]', self.body_nodes[0] + '.offsetParentMatrix', force=True)
+        negate = cmds.createNode('multiplyDivide', name=f'{self.side}_bodyPivotCompensate_MDV', ss=True)
+        cmds.setAttr(negate + '.input2', -1, -1, -1)
+        cmds.connectAttr(self.body_pivot_ctl + '.translate', negate + '.input1')
+        cmds.connectAttr(self.body_pivot_ctl + '.translate', self.body_ctl + '.rotatePivot')
+        cmds.connectAttr(self.body_pivot_ctl + '.translate', self.body_ctl + '.scalePivot')
+        cmds.connectAttr(negate + '.output', self.body_ctl + '.rotatePivotTranslate')
+        cmds.addAttr(self.body_ctl, longName='pivotVisibility', attributeType='bool', defaultValue=True)
+        cmds.setAttr(self.body_ctl + '.pivotVisibility', channelBox=True)
+        cmds.connectAttr(self.body_ctl + '.pivotVisibility', nodes[0] + '.visibility')
+        # Use the asset's actual leg-PV drawing, including its authored CVs.
+        pv = 'L_backLegPv_CTL'
+        temporary = []
+        if not cmds.objExists(pv) and hasattr(curve_tool, 'build_curves_from_template'):
+            temporary = curve_tool.build_curves_from_template(pv) or []
+            pv = temporary[0] if temporary else pv
+        if cmds.objExists(pv):
+            old = cmds.listRelatives(self.body_pivot_ctl, shapes=True, fullPath=True) or []
+            for index, shape in enumerate(cmds.listRelatives(pv, shapes=True, fullPath=True, type='nurbsCurve') or []):
+                copied = cmds.createNode('nurbsCurve', name=f'{self.body_pivot_ctl}Shape{index}', parent=self.body_pivot_ctl)
+                cmds.connectAttr(shape + '.local', copied + '.create')
+                cmds.dgeval(copied + '.local')
+                cmds.disconnectAttr(shape + '.local', copied + '.create')
+            if old:
+                cmds.delete(old)
+        if temporary:
+            cmds.delete(temporary)
+        cmds.setAttr(self.body_pivot_ctl + '.overrideEnabled', True)
+        cmds.setAttr(self.body_pivot_ctl + '.overrideColor', 17)
+
+    def parent_spine_controls(self):
+        """Keep primary controls below the root and the tip below the middle."""
+        primary = [i for i in range(len(self.spine_ctls)) if i not in self.tangent_indices]
+        middle = primary[len(primary) // 2]
+        for i in primary[1:]:
+            parent_index = middle if i == primary[-1] and middle != i else 0
+            root = self.spine_nodes[i][0]
+            cmds.parent(root, self.spine_ctls[parent_index], relative=True)
+            local = om.MMatrix(self.spine_guides_matrices[i]) * om.MMatrix(self.spine_guides_matrices[parent_index]).inverse()
+            cmds.setAttr(root + '.offsetParentMatrix', list(local), type='matrix')
+            cmds.xform(root, matrix=list(om.MMatrix.kIdentity))
+
+    def chest_spine_curve_drivers(self):
+        """Apply chest translation/scale upstream; keep chest rotation local."""
+        orientation = cmds.createNode('pickMatrix', name=f'{self.side}_spineChestFrame_PMX', ss=True)
+        cmds.connectAttr(self.spine_ctls[-1] + '.worldMatrix[0]', orientation + '.inputMatrix')
+        cmds.setAttr(orientation + '.useTranslate', False)
+        pivot = cmds.createNode('pickMatrix', name=f'{self.side}_spineChestPivot_PMX', ss=True)
+        cmds.connectAttr(self.spine_ctls[len(self.spine_ctls) // 2] + '.worldMatrix[0]', pivot + '.inputMatrix')
+        for attr in ('useRotate', 'useScale', 'useShear'):
+            cmds.setAttr(pivot + '.' + attr, False)
+        frame = cmds.createNode('multMatrix', name=f'{self.side}_spineChestFrame_MMX', ss=True)
+        cmds.connectAttr(orientation + '.outputMatrix', frame + '.matrixIn[0]')
+        cmds.connectAttr(pivot + '.outputMatrix', frame + '.matrixIn[1]')
+        inverse = cmds.createNode('inverseMatrix', name=f'{self.side}_spineChestFrame_IMX', ss=True)
+        cmds.connectAttr(frame + '.matrixSum', inverse + '.inputMatrix')
+        delta = cmds.createNode('pickMatrix', name=f'{self.side}_spineChestDelta_PMX', ss=True)
+        cmds.connectAttr(self.local_chest_ctl + '.matrix', delta + '.inputMatrix')
+        cmds.setAttr(delta + '.useRotate', False)
+        cmds.setAttr(delta + '.useShear', False)
+        drivers = list(self.spine_ctls)
+        for i in range(max(1, len(drivers) - 2), len(drivers)):
+            node = cmds.createNode('multMatrix', name=f'{self.side}_spineChestPoint{i:02d}_MMX', ss=True)
+            for slot, plug in enumerate((drivers[i] + '.worldMatrix[0]', inverse + '.outputMatrix',
+                                         delta + '.outputMatrix', frame + '.matrixSum')):
+                cmds.connectAttr(plug, node + f'.matrixIn[{slot}]')
+            drivers[i] = node
+        return drivers
+
+    def control_follow_setup(self):
+        """Give every secondary primary/tangent its own local/global choice."""
+        from maya_tools.scripts.utils.matrix_manager import control_follow_switch
+        for ctl in self.spine_ctls[1:]:
+            root = ctl.replace('_CTL', '_GRP')
+            parent = cmds.listRelatives(root, parent=True)[0]
+            control_follow_switch(ctl, parent, self.masterwalk_ctl)
+
+    def volume_setup(self, joints, drivers=None, connect=True):
+        """Preserve cross-sectional volume in solver axes, before authored axes."""
+        from maya_tools.scripts.utils.ribbon_volume import create_volume_matrix
+        drivers = drivers or [cmds.connectionInfo(j + '.offsetParentMatrix', sourceFromDestination=True) for j in joints]
+        volume = create_volume_matrix(drivers, self.body_ctl, self.masterwalk_ctl, f'{self.side}_spineVolume')
+        chest_rotation = om.MTransformationMatrix(om.MMatrix(self.spine_guides_matrices[-1])).rotation(asQuaternion=True).asMatrix()
+        direction = om.MVector(self.spine_guides_matrices[-1][12:15]) - om.MVector(self.spine_guides_matrices[0][12:15])
+        direction = direction * chest_rotation.inverse()
+        length_axis = max(range(3), key=lambda axis: abs(direction[axis]))
+        result = []
+        for i, (joint, plug) in enumerate(zip(joints, drivers)):
+            prefix = f'{self.side}_spineVolume{i:02d}'
+            manual = cmds.createNode('composeMatrix', name=prefix + 'Chest_CMX', ss=True)
+            weight = max(0.0, 2.0 * i / max(1, len(joints) - 1) - 1.0)
+            for axis_index, axis in enumerate('XYZ'):
+                if axis_index == length_axis:
+                    continue
+                scale = cmds.createNode('blendTwoAttr', name=prefix + 'Chest' + axis + '_BTA', ss=True)
+                cmds.setAttr(scale + '.input[0]', 1)
+                cmds.connectAttr(self.local_chest_ctl + '.scale' + axis, scale + '.input[1]')
+                cmds.setAttr(scale + '.attributesBlender', weight)
+                cmds.connectAttr(scale + '.output', manual + '.inputScale' + axis)
+            rotation = om.MTransformationMatrix(om.MMatrix(cmds.getAttr(plug))).rotation(asQuaternion=True).asMatrix()
+            offset = rotation * chest_rotation.inverse()
+            matrix = cmds.createNode('multMatrix', name=prefix + '_MMX', ss=True)
+            cmds.setAttr(matrix + '.matrixIn[0]', list(offset), type='matrix')
+            cmds.connectAttr(manual + '.outputMatrix', matrix + '.matrixIn[1]')
+            cmds.setAttr(matrix + '.matrixIn[2]', list(offset.inverse()), type='matrix')
+            cmds.connectAttr(volume, matrix + '.matrixIn[3]')
+            cmds.connectAttr(plug, matrix + '.matrixIn[4]')
+            result.append(matrix + '.matrixSum')
+            if connect:
+                cmds.connectAttr(result[-1], joint + '.offsetParentMatrix', force=True)
+        return result

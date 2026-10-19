@@ -56,6 +56,7 @@ class SpineModule(object):
                             {
                                 "local_hip_ctl": self.local_hip_ctl,
                                 "body_ctl": self.body_ctl,
+                                "spine_ctl": self.spine_ctls[0],
                                 "local_chest_ctl": self.local_chest_ctl,
                                 "last_spine_jnt": self.spine_chain[-1]
                             })

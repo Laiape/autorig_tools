@@ -59,6 +59,19 @@ legacy scenes remain opt-in. Tests and overhead evidence are in
 
 ## 1. Overview
 
+Skinning Manager selection callbacks are inactive while its widget is hidden.
+NG refresh preserves ordinary viewport mesh selection. A visible NG editor may
+retain a remembered stacked-skin target for a component mask; explicit cluster
+changes still use the native NG selection route. Interactive regression:
+`test_skinning_manager_ui.run_selection_preservation` covers visible/hidden
+mesh and vertex selection with two skinClusters and restores the artist context.
+
+Geometry Display on C_settings_CTL maps Locked/Selectable/Off to Reference,
+Normal and hidden geometry respectively. The shared display graph uses valid
+overrideDisplayType values only; Selectable must evaluate to 0, not the old
+summed value 4. Native state, repeated setup and reopen regression:
+`scripts/tools/tests/test_geometry_selectability.py`.
+
 Maya module named `self_module`. Run `scripts/install_maya_module.py`
 from the checkout to activate. It writes an explicit checkout path to
 `Documents/maya/modules/self_module.mod` and backs up the previous file.
@@ -119,6 +132,27 @@ The guide settings and `.build` export both persist the optional setting.
 Native regression: `scripts/tools/tests/test_quadruped_spine_tangents.py` checks
 neutral agreement with the five-control layout, endpoint following, visibility,
 live deformation, DG/Serial/Parallel, global scale, reproducible builds and reopen.
+Quadruped spine roots publish `SpaceFollow = body:localHip:masterWalk`, with
+TranslateValue/RotateValue both 1 by default. Neck roots use
+`localChest:body:masterWalk`. Secondary spine/neck controls, including spine
+tangents, each expose `follow = Local:Global`: Local follows the existing root/
+middle/endpoint hierarchy; Global follows masterwalk independently of that root.
+The body pivot uses a separate leg-PV drawing and drives `body_GRP` by world
+matrix, with native pivot compensation preserving the neutral body. Chest
+translation and scale affect upper spine points; chest rotation remains local,
+and the chest attachment follows the solved tip without double translation.
+`volumePreservation` on body and the first neck control applies inverse-square-
+root length compensation in the solver's transverse axes, normalized by global
+scale before authored-axis calibration. Head `SpaceFollow = Local:Global`
+controls both head position and orientation; Global is fixed in world space.
+The head control drives the actual head skin joint and neck endpoint, so moving
+the body deforms the neck toward a pinned head. Root/secondary spaces follow
+masterwalk in their Global setting; the explicit head Global setting does not.
+Regression: `scripts/tools/tests/test_quadruped_body_spaces.py`. The bounded
+`scripts/upgrade_quadruped_body_spaces.py` migration preserves an existing static
+pose and skin data on the previous authored-frame ribbon graph; it is never
+run implicitly during CREATE RIG or scene opening. Validation and retained
+scope: `docs/quadruped_body_spaces_20261019.md`.
 Chihuahua also enables `authored_guide_orientation` in its build settings.
 Spine, neck, tail, jaw, paw digits and FK controls retain the authored guide
 rotations; terminal frames are not replaced by their parent's orientation.
@@ -173,6 +207,9 @@ settings control. It hides the digit FK root groups without hiding settings
 or changing joint evaluation. Regression: `test_digit_controller_display.py`.
 PV indicator lines in the biped/quadruped limb builders and both eye aim lines
 use Reference display (type 2), so they remain visible without being selectable.
+Both biped leg builders attach the knee endpoint to `legLower00_JNT` after
+creating the skin joints, so the line follows the solved IK/FK knee rather
+than the static guide matrix. The PV control keeps its independent IK input.
 The shared module NURBS organizer recognizes their two world-driven CVs and
 keeps them under animator controls, outside hidden `modules_GRP`. Existing
 scenes can use Rigging > Utilities > Restore PV / Eye Lines to reparent only
@@ -881,6 +918,10 @@ For five or more controls, the first and last interior controls are tangents.
 Three or four controls use ordinary interior controls and an appropriate
 spline degree. The five-control names remain compatible with saved curves.
 These changes take effect when rebuilding the rig.
+
+Biped `localHip` offers `body` and `spine00` spaces. It defaults to `spine00`
+with TranslateValue and RotateValue both 1, so the hip control follows the
+first spine control with its maintained offset. Body remains available.
 
 Both biped leg solvers use IK/FK blend matrices for ankle and ball skin
 outputs. The custom solver also blends its terminal toe: the FK endpoint

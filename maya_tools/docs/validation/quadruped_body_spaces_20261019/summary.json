@@ -1,0 +1,240 @@
+{
+  "date": "2026-10-19",
+  "maya": "2026",
+  "checkout": "C:\\proyectos\\auto-rig\\autorig_tools",
+  "source_commit": "201e2dd",
+  "files": {
+    "maya_tools/scripts/quadruped/autorig/spine_module.py": "94effb84382f1e634ab6ceb35cf10e7eb530ef7fada31a41ac6359e671fa8b47",
+    "maya_tools/scripts/quadruped/autorig/neck_module.py": "894af6964294d15f1fa09e71a7bfdf84a87716db796bd8dd761b6fc376b1bcf5",
+    "maya_tools/scripts/utils/matrix_manager.py": "0f7922d298122a020e72c3c8cf5ef84002a8bcfe1f16fd86f9e943132d9986df",
+    "maya_tools/scripts/utils/rig_manager.py": "bc77edda02ea0c7e619cceeb51de4eccfa442d15dfa5282d0789bd93a05f16a3",
+    "maya_tools/scripts/utils/ribbon_volume.py": "2b29f748d45f8cfe7c1ffc8be2332716862ead229b4932abe8f3ff41ac891755",
+    "scripts/upgrade_quadruped_body_spaces.py": "7e0dd9cedd86af26072237df84f0f82d7817867ad3a90bda5495873df50870e6",
+    "maya_tools/scripts/tools/tests/test_quadruped_body_spaces.py": "6d73188b17a985b11032ab5bff45964c1ae6bc163d1edbb495f5bae820ed8ad7",
+    "maya_tools/assets/chihuahua/scenes/chihuahua_before_body_spaces_20261019_v001.ma": "76e5c91c7283d54041487d9be37575d135d2318ac5056d2050ab15f3f6e57d3d",
+    "maya_tools/assets/chihuahua/scenes/chihuahua_body_spaces_v001.ma": "c39218fbebfbe678438dd0e751bd10167b6ede2ab2de7a696bc22ced20c387a3"
+  },
+  "tests": {
+    "body_spaces": 6,
+    "spine_tangents": 3,
+    "authored_guide_frames": 4,
+    "ordered_guide_cases": 12
+  },
+  "full_builds": [
+    {
+      "build": 1,
+      "report": {
+        "asset": "chihuahua",
+        "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\validation\\20261019T071553449456Z.buildtiming.json",
+        "optimizations": {
+          "enabled": true,
+          "static_point_curves": 0,
+          "shared_math_nodes": 0,
+          "new_skin_bindings": []
+        }
+      },
+      "reopen_error": 0.0,
+      "mode_errors": [
+        0.0,
+        0.0
+      ],
+      "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\tmp\\quadruped_spaces_20261019\\full_build_final_1.mb"
+    },
+    {
+      "build": 2,
+      "report": {
+        "asset": "chihuahua",
+        "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\validation\\20261019T071612667611Z.buildtiming.json",
+        "optimizations": {
+          "enabled": true,
+          "static_point_curves": 0,
+          "shared_math_nodes": 0,
+          "new_skin_bindings": []
+        }
+      },
+      "reopen_error": 0.0,
+      "mode_errors": [
+        0.0,
+        0.0
+      ],
+      "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\tmp\\quadruped_spaces_20261019\\full_build_final_2.mb"
+    }
+  ],
+  "migration": {
+    "spine": [
+      "C_spine00_CTL",
+      "C_spine01Tan_CTL",
+      "C_spine02_CTL",
+      "C_spine03Tan_CTL",
+      "C_spine04_CTL"
+    ],
+    "neck": [
+      "C_neck00_CTL",
+      "C_neck01_CTL"
+    ],
+    "body_pivot": "C_bodyPivot_CTL",
+    "head": "C_head_CTL",
+    "skin_nodes_rebuilt": false,
+    "preserved_pose_channels": {
+      "C_spine00_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_spine01Tan_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_spine02_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_spine03Tan_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_spine04_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_neck00_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_neck01_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_body_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_head_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_localChest_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "C_pelvis_CTL": {
+        "translate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotate": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "neutral_error": 4.76837158203125e-07,
+    "joint_error": 5.959726956383804e-08,
+    "mode_errors": [
+      0.0,
+      0.0
+    ],
+    "reopen_error": 0.0,
+    "skins": 11,
+    "meshes": 10,
+    "scene": "C:\\proyectos\\auto-rig\\autorig_tools\\tmp\\quadruped_spaces_20261019\\chihuahua_upgraded_spaces.ma"
+  },
+  "delivery": {
+    "point_error": 4.76837158203125e-07,
+    "normal_error": 0.0,
+    "topology_uv_materials_edges_equal": true,
+    "head_error": 0.0,
+    "nonzero_skin_pose_delta": 4.679718017578125,
+    "pv_shape_equal": true,
+    "skins": 11
+  },
+  "interactive_scene_replaced": false,
+  "reason": "Artist moved to modified Nini scene; Chihuahua delivered as a separate version.",
+  "scope_limits": [
+    "CPU DG/Serial/Parallel only",
+    "Uniform globalScale 0.5 and 2",
+    "No playback performance claim",
+    "No arbitrary leg-axis or nonuniform character-scale equivalence claim"
+  ]
+}

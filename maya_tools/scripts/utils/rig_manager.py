@@ -708,12 +708,16 @@ def biped_space_switches():
         chest = data_manager.DataExportBiped().get_data("spine_module", "local_chest_ctl")
         body = data_manager.DataExportBiped().get_data("spine_module", "body_ctl")
         local_hip = data_manager.DataExportBiped().get_data("spine_module", "local_hip_ctl")
+        spine = data_manager.DataExportBiped().get_data("spine_module", "spine_ctl")
         head = data_manager.DataExportBiped().get_data("neck_module", "head_ctl")
         neck = data_manager.DataExportBiped().get_data("neck_module", "neck_ctl")
 
         # ---- Space switches ----
         matrix_manager.space_switches(target=neck, sources=[chest, body], default_rotate=1, default_translate=1) # Neck
-        matrix_manager.space_switches(target=local_hip, sources=[body], default_rotate=1, default_translate=1) # Local hip
+        matrix_manager.space_switches(target=local_hip, sources=[body, spine],
+                                      sources_names=["body", "spine00"],
+                                      default_rotate=1, default_translate=1,
+                                      default_follow=1)
 
         for side in ["L", "R"]:
 
@@ -771,10 +775,15 @@ def quadruped_space_switches():
         local_chest = data.get_data("spine_module", "local_chest_ctl")
         neck = data.get_data("neck_module", "neck_ctl")
         tail = data.get_data("tail_module", "tail_ctl")
+        spine = data.get_data("spine_module", "spine_ctl")
+        masterwalk = data.get_data("basic_structure", "masterwalk_ctl")
 
         # ---- Spine / Neck / Tail ----
         _ss(local_hip, [body], default_rotate=1, default_translate=1)          # Local hip
-        _ss(neck, [local_chest, body], default_rotate=1, default_translate=1)  # Neck
+        _ss(spine, [body, local_hip, masterwalk], default_rotate=1, default_translate=1,
+            sources_names=["body", "localHip", "masterWalk"])
+        _ss(neck, [local_chest, body, masterwalk], default_rotate=1, default_translate=1,
+            sources_names=["localChest", "body", "masterWalk"])
         _ss(tail, [local_hip, body], default_rotate=1, default_translate=1)    # Tail
         for side in ["L", "R"]:
 

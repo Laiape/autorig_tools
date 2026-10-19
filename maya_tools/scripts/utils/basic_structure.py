@@ -435,14 +435,16 @@ def create_basic_structure(character_name=None, in_scene=False):
 
     ref_cond = get_or_create("condition", "C_reference_COND")
     cmds.setAttr(f"{ref_cond}.secondTerm", 0)
-    cmds.setAttr(f"{ref_cond}.colorIfTrueR", 1)
-    cmds.setAttr(f"{ref_cond}.colorIfFalseR", 2)
+    # Locked -> Reference (2); Selectable/Off -> Normal (0). The sum below
+    # must never feed an out-of-range display enum such as 3 or 4.
+    cmds.setAttr(f"{ref_cond}.colorIfTrueR", 2)
+    cmds.setAttr(f"{ref_cond}.colorIfFalseR", 0)
     safe_connect(f"{settings_ctl}.geoDisplay", f"{ref_cond}.firstTerm")
 
     ref_cond_vis = get_or_create("condition", "C_referenceVis_COND")
     cmds.setAttr(f"{ref_cond_vis}.secondTerm", 1)
-    cmds.setAttr(f"{ref_cond_vis}.colorIfTrueR", 2)
-    cmds.setAttr(f"{ref_cond_vis}.colorIfFalseR", 1)
+    cmds.setAttr(f"{ref_cond_vis}.colorIfTrueR", 0)
+    cmds.setAttr(f"{ref_cond_vis}.colorIfFalseR", 0)
     safe_connect(f"{settings_ctl}.geoDisplay", f"{ref_cond_vis}.firstTerm")
 
     plus_minus_avg = get_or_create("plusMinusAverage", "C_settings_PMA")

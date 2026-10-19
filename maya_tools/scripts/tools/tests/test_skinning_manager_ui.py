@@ -519,12 +519,94 @@ def run_brush_lifecycle():
     return result
 
 
+@isolated_framework_context
+def run_selection_preservation():
+    """Mesh clicks stay meshes; hidden NG never substitutes a skinCluster."""
+    from maya import cmds
+    from PySide6 import QtWidgets
+    from maya_tools.scripts.ui import skinning_manager_UI as ui
+    panel = ui.restore()
+    if panel is None:
+        panel = ui.show()
+    ng = panel.pages[0].content
+    baseline = set(cmds.ls(long=True))
+    modified = cmds.file(query=True, modified=True)
+    selection = cmds.ls(selection=True, long=True) or []
+    context = cmds.currentCtx()
+    visible = cmds.workspaceControl(ui.WORKSPACE, query=True, visible=True)
+    state = (panel.current_mesh, panel.mesh.text(), panel.mesh.toolTip(),
+             ng.last_mesh, list(ng.last_skins), dict(ng.choices),
+             panel.tabs.currentIndex(), panel.skin_tabs.currentIndex())
+    namespace = cmds.namespaceInfo(currentNamespace=True)
+    test_ns = cmds.namespace(add='selectionRoutingTest')
+    result = {}
+    try:
+        cmds.namespace(set=test_ns)
+        mesh = cmds.polyPlane(name='mesh', subdivisionsX=2, subdivisionsY=2)[0]
+        joints = [cmds.createNode('joint', name='jointA'), cmds.createNode('joint', name='jointB')]
+        first = cmds.skinCluster(joints, mesh, name='firstSkin', toSelectedBones=True)[0]
+        second = cmds.skinCluster(joints, mesh, name='secondSkin', toSelectedBones=True, multi=True)[0]
+        mesh = cmds.ls(mesh, long=True)[0]
+        cmds.namespace(set=namespace)
+        panel.tabs.setCurrentIndex(0)
+        panel.skin_tabs.setCurrentIndex(0)
+        for show in (True, False):
+            cmds.workspaceControl(ui.WORKSPACE, edit=True, visible=show)
+            QtWidgets.QApplication.processEvents()
+            panel.current_mesh = mesh
+            ng.choices[mesh] = second
+            cmds.select(mesh, replace=True)
+            panel.scene_changed()
+            ng.refresh()
+            for _ in range(4):
+                QtWidgets.QApplication.processEvents()
+            assert cmds.ls(selection=True, long=True) == [mesh], cmds.ls(selection=True, long=True)
+            result['visible_mesh' if show else 'hidden_mesh'] = True
+            vertex = mesh + '.vtx[0]'
+            cmds.select(vertex, replace=True)
+            panel.scene_changed()
+            ng.refresh()
+            for _ in range(4):
+                QtWidgets.QApplication.processEvents()
+            assert cmds.filterExpand(cmds.ls(selection=True), selectionMask=31)
+            if show:
+                assert ng.session.state.selectedSkinCluster == second
+                # Choosing a cluster is an explicit action; clicking the mesh
+                # afterward must still return ordinary object selection.
+                ng.select_cluster(first)
+                cmds.select(mesh, replace=True)
+                ng.refresh()
+                QtWidgets.QApplication.processEvents()
+                assert cmds.ls(selection=True, long=True) == [mesh]
+            else:
+                assert cmds.ls(selection=True, long=True) == [vertex]
+            result['visible_components' if show else 'hidden_components'] = True
+    finally:
+        ng.busy = True
+        cmds.namespace(set=namespace)
+        if cmds.namespace(exists=test_ns):
+            cmds.namespace(removeNamespace=test_ns, deleteNamespaceContent=True)
+        panel.current_mesh, text, tooltip, ng.last_mesh, ng.last_skins, ng.choices, tab, skin_tab = state
+        panel.mesh.setText(text)
+        panel.mesh.setToolTip(tooltip)
+        panel.tabs.setCurrentIndex(tab)
+        panel.skin_tabs.setCurrentIndex(skin_tab)
+        cmds.workspaceControl(ui.WORKSPACE, edit=True, visible=visible)
+        cmds.select(selection, replace=True) if selection else cmds.select(clear=True)
+        cmds.setToolTo(context)
+        ng.busy = False
+        QtWidgets.QApplication.processEvents()
+        if not modified and set(cmds.ls(long=True)) == baseline:
+            cmds.file(modified=False)
+    return result
+
+
 def run():
     from maya import cmds
     if cmds.about(batch=True):
         raise RuntimeError('Run this integration test in interactive Maya.')
     results = {}
-    for check in (run_ng_selector, run_integration, run_lifecycle, run_existing_editor, run_brush_lifecycle):
+    for check in (run_selection_preservation, run_ng_selector, run_integration, run_lifecycle, run_existing_editor, run_brush_lifecycle):
         result = check()
         if 'error' in result:
             raise AssertionError(result['error'])

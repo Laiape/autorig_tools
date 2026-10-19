@@ -106,7 +106,7 @@ def ik_constraint(source, target):
         om.MGlobal.displayError("Source or target does not exist.")
         return
 
-def space_switches(target, sources=[], default_rotate=1, default_translate=1, sources_names=[], pv=False, base_ctl=None):
+def space_switches(target, sources=[], default_rotate=1, default_translate=1, sources_names=[], pv=False, base_ctl=None, default_follow=0):
     """
     Versión optimizada de space_switches siguiendo la lógica de fk_switch.
     """
@@ -151,7 +151,7 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
         sources_names = [src.split("_")[1] for src in sources]
 
     if len(sources) > 0:
-        cmds.addAttr(target, longName="SpaceFollow", attributeType="enum", enumName=":".join(sources_names), keyable=True)
+        cmds.addAttr(target, longName="SpaceFollow", attributeType="enum", enumName=":".join(sources_names), defaultValue=default_follow, keyable=True)
     
     cmds.addAttr(target, longName="TranslateValue", attributeType="float", min=0, max=1, defaultValue=default_translate, keyable=True)
     cmds.addAttr(target, longName="RotateValue", attributeType="float", min=0, max=1, defaultValue=default_rotate, keyable=True)
@@ -205,6 +205,28 @@ def space_switches(target, sources=[], default_rotate=1, default_translate=1, so
     cmds.connectAttr(f"{bmx_final}.outputMatrix", f"{target_grp}.offsetParentMatrix", force=True)
 
     # om.MGlobal.displayInfo(f"Space Switch creado con éxito para: {target}")
+
+
+def control_follow_switch(target, parent, masterwalk):
+    """Select local-parent or character-global space for a ribbon control."""
+    root = target.replace('_CTL', '_GRP')
+    rest = om.MMatrix(cmds.getAttr(root + '.worldMatrix[0]'))
+    cmds.addAttr(target, longName='follow', niceName='Follow', attributeType='enum',
+                 enumName='Local:Global', defaultValue=0, keyable=True)
+    spaces = []
+    for label, source in (('Local', parent), ('Global', masterwalk)):
+        offset = rest * om.MMatrix(cmds.getAttr(source + '.worldMatrix[0]')).inverse()
+        node = cmds.createNode('multMatrix', name=target.replace('_CTL', f'Follow{label}_MMX'), ss=True)
+        cmds.setAttr(node + '.matrixIn[0]', list(offset), type='matrix')
+        cmds.connectAttr(source + '.worldMatrix[0]', node + '.matrixIn[1]')
+        spaces.append(node + '.matrixSum')
+    blend = cmds.createNode('blendMatrix', name=target.replace('_CTL', 'Follow_BLM'), ss=True)
+    cmds.connectAttr(spaces[0], blend + '.inputMatrix')
+    cmds.connectAttr(spaces[1], blend + '.target[0].targetMatrix')
+    cmds.connectAttr(target + '.follow', blend + '.target[0].weight')
+    cmds.setAttr(root + '.inheritsTransform', False)
+    cmds.connectAttr(blend + '.outputMatrix', root + '.offsetParentMatrix', force=True)
+    return blend
 
 
 def get_offset_matrix(child, parent):

@@ -81,6 +81,9 @@ class LegModule(object):
         self.knee_pin_setup()
         self.foot_attributes()
         self.de_boor_ribbon(self.skinning_joint_numbers)
+        # The guide matrix is static. Read the solved skin knee for the PV line.
+        cmds.connectAttr(f"{self.side}_legLower00_JNT.worldMatrix[0]",
+                         f"{self.side}_legPv_RFM.matrix", force=True)
         ik_fk_match.setup(self.settings_ctl, self.fk_controllers, self.blend_matrices,
                           ik_root=self.root_ik_ctl, ik_end=self.ik_controllers[0], pv=self.pv_ctl,
                           foot_controls=self.ik_controllers, guides=self.guides_matrices,
