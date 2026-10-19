@@ -20,6 +20,7 @@ def install(prefix, eye_matrix=None):
             source = cmds.connectionInfo(plug, sourceFromDestination=True)
             if source != joint+'.worldMatrix[0]':
                 cmds.connectAttr(joint+'.worldMatrix[0]', plug, force=True)
+            _remove_secondary_primary_z(prefix, curve_label)
             continue
         ctl = prefix+'_eyelid'+curve_label+'_CTL'
         local = prefix+'_eyelid'+curve_label+'Local_MMX'
@@ -34,14 +35,7 @@ def install(prefix, eye_matrix=None):
             cmds.connectAttr(ctl+'.rotate'+axis, compose+'.inputRotate'+axis)
         cmds.connectAttr(compose+'.outputMatrix', local+'.matrixIn[0]', force=True)
         # Secondary skin inheritance must not add another weighted main roll.
-        destinations = cmds.listConnections(ctl+'.rotateZ', s=False, d=True,
-                                            plugs=True, skipConversionNodes=True) or []
-        for destination in destinations:
-            node = destination.split('.')[0]
-            if cmds.nodeType(node) == 'multiply' and 'Rotation00Z_MUL' in node:
-                original = cmds.connectionInfo(destination, sourceFromDestination=True)
-                cmds.disconnectAttr(original, destination)
-                cmds.setAttr(destination, 0)
+        _remove_secondary_primary_z(prefix, curve_label)
         pivot = cmds.createNode('multMatrix', name=stem+'Pivot_MMX')
         cmds.connectAttr(joint+'.worldMatrix[0]', pivot+'.matrixIn[0]')
         cmds.connectAttr(pose+'.worldInverseMatrix[0]', pivot+'.matrixIn[1]')
@@ -73,3 +67,23 @@ def install(prefix, eye_matrix=None):
     if joined and not changed:
         changed=[prefix+'_eyelid'+label+'_CTL' for label in ('Up','Down')]
     return changed
+
+
+def _remove_secondary_primary_z(prefix, curve_label):
+    """Persist the disabled inherited roll on scalar compose inputs.
+
+    Locate the owned multipliers by name as well as type: old installs have
+    already disconnected their driver and may have lost input[0] on save.
+    """
+    pattern = prefix+'_eyelid'+curve_label+'Rotation00Z_MUL*'
+    for node in cmds.ls(pattern, type='multiply') or []:
+        consumers = cmds.listConnections(node+'.output', source=False,
+                                        destination=True, plugs=True,
+                                        skipConversionNodes=True) or []
+        for consumer in consumers:
+            owner, attribute = consumer.rsplit('.', 1)
+            if cmds.nodeType(owner) != 'composeMatrix' or attribute not in ('inputRotateZ', 'irz'):
+                continue
+            original = cmds.connectionInfo(consumer, sourceFromDestination=True)
+            cmds.disconnectAttr(original, consumer)
+            cmds.setAttr(consumer, 0)

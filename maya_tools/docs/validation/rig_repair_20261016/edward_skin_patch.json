@@ -1,0 +1,270 @@
+{
+  "source": "Edward_v073.skc",
+  "source_sha256": "508ff07b6714e29343ea21badea4a959a6774dbd6a3c5163bf12df415a010595",
+  "candidate": "Edward_v074.skc",
+  "candidate_sha256": "58da8c5d78420b800c0d2832b801a62b2d8aa1c3697c1f820d94c32f911cd0aa",
+  "mesh": "cabeza_low_Shape",
+  "skin": "skinCluster41",
+  "vertices": [
+    2942,
+    3080
+  ],
+  "neighbor_weight_fraction": 0.4,
+  "neighbors": {
+    "3080": [
+      2126,
+      2174
+    ],
+    "2942": [
+      2939,
+      2940
+    ]
+  },
+  "changes": {
+    "2942": {
+      "C_jaw_ENV": {
+        "before": 0.00029,
+        "after": 0.0015080600321011237
+      },
+      "C_upperJaw_ENV": {
+        "before": 0.00191,
+        "after": 0.006958261549154221
+      },
+      "C_upperLip00_ENV": {
+        "before": 0.00046,
+        "after": 0.0009100285309985851
+      },
+      "C_upperLip00NonRot_ENV": {
+        "before": 0.00233,
+        "after": 0.010194395833854187
+      },
+      "R_upperLip00_ENV": {
+        "before": 0.00031,
+        "after": 0.00025800324011340396
+      },
+      "R_upperLip01_ENV": {
+        "before": 0.00126,
+        "after": 0.0011260166505827705
+      },
+      "R_upperLip02_ENV": {
+        "before": 0.0003,
+        "after": 0.0002580035101228543
+      },
+      "R_upperLip03_ENV": {
+        "before": 0.00026,
+        "after": 0.00022600315011025383
+      },
+      "R_upperLip04_ENV": {
+        "before": 0.00807,
+        "after": 0.007226107283754932
+      },
+      "R_upperLip06_ENV": {
+        "before": 0.01483,
+        "after": 0.013634213127459462
+      },
+      "R_upperLip08_ENV": {
+        "before": 0.00752,
+        "after": 0.010194255698949464
+      },
+      "R_upperLip10_ENV": {
+        "before": 0.00225,
+        "after": 0.0035720999934997725
+      },
+      "R_upperLip00NonRot_ENV": {
+        "before": 0.00088,
+        "after": 0.0012360318611151391
+      },
+      "R_upperLip01NonRot_ENV": {
+        "before": 0.00514,
+        "after": 0.007466197196901891
+      },
+      "R_upperLip02NonRot_ENV": {
+        "before": 0.00086,
+        "after": 0.0012260319511182894
+      },
+      "R_upperLip03NonRot_ENV": {
+        "before": 0.00083,
+        "after": 0.0011760305110678874
+      },
+      "R_upperLip04NonRot_ENV": {
+        "before": 0.02753,
+        "after": 0.04325920334211698
+      },
+      "R_upperLip06NonRot_ENV": {
+        "before": 0.0219,
+        "after": 0.14059373536073766
+      },
+      "R_upperLip08NonRot_ENV": {
+        "before": 0.02461,
+        "after": 0.15137214721515255
+      },
+      "R_upperLip10NonRot_ENV": {
+        "before": 0.00956,
+        "after": 0.029667076887691077
+      },
+      "R_upperLip11NonRot_ENV": {
+        "before": 0.0,
+        "after": 6.000270009450332e-06
+      },
+      "R_lowerLip00_ENV": {
+        "before": 0.00031,
+        "after": 0.00025800324011340396
+      },
+      "R_lowerLip00NonRot_ENV": {
+        "before": 0.00088,
+        "after": 0.0012360318611151391
+      },
+      "L_upperLip10_ENV": {
+        "before": 6e-05,
+        "after": 0.0001520052201827064
+      },
+      "L_upperLip08_ENV": {
+        "before": 0.0,
+        "after": 1.4000630022050773e-05
+      },
+      "L_upperLip11NonRot_ENV": {
+        "before": 0.0,
+        "after": 6.000270009450332e-06
+      },
+      "L_upperLip10NonRot_ENV": {
+        "before": 0.00037,
+        "after": 0.002316094233298166
+      },
+      "L_upperLip08NonRot_ENV": {
+        "before": 4e-05,
+        "after": 0.0003560149405229184
+      },
+      "L_upperLip06NonRot_ENV": {
+        "before": 0.0,
+        "after": 2.6001170040951436e-05
+      },
+      "C_freeze_ENV": {
+        "before": 0.86725,
+        "after": 0.5635779452380834
+      }
+    },
+    "3080": {
+      "C_jaw_ENV": {
+        "before": 0.0,
+        "after": 0.0036621281744861067
+      },
+      "C_upperJaw_ENV": {
+        "before": 0.0,
+        "after": 0.006104213647477661
+      },
+      "C_upperLip00_ENV": {
+        "before": 0.0,
+        "after": 0.0007180251308795808
+      },
+      "C_upperLip00NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.010208357292505237
+      },
+      "R_upperLip08_ENV": {
+        "before": 0.0,
+        "after": 1.4000490017150596e-05
+      },
+      "R_upperLip10_ENV": {
+        "before": 0.0,
+        "after": 0.00013000455015925555
+      },
+      "R_upperLip06NonRot_ENV": {
+        "before": 0.0,
+        "after": 2.4000840029401027e-05
+      },
+      "R_upperLip08NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0003540123904336652
+      },
+      "R_upperLip10NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0023440820428715006
+      },
+      "R_upperLip11NonRot_ENV": {
+        "before": 0.0,
+        "after": 8.000280009800343e-06
+      },
+      "L_upperLip10_ENV": {
+        "before": 0.0,
+        "after": 0.0025280884830969083
+      },
+      "L_upperLip08_ENV": {
+        "before": 0.0,
+        "after": 0.005756201467051346
+      },
+      "L_upperLip06_ENV": {
+        "before": 0.0,
+        "after": 0.001978069232423135
+      },
+      "L_upperLip04_ENV": {
+        "before": 0.0,
+        "after": 0.0016140564919772194
+      },
+      "L_upperLip03_ENV": {
+        "before": 0.0,
+        "after": 7.0002450085753e-05
+      },
+      "L_upperLip02_ENV": {
+        "before": 0.0,
+        "after": 7.800273009555335e-05
+      },
+      "L_upperLip01_ENV": {
+        "before": 0.0,
+        "after": 0.0003620126704434655
+      },
+      "L_upperLip00_ENV": {
+        "before": 0.0,
+        "after": 4.2001470051451796e-05
+      },
+      "L_upperLip11NonRot_ENV": {
+        "before": 0.0,
+        "after": 8.000280009800343e-06
+      },
+      "L_upperLip10NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.028929012515438036
+      },
+      "L_upperLip08NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.140986934542709
+      },
+      "L_upperLip06NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.130286560029601
+      },
+      "L_upperLip04NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.030197056896991394
+      },
+      "L_upperLip03NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0008300290510167854
+      },
+      "L_upperLip02NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0008700304510657871
+      },
+      "L_upperLip01NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0054001890066152315
+      },
+      "L_upperLip00NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0006480226807938277
+      },
+      "L_lowerLip00_ENV": {
+        "before": 0.0,
+        "after": 4.2001470051451796e-05
+      },
+      "L_lowerLip00NonRot_ENV": {
+        "before": 0.0,
+        "after": 0.0006480226807938277
+      },
+      "C_freeze_ENV": {
+        "before": 1.0,
+        "after": 0.6251588805608196
+      }
+    }
+  },
+  "intent": "Local mouth-mask transition repair; all other weights, geometry, bind data, deformers, correctives and wrinkles copied exactly from v073."
+}

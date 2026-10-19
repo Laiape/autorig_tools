@@ -1,0 +1,1016 @@
+{
+  "date": "2026-10-16",
+  "timezone": "Europe/Madrid",
+  "maya_version": "2026",
+  "checkout": "C:\\GIT\\autorig_tools",
+  "head": "4b592ec833b0c7f92162ade2bddb2c82982ced9d",
+  "summary": {
+    "module_files": 30,
+    "literal_node_creations_checked": 1422,
+    "unregistered_node_types_after_required_plugins": 0,
+    "character_builds": 13,
+    "character_builds_passed": 13,
+    "regression_suites": 36,
+    "regression_suites_passed": 33,
+    "full_deformation_acceptance": false
+  },
+  "fixes": [
+    "Standalone multiply nodes replace the invalid scalar multiplication type in Flower, eyelid corner rolls and auto collision.",
+    "Native multiplyPointByMatrix and multiplyVectorByMatrix replace invalid pointMatrixMult types, including offline eyelid prototypes.",
+    "Import the missing organize_module_nurbs decorator in the legacy Bezier jaw module.",
+    "Pass the neck module master control explicitly into its head space switch instead of depending on a second build-cache lookup.",
+    "Set the Flower asset explicitly in its isolated integration fixture.",
+    "Add test_native_node_types to the regression runner."
+  ],
+  "unresolved": [
+    {
+      "area": "Eyelid persistence",
+      "tests": [
+        "test_eyelid_blink",
+        "test_eyelid_corner_roll"
+      ],
+      "finding": "Native scene reopen differs from the pre-save curves/joint matrices. The corner fixture difference also reproduces with the previous graph using its registered legacy node aliases; the new standalone multipliers are not the cause.",
+      "prior_graph_log": "eyelid-corner-previous-graph.log.gz"
+    },
+    {
+      "area": "Edward Auto Wide deformation",
+      "tests": [
+        "test_jaw_auto_wide_edward"
+      ],
+      "finding": "At jaw rotation 0 and full test corner displacement (amount 1), enabling Auto Wide reverses one triangle in cabeza_high. Build completion does not pass this geometry gate."
+    }
+  ],
+  "method": [
+    "Scan production Python syntax and literal createNode/shadingNode calls; load required plugins and compare node types with the installed native registry.",
+    "Import every Python module in the biped, quadruped and Flower autorig directories; verify standalone multiply/divide and point/vector matrix math before and after native save/reopen.",
+    "Run the existing module regression files in disposable Maya processes with private build and model caches.",
+    "Build every available character from its saved settings/guides/model. Suppress only the progress window in batch; preserve all rig construction and data-import stages.",
+    "Check a case-insensitive character root, nonempty ENV joints/controllers, saved native scene reopen and persistence of named controls/ENV nodes.",
+    "Keep the initial case-sensitive test harness failures for Giraffe/Jamal separate from their passing corrected-harness reruns."
+  ],
+  "limits": [
+    "Literal type scanning does not statically resolve dynamically assembled node names or prove attribute wiring.",
+    "Module import coverage is broader than runtime make coverage. Optional and rejected prototype backends without a fixture are not certified for deformation or performance.",
+    "Build and native reopen success do not certify every pose, external texture/groom/plugin dependency or UI interaction. Source-data warnings and unknown editor metadata remain in the archived logs.",
+    "No source character scene, authored guide, skin snapshot or open artist scene was overwritten. Derived audit scenes remain in the outer temporary workspace."
+  ],
+  "modules": [
+    {
+      "file": "maya_tools/scripts/biped/autorig/arm_module.py",
+      "sha256": "048a24f275cf10cdd42c391f37b857df2437ef5c1592ad0947910800e1627ff9",
+      "classes": [
+        "ArmModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/arm_module_custom.py",
+      "sha256": "13330a4658722d2405e44c6f81a7cbb5fd10361413804eca8189b846407142f9",
+      "classes": [
+        "ArmModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/cheekbone_module.py",
+      "sha256": "cedaad912f5f37bb094a1db51b652a9c7725244db186c9f5f521f0f934768d0c",
+      "classes": [
+        "CheekboneModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/clavicle_module.py",
+      "sha256": "30d8c31ead5a1d2e265efbe6a5d13b2685c2fb0b2b5efc3bb899885cebac1be6",
+      "classes": [
+        "ClavicleModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/ear_module.py",
+      "sha256": "385c3ba7fa727fb89ca0994a2d35d22d4d8f76a7caca05fc2d092bb9617900d1",
+      "classes": [
+        "EarModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/eyebrow_module.py",
+      "sha256": "9f0d2246f75a11591993d1c4fdb3181b7e45c703cf0bec545b1bf036da9eac36",
+      "classes": [
+        "EyebrowModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/eyelid_module.py",
+      "sha256": "fd3720b3f208fb7ceb9f94b47ec591dff965e70c22499c3fef3c85feca3e4278",
+      "classes": [
+        "EyelidModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/fingers_module.py",
+      "sha256": "b80b7bf03a60501d14be978679e1c19b72db4041e5a32a021dea680b2615774e",
+      "classes": [
+        "FingersModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/jaw_module_bezier.py",
+      "sha256": "2b7e270e8e0ae53156f03e0c2208a519a3c7535587b79f2226db43ca99d49ba5",
+      "classes": [
+        "JawModule",
+        "JawModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/jaw_module_nurbs.py",
+      "sha256": "e5bd133397656a9bac9681c85a5c2f5e665ea880adaa089957b94d0add2087d9",
+      "classes": [
+        "JawModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/leg_module.py",
+      "sha256": "edd9b1a8488fe699ead1dffba1eebf072402a3fe4788b6e5a0c8e6cfa7c7a72b",
+      "classes": [
+        "LegModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/leg_module_custom.py",
+      "sha256": "b452fe59b84c56b2dbaf62c185651ab878d60b5aeb313efce0d8bd37f3e01802",
+      "classes": [
+        "LegModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/neck_module_de_boor.py",
+      "sha256": "dda2b772690344235381461ec27be33554036119ca8fb85f99e38443dc176313",
+      "classes": [
+        "NeckModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/nose_module.py",
+      "sha256": "22c19b6917d6eb07522350f098ce29f9a7cb4fdc3879f01b483addd77652bb67",
+      "classes": [
+        "NoseModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/spine_module.py",
+      "sha256": "0ea0217891acb559b044a9e6192d72b7e3a64fd9c9ebc48f18776e56cc90e65f",
+      "classes": [
+        "SpineModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/teeth_module.py",
+      "sha256": "ee90cc37c9fbf863c9fa6c94a24d0eadc5a061ac2bdf9d5dd0cfbda6b64dc4b0",
+      "classes": [
+        "TeethModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/tongue_module.py",
+      "sha256": "94161eada24063c779693dbddd01cbbdf9834f9920f77f004a9ec9d37e04941d",
+      "classes": [
+        "TongueModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/biped/autorig/wing_module.py",
+      "sha256": "64c66a3cec175c3305b2e0ec487560a37e278a130e9fec083130312fb607c2ab",
+      "classes": [
+        "WingModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/quadruped/autorig/digits_module.py",
+      "sha256": "d658994846daeb223c06269267ddb840beebecf4d8938cb22f5f6b75663b18ad",
+      "classes": [
+        "DigitsModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/quadruped/autorig/leg_module.py",
+      "sha256": "929000c0cee64cf8ebf42358a04518907007dda647758fe12c82d7d3b729ffc7",
+      "classes": [
+        "LegModule",
+        "BackLegModule",
+        "FrontLegModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/quadruped/autorig/leg_module_self.py",
+      "sha256": "cb3eb2fa646b0a2201ead70fb9e80260f379e64b8efa34117549bcb305150717",
+      "classes": [
+        "LegModule",
+        "BackLegModule",
+        "FrontLegModule",
+        "FootBase",
+        "HoofFoot",
+        "PawFoot"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/quadruped/autorig/neck_module.py",
+      "sha256": "dc5b35841fabe13a9064b36e51f482b0127f2977421d3421c71acc188012ecf7",
+      "classes": [
+        "NeckModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/quadruped/autorig/spine_module.py",
+      "sha256": "ef81e2dc925c06bae3fd5eeaec51fcf6117737044e82488543cc25ff6ba1f73c",
+      "classes": [
+        "SpineModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/quadruped/autorig/tail_module.py",
+      "sha256": "8e0929bbec320fb03fbde91d0cad05f3aecf0fd8e2ae85aa378a50fa8ddb3327",
+      "classes": [
+        "TailModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/flower/autorig/common.py",
+      "sha256": "1e1ea72aee9f1d29573fc88bba551d822b09fc0b2be8a5453b2518f2b24fce91",
+      "classes": [],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/flower/autorig/flower_module.py",
+      "sha256": "8f6936eb5f9ba998b5462f4e930c60b0cb21bae7c4eab73c0b7f75b3740fd110",
+      "classes": [],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/flower/autorig/head_module.py",
+      "sha256": "d88abbdbc9be707af6ae7247c1f0d52d0eca09ca2c311e498ccdc82a184f1574",
+      "classes": [
+        "HeadModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/flower/autorig/leaf_module.py",
+      "sha256": "3b397d0ae3e5733a56d0226efff5bda76aeb02fa640030ed5f7a6c8ba4f28d15",
+      "classes": [
+        "LeafModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/flower/autorig/petal_module.py",
+      "sha256": "e34693109cbede0744dd24b0aac5f9ad48b53dac0047c88d71286ad38aecbae7",
+      "classes": [
+        "PetalModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    },
+    {
+      "file": "maya_tools/scripts/flower/autorig/stem_module.py",
+      "sha256": "2d20917016eddefc1108778f0f62a21343f20cad846c809c7a917158de3bedef",
+      "classes": [
+        "StemModule"
+      ],
+      "syntax": "passed",
+      "import": "passed"
+    }
+  ],
+  "tests": [
+    {
+      "name": "test_authored_guide_frames",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 13.0325186252594,
+      "log": "test_authored_guide_frames.log.gz"
+    },
+    {
+      "name": "test_biped_spine_and_foot",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 13.120692729949951,
+      "log": "test_biped_spine_and_foot.log.gz"
+    },
+    {
+      "name": "test_biped_foot_reach",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 12.749699354171753,
+      "log": "test_biped_foot_reach.log.gz"
+    },
+    {
+      "name": "test_build_horse_leg_self",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 15.75645637512207,
+      "log": "test_build_horse_leg_self.log.gz"
+    },
+    {
+      "name": "test_controller_shapes",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 9.773309707641602,
+      "log": "test_controller_shapes.log.gz"
+    },
+    {
+      "name": "test_digit_controller_display",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 3.4681520462036133,
+      "log": "test_digit_controller_display.log.gz"
+    },
+    {
+      "name": "test_eye_head_deformation",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 4.2010133266448975,
+      "log": "test_eye_head_deformation-fixed.log.gz",
+      "initial_failure": "Implicit master control lookup returned None in the isolated neck/head fixture."
+    },
+    {
+      "name": "test_eyelid_blink",
+      "success": false,
+      "exit_code": 1,
+      "seconds": 4.263202667236328,
+      "log": "test_eyelid_blink.log.gz",
+      "failure": [
+        "File read in  0.058 seconds.",
+        "Traceback (most recent call last):",
+        "  File \"C:\\GIT\\autorig_tools\\scripts\\run_maya_test.py\", line 21, in <module>",
+        "    runpy.run_path(script, run_name='__main__')",
+        "  File \"<frozen runpy>\", line 291, in run_path",
+        "  File \"<frozen runpy>\", line 98, in _run_module_code",
+        "  File \"<frozen runpy>\", line 88, in _run_code",
+        "  File \"C:\\GIT\\autorig_tools\\maya_tools\\scripts\\tools\\tests\\test_eyelid_blink.py\", line 192, in <module>",
+        "    run()",
+        "  File \"C:\\GIT\\autorig_tools\\maya_tools\\scripts\\tools\\tests\\test_eyelid_blink.py\", line 185, in run",
+        "    assert np.allclose(sample(eye), expected, atol=1e-6, rtol=0)",
+        "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "AssertionError"
+      ]
+    },
+    {
+      "name": "test_eyelid_corner_roll",
+      "success": false,
+      "exit_code": 1,
+      "seconds": 4.507323503494263,
+      "log": "test_eyelid_corner_roll.log.gz",
+      "failure": [
+        "File read in  0.047 seconds.",
+        "Traceback (most recent call last):",
+        "  File \"C:\\GIT\\autorig_tools\\scripts\\run_maya_test.py\", line 21, in <module>",
+        "    runpy.run_path(script, run_name='__main__')",
+        "  File \"<frozen runpy>\", line 291, in run_path",
+        "  File \"<frozen runpy>\", line 98, in _run_module_code",
+        "  File \"<frozen runpy>\", line 88, in _run_code",
+        "  File \"C:\\GIT\\autorig_tools\\maya_tools\\scripts\\tools\\tests\\test_eyelid_corner_roll.py\", line 89, in <module>",
+        "    if __name__=='__main__':run()",
+        "                            ^^^^^",
+        "  File \"C:\\GIT\\autorig_tools\\maya_tools\\scripts\\tools\\tests\\test_eyelid_corner_roll.py\", line 83, in run",
+        "    assert np.allclose(actual,expected,atol=1e-6,rtol=0)",
+        "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "AssertionError"
+      ]
+    },
+    {
+      "name": "test_eyelid_primary_roll",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 4.56123685836792,
+      "log": "test_eyelid_primary_roll.log.gz"
+    },
+    {
+      "name": "test_face_squash_controls",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 4.591564655303955,
+      "log": "test_face_squash_controls.log.gz"
+    },
+    {
+      "name": "test_fingers_fit_rows",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 0.4401710033416748,
+      "log": "test_fingers_fit_rows.log.gz"
+    },
+    {
+      "name": "test_ik_fk_settings_match",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 13.274874687194824,
+      "log": "test_ik_fk_settings_match.log.gz"
+    },
+    {
+      "name": "test_iris_setup",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 3.311657190322876,
+      "log": "test_iris_setup.log.gz"
+    },
+    {
+      "name": "test_jaw_auto_wide",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 7.383843421936035,
+      "log": "test_jaw_auto_wide.log.gz"
+    },
+    {
+      "name": "test_jaw_auto_wide_edward",
+      "success": false,
+      "exit_code": 1,
+      "seconds": 44.6270866394043,
+      "log": "test_jaw_auto_wide_edward.log.gz",
+      "failure": [
+        "Error: RuntimeError: Error occurred during execution of MEL script",
+        "line 1: line 1: Error evaluating argument at position 1 in procedure \"findMenuSetFromLabel\".",
+        "Error: Bifrost: The user's default publishing location does not exist: C:/Users/laiap/Autodesk/Bifrost/Compounds",
+        "[AutoRig build] Cleaning up node graph...",
+        "[AutoRig build] Storing scene evaluation profile...",
+        "[AutoRig build] Restoring Maya state...",
+        "[AutoRig build] Timing report: C:\\GIT\\autorig_tools\\maya_tools\\assets\\Edward\\validation\\20261016T170451746627Z.buildtiming.json",
+        "[AutoRig build] Complete",
+        "Traceback (most recent call last):",
+        "  File \"C:\\GIT\\autorig_tools\\scripts\\run_maya_test.py\", line 21, in <module>",
+        "    runpy.run_path(script, run_name='__main__')",
+        "  File \"<frozen runpy>\", line 291, in run_path",
+        "  File \"<frozen runpy>\", line 98, in _run_module_code",
+        "  File \"<frozen runpy>\", line 88, in _run_code",
+        "  File \"C:\\GIT\\autorig_tools\\maya_tools\\scripts\\tools\\tests\\test_jaw_auto_wide_edward.py\", line 102, in <module>",
+        "    assert flips == 0, (corrective, angle, amount, mesh, flips)",
+        "           ^^^^^^^^^^",
+        "AssertionError: ('autoWide', 0, 1, 'cabeza_high', 1)"
+      ]
+    },
+    {
+      "name": "test_jaw_directional_defaults",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 5.348275423049927,
+      "log": "test_jaw_directional_defaults.log.gz"
+    },
+    {
+      "name": "test_jaw_lips",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 44.45399522781372,
+      "log": "test_jaw_lips.log.gz"
+    },
+    {
+      "name": "test_jaw_orientation",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 7.918240070343018,
+      "log": "test_jaw_orientation.log.gz"
+    },
+    {
+      "name": "test_jaw_single_surface",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 9.630701303482056,
+      "log": "test_jaw_single_surface.log.gz"
+    },
+    {
+      "name": "test_lip_surface_depth",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 8.039384126663208,
+      "log": "test_lip_surface_depth.log.gz"
+    },
+    {
+      "name": "test_lip_u_response",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 11.79859471321106,
+      "log": "test_lip_u_response.log.gz"
+    },
+    {
+      "name": "test_module_nurbs",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 9.112704515457153,
+      "log": "test_module_nurbs.log.gz"
+    },
+    {
+      "name": "test_neck_stretch_squash",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 3.8917033672332764,
+      "log": "test_neck_stretch_squash.log.gz"
+    },
+    {
+      "name": "test_paw_fetlock_roll",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 6.312170028686523,
+      "log": "test_paw_fetlock_roll.log.gz"
+    },
+    {
+      "name": "test_quadruped_guide_paths",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 6.175011873245239,
+      "log": "test_quadruped_guide_paths.log.gz"
+    },
+    {
+      "name": "test_quadruped_spine_tangents",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 4.803423643112183,
+      "log": "test_quadruped_spine_tangents.log.gz"
+    },
+    {
+      "name": "test_socket_fleshy",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 5.420580625534058,
+      "log": "test_socket_fleshy.log.gz"
+    },
+    {
+      "name": "test_spine_chest_stretch",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 3.942234516143799,
+      "log": "test_spine_chest_stretch.log.gz"
+    },
+    {
+      "name": "test_text_controller",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 11.713060855865479,
+      "log": "test_text_controller.log.gz"
+    },
+    {
+      "name": "test_wing_module",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 14.17690634727478,
+      "log": "test_wing_module.log.gz"
+    },
+    {
+      "name": "test_skin_sparse_influences",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 5.9357590675354,
+      "log": "test_skin_sparse_influences.log.gz"
+    },
+    {
+      "name": "test_build_exact_bindings",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 6.444795370101929,
+      "log": "test_build_exact_bindings.log.gz"
+    },
+    {
+      "name": "test_scene_evaluation",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 5.359943389892578,
+      "log": "test_scene_evaluation.log.gz"
+    },
+    {
+      "name": "test_flower_module",
+      "success": true,
+      "exit_code": 0,
+      "seconds": 20.526174068450928,
+      "log": "test_flower_module.log.gz"
+    },
+    {
+      "name": "test_native_node_types",
+      "success": true,
+      "exit_code": 0,
+      "log": "test_native_node_types.log.gz"
+    }
+  ],
+  "builds": [
+    {
+      "asset": "Edward",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 388,
+      "controls": 318,
+      "skins": 81,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 2,
+      "source_data_warning_count": 0,
+      "source_data_warning_examples": [],
+      "log": "Edward-build.log.gz"
+    },
+    {
+      "asset": "Nini",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 258,
+      "controls": 254,
+      "skins": 69,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 0,
+      "source_data_warning_count": 18,
+      "source_data_warning_examples": [
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_upperSocket_JNT' not found in the guide export data.",
+        "Error: Guide 'L_lowerSocket_JNT' not found in the guide export data.",
+        "Error: Guide 'L_inSocket_JNT' not found in the guide export data.",
+        "Error: Guide 'L_outSocket_JNT' not found in the guide export data."
+      ],
+      "log": "Nini-build.log.gz"
+    },
+    {
+      "asset": "anne",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 334,
+      "controls": 290,
+      "skins": 56,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 2,
+      "source_data_warning_count": 2,
+      "source_data_warning_examples": [
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "anne-build.log.gz"
+    },
+    {
+      "asset": "chihuahua",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 431,
+      "controls": 290,
+      "skins": 10,
+      "built_modules": [
+        "backLeg_module",
+        "basic_structure",
+        "eyelid_module",
+        "frontLeg_module",
+        "jaw_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module",
+        "tail_module"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 1,
+      "source_data_warning_count": 16,
+      "source_data_warning_examples": [
+        "Error: Guide 'L_frontLegtoe_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_frontLegDigitI00_JNT' not found in the guide export data.",
+        "Error: Guide 'R_frontLegtoe_LOCShape' not found in the guide export data.",
+        "Error: Guide 'R_frontLegDigitI00_JNT' not found in the guide export data.",
+        "Error: Guide 'L_backLegbankOut_LOCShape' not found in the guide export data."
+      ],
+      "log": "chihuahua-build.log.gz"
+    },
+    {
+      "asset": "flower",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 105,
+      "controls": 107,
+      "skins": 5,
+      "built_modules": [
+        "basic_structure",
+        "flower_head_module",
+        "flower_module",
+        "leaf_module",
+        "petal_module",
+        "rig_settings",
+        "stem_module"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 0,
+      "source_data_warning_count": 0,
+      "source_data_warning_examples": [],
+      "log": "flower-build.log.gz"
+    },
+    {
+      "asset": "freya",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 211,
+      "controls": 281,
+      "skins": 34,
+      "built_modules": [
+        "basic_structure",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "neck_module",
+        "rig_settings"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 33,
+      "source_data_warning_count": 4,
+      "source_data_warning_examples": [
+        "Error: Guide 'L_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "freya-build.log.gz"
+    },
+    {
+      "asset": "giraffe",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 214,
+      "controls": 96,
+      "skins": 6,
+      "built_modules": [
+        "backLeg_module",
+        "basic_structure",
+        "jaw_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module",
+        "tail_module"
+      ],
+      "root": "|giraffe_GRP|Giraffe",
+      "unknown_editor_metadata_count": 1,
+      "source_data_warning_count": 14,
+      "source_data_warning_examples": [
+        "Error: Guide 'C_localHip_JNT' not found in the guide export data.",
+        "Error: Guide 'L_backLegSettings_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_backLegbankOut_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_backLegbankIn_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_backLegheel_LOCShape' not found in the guide export data."
+      ],
+      "log": "giraffe-build.log.gz"
+    },
+    {
+      "asset": "horse",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 347,
+      "controls": 196,
+      "skins": 11,
+      "built_modules": [
+        "backLeg_module",
+        "basic_structure",
+        "eyelid_module",
+        "frontLeg_module",
+        "jaw_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module",
+        "tail_module"
+      ],
+      "root": null,
+      "unknown_editor_metadata_count": 3,
+      "source_data_warning_count": 20,
+      "source_data_warning_examples": [
+        "Error: Guide 'L_frontLegbankOut_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_frontLegbankIn_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_frontLegheel_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_frontLegtoe_LOCShape' not found in the guide export data.",
+        "Error: Guide 'L_frontLegsole_LOCShape' not found in the guide export data."
+      ],
+      "log": "horse-build.log.gz"
+    },
+    {
+      "asset": "jamal",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 300,
+      "controls": 282,
+      "skins": 10,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": "|Jamal",
+      "unknown_editor_metadata_count": 0,
+      "source_data_warning_count": 6,
+      "source_data_warning_examples": [
+        "Error: Guide 'C_chest_JNT' not found in the guide export data.",
+        "Error: Guide 'L_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "jamal-build.log.gz"
+    },
+    {
+      "asset": "maui",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 371,
+      "controls": 329,
+      "skins": 30,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": "|maui",
+      "unknown_editor_metadata_count": 3,
+      "source_data_warning_count": 5,
+      "source_data_warning_examples": [
+        "Error: Guide 'C_chest_JNT' not found in the guide export data.",
+        "Error: Guide 'L_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "maui-build.log.gz"
+    },
+    {
+      "asset": "mechanic",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 209,
+      "controls": 287,
+      "skins": 49,
+      "built_modules": [
+        "basic_structure",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "neck_module",
+        "rig_settings"
+      ],
+      "root": "|mechanic",
+      "unknown_editor_metadata_count": 80,
+      "source_data_warning_count": 4,
+      "source_data_warning_examples": [
+        "Error: Guide 'L_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "mechanic-build.log.gz"
+    },
+    {
+      "asset": "moana",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 372,
+      "controls": 324,
+      "skins": 11,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": "|moana",
+      "unknown_editor_metadata_count": 71,
+      "source_data_warning_count": 5,
+      "source_data_warning_examples": [
+        "Error: Guide 'C_chest_JNT' not found in the guide export data.",
+        "Error: Guide 'L_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "moana-build.log.gz"
+    },
+    {
+      "asset": "thaiz",
+      "success": true,
+      "native_reopen": true,
+      "env_joints": 331,
+      "controls": 285,
+      "skins": 43,
+      "built_modules": [
+        "arm_module",
+        "basic_structure",
+        "clavicle_module",
+        "eyebrow_module",
+        "eyelid_module",
+        "jaw_module",
+        "leg_module",
+        "neck_module",
+        "rig_settings",
+        "spine_module"
+      ],
+      "root": "|thaiz",
+      "unknown_editor_metadata_count": 1,
+      "source_data_warning_count": 5,
+      "source_data_warning_examples": [
+        "Error: Guide 'C_chest_JNT' not found in the guide export data.",
+        "Error: Guide 'L_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_eyebrow_CRVShape' not found in the guide export data.",
+        "Error: Guide 'L_socket_CRVShape' not found in the guide export data.",
+        "Error: Guide 'R_socket_CRVShape' not found in the guide export data."
+      ],
+      "log": "thaiz-build.log.gz"
+    }
+  ],
+  "follow_up": {
+    "status": "resolved",
+    "report": "../rig_repair_20261016/summary.json",
+    "regression_suites_passed": 39,
+    "regression_suites": 39
+  }
+}

@@ -56,10 +56,10 @@ def auto_collision_rig(collider_list, target_obj, axis='Z', direction=1):
     cmds.connectAttr(f"{target_obj}.pushAmount", f"{remap_node}.outputMin")
     
     # Direction Multiplier
-    mult_node = cmds.createNode('multDoubleLinear', name=f"{prefix}_dir_mult")
-    cmds.setAttr(f"{mult_node}.input2", direction)
+    mult_node = cmds.createNode('multiply', name=f"{prefix}_dir_mult")
+    cmds.setAttr(f"{mult_node}.input[1]", direction)
     
-    cmds.connectAttr(f"{remap_node}.outValue", f"{mult_node}.input1")
+    cmds.connectAttr(f"{remap_node}.outValue", f"{mult_node}.input[0]")
     cmds.connectAttr(f"{mult_node}.output", f"{auto_offset_grp}.translate{axis}")
 
     print(f"Collision system successfully created for: {target_obj}")

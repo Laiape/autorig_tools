@@ -97,11 +97,10 @@ def install(prefix):
         for j,(frame,row,coefficients) in enumerate(frames):
             if all(w==0 for w in coefficients[3]):continue
             name=stem+'Influence%d'%j
-            vector=cmds.createNode('pointMatrixMult',name=name+'_PMM')
-            cmds.setAttr(vector+'.vectorMultiply',True)
-            cmds.connectAttr(frame+'.matrixSum',vector+'.inMatrix')
+            vector=cmds.createNode('multiplyVectorByMatrix',name=name+'_PMM')
+            cmds.connectAttr(frame+'.matrixSum',vector+'.matrix')
             for axis,values in zip('XYZ',coefficients[:3]):
-                coefficient(vector+'.inPoint'+axis,driver,values,3,knots,name+axis+'_ACU')
+                coefficient(vector+'.input'+axis,driver,values,3,knots,name+axis+'_ACU')
             weighted=cmds.createNode('multiplyDivide',name=name+'_MD')
             for axis in 'XYZ':cmds.connectAttr(row+'.output'+axis,weighted+'.input1'+axis)
             coefficient(weighted+'.input2X',driver,coefficients[3],3,knots,name+'Weight_ACU')

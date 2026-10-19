@@ -64,6 +64,121 @@ class ControllerShapesTests(unittest.TestCase):
                 for x, y in zip(p, q):
                     self.assertAlmostEqual(x, y, places=6)
 
+    def test_center_to_pivot_preserves_shape_transform_children_and_undo(self):
+        parent = cmds.createNode('transform', name='rig')
+        cmds.setAttr(parent + '.translate', 4, -3, 7)
+        cmds.setAttr(parent + '.rotate', 21, -34, 13)
+        cmds.setAttr(parent + '.scale', -1.5, .75, 2)
+        target = self.multi(parent=parent)
+        cmds.setAttr(target + '.translate', 2, 1, -3)
+        cmds.setAttr(target + '.rotate', 15, 9, -22)
+        offset = om.MTransformationMatrix()
+        offset.setTranslation(om.MVector(3, 2, 1), om.MSpace.kTransform)
+        cmds.setAttr(target + '.offsetParentMatrix', list(offset.asMatrix()), type='matrix')
+        cmds.xform(target, rotatePivot=(1.5, -.3, .7), scalePivot=(-1, .4, .2))
+        cmds.setKeyframe(target, attribute='rotateY', value=9)
+        for channel in ('translateX', 'translateY', 'translateZ'):
+            cmds.setAttr(target + '.' + channel, lock=True)
+        child = cmds.createNode('transform', name='child', parent=target)
+        cmds.setAttr(child + '.translateX', 5)
+        locator = cmds.createNode('locator', name='locatorShape', parent=target)
+        original_shapes = curves(target)
+        before = data(target, world=True)
+        matrix = cmds.xform(target, query=True, worldSpace=True, matrix=True)
+        child_matrix = cmds.xform(child, query=True, worldSpace=True, matrix=True)
+        pivots = cmds.xform(target, query=True, worldSpace=True, pivots=True)
+        rotate_pivot = cmds.xform(target, query=True, worldSpace=True, rotatePivot=True)
+        connections = cmds.listConnections(target, source=True, destination=False, plugs=True)
+        bounds = cmds.exactWorldBoundingBox(original_shapes)
+        delta = [rotate_pivot[i] - (bounds[i] + bounds[i + 3]) * .5 for i in range(3)]
+        expected = data(target, world=True)
+        for curve in expected:
+            curve['points'] = [tuple(p[i] + delta[i] for i in range(3)) + (p[3],)
+                               for p in curve['points']]
+        cmds.select(target)
+        selection = cmds.ls(selection=True, long=True)
+        self.assertEqual(curve_tool.center_controller_to_pivot(), selection)
+        self.assertGeometry(expected, data(target, world=True))
+        self.assertEqual(original_shapes, curves(target))
+        bounds = cmds.exactWorldBoundingBox(curves(target))
+        for i in range(3):
+            self.assertAlmostEqual((bounds[i] + bounds[i + 3]) * .5, rotate_pivot[i], places=6)
+        self.assertEqual(matrix, cmds.xform(target, query=True, worldSpace=True, matrix=True))
+        self.assertEqual(child_matrix, cmds.xform(child, query=True, worldSpace=True, matrix=True))
+        self.assertEqual(pivots, cmds.xform(target, query=True, worldSpace=True, pivots=True))
+        self.assertEqual(connections, cmds.listConnections(target, source=True, destination=False, plugs=True))
+        self.assertEqual(cmds.ls(selection=True, long=True), selection)
+        self.assertTrue(cmds.objExists(locator))
+        self.assertEqual(cmds.getAttr(curves(target)[0] + '.lineWidth'), 3)
+        cmds.undo()
+        self.assertGeometry(before, data(target, world=True))
+        cmds.redo()
+        self.assertGeometry(expected, data(target, world=True))
+        curve_tool.center_controller_to_pivot(target)
+        self.assertGeometry(expected, data(target, world=True))
+
+    def test_center_component_selection_once_and_skip_driven_curves(self):
+        target = self.multi()
+        cmds.move(3, 2, -1, [s + '.cv[*]' for s in curves(target)],
+                  relative=True, worldSpace=True)
+        driven = cmds.circle(name='driven', constructionHistory=True)[0]
+        driven_before = data(driven, world=True)
+        components = [s + '.cv[0:2]' for s in curves(target)]
+        cmds.select(components + [driven])
+        selection = cmds.ls(selection=True, long=True)
+        self.assertEqual(registry.invoke('controllers_center'),
+                         cmds.ls(target, long=True))
+        self.assertEqual(cmds.ls(selection=True, long=True), selection)
+        self.assertGeometry(driven_before, data(driven, world=True))
+        bounds = cmds.exactWorldBoundingBox(curves(target))
+        for i in range(3):
+            self.assertAlmostEqual((bounds[i] + bounds[i + 3]) * .5, 0, places=6)
+
+    def test_center_multiple_selected_controls_leaves_unselected_child_curves_untouched(self):
+        first = self.multi('L_parent_CTL')
+        child = self.multi('L_child_CTL', parent=first)
+        second = self.multi('R_other_CTL')
+        cmds.setAttr(second + '.translate', -5, 2, 4)
+        cmds.setAttr(second + '.rotate', 14, -33, 7)
+        cmds.setAttr(second + '.scale', -1, 2, .5)
+        for node, offset in ((first, (3, 2, 1)), (child, (5, -3, 2)),
+                             (second, (-4, 1, 3))):
+            cmds.move(*offset, [s + '.cv[*]' for s in curves(node)],
+                      relative=True, objectSpace=True)
+        child_before = data(child, world=True)
+        matrices = {n: cmds.xform(n, query=True, worldSpace=True, matrix=True)
+                    for n in (first, child, second)}
+        before = {n: data(n, world=True) for n in (first, second)}
+        # Mixed transform/CV selection, including two shapes of the same control.
+        cmds.select([first] + [s + '.cv[0:2]' for s in curves(second)])
+        selection = cmds.ls(selection=True, long=True)
+        from maya_tools.scripts.framework import execution
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        with patch.object(execution.context.service(), 'snapshot',
+                          return_value=SimpleNamespace(root=None, summary=lambda: {})), \
+                patch.object(execution, '_JOURNAL', execution.Journal(Path(tempfile.mkdtemp()) / 'actions.jsonl')):
+            result = execution.run('controllers_center')
+        self.assertEqual(result['status'], 'completed', result)
+        self.assertEqual(cmds.ls(selection=True, long=True), selection)
+        self.assertGeometry(child_before, data(child, world=True))
+        for node in (first, second):
+            bounds = cmds.exactWorldBoundingBox(curves(node))
+            pivot = cmds.xform(node, query=True, worldSpace=True, rotatePivot=True)
+            for i in range(3):
+                self.assertAlmostEqual((bounds[i] + bounds[i + 3]) * .5, pivot[i], places=6)
+        for node, matrix in matrices.items():
+            self.assertEqual(matrix, cmds.xform(node, query=True, worldSpace=True, matrix=True))
+        after = {n: data(n, world=True) for n in (first, second)}
+        cmds.undo()
+        for node in (first, second):
+            self.assertGeometry(before[node], data(node, world=True))
+        self.assertGeometry(child_before, data(child, world=True))
+        cmds.redo()
+        for node in (first, second):
+            self.assertGeometry(after[node], data(node, world=True))
+        self.assertGeometry(child_before, data(child, world=True))
+
     def test_mirror_preserves_transform_animation_children_and_noncurve_shapes(self):
         left_parent = cmds.createNode('transform', name='leftRig')
         right_parent = cmds.createNode('transform', name='rightRig')
@@ -218,12 +333,14 @@ class ControllerShapesTests(unittest.TestCase):
 
     def test_catalogue_uses_existing_menu_adapters(self):
         self.assertIn('controllers_replace', registry.BY_ID)
-        for tool_id in ('controllers_mirror', 'controllers_replace'):
+        for tool_id in ('controllers_mirror', 'controllers_replace', 'controllers_center'):
             tool = registry.BY_ID[tool_id]
             self.assertEqual(tool.section, 'Controllers')
             self.assertEqual(tool.kind, 'action')
         self.assertTrue(callable(curve_tool.replace_shape_colored))
         self.assertTrue(callable(curve_tool.mirror_curves))
+        self.assertEqual(registry.BY_ID['controllers_center'].entrypoint,
+                         'maya_tools.scripts.utils.curve_tool:center_controller_to_pivot')
 
 
 if __name__ == '__main__':

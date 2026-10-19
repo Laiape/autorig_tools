@@ -1,0 +1,457 @@
+{
+  "local_region": [
+    1682,
+    1688,
+    1689,
+    2116,
+    2117,
+    2118,
+    2120,
+    2126,
+    2171,
+    2172,
+    2174,
+    2939,
+    2940,
+    2941,
+    2942,
+    2943,
+    2944,
+    3080
+  ],
+  "consumer": "skinCluster41 -> cabeza_low_poseCorrectives_BLS -> cheek/nose/socket skins",
+  "poses": [
+    {
+      "mode": "off",
+      "pose": [
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.0,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        0,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.19099736518191188,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        20,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3480412886107037,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        30,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3583675291083383,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        10,
+        0.1875,
+        0.125,
+        -10,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.1248581139198214,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        25,
+        0.125,
+        0.1875,
+        10,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.1550345820691203,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        20,
+        0.25,
+        0,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3574549124123289,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        20,
+        0,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.14112808103151936,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "off",
+      "pose": [
+        20,
+        0.1875,
+        0.1875,
+        -15,
+        1.25
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.15229824810072737,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.0,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        0,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.19099736518191188,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        20,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3480412886107037,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        30,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3583675291083383,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        10,
+        0.1875,
+        0.125,
+        -10,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.1248581139198214,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        25,
+        0.125,
+        0.1875,
+        10,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.1550345820691203,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        20,
+        0.25,
+        0,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3574549124123289,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        20,
+        0,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.14112808103151936,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "serial",
+      "pose": [
+        20,
+        0.1875,
+        0.1875,
+        -15,
+        1.25
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.15229824810072737,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.0,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        0,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.19099736518191188,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        20,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3480412886107037,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        30,
+        0.25,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3583675291083383,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        10,
+        0.1875,
+        0.125,
+        -10,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.1248581139198214,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        25,
+        0.125,
+        0.1875,
+        10,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.1550345820691203,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        20,
+        0.25,
+        0,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.3574549124123289,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        20,
+        0,
+        0.25,
+        0,
+        1
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.14112808103151936,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    },
+    {
+      "mode": "parallel",
+      "pose": [
+        20,
+        0.1875,
+        0.1875,
+        -15,
+        1.25
+      ],
+      "maximum_error": {
+        "cabeza_high": 0.0,
+        "cabeza_low": 0.15229824810072737,
+        "cuerpo_base": 0.0
+      },
+      "outside_changed_vertices": 0.0
+    }
+  ]
+}

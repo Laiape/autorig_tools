@@ -2,7 +2,7 @@
 from maya import cmds
 from maya.api import OpenMaya as om
 
-VERSION = 3
+VERSION = 4
 
 
 def current(prefix):
@@ -52,9 +52,14 @@ def install(prefix, eye_matrix):
                 angle = cmds.createNode('plusMinusAverage', name=stem+'Angle%02d_PMA'%index)
                 other = 'Down' if curve_label == 'Up' else 'Up'
                 for slot, (ctl, weight) in enumerate(((curve_label,own),(other,0))):
-                    mul = cmds.createNode('multDoubleLinear', name=stem+'Angle%02dWeight%d_MDL'%(index,slot))
-                    cmds.connectAttr(prefix+'_eyelid'+ctl+'_CTL.rz', mul+'.input1')
-                    cmds.setAttr(mul+'.input2', weight)
+                    # An unconnected zero array factor is omitted by Maya's
+                    # writer. Omit the zero contribution itself so reopening
+                    # cannot turn it into an unweighted input.
+                    if weight == 0:
+                        continue
+                    mul = cmds.createNode('multiply', name=stem+'Angle%02dWeight%d_MUL'%(index,slot))
+                    cmds.connectAttr(prefix+'_eyelid'+ctl+'_CTL.rz', mul+'.input[0]')
+                    cmds.setAttr(mul+'.input[1]', weight)
                     cmds.connectAttr(mul+'.output', angle+'.input1D[%d]'%slot)
                 rotation = cmds.createNode('composeMatrix', name=stem+'%02d_CMX'%index)
                 cmds.connectAttr(angle+'.output1D', rotation+'.inputRotateZ')
@@ -63,10 +68,10 @@ def install(prefix, eye_matrix):
                 cmds.connectAttr(rotation+'.outputMatrix', matrix+'.matrixIn[1]')
                 cmds.connectAttr(prefix+'_'+label+'LidRollPivot_MMX.matrixSum', matrix+'.matrixIn[2]')
                 matrices[own] = matrix+'.matrixSum'
-            point = cmds.createNode('pointMatrixMult', name=stem+'%02d_PMM'%index)
-            cmds.connectAttr(matrices[own], point+'.inMatrix')
+            point = cmds.createNode('multiplyPointByMatrix', name=stem+'%02d_PMM'%index)
+            cmds.connectAttr(matrices[own], point+'.matrix')
             for axis in 'xyz':
-                cmds.connectAttr(info+'.controlPoints[%d].%sValue'%(index,axis), point+'.inPoint'+axis.upper())
+                cmds.connectAttr(info+'.controlPoints[%d].%sValue'%(index,axis), point+'.input'+axis.upper())
                 cmds.connectAttr(point+'.output'+axis.upper(), shape+'.controlPoints[%d].%sValue'%(index,axis), force=True)
         for blend,index in ((prefix+'_'+label+'EyelidBlink_BLS',1),(prefix+'_eyelidBlink_BLS',lid)):
             target = blend+'.inputTarget[0].inputTargetGroup[%d].inputTargetItem[6000].inputGeomTarget'%index

@@ -147,9 +147,9 @@ def deboor(prefix):
                 cmds.setAttr(product+'.matrixIn[1]',list(geometry.inverse()),type='matrix')
                 cmds.connectAttr(frame+'.matrixSum',product+'.matrixIn[2]')
                 joint_frames[frame_key]=product+'.matrixSum'
-            point=cmds.createNode('pointMatrixMult',name=name+'Influence%d_PMM'%j)
-            cmds.setAttr(point+'.inPoint',moment.x/weight,moment.y/weight,moment.z/weight)
-            cmds.connectAttr(joint_frames[frame_key],point+'.inMatrix')
+            point=cmds.createNode('multiplyPointByMatrix',name=name+'Influence%d_PMM'%j)
+            cmds.setAttr(point+'.input',moment.x/weight,moment.y/weight,moment.z/weight)
+            cmds.connectAttr(joint_frames[frame_key],point+'.matrix')
             weighted=cmds.createNode('multiplyDivide',name=name+'Influence%d_MD'%j)
             for axis in 'XYZ':cmds.connectAttr(point+'.output'+axis,weighted+'.input1'+axis)
             cmds.setAttr(weighted+'.input2',weight,weight,weight)

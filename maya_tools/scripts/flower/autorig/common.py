@@ -67,9 +67,9 @@ def add_rotation(name, plugs, destination, multiplier=1.):
         cmds.connectAttr(plug, '%s.input1D[%s]' % (add, index))
     source = add+'.output1D'
     if multiplier != 1.:
-        mult = cmds.createNode('multDoubleLinear', name=name+'_MDL')
-        cmds.connectAttr(source, mult+'.input1')
-        cmds.setAttr(mult+'.input2', multiplier)
+        mult = cmds.createNode('multiply', name=name+'_MUL')
+        cmds.connectAttr(source, mult+'.input[0]')
+        cmds.setAttr(mult+'.input[1]', multiplier)
         source = mult+'.output'
     cmds.connectAttr(source, destination)
 

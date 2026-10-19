@@ -32,6 +32,11 @@ Requested DQ conversion and lossless canonical garment export in Edward v072:
 Requested skin-only garment export in Edward v073, with `cinturones2` and
 `pCube26` in Classic Linear and experimental bind blendShapes removed:
 `maya_tools/docs/rig_skin_only_export_20261016.md`.
+Edward v074 preserves that delivery and changes two mirrored low-head mouth
+skin rows to repair the Auto Wide mask boundary. The previous v073 snapshot
+is retained. Exact data differences, the downstream tangent-corrective stencil
+and DG/Serial/Parallel preservation checks are in
+`docs/validation/rig_repair_20261016/summary.json`.
 Edward Maya/custom limb-module compatibility and interactive timing comparison:
 `maya_tools/docs/rig_custom_solver_comparison_20261016.md`.
 Chihuahua verified binary opening through Character Manager, direct binary
@@ -79,6 +84,13 @@ Quadruped modules under `maya_tools/scripts/quadruped/autorig/`.
 Flower modules under `maya_tools/scripts/flower/autorig/` use `Rig_Type = 2`
 in the same CREATE RIG pipeline. Asset recipe, petal release actions and native
 validation: `maya_tools/scripts/flower/how_it_works.md`.
+The Maya 2026 module audit is in
+`docs/validation/module_audit_20261016/summary.json`: 30 module imports,
+1,422 registered literal node creations, 13 full builds/native reopens and
+33 of 36 regression suites passing in the initial run. The eyelid persistence
+repair, Edward v074 mouth-mask revision and final 39-suite follow-up are in
+`docs/validation/rig_repair_20261016/summary.json`. The reusable native type
+and module-import check is `scripts/tools/tests/test_native_node_types.py`.
 Its modules follow the ArmModule class/group convention. The shared skeleton
 helper accepts explicit module-chain attachments for its branched `_ENV`
 hierarchy under `rig_GRP/skeletonHierarchy_GRP`. The flower settings drawing is F.
@@ -122,6 +134,25 @@ continues to use its anatomical hinge after the animator frame is changed.
 Paw fetlock and pastern aims take their roll reference from the foot control.
 Lower IK bone twist cannot flip the paw when the fetlock is lifted. Regression:
 `scripts/tools/tests/test_paw_fetlock_roll.py`.
+Quadruped `leg_module_self.LegModule` adds guide-centred `CorrectivePush_JNT`
+bones at each internal leg guide. Their half-angle frames follow solved leg
+matrices in IK and FK. Bend changes relative to the build rest pose drive a
+clamped push; master-space measurement removes common global scale. Leg settings
+expose `Push_Enable`, `<Joint>_Push` (signed distance) and `<Joint>_PushAngle`
+(degrees to reach full push). Rest has zero displacement. The new influences
+have no automatic mesh weights; paint their local skin region to preserve the
+desired silhouette. They are exported as side branches in the native `_ENV`
+hierarchy. No expression, callback or per-frame Python is used.
+Leg skin groups publish `autorigSkeletonBranches` for the shared skeleton
+builder: the main anatomical chain is ordered explicitly and each paw digit
+branches independently from `legPastern_ENV`. Paw terminal `legTip` guides remain
+internal sole-aim references and no longer create skinning/export joints.
+Hoof tips remain available. Regression: `scripts/tools/tests/test_quadruped_leg_push.py`.
+The explicit `merge_rigid_tip_weights` migration helper adds a retired tip's
+weights to its pastern with native undo, preserving other weights and locks.
+It requires equivalent bind-relative operators and is never run automatically
+during a normal build. Chihuahua live and native-reopen evidence is in
+`docs/validation/chihuahua_leg_push_20261016/summary.json`.
 Guide curve exports now save their world transform together with local CVs;
 both guide import paths restore it. Old guide files without it remain valid.
 Native source regressions: `scripts/tools/tests/test_authored_guide_frames.py`.
@@ -160,6 +191,15 @@ Primary Up/Down Z uses its original moving main-control pivot. A smooth spatial
 falloff retains full central roll, about 7% on the CVs next to the corners and
 zero on the shared endpoints. The opposite lid does not inherit this roll.
 Calibrated aim tangents transport the skin frame and converge during blink.
+Corner roll weights use standalone `multiply` nodes. Point transforms use
+`multiplyPointByMatrix`; the legacy `multDoubleLinear` and `pointMatrixMult`
+type names create unknown nodes in the installed Maya 2026 build.
+Corner schema v4 omits zero roll terms and stores disabled inherited primary Z
+on scalar compose inputs. Literal zero elements of `multiply.input[]` can be
+omitted by native serialization and change the product after reopening. The
+existing explicit eyelid contact upgrade repairs saved v3 graphs idempotently,
+with native backup owned by the caller. Regression:
+`scripts/tools/tests/test_eyelid_persistence.py`.
 Current evidence: `docs/validation/eyelid_control_falloff_20261016/README.md`.
 The production builder keeps the analytic projection backend. Portable aim
 and De Boor CPU experiments, quality gates and scoped rejection/noise results:

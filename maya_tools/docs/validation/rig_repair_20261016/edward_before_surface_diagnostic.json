@@ -1,0 +1,630 @@
+[
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 0,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998211004,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 0,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999999999994,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 0,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 0.5,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 66,
+    "minimum_face_normal_dot": 0.9952865757754306,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 0.5,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 10,
+    "minimum_face_normal_dot": 0.9943473940535131,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 0.5,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 1,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [
+      [
+        8702,
+        8715,
+        8757
+      ]
+    ],
+    "retessellated_triangles": 284,
+    "minimum_face_normal_dot": 0.5056716726470275,
+    "triangle_face_orientation": [
+      {
+        "face": 7409,
+        "before": -0.9394166801794078,
+        "after": 0.5567041175958206
+      }
+    ]
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 1,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 60,
+    "minimum_face_normal_dot": 0.9185511929542455,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 0,
+    "amount": 1,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 0,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999812996,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 0,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998587334,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 0,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 0.5,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 66,
+    "minimum_face_normal_dot": 0.9988264180128393,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 0.5,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 8,
+    "minimum_face_normal_dot": 0.9947681240980136,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 0.5,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 1,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 186,
+    "minimum_face_normal_dot": 0.4312960630909698,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 1,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [
+      [
+        2126,
+        2174,
+        3080
+      ],
+      [
+        2172,
+        2174,
+        3080
+      ]
+    ],
+    "retessellated_triangles": 48,
+    "minimum_face_normal_dot": 0.9188513171656624,
+    "triangle_face_orientation": [
+      {
+        "face": 3057,
+        "before": 0.737553626806413,
+        "after": -0.7424278319148737
+      },
+      {
+        "face": 3056,
+        "before": -0.9433468666444838,
+        "after": 0.8591080785522739
+      }
+    ]
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 20,
+    "amount": 1,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 0,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998123918,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 0,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998274431,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 0,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 0.5,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 30,
+    "minimum_face_normal_dot": 0.9983912912150241,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 0.5,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 4,
+    "minimum_face_normal_dot": 0.9865421883378471,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 0.5,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 1,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 118,
+    "minimum_face_normal_dot": 0.5783030297382994,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 1,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 22,
+    "minimum_face_normal_dot": 0.9035076190251455,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoWide",
+    "jaw": 30,
+    "amount": 1,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 0,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998211004,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 0,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999999999994,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 0,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 0.5,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 8,
+    "minimum_face_normal_dot": 0.9996686770834106,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 0.5,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 2,
+    "minimum_face_normal_dot": 0.9996881415891876,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 0.5,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 1,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 18,
+    "minimum_face_normal_dot": 0.9450859011711015,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 1,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 8,
+    "minimum_face_normal_dot": 0.984267775193663,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 0,
+    "amount": 1,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 0,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999812996,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 0,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998587334,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 0,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 0.5,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 6,
+    "minimum_face_normal_dot": 0.999788624846038,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 0.5,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999535477791961,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 0.5,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 1,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 36,
+    "minimum_face_normal_dot": 0.9987184486038436,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 1,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 4,
+    "minimum_face_normal_dot": 0.6613457125528206,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 20,
+    "amount": 1,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 0,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998123918,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 0,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9999999998274431,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 0,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 0.5,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 8,
+    "minimum_face_normal_dot": 0.9996557452343771,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 0.5,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.9992447599120116,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 0.5,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 1,
+    "mesh": "cabeza_high",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 22,
+    "minimum_face_normal_dot": 0.9976627444223432,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 1,
+    "mesh": "cabeza_low",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 2,
+    "minimum_face_normal_dot": 0.8909287189105235,
+    "triangle_face_orientation": []
+  },
+  {
+    "corrective": "autoNarrow",
+    "jaw": 30,
+    "amount": 1,
+    "mesh": "cuerpo_base",
+    "polygon_flips": [],
+    "common_triangle_flips": [],
+    "retessellated_triangles": 0,
+    "minimum_face_normal_dot": 0.999999999845504,
+    "triangle_face_orientation": []
+  }
+]

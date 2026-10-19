@@ -617,6 +617,57 @@ def text_curve(ctl_name, letter=None):
     cmds.move(offset[0], offset[1], offset[2], cvs, r=True, ws=True)
     return ctl_name
 
+def center_controller_to_pivot(controllers=None):
+    """Center controller curves on their existing world-space rotate pivot.
+
+    Translate all visible curve CVs together so their combined bounding-box
+    center matches the pivot. Curve geometry, shape nodes, display settings,
+    transform channels, pivots and children are preserved apart from that
+    uniform CV translation. No history is deleted or transforms frozen.
+
+    Accept a controller, a list, or the current selection (including shapes
+    and CVs). Process only explicitly selected controllers; never expand the
+    selection to child controls. Each control uses its own pivot. Referenced,
+    instanced or driven shapes are skipped. Return the processed controller
+    paths. The whole operation supports one undo.
+    """
+    from maya_tools.scripts.utils import controller_shapes as shapes
+
+    nodes = cmds.ls(selection=True, objectsOnly=True, long=True) if controllers is None else controllers
+    if isinstance(nodes, str):
+        nodes = [nodes]
+    targets = []
+    for node in nodes or []:
+        try:
+            target = shapes._transform(node)
+            if target in targets:
+                continue
+            if not shapes._curves(target):
+                raise ValueError('Controller has no visible NURBS curves: %s' % target)
+            shapes._editable(target)
+            targets.append(target)
+        except ValueError as error:
+            cmds.warning(str(error))
+    if not targets:
+        cmds.warning('Select one or more editable curve controllers to center.')
+        return []
+
+    with shapes._operation('Center Controller Curves To Pivot'):
+        for target in targets:
+            curves = shapes._curves(target)
+            bounds = cmds.exactWorldBoundingBox(curves)
+            pivot = cmds.xform(target, query=True, worldSpace=True, rotatePivot=True)
+            offset = [pivot[i] - (bounds[i] + bounds[i + 3]) * 0.5 for i in range(3)]
+            if any(abs(value) > 1e-10 for value in offset):
+                # Include scaled/mirrored parents and offsetParentMatrix when
+                # converting the world displacement to local CV coordinates.
+                inverse = om.MMatrix(cmds.getAttr(target + '.worldMatrix[0]')).inverse()
+                local_offset = om.MVector(*offset) * inverse
+                cmds.move(*local_offset, [shape + '.cv[*]' for shape in curves],
+                          relative=True, objectSpace=True)
+    return targets
+
+
 def mirror_shapes(controllers=None):
     """Mirror L_ controller shapes to R_ using the puiastre adaptation."""
     from maya_tools.scripts.utils.controller_shapes import mirror_shapes as mirror

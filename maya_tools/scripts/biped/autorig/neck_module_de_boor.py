@@ -335,7 +335,9 @@ class NeckModule(object):
         cmds.matchTransform(f"{self.neck_nodes[-1]}", self.neck_chain[-1], pos=True, rot=True, scl=False)
         cmds.delete(self.neck_chain[0])
         
-        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl], default_rotate=1, default_translate=1) # Neck base and masterwalk
+        matrix_manager.space_switches(self.neck_ctls[-1], [self.neck_ctls[0], self.masterwalk_ctl],
+                                      default_rotate=1, default_translate=1,
+                                      base_ctl=self.masterwalk_ctl)
 
     def head_squash_setup(self):
 

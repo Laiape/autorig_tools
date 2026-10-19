@@ -5,6 +5,7 @@ import maya.mel as mel
 import maya.api.OpenMaya as om
 from importlib import reload
 import math
+import json
 
 from maya_tools.scripts.utils import data_manager
 from maya_tools.scripts.utils import guides_manager
@@ -30,6 +31,53 @@ SOLVER_SC_RP_SC = "sc_rp_sc"
 SOLVER_SC_RP_SC_CARPUS = "sc_rp_sc_carpus"
 SOLVER_RP_RP = "rp_rp"
 _AXIS_VECTORS = {"x": (1.0, 0.0, 0.0), "y": (0.0, 1.0, 0.0), "z": (0.0, 0.0, 1.0)}
+
+
+def merge_rigid_tip_weights(skin, source, target):
+    """Add a retired rigid tip's weights to its pastern, with native Maya undo.
+
+    The caller must verify equivalent bind-relative deformation operators first.
+    Other weight columns, locks and skin settings are preserved. This does not
+    delete the source influence or joint, and never runs during normal builds.
+    """
+    from maya.api import OpenMayaAnim as oma
+    cmds.undoInfo(openChunk=True, chunkName='Merge rigid paw tip weights')
+    try:
+        influences = cmds.skinCluster(skin, query=True, influence=True) or []
+        if target not in influences:
+            cmds.skinCluster(skin, edit=True, addInfluence=target, weight=0, lockWeights=True)
+        selection = om.MSelectionList(); selection.add(skin)
+        fn = oma.MFnSkinCluster(selection.getDependNode(0))
+        path = fn.getPathAtIndex(0)
+        count = om.MFnMesh(path).numVertices
+        component = om.MFnSingleIndexedComponent()
+        vertices = component.create(om.MFn.kMeshVertComponent)
+        component.setCompleteData(count)
+        weights, width = fn.getWeights(path, vertices)
+        names = [p.partialPathName() for p in fn.influenceObjects()]
+        source_index, target_index = names.index(source), names.index(target)
+        groups = {}
+        for vertex in range(count):
+            weight = weights[vertex * width + source_index]
+            if weight:
+                value = weight + weights[vertex * width + target_index]
+                groups.setdefault(value, []).append('%s.vtx[%d]' % (path.fullPathName(), vertex))
+        old_normalize = cmds.getAttr(skin + '.normalizeWeights')
+        old_max = cmds.getAttr(skin + '.maintainMaxInfluences')
+        locks = {j: cmds.getAttr(j + '.liw') for j in (source, target)}
+        try:
+            cmds.setAttr(skin + '.normalizeWeights', 0)
+            cmds.setAttr(skin + '.maintainMaxInfluences', 0)
+            for joint in locks:cmds.setAttr(joint + '.liw', 0)
+            for value, components in groups.items():
+                cmds.skinPercent(skin, components, transformValue=[(source, 0), (target, value)], normalize=False)
+        finally:
+            for joint, state in locks.items():cmds.setAttr(joint + '.liw', state)
+            cmds.setAttr(skin + '.normalizeWeights', old_normalize)
+            cmds.setAttr(skin + '.maintainMaxInfluences', old_max)
+        return {'source': source, 'target': target, 'vertices': sum(map(len, groups.values()))}
+    finally:
+        cmds.undoInfo(closeChunk=True)
 
 
 class LegModule(object):
@@ -128,7 +176,9 @@ class LegModule(object):
             self.roll_and_non_roll_setup()
             self.bendys_setup()
         self.skinning_setup()
+        self.push_joint_setup()
         self.publish()
+        self.export_skinning_branches()
 
     def load_guides(self):
         """Carga las guías del personaje: la cadena de la pierna y los pivotes del pie."""
@@ -1135,7 +1185,6 @@ class LegModule(object):
                 cmds.connectAttr(self.blend_plugs[idx], f"{jnt}.offsetParentMatrix")
                 self.foot_skin_drivers.append((jnt, self.blend_plugs[idx]))
 
-            tip_jnt = cmds.createNode("joint", name=self.tip_joint.replace("_JNT", "Skinning_JNT"), ss=True, parent=self.skeleton_grp)
             tip_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[-1]))
             plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
             if self.authored_orientation:
@@ -1144,8 +1193,11 @@ class LegModule(object):
             tip_mmx = cmds.createNode("multMatrix", name=f"{self.module_name}TipSkinning_MMX", ss=True)
             cmds.setAttr(f"{tip_mmx}.matrixIn[0]", list(tip_rest * plant_rest.inverse()), type="matrix")
             cmds.connectAttr(self.blend_plugs[self.plant_index], f"{tip_mmx}.matrixIn[1]")
-            cmds.connectAttr(f"{tip_mmx}.matrixSum", f"{tip_jnt}.offsetParentMatrix")
-            self.foot_skin_drivers.append((tip_jnt, f"{tip_mmx}.matrixSum"))
+            self.push_tip_driver = f"{tip_mmx}.matrixSum"
+            if not isinstance(self.foot, PawFoot):
+                tip_jnt = cmds.createNode("joint", name=self.tip_joint.replace("_JNT", "Skinning_JNT"), ss=True, parent=self.skeleton_grp)
+                cmds.connectAttr(self.push_tip_driver, f"{tip_jnt}.offsetParentMatrix")
+                self.foot_skin_drivers.append((tip_jnt, self.push_tip_driver))
             return
 
         cmds.parent(self.leg_chain[0], self.skeleton_grp)
@@ -1166,6 +1218,164 @@ class LegModule(object):
             (renamed[self.leg_end_index], self.blend_plugs[self.leg_end_index]),
             (renamed[self.plant_index], self.blend_plugs[self.plant_index]),
         ]
+        self.push_tip_driver = renamed[-1] + '.worldMatrix[0]'
+        self.skinning_joints = renamed
+        if isinstance(self.foot, PawFoot):
+            # The terminal guide still defines the sole aim, but is not a skin bone.
+            tip_mmx = cmds.createNode('multMatrix', name=self.module_name + 'TipSkinning_MMX', ss=True)
+            tip_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[-1]))
+            plant_rest = om.MMatrix(cmds.getAttr(self.guides_matrices[self.plant_index]))
+            cmds.setAttr(tip_mmx + '.matrixIn[0]', list(tip_rest * plant_rest.inverse()), type='matrix')
+            cmds.connectAttr(self.blend_plugs[self.plant_index], tip_mmx + '.matrixIn[1]')
+            self.push_tip_driver = tip_mmx + '.matrixSum'
+            self.skinning_joints = renamed[:-1]
+            cmds.delete(renamed[-1])
+
+    def push_joint_setup(self):
+        """Guide-centred, rest-neutral push bones driven by the solved IK/FK bend.
+
+        Native DG nodes only. The angle is measured in master space so global
+        scale cannot trigger a corrective. Each bone follows a half-angle frame;
+        its adjustable signed distance acts on the convex side of the rest bend.
+        Call on an existing module only in its original neutral pose.
+        """
+        marker = self.module_trn + '.legPushJoints'
+        if cmds.objExists(marker):
+            self.push_joints = json.loads(cmds.getAttr(marker))
+            if not all(cmds.objExists(j) for j in self.push_joints):
+                raise ValueError('The existing leg push system is incomplete.')
+            return self.push_joints
+        sources = list(self.blend_plugs) + [self.push_tip_driver]
+        rest = [om.MMatrix(cmds.getAttr(p)) for p in sources]
+        inverse_master = om.MMatrix(cmds.getAttr(self.masterwalk_ctl + '.worldInverseMatrix[0]'))
+        positions = [om.MVector(list(m * inverse_master)[12:15]) for m in rest]
+        skin = cmds.listRelatives(self.skeleton_grp, allDescendents=True, type='joint', fullPath=True) or []
+        skin = [j for j in skin if 'corrective' not in j.lower()]
+        if not skin:
+            raise ValueError('Leg push bones need the module skinning joints first.')
+        if not cmds.objExists(self.settings_ctl + '.Push_Enable'):
+            cmds.addAttr(self.settings_ctl, longName='Push_Enable', attributeType='double',
+                         minValue=0, maxValue=1, defaultValue=1, keyable=True)
+        points = []
+        for i, source in enumerate(sources):
+            name = self.module_name + 'PushPoint%02d' % i
+            local = cmds.createNode('multMatrix', name=name + '_MMX', ss=True)
+            cmds.connectAttr(source, local + '.matrixIn[0]')
+            cmds.connectAttr(self.masterwalk_ctl + '.worldInverseMatrix[0]', local + '.matrixIn[1]')
+            point = cmds.createNode('decomposeMatrix', name=name + '_DCM', ss=True)
+            cmds.connectAttr(local + '.matrixSum', point + '.inputMatrix')
+            points.append(point + '.outputTranslate')
+        self.push_joints = []
+        for i in range(1, len(sources) - 1):
+            label = self.fk_controllers[i].rsplit('|', 1)[-1].split(':')[-1]
+            label = label.split(self.LEG_PREFIX, 1)[1].replace('Fk_CTL', '')
+            name = self.module_name + label + 'CorrectivePush'
+            incoming, outgoing = positions[i] - positions[i-1], positions[i+1] - positions[i]
+            if min(incoming.length(), outgoing.length()) < 1e-6:
+                continue
+            direction = incoming.normal() - outgoing.normal()
+            if direction.length() < 1e-5:
+                forward = om.MVector(*self.FORWARD_AXIS)
+                direction = forward - incoming.normal() * (forward * incoming.normal())
+                if direction.length() < 1e-5:
+                    direction = om.MVector(1, 0, 0) ^ incoming.normal()
+            world_direction = direction.normal() * om.MMatrix(cmds.getAttr(self.masterwalk_ctl + '.worldMatrix[0]'))
+            local_direction = (world_direction * rest[i].inverse()).normal()
+            amount = self.settings_ctl + '.' + label + '_Push'
+            angle_range = self.settings_ctl + '.' + label + '_PushAngle'
+            for plug, value, minimum in ((amount, min(incoming.length(), outgoing.length()) * .12, None),
+                                         (angle_range, 60.0, .1)):
+                if not cmds.objExists(plug):
+                    kw = {'minValue': minimum} if minimum is not None else {}
+                    cmds.addAttr(self.settings_ctl, longName=plug.rsplit('.', 1)[1],
+                                 attributeType='double', defaultValue=value, keyable=True, **kw)
+            vectors = []
+            for suffix, a, b in (('Incoming', i, i-1), ('Outgoing', i+1, i)):
+                node = cmds.createNode('plusMinusAverage', name=name + suffix + '_PMA', ss=True)
+                cmds.setAttr(node + '.operation', 2)
+                cmds.connectAttr(points[a], node + '.input3D[0]')
+                cmds.connectAttr(points[b], node + '.input3D[1]')
+                vectors.append(node + '.output3D')
+            angle = cmds.createNode('angleBetween', name=name + '_ANG', ss=True)
+            for p, slot in zip(vectors, ('vector1', 'vector2')):
+                cmds.connectAttr(p, angle + '.' + slot)
+            degrees = cmds.createNode('unitConversion', name=name + 'Degrees_UC', ss=True)
+            cmds.connectAttr(angle + '.angle', degrees + '.input')
+            cmds.setAttr(degrees + '.conversionFactor', 180.0 / math.pi)
+            rest_angle = cmds.getAttr(degrees + '.output')
+            delta = cmds.createNode('plusMinusAverage', name=name + 'Delta_PMA', ss=True)
+            cmds.setAttr(delta + '.operation', 2)
+            cmds.connectAttr(degrees + '.output', delta + '.input1D[0]')
+            cmds.setAttr(delta + '.input1D[1]', rest_angle)
+            negative = cmds.createNode('multiplyDivide', name=name + 'Negative_MDV', ss=True)
+            cmds.connectAttr(delta + '.output1D', negative + '.input1X')
+            cmds.setAttr(negative + '.input2X', -1)
+            absolute = cmds.createNode('condition', name=name + 'Abs_CND', ss=True)
+            cmds.setAttr(absolute + '.operation', 3)
+            cmds.connectAttr(delta + '.output1D', absolute + '.firstTerm')
+            cmds.connectAttr(delta + '.output1D', absolute + '.colorIfTrueR')
+            cmds.connectAttr(negative + '.outputX', absolute + '.colorIfFalseR')
+            response = cmds.createNode('remapValue', name=name + '_RMV', ss=True)
+            cmds.connectAttr(absolute + '.outColorR', response + '.inputValue')
+            cmds.setAttr(response + '.inputMin', .05)
+            cmds.connectAttr(angle_range, response + '.inputMax')
+            gain = cmds.createNode('multiplyDivide', name=name + 'Gain_MDV', ss=True)
+            cmds.connectAttr(amount, gain + '.input1X')
+            cmds.connectAttr(self.settings_ctl + '.Push_Enable', gain + '.input2X')
+            distance = cmds.createNode('multiplyDivide', name=name + 'Distance_MDV', ss=True)
+            cmds.connectAttr(response + '.outValue', distance + '.input1X')
+            cmds.connectAttr(gain + '.outputX', distance + '.input2X')
+            # Adapt the preceding frame to this guide at rest, then bisect rotation.
+            previous = cmds.createNode('multMatrix', name=name + 'Previous_MMX', ss=True)
+            cmds.setAttr(previous + '.matrixIn[0]', list(rest[i] * rest[i-1].inverse()), type='matrix')
+            cmds.connectAttr(sources[i-1], previous + '.matrixIn[1]')
+            frame = cmds.createNode('blendMatrix', name=name + 'Frame_BLM', ss=True)
+            cmds.connectAttr(sources[i], frame + '.inputMatrix')
+            cmds.connectAttr(previous + '.matrixSum', frame + '.target[0].targetMatrix')
+            cmds.setAttr(frame + '.target[0].weight', .5)
+            for attr in ('translateWeight', 'scaleWeight', 'shearWeight'):
+                cmds.setAttr(frame + '.target[0].' + attr, 0)
+            pivot = om.MVector(list(rest[i])[12:15])
+            parent = min(skin, key=lambda j: (om.MVector(cmds.xform(j, q=True, ws=True, t=True)) - pivot).length())
+            joint = cmds.createNode('joint', name=name + '_JNT', parent=parent, ss=True)
+            cmds.setAttr(joint + '.segmentScaleCompensate', 0)
+            cmds.setAttr(joint + '.radius', max(.05, min(incoming.length(), outgoing.length()) * .08))
+            cmds.setAttr(joint + '.overrideEnabled', 1)
+            cmds.setAttr(joint + '.overrideColor', 13)
+            relative = cmds.createNode('multMatrix', name=name + 'Local_MMX', ss=True)
+            cmds.connectAttr(frame + '.outputMatrix', relative + '.matrixIn[0]')
+            cmds.connectAttr(parent + '.worldInverseMatrix[0]', relative + '.matrixIn[1]')
+            cmds.connectAttr(relative + '.matrixSum', joint + '.offsetParentMatrix')
+            vector = cmds.createNode('multiplyDivide', name=name + 'Vector_MDV', ss=True)
+            cmds.setAttr(vector + '.input1', *local_direction, type='double3')
+            for axis in 'XYZ':
+                cmds.connectAttr(distance + '.outputX', vector + '.input2' + axis)
+            cmds.connectAttr(vector + '.output', joint + '.translate')
+            cmds.addAttr(joint, longName='pushActivation', attributeType='double', keyable=False)
+            cmds.connectAttr(response + '.outValue', joint + '.pushActivation')
+            cmds.setAttr(joint + '.pushActivation', channelBox=True)
+            self.push_joints.append(joint)
+        cmds.addAttr(self.module_trn, longName='legPushJoints', dataType='string')
+        cmds.setAttr(marker, json.dumps(self.push_joints), type='string')
+        return self.push_joints
+
+    def export_skinning_branches(self):
+        """Publish explicit leg and digit branches to the shared ENV builder."""
+        body = list(self.skinning_joints)
+        for joint, _ in self.foot_skin_drivers:
+            if joint not in body:
+                body.append(joint)
+        scapula = self.side + '_scapulaSkinning_JNT'
+        if self.LEG_PREFIX == 'frontLeg' and cmds.objExists(scapula):
+            body.insert(0, scapula)
+        branches = [{'joints': body, 'parent': None}]
+        for controls in getattr(self.foot, 'leg_digit_fk_ctls', {}).values():
+            joints = [ctl.replace('Fk_CTL', 'Skinning_JNT') for ctl in controls]
+            branches.append({'joints': joints, 'parent': self.module_name + 'PasternSkinning_JNT'})
+        plug = self.skeleton_grp + '.autorigSkeletonBranches'
+        if not cmds.objExists(plug):
+            cmds.addAttr(self.skeleton_grp, longName='autorigSkeletonBranches', dataType='string')
+        cmds.setAttr(plug, json.dumps(branches), type='string')
 
     def publish(self):
         """Publica en data_manager todo lo que otro módulo pueda necesitar."""
@@ -1252,6 +1462,7 @@ class FrontLegModule(LegModule):
         self.side = side
         super().make(side, **kwargs)
         self.scapula_setup()
+        self.export_skinning_branches()
 
     def scapula_setup(self):
         """Escápula flotante: el cuadrúpedo no tiene clavícula articulada."""

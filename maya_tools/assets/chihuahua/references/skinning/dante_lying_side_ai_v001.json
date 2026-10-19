@@ -1,0 +1,14 @@
+{
+  "asset": "dante_lying_side_ai_v001.png",
+  "tool": "Built-in image_gen, transparent-background edit",
+  "ai_generated": true,
+  "purpose": "Artistic skinning reference; interpreted side view, not a render of the original film model.",
+  "source": "User-provided Coco frame with Dante lying down, AnimationScreencaps frame 277.",
+  "source_url": "https://imgs.screencaps.us/201/7-coco/full/coco-disneyscreencaps.com-277.jpg",
+  "final_prompt": "Edit this existing Dante pose reference. Keep this same dog, identity, full-body prone pose, skin colour, raised bent hindquarters, low long torso, head pointing RIGHT, tail LEFT, folded-back forelegs and outstretched tongue. The one necessary correction is the projection: make it a TRUE FLAT ORTHOGRAPHIC 90-DEGREE SIDE ELEVATION for matching a Maya side viewport, like a professional side-view character model sheet. The current image still shows the fronts of the paws and a little three-quarter perspective; eliminate that. Camera perpendicular to the dog's sagittal plane, perfectly level, no perspective, no yaw and no elevation. No visible top planes of the paws, near and far legs are superimposed in projection, far paws can have only a tiny readable offset. The near forepaw and near hind paw have their lowest ground-contact points on EXACTLY THE SAME HORIZONTAL BASELINE, and the chin/tongue lie at this baseline. Show the dog strictly from its side: exactly one visible eye, side silhouette of the muzzle, near-side shoulder/elbow/hip/knee/hock readable, no view down onto the back. Keep all four anatomically correct legs, with far legs mostly occluded, do not add limbs. Whole animal visible, comfortable 6% padding, compact landscape composition; no huge blank space above. Neutral soft render lighting to read skin folds and joint volumes. Completely TRANSPARENT BACKGROUND, clean alpha cutout, no floor, no cast shadows, no checkerboard painted into image, no text, no annotations. This is an AI interpreted side-view reconstruction for artistic skinning reference.",
+  "size": [
+    1672,
+    941
+  ],
+  "ground_baseline_pixel_y": 797
+}

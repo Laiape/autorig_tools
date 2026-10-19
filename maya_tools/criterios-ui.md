@@ -40,7 +40,7 @@ Rigging > Guides: Create New Guides, Import Guides, Export Guides, Mirror Guides
 Rigging > Build: CREATE RIG, CREATE RIG SELF, CREATE RIG SELF MATH,
 BUILD LEG (disabled legacy entry), Test Rig by Guide, De Boor Ribbon.
 Rigging > Controllers: Export All Controllers, Mirror Controllers,
-Replace Controller Shapes, Controller Shape Library.
+Replace Controller Shapes, Center Controller Shapes to Pivot, Controller Shape Library.
 Rigging > Utilities: Rig Utilities, Restore PV / Eye Lines. The restore action
 repairs misplaced display indicators in loaded rigs using the shared organizer.
 

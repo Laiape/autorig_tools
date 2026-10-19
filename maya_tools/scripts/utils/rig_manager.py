@@ -1303,7 +1303,26 @@ def skeleton_hierarchy(module_chains=None):
         else:
             parent = last_module_end or freeze_jnt
 
-        ends = parented_chain(main, parent) if main else []
+        module_group = next((grp for grp in module_grps
+                             if grp.split('|')[-1] == f'{side}_{clean}Skinning_GRP'), None)
+        branch_plug = module_group + '.autorigSkeletonBranches' if module_group else None
+        if branch_plug and cmds.objExists(branch_plug):
+            # A leg is branched: the paw digits are siblings after the pastern,
+            # not part of the accidental allDescendents order of flat skin joints.
+            branches = json.loads(cmds.getAttr(branch_plug))
+            ends = []
+            for branch in branches:
+                branch_parent = parent
+                if branch['parent']:
+                    branch_parent = find_env(branch['parent'].replace('Skinning_JNT', '_ENV').replace('_JNT', '_ENV'))
+                    if not branch_parent:
+                        raise ValueError('Missing leg export attachment: ' + branch['parent'])
+                ordered = [cmds.ls(joint, long=True)[0] for joint in branch['joints']]
+                result = parented_chain(ordered, branch_parent)
+                if not ends:
+                    ends = result
+        else:
+            ends = parented_chain(main, parent) if main else []
         if ends:
             last_module_end = ends[-1]
 

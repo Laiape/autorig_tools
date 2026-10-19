@@ -14,6 +14,14 @@ the skin frame follow the border and converge during blink. XY, translation,
 secondary edits and detail XYZ rotation remain available. Blink blending is
 downstream; projection preserves the contact curve's local Y and tilt.
 
+The v4 corner graph also preserves this behavior across native save/open.
+Disabled inherited primary Z is written on scalar compose inputs instead of
+an unconnected zero `multiply.input[]` element, which Maya can omit on save.
+Zero corner-weight terms are omitted during construction. The standard contact
+upgrade repairs existing v3 graphs; MA/MB reopen, exact curve skin weights,
+undo/redo and repeated upgrades are covered by `test_eyelid_persistence.py`.
+Repair evidence: `validation/rig_repair_20261016/summary.json`.
+
 This is in the shared builder, the explicit legacy contact upgrade, and the
 open Edward artist scene. Native snapshots are in the outer workspace:
 `recovery/eyelids_before_roll_20261016_v001.mb` and

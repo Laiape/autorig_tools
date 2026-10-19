@@ -1,0 +1,385 @@
+{
+  "date": "2026-10-16",
+  "timezone": "Europe/Madrid",
+  "maya": "2026",
+  "checkout": "C:\\GIT\\autorig_tools",
+  "git_head": "4b592ec833b0c7f92162ade2bddb2c82982ced9d",
+  "status": "passed",
+  "regression_suites": 39,
+  "regression_suites_passed": 39,
+  "original_failures_resolved": [
+    "test_eyelid_blink",
+    "test_eyelid_corner_roll",
+    "test_jaw_auto_wide_edward"
+  ],
+  "eyelids": {
+    "cause": "An unconnected literal zero in multiply.input[] can be omitted by Maya serialization, leaving the remaining factor to evaluate alone after reopen.",
+    "repair": "Omit zero corner-weight terms and store disabled inherited primary Z on scalar compose channels; schema v4 also repairs existing saved v3 graphs.",
+    "preserved": "Primary pivot, corner falloff, curl/blink behavior, skin weights, controls, joints and animation channels.",
+    "saved_v3_repair_maximum_error": 7.389520662037796e-09,
+    "tolerance": 1e-06,
+    "checks": [
+      "L/R",
+      "7/11 guide samples",
+      "rotated/nonuniform eye frames",
+      "DG/Serial/Parallel",
+      "nonzero poses",
+      "MA/MB reopen",
+      "lossless weights",
+      "undo/redo",
+      "idempotent upgrade"
+    ],
+    "additional_saved_scene_log": "saved-v3-eyelid-repair.log.gz"
+  },
+  "edward": {
+    "skin_revision": "Edward_v074.skc",
+    "previous_revision_preserved": "Edward_v073.skc",
+    "edited_weight_rows": [
+      2942,
+      3080
+    ],
+    "mesh": "cabeza_low_Shape",
+    "skin": "skinCluster41",
+    "before_high_head_alarm": "The high-head triangle initially opposed its own quad normal; Auto Wide repaired it. A raw before/after normal dot wrongly labelled this a new reversal.",
+    "actual_low_head_issue": "A local mouth-mask boundary introduced a new front-to-back triangle reversal with jaw at 20 degrees and quarter-width bilateral compression.",
+    "skin_change": "Blend only the two mirrored boundary rows 40 percent toward their neighboring mouth-weight interpolation, retaining original row totals and every positive source weight.",
+    "data_preservation": "All other skin rows, DQ data, bind data, attributes, topology, correctives and wrinkle presets are identical to v073.",
+    "consumer_map": "skinCluster41 -> cabeza_low_poseCorrectives_BLS -> cheek/nose/socket skins",
+    "local_tangent_stencil": [
+      1682,
+      1688,
+      1689,
+      2116,
+      2117,
+      2118,
+      2120,
+      2126,
+      2171,
+      2172,
+      2174,
+      2939,
+      2940,
+      2941,
+      2942,
+      2943,
+      2944,
+      3080
+    ],
+    "intentional_local_deformation_maximum": 0.3583675291083383,
+    "maximum_high_head_error": 0.0,
+    "maximum_body_error": 0.0,
+    "maximum_low_head_error_outside_stencil": 0.0,
+    "preservation_tolerance": 0.0001,
+    "scoped_pose_cases": 27,
+    "validation": [
+      "Two independent complete Edward rebuilds",
+      "18 Narrow/Wide pose cases per integration run",
+      "No new tested triangle/polygon reversals",
+      "Exact imported repaired weight rows",
+      "Ten saved correctives restored",
+      "Sticky-lip contact",
+      "Native reopen error 0.0",
+      "27 v073/v074 comparisons in DG/Serial/Parallel, including asymmetric compression, roll and global scale"
+    ],
+    "second_build_log": "edward-second-full-build.log.gz"
+  },
+  "surface_gate": {
+    "preserved_thresholds": {
+      "nondegenerate_triangle_area_vector_length": 1e-08,
+      "normal_dot_reversal": 0.0
+    },
+    "correction": "Compare emitted primitive identities and retain the greater-than-90-degree front-to-back reversal gate; distinguish an already reversed triangle being repaired. Check whole-polygon reversals separately.",
+    "counterexamples": "Unit regressions reject a real newly reversed fold and a whole-face reversal, while permitting a repaired fold and a valid native diagonal change."
+  },
+  "tests": [
+    {
+      "name": "test_authored_guide_frames",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 20.94948697090149,
+      "log": "test_authored_guide_frames.log.gz"
+    },
+    {
+      "name": "test_biped_spine_and_foot",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.46810531616211,
+      "log": "test_biped_spine_and_foot.log.gz"
+    },
+    {
+      "name": "test_biped_foot_reach",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 17.63325524330139,
+      "log": "test_biped_foot_reach.log.gz"
+    },
+    {
+      "name": "test_build_horse_leg_self",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 25.918871641159058,
+      "log": "test_build_horse_leg_self.log.gz"
+    },
+    {
+      "name": "test_controller_shapes",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 13.752201795578003,
+      "log": "test_controller_shapes.log.gz"
+    },
+    {
+      "name": "test_digit_controller_display",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.785729169845581,
+      "log": "test_digit_controller_display.log.gz"
+    },
+    {
+      "name": "test_eye_head_deformation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.8876359462738037,
+      "log": "test_eye_head_deformation.log.gz"
+    },
+    {
+      "name": "test_eyelid_blink",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.8339104652404785,
+      "log": "test_eyelid_blink.log.gz"
+    },
+    {
+      "name": "test_eyelid_corner_roll",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 15.91692304611206,
+      "log": "test_eyelid_corner_roll.log.gz"
+    },
+    {
+      "name": "test_eyelid_primary_roll",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.00361442565918,
+      "log": "test_eyelid_primary_roll.log.gz"
+    },
+    {
+      "name": "test_face_squash_controls",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.367161989212036,
+      "log": "test_face_squash_controls.log.gz"
+    },
+    {
+      "name": "test_fingers_fit_rows",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.39702510833740234,
+      "log": "test_fingers_fit_rows.log.gz"
+    },
+    {
+      "name": "test_ik_fk_settings_match",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 14.615847110748291,
+      "log": "test_ik_fk_settings_match.log.gz"
+    },
+    {
+      "name": "test_iris_setup",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.3351869583129883,
+      "log": "test_iris_setup.log.gz"
+    },
+    {
+      "name": "test_jaw_auto_wide",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.408903121948242,
+      "log": "test_jaw_auto_wide.log.gz"
+    },
+    {
+      "name": "test_jaw_auto_wide_edward",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 48.929943799972534,
+      "log": "test_jaw_auto_wide_edward.log.gz"
+    },
+    {
+      "name": "test_jaw_directional_defaults",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.7850022315979,
+      "log": "test_jaw_directional_defaults.log.gz"
+    },
+    {
+      "name": "test_jaw_lips",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 31.335180044174194,
+      "log": "test_jaw_lips.log.gz"
+    },
+    {
+      "name": "test_jaw_orientation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.154506206512451,
+      "log": "test_jaw_orientation.log.gz"
+    },
+    {
+      "name": "test_jaw_single_surface",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.47432279586792,
+      "log": "test_jaw_single_surface.log.gz"
+    },
+    {
+      "name": "test_lip_surface_depth",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.811632871627808,
+      "log": "test_lip_surface_depth.log.gz"
+    },
+    {
+      "name": "test_lip_u_response",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.083693504333496,
+      "log": "test_lip_u_response.log.gz"
+    },
+    {
+      "name": "test_module_nurbs",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.48349404335022,
+      "log": "test_module_nurbs.log.gz"
+    },
+    {
+      "name": "test_neck_stretch_squash",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.367581129074097,
+      "log": "test_neck_stretch_squash.log.gz"
+    },
+    {
+      "name": "test_paw_fetlock_roll",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.218995809555054,
+      "log": "test_paw_fetlock_roll.log.gz"
+    },
+    {
+      "name": "test_quadruped_guide_paths",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.753917694091797,
+      "log": "test_quadruped_guide_paths.log.gz"
+    },
+    {
+      "name": "test_quadruped_spine_tangents",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.6352996826171875,
+      "log": "test_quadruped_spine_tangents.log.gz"
+    },
+    {
+      "name": "test_socket_fleshy",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.825638055801392,
+      "log": "test_socket_fleshy.log.gz"
+    },
+    {
+      "name": "test_spine_chest_stretch",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.9992237091064453,
+      "log": "test_spine_chest_stretch.log.gz"
+    },
+    {
+      "name": "test_text_controller",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 7.491512775421143,
+      "log": "test_text_controller.log.gz"
+    },
+    {
+      "name": "test_wing_module",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.500713109970093,
+      "log": "test_wing_module.log.gz"
+    },
+    {
+      "name": "test_skin_sparse_influences",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.464819669723511,
+      "log": "test_skin_sparse_influences.log.gz"
+    },
+    {
+      "name": "test_build_exact_bindings",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.499726295471191,
+      "log": "test_build_exact_bindings.log.gz"
+    },
+    {
+      "name": "test_scene_evaluation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.311647653579712,
+      "log": "test_scene_evaluation.log.gz"
+    },
+    {
+      "name": "test_native_node_types",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 17.926700830459595,
+      "log": "test_native_node_types.log.gz"
+    },
+    {
+      "name": "test_eyelid_persistence",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.518202781677246,
+      "log": "test_eyelid_persistence.log.gz"
+    },
+    {
+      "name": "test_surface_reversals",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.7546560764312744,
+      "log": "test_surface_reversals.log.gz"
+    },
+    {
+      "name": "test_edward_skin_revision",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.2896990776062012,
+      "log": "test_edward_skin_revision.log.gz"
+    },
+    {
+      "name": "test_flower_module",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 25.07840347290039,
+      "log": "test_flower_module.log.gz"
+    }
+  ],
+  "source_sha256": {
+    "maya_tools/scripts/tools/eyelid_rotation.py": "4686def5887611daf1c61e3311702b8b3227a511921e3e18cfb8ed61a90ce198",
+    "maya_tools/scripts/tools/eyelid_corners.py": "3b0b1ccb2f10b0b3df515779f698269ad8ec15adf7b1bb0347ec820046fb88ba",
+    "maya_tools/scripts/tools/tests/test_eyelid_persistence.py": "91afe7340c0130f17b18f7e84d1346ea067e333e4c608ffc3ab4f431c0fd89d7",
+    "maya_tools/scripts/tools/tests/test_jaw_auto_wide_edward.py": "68daa555f908772ff96ed0eb00fce368ff4d742841f3821416c68fbb12f70a20",
+    "maya_tools/scripts/tools/tests/fixtures/surface_reversals.py": "d71c94a1ff71d6c760163c618600d4f81d600343e3def3e58458debfdecdf535",
+    "maya_tools/scripts/tools/tests/test_surface_reversals.py": "285cedf1e4e8c0462f3d11c84721fdda6a61b754c93f58ca27091cb6b548f449",
+    "maya_tools/scripts/tools/tests/test_edward_skin_revision.py": "a7cc0e3b71b3918ce9bb955df79b9c69fa67145dbd299c7a36a2e7ae1765353d",
+    "scripts/run_rig_regressions.py": "46288e7b9b75f99ef59c78b53be77eb41e16aa4b6a43043c0047e8dc92ba71a1"
+  },
+  "limits": [
+    "These are CPU/DG construction, deformation and native persistence checks, not a GPU/cache or playback-speed certification.",
+    "Native batch logs retain existing editor-metadata, legacy reference and plugin warnings; source scene files were preserved.",
+    "The two edited low-head skin rows intentionally change their downstream tangent-space corrective neighborhood. Geometry outside its 18-vertex face stencil, high head, body and neutral were checked independently."
+  ],
+  "previous_audit": "../module_audit_20261016/summary.json"
+}

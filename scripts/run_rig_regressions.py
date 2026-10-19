@@ -8,6 +8,11 @@ import subprocess
 import time
 
 TESTS = (
+    'test_native_node_types.py',
+    'test_quadruped_leg_push.py',
+    'test_eyelid_persistence.py',
+    'test_surface_reversals.py',
+    'test_edward_skin_revision.py',
     'test_build_pipeline.py',
     'test_jaw_single_surface.py',
     'test_jaw_directional_defaults.py',

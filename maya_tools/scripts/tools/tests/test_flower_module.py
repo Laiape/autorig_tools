@@ -22,6 +22,7 @@ def run(output_dir=None):
     from maya_tools.scripts.utils import create_rig, scene_evaluation, data_manager, guides_manager
     from maya_tools.scripts.flower.autorig import common, stem_module, head_module, leaf_module, petal_module, flower_module
     from maya_tools.scripts.framework import registry
+    cmds.optionVar(stringValue=('currentAssetRigName', 'flower'))
     for module in (common, stem_module, head_module, leaf_module, petal_module, flower_module, registry):
         reload(module)
     asset = ROOT/'maya_tools/assets/flower'

@@ -42,6 +42,9 @@ their stem anchors, and 30 petal chains branching from the head.
 
 Control inputs flow to matrices/joints and then to skinClusters. Global/local
 curl, spread and twist use native utility nodes on separate AUTO offsets.
+Scalar curl factors use the standalone `multiply` node with `input[0]`,
+`input[1]` and `output`. Do not create `multDoubleLinear`: this Maya 2026
+installation does not register that type and creates an unknown node instead.
 Static shell fitting and initial weight interpolation run only at authoring
 or build time. A first build without SKC binds complete shell coverage with
 at most two adjacent influences. Later builds restore the asset's saved SKC.

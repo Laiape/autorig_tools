@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-16",
+  "maya": "2026.2",
+  "status": "passed",
+  "scope": "Four native leg module builds, twice; artist rig migration and native MA reopen. No full-character rebuild.",
+  "push_bones": 16,
+  "driver": "Solved leg matrices; absolute bend change from neutral, half-angle orientation, master-space angle measurement.",
+  "settings": [
+    "Push_Enable",
+    "<Joint>_Push",
+    "<Joint>_PushAngle"
+  ],
+  "skeleton": {
+    "digit_roots_parent": "<side>_<leg>Pastern_ENV",
+    "paw_skin_tips_removed": true,
+    "internal_tip_aim_retained": true,
+    "hoof_tip_retained": true
+  },
+  "module_checks": [
+    "2 reproducible four-leg builds",
+    "actual IK foot movement and FK hinge rotation",
+    "native mesh deformation",
+    "enable and signed distance",
+    "uniform scale in FK",
+    "DG/Serial/Parallel",
+    "native MB reopen",
+    "linear/DQ/blended rigid tip weight merge and native undo",
+    "idempotent push setup",
+    "four additional native non-ribbon paw builds and IK motion"
+  ],
+  "related_regressions": {
+    "test_build_horse_leg_self": "passed",
+    "test_paw_fetlock_roll": "passed",
+    "test_native_node_types": "passed"
+  },
+  "artist": {
+    "success": true,
+    "joints": [
+      "L_backLegFetlockCorrectivePush_JNT",
+      "L_backLegHockCorrectivePush_JNT",
+      "L_backLegPasternCorrectivePush_JNT",
+      "L_backLegStifleCorrectivePush_JNT",
+      "L_frontLegCarpusCorrectivePush_JNT",
+      "L_frontLegElbowCorrectivePush_JNT",
+      "L_frontLegFetlockCorrectivePush_JNT",
+      "L_frontLegPasternCorrectivePush_JNT",
+      "R_backLegFetlockCorrectivePush_JNT",
+      "R_backLegHockCorrectivePush_JNT",
+      "R_backLegPasternCorrectivePush_JNT",
+      "R_backLegStifleCorrectivePush_JNT",
+      "R_frontLegCarpusCorrectivePush_JNT",
+      "R_frontLegElbowCorrectivePush_JNT",
+      "R_frontLegFetlockCorrectivePush_JNT",
+      "R_frontLegPasternCorrectivePush_JNT"
+    ],
+    "snapshot": "C:\\Users\\laiap\\Downloads\\Chihuahua_prueba_skinning\\Chihuahua_push_joints_20261016_201055.ma",
+    "backup": "C:\\Users\\laiap\\Downloads\\Chihuahua_prueba_skinning\\Chihuahua_antes_push_joints_20261016_201055.ma",
+    "original_joint_max_errors": {
+      "0": 5.329070518200751e-15,
+      "130": 5.329070518200751e-15,
+      "530": 5.329070518200751e-15,
+      "1490": 5.329070518200751e-15,
+      "1770": 5.329070518200751e-15
+    },
+    "geometry_errors": {
+      "0": {
+        "C_body_SKC": 0.0
+      },
+      "130": {
+        "C_body_SKC": 0.0
+      },
+      "530": {
+        "C_body_SKC": 0.0
+      },
+      "1490": {
+        "C_body_SKC": 0.0
+      },
+      "1770": {
+        "C_body_SKC": 0.0
+      }
+    },
+    "weight_errors": {
+      "C_body_SKC": 0.0
+    },
+    "retained_joint_count": 899,
+    "note": "First successful receipt recovered from dispatch output after guarded duplicate.",
+    "bind_pose_reset": [
+      "bindPose6"
+    ],
+    "bind_pre_matrices_preserved": true,
+    "activation_samples": {
+      "0": {},
+      "530": {},
+      "1490": {},
+      "1770": {}
+    },
+    "live_motion_verification": {
+      "FK": {
+        "L_backLegStifleCorrectivePush_JNT": 0.6663886904716492,
+        "L_frontLegElbowCorrectivePush_JNT": 0.3800329566001892,
+        "R_backLegStifleCorrectivePush_JNT": 0.6663886904716492,
+        "R_frontLegElbowCorrectivePush_JNT": 0.3800604045391083
+      },
+      "IK": {
+        "L_backLegFetlockCorrectivePush_JNT": 0.06706414371728897,
+        "L_backLegHockCorrectivePush_JNT": 0.8547065258026123,
+        "L_backLegStifleCorrectivePush_JNT": 1.0,
+        "L_frontLegCarpusCorrectivePush_JNT": 1.0,
+        "L_frontLegElbowCorrectivePush_JNT": 0.29931968450546265,
+        "L_frontLegFetlockCorrectivePush_JNT": 0.8510043621063232,
+        "R_backLegFetlockCorrectivePush_JNT": 0.061856940388679504,
+        "R_backLegHockCorrectivePush_JNT": 0.5006983876228333,
+        "R_backLegStifleCorrectivePush_JNT": 0.7224627137184143,
+        "R_frontLegCarpusCorrectivePush_JNT": 1.0,
+        "R_frontLegElbowCorrectivePush_JNT": 0.2993304431438446,
+        "R_frontLegFetlockCorrectivePush_JNT": 0.8510674238204956
+      }
+    },
+    "rest_frame": 0
+  },
+  "reopen": {
+    "success": true,
+    "reopen_mesh_max_errors": {
+      "0": 0.0,
+      "530": 0.0,
+      "1490": 0.0,
+      "1770": 0.0
+    },
+    "push_ENV": 16,
+    "digits_parent": "Pastern",
+    "tips": 0
+  },
+  "artist_pose_scope": "The original ROM had been flattened in the artist scene. The retained matrices and mesh were compared at the listed frame samples; nonzero IK/FK push movement was separately verified on all four legs with a temporary layer, then restored.",
+  "standalone_warnings": [
+    "The artist scene includes GUI nodeGraphEditorInfo and an XGen preview expression unavailable in standalone. These are inherited UI/groom records, not push nodes. Geometry and push joint reopen checks pass."
+  ],
+  "cache_note": "A legacy horse test used the default build scratch cache. Restored the full Chihuahua cache from the saved native-build record and verified all 44 stored scene references before migrating the artist rig.",
+  "new_regression_tests_passed": 3
+}

@@ -4,6 +4,7 @@ Run via scripts/run_maya_test.py in a disposable mayapy process. All derived
 build caches and native scene files live in a private temporary directory.
 """
 import json
+import bisect
 import os
 from pathlib import Path
 import sys
@@ -20,9 +21,11 @@ import maya.standalone
 maya.standalone.initialize(name='python')
 from maya import cmds
 from maya.api import OpenMaya as om
+from maya.api import OpenMayaAnim as oma
 import numpy as np
 from maya_tools.scripts.utils import create_rig
 from maya_tools.scripts.framework import context
+from fixtures import surface_reversals
 
 MESHES = ('cabeza_high', 'cabeza_low', 'cuerpo_base')
 
@@ -37,11 +40,6 @@ def points():
             for mesh in MESHES}
 
 
-def normals(p, triangles):
-    return np.cross(p[triangles[:, 1]] - p[triangles[:, 0]],
-                    p[triangles[:, 2]] - p[triangles[:, 0]])
-
-
 try:
     with tempfile.TemporaryDirectory(prefix='edward_auto_wide_') as folder:
         os.environ['AUTORIG_BUILD_CACHE_DIR'] = str(Path(folder) / 'cache')
@@ -54,6 +52,21 @@ try:
         from maya_tools.scripts.tools import pose_blendshapes as poses
         from maya_tools.scripts.tools.skin_manager_api import SkinManager
         saved = json.loads(Path(SkinManager().get_latest_version_path()).read_text())
+        low_record = next(r for r in saved['cabeza_low_Shape'] if r['name'] == 'skinCluster41')
+        skin = oma.MFnSkinCluster(om.MSelectionList().add('skinCluster41').getDependNode(0))
+        component = om.MFnSingleIndexedComponent().create(om.MFn.kMeshVertComponent)
+        vertex_ids = (2942, 3080)
+        om.MFnSingleIndexedComponent(component).addElements(vertex_ids)
+        shape = cmds.listRelatives('cabeza_low', shapes=True, noIntermediate=True, fullPath=True)[0]
+        weights, influence_count = skin.getWeights(om.MSelectionList().add(shape).getDagPath(0), component)
+        for column, influence in enumerate(skin.influenceObjects()):
+            name = influence.partialPathName()
+            values = low_record['sparse_weights'].get(name, {'ix': [], 'v': []})
+            value_key = next(k for k in values if k != 'ix')
+            for row, vertex in enumerate(vertex_ids):
+                index = bisect.bisect_left(values['ix'], vertex)
+                expected = values[value_key][index] if index < len(values['ix']) and values['ix'][index] == vertex else 0.
+                assert abs(weights[row*influence_count+column] - expected) < 1e-12, (vertex, name, 'lossless skin import')
         captured = saved.get('__scene_deformers__', {}).get('pose_targets', [])
         for target in captured:
             bs, index = target['blendShape'], target['targetIndex']
@@ -69,8 +82,6 @@ try:
         for control in wrinkle_controls:
             assert cmds.getAttr(control + '.wrinkleValue') == 1, control
             assert cmds.attributeQuery('wrinkleValue', node=control, listDefault=True) == [1.]
-        triangles = {mesh: np.asarray(mesh_function(mesh).getTriangles()[1], dtype=int).reshape(-1, 3)
-                     for mesh in MESHES}
         records = []
         for corrective, sign in (('autoWide', -1), ('autoNarrow', 1)):
             for angle in (0, 20, 30):
@@ -81,9 +92,11 @@ try:
                         cmds.setAttr(side + '_lipCorner_CTL.tx', sign * .25 * amount / scale)
                         cmds.setAttr(side + '_lipCorner_CTL.' + corrective, 0)
                     before = points()
+                    before_surface = {mesh: surface_reversals.capture(mesh_function(mesh)) for mesh in MESHES}
                     for side in ('L', 'R'):
                         cmds.setAttr(side + '_lipCorner_CTL.' + corrective, 1)
                     after = points()
+                    after_surface = {mesh: surface_reversals.capture(mesh_function(mesh)) for mesh in MESHES}
                     case = {'corrective': corrective, 'jaw': angle,
                             'signed_x_fraction': sign * .25 * amount, 'meshes': {}}
                     for mesh in MESHES:
@@ -91,15 +104,13 @@ try:
                         assert np.isfinite(b).all(), (corrective, angle, amount, mesh)
                         delta = b - a
                         moved = np.linalg.norm(delta, axis=1) > 1e-7
-                        n0, n1 = normals(a, triangles[mesh]), normals(b, triangles[mesh])
-                        affected = moved[triangles[mesh]].any(axis=1)
-                        valid = np.linalg.norm(n0, axis=1) > 1e-8
-                        flips = int(np.count_nonzero(affected & valid & (np.sum(n0*n1, axis=1) < 0)))
+                        surface = surface_reversals.compare(before_surface[mesh], after_surface[mesh])
                         case['meshes'][mesh] = dict(vertices=len(b), moved_vertices=int(moved.sum()),
                                                    maximum_forward=float(delta[:, 2].max()),
                                                    minimum_forward=float(delta[:, 2].min()),
-                                                   new_triangle_reversals=flips)
-                        assert flips == 0, (corrective, angle, amount, mesh, flips)
+                                                   **surface)
+                        assert surface['new_triangle_reversals'] == 0, (corrective, angle, amount, mesh, surface)
+                        assert surface['new_polygon_reversals'] == 0, (corrective, angle, amount, mesh, surface)
                         if amount == 0 or mesh == 'cuerpo_base':
                             assert not moved.any(), (corrective, angle, amount, mesh)
                     if amount:
@@ -114,9 +125,13 @@ try:
             assert np.allclose(a, b, atol=1e-5, rtol=0)
         cmds.setAttr('C_jaw_CTL.stickyLips', 0)
         expected = points()
-        path = Path(folder) / 'Edward_auto_wide.mb'
+        # Retain the source format when batch Maya preserves editor-only nodes
+        # as unknown; changing formats is forbidden for such native scenes.
+        scene_type = cmds.file(query=True, type=True)[0]
+        extension = '.mb' if scene_type == 'mayaBinary' else '.ma'
+        path = Path(folder) / ('Edward_auto_wide' + extension)
         cmds.file(rename=str(path))
-        cmds.file(save=True, type='mayaBinary', force=True)
+        cmds.file(save=True, type=scene_type, force=True)
         cmds.file(new=True, force=True)
         cmds.file(str(path), open=True, force=True)
         reopened = points()
