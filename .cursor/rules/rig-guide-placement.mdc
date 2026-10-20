@@ -50,6 +50,13 @@ alwaysApply: false
 - Shoulder X follows the upper arm. For Girl's side-view up convention, L has
   RX=0 and the behavior mirror on R has RX=180; signed Y has no world-Z lean in
   the side projection. Retain elbow bend channels and independent finger frames.
+- A subsequent artist-edited shoulder frame is authoritative. When the artist
+  explicitly keeps BOTH its position and orientation and retains elbow TX/RY,
+  fit elbow TX to the closest loop-center projection on shoulder X, then fit
+  wrist TX and elbow RY in the shoulder XZ plane. Do not change shoulder, add RZ,
+  or hide an extra degree of freedom in jointOrient/offsetParentMatrix. Record
+  the unavoidable residual and do not claim exact loop centering. Girl v005's
+  accepted wrist residual is 1.87035069 cm; both shoulders are preserved.
 - A marked front edge can specify the spine endpoint's HEIGHT rather than a
   front-surface pivot. Record the exact source edge chain and centerline vertex;
   retain the artist's spine root frame and redistribute uniform child TY to the
@@ -66,6 +73,13 @@ alwaysApply: false
   TY remains zero and locked. Verify an actual mesh move and restore it.
   Native scene attachments are distinct from the evaluated static matrices/CVs
   saved by the existing .guides export format.
+- Foot joint orientation is a later explicit exception to the earlier terminal
+  ankle zero-rotation convention: preserve ankle/ball centers, aim positive X
+  from ankle to ball and from ball to tip, and use positive world Y as the up
+  reference, projected perpendicular to the aim. Apply positive X/Y on BOTH
+  sides for this foot request. Place each tip exactly at its tip locator, with
+  local TX only and zero rotation. Keep jointOrient/rotateAxis zero and preserve
+  hip/knee frames. Ankle rotations are editable; ball/tip translations use TX.
 - Preserve the chosen vertex IDs, edge IDs and component sets so an artist can
   select and inspect the actual source topology afterward. Record any ambiguous
   anatomical patch without silently assigning it to an unrelated guide.

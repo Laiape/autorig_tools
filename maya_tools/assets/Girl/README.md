@@ -67,7 +67,7 @@ are in `validation/channel_feedback_v003*.json` and the v003 PNGs. All 25 model
 meshes are unchanged; nine artist clusters and paired lip/eyelid endpoints are
 preserved. Other guide frames are unchanged within floating-point precision.
 
-The current review is `scenes/Girl_guides_high_v004.ma` with
+The previous torso review is `scenes/Girl_guides_high_v004.ma` with
 `guides/Girl_v004.guides`. The live artist correction is authoritative: all five
 left leg joints and their local channels are preserved exactly, and the entire
 branch, including ball/tip, is behavior-mirrored to R. L hip is RX=90/RZ=-90,
@@ -90,6 +90,31 @@ and the v004 PNGs: exact left preservation, mirrored right matrices, single-axis
 limb channels, shoulder side-view alignment, spine/chest placement, unchanged
 25 model meshes and unchanged other joint/locator frames. The nine clusters,
 26 brow/foot attachment nodes and paired lip/eyelid endpoints are retained.
+
+The current review is `scenes/Girl_guides_high_v005.ma` with
+`guides/Girl_v005.guides`. It retains the latest artist shoulder correction.
+The artist explicitly chose to preserve both shoulder positions/orientations,
+retain TX/RY at the elbows and use the closest reachable loop-center positions.
+Elbow TX is the closest point on shoulder X; wrist TX/elbow RY give the closest
+point in the shoulder XZ plane. L elbow residual is 0.0076758 cm, R is numerical
+zero, and both wrists retain an accepted 1.87035069 cm residual. These are
+constrained approximations, not exact wrist-loop centers. Shoulder matrices and
+channels, independent finger frames and all other unaffected joints are intact.
+
+Both feet now use positive X from ankle to ball and from ball to tip, with
+positive world Y projected perpendicular to each aim as the up reference.
+Ankle and ball centers are unchanged; each tip exactly matches its tip locator
+at ground height. Ball/tip translations use local TX only; tip rotations and
+all foot jointOrient/rotateAxis values are zero. This orientation request
+supersedes the earlier ankle zero-rotation convention, while hip/knee frames
+are preserved. The right foot also uses positive X/Y for these aim frames.
+
+The pre-edit native snapshot is retained locally as
+`C:/GIT/maya_scripts/girl_asset_20261020/Girl_artist_arm_correction_before_v005.ma`.
+`validation/artist_foot_arm_v005*.json` verifies a native reopen, the constrained
+arm closest-point conditions, exact foot aims/locator placement, unchanged 25
+model meshes, unchanged guide curves/locators, nine clusters and 26 native
+brow/foot attachments. The v005 PNGs show the arm and foot axes for review.
 
 - Low Res uses Body_low, Top_low and Pantalon_low.
 - High Res uses Body_high, Top_high and pantalon_high.
