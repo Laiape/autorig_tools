@@ -3,6 +3,11 @@
 Parent: `maya_tools/how_it_works.md`.
 Evidence: `docs/validation/chihuahua_planar_legs_20261020/summary.json`.
 
+Historical delivery, superseded by `chihuahua_forward_knees_20261020.md`.
+The earlier point-error maxima did not reject NaN values in two source skin
+vertices and did not establish anatomical knee alignment. Current finite-value,
+skin repair and actual lift tests are documented in that later delivery.
+
 The user requested a planar model for refitting guides, with the knees facing
 forward, hocks backward and ankles untwisted. Only the hind legs are changed.
 

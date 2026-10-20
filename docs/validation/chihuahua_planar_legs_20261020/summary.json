@@ -388,5 +388,7 @@
       "sha256": "03ca50725c51f9168523e1044a6af0fa662012742603c4209a4fc2eed3feaead"
     }
   },
-  "scope": "Static model preparation. Original guide/skin presets remain unchanged; a subsequent rig build after artist guide fitting is not validated by this edit. Original deferred groom is retained unloaded and has not been reposed."
+  "scope": "Static model preparation. Original guide/skin presets remain unchanged; a subsequent rig build after artist guide fitting is not validated by this edit. Original deferred groom is retained unloaded and has not been reposed.",
+  "superseded_by": "docs/validation/chihuahua_forward_knees_20261020/summary.json",
+  "quality_correction": "Earlier error maxima did not reject nonfinite values. Two source skin vertices had NaN weights and geometry; anatomical knee twist also remained. These records do not approve deformation quality."
 }

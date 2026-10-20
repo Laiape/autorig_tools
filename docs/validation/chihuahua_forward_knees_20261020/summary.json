@@ -1,0 +1,633 @@
+{
+  "model": {
+    "source_model": "chihuahua_v003.mb",
+    "source_skin": "chihuahua_v013.skc",
+    "source_rig": "chihuahua_planar_legs_v001.mb",
+    "landmarks": {
+      "L": 4954,
+      "R": 2124
+    },
+    "legs": {
+      "L": {
+        "rest_twist_degrees": 53.270366191864014,
+        "knee_landmark_before": [
+          4.575383186340332,
+          7.427582740783691,
+          4.728099822998047
+        ],
+        "knee_landmark_after": [
+          3.427764415740967,
+          7.270043849945068,
+          5.271736145019531
+        ],
+        "knee_plane_x": 3.4277642236599575,
+        "lateral_error_cm": 1.920810093203329e-07
+      },
+      "R": {
+        "rest_twist_degrees": -53.270390033721924,
+        "knee_landmark_before": [
+          -4.57537841796875,
+          7.427582263946533,
+          4.728100299835205
+        ],
+        "knee_landmark_after": [
+          -3.427760124206543,
+          7.27004337310791,
+          5.271736145019531
+        ],
+        "knee_plane_x": -3.427759999999972,
+        "lateral_error_cm": 1.242065708062512e-07
+      }
+    },
+    "nonfinite_weight_repairs": [
+      {
+        "vertex": 11682,
+        "influence": "C_neck00_ENV",
+        "replacement": 0.0
+      },
+      {
+        "vertex": 11682,
+        "influence": "C_head_ENV",
+        "replacement": 0.0
+      },
+      {
+        "vertex": 20147,
+        "influence": "C_neck00_ENV",
+        "replacement": 0.0
+      },
+      {
+        "vertex": 20147,
+        "influence": "C_head_ENV",
+        "replacement": 0.0
+      }
+    ],
+    "front_body_error_cm": 0.0,
+    "model_reopen_error_cm": 7.450580596923828e-09,
+    "model": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/models/chihuahua_v004.mb",
+    "guides": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/guides/chihuahua_v014.guides",
+    "changed_guides": [
+      "L_backLegHip_JNT",
+      "L_backLegStifle_JNT",
+      "L_backLegHock_JNT",
+      "L_backLegFetlock_JNT",
+      "L_backLegPastern_JNT",
+      "L_backLegTip_JNT",
+      "L_backLegDigitIV02_JNT",
+      "L_backLegDigitIV01_JNT",
+      "L_backLegDigitIV00_JNT",
+      "L_backLegDigitV02_JNT",
+      "L_backLegDigitV01_JNT",
+      "L_backLegDigitV00_JNT",
+      "L_backLegDigitIII02_JNT",
+      "L_backLegDigitIII01_JNT",
+      "L_backLegDigitIII00_JNT",
+      "L_backLegDigitII02_JNT",
+      "L_backLegDigitII01_JNT",
+      "L_backLegDigitII00_JNT",
+      "R_backLegHip_JNT",
+      "R_backLegStifle_JNT",
+      "R_backLegHock_JNT",
+      "R_backLegFetlock_JNT",
+      "R_backLegPastern_JNT",
+      "R_backLegTip_JNT",
+      "R_backLegDigitIV02_JNT",
+      "R_backLegDigitIV01_JNT",
+      "R_backLegDigitIV00_JNT",
+      "R_backLegDigitV02_JNT",
+      "R_backLegDigitV01_JNT",
+      "R_backLegDigitV00_JNT",
+      "R_backLegDigitIII02_JNT",
+      "R_backLegDigitIII01_JNT",
+      "R_backLegDigitIII00_JNT",
+      "R_backLegDigitII02_JNT",
+      "R_backLegDigitII01_JNT",
+      "R_backLegDigitII00_JNT"
+    ]
+  },
+  "validation": {
+    "second_build": {
+      "asset": "chihuahua",
+      "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\validation\\20261020T073130207916Z.buildtiming.json",
+      "optimizations": {
+        "enabled": true,
+        "static_point_curves": 0,
+        "shared_math_nodes": 0,
+        "new_skin_bindings": []
+      }
+    },
+    "neutral_agreement_cm": 7.450580596923828e-09,
+    "reopen_error_cm": 0.0,
+    "weights_dq_and_method_exact_through_skc_rebuild": true,
+    "tests": [
+      {
+        "kind": "IK",
+        "side": "L",
+        "value": 2,
+        "max_vertex_motion_cm": 2.330192612890768,
+        "min_triangle_area_ratio": 0.20040359950726486,
+        "max_triangle_area_ratio": 2.3517515250561436,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.2075371742248535,
+              6.661589622497559
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.27004337310791,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.3212617882369417,
+            2.9872674113345115,
+            2.5833755501310525
+          ],
+          "R": [
+            -3.321261788237032,
+            0.9872681265902331,
+            2.5833755501310187
+          ]
+        },
+        "rigid_nail_error_cm": 2.476988541844988e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "IK",
+        "side": "L",
+        "value": 4,
+        "max_vertex_motion_cm": 4.529042259889017,
+        "min_triangle_area_ratio": 0.030305781355364846,
+        "max_triangle_area_ratio": 3.1080523379947875,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.196173191070557,
+              6.681894302368164
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.27004337310791,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788236941,
+            4.9872671729159475,
+            2.583375550131181
+          ],
+          "R": [
+            -3.321261788237032,
+            0.9872681265902331,
+            2.5833755501310187
+          ]
+        },
+        "rigid_nail_error_cm": 3.268388617024385e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "IK",
+        "side": "R",
+        "value": 2,
+        "max_vertex_motion_cm": 2.3301921481706493,
+        "min_triangle_area_ratio": 0.20040539516787867,
+        "max_triangle_area_ratio": 2.351740731163389,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.270043849945068,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.207536697387695,
+              6.661589622497559
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788237031,
+            0.9872681265902334,
+            2.5833755501310183
+          ],
+          "R": [
+            -3.321261788236942,
+            2.9872674113345106,
+            2.5833755501310525
+          ]
+        },
+        "rigid_nail_error_cm": 2.5105391420213025e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "IK",
+        "side": "R",
+        "value": 4,
+        "max_vertex_motion_cm": 4.5290423140474,
+        "min_triangle_area_ratio": 0.030305709674066678,
+        "max_triangle_area_ratio": 3.1080561366759882,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.270043849945068,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.196172714233398,
+              6.681894302368164
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788237031,
+            0.9872681265902334,
+            2.5833755501310183
+          ],
+          "R": [
+            -3.3212617882369404,
+            4.987267172915946,
+            2.5833755501311817
+          ]
+        },
+        "rigid_nail_error_cm": 3.3040960087604704e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "IK",
+        "side": "both",
+        "value": 4,
+        "max_vertex_motion_cm": 4.5290423140474,
+        "min_triangle_area_ratio": 0.030305709674066678,
+        "max_triangle_area_ratio": 3.1080561366759882,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.196173191070557,
+              6.681894302368164
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.196172714233398,
+              6.681894302368164
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788236941,
+            4.9872671729159475,
+            2.583375550131181
+          ],
+          "R": [
+            -3.3212617882369404,
+            4.987267172915946,
+            2.5833755501311817
+          ]
+        },
+        "rigid_nail_error_cm": 3.3040960087604704e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "FK",
+        "side": "L",
+        "value": 25,
+        "max_vertex_motion_cm": 3.330518349400415,
+        "min_triangle_area_ratio": 0.6166962467312455,
+        "max_triangle_area_ratio": 1.2395958343515676,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.552304744720459,
+              5.200741767883301
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.27004337310791,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.3212617882370337,
+            1.067839136792712,
+            5.332496286215252
+          ],
+          "R": [
+            -3.321261788237032,
+            0.9872681265902331,
+            2.5833755501310187
+          ]
+        },
+        "rigid_nail_error_cm": 2.388881497455997e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "FK",
+        "side": "L",
+        "value": 50,
+        "max_vertex_motion_cm": 6.5031436395932865,
+        "min_triangle_area_ratio": 0.213821815032088,
+        "max_triangle_area_ratio": 1.4213095954182369,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.778116703033447,
+              5.017110347747803
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              7.27004337310791,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788237033,
+            2.3026898975478565,
+            7.789995036553871
+          ],
+          "R": [
+            -3.321261788237032,
+            0.9872681265902331,
+            2.5833755501310187
+          ]
+        },
+        "rigid_nail_error_cm": 4.86501499506713e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "FK",
+        "side": "R",
+        "value": 25,
+        "max_vertex_motion_cm": 3.3305186769168738,
+        "min_triangle_area_ratio": 0.7144247388378875,
+        "max_triangle_area_ratio": 1.3370334732168905,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.270043849945068,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              6.984224796295166,
+              5.216790199279785
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788237031,
+            0.9872681265902334,
+            2.5833755501310183
+          ],
+          "R": [
+            -3.3212617882370337,
+            2.0760746194335664,
+            0.05777523923546905
+          ]
+        },
+        "rigid_nail_error_cm": 6.241071707830646e-08,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      },
+      {
+        "kind": "FK",
+        "side": "R",
+        "value": 50,
+        "max_vertex_motion_cm": 6.503144188906667,
+        "min_triangle_area_ratio": 0.3980916209964069,
+        "max_triangle_area_ratio": 1.6031747519788841,
+        "knees": {
+          "L": {
+            "landmark_position": [
+              3.427764415740967,
+              7.270043849945068,
+              5.271736145019531
+            ],
+            "lateral_drift_cm": 0.0
+          },
+          "R": {
+            "landmark_position": [
+              -3.427760124206543,
+              6.748405933380127,
+              5.046199798583984
+            ],
+            "lateral_drift_cm": 0.0
+          }
+        },
+        "feet": {
+          "L": [
+            3.321261788237031,
+            0.9872681265902334,
+            2.5833755501310183
+          ],
+          "R": [
+            -3.3212617882370323,
+            4.13023323571598,
+            -1.7710464820939082
+          ]
+        },
+        "rigid_nail_error_cm": 1.5080521299698264e-07,
+        "evaluation_errors_cm": {
+          "off": 0.0,
+          "serial": 0.0,
+          "parallel": 0.0
+        },
+        "return_to_neutral_error_cm": 0.0
+      }
+    ],
+    "scope": "Native rest and bounded IK 2/4 cm, FK 25/50 degree tests in DG/Serial/Parallel. Not approval of arbitrary extreme poses."
+  },
+  "finite_model": {
+    "finite_model_restored_from_uncorrupted_v002_base": true,
+    "all_model_vertices_finite": true,
+    "native_reopen_error_cm": 7.450580596923828e-09,
+    "corrected_vertices": [
+      11682,
+      20147
+    ]
+  },
+  "appearance": {
+    "mesh_count": 10,
+    "topology_uv_and_face_material_assignments_preserved": true,
+    "all_model_points_and_face_vertex_normals_finite": true,
+    "front_body_vertex_count": 17150,
+    "front_body_error_cm": 0.0,
+    "other_primary_meshes_unchanged": true,
+    "entire_final_skc_has_only_finite_numeric_values": true
+  },
+  "final_build": {
+    "normal_build_succeeded": true,
+    "neutral_error_cm": 7.450580596923828e-09,
+    "body_vertices_finite": true,
+    "native_skeleton_populated": true,
+    "nail_skin_present": true,
+    "build": {
+      "asset": "chihuahua",
+      "timing_report": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\validation\\20261020T073307033741Z.buildtiming.json",
+      "optimizations": {
+        "enabled": true,
+        "static_point_curves": 0,
+        "shared_math_nodes": 0,
+        "new_skin_bindings": []
+      }
+    }
+  },
+  "delivery": {
+    "rig": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/scenes/chihuahua_forward_knees_v001.mb",
+    "guide_scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/scenes/chihuahua_planar_guides_work_v003.mb",
+    "renders": [
+      "C:/proyectos/auto-rig/tmp/chihuahua_knee_20261020/corrected_front_tmp.png",
+      "C:/proyectos/auto-rig/tmp/chihuahua_knee_20261020/corrected_side_tmp.png",
+      "C:/proyectos/auto-rig/tmp/chihuahua_knee_20261020/lift2cm_front_tmp.png",
+      "C:/proyectos/auto-rig/tmp/chihuahua_knee_20261020/lift2cm_side_tmp.png",
+      "C:/proyectos/auto-rig/tmp/chihuahua_knee_20261020/lift4cm_front_tmp.png",
+      "C:/proyectos/auto-rig/tmp/chihuahua_knee_20261020/lift4cm_side_tmp.png"
+    ]
+  },
+  "skin": {
+    "nonfinite_body_weights_zeroed": [
+      [
+        11682,
+        "C_neck00_ENV"
+      ],
+      [
+        11682,
+        "C_head_ENV"
+      ],
+      [
+        20147,
+        "C_neck00_ENV"
+      ],
+      [
+        20147,
+        "C_head_ENV"
+      ]
+    ],
+    "all_original_finite_weights_exact": true,
+    "rear_nails_bound_rigidly": true,
+    "weights_dq_influences_method_hash": "83aa75aa7867ac478c16496b6b0fc8d4800a6f1592af07b95439384c9f38482a",
+    "weights_unchanged_by_rest_calibration": true,
+    "neutral_error_cm": 7.450580596923828e-09,
+    "native_reopen_error_cm": 7.450580596923828e-09,
+    "new_skin": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/skin_clusters/chihuahua_v014.skc",
+    "new_rig": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/scenes/chihuahua_forward_knees_v001.mb"
+  },
+  "limitations": [
+    "The previous guide-only repair did not correct anatomical mesh twist.",
+    "Earlier point-error maxima did not reject NaN values; those acceptance claims are superseded.",
+    "IK 4 cm is a tightly compressed pose; this is not approval of arbitrary extreme poses or a new corrective sculpt.",
+    "The original optional groom is retained unloaded and has not been adapted."
+  ],
+  "assets": {
+    "maya_tools/assets/chihuahua/models/chihuahua_v004.mb": {
+      "bytes": 12728992,
+      "sha256": "e44c4204f2196c72df429f4089547696e10a77112aa024f9ee43ae64302f699f"
+    },
+    "maya_tools/assets/chihuahua/guides/chihuahua_v014.guides": {
+      "bytes": 156140,
+      "sha256": "2429af5f77e68ce9d998d40a72d1ad1dde3e5879671e1f70dc1f9b2e4b95c063"
+    },
+    "maya_tools/assets/chihuahua/skin_clusters/chihuahua_v014.skc": {
+      "bytes": 6541349,
+      "sha256": "96de2174f2541234a2ebef830d2bdd232c46f9f10fb8a9392532043644b5d56a"
+    },
+    "maya_tools/assets/chihuahua/scenes/chihuahua_forward_knees_v001.mb": {
+      "bytes": 19506060,
+      "sha256": "c5796bd335ec3fbc42b09ae8d458a55765351b77f6573a3e60a17d910ed3295a"
+    },
+    "maya_tools/assets/chihuahua/scenes/chihuahua_planar_guides_work_v003.mb": {
+      "bytes": 12788028,
+      "sha256": "6691ec938fab70bb274c9bc0646469fb507a18ae240d53821bc84f272d42b01b"
+    }
+  }
+}

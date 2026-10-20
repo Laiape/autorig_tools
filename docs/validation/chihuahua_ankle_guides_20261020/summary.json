@@ -159,5 +159,7 @@
     "L_backLegPastern_JNT",
     "L_backLegFetlock_JNT"
   ],
-  "other_preset_fields_exact": true
+  "other_preset_fields_exact": true,
+  "superseded_by": "docs/validation/chihuahua_forward_knees_20261020/summary.json",
+  "quality_correction": "Earlier error maxima did not reject nonfinite values. Two source skin vertices had NaN weights and geometry; anatomical knee twist also remained. These records do not approve deformation quality."
 }
