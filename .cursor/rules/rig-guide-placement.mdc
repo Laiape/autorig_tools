@@ -42,6 +42,20 @@ alwaysApply: false
   jointOrient zero; do not hide extra bend axes in jointOrient. Preserve the
   intended world anatomical anchors by orienting the root frame and expressing
   the bend on the single allowed axis. Preserve unaffected descendant frames.
+- Preserve live artist corrections as the authoritative source for a requested
+  mirror. Girl's left hip uses RX=90/RZ=-90, retaining its authored RY; its native
+  behavior mirror uses RX=-90/RZ=90 on R, negative child TX and the same knee RZ.
+  Mirror the full leg branch, including ball/tip, and preserve the left matrices
+  and channels exactly. Do not refit the corrected source from old loop data.
+- Shoulder X follows the upper arm. For Girl's side-view up convention, L has
+  RX=0 and the behavior mirror on R has RX=180; signed Y has no world-Z lean in
+  the side projection. Retain elbow bend channels and independent finger frames.
+- A marked front edge can specify the spine endpoint's HEIGHT rather than a
+  front-surface pivot. Record the exact source edge chain and centerline vertex;
+  retain the artist's spine root frame and redistribute uniform child TY to the
+  marked height. Center chest at the world midpoint between the spine endpoint
+  and the bilateral clavicle center, with X=0. Girl v004's marked edge is the
+  Top_high front chain through vertex 15 (Y=122.315338 scene units).
 - Spine and neck use only local TY between joints, with uniform spacing and
   zero child rotations. The root places and orients each straight chain while
   retaining the intended endpoints. Ear guides run from the lobe to the helix

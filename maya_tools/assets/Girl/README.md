@@ -41,7 +41,7 @@ checks are saved in `validation/edward_guide_placement_audit.json`,
 all curve segments are actual mesh edges, curve-to-vertex and model position
 errors are zero, all nine cluster selections are preserved, and High Res is active.
 
-The current review is `scenes/Girl_guides_high_v003.ma` with
+The previous channel review is `scenes/Girl_guides_high_v003.ma` with
 `guides/Girl_v003.guides`. It applies the artist's channel conventions:
 
 - Arm roots allow T/R; elbows use TX/RY; wrists use TX with zero rotation.
@@ -66,6 +66,30 @@ Native reopen checks, actual attachment-follow trials and viewport captures
 are in `validation/channel_feedback_v003*.json` and the v003 PNGs. All 25 model
 meshes are unchanged; nine artist clusters and paired lip/eyelid endpoints are
 preserved. Other guide frames are unchanged within floating-point precision.
+
+The current review is `scenes/Girl_guides_high_v004.ma` with
+`guides/Girl_v004.guides`. The live artist correction is authoritative: all five
+left leg joints and their local channels are preserved exactly, and the entire
+branch, including ball/tip, is behavior-mirrored to R. L hip is RX=90/RZ=-90,
+with its authored RY retained; R hip is RX=-90/RZ=90 with mirrored RY.
+Shoulder X retains upper-arm aim. L shoulder RX=0 and mirrored R RX=180 make
+signed local Y vertical in the side projection; elbow channels and independent
+finger frames are preserved.
+
+Spine retains its artist root frame and uses uniform local TY=2.63292700644
+between its eight guides. Its endpoint reaches Y=122.31533813477, the marked
+front edge through `Top_high.vtx[15]`. The actual 20-edge chain is stored in
+`Girl_spineEndReferenceEdges_SET`. Chest is the centered world midpoint between
+that endpoint and the bilateral clavicle center. This matches the indicated
+height while keeping the spine pivot inside the torso.
+
+The unsaved artist state is preserved locally in
+`C:/GIT/maya_scripts/girl_asset_20261020/Girl_artist_leg_correction_before_v004.ma`.
+Native reopen checks and captures are in `validation/artist_feedback_v004*.json`
+and the v004 PNGs: exact left preservation, mirrored right matrices, single-axis
+limb channels, shoulder side-view alignment, spine/chest placement, unchanged
+25 model meshes and unchanged other joint/locator frames. The nine clusters,
+26 brow/foot attachment nodes and paired lip/eyelid endpoints are retained.
 
 - Low Res uses Body_low, Top_low and Pantalon_low.
 - High Res uses Body_high, Top_high and pantalon_high.
