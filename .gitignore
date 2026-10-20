@@ -13,6 +13,8 @@ incrementalSave/
 *.ma.bak
 *.mb.bak
 *.swatches
+# Arnold converted texture caches (source PNGs are versioned).
+*.png.tx
 
 # Autorig build cache (regenerated on CREATE RIG)
 maya_tools/cache/*.cache

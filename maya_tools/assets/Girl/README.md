@@ -1,0 +1,89 @@
+# Girl
+
+Registered Character Manager asset, prepared from
+`D:/RIGS/Girl/Girl_rigging.ma` on 2026-10-20. The source scene is preserved.
+`thumbnail.png` is the supplied reference image; its full copy is in `reference/`.
+
+Open `models/Girl_v001.ma` for modeling or `scenes/CHAR_Girl_v001.ma` for the
+prepared character structure and `C_settings_CTL.resolution` selector.
+This is a model preparation delivery. The first editable guide fit is in
+`scenes/Girl_guides_high_v001.ma` and `guides/Girl_v001.guides`, with High Res
+active. Its native biped hierarchy has 118 joints, 12 locators, ten facial
+curves and two hidden construction surfaces, fitted from the existing project
+schema to Girl. This is an initial proposal awaiting artist feedback; animation
+modules, an export skeleton and skinning have not been built.
+
+The guide review scene uses neutral viewport shading. Two review display layers,
+`Girl_guideOutfit_LYR` and `Girl_guideHair_LYR`, hide the outfit and polygon hair
+to expose the anatomy; turn them on to inspect those meshes again. The source
+model and earlier character scene are unchanged. The unsaved artist model was
+preserved in `scenes/Girl_before_guides_live_v001.ma` before guide placement.
+Front/side captures and native guide round-trip checks are in `validation/`.
+
+The current review is `scenes/Girl_guides_high_v002.ma` with
+`guides/Girl_v002.guides`. It preserves the artist's nine component-tag clusters,
+adjusts 22 joint anchors from the selected anatomical loops/patches, and replaces
+all ten facial curves by connected High Res mesh-edge polylines. Lips have 33 CVs
+per arc, eyelids 23 per arc and socket rings 45 including the repeated closure.
+Each upper/lower lip or eyelid pair shares CV[0] at its maximum world-X corner
+and also shares its other endpoint. No model points were changed.
+`Girl_guideLoopSelections_SET` contains the inspectable source selections.
+Cluster5 is two open breast-front chains and remains an anatomical reference;
+it was not silently substituted for the thoracic pivot. Other unconfirmed guide
+positions remain editable for further artist feedback.
+
+The full Edward reference audit, cluster mappings and exact curve connectivity
+checks are saved in `validation/edward_guide_placement_audit.json`,
+`validation/artist_cluster_loop_mapping_v002.json` and
+`validation/topology_guide_fit_v002.json`. The learned workflow is recorded in
+`.cursor/rules/rig-guide-placement.mdc` at the repository root.
+`validation/topology_guide_fit_v002_reopen.json` verifies the saved native scene:
+all curve segments are actual mesh edges, curve-to-vertex and model position
+errors are zero, all nine cluster selections are preserved, and High Res is active.
+
+- Low Res uses Body_low, Top_low and Pantalon_low.
+- High Res uses Body_high, Top_high and pantalon_high.
+- Model_shared contains the 19 eye, mouth, hair-blocking and accessory meshes
+  displayed in either resolution. The source high group only supplied three
+  meshes; no high-resolution accessories are claimed.
+- Both derived scenes exclude XGen, dedicated scalp meshes, missing groom-only
+  IFF paint-map nodes and the XGen refresh expression. Polygon hair is retained.
+- All 14 surviving file-texture plugs resolve to the asset's `textures/` tree.
+  Base color is sRGB; normal, roughness, metallic and SSS mask inputs are Raw.
+  The SSS mask retains its distinct `SubsurfaceScattering_Mask/` path.
+
+The shared basic-structure builder reads explicit `autorigLodRole` metadata and
+recreates the Resolution selector. Its geometry organization preserves nested
+LOD groups instead of flattening their meshes into FINAL. Untagged models do
+not gain a Resolution attribute.
+
+Model Checker ran all 23 automatic checks on the final reopened model:
+zero automatic blockers, zero execution errors, three advisory categories.
+The six gum n-gons were split, degenerate hair-blocking geometry was cleaned,
+mesh offsets were baked without changing evaluated positions/normals/UVs or
+material membership, watch transforms were frozen, pivots were reset and
+pasted node names were replaced. The source grooming data is still available
+in the original scene.
+
+The report is INCOMPLETE because all 24 guided visual-review rows remain
+Pending. Triangles, 16 overlapping gum vertices, six nearby hair-blocking
+vertices, asymmetry, pole candidates and small-mesh guidance remain explicit
+review findings. Nearby anatomical or UV seams were not blindly welded.
+
+Validation receipts:
+
+- `validation/source_model_checker.json`: original findings.
+- `validation/model_checker_after.json` and `.txt`: final full checker results.
+- `validation/changes.json`: repairs, texture remapping and exact mesh-bake checks.
+- `validation/file_path_editor.json`: Maya File Path Editor resolution statuses.
+- `validation/structure_validation.json`: two independent structure builds,
+  effective visible-mesh membership in both resolutions, zero position change
+  and native save/reopen verification.
+- `validation/acceptance.json`: delivery checks and remaining scope.
+
+Native regression coverage: four LOD/group-preservation tests and all 15 tests
+in the existing build-pipeline suite passed. Low/High review renders were also
+inspected; they carry Arnold's unlicensed-preview watermark, and their temporary
+lighting was not saved in either delivery scene. File identities are recorded
+in `validation/manifest.json`. Preparation scripts and raw Maya logs are retained in
+`C:/GIT/maya_scripts/girl_asset_20261020/`.

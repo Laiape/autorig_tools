@@ -1,0 +1,44 @@
+---
+description: Place joint and facial guides from authored polygon loops and component selections
+alwaysApply: false
+---
+
+# Guide placement from mesh topology
+
+- Preserve an unsaved artist scene in a versioned native snapshot before fitting.
+- Inspect the complete approved reference: body, limb, hand, neck and facial
+  joint positions, hierarchy and local frames, as well as its guide curves.
+  Compare anatomical loop roles; do not copy another character's dimensions.
+- Joint centers come from the intended edge loop or explicit component patch.
+  Keep the distinction between a bounding-box center and an arithmetic centroid.
+  A selected face band can intentionally place a center between two edge rows.
+  Do not move such a joint to one band boundary merely because it is closer.
+- A cluster handle's world rotate pivot is the useful position, not its transform
+  translation, which can be zero. In Maya 2026 inspect component tags on the
+  original geometry and the deformer's componentTagExpression to recover exact
+  selected edges/faces. An absent deformerSet is valid. Default nonzero weights
+  across the whole mesh do not identify the component-tag membership.
+- Fit on the requested resolution. A low-resolution artist selection can define
+  the intended anatomy, but record the corresponding actual High Res edges.
+- Facial linear guides use one CV per ordered mesh vertex, with every consecutive
+  pair connected by an actual selected mesh edge. Do not project donor CVs to the
+  surface, resample, smooth or rebuild them to invent the source contour.
+- Upper/lower lips share both endpoints and the same CV count. Each upper/lower
+  eyelid pair does the same. For this user's convention CV[0] is their identical
+  corner with the largest WORLD X coordinate. This means global +X, not absolute
+  X: the right eye starts at its inner corner and the left at its outer corner.
+  An older reference export with another order does not override that request.
+- Sockets use the intended outer orbital edge loop, closed by repeating the
+  first vertex as the last CV when following Edward's linear-polyline format.
+  Eyebrows can use an explicitly connected open edge chain across poles.
+- Preserve the chosen vertex IDs, edge IDs and component sets so an artist can
+  select and inspect the actual source topology afterward. Record any ambiguous
+  anatomical patch without silently assigning it to an unrelated guide.
+- Preserve the artist's clusters, model points and unaffected guide positions.
+  Save a new native scene and .guides version. Verify connectivity, exact vertex
+  positions, paired endpoint order and a native reopen before presenting it.
+
+Measured reference: Edward_v013.guides on Edward_v003.ma. Its left facial curves
+and lips coincide with consecutive cabeza_high vertices to about 1.53e-5 scene
+units. Girl v002 records its exact source edges and the artist's nine clusters
+under assets/Girl/validation/. This is placement evidence, not rig validation.

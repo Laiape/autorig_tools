@@ -15,6 +15,10 @@ existing module; use the shared builder, per-module mechanics/skin/control
 groups and a populated `_ENV` skeleton under `rig_GRP/skeletonHierarchy_GRP`.
 The flower settings controller uses an F drawing.
 
+For guide placement and fitting, read `.cursor/rules/rig-guide-placement.mdc`.
+Use actual anatomical mesh loops and the artist's component selections for
+joint centers and facial curves; paired lip/eyelid CV[0] starts at world +X.
+
 Read `how_it_works.md` and the affected area's index before changes. Product
 code/docs are English ASCII; user chat is Spanish. Preserve existing local
 edits and resolve the loaded Maya checkout before editing runtime code.

@@ -85,7 +85,9 @@ def _parent_model_under_final(main_xf, geo_grp, final_geo, character_name):
         if not is_rig_or_system(c):
             geo_roots.append(c)
     main_path = (cmds.ls(main_xf, long=True) or [main_xf])[0]
-    for a in (cmds.ls(assemblies=True, transforms=True, long=True) or []):
+    # Combining assemblies and transforms unions both Maya selection masks,
+    # which also collects nested meshes and flattens authored LOD groups.
+    for a in (cmds.ls(assemblies=True, long=True) or []):
         if a == main_path or main_path.startswith(a+'|'):
             # Some source models nest their character root in a model group.
             # That ancestor cannot be parented below the character's FINAL group.
@@ -418,6 +420,10 @@ def create_basic_structure(character_name=None, in_scene=False):
     cmds.setAttr(f"{settings_ctl}.hideControllersOnPlayblast", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.geometryType", lock=False, keyable=False, channelBox=True)
     cmds.setAttr(f"{settings_ctl}.geoDisplay", lock=False, keyable=False, channelBox=True)
+
+    # Models opt in with explicit Low/High group metadata; untagged assets stay unchanged.
+    from maya_tools.scripts.utils import geometry_lod
+    geometry_lod.configure(settings_ctl, geo_grp)
 
     # ─────────────────────────────────────────
     # SHARED: Conexiones geo visibility

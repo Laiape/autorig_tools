@@ -50,6 +50,9 @@ checks. Editable rig and guide scenes, source NaN repairs and validation limits:
 `maya_tools/docs/chihuahua_forward_knees_20261020.md`.
 The earlier model v003 and guide-only ankle correction are historical:
 `maya_tools/docs/chihuahua_planar_legs_20261020.md`.
+Girl's prepared model, texture paths, groom-free character scene and Low/High
+resolution control: `assets/Girl/README.md`. Tagged model LOD groups are handled
+by `scripts/utils/geometry_lod.py` in the shared basic-structure builder.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 
