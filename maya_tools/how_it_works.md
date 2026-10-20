@@ -48,6 +48,8 @@ Chihuahua's v003 model reposes only the hind legs into sagittal planes with
 forward knees, backward hocks and untwisted feet for guide refitting. The
 editable preparation rig, working guide scene and native preservation checks
 are described in `maya_tools/docs/chihuahua_planar_legs_20261020.md`.
+The follow-up guides v013 and working scene v002 center and orient the left
+fetlock/pastern and their sole-tip helper; other guide entries are preserved.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 

@@ -1,0 +1,52 @@
+{
+  "build_succeeded": true,
+  "controls": {
+    "L_backLegFetlockFk_CTL": {
+      "matrix": [
+        -2.636779683484747e-16,
+        -0.8538530135134419,
+        0.5205141989552401,
+        0.0,
+        1.249000902703301e-16,
+        0.5205141989552405,
+        0.8538530135134416,
+        0.0,
+        -1.0000000000000002,
+        6.175615574477433e-16,
+        -3.608224830031759e-16,
+        0.0,
+        3.3212617882370354,
+        0.9872681265902372,
+        2.5833755501310067,
+        1.0
+      ],
+      "guide_matrix_error": 3.1086244689504383e-15,
+      "native_reopen_matrix_error": 0.0
+    },
+    "L_backLegPasternFk_CTL": {
+      "matrix": [
+        -1.3487795174412766e-16,
+        -0.3667296098632341,
+        0.930327573088942,
+        0.0,
+        2.5871614111845547e-16,
+        0.9303275730889426,
+        0.36672960986323416,
+        0.0,
+        -1.0000000000000002,
+        5.610512336659783e-16,
+        -4.61525630731663e-16,
+        0.0,
+        3.3212617882370363,
+        0.329891928468647,
+        2.984116239409041,
+        1.0
+      ],
+      "guide_matrix_error": 3.0190863401907767e-15,
+      "native_reopen_matrix_error": 0.0
+    }
+  },
+  "skeleton_hierarchy_populated": true,
+  "trial_scene": "C:/proyectos/auto-rig/tmp/chihuahua_ankle_guides_20261020/rebuilt_guide_check_v001.mb",
+  "scope": "Guide-to-control transforms and native persistence. No skin rebind or deformation equivalence approval."
+}
