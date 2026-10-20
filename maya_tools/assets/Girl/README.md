@@ -20,7 +20,7 @@ model and earlier character scene are unchanged. The unsaved artist model was
 preserved in `scenes/Girl_before_guides_live_v001.ma` before guide placement.
 Front/side captures and native guide round-trip checks are in `validation/`.
 
-The current review is `scenes/Girl_guides_high_v002.ma` with
+The previous loop review is `scenes/Girl_guides_high_v002.ma` with
 `guides/Girl_v002.guides`. It preserves the artist's nine component-tag clusters,
 adjusts 22 joint anchors from the selected anatomical loops/patches, and replaces
 all ten facial curves by connected High Res mesh-edge polylines. Lips have 33 CVs
@@ -40,6 +40,32 @@ checks are saved in `validation/edward_guide_placement_audit.json`,
 `validation/topology_guide_fit_v002_reopen.json` verifies the saved native scene:
 all curve segments are actual mesh edges, curve-to-vertex and model position
 errors are zero, all nine cluster selections are preserved, and High Res is active.
+
+The current review is `scenes/Girl_guides_high_v003.ma` with
+`guides/Girl_v003.guides`. It applies the artist's channel conventions:
+
+- Arm roots allow T/R; elbows use TX/RY; wrists use TX with zero rotation.
+- Leg roots allow T/R; knees use TX/RZ; ankles use TX with zero rotation.
+- These limb chains retain all their previous world anatomical anchors.
+  jointOrient and rotateAxis are zero, so no extra bend axes are hidden there.
+- Spine and neck retain their endpoints and use uniform TY-only spacing in
+  their root-oriented local frame. Child rotations are zero.
+- Each ear starts on a lobe vertex, ends on the superior helix and has an exact
+  midpoint, with uniform TY-only spacing along its root-oriented local frame.
+- Eight foot pivot locators follow `suela_low` in X/Z and stay at Y=0.
+- Each eyebrow follows nine consecutive vertices of the actual `cejas_low`
+  longitudinal edge chain, projected onto `Body_high`. The CVs use native body
+  surface attachments, with CV[0] nearest the world centerline. Source eyebrow
+  edge sets and body attachment UVs are recorded separately; the curve is not
+  forced to switch body edge rows to approximate the brow arch.
+
+The native scene retains 26 `pointOnPolyConstraint` nodes under
+`Girl_guideAttachments_GRP` for the foot and brow attachments. The existing
+`.guides` format exports their evaluated matrices/CVs as static guide data.
+Native reopen checks, actual attachment-follow trials and viewport captures
+are in `validation/channel_feedback_v003*.json` and the v003 PNGs. All 25 model
+meshes are unchanged; nine artist clusters and paired lip/eyelid endpoints are
+preserved. Other guide frames are unchanged within floating-point precision.
 
 - Low Res uses Body_low, Top_low and Pantalon_low.
 - High Res uses Body_high, Top_high and pantalon_high.

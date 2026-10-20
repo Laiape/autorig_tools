@@ -20,7 +20,7 @@ alwaysApply: false
   across the whole mesh do not identify the component-tag membership.
 - Fit on the requested resolution. A low-resolution artist selection can define
   the intended anatomy, but record the corresponding actual High Res edges.
-- Facial linear guides use one CV per ordered mesh vertex, with every consecutive
+- Lip, eyelid and socket linear guides use one CV per ordered mesh vertex, with every consecutive
   pair connected by an actual selected mesh edge. Do not project donor CVs to the
   surface, resample, smooth or rebuild them to invent the source contour.
 - Upper/lower lips share both endpoints and the same CV count. Each upper/lower
@@ -30,7 +30,28 @@ alwaysApply: false
   An older reference export with another order does not override that request.
 - Sockets use the intended outer orbital edge loop, closed by repeating the
   first vertex as the last CV when following Edward's linear-polyline format.
-  Eyebrows can use an explicitly connected open edge chain across poles.
+  Eyebrows follow the longitudinal edge chain of the actual eyebrow mesh when
+  present. Attach that route to the BODY surface, not to the separate eyebrow
+  mesh. Keep CV[0] nearest the world centerline (minimum absolute world X).
+  Project the source eyebrow chain to body UVs rather than forcing it to jump
+  between body edge rows and introducing a stair-step in the brow arch. Preserve
+  the actual eyebrow source edges and the body attachment UVs separately.
+- Three-joint arms: root has free T/R, middle has only local TX and RY, terminal
+  has only local TX with all rotations zero. Legs follow TX/RZ at the middle
+  and TX only at the terminal. Keep unused translations, rotateAxis and
+  jointOrient zero; do not hide extra bend axes in jointOrient. Preserve the
+  intended world anatomical anchors by orienting the root frame and expressing
+  the bend on the single allowed axis. Preserve unaffected descendant frames.
+- Spine and neck use only local TY between joints, with uniform spacing and
+  zero child rotations. The root places and orients each straight chain while
+  retaining the intended endpoints. Ear guides run from the lobe to the helix
+  tip with the third guide exactly halfway between them on one local axis
+  (Y in the existing ear module).
+- Foot pivot locators follow the actual foot/shoe mesh perimeter in X/Z and
+  stay at local and world Y=0. Native surface attachments can drive X/Z while
+  TY remains zero and locked. Verify an actual mesh move and restore it.
+  Native scene attachments are distinct from the evaluated static matrices/CVs
+  saved by the existing .guides export format.
 - Preserve the chosen vertex IDs, edge IDs and component sets so an artist can
   select and inspect the actual source topology afterward. Record any ambiguous
   anatomical patch without silently assigning it to an unrelated guide.
