@@ -44,6 +44,10 @@ model delivery and measured load/redraw scope:
 `maya_tools/docs/chihuahua_model_open_20261016.md`.
 Chihuahua's current lightweight model, optional groom reference and explicit
 SHOW GROOM action: `maya_tools/docs/chihuahua_deferred_groom_20261016.md`.
+Chihuahua's v003 model reposes only the hind legs into sagittal planes with
+forward knees, backward hocks and untwisted feet for guide refitting. The
+editable preparation rig, working guide scene and native preservation checks
+are described in `maya_tools/docs/chihuahua_planar_legs_20261020.md`.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 

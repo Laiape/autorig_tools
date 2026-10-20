@@ -1,0 +1,392 @@
+{
+  "intent": "Repose only both hind legs through the current skin for guide placement. Preserve front legs. Knee forward, hock backward, feet forward without lateral bank.",
+  "maya_version": "2026",
+  "source_assets": [
+    "maya_tools/assets/chihuahua/models/chihuahua_v002.mb",
+    "maya_tools/assets/chihuahua/guides/chihuahua_v012.guides",
+    "maya_tools/assets/chihuahua/skin_clusters/chihuahua_v013.skc",
+    "maya_tools/assets/chihuahua/build/chihuahua_v001.build"
+  ],
+  "verification": {
+    "legs": {
+      "L": {
+        "hip_knee_hock_ankle_x_span_cm": 1.199040866595169e-14,
+        "max_bone_length_error_cm": 8.881784197001252e-16,
+        "knee_forward_bend_cm": 0.6422968464025081,
+        "hock_backward_bend_cm": -0.8210727674801439,
+        "paw_yaw_degrees": 1.552729571405236e-14,
+        "paw_roll_degrees": 4.3260513284593606e-14
+      },
+      "R": {
+        "hip_knee_hock_ankle_x_span_cm": 2.7977620220553945e-14,
+        "max_bone_length_error_cm": 1.3322676295501878e-15,
+        "knee_forward_bend_cm": 0.6423030963345964,
+        "hock_backward_bend_cm": -0.8210732073064317,
+        "paw_yaw_degrees": 4.8307137284033865e-14,
+        "paw_roll_degrees": 9.5590577028048e-14
+      }
+    },
+    "front_body_vertex_count_checked": 17150,
+    "front_body_max_error_cm": 0.0,
+    "skin_weights_dq_bind_and_influences_exact_after_native_reopen": true,
+    "rig_reopen_max_error_cm": 0.0,
+    "working_scene": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/scenes/chihuahua_planar_guides_work_v001.mb",
+    "guides_status": "Original v012 loaded unchanged for artist repositioning; display radius only adjusted.",
+    "groom_status": "Original groom reference retained unloaded. Reposing the groom is outside this model-only edit."
+  },
+  "model_validation": {
+    "model": "C:\\proyectos\\auto-rig\\autorig_tools\\maya_tools\\assets\\chihuahua\\models\\chihuahua_v003.mb",
+    "rig": "C:/proyectos/auto-rig/autorig_tools/maya_tools/assets/chihuahua/scenes/chihuahua_planar_legs_v001.mb",
+    "unchanged_original_model_sha256": "51895a9ec24cfb0113f884b4b4910ab054961a670d509390020e746a6117f89b",
+    "prebake_baseline_error": {
+      "body_geo_Shape": 0.0,
+      "nailsShape": 0.0
+    },
+    "reopen_errors": {
+      "|chihuahua|Eyes|corneas|Cornea_L|Cornea_LShape": 0.0,
+      "|chihuahua|Eyes|corneas|Cornea_R|Cornea_RShape": 0.0,
+      "|chihuahua|Eyes|eyes|Eye_L|Eye_LShape": 0.0,
+      "|chihuahua|Eyes|eyes|Eye_R|Eye_RShape": 0.0,
+      "|chihuahua|body_geo|body_geo_Shape": 7.450580596923828e-09,
+      "|chihuahua|collar_low|collar_lowShape": 0.0,
+      "|chihuahua|mouth|encia_inf|encia_infShape": 0.0,
+      "|chihuahua|mouth|encia_sup|encia_supShape": 0.0,
+      "|chihuahua|nails|nailsShape": 0.0,
+      "|chihuahua|mouth|tongue|tongueShape": 0.0
+    },
+    "deferred_references": {
+      "Chihuahua_groom_v001RN": false
+    },
+    "model_sha256": "87cbd5d99febab23365198e113e08575f59d25a5e548f472217b05613d9c504f"
+  },
+  "pose": {
+    "L": {
+      "before": [
+        [
+          3.4277642236599695,
+          11.688552109291056,
+          4.269046889759101
+        ],
+        [
+          3.2973891496658303,
+          7.22967743873595,
+          3.7764277458191007
+        ],
+        [
+          3.321261788237034,
+          4.193983100104793,
+          2.306901054972599
+        ],
+        [
+          3.5251084982753347,
+          1.017433976587356,
+          2.4784622615818424
+        ],
+        [
+          3.796258969337383,
+          0.3298919284686457,
+          3.005378002881422
+        ]
+      ],
+      "after": [
+        [
+          3.4277642236599695,
+          11.688552109291056,
+          4.269046889759101
+        ],
+        [
+          3.4277642236599575,
+          7.2277947726159235,
+          3.7762197477386636
+        ],
+        [
+          3.427764223659958,
+          4.168853189898945,
+          2.3555174182182173
+        ],
+        [
+          3.427764223659958,
+          0.9872681265902408,
+          2.5529194137932416
+        ],
+        [
+          3.5664769288600273,
+          0.28615497167568427,
+          3.1124513375827276
+        ]
+      ],
+      "x_span": 1.199040866595169e-14,
+      "length_max_error": 8.881784197001252e-16,
+      "lateral_axes": {
+        "L_backLegHipFk_CTL": [
+          -1.0,
+          1.3682631416767066e-15,
+          3.0531133177191805e-16
+        ],
+        "L_backLegStifleFk_CTL": [
+          -0.9999999999999999,
+          2.706168622523819e-16,
+          -3.885780586188048e-16
+        ],
+        "L_backLegHockFk_CTL": [
+          -1.0000000000000002,
+          1.4432899320127035e-15,
+          4.718447854656915e-16
+        ],
+        "L_backLegFetlockFk_CTL": [
+          -0.9564045337855236,
+          0.04148550816659236,
+          0.28908358716235577
+        ],
+        "L_backLegPasternFk_CTL": [
+          -0.9882526501834116,
+          -0.12038690409988258,
+          0.09414718650448176
+        ]
+      },
+      "rotations": {
+        "L_backLegHipFk_CTL": [
+          13.424137559844299,
+          1.6192392069310657,
+          0.3864208305237396
+        ],
+        "L_backLegStifleFk_CTL": [
+          -18.364442292819756,
+          -6.055080230346598,
+          2.0055253698297384
+        ],
+        "L_backLegHockFk_CTL": [
+          11.408285021054215,
+          -6.120367165215033,
+          -1.232466033011437
+        ],
+        "L_backLegFetlockFk_CTL": [
+          0.8204062049670715,
+          -2.258393224134355,
+          -0.4444777236174354
+        ],
+        "L_backLegPasternFk_CTL": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "paw_operator": [
+        0.9869251883739916,
+        -0.07966113302154343,
+        0.14011700981210662,
+        0.0,
+        0.08041819136530771,
+        0.9967611785486289,
+        0.00025968419694004374,
+        0.0,
+        -0.13968388257238085,
+        0.011011667633622397,
+        0.9901349181426908,
+        0.0,
+        0.21312688623692155,
+        0.22665157132107216,
+        -0.39528448826457163,
+        1.0
+      ]
+    },
+    "R": {
+      "before": [
+        [
+          -3.42776,
+          11.6886,
+          4.26905
+        ],
+        [
+          -3.2973899999999996,
+          7.229680000000008,
+          3.7764299999999995
+        ],
+        [
+          -3.321259999999999,
+          4.193979999999998,
+          2.3068999999999997
+        ],
+        [
+          -3.525109999999999,
+          1.0174300000000023,
+          2.4784600000000006
+        ],
+        [
+          -3.7962599999999997,
+          0.3298920000000001,
+          3.0053800000000015
+        ]
+      ],
+      "after": [
+        [
+          -3.42776,
+          11.6886,
+          4.26905
+        ],
+        [
+          -3.427759999999972,
+          7.2277974991341285,
+          3.7762220219298426
+        ],
+        [
+          -3.4277599999999735,
+          4.168850829352342,
+          2.355515169961087
+        ],
+        [
+          -3.427759999999972,
+          0.9872645587157476,
+          2.5529141595651463
+        ],
+        [
+          -3.5664705813002207,
+          0.2861547284638082,
+          3.1124495837372432
+        ]
+      ],
+      "x_span": 2.7977620220553945e-14,
+      "length_max_error": 1.3322676295501878e-15,
+      "lateral_axes": {
+        "R_backLegHipFk_CTL": [
+          -0.9999999999993154,
+          -1.1630566481022134e-06,
+          -1.2849411204496342e-07
+        ],
+        "R_backLegStifleFk_CTL": [
+          -0.9999999999996738,
+          7.324890492071967e-07,
+          3.4019952749320126e-07
+        ],
+        "R_backLegHockFk_CTL": [
+          -0.9999999999994508,
+          -1.0460802955802873e-06,
+          6.490321988184e-08
+        ],
+        "R_backLegFetlockFk_CTL": [
+          -0.9564041114613311,
+          -0.04148800134096941,
+          -0.2890846265794725
+        ],
+        "R_backLegPasternFk_CTL": [
+          -0.9882528908351228,
+          0.12038418057714476,
+          -0.09414814295986793
+        ]
+      },
+      "rotations": {
+        "R_backLegHipFk_CTL": [
+          13.424136640088374,
+          1.619178046519854,
+          0.38638827803688514
+        ],
+        "R_backLegStifleFk_CTL": [
+          -18.36445880468547,
+          -6.054979799470343,
+          2.005479098131802
+        ],
+        "R_backLegHockFk_CTL": [
+          11.408266075472511,
+          -6.1204640791300315,
+          -1.2324951832439923
+        ],
+        "R_backLegFetlockFk_CTL": [
+          0.82029536335678,
+          -2.2584261146764852,
+          -0.4445074452756219
+        ],
+        "R_backLegPasternFk_CTL": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "paw_operator": [
+        0.9869251112690511,
+        0.0796640215280535,
+        -0.1401159106616724,
+        0.0,
+        -0.0804210070175993,
+        0.996760951214106,
+        0.00026031716496631267,
+        0.0,
+        0.1396828063035931,
+        0.011011349087599664,
+        0.9901350735199843,
+        0.0,
+        -0.21311592395561352,
+        0.2266633147910816,
+        -0.39528486707691624,
+        1.0
+      ]
+    }
+  },
+  "mesh_changes": {
+    "Cornea_LShape": {
+      "vertices": 282,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "Cornea_RShape": {
+      "vertices": 282,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "Eye_LShape": {
+      "vertices": 330,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "Eye_RShape": {
+      "vertices": 330,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "body_geo_Shape": {
+      "vertices": 23106,
+      "changed": 5462,
+      "max_distance": 0.44922152395211673
+    },
+    "collar_lowShape": {
+      "vertices": 15778,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "encia_infShape": {
+      "vertices": 2758,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "encia_supShape": {
+      "vertices": 2492,
+      "changed": 0,
+      "max_distance": 0.0
+    },
+    "nailsShape": {
+      "vertices": 2340,
+      "changed": 1040,
+      "max_distance": 0.48442996511808833
+    },
+    "tongueShape": {
+      "vertices": 314,
+      "changed": 0,
+      "max_distance": 0.0
+    }
+  },
+  "skin_signature": "0fad5007111db291efe744c75b603b2d4020400c2dbfc30ad18698cb4763f0f3",
+  "delivered_files": {
+    "maya_tools/assets/chihuahua/models/chihuahua_v003.mb": {
+      "bytes": 12728936,
+      "sha256": "87cbd5d99febab23365198e113e08575f59d25a5e548f472217b05613d9c504f"
+    },
+    "maya_tools/assets/chihuahua/scenes/chihuahua_planar_legs_v001.mb": {
+      "bytes": 19185652,
+      "sha256": "d6d1cf17df97a481ac626d838fc573b701d31f6f14890fbdd6bda61429bc5d61"
+    },
+    "maya_tools/assets/chihuahua/scenes/chihuahua_planar_guides_work_v001.mb": {
+      "bytes": 12787972,
+      "sha256": "03ca50725c51f9168523e1044a6af0fa662012742603c4209a4fc2eed3feaead"
+    }
+  },
+  "scope": "Static model preparation. Original guide/skin presets remain unchanged; a subsequent rig build after artist guide fitting is not validated by this edit. Original deferred groom is retained unloaded and has not been reposed."
+}
