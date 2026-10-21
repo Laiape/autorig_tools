@@ -2,7 +2,22 @@
 
 ## Selected finger-band clusters (2026-10-21)
 
-The latest editable finger fit is `scenes/Girl_finger_clusters_v002.mb`, exported
+The latest axis/thumb revision is `scenes/Girl_finger_clusters_v003.mb`, exported
+as `guides/Girl_v014.guides`. It preserves the artist's subsequently moved
+four-finger bases and all current non-thumb guide positions, recalculating X
+toward each next joint. Z follows each finger's flexion-plane normal projected
+perpendicular to X. Native guides use ZXY rotation order so editing rotateZ
+actually rotates around that local Z even with nonzero rest rotations; native
+jointOrient and rotateAxis remain zero. Thumb 00 retains its carpal anchor,
+01/02 use actual thumb cross-section loop centers and End uses an explicit
+fingertip cap patch. Thumb Z uses its own cross-section hinge direction.
+All clusters, other guides and model points are preserved. Actual joint rotateZ
+tests in the saved scene and after native `.guides` import are recorded in
+`validation/finger_axes_thumb_20261021.json`; source IDs and frames are in
+`reference/finger_axes_thumb_20261021.json`. The matrix-only guide export keeps
+the axes, while guide import uses its existing frozen joint-orientation setup.
+
+The earlier fit is `scenes/Girl_finger_clusters_v002.mb`, exported
 as `guides/Girl_v013.guides`. It adds four palm-loop clusters at the artist's
 second selected ring, aligned with the original four knuckle-band clusters.
 Finger guide 00 matches each palm cluster's world pivot and 01 matches its
@@ -62,8 +77,8 @@ also the attribute's reset value. Reconfiguring an existing selector retains
 its currently chosen resolution.
 
 The current model is `models/Girl_v002.mb`, prepared from the new download
-`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_finger_clusters_v002.mb` for editable
-guides, or load `guides/Girl_v013.guides` through Character Manager. Earlier
+`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_finger_clusters_v003.mb` for editable
+guides, or load `guides/Girl_v014.guides` through Character Manager. Earlier
 models, guide exports and native review scenes remain available.
 
 The latest facial edit uses the artist's 108 selected Body_high edges: a

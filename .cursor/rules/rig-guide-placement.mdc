@@ -100,6 +100,15 @@ alwaysApply: false
   unless their fitting or mirroring is requested. Record distal loop sources
   separately from the artist-selected bands; shaft-loop End references are not
   a claim of exact fingertip placement.
+  Subsequent artist-edited finger root positions are authoritative: an axis
+  correction must preserve them and every other current non-thumb guide center.
+  Recompute X from the actual next joint rather than keeping an old root frame.
+  Use each finger's flexion-plane normal for Z; the thumb uses its own anatomical
+  cross-section hinge, never the four-finger hand-width reference. With zero JO
+  and rotateAxis, native finger guides use ZXY order so direct rotateZ follows
+  the displayed local Z at nonzero rest rotations. Verify the actual joint
+  rotateZ response, not only a separate zeroed controller probe, and check guide
+  export/import. Thumb fitting must record source loops and its explicit tip patch.
 
 Measured reference: Edward_v013.guides on Edward_v003.ma. Its left facial curves
 and lips coincide with consecutive cabeza_high vertices to about 1.53e-5 scene
