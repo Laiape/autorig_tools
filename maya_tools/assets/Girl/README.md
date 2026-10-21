@@ -1,5 +1,30 @@
 # Girl
 
+## Edward controller drawings (2026-10-21)
+
+`curves/Girl_v002.curves` reuses Edward v002 controller drawings, fitted in
+object space to Girl v007 guide proportions. Body, limbs, feet, neck, head,
+mouth, brows, eyelids, eyes, ears and each finger use separate measured spans.
+Long finger-root boxes also fit the complete target finger length; finger
+drawings have a width bound relative to that span to avoid oversized controls.
+Girl keeps its own settings drawing. Fourteen additional eyelid/finger controls
+reuse equivalent Edward drawings. The 332 templates cover all 310 controls
+created by Girl's current module configuration; unused donor templates remain
+available for compatible module configurations.
+
+`fit_edward_curves.py` regenerates the template and its per-control fitting
+receipt. The normal template loader selects this version automatically.
+`scenes/Girl_edward_curves_v001.mb` is an editable controller review built with
+the shared native model/module builder and a populated export skeleton. It has
+no imported skin weights and is not a deformation-approved rig. Earlier model,
+guide and curve versions remain available. Existing socket guide-name warnings
+from the module builder are outside this controller-drawing adaptation.
+
+Native reopen, complete template coverage, exact drawing topology, controller
+matrix preservation and unchanged model points after shape application are
+checked in `validation/edward_curve_reopen_v002.json`. The fitting receipt is
+`validation/edward_curves_v002.json`.
+
 ## Current model and guides (2026-10-21)
 
 The current model is `models/Girl_v002.mb`, prepared from the new download

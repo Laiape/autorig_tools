@@ -57,6 +57,10 @@ The earlier model v003 and guide-only ankle correction are historical:
 Girl's prepared model, texture paths, groom-free character scene and Low/High
 resolution control: `assets/Girl/README.md`. Tagged model LOD groups are handled
 by `scripts/utils/geometry_lod.py` in the shared basic-structure builder.
+Girl's v002 controller templates reuse Edward's drawings with separate anatomical
+guide-span fits and complete coverage of Girl's additional eyelid/finger controls.
+The editable controller review scene and regeneration recipe are indexed in
+`assets/Girl/README.md`; this delivery does not certify skin or deformation.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 
