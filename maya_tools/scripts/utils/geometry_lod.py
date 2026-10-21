@@ -5,7 +5,7 @@ ROLE_ATTRIBUTE = 'autorigLodRole'
 
 
 def configure(settings_ctl, geo_root):
-    """Expose Low Res / High Res only when the model declares both groups.
+    """Expose Low Res / High Res, initially High, for explicitly tagged groups.
 
     Shared geometry stays outside these groups. This controls display only;
     it makes no claim that hidden deformation work is bypassed.
@@ -20,7 +20,9 @@ def configure(settings_ctl, geo_root):
         return {}
     if not cmds.attributeQuery('resolution', node=settings_ctl, exists=True):
         cmds.addAttr(settings_ctl, longName='resolution', niceName='Resolution',
-                     attributeType='enum', enumName='Low Res:High Res', defaultValue=0)
+                     attributeType='enum', enumName='Low Res:High Res', defaultValue=1)
+    else:
+        cmds.addAttr(settings_ctl + '.resolution', edit=True, defaultValue=1)
     cmds.setAttr(settings_ctl + '.resolution', keyable=False, channelBox=True)
     prefix = settings_ctl.rsplit('|', 1)[-1]
     for value, role in enumerate(('Low', 'High')):

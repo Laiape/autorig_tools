@@ -45,11 +45,16 @@ class GeometryLodTests(unittest.TestCase):
     def test_shared_geometry_and_existing_mode_survive_reconfigure(self):
         self.tagged_model()
         geometry_lod.configure(self.settings, self.geo)
+        self.assertEqual(cmds.getAttr(self.settings + '.resolution'), 1)
+        self.assertEqual(cmds.attributeQuery('resolution', node=self.settings, listDefault=True), [1])
+        self.assertTrue(cmds.getAttr('High.visibility'))
+        self.assertFalse(cmds.getAttr('Low.visibility'))
         self.assert_modes()
+        cmds.setAttr(self.settings + '.resolution', 0)
         before = set(cmds.ls())
         geometry_lod.configure(self.settings, self.geo)
         self.assertEqual(set(cmds.ls()), before)
-        self.assertEqual(cmds.getAttr(self.settings + '.resolution'), 1)
+        self.assertEqual(cmds.getAttr(self.settings + '.resolution'), 0)
         self.assert_modes()
 
     def test_native_reopen_preserves_both_resolutions(self):

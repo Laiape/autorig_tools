@@ -31,6 +31,10 @@ checked in `validation/edward_curve_reopen_v002.json`. The fitting receipt is
 
 ## Current model and guides (2026-10-21)
 
+New builds start with `C_settings_CTL.resolution` set to High Res. High Res is
+also the attribute's reset value. Reconfiguring an existing selector retains
+its currently chosen resolution.
+
 The current model is `models/Girl_v002.mb`, prepared from the new download
 `YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v007.mb` for editable
 guides, or load `guides/Girl_v010.guides` through Character Manager. Earlier
