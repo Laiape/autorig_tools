@@ -14,11 +14,15 @@ available for compatible module configurations.
 
 `fit_edward_curves.py` regenerates the template and its per-control fitting
 receipt. The normal template loader selects this version automatically.
-`scenes/Girl_edward_curves_v001.mb` is an editable controller review built with
+`scenes/Girl_edward_curves_v002.mb` is an editable controller review built with
 the shared native model/module builder and a populated export skeleton. It has
 no imported skin weights and is not a deformation-approved rig. Earlier model,
 guide and curve versions remain available. Existing socket guide-name warnings
 from the module builder are outside this controller-drawing adaptation.
+This revision ends the spine at its last spine guide and places localChest at
+the independent chest guide; v001 retains the earlier endpoint placement.
+Its native reopened anchors and controller-template checks are recorded in
+`validation/spine_endpoint_reopen_v002.json`.
 
 Native reopen, complete template coverage, exact drawing topology, controller
 matrix preservation and unchanged model points after shape application are
@@ -28,9 +32,21 @@ checked in `validation/edward_curve_reopen_v002.json`. The fitting receipt is
 ## Current model and guides (2026-10-21)
 
 The current model is `models/Girl_v002.mb`, prepared from the new download
-`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v006.mb` for editable
-guides, or load `guides/Girl_v006.guides` through Character Manager. Earlier
+`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v007.mb` for editable
+guides, or load `guides/Girl_v010.guides` through Character Manager. Earlier
 models, guide exports and native review scenes remain available.
+
+The latest facial edit uses the artist's 108 selected Body_high edges: a
+64-edge lip ring and a 44-edge left eyelid ring. The right eyelid follows its
+real connected counterpart vertices; the maximum distance from a perfect
+reflection is 0.002619 cm. Each CV is an actual High Res vertex, with 33 CVs
+per lip arc and 23 per eyelid arc. Paired arcs share both corners and start at
+the corner with greater world X. The tilted eye retains its anatomical corner
+instead of replacing it with an interior X extremum. The selected and mirrored
+source edges are inspectable under `Girl_selectedFacialGuideSources_20261021_SET`.
+Joints, other curves, model vertices and existing native attachments are
+preserved. Native reopen and export correspondence are checked in
+`validation/selected_facial_edges_20261021_reopen.json`.
 
 This model preserves the new source's 25 primary mesh outputs and topology,
 including its revised High Res body, hair blocking, gums and watch placement.
@@ -39,11 +55,14 @@ their explicit LOD roles. The 14 PNG texture paths point to this asset's existin
 texture tree. XGen/scalps remain outside the prepared model, matching the earlier
 Girl delivery. The downloaded source, including its grooming, is unchanged.
 
-The new guide scene retains all 118 joints, nine artist clusters, source sets,
-26 brow/foot surface attachments, accepted shoulders, leg frames, torso spacing
-and foot aims. Upper/lower lip and eyelid curves and the socket rings use the
-same connected source vertex IDs on the revised High Res mesh. Eyebrows retain
-their native body-UV attachments. Paired facial arcs still begin at world +X.
+The new guide scene retains all 118 joints and the current live guide matrices.
+Upper/lower lip and eyelid curves use the newly selected connected source
+routes; socket rings and evaluated eyebrow curves retain their earlier routes.
+The artist's current loaded-guide scene had no cluster or surface-constraint
+nodes before this edit. The earlier v006 native scene remains the archive of
+the nine clusters and 26 brow/foot attachments; the static `.guides` format
+does not reconstruct those dependencies. Paired facial arcs begin at the shared
+corner with greater world X.
 
 The shoulders retain their approved positions and orientations. Elbow TX is
 the closest projection of the new loop's bounding-box center onto shoulder X;

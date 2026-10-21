@@ -57,6 +57,7 @@ def run():
                 cmds.setAttr(joint + ".translateY", 2 if i else 10)
                 module.spine_chain.append(joint)
             module.body_guide_matrix = cmds.getAttr(module.spine_chain[0] + ".worldMatrix[0]")
+            module.spine_end_guide_matrix = list(cmds.getAttr(module.spine_chain[-1] + ".worldMatrix[0]"))
             module.chest_guide_matrix = list(cmds.getAttr(module.spine_chain[-1] + ".worldMatrix[0]"))
             module.has_chest_guide = chest_guide
             if chest_guide:
@@ -66,6 +67,11 @@ def run():
             module.controller_creation()
             module.local_hip_chest_setup()
             module.ik_spine()
+            for node, expected in ((module.spine_ctls[-1], module.spine_end_guide_matrix),
+                                   (module.spine_chain[-1], module.spine_end_guide_matrix),
+                                   (module.local_chest_ctl, module.chest_guide_matrix)):
+                actual = cmds.xform(node, q=True, ws=True, t=True)
+                assert all(math.isclose(a, b, abs_tol=1e-5) for a, b in zip(actual, expected[12:15])), (node, actual, expected[12:15])
             cmds.setAttr(module.body_ctl + ".spineStretch", 1)
             cmds.setAttr(module.body_ctl + ".spineStretchMin", 0.1)
             cmds.setAttr(module.body_ctl + ".spineStretchMax", 3)

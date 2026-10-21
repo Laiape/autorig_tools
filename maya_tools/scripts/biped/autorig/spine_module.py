@@ -73,6 +73,7 @@ class SpineModule(object):
 
         # Matrices horneadas de las guías (estáticas) en lugar de transforms _GUIDE vivos
         self.body_guide_matrix = cmds.getAttr(f"{self.spine_chain[0]}.worldMatrix[0]")
+        self.spine_end_guide_matrix = cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")
 
         # Chest: si existe la guía C_chest_JNT, el localChest se coloca ahí; si no,
         # se queda en la ÚLTIMA joint del spine (comportamiento por defecto).
@@ -86,7 +87,7 @@ class SpineModule(object):
         except Exception:
             self.has_chest_guide = False
         if not self.has_chest_guide:
-            self.chest_guide_matrix = cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")
+            self.chest_guide_matrix = self.spine_end_guide_matrix
 
     def controller_creation(self):
 
@@ -114,11 +115,11 @@ class SpineModule(object):
         self.spine_nodes = []
         self.spine_ctls = []
         
-        # Counts come from the build, not the guide-joint count. Sample the
-        # actual control endpoints: the tip follows the chest guide below.
+        # Counts come from the build, not the guide-joint count. The spine
+        # ends at its own terminal guide; chest has an independent rest frame.
         count = self.spine_controllers
         start = om.MTransformationMatrix(om.MMatrix(self.body_guide_matrix))
-        end = om.MTransformationMatrix(om.MMatrix(self.chest_guide_matrix))
+        end = om.MTransformationMatrix(om.MMatrix(self.spine_end_guide_matrix))
         start_position = start.translation(om.MSpace.kWorld)
         end_position = end.translation(om.MSpace.kWorld)
         start_rotation = start.rotation(asQuaternion=True)
@@ -215,14 +216,24 @@ class SpineModule(object):
         if self.has_chest_guide:
             # Preserve the original offset and follow the solved spine tip.
             # Curve inputs below use only local chest channels, never this result.
-            chest_off = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.spine_chain[-1]}.worldMatrix[0]")).inverse()
+            chest_off = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(self.spine_end_guide_matrix).inverse()
             chest_follow = cmds.createNode("multMatrix", name=f"{self.side}_localChestFollow_MMX", ss=True)
             cmds.setAttr(f"{chest_follow}.matrixIn[0]", list(chest_off), type="matrix")
-            cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{chest_follow}.matrixIn[1]")
+            # The solved chain carries global scaling in its segment lengths,
+            # not its matrix axes. Scale the authored chest offset explicitly.
+            chest_offset_scale = cmds.createNode("composeMatrix", name=f"{self.side}_localChestOffsetScale_CMX", ss=True)
+            for axis in "XYZ":
+                cmds.connectAttr(f"{self.masterwalk_ctl}.globalScale", f"{chest_offset_scale}.inputScale{axis}")
+            cmds.connectAttr(f"{chest_offset_scale}.outputMatrix", f"{chest_follow}.matrixIn[1]")
+            cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{chest_follow}.matrixIn[2]")
             cmds.connectAttr(f"{chest_follow}.matrixSum", f"{blend_matrix_node}.inputMatrix")
+            chest_control_follow = cmds.createNode("multMatrix", name=f"{self.side}_localChestControlFollow_MMX", ss=True)
+            cmds.setAttr(f"{chest_control_follow}.matrixIn[0]", list(chest_off), type="matrix")
+            cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{chest_control_follow}.matrixIn[1]")
+            cmds.connectAttr(f"{chest_control_follow}.matrixSum", f"{blend_matrix_node}.target[0].targetMatrix")
         else:
             cmds.connectAttr(f"{self.spine_chain[-1]}.worldMatrix[0]", f"{blend_matrix_node}.inputMatrix")
-        cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
+            cmds.connectAttr(f"{self.spine_ctls[-1]}.worldMatrix[0]", f"{blend_matrix_node}.target[0].targetMatrix")
         # The solved tip already includes chest translation. Remove it from the
         # parent frame so the chest control does not apply it a second time.
         chest_untranslate = cmds.createNode("composeMatrix", name=f"{self.side}_localChestUntranslate_CMX", ss=True)
@@ -245,21 +256,21 @@ class SpineModule(object):
         cmds.addAttr(self.spine_ctls[-1], longName="follow", niceName="Follow", attributeType="enum", enumName="Local:World", keyable=True, dv=0)
         last_spine_space_switch_parentMatrix = cmds.createNode("parentMatrix", name=f"{self.side}_lastSpineSpaceSwitch_PMX")
         reverse_node = cmds.createNode("reverse", name=f"{self.side}_lastSpineSpaceSwitch_REV")
-        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.inputMatrix", self.chest_guide_matrix, type="matrix")
+        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.inputMatrix", self.spine_end_guide_matrix, type="matrix")
         cmds.connectAttr(f"{self.spine_ctls[len(self.spine_ctls) // 2]}.worldMatrix[0]", f"{last_spine_space_switch_parentMatrix}.target[0].targetMatrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.follow", f"{reverse_node}.inputX")
         cmds.connectAttr(f"{reverse_node}.outputX", f"{last_spine_space_switch_parentMatrix}.target[0].weight")
         cmds.connectAttr(f"{last_spine_space_switch_parentMatrix}.outputMatrix", f"{self.spine_nodes[-1]}.offsetParentMatrix")
-        chest_offset = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.spine_nodes[len(self.spine_ctls) // 2]}.worldMatrix[0]")).inverse()
-        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[0].offsetMatrix", list(chest_offset), type="matrix")
+        spine_offset = om.MMatrix(self.spine_end_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.spine_nodes[len(self.spine_ctls) // 2]}.worldMatrix[0]")).inverse()
+        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[0].offsetMatrix", list(spine_offset), type="matrix")
 
         # En modo World (peso del target[0] = 0) el parentMatrix devolvía la matriz
         # de reposo estática y, con inheritsTransform=0, el chest ignoraba el
         # masterwalk (posición y escala global). El modo World ahora sigue al
         # masterwalk como segundo target.
-        chest_masterwalk_offset = om.MMatrix(self.chest_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]")).inverse()
+        spine_masterwalk_offset = om.MMatrix(self.spine_end_guide_matrix) * om.MMatrix(cmds.getAttr(f"{self.masterwalk_ctl}.worldMatrix[0]")).inverse()
         cmds.connectAttr(f"{self.masterwalk_ctl}.worldMatrix[0]", f"{last_spine_space_switch_parentMatrix}.target[1].targetMatrix")
-        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[1].offsetMatrix", list(chest_masterwalk_offset), type="matrix")
+        cmds.setAttr(f"{last_spine_space_switch_parentMatrix}.target[1].offsetMatrix", list(spine_masterwalk_offset), type="matrix")
         cmds.connectAttr(f"{self.spine_ctls[-1]}.follow", f"{last_spine_space_switch_parentMatrix}.target[1].weight")
         cmds.setAttr(f"{self.spine_nodes[-1]}.inheritsTransform", 0)
         cmds.xform(self.spine_nodes[-1], m=om.MMatrix.kIdentity)

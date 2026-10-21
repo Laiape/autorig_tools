@@ -61,6 +61,10 @@ Girl's v002 controller templates reuse Edward's drawings with separate anatomica
 guide-span fits and complete coverage of Girl's additional eyelid/finger controls.
 The editable controller review scene and regeneration recipe are indexed in
 `assets/Girl/README.md`; this delivery does not certify skin or deformation.
+Girl's editable guide scene v007 and guide export v010 use the artist's selected
+lip/left-eye edge rings and the right eye's real symmetric counterpart edges.
+The native scene retains selectable source sets; source vertex/edge IDs are in
+`assets/Girl/guide_sources/selected_facial_edges_20261021.json`.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 
@@ -929,12 +933,20 @@ matrix components differ by at most 3.45e-8. The checked mesh tolerance is
 
 `biped/autorig/spine_module.py` uses the `.build` `spine_controllers`
 count independently of the guide and skin-joint counts. Controls are spaced
-uniformly between the body and chest control rest matrices. Five controls
+uniformly between the first and last spine guide matrices. `C_chest_JNT`
+sets the separate local-chest rest frame and never extends the spine endpoint.
+The terminal control's Local/World spaces use the final spine guide, while
+the chest follows the solved tip with its authored offset, including global
+scale. Five controls
 sit at 0, 0.25, 0.5, 0.75 and 1; Edward's current build requests five.
 For five or more controls, the first and last interior controls are tangents.
 Three or four controls use ordinary interior controls and an appropriate
 spline degree. The five-control names remain compatible with saved curves.
 These changes take effect when rebuilding the rig.
+Regression: `scripts/tools/tests/test_spine_guide_endpoints.py` checks Edward's
+3/4/5/7/10-control layouts and Girl's distinct spine/chest anchors, Local/World,
+global scale, two builds and native save/reopen. The chest stretch regression
+also covers the fallback when no chest guide exists.
 
 Biped `localHip` offers `body` and `spine00` spaces. It defaults to `spine00`
 with TranslateValue and RotateValue both 1, so the hip control follows the

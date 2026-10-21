@@ -18,7 +18,7 @@ from test_spine_chest_stretch import create_controller
 ROOT = Path(__file__).resolve().parents[4]
 
 
-def load_spine(real_curves=False):
+def load_spine(real_curves=False, character="Edward", guide_version="013"):
     path = ROOT / "maya_tools/scripts/biped/autorig/spine_module.py"
     tree = ast.parse(path.read_text(encoding="utf-8"))
     methods = next(node for node in tree.body if isinstance(node, ast.ClassDef)).body
@@ -31,7 +31,7 @@ def load_spine(real_curves=False):
     if real_curves:
         from maya_tools.scripts.utils import curve_tool
         scope["curve_tool"] = curve_tool
-    guides = json.loads((ROOT / "maya_tools/assets/Edward/guides/Edward_v013.guides").read_text())["Edward"]
+    guides = json.loads((ROOT / f"maya_tools/assets/{character}/guides/{character}_v{guide_version}.guides").read_text())[character]
 
     def get_guides(name):
         names = [name] + guides[name].get("children", [])
@@ -64,6 +64,12 @@ def check_spine(count, skinning_count, real_curves=False):
     assert len(set(rig.spine_ctls)) == count
     start = om.MVector(cmds.xform(rig.spine_ctls[0], q=True, ws=True, t=True))
     end = om.MVector(cmds.xform(rig.spine_ctls[-1], q=True, ws=True, t=True))
+    expected_end = om.MVector(rig.spine_end_guide_matrix[12:15])
+    assert (end - expected_end).length() < 1e-4, (end, expected_end)
+    solved_end = om.MVector(cmds.xform(rig.spine_chain[-1], q=True, ws=True, t=True))
+    assert (solved_end - expected_end).length() < 1e-4, (solved_end, expected_end)
+    chest = om.MVector(cmds.xform(rig.local_chest_ctl, q=True, ws=True, t=True))
+    assert (chest - om.MVector(rig.chest_guide_matrix[12:15])).length() < 1e-4
     for index, ctl in enumerate(rig.spine_ctls):
         actual = om.MVector(cmds.xform(ctl, q=True, ws=True, t=True))
         expected = start + (end - start) * (index / float(count - 1))
