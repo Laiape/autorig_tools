@@ -92,6 +92,14 @@ alwaysApply: false
 - Preserve the artist's clusters, model points and unaffected guide positions.
   Save a new native scene and .guides version. Verify connectivity, exact vertex
   positions, paired endpoint order and a native reopen before presenting it.
+- Finger guide fitting from two selected hand bands: match 00 to the proximal
+  palm-loop cluster world pivot and 01 to the corresponding knuckle-band pivot.
+  For Girl's four left fingers, positive X aims at the next guide and Z is the
+  projected hand-width axis for curl; keep a right-handed frame, positive child
+  TX only, and zero jointOrient/rotateAxis. Preserve thumb/right-hand guides
+  unless their fitting or mirroring is requested. Record distal loop sources
+  separately from the artist-selected bands; shaft-loop End references are not
+  a claim of exact fingertip placement.
 
 Measured reference: Edward_v013.guides on Edward_v003.ma. Its left facial curves
 and lips coincide with consecutive cabeza_high vertices to about 1.53e-5 scene

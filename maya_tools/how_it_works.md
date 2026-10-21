@@ -69,6 +69,10 @@ The native scene retains selectable source sets; source vertex/edge IDs are in
 `assets/Girl/guide_sources/selected_facial_edges_20261021_v002.json`. Both lip
 arcs have 33 CVs and all four eyelid arcs have 23; every pair shares endpoints
 and starts at its complete ring's maximum world-X vertex.
+Girl's finger scene `assets/Girl/scenes/Girl_finger_clusters_v002.mb` retains
+both selected cluster levels and fits the four left non-thumb guide chains;
+`Girl_v013.guides` exports their X-aim/Z-curl matrices. Source components,
+distal loop choices and native reopen/probe scope are in `assets/Girl/README.md`.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 

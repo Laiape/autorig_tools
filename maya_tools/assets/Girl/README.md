@@ -2,6 +2,22 @@
 
 ## Selected finger-band clusters (2026-10-21)
 
+The latest editable finger fit is `scenes/Girl_finger_clusters_v002.mb`, exported
+as `guides/Girl_v013.guides`. It adds four palm-loop clusters at the artist's
+second selected ring, aligned with the original four knuckle-band clusters.
+Finger guide 00 matches each palm cluster's world pivot and 01 matches its
+original knuckle cluster. The remaining 02/03/End guides use real connected
+finger-shaft loop centers at the nearest previous guide heights. These End
+anchors are shaft-loop references, not a new fingertip-surface acceptance.
+All four left non-thumb chains aim positive X at the next joint. Z follows the
+hand-width axis projected perpendicular to X, giving local-Z curl; the existing
+finger controller SDK already uses rotateZ. Child translations use positive TX
+only, with jointOrient and rotateAxis zero. Thumb, right-hand and other guides,
+original cluster transforms, and model positions are preserved. Native reopen,
+guide-export correspondence and a native local-Z controller probe are recorded
+in `validation/finger_joint_fit_20261021.json`. Both cluster levels are native
+scene data; `.guides` retains the evaluated joint matrices only.
+
 `scenes/Girl_finger_clusters_v001.mb` preserves the artist's current scene and
 adds four editable left-hand clusters for index, middle, ring and pinky.
 The selected continuous 128-face band is divided at the three interdigital
@@ -46,8 +62,8 @@ also the attribute's reset value. Reconfiguring an existing selector retains
 its currently chosen resolution.
 
 The current model is `models/Girl_v002.mb`, prepared from the new download
-`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v008.mb` for editable
-guides, or load `guides/Girl_v011.guides` through Character Manager. Earlier
+`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_finger_clusters_v002.mb` for editable
+guides, or load `guides/Girl_v013.guides` through Character Manager. Earlier
 models, guide exports and native review scenes remain available.
 
 The latest facial edit uses the artist's 108 selected Body_high edges: a
