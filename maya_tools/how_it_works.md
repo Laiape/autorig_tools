@@ -63,10 +63,12 @@ Girl's v002 controller templates reuse Edward's drawings with separate anatomica
 guide-span fits and complete coverage of Girl's additional eyelid/finger controls.
 The editable controller review scene and regeneration recipe are indexed in
 `assets/Girl/README.md`; this delivery does not certify skin or deformation.
-Girl's editable guide scene v007 and guide export v010 use the artist's selected
+Girl's editable guide scene v008 and guide export v011 use the artist's selected
 lip/left-eye edge rings and the right eye's real symmetric counterpart edges.
 The native scene retains selectable source sets; source vertex/edge IDs are in
-`assets/Girl/guide_sources/selected_facial_edges_20261021.json`.
+`assets/Girl/guide_sources/selected_facial_edges_20261021_v002.json`. Both lip
+arcs have 33 CVs and all four eyelid arcs have 23; every pair shares endpoints
+and starts at its complete ring's maximum world-X vertex.
 Use the project impact/audit/equivalence skills indexed in
 `.cursor/skills/how_it_works.md` for large system and deformation changes.
 

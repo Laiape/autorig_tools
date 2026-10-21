@@ -28,6 +28,12 @@ alwaysApply: false
   corner with the largest WORLD X coordinate. This means global +X, not absolute
   X: the right eye starts at its inner corner and the left at its outer corner.
   An older reference export with another order does not override that request.
+  Check CV[0] against EVERY vertex in both arcs, not just the other endpoint.
+  When a tilted ring has non-antipodal X extrema, start at its maximum world-X
+  vertex and split at the opposite vertex by edge count. This retains equal
+  upper/lower counts and the complete selected ring without resampling.
+  Recompute the right eye's start independently after mirroring the source
+  ring; reversing a left-eye arc alone can leave its maximum X at CV[1].
 - Sockets use the intended outer orbital edge loop, closed by repeating the
   first vertex as the last CV when following Edward's linear-polyline format.
   Eyebrows follow the longitudinal edge chain of the actual eyebrow mesh when

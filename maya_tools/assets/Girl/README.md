@@ -36,21 +36,23 @@ also the attribute's reset value. Reconfiguring an existing selector retains
 its currently chosen resolution.
 
 The current model is `models/Girl_v002.mb`, prepared from the new download
-`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v007.mb` for editable
-guides, or load `guides/Girl_v010.guides` through Character Manager. Earlier
+`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v008.mb` for editable
+guides, or load `guides/Girl_v011.guides` through Character Manager. Earlier
 models, guide exports and native review scenes remain available.
 
 The latest facial edit uses the artist's 108 selected Body_high edges: a
 64-edge lip ring and a 44-edge left eyelid ring. The right eyelid follows its
 real connected counterpart vertices; the maximum distance from a perfect
 reflection is 0.002619 cm. Each CV is an actual High Res vertex, with 33 CVs
-per lip arc and 23 per eyelid arc. Paired arcs share both corners and start at
-the corner with greater world X. The tilted eye retains its anatomical corner
-instead of replacing it with an interior X extremum. The selected and mirrored
+per lip arc and 23 per eyelid arc. Paired arcs share both endpoints and start
+at the maximum world-X vertex of their complete ring. Each ring is split into
+equal edge counts, including the independently reordered right eyelid. V011
+corrects v010's right-eye maximum X at CV[1]. The selected and mirrored
 source edges are inspectable under `Girl_selectedFacialGuideSources_20261021_SET`.
 Joints, other curves, model vertices and existing native attachments are
 preserved. Native reopen and export correspondence are checked in
-`validation/selected_facial_edges_20261021_reopen.json`.
+`validation/facial_cv_order_20261021_v002.json`. Exact ordered source IDs are in
+`guide_sources/selected_facial_edges_20261021_v002.json`.
 
 This model preserves the new source's 25 primary mesh outputs and topology,
 including its revised High Res body, hair blocking, gums and watch placement.
@@ -66,7 +68,7 @@ The artist's current loaded-guide scene had no cluster or surface-constraint
 nodes before this edit. The earlier v006 native scene remains the archive of
 the nine clusters and 26 brow/foot attachments; the static `.guides` format
 does not reconstruct those dependencies. Paired facial arcs begin at the shared
-corner with greater world X.
+vertex with maximum world X across both arcs.
 
 The shoulders retain their approved positions and orientations. Elbow TX is
 the closest projection of the new loop's bounding-box center onto shoulder X;
