@@ -44,7 +44,11 @@ model delivery and measured load/redraw scope:
 `maya_tools/docs/chihuahua_model_open_20261016.md`.
 Chihuahua's current lightweight model, optional groom reference and explicit
 SHOW GROOM action: `maya_tools/docs/chihuahua_deferred_groom_20261016.md`.
-Chihuahua's current v004 model corrects the actual outward knee volumes, with
+The 2026-10-21 downloaded models are now Girl v002 and Chihuahua v005, with
+guide exports v006/v015 and new editable native scenes. Source preservation,
+anatomical loop sets, constrained arm residuals, optional revised Chihuahua
+groom and native reopening checks: `maya_tools/docs/model_refresh_20261021.md`.
+Chihuahua's earlier v004 model corrects the actual outward knee volumes, with
 guides v014, finite lossless skin v014, rear nail attachment and native lift/FK
 checks. Editable rig and guide scenes, source NaN repairs and validation limits:
 `maya_tools/docs/chihuahua_forward_knees_20261020.md`.

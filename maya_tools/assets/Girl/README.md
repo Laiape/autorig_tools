@@ -1,5 +1,44 @@
 # Girl
 
+## Current model and guides (2026-10-21)
+
+The current model is `models/Girl_v002.mb`, prepared from the new download
+`YDRAY-Girl_rigging.ma`. Open `scenes/Girl_guides_high_v006.mb` for editable
+guides, or load `guides/Girl_v006.guides` through Character Manager. Earlier
+models, guide exports and native review scenes remain available.
+
+This model preserves the new source's 25 primary mesh outputs and topology,
+including its revised High Res body, hair blocking, gums and watch placement.
+`Body_high8` is named `Body_high` for compatibility. Low/High/shared groups retain
+their explicit LOD roles. The 14 PNG texture paths point to this asset's existing
+texture tree. XGen/scalps remain outside the prepared model, matching the earlier
+Girl delivery. The downloaded source, including its grooming, is unchanged.
+
+The new guide scene retains all 118 joints, nine artist clusters, source sets,
+26 brow/foot surface attachments, accepted shoulders, leg frames, torso spacing
+and foot aims. Upper/lower lip and eyelid curves and the socket rings use the
+same connected source vertex IDs on the revised High Res mesh. Eyebrows retain
+their native body-UV attachments. Paired facial arcs still begin at world +X.
+
+The shoulders retain their approved positions and orientations. Elbow TX is
+the closest projection of the new loop's bounding-box center onto shoulder X;
+elbow RY and wrist TX place the wrist as close as its XZ plane permits. This
+leaves elbow residuals of 0.563/0.561 cm and wrist residuals of 1.150/1.150 cm
+on L/R. These are explicit constrained approximations, not exact loop centers.
+Both sides have inspectable `Girl_*_modelRefreshLoop_SET` component sets.
+All 24 finger guides per hand, including their independent root branches, follow
+the revised hand's rigid correspondence; maximum surface residual is 0.00138 cm.
+The outfit and polygon hair review layers can be enabled to inspect those meshes.
+
+Native model/guide reopening, source geometry/topology, finite points/normals,
+guide matrices, facial connectivity/order, shoulder preservation, and actual
+brow/foot attachment motion have been checked. Evidence and review images are
+indexed in `../../docs/model_refresh_20261021.md`. This is a model/guide update;
+the initial model's full Model Checker results below do not certify the new
+source, and no new rig build, skinning or animation acceptance is claimed.
+
+## Earlier preparation and guide history
+
 Registered Character Manager asset, prepared from
 `D:/RIGS/Girl/Girl_rigging.ma` on 2026-10-20. The source scene is preserved.
 `thumbnail.png` is the supplied reference image; its full copy is in `reference/`.
@@ -91,7 +130,7 @@ limb channels, shoulder side-view alignment, spine/chest placement, unchanged
 25 model meshes and unchanged other joint/locator frames. The nine clusters,
 26 brow/foot attachment nodes and paired lip/eyelid endpoints are retained.
 
-The current review is `scenes/Girl_guides_high_v005.ma` with
+The previous review is `scenes/Girl_guides_high_v005.ma` with
 `guides/Girl_v005.guides`. It retains the latest artist shoulder correction.
 The artist explicitly chose to preserve both shoulder positions/orientations,
 retain TX/RY at the elbows and use the closest reachable loop-center positions.

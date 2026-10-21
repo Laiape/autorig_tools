@@ -3,6 +3,10 @@
 Parent: `maya_tools/how_it_works.md`.
 Evidence: `docs/validation/chihuahua_forward_knees_20261020/summary.json`.
 
+Historical delivery: the new artist source received on 2026-10-21 is model
+v005 with guides v015. See `model_refresh_20261021.md`. The model/skin/rig pose
+acceptance below applies to v004/v014, not to that later source model.
+
 This supersedes the v003 model and guide-only ankle correction. The user's
 annotated front view showed the knee volume still pointing outward. Coplanar
 guide positions and controller matrices did not establish anatomical alignment.
