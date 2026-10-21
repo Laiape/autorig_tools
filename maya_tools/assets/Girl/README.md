@@ -1,5 +1,15 @@
 # Girl
 
+## Selected finger-band clusters (2026-10-21)
+
+`scenes/Girl_finger_clusters_v001.mb` preserves the artist's current scene and
+adds four editable left-hand clusters for index, middle, ring and pinky.
+The selected continuous 128-face band is divided at the three interdigital
+concavities into disjoint vertex regions; all 256 selected vertices are covered.
+Handle pivots use each region's bounding-box center. Model positions are unchanged.
+Source membership is recorded in `reference/finger_loop_clusters_20261021.json`
+and the four `L_*Loop_SOURCE_SET` component sets in the native scene.
+
 ## Edward controller drawings (2026-10-21)
 
 `curves/Girl_v002.curves` reuses Edward v002 controller drawings, fitted in
