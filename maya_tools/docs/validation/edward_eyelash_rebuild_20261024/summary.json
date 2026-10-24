@@ -1,0 +1,66 @@
+{
+  "maya": "2026",
+  "scope": "Reconstruct both eyelash skins through the production importer twice; native reopen. No full character rebuild claimed.",
+  "passes": [
+    {
+      "iteration": 1,
+      "pose_max_errors_cm": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_error_cm": 0.0,
+      "global_influences": [
+        "C_head_ENV"
+      ],
+      "order_output_to_input": [
+        "C_eyelashes_global_SKC",
+        "C_eyelashes_local_SKC"
+      ]
+    },
+    {
+      "iteration": 2,
+      "pose_max_errors_cm": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_error_cm": 0.0,
+      "global_influences": [
+        "C_head_ENV"
+      ],
+      "order_output_to_input": [
+        "C_eyelashes_global_SKC",
+        "C_eyelashes_local_SKC"
+      ]
+    }
+  ],
+  "selected_latest": "C:\\GIT\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v075.skc",
+  "native_reopen_max_error_cm": 0.0,
+  "passed": true,
+  "data_change": {
+    "source": "C:\\GIT\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v074.skc",
+    "candidate": "C:\\GIT\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v075.skc",
+    "source_sha256": "58da8c5d78420b800c0d2832b801a62b2d8aa1c3697c1f820d94c32f911cd0aa",
+    "candidate_sha256": "211befc3a0e080749066ee8d69a1f4b35c5daf27736bbfba73da0cec73c9ec88",
+    "vertex_count": 288,
+    "scope_verified": true,
+    "head_index_in_reference_skin": 5
+  }
+}

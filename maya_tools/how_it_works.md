@@ -37,6 +37,10 @@ skin rows to repair the Auto Wide mask boundary. The previous v073 snapshot
 is retained. Exact data differences, the downstream tangent-corrective stencil
 and DG/Serial/Parallel preservation checks are in
 `docs/validation/rig_repair_20261016/summary.json`.
+Edward v075 retains those changes and makes the global eyelash skin follow
+`C_head_ENV` instead of `C_freeze_ENV` during the next rebuild. Scoped native
+skin reconstruction and persistence checks are documented in
+`docs/edward_eyelash_rebuild_repair_20261024.md`.
 Edward Maya/custom limb-module compatibility and interactive timing comparison:
 `maya_tools/docs/rig_custom_solver_comparison_20261016.md`.
 Chihuahua verified binary opening through Character Manager, direct binary
