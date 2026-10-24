@@ -1103,6 +1103,18 @@ unchanged. Full build/rebuild and scene reopen reproduce neutral/half/full
 jaw shapes exactly. The scene and JSON validation are under
 `maya_tools/assets/Edward/experiments/research_application/`.
 
+Nini's two shoulder sculpts and orientation drivers are saved losslessly in
+`assets/Nini/skin_clusters/Nini_v028.skc`. Each `armUpper00_ENV` is measured
+relative to its side's `clavicle_ENV`; the `shoulderFk` target names identify
+the capture controls, while activation follows the joint in both FK and IK.
+Maya 2024 verification covers neutral, 22.5 and 45 degree poses on both sides:
+destructive SKC corrective reconstruction and shared full build stages followed
+by native save/reopen reproduce all 12 artist-reference body outputs exactly.
+Matched FK/IK body outputs differ by at most 1.49e-5 scene units. The standalone
+build check skips the UI progress dialog; existing missing optional socket
+guide warnings remain outside this shoulder validation. Local results are in
+`assets/Nini/validation/shoulder_correctives_skc_v028.json`.
+
 Neutral pose resets all `_CTL` controls below the loaded mesh's character root,
 including keyable numeric custom attributes, to their declared defaults in one
 undo step. Visibility is preserved; locked or driven channels are skipped and
