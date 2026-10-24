@@ -41,6 +41,10 @@ Edward v075 retains those changes and makes the global eyelash skin follow
 `C_head_ENV` instead of `C_freeze_ENV` during the next rebuild. Scoped native
 skin reconstruction and persistence checks are documented in
 `docs/edward_eyelash_rebuild_repair_20261024.md`.
+Edward v078 preserves the artist's newer v077 weights and enables interactive
+pants weight editing without enforcing the incompatible five-influence limit.
+Native edit/import persistence evidence:
+`docs/edward_pants_paint_settings_20261024.md`.
 Edward Maya/custom limb-module compatibility and interactive timing comparison:
 `maya_tools/docs/rig_custom_solver_comparison_20261016.md`.
 Chihuahua verified binary opening through Character Manager, direct binary

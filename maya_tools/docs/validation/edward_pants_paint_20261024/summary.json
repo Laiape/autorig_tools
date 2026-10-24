@@ -1,0 +1,56 @@
+{
+  "native_verification": {
+    "native_ascii_weight_tolerance": 1e-15,
+    "vertex_index": 286,
+    "source_nonzero": 10,
+    "trials": [
+      {
+        "fixed": false,
+        "nonzero": 10,
+        "sum": 0.9240180428948527,
+        "removed_original_influences": 0
+      },
+      {
+        "fixed": true,
+        "nonzero": 10,
+        "sum": 1.0,
+        "removed_original_influences": 0
+      }
+    ],
+    "import_weight_error": 0.0,
+    "import_settings": {
+      "normalizeWeights": 1,
+      "maintainMaxInfluences": false
+    },
+    "reopen_weight_error": 1.3552527156068805e-20,
+    "reopen_nonzero_signs_preserved": true,
+    "reopen_settings": {
+      "normalizeWeights": 1,
+      "maintainMaxInfluences": false
+    },
+    "passed": true
+  },
+  "data_change": {
+    "source": "C:\\GIT\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v077.skc",
+    "candidate": "C:\\GIT\\autorig_tools\\maya_tools\\assets\\Edward\\skin_clusters\\Edward_v078.skc",
+    "source_sha256": "814f0a5857ac9809d62ffb82a95873d86edd63dd92338375a231bd454853b8a8",
+    "candidate_sha256": "c818236456504a613e6400b8ade4dfb1e3132461845a7186723c52a1149fb04a",
+    "weights_unchanged": true,
+    "scope": "C_pants_SKC normalization and influence-limit settings plus matching metadata only"
+  },
+  "live_application": {
+    "settings_before": {
+      "normalizeWeights": 0,
+      "maintainMaxInfluences": true,
+      "maxInfluences": 5
+    },
+    "settings_after": {
+      "normalizeWeights": 1,
+      "maintainMaxInfluences": false,
+      "maxInfluences": 5
+    },
+    "weight_max_error": 0.0,
+    "position_max_error_cm": 0.0,
+    "passed": true
+  }
+}
